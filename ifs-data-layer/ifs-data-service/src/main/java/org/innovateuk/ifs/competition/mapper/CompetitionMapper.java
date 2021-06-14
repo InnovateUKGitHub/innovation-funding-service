@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.mapper;
 
+import org.innovateuk.ifs.assessment.period.mapper.AssessmentPeriodMapper;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.mapper.InnovationSectorMapper;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
                 InnovationSectorMapper.class,
                 ResearchCategoryMapper.class,
                 MilestoneMapper.class,
+                AssessmentPeriodMapper.class,
                 CompetitionTypeMapper.class,
                 SectionMapper.class,
                 CompetitionFunderMapper.class,

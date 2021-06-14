@@ -2225,6 +2225,8 @@
                           data-mirror="#section-total-associate-salary-costs"
                           th:text="'£' + ${#numbers.formatInteger(form.totalAssociateSalaryCosts, 0,'DEFAULT')}"></span>
                 </h4>
+                <input type="hidden" name="fecModelEnabled" th:value="${model.fecModelEnabled}" />
+                <input type="hidden" name="grantClaimPercentage" th:value="${model.grantClaimPercentage}" />
                 <input type="hidden"
                        data-calculation-fields=".associate-salary-costs-totals"
                        data-calculation-operations="+"
@@ -2232,8 +2234,6 @@
                        th:attr="data-calculation-rawvalue=${form.totalAssociateSalaryCosts}"
                        th:value="'£' + ${#numbers.formatInteger(form.totalAssociateSalaryCosts, 0,'DEFAULT')}"/>
                 <th:block th:if="${model.fecModelDisabled}">
-                    <input type="hidden" name="fecModelEnabled" th:value="${model.fecModelEnabled}" />
-                    <input type="hidden" name="grantClaimPercentage" th:value="${model.grantClaimPercentage}" />
                     <input type="hidden"
                            data-calculation-operations="*,/"
                            id="total-grant-associate-salary-costs"
@@ -3680,7 +3680,7 @@
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).ADDITIONAL_COMPANY_COSTS}">
     <th:block th:if="${model.financeRowTypes.contains(financeRowType)}">
         <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Additional costs</h2>
-        <p class="govuk-body">These are not part of the proposed projects’ eligible costs.</p>
+        <p class="govuk-body">These are not part of the proposed project’s eligible costs. Additional costs must be provided on behalf of the business partner.</p>
         <div class="govuk-accordion" data-module="govuk-accordion">
             <div class="govuk-accordion__section">
                 <div class="govuk-accordion__section-header">
@@ -3867,8 +3867,7 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
 
             <th:block th:unless="${model.isReadOnly()}">
                 <th:block th:unless="${model.internal}">
-                    <p class="govuk-body">You may enter up to £875 (or up to £1,000 for London weighting) multiplied by the number of months your project will run.
-                    </p>
+                    <p class="govuk-body">You may enter up to £875 multiplied by the number of months your project will run.</p>
                 </th:block>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="academic-secretarial-costs-table">

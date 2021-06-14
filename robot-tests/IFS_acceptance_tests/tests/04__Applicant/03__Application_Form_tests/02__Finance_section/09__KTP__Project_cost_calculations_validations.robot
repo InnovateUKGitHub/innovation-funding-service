@@ -25,6 +25,8 @@ Documentation     IFS-7790 KTP: Your finances - Edit
 ...
 ...               IFS-9340 KTP fEC/Non-fEC: application changes for print view
 ...
+...               IFS-9819 KTP 2 Questions Wording Change
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../../resources/defaultResources.robot
@@ -76,11 +78,12 @@ New lead applicant can mark Your fEC model section as complete if 'No' is select
     [Teardown]   the user completes your funding section
 
 Knowledge based applicant cannot view or edit fEC specific project costs based on non-fEC selection
-    [Documentation]  IFS-9242
+    [Documentation]  IFS-9242  IFS-9819
     When the user clicks the button/link        link = Your project costs
     Then the user should not see the element    jQuery = button:contains("Knowledge base supervisor")
     And the user should not see the element     jQuery = button:contains("Additional associate support")
     And the user should not see the element     jQuery = button:contains("Associates estates costs")
+    And the user should see the element         jQuery = p:contains("These are not part of the proposed project’s eligible costs. Additional costs must be provided on behalf of the business partner.")
 
 Associate employment and development client side validation
     [Documentation]  IFS-7790
@@ -425,7 +428,7 @@ the user collapses and expands the academic and secretarial support section
     the user clicks the button/link         jQuery = button:contains("Academic and secretarial support")
     the user should not see the element     id = academicAndSecretarialSupportForm
     the user clicks the button/link         jQuery = button:contains("Academic and secretarial support")
-    the user should see the element         jQuery = p:contains("You may enter up to £875")
+    the user should see the element         jQuery = p:contains("You may enter up to £875 multiplied by the number of months your project will run.")
 
 knowledge based applicant completes and submits application
     log in as a different user                               &{KTPLead}

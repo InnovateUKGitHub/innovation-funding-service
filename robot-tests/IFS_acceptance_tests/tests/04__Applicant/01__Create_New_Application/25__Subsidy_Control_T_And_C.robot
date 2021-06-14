@@ -211,9 +211,9 @@ Partner completes project finances and terms and conditions of state aid applica
 
 Partner applicant can accept subsidy control terms and conditions based on NI declaration
     [Documentation]  IFS-9233
-    And the user clicks the button/link          link = Award terms and conditions
+    When the user clicks the button/link         link = Award terms and conditions
     Then the user should see the element         jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
-    And the user should see the element          jQuery = ul li:contains("shall continue after the project term for a period of 6 years.")
+    And the user should see the element          jQuery = li:contains("Subsidy Control/ State aid obligations")
     And the user accepts terms and conditions
 
 Lead applicant submits state aid subsidy basis application
@@ -272,7 +272,7 @@ Lead applicant can accept subsidy control terms and conditions based on NI decla
     [Documentation]  IFS-9223
     When the user clicks the button/link          link = Award terms and conditions
     Then the user should see the element          jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
-    And the user should see the element           jQuery = ul li:contains("shall continue after the project term for a period of 6 years.")
+    And the user should see the element           jQuery = li:contains("Subsidy Control/ State aid obligations")
     And the user accepts terms and conditions
 
 Partner completes project finances and terms and conditions of subsidy control application

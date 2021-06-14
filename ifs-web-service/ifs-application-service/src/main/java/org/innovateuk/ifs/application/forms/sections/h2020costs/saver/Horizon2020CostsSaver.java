@@ -153,6 +153,7 @@ public class Horizon2020CostsSaver {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private <C extends FinanceRowItem> C newCost(C cost) {
         return (C) financeRowRestService.create(cost).getSuccess();
     }

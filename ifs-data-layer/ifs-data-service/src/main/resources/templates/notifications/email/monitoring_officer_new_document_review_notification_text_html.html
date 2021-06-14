@@ -1,0 +1,27 @@
+<#ftl output_format="HTML" auto_esc=true>
+<#import "layout/default.html" as layout>
+<@layout.default>
+<p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
+<p style="margin: 0 0 1em 0;">
+    A new document has been uploaded by the project manager for this project:<br>
+    ${applicationId} : ${applicationName}</br>
+</p>
+
+<p style="margin: 0 0 1em 0;">
+    Please <a href="${dashboardUrl}">sign into your Innovate UK dashboard:</a> and review the<br>
+    document in the project setup section.</br>
+</p>
+
+<p style="margin: 0 0 1em 0;">
+    The project cannot start until you approve this document.
+</p>
+
+<p style="margin: 1em 0 1em 0;">
+    Yours sincerely,
+</p>
+<p style="margin: 1em 0 1em 0;">
+    Innovate UK, part of UK Research and Innovation<br/>
+    Tel: 0300 321 4357<br/>
+    Email: competitions@innovateuk.ukri.org
+</p>
+</@layout.default>

@@ -9,9 +9,7 @@ import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationAddressService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.sil.crm.resource.SilAddress;
@@ -25,8 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -124,9 +121,6 @@ public class CrmServiceImpl implements CrmService {
 
         if (newOrganisationSearchEnabled) {
             silOrganisation.setRegisteredAddress(getRegisteredAddress(organisation));
-            silOrganisation.setDateOfIncorporation(organisation.getDateOfIncorporation());
-            silOrganisation.setSicCodes(getSicCodes(organisation));
-            silOrganisation.setExecutiveOfficers(getExecutiveOfficers(organisation));
         }
 
         silContact.setOrganisation(silOrganisation);
@@ -148,34 +142,24 @@ public class CrmServiceImpl implements CrmService {
     }
 
     private SilAddress organisationAddressToSilAddress(OrganisationAddressResource organisationAddress) {
+        SilAddress silAddress = new SilAddress();
         AddressResource address = organisationAddress.getAddress();
 
-        String[] street = new String[2];
-        street[0] = address.getAddressLine2() == null ? "" : address.getAddressLine2();
-        street[1] = (address.getAddressLine3() != null
-                && address.getAddressLine3().trim().length() > 0) ? format(", %s", address.getAddressLine3()) : "";
+        if (address != null) {
+            String[] street = new String[2];
+            street[0] = address.getAddressLine2() == null ? "" : address.getAddressLine2();
+            street[1] = (address.getAddressLine3() != null
+                    && address.getAddressLine3().trim().length() > 0) ? format(", %s", address.getAddressLine3()) : "";
 
-        SilAddress silAddress = new SilAddress();
-        silAddress.setBuildingName(address.getAddressLine1() == null ? "" : address.getAddressLine1());
-        silAddress.setStreet(String.join("", street));
-        silAddress.setLocality(address.getCounty() == null ? "" : address.getCounty());
-        silAddress.setTown(address.getTown() == null ? "" : address.getTown());
-        silAddress.setPostcode(address.getPostcode() == null ? "" : address.getPostcode());
-        silAddress.setCountry(address.getCountry() == null ? "" : address.getCountry());
+            silAddress.setBuildingName(address.getAddressLine1() == null ? "" : address.getAddressLine1());
+            silAddress.setStreet(String.join("", street));
+            silAddress.setLocality(address.getCounty() == null ? "" : address.getCounty());
+            silAddress.setTown(address.getTown() == null ? "" : address.getTown());
+            silAddress.setPostcode(address.getPostcode() == null ? "" : address.getPostcode());
+            silAddress.setCountry(address.getCountry() == null ? "" : address.getCountry());
+        }
 
         return silAddress;
-    }
-
-    private List<String> getExecutiveOfficers(OrganisationResource organisation) {
-        return organisation.getExecutiveOfficers().stream()
-                .map(OrganisationExecutiveOfficerResource::getName)
-                .collect(Collectors.toList());
-    }
-
-    private List<String> getSicCodes(OrganisationResource organisation) {
-        return organisation.getSicCodes().stream()
-                .map(OrganisationSicCodeResource::getSicCode)
-                .collect(Collectors.toList());
     }
 
     private SilContact setSilContactDetails(UserResource user) {

@@ -65,8 +65,8 @@ The user can see qualtrics survey fields in business and financial information a
     And the user clicks the button/link                  id = edit
     When the user clicks the button/link                 link = Complete the online business survey (opens in a new window)
     And select window                                    Innovate UK - Innovation Continuity Loans
-    And the user clicks the button/link                  id = NextButton
-    Then the user should see qualtrics survey fields
+#    And the user clicks the button/link                  id = NextButton
+#    Then the user should see qualtrics survey fields
     [Teardown]  the user closes the last opened tab
 
 The user will not be able to mark the application as complete without completing business and financial information
@@ -89,9 +89,9 @@ The user can complete the business and financial information application questio
     Then the user should see the element           jQuery = div:contains("Business and financial information") ~ .task-status-complete
 
 Loan application shows correct T&C's
-    [Documentation]    IFS-6205  IFS-9483
+    [Documentation]    IFS-6205  IFS-9483  IFS-9716
     Given the user clicks the button/link   link = Loan terms and conditions
-    And the user should see the element     jQuery = h1:contains("Loan terms and conditions")
+    And the user should see the element     jQuery = h1:contains("Loans terms and conditions")
     When the user clicks the button/link    link = Back to application overview
     Then the user should see the element    jQuery = li:contains("Loan terms and conditions") .task-status-complete
 
