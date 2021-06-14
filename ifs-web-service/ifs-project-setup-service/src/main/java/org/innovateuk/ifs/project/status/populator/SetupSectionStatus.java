@@ -15,6 +15,8 @@ import java.util.List;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.sections.SectionStatus.*;
+import static org.innovateuk.ifs.sections.SectionStatus.INCOMPLETE;
+import static org.innovateuk.ifs.sections.SectionStatus.MO_FLAG;
 
 /**
  * This is a helper class for determining the status of a given Project Setup section
@@ -101,7 +103,8 @@ public class SetupSectionStatus {
 
     public SectionStatus documentsSectionStatus(final boolean isProjectManager,
                                                 ProjectResource project,
-                                                CompetitionResource competition) {
+                                                CompetitionResource competition,
+                                                final boolean isProjectMO) {
         List<CompetitionDocumentResource> competitionDocuments = competition.getCompetitionDocuments();
         List<ProjectDocumentResource> projectDocuments = project.getProjectDocuments();
 
@@ -118,6 +121,21 @@ public class SetupSectionStatus {
         if (actualNumberOfDocuments == expectedNumberOfDocuments && projectDocuments.stream()
                 .allMatch(projectDocumentResource -> DocumentStatus.APPROVED.equals(projectDocumentResource.getStatus()))) {
             return TICK;
+        }
+
+        if (isProjectMO) {
+            if (projectDocuments.stream()
+                    .allMatch(projectDocumentResource -> DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus())
+                            || DocumentStatus.REJECTED_DUE_TO_TEAM_CHANGE.equals(projectDocumentResource.getStatus()))) {
+                return INCOMPLETE;
+            }
+            if (actualNumberOfDocuments == expectedNumberOfDocuments && projectDocuments.stream()
+                    .anyMatch(projectDocumentResource -> DocumentStatus.SUBMITTED.equals(projectDocumentResource.getStatus()))) {
+                return MO_FLAG;
+            }
+            if (actualNumberOfDocuments != expectedNumberOfDocuments) {
+                return (actualNumberOfDocuments == 0) ? INCOMPLETE : MO_FLAG;
+            }
         }
 
         if (actualNumberOfDocuments != expectedNumberOfDocuments || projectDocuments.stream()

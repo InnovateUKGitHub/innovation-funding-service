@@ -7,7 +7,9 @@ package org.innovateuk.ifs.sections;
 public enum SectionStatus {
     EMPTY(""),
     HOURGLASS("waiting"),
+    INCOMPLETE("incomplete"),
     FLAG("require-action"),
+    MO_FLAG("mo-require-action"),
     LEAD_ACTION_FLAG("lead-action-required"),
     TICK("complete"),
     CROSS("rejected");
