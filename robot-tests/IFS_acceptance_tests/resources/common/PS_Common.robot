@@ -508,14 +508,14 @@ project manager submits both documents
     the user clicks the button/link     id = submit-document-button
     the user clicks the button/link     id = submitDocumentButtonConfirm
 
-project finance approves both documents
+ifs admin approves both documents
     [Arguments]  ${project}
-    log in as a different user             &{internal_finance_credentials}
-    the user navigates to the page         ${SERVER}/project-setup-management/project/${project}/document/all
-    the user clicks the button/link        link = Collaboration agreement
+    log in as a different user                   &{ifs_admin_user_credentials}
+    the user navigates to the page               ${SERVER}/project-setup-management/project/${project}/document/all
+    the user clicks the button/link              link = Collaboration agreement
     internal user approve uploaded documents
-    the user clicks the button/link         link = Return to documents
-    the user clicks the button/link         link = Exploitation plan
+    the user clicks the button/link              link = Return to documents
+    the user clicks the button/link              link = Exploitation plan
     internal user approve uploaded documents
 
 project finance generates the Spend Profile
