@@ -5,19 +5,6 @@ metadata:
 build:
   artifacts:
 
-#    - image: ldap
-#      context: ifs-auth-service/ifs-ldap-service/src/main/docker
-#      docker:
-#        dockerfile: Dockerfile-template
-#    - image: sp
-#      context: ifs-auth-service/ifs-sp-service/src/main/docker
-#      docker:
-#        dockerfile: Dockerfile-template
-#    - image: idp
-#      context: ifs-auth-service/ifs-idp-service/src/main/docker
-#      docker:
-#        dockerfile: Dockerfile-skaffold
-
     - image: innovateuk/data-service
       context: .
       jib:
@@ -119,3 +106,17 @@ deploy:
   kustomize:
     paths:
       - os-files/kustomize/overlays/local
+
+portForward:
+  - resourceType: service
+    resourceName: shib
+    port: 443
+    localPort: 8443
+  - resourceType: service
+    resourceName: idp
+    port: 443
+    localPort: 9443
+  - resourceType: service
+    resourceName: application-svc
+    port: 8080
+    localPort: 8080
