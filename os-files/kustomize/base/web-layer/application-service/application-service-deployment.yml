@@ -19,10 +19,6 @@ spec:
       labels:
         app: application-svc
     spec:
-      initContainers:
-        - name: init-wait-for-db
-          image: alpine
-          command: [ "/bin/sh", "-c", "for i in $(seq 1 300); do nc -zvw1 ifs-database 3306 && exit 0 || sleep 3; done; exit 1" ]
       containers:
       - image: innovateuk/application-service
         name: spring-boot-service-container
