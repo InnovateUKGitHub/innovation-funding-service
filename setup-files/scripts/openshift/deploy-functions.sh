@@ -188,7 +188,7 @@ function setMinimumNumberOfReplicas() {
 
     echo "Setting application replicas"
     CURRENT_REPLICAS=$(oc describe dc/application-svc ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
-    sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/ifs-services/4-application-service.yml
+    sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/ifs-services/4-assessment-service.yml
 
     echo "Setting front door replicas"
     CURRENT_REPLICAS=$(oc describe dc/front-door-svc ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')

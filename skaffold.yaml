@@ -109,6 +109,70 @@ build:
         project: ifs-sil-stub
         args:
           - "-DskipTests"
+
+    - image: innovateuk/application-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-web-service:ifs-application-service
+        args:
+          - "-DskipTests"
+
+    - image: innovateuk/front-door-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-web-service:ifs-front-door-service
+        args:
+          - "-DskipTests"
+    - image: innovateuk/assessment-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-web-service:ifs-assessment-service
+        args:
+          - "-DskipTests"
+
+    - image: innovateuk/project-setup-mgt-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-web-service:ifs-project-setup-mgt-service
+        args:
+          - "-DskipTests"
+          -
+    - image: innovateuk/project-setup-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-web-service:ifs-project-setup-service
+        args:
+          - "-DskipTests"
+
+    - image: innovateuk/competition-mgt-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-web-service:ifs-competition-mgt-service
+        args:
+          - "-DskipTests"
+
+    - image: innovateuk/registration-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-registration-service
+        args:
+          - "-DskipTests"
+
+    - image: innovateuk/survey-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-survey-service
+        args:
+          - "-DskipTests"
+
   local:
     useDockerCLI: false
     useBuildkit: false
