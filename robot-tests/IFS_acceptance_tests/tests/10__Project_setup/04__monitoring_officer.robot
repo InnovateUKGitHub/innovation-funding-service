@@ -41,8 +41,6 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...
 ...               IFS-8958  SBRI Milestones - Application overview / summary
 ...
-...               IFS-9579  MO documents: Change of internal approve/reject authority
-...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -54,7 +52,6 @@ ${Assign_Project}                         Climate control solution
 ${Assign_Project_ID}                      ${application_ids["${Assign_Project}"]}
 ${Assign_Project2}                        High Performance Gasoline Stratified
 ${sbri_applicaton_name}                   SBRI application
-${correlation_applicaton_name}            Correlation of maintenance data of corroded knuckles (CorMaCK)
 ${sbri_application_id}                    ${application_ids["${sbri_applicaton_name}"]}
 ${Assign_Project2_ID}                     ${application_ids["${Assign_Project2}"]}
 ${New_Mo}                                 tom@poly.io
@@ -282,20 +279,6 @@ MO can now view payment milestones in SBRI application
     And the user clicks the button/link                                     link = view application feedback
     Then the payment milestone table is visible in application overview
 
-Internal finance cannot approve Exploitation or Collaboration documents
-    [Documentation]   IFS-9579
-    Given log in as a different user                     ${PS_LP_Application_Academic_Email}  ${short_password}
-    And the user navigates to the page                   ${server}/project-setup/project/${correlation_projectID}/document/all
-    When the user uploads the exploitation plan
-    And the user uploads the Collaboration agreement     
-    Then log in as a different user                      &{internal_finance_credentials} 
-    And the user navigates to the page                   ${server}/project-setup-management/project/${correlation_projectID}/document/all
-    And the user clicks the button/link                  link = Collaboration agreement
-    And the user cannot approve the document             approved   true
-    And the user clicks the button/link                  link = Return to documents
-    And the user clicks the button/link                  link = Exploitation plan
-    And the user cannot approve the document             approved   true
-
 *** Keywords ***
 The MO user is able to access all of the links
     the user is able to see Project details section
@@ -323,10 +306,8 @@ The user is able to see Spend profile section
     the user clicks the button/link   jQuery = a:contains("Set up your project")
 
 Requesting IDs of this application
-    ${sbri_projectID} =  get project id by name            ${sbri_applicaton_name}
+    ${sbri_projectID} =  get project id by name     ${sbri_applicaton_name}
     Set suite variable    ${sbri_projectID}
-    ${correlation_projectID} =  get project id by name     ${correlation_applicaton_name}
-    Set suite variable    ${correlation_projectID}
 
 The SBRI MO assignee has been changed
     log in as a different user                  &{Comp_admin1_credentials}
@@ -501,9 +482,3 @@ Internal user removes a partner organisation
     the user clicks the button/link         jQuery = h2:contains("SmithZone")~ button:contains("Remove organisation"):first
     the user clicks the button/link         jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
     the user should not see the element     jQuery = h2:contains("SmithZone")
-
-the user cannot approve the document
-    [Arguments]    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
-    the user should not see the element              css=[name^="${RADIO_BUTTON}"][value="${RADIO_BUTTON_OPTION}"] ~ label, [id="${RADIO_BUTTON_OPTION}"] ~ label
-    the user should not see an error in the page
-    Sleep   400ms
