@@ -48,7 +48,7 @@ public class ProjectDocument {
     private User modifiedBy;
 
     @LastModifiedDate
-    @Column(nullable = false, updatable = false)
+    @Column
     private ZonedDateTime modifiedDate;
 
     public ProjectDocument() {
