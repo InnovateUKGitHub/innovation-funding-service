@@ -102,7 +102,7 @@ public class StatusPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Stakeholders should be able to view current status of project from competition assigned to them OR" +
             "Auditors should be able to view the current status of project ")
-    public boolean assignedStakeholderORAuditorCanViewProjectStatus(ProjectResource project, UserResource user){
+    public boolean assignedStakeholderCanViewProjectStatus(ProjectResource project, UserResource user){
         return userIsStakeholderInCompetition(project.getCompetition(), user.getId()) || auditorHasStakeholderAutorityCanViewAllCompetitions(user);
     }
 
