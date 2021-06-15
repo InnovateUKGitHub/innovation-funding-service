@@ -41,6 +41,8 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...
 ...               IFS-9579 MO documents: Change of internal approve/reject authority
 ...
+...               IFS-9577 MO documents: approve or reject
+...
 Suite Setup       the user logs-in in new browser     &{collaborator1_credentials_bd}
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -53,6 +55,9 @@ ${USER_PM}                               phillip.ramos@katz.example.com
 ${MO_EMAIL}                              nilesh.patti@gmail.com
 ${newOrgRejectedDocumentMessagePM}       We have marked this document as incomplete because you have made a change to your project team.
 ${newOrgRejectedDocumentMessagePartner}  We have marked this document as incomplete because a change has been made to your project team.
+${MO_DocApproval_application_Title}      Correlation of maintenance data of corroded knuckles (CorMaCK)
+${MO_DocApproval_application_No}         ${application_ids["${MO_DocApproval_application_Title}"]}
+${MO_DocApproval_ProjectID}              ${project_ids["${MO_DocApproval__application_Title}"]}
 
 *** Test Cases ***
 Non-lead partner cannot upload either document
@@ -456,6 +461,27 @@ PM uploads documents and the MO receives an email
     And the user logs out if they are logged in
     And the user reads his email                                  ${MO_EMAIL}     You have a new document to review for project ${PS_Point_Project_Name}     A new document has been uploaded by the project manager for this project:
 
+Assign a MO to the project
+    [Documentation]  IFS-9577
+    [Setup]  log in as a different user            &{Comp_admin1_credentials}
+    Given the user navigates to the page           ${server}/project-setup-management/competition/${PS_Competition_Id}/status/all?page=2
+    When the user clicks the button/link           css = #table-project-status tr:nth-child(4) > td:nth-child(5) a
+    And search for MO                              Orvill  Orville Gibbs
+    Then the user should see the element           jQuery = span:contains("Assign projects to Monitoring Officer")
+    And the internal user assign project to MO     ${MO_DocApproval_application_No}   ${MO_DocApproval_application_Title}
+
+MO rejects the document
+    [Documentation]  IFS-9577
+    [Setup]  log in as a different user      &{monitoring_officer_one_credentials}
+    Given the user navigates to the page     ${server}/project-setup/project/${MO_DocApproval_ProjectID}/document/all
+    When the user clicks the button/link     link = Collaboration agreement
+    Then MO reject uploaded documents
+
+MO approves the document
+    [Documentation]  IFS-9577
+    Given the user clicks the button/link     link = Exploitation plan
+    Then MO approves uploaded documents
+
 *** Keywords ***
 the user removes and reuploads project files
     log in as a different user             &{lead_applicant_credentials_bd}
@@ -548,3 +574,21 @@ PM uploads and notifies the project documents to MO
     the user clicks the button/link        id = submit-document-button
     the user clicks the button/link        id = submitDocumentButtonConfirm
     the user should not see an error in the page
+
+MO reject uploaded documents
+    the user selects the radio button               approved   false
+    the user enters text to a text field            id = document-reject-reason   Rejected
+    the user clicks the button/link                 id = submit-button
+    the user clicks the button/link                 jQuery = .modal-reject-configured-doc button:contains("Cancel")
+    the user should not see an error in the page
+    the user clicks the button/link                 id = submit-button
+    the user clicks the button/link                 id = reject-document
+    the user should see the element                 jQuery = p:contains("You have rejected this document. Please contact the Project Manager to explain your decision.")
+    the user clicks the button/link                 jQuery = a:contains("Return to documents")
+
+MO approves uploaded documents
+    the user selects the radio button     approved   true
+    the user clicks the button/link       id = submit-button
+    the user clicks the button/link       id = accept-document
+    the user should see the element       jQuery = p:contains("You have approved this document.")
+    the user clicks the button/link       jQuery = a:contains("Return to documents")
