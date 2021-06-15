@@ -227,31 +227,10 @@ Mandatory document submission
     And the user reloads the page
     Then PM submits both documents     ${Grade_Crossing_Project_Id}
 
-Internal finance cannot approve Exploitation or Collaboration documents
-    [Documentation]   IFS-9579
-    Given log in as a different user              &{internal_finance_credentials} 
-    And the user navigates to the page            ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
-    When the user clicks the button/link          link = Collaboration agreement
-    Then the user cannot approve the document     approved   true
-    And the user clicks the button/link           link = Return to documents
-    And the user clicks the button/link           link = Exploitation plan
-    And the user cannot approve the document      approved   true
-
-Comp admin cannot approve Exploitation or Collaboration documents
-    [Documentation]   IFS-9579
-    Given log in as a different user              &{Comp_admin1_credentials}   
-    And the user navigates to the page            ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
-    When the user clicks the button/link          link = Collaboration agreement
-    Then the user cannot approve the document     approved   true
-    And the user clicks the button/link           link = Return to documents
-    And the user clicks the button/link           link = Exploitation plan
-    And the user cannot approve the document      approved   true
- 
 PM can still view both documents after submitting
     [Documentation]    INFUND-3012
     [Tags]
-    Given log in as a different user          &{lead_applicant_credentials_bd}
-    And the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
+    Given the user navigates to the page      ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link      link = Collaboration agreement
     And open pdf link                         jQuery = a:contains("${valid_pdf} (opens in a new window)")
     When the user goes to documents page      Return to documents  Exploitation plan
@@ -278,6 +257,26 @@ Lead partner can still view both documents after submitting
     Given open pdf link                     jQuery = a:contains("${valid_pdf} (opens in a new window)")
     When the user goes to documents page    Return to documents  Collaboration agreement
     Then open pdf link                      jQuery = a:contains("${valid_pdf} (opens in a new window)")
+
+Internal finance cannot approve Exploitation or Collaboration documents
+    [Documentation]   IFS-9579
+    Given log in as a different user              &{internal_finance_credentials} 
+    And the user navigates to the page            ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
+    When the user clicks the button/link          link = Collaboration agreement
+    Then the user cannot approve the document     approved   true
+    And the user clicks the button/link           link = Return to documents
+    And the user clicks the button/link           link = Exploitation plan
+    And the user cannot approve the document      approved   true
+
+Comp admin cannot approve Exploitation or Collaboration documents
+    [Documentation]   IFS-9579
+    Given log in as a different user              &{Comp_admin1_credentials}   
+    And the user navigates to the page            ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
+    When the user clicks the button/link          link = Collaboration agreement
+    Then the user cannot approve the document     approved   true
+    And the user clicks the button/link           link = Return to documents
+    And the user clicks the button/link           link = Exploitation plan
+    And the user cannot approve the document      approved   true
 
 Non-lead partner cannot remove the documents after submission by PM
     [Documentation]  INFUND-3012
