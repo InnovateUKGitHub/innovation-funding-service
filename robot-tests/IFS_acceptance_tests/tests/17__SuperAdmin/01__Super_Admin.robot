@@ -71,7 +71,7 @@ Super admin can reject an approved document
 Super admin user cannot reject a document once the project is completed
     [Documentation]  IFS-9692
     Given the applicant submits the document
-    And compAdmin user approves uploaded documents
+    And ifsAdmin user approves uploaded documents
     And compAdmin user approves the GOL
     When log in as a different user                   &{superAdminCredentials}
     And the user navigates to the page                ${SERVER}/project-setup-management/project/${projectID}/document/all
@@ -131,8 +131,8 @@ the applicant submits the document
     the user clicks the button/link                                      jQuery = .modal-configured-partner-document button:contains("Submit")
     the user should not see an error in the page
 
-compAdmin user approves uploaded documents
-    log in as a different user           &{Comp_admin1_credentials}
+ifsAdmin user approves uploaded documents
+    log in as a different user           &{ifs_admin_user_credentials}
     the user navigates to the page       ${SERVER}/project-setup-management/project/${projectID}/document/all
     the user clicks the button/link      link = Exploitation plan
     the user selects the radio button    approved   true

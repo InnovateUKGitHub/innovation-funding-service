@@ -72,7 +72,7 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
                                    HttpServletRequest request,
                                    HttpServletResponse response,
                                    UserResource loggedInUser) {
-        updateSelectionForm(request, response, competitionId, assessorId, selectionForm, filter);
+        updateSelectionForm(request, response, competitionId, assessorId, assessmentPeriodId, selectionForm, filter);
         model.addAttribute("model", assessorAssessmentProgressModelPopulator.populateModel(
                 competitionId,
                 assessorId,
@@ -172,6 +172,7 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
     public JsonNode selectAssessorForResendListForPeriod(
             @PathVariable long competitionId,
             @PathVariable long assessorId,
+            @PathVariable long assessmentPeriodId,
             @RequestParam("selectionId") long applicationId,
             @RequestParam("isSelected") boolean isSelected,
             @RequestParam(value = "filterSearch", defaultValue = "") String filter,
@@ -180,6 +181,7 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
         return selectAssessorForResendListJsonNode(
                 competitionId,
                 assessorId,
+                assessmentPeriodId,
                 applicationId,
                 isSelected,
                 filter,
@@ -191,6 +193,7 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
     private JsonNode selectAssessorForResendListJsonNode(
             long competitionId,
             long assessorId,
+            long assessmentPeriodId,
             long applicationId,
             boolean isSelected,
             String filter,
@@ -198,7 +201,7 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
             HttpServletResponse response) {
         boolean limitExceeded = false;
         try {
-            List<Long> InviteIds = getAllApplicationIds(competitionId, assessorId, filter);
+            List<Long> InviteIds = getAllApplicationIds(competitionId, assessorId, assessmentPeriodId, filter);
             ApplicationSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new ApplicationSelectionForm());
             if (isSelected) {
                 int predictedSize = selectionForm.getSelectedApplications().size() + 1;
@@ -225,6 +228,7 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
     @PostMapping(value = "/period/{assessmentPeriodId}", params = {"addAll"})
     public @ResponseBody JsonNode addAllAssessorsToResendList(@PathVariable long competitionId,
                                                               @PathVariable long assessorId,
+                                                              @PathVariable long assessmentPeriodId,
                                                               @RequestParam("addAll") boolean addAll,
                                                               @RequestParam(value = "filterSearch", defaultValue = "") String filter,
                                                               HttpServletRequest request,
@@ -233,7 +237,7 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
             ApplicationSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new ApplicationSelectionForm());
 
             if (addAll) {
-                selectionForm.setSelectedApplications(getAllApplicationIds(competitionId, assessorId, filter));
+                selectionForm.setSelectedApplications(getAllApplicationIds(competitionId, assessorId, assessmentPeriodId, filter));
                 selectionForm.setAllSelected(true);
             } else {
                 selectionForm.getSelectedApplications().clear();
@@ -249,19 +253,20 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
         }
     }
 
-    private List<Long> getAllApplicationIds(long competitionId, long assessorId, String filterSearch) {
-        return applicationCountSummaryRestService.getApplicationIdsByCompetitionIdAndAssessorId(competitionId, assessorId, filterSearch).getSuccess();
+    private List<Long> getAllApplicationIds(long competitionId, long assessorId, long assessmentPeriodId, String filterSearch) {
+        return applicationCountSummaryRestService.getApplicationIdsByCompetitionIdAndAssessorId(competitionId, assessorId, assessmentPeriodId, filterSearch).getSuccess();
     }
 
     private void updateSelectionForm(HttpServletRequest request,
                                      HttpServletResponse response,
                                      long competitionId,
                                      long assessorId,
+                                     long assessmentPeriodId,
                                      ApplicationSelectionForm selectionForm,
                                      String filter) {
         ApplicationSelectionForm storedSelectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new ApplicationSelectionForm());
 
-        ApplicationSelectionForm trimmedAssessorForm = trimSelectionByFilteredResult(storedSelectionForm, filter, competitionId, assessorId);
+        ApplicationSelectionForm trimmedAssessorForm = trimSelectionByFilteredResult(storedSelectionForm, filter, competitionId, assessorId, assessmentPeriodId);
         selectionForm.setSelectedApplications(trimmedAssessorForm.getSelectedApplications());
         selectionForm.setAllSelected(trimmedAssessorForm.isAllSelected());
 
@@ -270,8 +275,8 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
 
     private ApplicationSelectionForm trimSelectionByFilteredResult(ApplicationSelectionForm selectionForm,
                                                                 String filter,
-                                                                long competitionId, long assessorId) {
-        List<Long> filteredResults = getAllApplicationIds(competitionId, assessorId, filter);
+                                                                long competitionId, long assessorId, long assessmentPeriodId) {
+        List<Long> filteredResults = getAllApplicationIds(competitionId, assessorId, assessmentPeriodId, filter);
         ApplicationSelectionForm updatedSelectionForm = new ApplicationSelectionForm();
 
         selectionForm.getSelectedApplications().retainAll(filteredResults);
