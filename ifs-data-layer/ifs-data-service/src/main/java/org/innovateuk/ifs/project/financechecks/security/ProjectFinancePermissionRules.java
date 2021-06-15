@@ -11,7 +11,6 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
-import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
@@ -222,7 +221,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ_PROJECT_FINANCE", description = "A stakeholder user can see project finances for organisations")
     public boolean stakeholderUserCanSeeProjectFinancesForOrganisations(final ProjectFinanceResource projectFinanceResource, final UserResource user) {
-        return user.hasRole(STAKEHOLDER);
+        return isStakeholder(user);
     }
 
     @PermissionRule(value = "READ_PROJECT_FINANCE", description = "A Competition finance user can see project finances for organisations")

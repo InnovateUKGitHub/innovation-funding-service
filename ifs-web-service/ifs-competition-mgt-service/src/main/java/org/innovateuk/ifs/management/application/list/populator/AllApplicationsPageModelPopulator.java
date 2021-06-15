@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.management.application.list.viewmodel.AllApplicationsRowViewModel;
 import org.innovateuk.ifs.management.application.list.viewmodel.AllApplicationsViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -47,8 +48,8 @@ public class AllApplicationsPageModelPopulator {
                 filter.orElse(""),
                 getApplications(applicationSummaryPageResource),
                 new Pagination(applicationSummaryPageResource),
-                user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)? "Dashboard" : "Applications",
-                user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)? "/dashboard/live" : "/competition/" + competitionId + "/applications",
+                user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER) || user.hasAuthority(Authority.STAKEHOLDER)? "Dashboard" : "Applications",
+                user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER) || user.hasAuthority(Authority.STAKEHOLDER)? "/dashboard/live" : "/competition/" + competitionId + "/applications",
                 user.hasRole(SUPPORT)
         );
     }

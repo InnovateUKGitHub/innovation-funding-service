@@ -23,9 +23,9 @@ public class ProjectPermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value = "READ", description = "Stakeholders can see project resources")
+    @PermissionRule(value = "READ", description = "Stakeholders OR Auditors can see project resources")
     public boolean stakeholdersCanViewProjects(final ProjectResource project, final UserResource user) {
-        return userIsStakeholderInCompetition(project.getCompetition(), user.getId());
+        return userIsStakeholderInCompetition(project.getCompetition(), user.getId()) || auditorHasStakeholderAutorityCanViewAllCompetitions(user);
     }
 
     @PermissionRule(value = "READ", description = "Competition finance users can see project resources")
@@ -49,9 +49,9 @@ public class ProjectPermissionRules extends BasePermissionRules {
         return project != null && userIsInnovationLeadOnCompetition(project.getCompetition(), user.getId());
     }
 
-    @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Stakeholders can view finance reviewer.")
+    @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Stakeholders/Auditors can view finance reviewer.")
     public boolean stakeholderCanViewFinanceReviewer(final ProjectResource project, final UserResource user) {
-        return project != null && userIsStakeholderInCompetition(project.getCompetition(), user.getId());
+        return project != null && (userIsStakeholderInCompetition(project.getCompetition(), user.getId()) || auditorHasStakeholderAutorityCanViewAllCompetitions(user));
     }
 
     @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Project finance users can view finance reviewer.")

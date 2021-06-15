@@ -33,9 +33,9 @@ public class StatusPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_TEAM_STATUS",
-            description = "Stakeholders can see a team's status for a project on their competitions")
+            description = "Stakeholders/Auditors can see a team's status for a project on their(all) competitions")
     public boolean stakeholdersCanViewTeamStatus(ProjectResource project, UserResource user) {
-        return userIsStakeholderInCompetition(project.getCompetition(), user.getId());
+        return userIsStakeholderInCompetition(project.getCompetition(), user.getId()) || auditorHasStakeholderAutorityCanViewAllCompetitions(user);
     }
 
     @PermissionRule(
@@ -74,9 +74,10 @@ public class StatusPermissionRules extends BasePermissionRules {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
 
-    @PermissionRule(value = "VIEW_PROJECT_SETUP_COMPETITION_STATUS", description = "Stakeholders should be able to access current status of competition that are assigned to them")
+    @PermissionRule(value = "VIEW_PROJECT_SETUP_COMPETITION_STATUS", description = "Stakeholders should be able to access current status of competition that are assigned to them OR" +
+            "Auditors can able to access the current status of all competitions")
     public boolean assignedStakeholderCanViewCompetitionStatus(CompetitionResource competition, UserResource user){
-        return userIsStakeholderInCompetition(competition.getId(), user.getId());
+        return userIsStakeholderInCompetition(competition.getId(), user.getId()) || auditorHasStakeholderAutorityCanViewAllCompetitions(user);
     }
 
     @PermissionRule(value = "VIEW_PROJECT_SETUP_COMPETITION_STATUS", description = "Competition finance users should be able to access current status of competition that are assigned to them")
@@ -99,9 +100,10 @@ public class StatusPermissionRules extends BasePermissionRules {
         return userIsInnovationLeadOnCompetition(project.getCompetition(), user.getId());
     }
 
-    @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Stakeholders should be able to view current status of project from competition assigned to them")
-    public boolean assignedStakeholderCanViewProjectStatus(ProjectResource project, UserResource user){
-        return userIsStakeholderInCompetition(project.getCompetition(), user.getId());
+    @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Stakeholders should be able to view current status of project from competition assigned to them OR" +
+            "Auditors should be able to view the current status of project ")
+    public boolean assignedStakeholderORAuditorCanViewProjectStatus(ProjectResource project, UserResource user){
+        return userIsStakeholderInCompetition(project.getCompetition(), user.getId()) || auditorHasStakeholderAutorityCanViewAllCompetitions(user);
     }
 
     @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Competition finance users should be able to view current status of project from competition assigned to them")

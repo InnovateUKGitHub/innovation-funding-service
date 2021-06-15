@@ -38,6 +38,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isStakeholderRoleOrAuthority;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -272,7 +273,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<Boolean> showApplicationTeam(Long applicationId,
                                                       Long userId) {
         return find(userRepository.findById(userId), notFoundError(User.class, userId))
-                .andOnSuccessReturn(user -> user.isInternalUser() || user.hasRole(STAKEHOLDER));
+                .andOnSuccessReturn(user -> user.isInternalUser() || isStakeholderRoleOrAuthority(user));
     }
 
     @Override

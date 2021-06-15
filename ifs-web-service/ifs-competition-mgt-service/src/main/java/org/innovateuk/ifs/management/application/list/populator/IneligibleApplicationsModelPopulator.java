@@ -7,6 +7,7 @@ import org.innovateuk.ifs.management.application.view.form.IneligibleApplication
 import org.innovateuk.ifs.management.application.list.viewmodel.IneligibleApplicationsRowViewModel;
 import org.innovateuk.ifs.management.application.list.viewmodel.IneligibleApplicationsViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -53,7 +54,7 @@ public class IneligibleApplicationsModelPopulator {
                 filterForm.getFilterSearch(),
                 getApplications(summaryPageResource),
                 new Pagination(summaryPageResource),
-                user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)|| user.hasRole(SUPPORT)
+                user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)|| user.hasRole(SUPPORT) || user.hasAuthority(Authority.STAKEHOLDER)
         );
     }
 

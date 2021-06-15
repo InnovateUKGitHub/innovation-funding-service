@@ -297,7 +297,7 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
             return COMPLETE;
         } else if (allRequiredDetailsComplete) {
             User user = loggedInUserSupplier.get();
-            if (isSupport(user) || isInnovationLead(user) || isStakeholder(user)) {
+            if (isSupport(user) || isInnovationLead(user) || isStakeholderRoleOrAuthority(user)) {
                 return notStartedIfProjectActive(projectState);
             } else {
                 return projectState.isActive() ?

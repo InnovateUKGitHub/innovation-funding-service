@@ -29,9 +29,9 @@ public class MilestonePermissionRules extends BasePermissionRules {
         return userIsInnovationLeadOnCompetition(competitionId.id(), user.getId());
     }
 
-    @PermissionRule(value = "VIEW_MILESTONE", description = "Stakeholders can view milestones on competitions assigned to them.")
+    @PermissionRule(value = "VIEW_MILESTONE", description = "Stakeholders can view milestones on competitions assigned to them OR Auditors can view all competitions.")
     public boolean stakeholdersCanViewMilestonesOnAssignedComps(CompetitionCompositeId competitionId, UserResource user) {
-        return userIsStakeholderInCompetition(competitionId.id(), user.getId());
+        return userIsStakeholderInCompetition(competitionId.id(), user.getId()) || auditorHasStakeholderAutorityCanViewAllCompetitions(user);
     }
 
     @PermissionRule(value = "VIEW_MILESTONE", description = "Internal users (except innovation leads and stakeholders) can view milestones on any competition.")

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.monitoring.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
-import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.Authority;
@@ -48,9 +47,10 @@ public class MonitoringOfficerPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_MONITORING_OFFICER",
-            description = "Stakeholders can view Monitoring Officers on any Project in their competitions")
+            description = "Stakeholders can view Monitoring Officers on any Project in their competitions OR" +
+                    "Auditors can view Monitoring Officers on any Project ")
     public boolean stakeholdersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(ProjectResource project, UserResource user) {
-        return userIsStakeholderInCompetition(project.getCompetition(), user.getId());
+        return userIsStakeholderInCompetition(project.getCompetition(), user.getId()) || auditorHasStakeholderAutorityCanViewAllCompetitions(user);
     }
 
     @PermissionRule(

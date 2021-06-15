@@ -69,4 +69,9 @@ public final class SecurityRuleUtil {
     public static boolean isStakeholder(User user) { return user.hasRole(STAKEHOLDER); }
 
     public static boolean isCompetitionFinance(User user) { return user.hasRole(EXTERNAL_FINANCE); }
+
+    public static boolean isAuditor(User user) { return user.hasRole(AUDITOR); }
+
+    public static boolean isStakeholderRoleOrAuthority(User user) { return user.hasRole(STAKEHOLDER) || user.hasAuthority(Authority.STAKEHOLDER); }
+
 }
