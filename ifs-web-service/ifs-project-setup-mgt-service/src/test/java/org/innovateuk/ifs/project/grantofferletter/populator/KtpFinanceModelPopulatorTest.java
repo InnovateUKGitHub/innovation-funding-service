@@ -88,6 +88,7 @@ public class KtpFinanceModelPopulatorTest {
         assertEquals(7216, ktpFinanceModel.getMaximumAmountOfGovtGrant());
 
         assertNull(ktpFinanceModel.getFecModelEnabled());
+        assertFalse(ktpFinanceModel.isFecModelDisabled());
     }
 
     @Test
@@ -139,6 +140,7 @@ public class KtpFinanceModelPopulatorTest {
         assertNull(ktpFinanceModel.getAssociateEstateCosts());
 
         assertFalse(ktpFinanceModel.getFecModelEnabled());
+        assertTrue(ktpFinanceModel.isFecModelDisabled());
     }
 
     private void assertRow(KtpFinanceRowModel row, int cost, int funding, int contribution) {

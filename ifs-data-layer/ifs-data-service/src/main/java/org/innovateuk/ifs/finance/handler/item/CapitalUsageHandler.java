@@ -19,6 +19,7 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.CAPITAL_US
  * Handles the capital usage costs, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
+@SuppressWarnings("unchecked")
 @Component
 public class CapitalUsageHandler extends FinanceRowHandler<CapitalUsage> {
     public static final String COST_FIELD_EXISTING = "existing";

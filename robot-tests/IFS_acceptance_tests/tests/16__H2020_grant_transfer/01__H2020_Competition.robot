@@ -13,6 +13,8 @@ Documentation  IFS-5158 - Competition Template
 ...
 ...            IFS-8847 Always open competitions: new comp setup configuration
 ...
+...            IFS-9579 MO documents: Change of internal approve/reject authority
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
 Resource          ../../resources/defaultResources.robot
@@ -126,11 +128,11 @@ The user is able to complete the Documents section
     Then the user should see the element      jQuery = .progress-list li:nth-child(3):contains("Awaiting review")
 
 Internal user is able to approve documents
-    [Documentation]  IFS-5700
-    [Setup]  log in as a different user         &{Comp_admin1_credentials}
+    [Documentation]  IFS-5700  IFS-9579
+    [Setup]  log in as a different user                  &{ifs_admin_user_credentials}
     Given Internal user is able to approve documents
-    When the user navigates to the page        ${server}/project-setup-management/competition/${competitionId}/status/all
-    Then the user should see the element       css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
+    When the user navigates to the page                  ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
 
 Internal user is able to assign an MO
     [Documentation]  IFS-5700

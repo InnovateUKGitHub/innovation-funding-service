@@ -70,7 +70,7 @@ public class ApplicationProcurementMilestoneServiceImpl
         return applicationFinanceService.financeDetails(applicationId, organisationId).andOnSuccessReturn(finance -> {
             BigInteger totalPayments = repository.findByApplicationFinanceApplicationIdAndApplicationFinanceOrganisationIdOrderByMonthAsc(applicationId, organisationId)
                     .stream()
-                    .map(ApplicationProcurementMilestone::getPayment)
+                    .map(paymentMilestone -> paymentMilestone.getPayment() == null ? BigInteger.ZERO : paymentMilestone.getPayment())
                     .reduce(BigInteger.ZERO, BigInteger::add);
             BigInteger totalFunding = finance.getTotalFundingSought().setScale(0, RoundingMode.HALF_UP).toBigInteger();
             return totalFunding.equals(totalPayments);
