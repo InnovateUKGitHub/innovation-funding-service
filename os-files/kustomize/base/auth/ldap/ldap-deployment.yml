@@ -4,6 +4,7 @@ metadata:
   name: ldap
   annotations:
     pullSecrets: pullSecrets
+    waitForDb: waitForDb
 spec:
   replicas: 1
   selector:
@@ -25,6 +26,10 @@ spec:
               value: "8389"
           name: ldap
           image: docker-ifs.devops.innovateuk.org/releases/ldap-service:1.1.149
+          lifecycle:
+            postStart:
+              exec:
+                command: [ "/bin/sh", "-c", "/usr/local/bin/ldap-sync-from-ifs-db.sh"]
           volumeMounts:
             - name: ldap-keys-volume
               mountPath: /var/certs

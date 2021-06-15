@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: cache-provider
   annotations:
-    monitor: monitor
     pullSecrets: pullSecrets
 spec:
   replicas: 1
@@ -21,8 +20,8 @@ spec:
         app: cache-provider
     spec:
       containers:
-        - image: innovateuk/cache-provider:5.0.5
-          name: spring-boot-service-container
+        - image: docker-ifs.devops.innovateuk.org/releases/cache-provider:5.0.5
+          name: cache-contianer
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 6379

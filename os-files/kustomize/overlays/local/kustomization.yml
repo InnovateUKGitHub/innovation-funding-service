@@ -24,6 +24,8 @@ resources:
   - mail/mail-service.yml
   - mail/mail-config.yml
   - mail/mail-service-deployment.yml
+  - cache-provider/cache-provider-service.yml
+  - cache-provider/cache-provider-service-deployment.yml
 
 patchesStrategicMerge:
   - cache-config.yml

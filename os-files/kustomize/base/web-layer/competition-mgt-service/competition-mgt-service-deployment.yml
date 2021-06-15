@@ -26,7 +26,10 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
           - name: IFS_EXTERNAL_ROLE_ENABLED
-            value: "${IFS_EXTERNAL_ROLE_ENABLED}"
+            valueFrom:
+              configMapKeyRef:
+                name: feature-toggle-config
+                key: IFS_EXTERNAL_ROLE_ENABLED
           - name: IFS_ALWAYS_OPEN_COMPETITION_ENABLED
             valueFrom:
               configMapKeyRef:
