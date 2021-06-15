@@ -123,10 +123,20 @@ public class SetupSectionStatus {
             return TICK;
         }
 
+        boolean hasRejectedAndApprovedDocuments = projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.APPROVED.equals(projectDocumentResource.getStatus())) &&
+                projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus()));
+
         if (isProjectMO) {
+            if (projectDocuments.stream()
+                    .allMatch(projectDocumentResource -> DocumentStatus.UNSET.equals(projectDocumentResource.getStatus()))) {
+                return INCOMPLETE;
+            }
             if (projectDocuments.stream()
                     .allMatch(projectDocumentResource -> DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus())
                             || DocumentStatus.REJECTED_DUE_TO_TEAM_CHANGE.equals(projectDocumentResource.getStatus()))) {
+                return INCOMPLETE;
+            }
+            if (actualNumberOfDocuments == expectedNumberOfDocuments && hasRejectedAndApprovedDocuments) {
                 return INCOMPLETE;
             }
             if (actualNumberOfDocuments == expectedNumberOfDocuments && projectDocuments.stream()
@@ -134,7 +144,7 @@ public class SetupSectionStatus {
                 return MO_FLAG;
             }
             if (actualNumberOfDocuments != expectedNumberOfDocuments) {
-                return (actualNumberOfDocuments == 0) ? INCOMPLETE : MO_FLAG;
+                return MO_FLAG;
             }
         }
 
