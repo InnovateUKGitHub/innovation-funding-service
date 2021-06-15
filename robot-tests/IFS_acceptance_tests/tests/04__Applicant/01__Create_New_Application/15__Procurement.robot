@@ -37,6 +37,8 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 ...             IFS-8847 Always open competitions: new comp setup configuration
 ...
+...             IFS-9904 SBRIs - Payment Milestones View - Required users
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -161,12 +163,13 @@ Comp Admin allocates assessor to application
     Then the user clicks the button/link             jQuery = button:contains("Notify assessors")
 
 Allocated assessor assess the application
-    [Documentation]  IFS-2376  IFS-7311 IFS-7703
+    [Documentation]  IFS-2376  IFS-7311  IFS-7703  IFS-9904
     Given Log in as a different user                                                   &{assessor_credentials}
     And the user accepts the application to assess
     And the user should be redirected to the correct page                              ${server}/assessment/assessor/dashboard/competition/${competitionId}
     When the user clicks the button/link                                               link = ${appl_name}
     Then the user can see multiple appendices uploaded to the application question
+    And the assessor views summary of payment milestones
     And the assessor submits the assessment
 
 User migrates application to avoid duplication in IFS PA
@@ -218,6 +221,14 @@ Internal user generate the contract
     When Lead applicant upload the contract
     Then the internal user approve the contract               ${ProjectID}
 
+Monitoring officer views summary of payment milestones
+    [Documentation]  IFS-9904
+    Given log in as a different user        &{monitoring_officer_one_credentials}
+    And the user clicks the button/link     link = ${appl_name}
+    When the user clicks the button/link     link = view application feedback
+    Then the user should see the element    jQuery = h3:contains("Payment milestones")
+    And the user should see the element     jQuery = th:contains("Total payment requested")+th:contains("100%")+ th:contains("£72,839")
+
 Internal user makes changes to the finance payment milestones
     [Documentation]   IFS-8944
     Given Requesting SBRI Project ID of this Project
@@ -236,6 +247,14 @@ Internal user makes changes to project finances
     Then the user should see the element                    jQuery = td:contains("90,000") + td:contains("80,000") + td:contains("- 10,000")
     And the user should see the element                     jQuery = td:contains("1,100") + td:contains("11,100") + td:contains("+ 10,000")
     And the user should see the element                     jQuery = td:contains("£243,484")
+
+Internal user views summary of the payment milestones
+    [Documentation]   IFS-9904
+    [Setup]  get application id by name and set as suite variable     ${appl_name}
+    When the user navigates to the page     ${server}/management/competition/${competitionId}/application/${application_id}
+    Then the user should see the element     jQuery = h3:contains("Payment milestones")
+    And the user should see the element      jQuery = th:contains("Total payment requested")+th:contains("100%")+ th:contains("£72,839")
+    And the user should see the element      jQuery = div:contains("Crystalrover") a:contains("View finances")
 
 Internal user removes payment milestones
     [Documentation]   IFS-8944
@@ -283,6 +302,12 @@ the user can see multiple appendices uploaded to the application question
     the user should see the element     jQuery = a:contains("${pdf_file}")
     the user should see the element     jQuery = a:contains("${ods_file}")
     the user should see the element     jQuery = a:contains("${excel_file}")
+    the user clicks the button/link     link = Back to your assessment overview
+
+the assessor views summary of payment milestones
+    the user clicks the button/link     link = Finances overview
+    the user should see the element     jQuery = h3:contains("Payment milestones")
+    the user should see the element     jQuery = th:contains("Total payment requested")+th:contains("100%")+ th:contains("£72,839")
     the user clicks the button/link     link = Back to your assessment overview
 
 the user fills in procurement Application details
