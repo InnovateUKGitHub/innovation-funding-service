@@ -21,35 +21,60 @@ spec:
         name: spring-boot-service-container
         imagePullPolicy: IfNotPresent
         env:
-          - name: NEW_RELIC_LICENSE_KEY
+          - name: SPRING_DATASOURCE_URL
             valueFrom:
               configMapKeyRef:
-                name: new-relic-config
-                key: NEW_RELIC_LICENSE_KEY
+                name: survey-db-config
+                key: DB_URL
+          - name: SPRING_FLYWAY_URL
+            valueFrom:
+              configMapKeyRef:
+                name: survey-db-config
+                key: DB_URL
+          - name: SPRING_DATASOURCE_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: survey-db-config
+                key: DB_USER
+          - name: SPRING_FLYWAY_USER
+            valueFrom:
+              configMapKeyRef:
+                name: survey-db-config
+                key: DB_USER
+          - name: SPRING_DATASOURCE_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: survey-db-config
+                key: DB_PASS
+          - name: SPRING_FLYWAY_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: survey-db-config
+                key: DB_PASS
+          - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
+            valueFrom:
+              configMapKeyRef:
+                name: data-service-config
+                key: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
           - name: NEW_RELIC_LOG
             valueFrom:
               configMapKeyRef:
                 name: new-relic-config
                 key: NEW_RELIC_LOG
+          - name: NEW_RELIC_LICENSE_KEY
+            valueFrom:
+              configMapKeyRef:
+                name: new-relic-config
+                key: NEW_RELIC_LICENSE_KEY
           - name: IFS_WEB_SYSTEM_USER_UID
             valueFrom:
               configMapKeyRef:
                 name: web-config
                 key: IFS_WEB_SYSTEM_USER_UID
-          - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
-            valueFrom:
-              configMapKeyRef:
-                name: web-config
-                key: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
-          - name: SPRING_APPLICATION_JSON
-            valueFrom:
-              configMapKeyRef:
-                name: web-config
-                key: SPRING_APPLICATION_JSON
           - name: JAVA_OPTS
-            value: -Xms400m -Xmx400m -javaagent:/newrelic.jar
+            value: -Xms800m -Xmx800m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
-            value: "ifs-survey-service (${openshiftEnv})"
+            value: "ifs-survey-data-service (${openshiftEnv})"
         ports:
           - containerPort: 8080
         resources:
