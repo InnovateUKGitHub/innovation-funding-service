@@ -20,12 +20,7 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment as a Service POC',size='govuk-heading-l'" />
 
         <p class="govuk-body">Upload files</p>
-        <span class="govuk-hint">For POC Luke's decision is to make use of one simple csv which has the minimum data- such as
-            "Competition Name, Application Name, Question and Respone". Later this can be modified in the original work comes into picture.
-            Once the csv got uploaded,  in the background the competition/application/questions/responses are created in our DB with the default data
-            (may need to change in the later stage).
-        </span>
-        <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{type}')} ? 'govuk-form-group--error'">
             <!--    <label class="govuk-label govuk-label--s" for="type">
                     Type
