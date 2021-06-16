@@ -666,6 +666,6 @@ the internal user approves the exploitation plan
     the user navigates to the page      ${server}/project-setup-management/project/${project_ids["PSC application 20"]}/document/all
     the user clicks the button/link     link = Exploitation plan
     internal user approve uploaded documents
-    the user clicks the button/link     link = Back to documents
+    the user clicks the button/link     link = Return to documents
     the user navigates to the page      ${server}/project-setup-management/competition/${competition_ids["Project Setup Comp 20"]}/status
     the user should see the element     css = #table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.ok

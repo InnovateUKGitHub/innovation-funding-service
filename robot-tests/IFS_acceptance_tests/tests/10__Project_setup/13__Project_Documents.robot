@@ -264,7 +264,7 @@ Internal finance cannot approve Exploitation or Collaboration documents
     And the user navigates to the page            ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link          link = Collaboration agreement
     Then the user cannot approve the document     approved   true
-    And the user clicks the button/link           link = Back to documents
+    And the user clicks the button/link           link = Return to documents
     And the user clicks the button/link           link = Exploitation plan
     And the user cannot approve the document      approved   true
 
@@ -274,7 +274,7 @@ Comp admin cannot approve Exploitation or Collaboration documents
     And the user navigates to the page            ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link          link = Collaboration agreement
     Then the user cannot approve the document     approved   true
-    And the user clicks the button/link           link = Back to documents
+    And the user clicks the button/link           link = Return to documents
     And the user clicks the button/link           link = Exploitation plan
     And the user cannot approve the document      approved   true
 
@@ -397,7 +397,7 @@ ifsAdmin approves both documents
     Given the user navigates to the page              ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link              link = Collaboration agreement
     Then internal user approve uploaded documents
-    When the user goes to documents page              Back to documents  Exploitation plan
+    When the user goes to documents page              Return to documents  Exploitation plan
     Then internal user approve uploaded documents
 
 Partners can see the documents approved
@@ -508,7 +508,7 @@ ifsadmin approves all documents
     the user navigates to the page        ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
     the user clicks the button/link        link = Collaboration agreement
     ifs admin approves uploaded documents
-    the user goes to documents page        Back to documents  Exploitation plan
+    the user goes to documents page        Return to documents  Exploitation plan
     ifs admin approves uploaded documents
     the user navigates to the page        ${SERVER}/project-setup-management/competition/${PS_Competition_Id}/project/${Grade_Crossing_Project_Id}/team
 

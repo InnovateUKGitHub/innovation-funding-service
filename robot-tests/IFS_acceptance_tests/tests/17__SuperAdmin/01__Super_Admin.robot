@@ -65,7 +65,7 @@ Super admin can reject an approved document
     And the user should see the element       jQuery = li:nth-child(1) span:contains("Approved")
     When the user rejects the document
     Then the user should see the element      jQuery = p:contains("You have rejected this document. Please contact the Project Manager to explain your decision.")
-    And the user clicks the button/link       jQuery = a:contains("Back to documents")
+    And the user clicks the button/link       jQuery = a:contains("Return to documents")
     And the user should see the element       jQuery = div span:contains("Rejected")
 
 Super admin user cannot reject a document once the project is completed
