@@ -263,6 +263,26 @@ Lead partner can still view both documents after submitting
     When the user goes to documents page    Return to documents  Collaboration agreement
     Then open pdf link                      jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
+Internal finance cannot approve Exploitation or Collaboration documents
+    [Documentation]   IFS-9579
+    Given log in as a different user              &{internal_finance_credentials} 
+    And the user navigates to the page            ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
+    When the user clicks the button/link          link = Collaboration agreement
+    Then the user cannot approve the document     approved   true
+    And the user clicks the button/link           link = Return to documents
+    And the user clicks the button/link           link = Exploitation plan
+    And the user cannot approve the document      approved   true
+
+Comp admin cannot approve Exploitation or Collaboration documents
+    [Documentation]   IFS-9579
+    Given log in as a different user              &{Comp_admin1_credentials}   
+    And the user navigates to the page            ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
+    When the user clicks the button/link          link = Collaboration agreement
+    Then the user cannot approve the document     approved   true
+    And the user clicks the button/link           link = Return to documents
+    And the user clicks the button/link           link = Exploitation plan
+    And the user cannot approve the document      approved   true
+
 Non-lead partner cannot remove the documents after submission by PM
     [Documentation]  INFUND-3012
     [Tags]
@@ -464,9 +484,8 @@ PM uploads documents and the MO receives an email
 Assign a MO to the project
     [Documentation]  IFS-9577
     [Setup]  log in as a different user            &{Comp_admin1_credentials}
-    Given the user navigates to the page           ${server}/project-setup-management/competition/${PS_Competition_Id}/status/all?page=2
-    When the user clicks the button/link           css = #table-project-status tr:nth-child(4) > td:nth-child(5) a
-    And search for MO                              Orvill  Orville Gibbs
+    Given the user navigates to the page           ${server}/project-setup-management/monitoring-officer/view-all?ktp=false
+    When search for MO                              Orvill  Orville Gibbs
     Then the user should see the element           jQuery = span:contains("Assign projects to Monitoring Officer")
     And the internal user assign project to MO     ${MO_DocApproval_application_No}   ${MO_DocApproval_application_Title}
 
@@ -586,9 +605,6 @@ MO reject uploaded documents
     the user should see the element                 jQuery = p:contains("You have rejected this document. Please contact the Project Manager to explain your decision.")
     the user clicks the button/link                 jQuery = a:contains("Return to documents")
 
-MO approves uploaded documents
-    the user selects the radio button     approved   true
-    the user clicks the button/link       id = submit-button
-    the user clicks the button/link       id = accept-document
-    the user should see the element       jQuery = p:contains("You have approved this document.")
-    the user clicks the button/link       jQuery = a:contains("Return to documents")
+the user cannot approve the document
+    [Arguments]    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
+    the user should not see the element     css=[name^="${RADIO_BUTTON}"][value="${RADIO_BUTTON_OPTION}"] ~ label, [id="${RADIO_BUTTON_OPTION}"] ~ label
