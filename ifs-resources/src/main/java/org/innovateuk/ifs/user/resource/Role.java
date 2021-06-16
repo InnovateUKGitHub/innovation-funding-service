@@ -31,7 +31,8 @@ public enum Role implements Identifiable {
     KNOWLEDGE_TRANSFER_ADVISER  (23, "Knowledge transfer adviser", Authority.KNOWLEDGE_TRANSFER_ADVISER, Authority.ASSESSOR, Authority.MONITORING_OFFICER),
     SUPPORTER                   (24, "Supporter", Authority.SUPPORTER),
     SUPER_ADMIN_USER            (25, "Super Admin User", Authority.SUPER_ADMIN_USER, Authority.IFS_ADMINISTRATOR, Authority.PROJECT_FINANCE, Authority.COMP_ADMIN),
-    AUDITOR                     (26, "Auditor", Authority.STAKEHOLDER, Authority.PROJECT_FINANCE);
+    AUDITOR                     (26, "Auditor", Authority.AUDITOR, Authority.STAKEHOLDER);
+
 
     final long id;
     final String displayName;
