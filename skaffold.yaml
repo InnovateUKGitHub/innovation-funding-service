@@ -4,13 +4,13 @@ metadata:
   name: innovation-funding-service
 build:
   artifacts:
-#    - image: innovateuk/data-service
-#      context: .
-#      jib:
-#        type: gradle
-#        project: ifs-data-layer:ifs-data-service
-#        args:
-#          - "-DskipTests"
+    - image: innovateuk/data-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-data-layer:ifs-data-service
+        args:
+          - "-DskipTests"
     - image: innovateuk/finance-data-service
       context: .
       jib:
@@ -105,6 +105,8 @@ deploy:
   kustomize:
     paths:
       - os-files/kustomize/overlays/local
+      - os-files/kustomize/overlays/sysint
+      - os-files/kustomize/overlays/demo
 
 #portForward:
 #  - resourceType: service
