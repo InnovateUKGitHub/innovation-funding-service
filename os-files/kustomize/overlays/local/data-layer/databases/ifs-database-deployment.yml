@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ifs-database
+  annotations:
+    pullSecrets: pullSecrets
 spec:
   replicas: 1
   selector:
@@ -12,8 +14,6 @@ spec:
       labels:
         app: ifs-database
     spec:
-      imagePullSecrets:
-        - name: regcred
       containers:
         - env:
             - name: MYSQL_ROOT_PASSWORD

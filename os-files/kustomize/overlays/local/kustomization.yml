@@ -6,19 +6,26 @@ bases:
   - ../../base
 
 patches:
-  - path: data-layer/patches/waitdb-init-container.yml
-    target:
-      kind: Deployment
-      annotationSelector: "waitForDb=waitForDb"
+- path: data-layer/patches/waitdb-init-container.yml
+  target:
+    kind: Deployment
+    annotationSelector: "waitForDb=waitForDb"
+
+- path: patches/pull-secrets-patch.yml
+  target:
+    kind: Deployment
+    annotationSelector: "pullSecrets=pullSecrets"
 
 resources:
   - spring-config.yml
   - data-layer/databases/ifs-database.yml
   - data-layer/databases/ifs-database-deployment.yml
   - data-layer/databases/mysql-configmap.yml
-  - mail/mail-service.yml
-  - mail/mail-config.yml
-  - mail/mail-service-deployment.yml
+#  - mail/mail-service.yml
+#  - mail/mail-config.yml
+#  - mail/mail-service-deployment.yml
+  - cache-provider/cache-provider-service.yml
+  - cache-provider/cache-provider-service-deployment.yml
 
 patchesStrategicMerge:
   - cache-config.yml
@@ -26,6 +33,9 @@ patchesStrategicMerge:
   - data-layer/data-service/data-service-config.yml
   - data-layer/finance-data-service/finance-data-service-config.yml
   - data-layer/survey-data-service/survey-data-service-config.yml
+  - auth/idp/shibboleth-config.yml
+  - auth/idp/idp-config.yml
+  - auth/ldap/ldap-config.yml
   - feature-toggle-config.yml
   - new-relic-config.yml
   - web-config.yml

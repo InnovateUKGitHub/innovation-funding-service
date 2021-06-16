@@ -6,10 +6,10 @@ commonAnnotations:
   environment: base
 
 patches:
-- path: patches/health-check-patch.yml
+- path: patches/pull-secrets-patch.yml
   target:
     kind: Deployment
-    annotationSelector: "monitor=monitor"
+    annotationSelector: "pullSecrets=pullSecrets"
 
 - path: patches/spring-profiles-active-env.yml
   target:
@@ -21,13 +21,16 @@ patches:
     kind: Deployment
     annotationSelector: "waitForDb=waitForDb"
 
+- path: patches/pull-secrets-patch.yml
+  target:
+    kind: Deployment
+
 resources:
 ###############################################################################
 ############### Auth ##########################################################
 ###############################################################################
   - auth/idp/idp.yml
   - auth/idp/idp-deployment.yml
-  - auth/idp/sp-secrets.yml
   - auth/idp/idp-keys-secrets.yml
   - auth/idp/idp-config.yml
   - auth/idp/shibboleth-config.yml
@@ -38,31 +41,32 @@ resources:
   - auth/sp/sp.yml
   - auth/sp/sp-deployment.yml
   - auth/sp/sp-keys-secrets.yml
+  - auth/sp/sp-secrets.yml
 ###############################################################################
 
-###############################################################################
-############### Data Services #################################################
-###############################################################################
+################################################################################
+################ Data Services #################################################
+################################################################################
   - data-layer/db-config.yml
   # data service
   - data-layer/data-service/data-service.yml
   - data-layer/data-service/data-service-config.yml
   - data-layer/data-service/data-service-deployment.yml
   # data service alerts
-  - data-layer/data-service-alerts/data-service-alerts.yml
-  - data-layer/data-service-alerts/data-service-alerts-deployment.yml
+#  - data-layer/data-service-alerts/data-service-alerts.yml
+#  - data-layer/data-service-alerts/data-service-alerts-deployment.yml
   # finance data service
   - data-layer/finance-data-service/finance-data-service.yml
   - data-layer/finance-data-service/finance-data-service-config.yml
   - data-layer/finance-data-service/finance-data-service-deployment.yml
   # survey data service
-  - data-layer/survey-data-service/survey-data-service.yml
-  - data-layer/survey-data-service/survey-data-service-deployment.yml
-################################################################################
-
-###############################################################################
-############### Web Layer #####################################################
-###############################################################################
+#  - data-layer/survey-data-service/survey-data-service.yml
+#  - data-layer/survey-data-service/survey-data-service-deployment.yml
+##################################################################################
+#
+#################################################################################
+################# Web Layer #####################################################
+#################################################################################
   # application service
   - web-layer/application-service/application-service.yml
   - web-layer/application-service/application-service-deployment.yml
@@ -84,11 +88,11 @@ resources:
   # registration service
   - web-layer/registration-service/registration-service.yml
   - web-layer/registration-service/registration-service-deployment.yml
-  # registration service
-  - web-layer/survey-service/survey-service.yml
-  - web-layer/survey-service/survey-service-deployment.yml
-################################################################################
-################################################################################
+  # survey service
+#  - web-layer/survey-service/survey-service.yml
+#  - web-layer/survey-service/survey-service-deployment.yml
+##################################################################################
+##################################################################################
 
   # config-maps
   - cache-config.yml

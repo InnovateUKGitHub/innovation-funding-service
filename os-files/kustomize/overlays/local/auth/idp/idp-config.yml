@@ -3,4 +3,4 @@ apiVersion: v1
 metadata:
   name: idp-config
 data:
-  RESOURCE_DOMAIN: "${RESOURCE_DOMAIN}"
+  RESOURCE_DOMAIN: ""

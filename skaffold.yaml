@@ -4,20 +4,6 @@ metadata:
   name: innovation-funding-service
 build:
   artifacts:
-
-    - image: ldap
-      context: ifs-auth-service/ifs-ldap-service/src/main/docker
-      docker:
-        dockerfile: Dockerfile-template
-    - image: sp
-      context: ifs-auth-service/ifs-sp-service/src/main/docker
-      docker:
-        dockerfile: Dockerfile-template
-    - image: idp
-      context: ifs-auth-service/ifs-idp-service/src/main/docker
-      docker:
-        dockerfile: Dockerfile-skaffold
-
     - image: innovateuk/data-service
       context: .
       jib:
@@ -32,27 +18,27 @@ build:
         project: ifs-data-layer:ifs-finance-data-service
         args:
           - "-DskipTests"
-    - image: innovateuk/survey-data-service
-      context: .
-      jib:
-        type: gradle
-        project: ifs-data-layer:ifs-survey-data-service
-        args:
-          - "-DskipTests"
-    - image: innovateuk/data-service-alerts
-      context: .
-      jib:
-        type: gradle
-        project: ifs-data-layer:data-service-alerts
-        args:
-          - "-DskipTests"
-    - image: innovateuk/survey-service
-      context: .
-      jib:
-        type: gradle
-        project: ifs-web-service:ifs-survey-service
-        args:
-          - "-DskipTests"
+#    - image: innovateuk/survey-data-service
+#      context: .
+#      jib:
+#        type: gradle
+#        project: ifs-data-layer:ifs-survey-data-service
+#        args:
+#          - "-DskipTests"
+#    - image: innovateuk/data-service-alerts
+#      context: .
+#      jib:
+#        type: gradle
+#        project: ifs-data-layer:data-service-alerts
+#        args:
+#          - "-DskipTests"
+#    - image: innovateuk/survey-service
+#      context: .
+#      jib:
+#        type: gradle
+#        project: ifs-web-service:ifs-survey-service
+#        args:
+#          - "-DskipTests"
     - image: innovateuk/project-setup-service
       context: .
       jib:
@@ -119,3 +105,21 @@ deploy:
   kustomize:
     paths:
       - os-files/kustomize/overlays/local
+
+#portForward:
+#  - resourceType: service
+#    resourceName: shib
+#    port: 443
+#    localPort: 8443
+#  - resourceType: service
+#    resourceName: idp
+#    port: 443
+#    localPort: 9443
+#  - resourceType: service
+#    resourceName: application-svc
+#    port: 8080
+#    localPort: 8080
+#  - resourceType: service
+#    resourceName: ifs-database
+#    port: 3306
+#    localPort: 3306

@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mail
+  name: cache-provider
   annotations:
     pullSecrets: pullSecrets
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mail
+      app: cache-provider
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -17,21 +17,16 @@ spec:
   template:
     metadata:
       labels:
-        app: mail
+        app: cache-provider
     spec:
       containers:
-        - image: docker-ifs.devops.innovateuk.org/releases/mail-sink:1.0.0
-          name: mail-container
+        - image: docker-ifs.devops.innovateuk.org/releases/cache-provider:5.0.5
+          name: cache-contianer
           imagePullPolicy: IfNotPresent
-          env:
-            - name: FQDN
-              value: ${MAIL_ADDRESS}
           ports:
-            - containerPort: 8025
-            - containerPort: 4443
-            - containerPort: 8143
+            - containerPort: 6379
           resources:
             requests:
               memory: 50M
             limits:
-              memory: 60M
+              memory: 100M

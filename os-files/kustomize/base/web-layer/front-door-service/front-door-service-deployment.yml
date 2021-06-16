@@ -4,6 +4,7 @@ metadata:
   name: front-door-svc
   annotations:
     monitor: monitor
+    pullSecrets: pullSecrets
 spec:
   replicas: 1
   selector:
