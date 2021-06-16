@@ -21,9 +21,6 @@ patches:
     kind: Deployment
     annotationSelector: "waitForDb=waitForDb"
 
-- path: patches/pull-secrets-patch.yml
-  target:
-    kind: Deployment
 
 resources:
 ###############################################################################
