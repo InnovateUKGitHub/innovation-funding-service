@@ -155,8 +155,8 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
         when(assessorCompetitionSummaryRestService.getAssessorSummary(assessorId, competitionId))
                 .thenReturn(restSuccess(assessorCompetitionSummaryResource));
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId, 0, Sort.APPLICATION_NUMBER, "")).thenReturn(restSuccess(expectedPageResource));
-        when(applicationCountSummaryRestService.getApplicationIdsByCompetitionIdAndAssessorId(competitionResource.getId(), assessorId, "")).thenReturn(restSuccess(asList(1L, 21L)));
+        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId, assessmentPeriodId, 0, Sort.APPLICATION_NUMBER, "")).thenReturn(restSuccess(expectedPageResource));
+        when(applicationCountSummaryRestService.getApplicationIdsByCompetitionIdAndAssessorId(competitionResource.getId(), assessorId, assessmentPeriodId, "")).thenReturn(restSuccess(asList(1L, 21L)));
         when(assessmentPeriodService.assessmentPeriodName(assessmentPeriodId, competitionResource.getId())).thenReturn("name");
 
         MvcResult result = mockMvc.perform(get("/assessment/competition/{competitionId}/assessors/{assessorId}/period/{assessmentPeriodId}", competitionId, assessorId, assessmentPeriodId))
@@ -248,8 +248,8 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
 
         when(assessorCompetitionSummaryRestService.getAssessorSummary(assessorId, competitionResource.getId())).thenReturn(restSuccess(summaryResource));
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionResource.getId(), assessorId,  1, Sort.APPLICATION_NUMBER, "")).thenReturn(restSuccess(expectedPageResource));
-        when(applicationCountSummaryRestService.getApplicationIdsByCompetitionIdAndAssessorId(competitionResource.getId(), assessorId, "")).thenReturn(restSuccess(asList(1L, 21L)));
+        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionResource.getId(), assessorId, assessmentPeriodId, 1, Sort.APPLICATION_NUMBER, "")).thenReturn(restSuccess(expectedPageResource));
+        when(applicationCountSummaryRestService.getApplicationIdsByCompetitionIdAndAssessorId(competitionResource.getId(), assessorId, assessmentPeriodId, "")).thenReturn(restSuccess(asList(1L, 21L)));
         when(assessmentPeriodService.assessmentPeriodName(assessmentPeriodId, competitionResource.getId())).thenReturn("name");
         AssessorAssessmentProgressViewModel model = (AssessorAssessmentProgressViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/assessors/{assessorId}/period/{assessmentPeriodId}?page=2", competitionResource.getId(), assessorId, assessmentPeriodId))
                 .andExpect(status().isOk())

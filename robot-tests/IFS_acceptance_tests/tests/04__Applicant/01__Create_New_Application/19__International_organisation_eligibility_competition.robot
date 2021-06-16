@@ -21,6 +21,8 @@ Documentation     IFS-7195  Organisational eligibility category in Competition s
 ...
 ...               IFS-8847 Always open competitions: new comp setup configuration
 ...
+...               IFS-9579 MO documents: Change of internal approve/reject authority
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin Applicant
@@ -606,14 +608,14 @@ Partner applicant can upload appendix file
     Then the lead can see multiple appendices uploaded to the technical approach question
 
 Uk based lead applicant moves application to project setup and generates GOL
-    [Documentation]  IFS-7197
+    [Documentation]  IFS-7197  IFS-9579
     [Tags]  HappyPath
     When international partner submits finance details
     Then Uk lead submits international competition application to assesment
     And Uk lead completes project setup details and generated GOL
 
 GOL template to be updated with country for correspondents address
-    [Documentation]     IFS - 7241
+    [Documentation]     IFS - 7241  IFS-9579
     Given the user complete all sections of the project setup and generates GOL
     When the user navigates to the page                                            ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/template
     Then element should contain                                                    xpath = //p[1]     Argentina
@@ -1085,7 +1087,7 @@ the user complete all sections of the project setup and generates GOL
     Requesting test empire organisation ID of this Project
     Requesting innovate uk organisation ID of this Project
     project manager submits documents                                   ${lead_international_email}   ${short_password}   ${ProjectID}
-    project finance approves both documents                             ${ProjectID}
+    ifs admin approves both documents                                   ${ProjectID}
     project finance approves Viability for                              ${organisationTestEmpireOneID}        ${ProjectID}
     project finance approves Viability for                              ${organisationUiveristyOfLiverPoolId}    ${ProjectID}
     project finance approves Viability for                              ${organistaionTestEmpireID}       ${ProjectID}
@@ -1213,7 +1215,7 @@ Uk lead completes project setup details and generated GOL
     UK lead applicant enters correspondence address
     partner submits the project and team details                                        ${partner_international_email}   ${short_password}  ${ukLeadApplicationProjectID}
     project manager submits documents                                                   ${lead_applicant}    ${short_password}  ${ukLeadApplicationProjectID}
-    project finance approves both documents                                             ${ukLeadApplicationProjectID}
+    ifs admin approves both documents                                                   ${ukLeadApplicationProjectID}
     ifs finance user approves bank details of uk based partner
     ifs admin assigns MO to the competition in project setup                            ${ukLeadApplicationID}   ${ukLeadInternationalApplicationTitle}
     project finance approves Viability for                                              ${organistaionOrg2}        ${ukLeadApplicationProjectID}
