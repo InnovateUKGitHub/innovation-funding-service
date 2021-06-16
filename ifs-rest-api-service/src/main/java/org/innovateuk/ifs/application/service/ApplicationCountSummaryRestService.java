@@ -19,11 +19,13 @@ public interface ApplicationCountSummaryRestService {
 
     RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessorId(long competitionId,
                                                                                                               long assessorId,
+                                                                                                              long assessmentPeriodId,
                                                                                                               int page,
                                                                                                               Sort sort,
                                                                                                               String filter);
 
     RestResult<List<Long>> getApplicationIdsByCompetitionIdAndAssessorId(long competitionId,
                                                                          long assessorId,
+                                                                         long assessmentPeriodId,
                                                                          String filter);
 }
