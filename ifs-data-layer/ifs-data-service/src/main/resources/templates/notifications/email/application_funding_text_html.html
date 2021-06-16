@@ -2,12 +2,19 @@
 <#import "layout/default.html" as layout>
 <@layout.default>
   <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
-  <p style="margin: 0 0 1em 0;"><strong>
+  <p style="margin: 0 0 1em 0;">
       Innovate UK<br/>
       ${competitionName}<br/>
-      ${applicationName}<br/>
-      <#if averageAssessorScore??>${averageAssessorScore}<br/></#if>
-  </strong></p>
+      ${applicationName}<br/><br/>
+      <#if averageAssessorScore??>${averageAssessorScore}<br/><br/></#if>
+      <#if alwaysOpen>
+          Thank you for submitting your application <strong>${applicationId}: ${applicationName}</strong> to Innovate UK for
+          the competition:<br/>
+          <strong>${competitionId}: ${competitionName}</strong><br/><br/>
+          Feedback is now available for you to view on the <a href="${webBaseUrl}">Innovation Funding Service</a>.
+      </#if>
+
+  </p>
   <p style="margin: 0 0 1em 0;">${message?no_esc}</p>
   <p style="margin: 0 0 1em 0;">Yours sincerely,</p>
   <@layout.senderHTML />

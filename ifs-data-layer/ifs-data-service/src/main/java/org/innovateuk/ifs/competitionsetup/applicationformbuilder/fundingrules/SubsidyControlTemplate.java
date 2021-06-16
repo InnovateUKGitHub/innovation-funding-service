@@ -65,7 +65,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
             return competitionTypeSections;
         }
 
-        if (northernIrelandSubsidyControlModeDisabled() || generatingWebtestDataForComp(competition)) {
+        if (!northernIrelandSubsidyControlToggle || generatingWebtestDataForComp(competition)) {
             insertNorthernIrelandTacticalDeclaration(competitionTypeSections);
         } else if (northernIrelandSubsidyControlToggle) {
             competitionTypeSections.get(0)
@@ -88,10 +88,6 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
                 && competition.getName().contains("Subsidy control tactical");
     }
 
-    private boolean northernIrelandSubsidyControlModeDisabled() {
-        return !northernIrelandSubsidyControlToggle;
-    }
-
     private static void insertNorthernIrelandTacticalDeclaration(List<SectionBuilder> sectionBuilders) {
         sectionBuilders.stream()
                 .filter(section -> SectionType.PROJECT_DETAILS == section.getType())
@@ -102,7 +98,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
     private static QuestionBuilder northernIrelandTacticalDeclaration() {
         return aQuestion()
                 .withShortName("Subsidy basis")
-                .withName("Is your company based in Northern Ireland and/or are you planning to undertake any work for which you are seeking Innovate UK funding in Northern Ireland?")
+                .withName("Will the project, including any related activities you want Innovate UK to fund, affect trade between Northern Ireland and the EU?")
                 .withAssignEnabled(false)
                 .withMarkAsCompletedEnabled(true)
                 .withMultipleStatuses(true)

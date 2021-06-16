@@ -22,8 +22,8 @@ public class DatesViewModel extends AbstractPublicContentViewModel {
 
     public List<DateViewModel> getSortedEvents() {
         List<DateViewModel> listToBeSorted = getPublicContentDates();
-        List<DateViewModel> emptyDates = new ArrayList();
-        List<DateViewModel> sortedList = new ArrayList();
+        List<DateViewModel> emptyDates = new ArrayList<>();
+        List<DateViewModel> sortedList = new ArrayList<>();
 
         listToBeSorted.stream()
                 .filter(dateViewModel -> null != dateViewModel.getDateTime())

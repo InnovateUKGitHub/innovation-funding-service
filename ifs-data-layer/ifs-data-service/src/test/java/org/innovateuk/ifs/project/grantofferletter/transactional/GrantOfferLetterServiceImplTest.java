@@ -7,14 +7,11 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.docusign.domain.DocusignDocument;
 import org.innovateuk.ifs.docusign.resource.DocusignType;
 import org.innovateuk.ifs.docusign.transactional.DocusignService;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.grant.repository.GrantProcessConfigurationRepository;
-import org.innovateuk.ifs.grant.service.GrantProcessService;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -25,12 +22,10 @@ import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
-import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.repository.CostRepository;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
-import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
@@ -153,22 +148,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     private CostRepository costRepository;
 
     @Mock
-    private GrantProcessService grantProcessService;
-
-    @Mock
     private DocusignService docusignService;
-
-    @Mock
-    private CompetitionRepository competitionRepository;
-
-    @Mock
-    private GrantProcessConfigurationRepository grantProcessConfigurationRepository;
-
-    @Mock
-    private ProjectUserRepository projectUserRepository;
-
-    @Mock
-    private GrantOfferLetterProcessRepository grantOfferLetterProcessRepository;
 
     @Before
     public void setUp() {
@@ -472,7 +452,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         assertEquals(existingGOLFile, project.getGrantOfferLetter());
 
         verify(golWorkflowHandler).removeGrantOfferLetter(project, internalUser);
-        verify(fileServiceMock, never()).deleteFile(existingGOLFile.getId());
+        verify(fileServiceMock, never()).deleteFileIgnoreNotFound(existingGOLFile.getId());
     }
 
     @Test

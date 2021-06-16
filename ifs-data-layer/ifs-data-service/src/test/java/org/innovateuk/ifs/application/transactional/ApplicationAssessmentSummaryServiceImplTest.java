@@ -29,12 +29,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static java.util.Arrays.asList;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
@@ -43,7 +44,9 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
@@ -172,7 +175,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withCompetitionName(application.getCompetition().getName())
                 .withLeadOrganisation("Liquid Dynamics")
                 .withCompetitionStatus(CLOSED)
-                .withPartnerOrganisations(asList("Acme Ltd.", "IO systems"))
+                .withPartnerOrganisations(newArrayList("Acme Ltd.", "IO systems"))
                 .build();
 
         when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
@@ -220,7 +223,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withCompetitionName(application.getCompetition().getName())
                 .withLeadOrganisation("")
                 .withCompetitionStatus(CLOSED)
-                .withPartnerOrganisations(asList("Acme Ltd.", "IO systems", "Liquid Dynamics"))
+                .withPartnerOrganisations(newArrayList("Acme Ltd.", "IO systems", "Liquid Dynamics"))
                 .build();
 
         when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
@@ -252,6 +255,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         .build())
                 .withCompetition(newCompetition()
                         .withName("Connected digital additive manufacturing")
+                        .withAssessmentPeriods(newAssessmentPeriod().build(1))
                         .withCompetitionStatus(FUNDERS_PANEL)
                         .build())
                 .withProcessRoles(newProcessRole()
@@ -268,7 +272,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withCompetitionName(application.getCompetition().getName())
                 .withLeadOrganisation("Liquid Dynamics")
                 .withCompetitionStatus(FUNDERS_PANEL)
-                .withPartnerOrganisations(asList("Acme Ltd.", "IO systems"))
+                .withPartnerOrganisations(newArrayList("Acme Ltd.", "IO systems"))
                 .build();
 
         when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
@@ -301,6 +305,11 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         .withName("Digital Manufacturing")
                         .build())
                 .withCompetition(newCompetition()
+                        .withAssessmentPeriods(
+                                newAssessmentPeriod().withMilestones(
+                                        newMilestone()
+                                                .build(1))
+                                        .build(1))
                         .withName("Connected digital additive manufacturing")
                         .withCompetitionStatus(FUNDERS_PANEL)
                         .build())
@@ -318,7 +327,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withCompetitionName(application.getCompetition().getName())
                 .withLeadOrganisation("Acme Ltd.")
                 .withCompetitionStatus(FUNDERS_PANEL)
-                .withPartnerOrganisations(asList("Liquid Dynamics", "Piezo Electrics"))
+                .withPartnerOrganisations(newArrayList("Liquid Dynamics", "Piezo Electrics"))
                 .build();
 
         when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
@@ -341,7 +350,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         long applicationId = 1L;
         long competitionId = 2L;
         String filter = "Filter";
-        List<Long> expectedIds = asList(1L, 2L);
+        List<Long> expectedIds = newArrayList(1L, 2L);
 
         when(applicationRepositoryMock.findById(applicationId)).thenReturn(of(newApplication().withCompetition(newCompetition().withId(competitionId).build()).build()));
         when(assessmentParticipantRepositoryMock.findAvailableAssessorIdsForApplication(competitionId, applicationId, filter)).thenReturn(expectedIds);

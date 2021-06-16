@@ -132,12 +132,14 @@ public abstract class BaseBuilder<T, S> implements Builder<T, S> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T[] buildArray(int numberToBuild, Class<T> clazz) {
         build(numberToBuild);
         return build(numberToBuild).toArray((T[]) Array.newInstance(clazz, numberToBuild));
     }
 
-    protected <T> T newInstance(Class<T> clazz) {
+    @SuppressWarnings("unchecked")
+    protected T newInstance(Class<T> clazz) {
         try {
             Optional<? extends Constructor<?>> ctor =
                     stream(clazz.getDeclaredConstructors()).filter(c -> c.getParameters().length == 0).findFirst();

@@ -7,6 +7,8 @@ import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(
@@ -22,6 +24,12 @@ public abstract class AssessmentPeriodMapper extends BaseResourceMapper<Assessme
         this.repository = repository;
     }
 
+    @Mappings({
+            @Mapping(target = "competitionId", ignore = true),
+            @Mapping(source = "open", target = "open"),
+            @Mapping(source = "inAssessment", target = "inAssessment"),
+            @Mapping(source = "assessmentClosed", target = "assessmentClosed"),
+    })
     @Override
     public abstract AssessmentPeriodResource mapToResource(AssessmentPeriod domain);
 

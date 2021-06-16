@@ -20,11 +20,12 @@ public class AssessorCountSummaryController {
 
     private static final String DEFAULT_PAGE_SIZE = "20";
 
-    @GetMapping("/find-by-competition-id/{competitionId}")
-    public RestResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(@PathVariable("competitionId") long competitionId,
+    @GetMapping("/find-by-competition-id-and-assessment-period-id/{competitionId}/{assessmentPeriodId}")
+    public RestResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionIdAndAssessmentPeriodId(@PathVariable("competitionId") long competitionId,
+                                                                                                 @PathVariable("assessmentPeriodId") long assessmentPeriodId,
                                                                                                  @RequestParam(value = "assessorNameFilter", defaultValue = "") String assessorNameFilter,
                                                                                                  @RequestParam(value = "page",defaultValue = "0") int pageIndex,
                                                                                                  @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
-        return assessorCountSummaryService.getAssessorCountSummariesByCompetitionId(competitionId, trim(assessorNameFilter), pageIndex, pageSize).toGetResponse();
+        return assessorCountSummaryService.getAssessorCountSummariesByCompetitionIdAndAssessmentPeriodId(competitionId, assessmentPeriodId, trim(assessorNameFilter), pageIndex, pageSize).toGetResponse();
     }
 }

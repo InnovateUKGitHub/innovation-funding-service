@@ -39,7 +39,7 @@ public abstract class CompetitionParticipant<I extends Invite<Competition, I>> e
     @JoinColumn(name = "rejection_reason_id")
     private RejectionReason rejectionReason;
 
-    @Column(name = "rejection_comment")
+    @Column(name = "rejection_comment", columnDefinition = "LONGTEXT")
     private String rejectionReasonComment;
 
     @Enumerated(EnumType.STRING)

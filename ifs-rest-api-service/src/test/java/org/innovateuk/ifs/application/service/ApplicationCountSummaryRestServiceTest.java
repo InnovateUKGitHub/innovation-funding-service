@@ -21,34 +21,34 @@ public class ApplicationCountSummaryRestServiceTest extends BaseRestServiceUnitT
 
     @Test
     public void getApplicationCountSummariesByCompetitionId() {
-        String expectedUrl = "/application-count-summary/find-by-competition-id/1?filter=filter&page=2&size=3";
+        String expectedUrl = "/application-count-summary/find-by-competition-id-and-assessment-period-id/1/2?filter=filter&page=2&size=3";
         ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
 
         setupGetWithRestResultExpectations(expectedUrl, ApplicationCountSummaryPageResource.class, pageResource, OK);
 
-        ApplicationCountSummaryPageResource result = service.getApplicationCountSummariesByCompetitionId(1L, 2, 3, "filter").getSuccess();
+        ApplicationCountSummaryPageResource result = service.getApplicationCountSummariesByCompetitionIdAndAssessmentPeriodId(1L, 2, 2, 3, "filter").getSuccess();
         Assert.assertEquals(pageResource, result);
     }
 
     @Test
     public void getApplicationCountSummariesByCompetitionIdAndAssessorId() {
-        String expectedUrl = "/application-count-summary/find-by-competition-id-and-assessor-id/1/10?page=2&filter=filter&sort=ASSESSORS";
+        String expectedUrl = "/application-count-summary/find-by-competition-id-and-assessor-id-and-assessment-period-id/1/10/10?page=2&filter=filter&sort=ASSESSORS";
         ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
 
         setupGetWithRestResultExpectations(expectedUrl, ApplicationCountSummaryPageResource.class, pageResource, OK);
 
-        ApplicationCountSummaryPageResource result = service.getApplicationCountSummariesByCompetitionIdAndAssessorId(1L, 10L,2, Sort.ASSESSORS, "filter").getSuccess();
+        ApplicationCountSummaryPageResource result = service.getApplicationCountSummariesByCompetitionIdAndAssessorId(1L, 10L, 10L,2,  Sort.ASSESSORS, "filter").getSuccess();
         Assert.assertEquals(pageResource, result);
     }
 
     @Test
     public void getApplicationIdsByCompetitionIdAndAssessorId() {
-        String expectedUrl = "/application-count-summary/find-ids-by-competition-id-and-assessor-id/1/10?filter=filter";
+        String expectedUrl = "/application-count-summary/find-ids-by-competition-id-and-assessor-id-and-assessment-period-id/1/10/10?filter=filter";
         List<Long> list = asList(1L);
 
         setupGetWithRestResultExpectations(expectedUrl, longsListType(), list, OK);
 
-        List<Long> result = service.getApplicationIdsByCompetitionIdAndAssessorId(1L, 10L,"filter").getSuccess();
+        List<Long> result = service.getApplicationIdsByCompetitionIdAndAssessorId(1L, 10L,10L,"filter").getSuccess();
         Assert.assertEquals(list, result);
     }
 }

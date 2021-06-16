@@ -2,7 +2,6 @@ package org.innovateuk.ifs.organisation.transactional;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
@@ -63,4 +62,7 @@ public interface OrganisationService {
 
     @PreAuthorize("hasPermission(#organisation, 'UPDATE')")
     ServiceResult<List<OrganisationResource>> findOrganisationsByName(String organisationName);
+
+    @PreAuthorize("hasPermission(#organisation, 'UPDATE')")
+    ServiceResult<OrganisationResource> updateOrganisationName(Long organisationId, String name);
 }

@@ -13,20 +13,29 @@ public class ManageApplicationsViewModel {
     private List<ManageApplicationsRowViewModel> applications;
     private boolean inAssessment;
     private String filter;
+    private String assessmentPeriodName;
     private Pagination pagination;
+    private Long assessmentPeriodId;
+    private boolean alwaysOpen;
 
     public ManageApplicationsViewModel(Long competitionId,
                                        String competitionName,
+                                       Long assessmentPeriodId,
+                                       String assessmentPeriodName,
                                        List<ManageApplicationsRowViewModel> applications,
                                        boolean inAssessment,
+                                       boolean alwaysOpen,
                                        String filter,
                                        Pagination pagination) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
+        this.assessmentPeriodId = assessmentPeriodId;
+        this.assessmentPeriodName = assessmentPeriodName;
         this.applications = applications;
         this.inAssessment = inAssessment;
         this.filter = filter;
         this.pagination = pagination;
+        this.alwaysOpen = alwaysOpen;
     }
 
     public Long getCompetitionId() {
@@ -51,5 +60,17 @@ public class ManageApplicationsViewModel {
 
     public Pagination getPagination() {
         return pagination;
+    }
+
+    public String getAssessmentPeriodName() {
+        return assessmentPeriodName;
+    }
+
+    public Long getAssessmentPeriodId() {
+        return assessmentPeriodId;
+    }
+
+    public boolean isAlwaysOpen() {
+        return alwaysOpen;
     }
 }

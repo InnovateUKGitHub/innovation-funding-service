@@ -55,6 +55,11 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     }
 
     @Override
+    public RestResult<Long> countByStateAndAssessmentPeriod(AssessmentState state, long assessmentPeriodId) {
+        return getWithRestResult(format("%s/state/%s/assessment-period/%s/count", assessmentRestURL, state.getStateName(), assessmentPeriodId), Long.TYPE);
+    }
+
+    @Override
     public RestResult<AssessmentTotalScoreResource> getTotalScore(long id) {
         return getWithRestResult(format("%s/%s/score", assessmentRestURL, id), AssessmentTotalScoreResource.class);
     }
@@ -77,6 +82,11 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     @Override
     public RestResult<Void> withdrawAssessment(long id) {
         return putWithRestResult(format("%s/%s/withdraw", assessmentRestURL, id), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> unsubmitAssessment(long id) {
+        return putWithRestResult(format("%s/%s/unsubmit", assessmentRestURL, id), Void.class);
     }
 
     @Override

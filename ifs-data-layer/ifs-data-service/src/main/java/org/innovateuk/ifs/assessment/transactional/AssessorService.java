@@ -25,6 +25,12 @@ public interface AssessorService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(
+            value = "NOTIFY_ASSESSORS",
+            description = "Comp admins and execs can notify all assessors of their assignments for an assessment period")
+    ServiceResult<Void> notifyAssessorsByAssessmentPeriodId(long assessmentPeriodId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
+    @SecuredBySpring(
             value = "HAS_ASSESSMENTS",
             description = "Comp admins and execs can see if an assessor has any assessments assigned to them")
     ServiceResult<Boolean> hasApplicationsAssigned(long assessorId);

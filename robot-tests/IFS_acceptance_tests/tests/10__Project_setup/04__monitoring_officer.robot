@@ -306,7 +306,7 @@ The user is able to see Spend profile section
     the user clicks the button/link   jQuery = a:contains("Set up your project")
 
 Requesting IDs of this application
-    ${sbri_projectID} =  get project id by name    ${sbri_applicaton_name}
+    ${sbri_projectID} =  get project id by name     ${sbri_applicaton_name}
     Set suite variable    ${sbri_projectID}
 
 The SBRI MO assignee has been changed

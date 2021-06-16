@@ -30,7 +30,7 @@ import static java.lang.String.format;
  * This controller will handle all Competition Management requests related to allocating assessors to an Application.
  */
 @Controller
-@RequestMapping("/assessment/competition/{competitionId}/application/{applicationId}/assessors")
+@RequestMapping("/assessment/competition/{competitionId}/application/{applicationId}/period/{assessmentPeriodId}/assessors")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentApplicationProgressController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
 public class AssessmentApplicationProgressController extends CompetitionManagementCookieController<AvailableAssessorForm> {
@@ -61,18 +61,20 @@ public class AssessmentApplicationProgressController extends CompetitionManageme
                                       @ModelAttribute(name = SELECTION_FORM, binding = false) AvailableAssessorForm selectionForm,
                                       @PathVariable long applicationId,
                                       @PathVariable long competitionId,
+                                      @PathVariable long assessmentPeriodId,
                                       @RequestParam(value = "page", defaultValue = "1") int page,
                                       @RequestParam(value = "assessorNameFilter", defaultValue = "") String filter,
                                       @RequestParam(value = "sort", defaultValue = "ASSESSOR") Sort sort,
                                       HttpServletRequest request,
                                       HttpServletResponse response) {
         updateSelectionForm(request, response, competitionId, applicationId, selectionForm, filter);
-        return doProgressView(model, applicationId, filter, page - 1, sort);
+        return doProgressView(model, applicationId, assessmentPeriodId, filter, page - 1, sort);
     }
 
     @PostMapping
     public String assignAssessor(@PathVariable("competitionId") Long competitionId,
                                  @PathVariable("applicationId") Long applicationId,
+                                 @PathVariable long assessmentPeriodId,
                                  @ModelAttribute(SELECTION_FORM) AvailableAssessorForm selectionForm,
                                  HttpServletRequest request) {
         AvailableAssessorForm submittedSelectionForm = getSelectionFormFromCookie(request, competitionId)
@@ -80,18 +82,19 @@ public class AssessmentApplicationProgressController extends CompetitionManageme
                 .orElse(selectionForm);
 
         List<AssessmentCreateResource> assessments = submittedSelectionForm.getSelectedAssessors().stream()
-                .map(assessorId -> new AssessmentCreateResource(applicationId, assessorId))
+                .map(assessorId -> new AssessmentCreateResource(applicationId, assessorId, assessmentPeriodId))
                 .collect(Collectors.toList());
         assessmentRestService.createAssessments(assessments).getSuccess();
-        return format("redirect:/assessment/competition/%s/application/%s/assessors", competitionId, applicationId);
+        return format("redirect:/assessment/competition/%s/application/%s/period/%s/assessors", competitionId, applicationId, assessmentPeriodId);
     }
 
     @PostMapping("/withdraw/{assessmentId}")
     public String withdrawAssessment(@PathVariable("competitionId") Long competitionId,
                                      @PathVariable("applicationId") Long applicationId,
-                                     @PathVariable("assessmentId") Long assessmentId) {
+                                     @PathVariable("assessmentId") Long assessmentId,
+                                     @PathVariable long assessmentPeriodId) {
         assessmentRestService.withdrawAssessment(assessmentId).getSuccess();
-        return redirectToProgress(competitionId, applicationId);
+        return redirectToProgress(competitionId, applicationId, assessmentPeriodId);
     }
 
     @GetMapping(value = "/withdraw/{assessmentId}/confirm")
@@ -100,24 +103,26 @@ public class AssessmentApplicationProgressController extends CompetitionManageme
             @PathVariable("competitionId") Long competitionId,
             @PathVariable("applicationId") Long applicationId,
             @PathVariable("assessmentId") Long assessmentId,
+            @PathVariable long assessmentPeriodId,
             @RequestParam(value = "sortField", defaultValue = "TITLE") String sortField) {
         model.addAttribute("model", new ApplicationAssessmentProgressRemoveViewModel(
                 competitionId,
                 applicationId,
                 assessmentId,
+                assessmentPeriodId,
                 AvailableAssessorsSortFieldType.valueOf(sortField)
         ));
         return "competition/application-progress-remove-confirm";
     }
 
-    private String doProgressView(Model model, Long applicationId, String assessorNameFilter, int page, Sort sort) {
-        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, assessorNameFilter, page, sort));
+    private String doProgressView(Model model, Long applicationId, long assessmentPeriodId, String assessorNameFilter, int page, Sort sort) {
+        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, assessmentPeriodId, assessorNameFilter, page, sort));
 
         return "competition/application-progress";
     }
 
-    private String redirectToProgress(long competitionId, long applicationId) {
-        return format("redirect:/assessment/competition/%s/application/%s/assessors", competitionId, applicationId);
+    private String redirectToProgress(long competitionId, long applicationId, long assessmentPeriodId) {
+        return format("redirect:/assessment/competition/%s/application/%s/period/%s/assessors", competitionId, applicationId, assessmentPeriodId);
     }
 
     @PostMapping(params = {"selectionId"})

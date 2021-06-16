@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.survey.controller;
 
-import org.innovateuk.ifs.MockMvcTest;
 import org.innovateuk.ifs.survey.SurveyResource;
+import org.innovateuk.ifs.survey.documentation.MockMvcTest;
 import org.innovateuk.ifs.survey.transactional.SurveyService;
 import org.junit.Test;
 import org.mockito.Mock;

@@ -1,7 +1,6 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
 
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
-apply from: rootProject.file("gradle-support/asciidoc.gradle")
 
 apply from: rootProject.file("gradle-support/profile-handler.gradle")
 
@@ -16,7 +15,6 @@ apply from: "finance-data-service-sync.gradle"
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
-apply from: rootProject.file("gradle-support/zipkin-support.gradle")
 
 apply plugin: 'idea'
 
@@ -127,6 +125,9 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-redis"
     compile "org.apache.commons:commons-pool2"
 
+    compile "io.springfox:springfox-boot-starter:3.0.0"
+    compile 'io.springfox:springfox-swagger-ui:3.0.0'
+
     compile "org.springframework.boot:spring-boot-starter-cache"
     compile "org.springframework:spring-web"
     compile "com.jayway.jsonpath:json-path-assert"
@@ -166,8 +167,6 @@ test {
 
     minHeapSize = "1024m"
     maxHeapSize = "2048m"
-
-    finalizedBy asciidoctor
 
     if (project.hasProperty('excludeTests')) {
         exclude "${project.excludeTests}"

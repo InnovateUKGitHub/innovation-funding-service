@@ -45,6 +45,13 @@ public interface AssessmentService {
             description = "Comp admins and execs can see a count of assessments in a particular state per competition")
     ServiceResult<Integer> countByStateAndCompetition(AssessmentState state, long competitionId);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'innovation_lead', 'stakeholder')")
+    @SecuredBySpring(
+            value = "COUNT_BY_STATE_AND_ASSESSMENT_PERIOD",
+            description = "Comp admins and execs can see a count of assessments in a particular state per assessment period")
+    ServiceResult<Integer> countByStateAndAssessmentPeriodId(AssessmentState state, long assessmentPeriod);
+
+
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'READ_SCORE')")
     ServiceResult<AssessmentTotalScoreResource> getTotalScore(long assessmentId);
 
@@ -60,6 +67,10 @@ public interface AssessmentService {
     @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "WITHDRAW_ASSESSOR", description = "Comp Admins can withdraw an application from an assessor")
     ServiceResult<Void> withdrawAssessment(long assessmentId);
+
+    @PreAuthorize("hasAnyAuthority('super_admin_user')")
+    @SecuredBySpring(value = "UNSUBMIT_ASSESSMENT", description = "Super admin can unsubmit an assessor's assessment")
+    ServiceResult<Void> unsubmitAssessment(long assessmentId);
 
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
     ServiceResult<Void> acceptInvitation(long assessmentId);

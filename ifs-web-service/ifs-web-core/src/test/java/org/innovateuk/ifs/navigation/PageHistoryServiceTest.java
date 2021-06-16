@@ -61,7 +61,7 @@ public class PageHistoryServiceTest {
 
         pageHistoryService.recordPageHistory(request, response, modelAndView, handler);
 
-        assertEquals(3, history.size());
+        assertPageAddedToHistory();
         assertEquals("/url/pageSecond", model.get("cookieBackLinkUrl"));
         assertEquals("pageSecond", model.get("cookieBackLinkText"));
         verify(encodedCookieService).saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
@@ -80,14 +80,16 @@ public class PageHistoryServiceTest {
 
     @Test
     public void recordPageHistory_ExcludeFromPageHistory() {
+        Map<String, Object> model = new HashMap<>();
+        when(modelAndView.getModel()).thenReturn(model);
         when(request.getRequestURI()).thenReturn("/url/pageOne");
         when(handler.hasMethodAnnotation(NavigationRoot.class)).thenReturn(false);
         when(handler.hasMethodAnnotation(ExcludeFromPageHistory.class)).thenReturn(true);
 
         pageHistoryService.recordPageHistory(request, response, modelAndView, handler);
 
-        assertEquals(2, history.size());
-        verify(encodedCookieService, never()).saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
+        assertNoPagesAddedToHistory();
+        verify(encodedCookieService).saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
     }
 
     @Test
@@ -99,7 +101,7 @@ public class PageHistoryServiceTest {
 
         pageHistoryService.recordPageHistory(request, response, modelAndView, handler);
 
-        assertEquals(2, history.size());
+        assertNoPagesAddedToHistory();
         assertEquals("/url/pageFirst", model.get("cookieBackLinkUrl"));
         assertEquals("pageFirst", model.get("cookieBackLinkText"));
         verify(encodedCookieService).saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
@@ -115,10 +117,10 @@ public class PageHistoryServiceTest {
 
         pageHistoryService.recordPageHistory(request, response, modelAndView, handler);
 
-        assertEquals(2, history.size());
+        assertNoPagesAddedToHistory();
         assertEquals("/url/pageSecond", model.get("cookieBackLinkUrl"));
         assertEquals("pageSecond", model.get("cookieBackLinkText"));
-        verify(encodedCookieService, never()).saveToCookie(any(), any(), any());
+        verify(encodedCookieService).saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
     }
 
     @Test
@@ -140,10 +142,19 @@ public class PageHistoryServiceTest {
 
         pageHistoryService.recordPageHistory(request, response, modelAndView, handler);
 
-        assertEquals(3, history.size());
+        assertPageAddedToHistory();
         PageHistory pageHistory = pageHistoryService.getPreviousPage(request).get();
         assertEquals("ktp=true", pageHistory.getQuery());
         verify(encodedCookieService).saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
+    }
+
+
+    private void assertNoPagesAddedToHistory() {
+        assertEquals(2, history.size());
+    }
+
+    private void assertPageAddedToHistory() {
+        assertEquals(3, history.size());
     }
 
 }

@@ -186,6 +186,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                                                                                  final ZonedDateTime fundingEmailDateTime) {
         return getApplication(applicationId).andOnSuccessReturn(application -> {
             application.setManageFundingEmailDate(fundingEmailDateTime);
+            if (application.getCompetition().isAlwaysOpen()) {
+                application.setFeedbackReleased(fundingEmailDateTime);
+            }
             Application savedApplication = applicationRepository.save(application);
             return applicationMapper.mapToResource(savedApplication);
         });

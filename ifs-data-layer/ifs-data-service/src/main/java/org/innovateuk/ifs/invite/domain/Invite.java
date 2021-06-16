@@ -25,6 +25,7 @@ import static java.util.Objects.requireNonNull;
         // Does this constraint still hold?
     uniqueConstraints= @UniqueConstraint(columnNames={"type", "target_id", "email"})
 )
+@SuppressWarnings("unchecked")
 @DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @Entity

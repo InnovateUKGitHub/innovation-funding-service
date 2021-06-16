@@ -1,12 +1,16 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.saver;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.*;
+import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.IndirectCostsUtil;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.BaseOtherFundingCostCategory;
+import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
@@ -28,7 +32,7 @@ import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.for
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMAL_PLACES;
 
 @Component
-public class YourFundingSaver extends AbstractYourFundingSaver {
+public class YourFundingSaver<R extends BaseOtherFunding, T extends BaseOtherFundingRowForm<R>> extends AbstractYourFundingSaver<R, T> {
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -49,14 +53,34 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
         return financeRowRestService;
     }
 
-    public ServiceResult<Void> save(long applicationId, long organisationId, AbstractYourFundingAmountForm<? extends BaseOtherFundingRowForm> form) {
+    public ServiceResult<Void> save(long applicationId, long organisationId, AbstractYourFundingAmountForm<R, T> form) {
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
         return super.save(finance, form);
     }
 
-    public ServiceResult<Void> save(long applicationId, long organisationId, AbstractYourFundingPercentageForm<? extends BaseOtherFundingRowForm> form) {
+    public ServiceResult<Void> save(long applicationId, long organisationId, AbstractYourFundingPercentageForm<R, T> form) {
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
-        return super.save(finance, form);
+
+        return super.save(finance, form)
+                .andOnSuccess(() -> {
+                    if (BooleanUtils.isFalse(finance.getFecModelEnabled())) {
+                        IndirectCost indirectCost = recalculateIndirectCostsFollowingGrantClaimUpdate(finance);
+                        financeRowRestService.update(indirectCost).getSuccess();
+                    }
+                });
+    }
+
+    private IndirectCost recalculateIndirectCostsFollowingGrantClaimUpdate(ApplicationFinanceResource finance) {
+        DefaultCostCategory defaultCostCategory2 = (DefaultCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.INDIRECT_COSTS);
+        IndirectCost indirectCost = (IndirectCost) defaultCostCategory2.getCosts().stream()
+                .filter(costRowItem -> costRowItem.getCostType() == FinanceRowType.INDIRECT_COSTS)
+                .findFirst()
+                .orElseGet(() -> financeRowRestService.create(new IndirectCost(finance.getId())).getSuccess());
+
+        BigDecimal cost = IndirectCostsUtil.calculateIndirectCost(finance);
+        indirectCost.setCost(cost.toBigIntegerExact());
+
+        return indirectCost;
     }
 
     public Optional<Long> autoSave(String field, String value, long applicationId, UserResource user) {
@@ -133,6 +157,11 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
     private void updateGrantClaimPercentage(String value, ApplicationFinanceResource finance) {
         GrantClaimPercentage grantClaim = (GrantClaimPercentage) finance.getGrantClaim();
         grantClaim.setPercentage(new BigDecimal(value).setScale(MAX_DECIMAL_PLACES, HALF_UP));
-        getFinanceRowService().update(grantClaim).getSuccess();
+        getFinanceRowService().update(grantClaim).andOnSuccess(() -> {
+            if (BooleanUtils.isFalse(finance.getFecModelEnabled())) {
+                IndirectCost indirectCost = recalculateIndirectCostsFollowingGrantClaimUpdate(finance);
+                financeRowRestService.update(indirectCost).getSuccess();
+            }
+        });
     }
 }
