@@ -57,8 +57,9 @@ resources:
   - data-layer/finance-data-service/finance-data-service-config.yml
   - data-layer/finance-data-service/finance-data-service-deployment.yml
   # survey data service
-#  - data-layer/survey-data-service/survey-data-service.yml
-#  - data-layer/survey-data-service/survey-data-service-deployment.yml
+  - data-layer/survey-data-service/survey-data-service.yml
+  - data-layer/survey-data-service/survey-data-service-config.yml
+  - data-layer/survey-data-service/survey-data-service-deployment.yml
 ##################################################################################
 #
 #################################################################################
