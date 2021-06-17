@@ -9,7 +9,7 @@ public enum SectionStatus {
     HOURGLASS("waiting"),
     INCOMPLETE("incomplete"),
     FLAG("require-action"),
-    MO_FLAG("mo-require-action"),
+    MO_ACTION_REQUIRED("mo-action-required"),
     LEAD_ACTION_FLAG("lead-action-required"),
     TICK("complete"),
     CROSS("rejected");

@@ -71,7 +71,7 @@ import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.sections.SectionStatus.*;
 import static org.innovateuk.ifs.sections.SectionStatus.INCOMPLETE;
-import static org.innovateuk.ifs.sections.SectionStatus.MO_FLAG;
+import static org.innovateuk.ifs.sections.SectionStatus.MO_ACTION_REQUIRED;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.junit.Assert.assertEquals;
@@ -1404,7 +1404,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         SetupStatusViewModel viewModel = performDocumentsForMOViewTest(DocumentStatus.SUBMITTED, DocumentStatus.UNSET);
 
         assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
-        assertStageStatus(viewModel, DOCUMENTS, MO_FLAG);
+        assertStageStatus(viewModel, DOCUMENTS, MO_ACTION_REQUIRED);
     }
 
     @Test
@@ -1413,7 +1413,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         SetupStatusViewModel viewModel = performDocumentsForMOViewTest(DocumentStatus.SUBMITTED, DocumentStatus.SUBMITTED);
 
         assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
-        assertStageStatus(viewModel, DOCUMENTS, MO_FLAG);
+        assertStageStatus(viewModel, DOCUMENTS, MO_ACTION_REQUIRED);
     }
 
     @Test
@@ -1422,7 +1422,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         SetupStatusViewModel viewModel = performDocumentsForMOViewTest(DocumentStatus.REJECTED, DocumentStatus.SUBMITTED);
 
         assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
-        assertStageStatus(viewModel, DOCUMENTS, MO_FLAG);
+        assertStageStatus(viewModel, DOCUMENTS, MO_ACTION_REQUIRED);
     }
 
     @Test

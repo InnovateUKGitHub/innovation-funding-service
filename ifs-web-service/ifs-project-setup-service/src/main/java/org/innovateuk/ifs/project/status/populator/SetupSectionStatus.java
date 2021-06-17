@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResourc
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.sections.SectionStatus.*;
 import static org.innovateuk.ifs.sections.SectionStatus.INCOMPLETE;
-import static org.innovateuk.ifs.sections.SectionStatus.MO_FLAG;
+import static org.innovateuk.ifs.sections.SectionStatus.MO_ACTION_REQUIRED;
 
 /**
  * This is a helper class for determining the status of a given Project Setup section
@@ -141,10 +141,10 @@ public class SetupSectionStatus {
             }
             if (actualNumberOfDocuments == expectedNumberOfDocuments && projectDocuments.stream()
                     .anyMatch(projectDocumentResource -> DocumentStatus.SUBMITTED.equals(projectDocumentResource.getStatus()))) {
-                return MO_FLAG;
+                return MO_ACTION_REQUIRED;
             }
             if (actualNumberOfDocuments != expectedNumberOfDocuments) {
-                return MO_FLAG;
+                return MO_ACTION_REQUIRED;
             }
         }
 
