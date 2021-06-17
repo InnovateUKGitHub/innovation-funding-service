@@ -54,7 +54,7 @@ public class MonitoringOfficerRegistrationControllerTest extends BaseControllerM
         MonitoringOfficerInviteResource monitoringOfficerInviteResource = newMonitoringOfficerInviteResource()
                 .withEmail("tom@poly.io")
                 .build();
-        RegistrationViewModel expectedViewModel = RegistrationViewModelBuilder.aRegistrationViewModel().withPhoneRequired(true).withTermsRequired(false).withInvitee(true).build();
+        RegistrationViewModel expectedViewModel = RegistrationViewModelBuilder.aRegistrationViewModel().withPhoneRequired(true).withTermsRequired(false).withInvitee(true).withShowBackLink(false).build();
 
         when(competitionSetupMonitoringOfficerRestServiceMock.openMonitoringOfficerInvite(hash)).thenReturn(restSuccess(monitoringOfficerInviteResource));
 
