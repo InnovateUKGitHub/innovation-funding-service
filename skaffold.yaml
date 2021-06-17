@@ -4,91 +4,91 @@ metadata:
   name: innovation-funding-service
 build:
   artifacts:
-    - image: innovateuk/data-service
+    - image: data-service
       context: .
       jib:
         type: gradle
         project: ifs-data-layer:ifs-data-service
         args:
           - "-DskipTests"
-    - image: innovateuk/finance-data-service
+    - image: finance-data-service
       context: .
       jib:
         type: gradle
         project: ifs-data-layer:ifs-finance-data-service
         args:
           - "-DskipTests"
-    - image: innovateuk/survey-data-service
+    - image: survey-data-service
       context: .
       jib:
         type: gradle
         project: ifs-data-layer:ifs-survey-data-service
         args:
           - "-DskipTests"
-    - image: innovateuk/data-service-alerts
+    - image: data-service-alerts
       context: .
       jib:
         type: gradle
         project: ifs-data-layer:data-service-alerts
         args:
           - "-DskipTests"
-    - image: innovateuk/survey-service
+    - image: survey-service
       context: .
       jib:
         type: gradle
         project: ifs-web-service:ifs-survey-service
         args:
           - "-DskipTests"
-    - image: innovateuk/project-setup-service
+    - image: project-setup-service
       context: .
       jib:
         type: gradle
         project: ifs-web-service:ifs-project-setup-service
         args:
           - "-DskipTests"
-    - image: innovateuk/project-setup-mgt-service
+    - image: project-setup-mgt-service
       context: .
       jib:
         type: gradle
         project: ifs-web-service:ifs-project-setup-mgt-service
         args:
           - "-DskipTests"
-    - image: innovateuk/front-door-service
+    - image: front-door-service
       context: .
       jib:
         type: gradle
         project: ifs-web-service:ifs-front-door-service
         args:
           - "-DskipTests"
-    - image: innovateuk/competition-mgt-service
+    - image: competition-mgt-service
       context: .
       jib:
         type: gradle
         project: ifs-web-service:ifs-competition-mgt-service
         args:
           - "-DskipTests"
-    - image: innovateuk/assessment-service
+    - image: assessment-service
       context: .
       jib:
         type: gradle
         project: ifs-web-service:ifs-assessment-service
         args:
           - "-DskipTests"
-    - image: innovateuk/application-service
+    - image: application-service
       context: .
       jib:
         type: gradle
         project: ifs-web-service:ifs-application-service
         args:
           - "-DskipTests"
-    - image: innovateuk/registration-service
+    - image: registration-service
       context: .
       jib:
         type: gradle
         project: ifs-registration-service
         args:
           - "-DskipTests"
-    - image: innovateuk/sil-stub
+    - image: sil-stub
       context: .
       jib:
         type: gradle
