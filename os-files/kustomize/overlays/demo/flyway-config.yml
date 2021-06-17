@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: flyway-config
+data:
+  FLYWAY_LOCATIONS: "db/migration,db/reference,db/setup"
+  SYSTEM_USER_UUID: "ce79e077-f05f-11e7-bc5d-0242ac120004"
+  FLYWAY_TABLE: "schema_version"
