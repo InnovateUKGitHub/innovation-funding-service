@@ -294,7 +294,7 @@ The user is able to see Project details section
 The user is able to see Documents section
     the user clicks the button/link   link = Documents
     the user should see the element   jQuery = h1:contains("Documents")
-    the user clicks the button/link   jQuery = a:contains("Set up your project")
+    the user clicks the button/link   jQuery = a:contains("Back to monitor project")
 
 The user is able to see Monitoring officer section
     the user clicks the button/link   jQuery = a:contains("Monitoring Officer")
