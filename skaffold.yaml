@@ -88,13 +88,13 @@ build:
         project: ifs-registration-service
         args:
           - "-DskipTests"
-#    - image: innovateuk/sil-stub
-#      context: .
-#      jib:
-#        type: gradle
-#        project: ifs-sil-stub
-#        args:
-#          - "-DskipTests"
+    - image: innovateuk/sil-stub
+      context: .
+      jib:
+        type: gradle
+        project: ifs-sil-stub
+        args:
+          - "-DskipTests"
   local:
     useDockerCLI: true
     useBuildkit: false
