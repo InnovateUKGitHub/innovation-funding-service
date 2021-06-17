@@ -1,0 +1,12 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: db-config
+data:
+  DB_URL: "jdbc:mysql://ifsdb.prod.org-env-0.iuk.local:3306/ifs"
+  DB_NAME: "ifs"
+  DB_USER: "ifs"
+  DB_PASS: ""
+  DB_HOST: "ifsdb.prod.org-env-0.iuk.local"
+  DB_PORT: "3306"
+  DB_ANON_PASS: ""

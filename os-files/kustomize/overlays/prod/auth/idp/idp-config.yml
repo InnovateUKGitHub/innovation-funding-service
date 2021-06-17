@@ -1,0 +1,6 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: idp-config
+data:
+  RESOURCE_DOMAIN: "https://apply-for-innovation-funding.service.gov.uk"
