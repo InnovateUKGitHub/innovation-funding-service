@@ -230,11 +230,11 @@ Mandatory document submission
 PM can still view both documents after submitting
     [Documentation]    INFUND-3012
     [Tags]
-    Given the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
-    When the user clicks the button/link    link = Collaboration agreement
-    And open pdf link                       jQuery = a:contains("${valid_pdf} (opens in a new window)")
-    When the user goes to documents page    Return to documents  Exploitation plan
-    Then open pdf link                      jQuery = a:contains("${valid_pdf} (opens in a new window)")
+    Given the user navigates to the page      ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
+    When the user clicks the button/link      link = Collaboration agreement
+    And open pdf link                         jQuery = a:contains("${valid_pdf} (opens in a new window)")
+    When the user goes to documents page      Return to documents  Exploitation plan
+    Then open pdf link                        jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
 PM cannot remove the documents after submitting
     [Documentation]    INFUND-3012
@@ -257,6 +257,26 @@ Lead partner can still view both documents after submitting
     Given open pdf link                     jQuery = a:contains("${valid_pdf} (opens in a new window)")
     When the user goes to documents page    Return to documents  Collaboration agreement
     Then open pdf link                      jQuery = a:contains("${valid_pdf} (opens in a new window)")
+
+Internal finance cannot approve Exploitation or Collaboration documents
+    [Documentation]   IFS-9579
+    Given log in as a different user              &{internal_finance_credentials} 
+    And the user navigates to the page            ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
+    When the user clicks the button/link          link = Collaboration agreement
+    Then the user cannot approve the document     approved   true
+    And the user clicks the button/link           link = Return to documents
+    And the user clicks the button/link           link = Exploitation plan
+    And the user cannot approve the document      approved   true
+
+Comp admin cannot approve Exploitation or Collaboration documents
+    [Documentation]   IFS-9579
+    Given log in as a different user              &{Comp_admin1_credentials}   
+    And the user navigates to the page            ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
+    When the user clicks the button/link          link = Collaboration agreement
+    Then the user cannot approve the document     approved   true
+    And the user clicks the button/link           link = Return to documents
+    And the user clicks the button/link           link = Exploitation plan
+    And the user cannot approve the document      approved   true
 
 Non-lead partner cannot remove the documents after submission by PM
     [Documentation]  INFUND-3012
@@ -548,3 +568,7 @@ PM uploads and notifies the project documents to MO
     the user clicks the button/link        id = submit-document-button
     the user clicks the button/link        id = submitDocumentButtonConfirm
     the user should not see an error in the page
+
+the user cannot approve the document
+    [Arguments]    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
+    the user should not see the element     css=[name^="${RADIO_BUTTON}"][value="${RADIO_BUTTON_OPTION}"] ~ label, [id="${RADIO_BUTTON_OPTION}"] ~ label
