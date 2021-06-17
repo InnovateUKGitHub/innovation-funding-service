@@ -191,7 +191,7 @@
                                             th:case="${T(org.innovateuk.ifs.competition.resource.MilestoneType).LINE_DRAW}"
                                             th:formaction="@{/competition/{competitionId}/reopen-assessment-period(competitionId=${model.competitionId})}"
                                             th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
-                                            class="govuk-button">Reopen assessment period
+                                            class="govuk-button">Reopen assessment
                                     </button>
                                 </th:block>
                                 <th:block th:unless="${model.readOnly}"
@@ -244,6 +244,9 @@
                             <li>
                                 <h3 class="govuk-heading-s">Funding decision and assessment feedback</h3>
                             </li>
+                            <a disabled="disabled" class="govuk-button govuk-!-margin-top-2" th:unless="${model.hasAClosedAssessmentPeriod()}">
+                                Send notification and release feedback</a>
+
                             <a class="govuk-button govuk-!-margin-top-2" th:if="${model.hasAClosedAssessmentPeriod()}"
                                th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}">
                                 Send notification and release feedback</a>

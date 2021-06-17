@@ -46,6 +46,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 /**
  * Service for operations around the usage and processing of Competitions
  */
+@SuppressWarnings("unchecked")
 @Service
 public class CompetitionServiceImpl extends BaseTransactionalService implements CompetitionService {
 

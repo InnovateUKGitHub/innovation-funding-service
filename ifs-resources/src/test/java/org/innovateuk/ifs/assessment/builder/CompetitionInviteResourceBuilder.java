@@ -71,6 +71,10 @@ public class CompetitionInviteResourceBuilder extends BaseBuilder<CompetitionInv
         return withArraySetFieldByReflection("innovationArea", innovationAreas);
     }
 
+    public CompetitionInviteResourceBuilder withCompetitionAlwaysOpen(Boolean... alwaysOpen) {
+        return withArraySetFieldByReflection("competitionAlwaysOpen", alwaysOpen);
+    }
+
     @Override
     protected CompetitionInviteResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionInviteResource>> actions) {
         return new CompetitionInviteResourceBuilder(actions);

@@ -32,7 +32,7 @@ import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.for
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMAL_PLACES;
 
 @Component
-public class YourFundingSaver extends AbstractYourFundingSaver {
+public class YourFundingSaver<R extends BaseOtherFunding, T extends BaseOtherFundingRowForm<R>> extends AbstractYourFundingSaver<R, T> {
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -53,12 +53,12 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
         return financeRowRestService;
     }
 
-    public ServiceResult<Void> save(long applicationId, long organisationId, AbstractYourFundingAmountForm<? extends BaseOtherFundingRowForm> form) {
+    public ServiceResult<Void> save(long applicationId, long organisationId, AbstractYourFundingAmountForm<R, T> form) {
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
         return super.save(finance, form);
     }
 
-    public ServiceResult<Void> save(long applicationId, long organisationId, AbstractYourFundingPercentageForm<? extends BaseOtherFundingRowForm> form) {
+    public ServiceResult<Void> save(long applicationId, long organisationId, AbstractYourFundingPercentageForm<R, T> form) {
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
 
         return super.save(finance, form)

@@ -31,21 +31,17 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
+import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
-import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -144,6 +140,8 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertTrue(viewModel.isProcurementCompetition());
         assertEquals("state_aid_checkbox_label", viewModel.getStateAidCheckboxLabelFragment());
         assertEquals(BigDecimal.ZERO, viewModel.getGrantClaimPercentage());
+        assertNull(viewModel.getFecModelEnabled());
+        assertFalse(viewModel.isFecModelDisabled());
     }
 
     @Test
@@ -242,6 +240,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertFalse(viewModel.isYourFecCostRequired());
         assertNull(viewModel.getYourFecCostSectionId());
         assertNull(viewModel.getFecModelEnabled());
+        assertFalse(viewModel.isFecModelDisabled());
     }
 
     @Test
@@ -311,6 +310,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertFalse(viewModel.isYourFecCostRequired());
         assertNull(viewModel.getYourFecCostSectionId());
         assertNull(viewModel.getFecModelEnabled());
+        assertFalse(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
     }
 
@@ -387,6 +387,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertFalse(viewModel.isYourFecCostRequired());
         assertEquals(yourFecCostSectionId, viewModel.getYourFecCostSectionId());
         assertTrue(viewModel.getFecModelEnabled());
+        assertFalse(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
     }
 
@@ -463,6 +464,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertTrue(viewModel.isYourFecCostRequired());
         assertEquals(yourFecCostSectionId, viewModel.getYourFecCostSectionId());
         assertTrue(viewModel.getFecModelEnabled());
+        assertFalse(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
     }
 
@@ -527,6 +529,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertFalse(viewModel.isYourFecCostRequired());
         assertNull(viewModel.getYourFecCostSectionId());
         assertTrue(viewModel.getFecModelEnabled());
+        assertFalse(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
     }
 
@@ -605,6 +608,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertNotNull(viewModel.getFinanceRowTypes());
         assertThat(viewModel.getFinanceRowTypes(), containsInAnyOrder(expectedOrganisationFinanceRowTypes.toArray()));
         assertTrue(viewModel.getFecModelEnabled());
+        assertFalse(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
     }
 
@@ -683,6 +687,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertNotNull(viewModel.getFinanceRowTypes());
         assertThat(viewModel.getFinanceRowTypes(), containsInAnyOrder(expectedOrganisationFinanceRowTypes.toArray()));
         assertFalse(viewModel.getFecModelEnabled());
+        assertTrue(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
     }
 
@@ -761,6 +766,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertNotNull(viewModel.getFinanceRowTypes());
         assertThat(viewModel.getFinanceRowTypes(), containsInAnyOrder(expectedOrganisationFinanceRowTypes.toArray()));
         assertTrue(viewModel.getFecModelEnabled());
+        assertFalse(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
     }
 
@@ -839,6 +845,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertNotNull(viewModel.getFinanceRowTypes());
         assertThat(viewModel.getFinanceRowTypes(), containsInAnyOrder(expectedOrganisationFinanceRowTypes.toArray()));
         assertFalse(viewModel.getFecModelEnabled());
+        assertTrue(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
     }
 }

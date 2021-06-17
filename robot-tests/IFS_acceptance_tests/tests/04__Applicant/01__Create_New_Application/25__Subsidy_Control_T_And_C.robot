@@ -3,7 +3,7 @@ Documentation     IFS-8994  Two new sets of terms & conditions required
 ...
 ...               IFS-9137  Update Subsidy control T&Cs for Innovate UK & ATI
 ...
-...               IFS-9214 Add dual T&Cs to Subsidy Control Competitions
+...               IFS-9124 Add dual T&Cs to Subsidy Control Competitions
 ...
 ...               IFS-9116 Applicant Subsidy Basis Questionnaire and Declaration Confirmation (Application)
 ...
@@ -83,7 +83,8 @@ Creating a new comp to confirm Innovateuk subsidy control T&C's
     [Documentation]  IFS-8994  IFS-9137
     Given the user fills in initial details     ATI Subsidy Control Comp
     When the user clicks the button/link        link = Terms and conditions
-    And the user selects the radio button       termsAndConditionsId  44
+#    And the user selects the radio button       termsAndConditionsId  44
+    And the user clicks the button twice        jQuery = label:contains("Innovate UK - Subsidy control")
     And the user clicks the button/link         jQuery = button:contains("Done")
     And the user selects the radio button       termsAndConditionsId  34
     Then the user clicks the button/link        jQuery = button:contains("Done")
@@ -210,9 +211,9 @@ Partner completes project finances and terms and conditions of state aid applica
 
 Partner applicant can accept subsidy control terms and conditions based on NI declaration
     [Documentation]  IFS-9233
-    And the user clicks the button/link          link = Award terms and conditions
+    When the user clicks the button/link         link = Award terms and conditions
     Then the user should see the element         jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
-    And the user should see the element          jQuery = ul li:contains("shall continue after the project term for a period of 6 years.")
+    And the user should see the element          jQuery = li:contains("Subsidy Control/ State aid obligations")
     And the user accepts terms and conditions
 
 Lead applicant submits state aid subsidy basis application
@@ -271,7 +272,7 @@ Lead applicant can accept subsidy control terms and conditions based on NI decla
     [Documentation]  IFS-9223
     When the user clicks the button/link          link = Award terms and conditions
     Then the user should see the element          jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
-    And the user should see the element           jQuery = ul li:contains("shall continue after the project term for a period of 6 years.")
+    And the user should see the element           jQuery = li:contains("Subsidy Control/ State aid obligations")
     And the user accepts terms and conditions
 
 Partner completes project finances and terms and conditions of subsidy control application
@@ -551,17 +552,18 @@ the assessors accept the invitation to assess the subsidy control competition
     the user clicks the button/link                       jQuery = button:contains("Confirm")
 
 the application is assigned to be an assessor
-    log in as a different user            &{Comp_admin1_credentials}
-    the user navigates to the page        ${server}/management/assessment/competition/${subsidyControlCompetitionId}/application/${leadSubsidyControlApplicationID}/assessors
-    the user selects the checkbox         assessor-row-1
-    the user clicks the button/link       jQuery = button:contains("Add to application")
-    the user navigates to the page        ${server}/management/competition/${subsidyControlCompetitionId}
-    the user clicks the button/link       jQuery = button:contains("Notify assessors")
-    log in as a different user            ${assessor1_email}   ${short_password}
-    the user navigates to the page        ${server}/assessment/assessor/dashboard/competition/${subsidyControlCompetitionId}
-    the user clicks the button/link       link = ${leadSubsidyControlApplication}
-    the user selects the radio button     assessmentAccept  true
-    the user clicks the button/link       jQuery = button:contains("Confirm")
+    log in as a different user                             &{Comp_admin1_credentials}
+    get assessment period id and set as suite variable     ${subsidyControlCompetitionId}
+    the user navigates to the page                         ${server}/management/assessment/competition/${subsidyControlCompetitionId}/application/${leadSubsidyControlApplicationID}/period/${assessmentPeriodID}/assessors
+    the user selects the checkbox                          assessor-row-1
+    the user clicks the button/link                        jQuery = button:contains("Add to application")
+    the user navigates to the page                         ${server}/management/competition/${subsidyControlCompetitionId}
+    the user clicks the button/link                        jQuery = button:contains("Notify assessors")
+    log in as a different user                             ${assessor1_email}   ${short_password}
+    the user navigates to the page                         ${server}/assessment/assessor/dashboard/competition/${subsidyControlCompetitionId}
+    the user clicks the button/link                        link = ${leadSubsidyControlApplication}
+    the user selects the radio button                      assessmentAccept  true
+    the user clicks the button/link                        jQuery = button:contains("Confirm")
 
 assessor should see valid subsidy basis answers
     the user clicks the button/link                 jQuery = tr:nth-child(1) a:contains("View answers")
@@ -576,3 +578,8 @@ the user can see the terms and conditions for the lead and partner applicant
     the user should see the element      link = Innovate UK - Subsidy control
     the user should see the element      jQuery = td:contains("${partnerOrganisationName}")+ td:contains("State aid")
     the user should see the element      link = Innovate UK
+
+get assessment period id and set as suite variable
+    [Arguments]  ${competitionID}
+    ${assessmentPeriodID} =   get assessment period using competition id   ${competitionID}
+    Set suite variable  ${assessmentPeriodID}

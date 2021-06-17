@@ -23,7 +23,7 @@ public class AssessmentPeriodFormPopulator {
     @Autowired
     private MilestoneRestService milestoneRestService;
 
-    public ManageAssessmentPeriodsForm populate(long competitionId, PageResource<AssessmentPeriodResource> assessmentPeriodResources) {
+    public ManageAssessmentPeriodsForm populate(long competitionId, PageResource<AssessmentPeriodResource> assessmentPeriodResources, boolean addAssessment) {
         List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess();
         Map<Long, List<MilestoneResource>> periodIdToMilestoneMap = milestones
                 .stream()

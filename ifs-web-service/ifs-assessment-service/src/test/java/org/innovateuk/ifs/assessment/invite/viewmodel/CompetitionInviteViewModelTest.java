@@ -21,6 +21,7 @@ public class CompetitionInviteViewModelTest {
         CompetitionInviteViewModel viewModel = new CompetitionInviteViewModel(inviteHash, competitionInviteResource, false);
 
         assertFalse(viewModel.isKtpCompetition());
+        assertFalse(viewModel.isAlwaysOpenCompetition());
     }
 
     @Test
@@ -34,5 +35,20 @@ public class CompetitionInviteViewModelTest {
         CompetitionInviteViewModel viewModel = new CompetitionInviteViewModel(inviteHash, competitionInviteResource, false);
 
         assertTrue(viewModel.isKtpCompetition());
+        assertFalse(viewModel.isAlwaysOpenCompetition());
+    }
+
+    @Test
+    public void testAlwaysOpenCompetition() {
+        String inviteHash = "invite-hash";
+
+        CompetitionInviteResource competitionInviteResource = CompetitionInviteResourceBuilder.newCompetitionInviteResource()
+                .withCompetitionFundingType(FundingType.GRANT)
+                .withCompetitionAlwaysOpen(true)
+                .build();
+
+        CompetitionInviteViewModel viewModel = new CompetitionInviteViewModel(inviteHash, competitionInviteResource, false);
+
+        assertTrue(viewModel.isAlwaysOpenCompetition());
     }
 }

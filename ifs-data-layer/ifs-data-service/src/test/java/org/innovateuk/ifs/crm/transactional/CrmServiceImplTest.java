@@ -2,14 +2,11 @@ package org.innovateuk.ifs.crm.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.LambdaMatcher;
-import org.innovateuk.ifs.address.builder.AddressTypeBuilder;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationAddressService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
@@ -24,18 +21,17 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.builder.AddressTypeBuilder.newAddressType;
 import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
-import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationExecutiveOfficerResourceBuilder.newOrganisationExecutiveOfficerResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationSicCodeResourceBuilder.newOrganisationSicCodeResource;
-import static org.innovateuk.ifs.organisation.builder.OrganisationExecutiveOfficerResourceBuilder.newOrganisationExecutiveOfficerResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
@@ -243,9 +239,6 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         return silContact -> {
             assertThat(silContact.getSrcSysContactId(), equalTo(String.valueOf(user.getId())));
             assertThat(silContact.getOrganisation().getRegistrationNumber(), equalTo(organisation.getCompaniesHouseNumber()));
-            assertNull(silContact.getOrganisation().getDateOfIncorporation());
-            assertNull(silContact.getOrganisation().getSicCodes());
-            assertNull(silContact.getOrganisation().getExecutiveOfficers());
             assertNull(silContact.getOrganisation().getRegisteredAddress());
             return true;
         };
@@ -254,13 +247,6 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     private Predicate<SilContact> matchExternalSilContactWithOrganisationUpdates(UserResource user, OrganisationResource organisation) {
         return silContact -> {
             assertThat(silContact.getSrcSysContactId(), equalTo(String.valueOf(user.getId())));
-            assertThat(silContact.getOrganisation().getDateOfIncorporation(), equalTo(organisation.getDateOfIncorporation()));
-            assertThat(silContact.getOrganisation().getSicCodes(), equalTo(organisation.getSicCodes().stream()
-                    .map(OrganisationSicCodeResource::getSicCode)
-                    .collect(Collectors.toList())));
-            assertThat(silContact.getOrganisation().getExecutiveOfficers(), equalTo(organisation.getExecutiveOfficers().stream()
-                    .map(OrganisationExecutiveOfficerResource::getName)
-                    .collect(Collectors.toList())));
             assertThat(silContact.getOrganisation().getRegisteredAddress().getBuildingName(), equalTo("Line1"));
             assertThat(silContact.getOrganisation().getRegisteredAddress().getStreet(), equalTo("Line2, Line3"));
             assertThat(silContact.getOrganisation().getRegisteredAddress().getLocality(), equalTo("County"));

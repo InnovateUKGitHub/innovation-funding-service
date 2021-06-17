@@ -11,4 +11,6 @@ import java.util.List;
 public interface CompetitionParticipantRestService {
 
     RestResult<List<CompetitionParticipantResource>> getAssessorParticipants(long userId);
+
+    RestResult<List<CompetitionParticipantResource>> getAssessorParticipantsWithAssessmentPeriod(long userId);
 }

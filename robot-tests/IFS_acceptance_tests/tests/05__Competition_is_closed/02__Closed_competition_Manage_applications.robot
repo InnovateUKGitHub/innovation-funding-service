@@ -44,7 +44,7 @@ Filtering Assessors in the Assign assessors page
 
 Manage assessor list is correct
     [Documentation]    IFS-17
-    [Setup]  the user clicks the button/link  link = Manage assessments
+    [Setup]  the user clicks the button/link  link = Back to manage assessments
     Given the user clicks the button/link     link = Allocate assessors
     Then the assessor list is correct before changes
 
