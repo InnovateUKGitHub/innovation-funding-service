@@ -96,7 +96,7 @@ build:
 #        args:
 #          - "-DskipTests"
   local:
-    useDockerCLI: false
+    useDockerCLI: true
     useBuildkit: false
     tryImportMissing: true
     push: true
