@@ -20,6 +20,8 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.competition.builder.LiveCompetitionSearchResultItemBuilder.newLiveCompetitionSearchResultItem;
+import static org.innovateuk.ifs.competition.builder.ProjectSetupCompetitionSearchResultItemBuilder.newProjectSetupCompetitionSearchResultItem;
+import static org.innovateuk.ifs.competition.builder.PreviousCompetitionSearchResultItemBuilder.newPreviousCompetitionSearchResultItem;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_USER_ROLES;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -317,5 +319,21 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
 
         assertFalse(rules.projectUsersCanReadPostAwardServiceForCompetition(competition, user));
         verify(projectUserRepository).existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), user.getId());
+    }
+
+    @Test
+    public void auditorCanAccessAllCompetitions() {
+        long competitionId = 1L;
+        List<Role> auditorRoles = singletonList(AUDITOR);
+        UserResource audtior = newUserResource().withRolesGlobal(auditorRoles).build();
+
+        CompetitionSearchResultItem competitionSearchLiveResultItem = newLiveCompetitionSearchResultItem().withCompetitionStatus(OPEN).withId(competitionId).build();
+        CompetitionSearchResultItem competitionSearchProjectSetupResultItem = newProjectSetupCompetitionSearchResultItem().withCompetitionStatus(PROJECT_SETUP).build();
+        CompetitionSearchResultItem competitionSearchPreviousResultItem = newPreviousCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.ASSESSOR_FEEDBACK).withId(2L).build();
+
+        assertTrue(rules.stakeholderCanViewCompetitionAssignedToThem(competitionSearchLiveResultItem, audtior));
+        assertTrue(rules.stakeholderCanViewCompetitionAssignedToThem(competitionSearchProjectSetupResultItem, audtior));
+        assertTrue(rules.stakeholderCanViewCompetitionAssignedToThem(competitionSearchPreviousResultItem, audtior));
+
     }
 }

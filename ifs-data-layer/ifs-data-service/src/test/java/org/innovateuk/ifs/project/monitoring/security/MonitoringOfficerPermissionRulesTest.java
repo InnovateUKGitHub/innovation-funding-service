@@ -160,4 +160,19 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
 
         assertFalse(rules.partnersCanViewMonitoringOfficersOnTheirProjects(project, user));
     }
+    @Test
+    public void auditorsCanViewMonitoringOfficersForAProjectOnTheCompetitions() {
+
+        User auditor = newUser().withRoles(singleton(AUDITOR)).build();
+        UserResource auditorResource = newUserResource().withId(auditor.getId()).withRoleGlobal(AUDITOR).build();
+        Competition competition = newCompetition().build();
+
+        ProjectResource project = newProjectResource()
+                .withCompetition(competition.getId())
+                .build();
+
+
+        assertTrue(rules.stakeholdersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(project, auditorResource));
+
+    }
 }

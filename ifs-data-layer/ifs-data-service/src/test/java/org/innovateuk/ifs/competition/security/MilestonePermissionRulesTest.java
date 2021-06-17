@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -25,8 +24,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
-import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -140,5 +138,13 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
             verify(competitionRepository, times(5)).findById(competitionId);
             reset(competitionRepository);
         });
+    }
+
+    @Test
+    public void auditorsCanViewMilestoneOntheCompetitions() {
+        List<Role> auditorRoles = singletonList(AUDITOR);
+        UserResource audtior = newUserResource().withRolesGlobal(auditorRoles).build();
+        CompetitionResource competition = newCompetitionResource().withId(competitionId).build();
+        assertTrue(rules.stakeholdersCanViewMilestonesOnAssignedComps(compositeId, audtior));
     }
 }
