@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finance-data-service
+  annotations:
+    monitor: monitor
+    waitForDb: waitForDb
+    pullSecrets: pullSecrets
+spec:
+  replicas: 2

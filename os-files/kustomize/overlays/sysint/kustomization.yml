@@ -7,8 +7,6 @@ bases:
 
 resources:
   - spring-config.yml
-  - cache-provider/cache-provider-service.yml
-  - cache-provider/cache-provider-service-deployment.yml
 
   ###############################################################################
   ############### Auth ##########################################################
