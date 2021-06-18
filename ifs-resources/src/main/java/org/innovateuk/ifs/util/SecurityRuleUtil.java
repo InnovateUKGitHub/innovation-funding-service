@@ -52,7 +52,7 @@ public final class SecurityRuleUtil {
         return user.hasRole(INNOVATION_LEAD); }
 
     public static boolean isStakeholder(UserResource user) {
-        return user.hasRole(STAKEHOLDER) || user.hasAuthority(Authority.STAKEHOLDER);
+        return user.hasRole(STAKEHOLDER);
     }
 
     public static boolean isAuditor(UserResource user) {

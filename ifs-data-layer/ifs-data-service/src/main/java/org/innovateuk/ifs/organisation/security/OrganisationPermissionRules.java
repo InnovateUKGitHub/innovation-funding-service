@@ -13,6 +13,7 @@ import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -50,9 +51,9 @@ public class OrganisationPermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value = "READ", description = "Stakeholders can see all Organisations")
+    @PermissionRule(value = "READ", description = "Stakeholders/auditors can see all Organisations")
     public boolean stakeholdersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
-        return isStakeholder(user);
+        return user.hasAuthority(Authority.STAKEHOLDER);
     }
 
     @PermissionRule(value = "READ", description = "Competition finance users can see all Organisations")
