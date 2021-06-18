@@ -5,4 +5,4 @@ metadata:
 data:
   DB_PASS: ""
   DB_URL: ""
-  DB_USER: "ifs_survey"
+  DB_USER: ""
