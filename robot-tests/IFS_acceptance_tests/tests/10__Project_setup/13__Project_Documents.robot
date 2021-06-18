@@ -43,6 +43,8 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...
 ...               IFS-9577 MO documents: approve or reject
 ...
+...               IFS-9701 MO documents: Monitor project page status updates
+...
 Suite Setup       the user logs-in in new browser     &{collaborator1_credentials_bd}
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -210,6 +212,18 @@ Non-lead partner cannot view either document once removed
     When the user goes to documents page          Back to document overview  Exploitation plan
     Then the user should not see the element      jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
+Assign a MO to the project and they check the documents are incomplete
+    [Documentation]  IFS-9577  IFS-9701
+    [Tags]
+    [Setup]  log in as a different user            &{Comp_admin1_credentials}
+    Given the user navigates to the page           ${server}/project-setup-management/monitoring-officer/view-all?ktp=false
+    When search for MO                             Orvill  Orville Gibbs
+    Then the user should see the element           jQuery = span:contains("Assign projects to Monitoring Officer")
+    And the internal user assign project to MO     ${Grade_Crossing_Applicaiton_No}   ${Grade_Crossing_Application_Title}
+    And the user logs-in in new browser            &{monitoring_officer_one_credentials}
+    And the user navigates to the page             ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+    And the user should see the element            jQuery = ul li:contains("Documents") span:contains("Incomplete")
+
 PM can upload both documents after they have been removed
     [Documentation]    INFUND-3011
     [Tags]  HappyPath
@@ -232,14 +246,22 @@ Mandatory document submission
     And the user reloads the page
     Then PM submits both documents     ${Grade_Crossing_Project_Id}
 
+MO can see the Documents are awaiting review
+    [Documentation]    IFS-9701
+    [Tags]
+    Given the user logs-in in new browser     &{monitoring_officer_one_credentials}
+    When the user navigates to the page       ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+    Then the user should see the element      jQuery = ul li:contains("Documents") span:contains("Awaiting review")
+
 PM can still view both documents after submitting
     [Documentation]    INFUND-3012
     [Tags]
-    Given the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
-    When the user clicks the button/link    link = Collaboration agreement
-    And open pdf link                       jQuery = a:contains("${valid_pdf} (opens in a new window)")
-    When the user goes to documents page    Return to documents  Exploitation plan
-    Then open pdf link                      jQuery = a:contains("${valid_pdf} (opens in a new window)")
+    Given log in as a different user         &{lead_applicant_credentials_bd}
+    And the user navigates to the page       ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
+    When the user clicks the button/link     link = Collaboration agreement
+    And open pdf link                        jQuery = a:contains("${valid_pdf} (opens in a new window)")
+    Then the user goes to documents page     Return to documents  Exploitation plan
+    And open pdf link                        jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
 PM cannot remove the documents after submitting
     [Documentation]    INFUND-3012
@@ -333,6 +355,13 @@ IfsAdmin rejects both documents
     When the user goes to documents page        Return to documents  Exploitation plan
     Then ifs admin reject uploaded documents
 
+MO can see the Documents are set back to incomplete
+    [Documentation]    IFS-9701
+    [Tags]
+    Given the user logs-in in new browser     &{monitoring_officer_one_credentials}
+    When the user navigates to the page       ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+    Then the user should see the element      jQuery = ul li:contains("Documents") span:contains("Incomplete")
+    
 Partners can see the documents rejected
     [Documentation]    INFUND-5559, INFUND-5424, INFUND-7342, IFS-218
     [Tags]  HappyPath
@@ -405,6 +434,13 @@ ifsAdmin approves both documents
     When the user goes to documents page              Return to documents  Exploitation plan
     Then internal user approve uploaded documents
 
+MO can see the Documents have been completed
+    [Documentation]    IFS-9701
+    [Tags]
+    Given the user logs-in in new browser     &{monitoring_officer_one_credentials}
+    WHen the user navigates to the page       ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+    Then the user should see the element      jQuery = ul li:contains("Documents") span:contains("Completed")
+    
 Partners can see the documents approved
     [Documentation]    INFUND-5559, INFUND-5424, INFUND-7345
     [Tags]  HappyPath
