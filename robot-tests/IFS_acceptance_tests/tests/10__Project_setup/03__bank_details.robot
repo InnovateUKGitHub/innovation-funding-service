@@ -344,7 +344,6 @@ The user submits the bank account details
 The project finance user downloads the bank details
     log in as a different user         &{internal_finance_credentials}
     the user navigates to the page     ${server}/project-setup-management/competition/${PS_Competition_Id}/status/all
-    #the user clicks the button/link    jQuery = a:contains("Export all bank details")
     the user should not see an error in the page
     #the user downloads the file  ${internal_finance_credentials["email"]}  ${server}/project-setup-management/competition/${PS_Competition_Id}/status/bank-details/export  ${DOWNLOAD_FOLDER}/bank_details.csv
 

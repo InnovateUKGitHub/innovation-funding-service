@@ -690,7 +690,6 @@ KTA can download the appendix file uploaded by lead
     And the user clicks the application tile if displayed
     When the user clicks the button/link                      link = ${ktpApplicationTitle}
     And the user clicks the button/link                       id = accordion-questions-heading-2-6
-    #And the user navigates to the page                       ${server}/application/${ApplicationID}/form/question/2006/forminput/5403/file/744/download
     Then open pdf link                                        link = testing.pdf (opens in a new window)
     #Then the user downloads the file                          ${ktaEmail}   ${server}/application/${ApplicationID}/form/question/2006/forminput/5403/file/744/download   ${DOWNLOAD_FOLDER}/${valid_pdf}
     #[Teardown]  remove the file from the operating system     ${valid_pdf}
