@@ -5,26 +5,10 @@ commonAnnotations:
 bases:
   - ../../base
 
-resources:
-  - spring-config.yml
-
-  ###############################################################################
-  ############### Auth ##########################################################
-  ###############################################################################
-  - auth/idp/idp-keys-secrets.yml
-  - auth/idp/idp-config.yml
-  - auth/idp/shibboleth-config.yml
-  - auth/ldap/ldap-config.yml
-  - auth/ldap/ldap-keys-secrets.yml
-
 patchesStrategicMerge:
-  - cache-config.yml
-  - db-config.yml
-  - data-layer/data-service/data-service-config.yml
+  - auth/sp/sp-deployment.yml
   - data-layer/data-service/data-service-deployment.yml
-  - data-layer/finance-data-service/finance-data-service-config.yml
   - data-layer/finance-data-service/finance-data-service-deployment.yml
-  - data-layer/survey-data-service/survey-data-service-config.yml
   - data-layer/survey-data-service/survey-data-service-deployment.yml
   - data-layer/application-service/application-service-deployment.yml
   - data-layer/assessment-service/assessment-service-deployment.yml
@@ -33,8 +17,3 @@ patchesStrategicMerge:
   - data-layer/project-setup-mgt-service/project-setup-mgt-service-deployment.yml
   - data-layer/project-setup-service/project-setup-service-deployment.yml
   - data-layer/registration-service/registration-service-deployment.yml
-  - feature-toggle-config.yml
-  - new-relic-config.yml
-  - web-config.yml
-  - docusign-config.yml
-  - flyway-config.yml
