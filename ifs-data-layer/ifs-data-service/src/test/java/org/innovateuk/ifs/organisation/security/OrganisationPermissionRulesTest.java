@@ -70,9 +70,9 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
     }
 
     @Test
-    public void stakeholdersCanSeeAllOrganisations() {
+    public void stakeholdersORAuditorsCanSeeAllOrganisations() {
         allGlobalRoleUsers.forEach(user -> {
-            if (user.hasRole(STAKEHOLDER)) {
+            if (user.hasAuthority(Authority.STAKEHOLDER)) {
                 assertTrue(rules.stakeholdersCanSeeAllOrganisations(newOrganisationResource().build(), user));
             } else {
                 assertFalse(rules.stakeholdersCanSeeAllOrganisations(newOrganisationResource().build(), user));
@@ -416,16 +416,6 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
         assertTrue(rules.systemRegistrationUserCanSyncOrganisationDetailsForCompaniesHouseUpdate(organisation, user));
     }
-
-    @Test
-    public void auditorsCanSeeAllOrganisations() {
-        allGlobalRoleUsers.forEach(user -> {
-            if (user.hasAuthority(Authority.STAKEHOLDER)) {
-                assertTrue(rules.stakeholdersCanSeeAllOrganisations(newOrganisationResource().build(), user));
-            }
-        });
-    }
-
 
     @Override
     protected OrganisationPermissionRules supplyPermissionRulesUnderTest() {
