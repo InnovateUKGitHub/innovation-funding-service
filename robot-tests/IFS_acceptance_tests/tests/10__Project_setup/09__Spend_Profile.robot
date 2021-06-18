@@ -575,9 +575,12 @@ check if finance contact can be changed
 
 the project finance user downloads the spend profile file and checks the content of it
     [Arguments]  ${file}
-    the user downloads the file  ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${PS_SP_Project_Id}/partner-organisation/${Ooba_Lead_Org_Id}/spend-profile-export/csv  ${DOWNLOAD_FOLDER}/${file}
-    the user opens the csv file and checks the content  ${file}
-    remove the file from the operating system  ${file}
+    the user navigates to the page                   ${server}/project-setup-management/project/${PS_SP_Project_Id}/partner-organisation/${Ooba_Lead_Org_Id}/spend-profile-export/csv
+    the user should not see an error in the page
+
+    #the user downloads the file  ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${PS_SP_Project_Id}/partner-organisation/${Ooba_Lead_Org_Id}/spend-profile-export/csv  ${DOWNLOAD_FOLDER}/${file}
+    #the user opens the csv file and checks the content  ${file}
+    #remove the file from the operating system  ${file}
 
 the user opens the csv file and checks the content
     [Arguments]  ${file}
@@ -788,6 +791,7 @@ the project finance user should see the spend profile details
     the user should see the element              jQuery = h2:contains("Innovation Lead") ~ p:contains("Peter Freeman")
     the user should see the element              jQuery = h2:contains("Project spend profile")
     the project finance user downloads the spend profile file and checks the content of it  ${Ooba_Lead_Org_Name}-spend-profile.csv
+    the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
     the user should see the element              link = ${Wordpedia_Partner_Org_Name}-spend-profile.csv
     the user should see the element              link = ${Jabbertype_Partner_Org_Name}-spend-profile.csv
     the user should see the element              jQuery = .govuk-main-wrapper h2:contains("Approved by Innovate UK")

@@ -171,12 +171,12 @@ Applicant - Finance contact can view the query
     Then The user clicks the button/link             jQuery = h2:contains("an eligibility query's title")
     And the user should see the element              jQuery = h2:contains("a viability query's title")
 
-#Applicant - Finance Contact can view all the attachments and download them
-#    [Documentation]   IFS-7215
-#    [Tags]  HappyPath
-#    Given the user should see all the attachments
-#    And open pdf link                                 jQuery = a:contains("${valid_pdf}")
-#    And the user is able to download attachments      ${ods_file}  ${valid_odt}
+Applicant - Finance Contact can view all the attachments and download them
+    [Documentation]   IFS-7215
+    [Tags]  HappyPath
+    Given the user should see all the attachments
+    And open pdf link                                 jQuery = a:contains("${valid_pdf}")
+    And the user is able to download attachments      ${ods_file}  ${valid_odt}
 
 Applicant - Response to query validations
     [Documentation]  INFUND-4843 IFS-2746
@@ -242,9 +242,9 @@ Project finance user can view the response and supporting documents
     When the user navigates to the page                     ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     Then the project finance user view the query details
 
-#Project Finance user can doenload supporting documents
-#    [Documentation]   IFS-7215
-#    Given the user is able to download attachments    ${valid_docx}  ${excel_file}
+Project Finance user can download supporting documents
+    [Documentation]   IFS-7215
+    Given the user is able to download attachments    ${valid_docx}  ${excel_file}
 
 Project finance user can continue the conversation
     [Documentation]    INFUND-7752
@@ -469,12 +469,16 @@ the user uploads multiple file types as attachment and removes them
 
 the user is able to download attachments
     [Arguments]  ${attachment1}  ${attachment2}
-    The user downloads the file                 ${PublicSector_lead_applicant_credentials["email"]}  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check  ${DOWNLOAD_FOLDER}/${attachment1}
-    Download should be done
-    remove the file from the operating system   ${attachment1}
-    The user downloads the file                 ${PublicSector_lead_applicant_credentials["email"]}  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check  ${DOWNLOAD_FOLDER}/${attachment2}
-    Download should be done
-    remove the file from the operating system   ${attachment2}
+    the user clicks the button/link                  link = ${attachment1} (opens in a new window)
+    the user should not see an error in the page
+    #The user downloads the file                 ${PublicSector_lead_applicant_credentials["email"]}  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check  ${DOWNLOAD_FOLDER}/${attachment1}
+    #Download should be done
+    #remove the file from the operating system   ${attachment1}
+    the user clicks the button/link                  link = ${attachment2} (opens in a new window)
+    the user should not see an error in the page
+    #The user downloads the file                 ${PublicSector_lead_applicant_credentials["email"]}  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check  ${DOWNLOAD_FOLDER}/${attachment2}
+    #Download should be done
+    #remove the file from the operating system   ${attachment2}
 
 The query conversation can be resolved by
     [Arguments]  ${user}  ${section}

@@ -284,16 +284,16 @@ IFS admin can see applicant response for funding rule query and mark discussion 
     When the user navigates to the page          ${server}/project-setup-management/project/${ProjectID}/finance-check
     Then the user marks the query as resolved
 
-#Project Finance is able to see the Overheads costs file
-#    [Documentation]  IFS-2332
-#    Given Log in as a different user            &{internal_finance_credentials}
-#    When the user navigates to the page         ${SERVER}/project-setup-management/project/${ProjectID}/finance-check/
-#    And the user clicks the button/link         jQuery = tr:contains("Empire Ltd") td:nth-child(6) a:contains("Review")
-#    And the user expands the section            Overhead costs
-#    Then the user should see the element        jQuery = a:contains("${excel_file}")
-#    And the user should not see the element     jQuery = .govuk-details__summary span:contains("Overheads costs guidance")
-#    And the project finance user is able to download the Overheads file    ${ProjectID}  22
-#    # TODO IFS-2599 Raised to improve this as we cannot rely on hard-coded values.
+Project Finance is able to see the Overheads costs file
+    [Documentation]  IFS-2332
+    Given Log in as a different user            &{internal_finance_credentials}
+    When the user navigates to the page         ${SERVER}/project-setup-management/project/${ProjectID}/finance-check/
+    And the user clicks the button/link         jQuery = tr:contains("Empire Ltd") td:nth-child(6) a:contains("Review")
+    And the user expands the section            Overhead costs
+    Then the user should see the element        jQuery = a:contains("${excel_file}")
+    And the user should not see the element     jQuery = .govuk-details__summary span:contains("Overheads costs guidance")
+    And the project finance user is able to download the Overheads file    ${ProjectID}  22
+    # TODO IFS-2599 Raised to improve this as we cannot rely on hard-coded values.
 
 *** Keywords ***
 Custom Suite Setup

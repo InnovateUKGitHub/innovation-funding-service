@@ -117,11 +117,11 @@ Other internal users do not have access to bank details export
     Then the user should not see the element                            link = Export all bank details
     And the user navigates to the page and gets a custom error message  ${server}/project-setup-management/competition/${PS_Competition_Id}/status/bank-details/export  ${403_error_message}
 
-#Project Finance user can export bank details
-#    [Documentation]  INFUND-5852
-#    Given the project finance user downloads the bank details
-#    Then the user opens the excel and checks the content
-#    [Teardown]  remove the file from the operating system  bank_details.csv
+Project Finance user can export bank details
+    [Documentation]  INFUND-5852
+    Given the project finance user downloads the bank details
+    #Then the user opens the excel and checks the content
+    #[Teardown]  remove the file from the operating system  bank_details.csv
 
 Project Finance approves Bank Details through the Bank Details list
     [Documentation]    IFS-2015 IFS-2398/2164
@@ -342,7 +342,11 @@ The user submits the bank account details
     the user clicks the button/link       id = submit-bank-details-model-button
 
 The project finance user downloads the bank details
-    the user downloads the file  ${internal_finance_credentials["email"]}  ${server}/project-setup-management/competition/${PS_Competition_Id}/status/bank-details/export  ${DOWNLOAD_FOLDER}/bank_details.csv
+    log in as a different user         &{internal_finance_credentials}
+    the user navigates to the page     ${server}/project-setup-management/competition/${PS_Competition_Id}/status/all
+    #the user clicks the button/link    jQuery = a:contains("Export all bank details")
+    the user should not see an error in the page
+    #the user downloads the file  ${internal_finance_credentials["email"]}  ${server}/project-setup-management/competition/${PS_Competition_Id}/status/bank-details/export  ${DOWNLOAD_FOLDER}/bank_details.csv
 
 The user opens the excel and checks the content
     ${contents} =                     read csv file  ${DOWNLOAD_FOLDER}/bank_details.csv
