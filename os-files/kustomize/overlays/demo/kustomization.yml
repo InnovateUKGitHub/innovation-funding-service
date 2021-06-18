@@ -7,5 +7,3 @@ bases:
 
 patchesStrategicMerge:
   - data-layer/data-service/data-service-deployment.yml
-  - data-layer/finance-data-service/finance-data-service-deployment.yml
-  - data-layer/survey-data-service/survey-data-service-config.yml
