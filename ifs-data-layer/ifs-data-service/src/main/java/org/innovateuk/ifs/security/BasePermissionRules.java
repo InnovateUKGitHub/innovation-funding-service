@@ -23,7 +23,6 @@ import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerReposit
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,6 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isAuditor;
 
 /**
  * Base class to contain useful shorthand methods for the Permission rule subclasses
@@ -214,10 +212,4 @@ public abstract class BasePermissionRules extends RootPermissionRules {
                 .findFirst()
                 .isPresent();
     }
-
-
-    public boolean auditorHasStakeholderAutorityCanViewAllCompetitions(UserResource user) {
-       return  isAuditor(user) && user.hasAuthority(Authority.STAKEHOLDER);
-    }
-
 }

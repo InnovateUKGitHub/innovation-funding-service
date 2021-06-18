@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +26,7 @@ public class PartnerOrganisationPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "Stakeholders can see partner organisations on projects in competitions they are assigned to OR " +
             "Auditors can see partner organisations on projects in all competitions")
     public boolean stakeholdersCanViewProjects(PartnerOrganisationResource partnerOrganisation, final UserResource user) {
-        return userIsStakeholderOnCompetitionForProject(partnerOrganisation.getProject(), user.getId()) || auditorHasStakeholderAutorityCanViewAllCompetitions(user);
+        return userIsStakeholderOnCompetitionForProject(partnerOrganisation.getProject(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
     }
 
     @PermissionRule(value = "READ", description = "Competition finances users can see partner organisations on projects in competitions they are assigned to")
@@ -51,7 +52,7 @@ public class PartnerOrganisationPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ_PENDING_PARTNER_PROGRESS", description = "Stakeholders can read partner progress in project setup in competitions they are assigned to OR" +
             "Auditors can read partner progress in project setup for all competitions")
     public boolean stakeholdersCanReadPendingPartnerProgress(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
-        return userIsStakeholderOnCompetitionForProject(partnerOrganisation.getProject(), user.getId()) || auditorHasStakeholderAutorityCanViewAllCompetitions(user);
+        return userIsStakeholderOnCompetitionForProject(partnerOrganisation.getProject(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
     }
 
     @PermissionRule(value = "READ_PENDING_PARTNER_PROGRESS", description = "Competition finance users can read partner progress in project setup in competitions they are assigned to")

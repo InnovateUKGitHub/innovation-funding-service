@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +36,7 @@ public class StatusPermissionRules extends BasePermissionRules {
             value = "VIEW_TEAM_STATUS",
             description = "Stakeholders/Auditors can see a team's status for a project on their(all) competitions")
     public boolean stakeholdersCanViewTeamStatus(ProjectResource project, UserResource user) {
-        return userIsStakeholderInCompetition(project.getCompetition(), user.getId()) || auditorHasStakeholderAutorityCanViewAllCompetitions(user);
+        return userIsStakeholderInCompetition(project.getCompetition(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
     }
 
     @PermissionRule(
@@ -77,7 +78,7 @@ public class StatusPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "VIEW_PROJECT_SETUP_COMPETITION_STATUS", description = "Stakeholders should be able to access current status of competition that are assigned to them OR" +
             "Auditors can able to access the current status of all competitions")
     public boolean assignedStakeholderCanViewCompetitionStatus(CompetitionResource competition, UserResource user){
-        return userIsStakeholderInCompetition(competition.getId(), user.getId()) || auditorHasStakeholderAutorityCanViewAllCompetitions(user);
+        return userIsStakeholderInCompetition(competition.getId(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
     }
 
     @PermissionRule(value = "VIEW_PROJECT_SETUP_COMPETITION_STATUS", description = "Competition finance users should be able to access current status of competition that are assigned to them")
@@ -103,7 +104,7 @@ public class StatusPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Stakeholders should be able to view current status of project from competition assigned to them OR" +
             "Auditors should be able to view the current status of project ")
     public boolean assignedStakeholderCanViewProjectStatus(ProjectResource project, UserResource user){
-        return userIsStakeholderInCompetition(project.getCompetition(), user.getId()) || auditorHasStakeholderAutorityCanViewAllCompetitions(user);
+        return userIsStakeholderInCompetition(project.getCompetition(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
     }
 
     @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Competition finance users should be able to view current status of project from competition assigned to them")

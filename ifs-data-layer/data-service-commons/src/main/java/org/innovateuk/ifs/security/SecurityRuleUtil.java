@@ -72,6 +72,4 @@ public final class SecurityRuleUtil {
 
     public static boolean isAuditor(User user) { return user.hasRole(AUDITOR); }
 
-    public static boolean isStakeholderRoleOrAuthority(User user) { return user.hasRole(STAKEHOLDER) || user.hasAuthority(Authority.STAKEHOLDER); }
-
 }

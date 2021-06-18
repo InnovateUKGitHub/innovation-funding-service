@@ -50,7 +50,7 @@ public class MonitoringOfficerPermissionRules extends BasePermissionRules {
             description = "Stakeholders can view Monitoring Officers on any Project in their competitions OR" +
                     "Auditors can view Monitoring Officers on any Project ")
     public boolean stakeholdersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(ProjectResource project, UserResource user) {
-        return userIsStakeholderInCompetition(project.getCompetition(), user.getId()) || auditorHasStakeholderAutorityCanViewAllCompetitions(user);
+        return userIsStakeholderInCompetition(project.getCompetition(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
     }
 
     @PermissionRule(

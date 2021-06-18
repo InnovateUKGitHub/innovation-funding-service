@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -43,7 +44,7 @@ public class CompetitionPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "Stakeholders can view competitions that are assigned to them OR Auditors can view all competitions")
     public boolean stakeholderCanViewCompetitionAssignedToThem(CompetitionResource competition, UserResource user) {
-        return userIsStakeholderInCompetition(competition.getId(), user.getId()) || auditorHasStakeholderAutorityCanViewAllCompetitions(user);
+        return userIsStakeholderInCompetition(competition.getId(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
     }
 
     @PermissionRule(value = "READ", description = "Competition finance users can view competitions that are assigned to them")
@@ -68,7 +69,7 @@ public class CompetitionPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "Stakeholders can see competitions that are assigned to them OR Auditors can view all competitions")
     public boolean stakeholderCanViewCompetitionAssignedToThem(CompetitionSearchResultItem competition, UserResource user) {
-        return userIsStakeholderInCompetition(competition.getId(), user.getId()) || auditorHasStakeholderAutorityCanViewAllCompetitions(user);
+        return userIsStakeholderInCompetition(competition.getId(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
     }
 
     @PermissionRule(value = "MANAGE_INNOVATION_LEADS", description = "Competition Admin and Project Finance can add, remove and view innovation leads for a competition")
@@ -87,7 +88,7 @@ public class CompetitionPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "VIEW_PREVIOUS_APPLICATIONS", description = "Stakeholders for the competition can view previous applications OR Auditors can view all previous competitions")
     public boolean stakeholderForCompetitionCanViewPreviousApplications(CompetitionResource competition, UserResource user) {
-        return userIsStakeholderInCompetition(competition.getId(), user.getId()) || auditorHasStakeholderAutorityCanViewAllCompetitions(user);
+        return userIsStakeholderInCompetition(competition.getId(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
     }
 
     @PermissionRule(value = "DELETE",

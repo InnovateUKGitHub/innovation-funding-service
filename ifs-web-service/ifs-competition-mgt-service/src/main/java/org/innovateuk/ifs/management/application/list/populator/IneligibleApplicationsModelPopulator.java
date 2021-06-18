@@ -3,9 +3,9 @@ package org.innovateuk.ifs.management.application.list.populator;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.management.application.view.form.IneligibleApplicationsForm;
 import org.innovateuk.ifs.management.application.list.viewmodel.IneligibleApplicationsRowViewModel;
 import org.innovateuk.ifs.management.application.list.viewmodel.IneligibleApplicationsViewModel;
+import org.innovateuk.ifs.management.application.view.form.IneligibleApplicationsForm;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
-import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -54,7 +53,7 @@ public class IneligibleApplicationsModelPopulator {
                 filterForm.getFilterSearch(),
                 getApplications(summaryPageResource),
                 new Pagination(summaryPageResource),
-                user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)|| user.hasRole(SUPPORT) || user.hasAuthority(Authority.STAKEHOLDER)
+                user.hasRole(INNOVATION_LEAD) || user.hasRole(SUPPORT) || user.hasAuthority(Authority.STAKEHOLDER)
         );
     }
 

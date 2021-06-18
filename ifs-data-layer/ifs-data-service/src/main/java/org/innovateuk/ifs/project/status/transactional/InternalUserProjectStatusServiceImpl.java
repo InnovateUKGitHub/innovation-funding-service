@@ -28,6 +28,7 @@ import org.innovateuk.ifs.project.status.resource.ProjectStatusPageResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -297,7 +298,7 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
             return COMPLETE;
         } else if (allRequiredDetailsComplete) {
             User user = loggedInUserSupplier.get();
-            if (isSupport(user) || isInnovationLead(user) || isStakeholderRoleOrAuthority(user)) {
+            if (isSupport(user) || isInnovationLead(user) || user.hasAuthority(Authority.STAKEHOLDER)) {
                 return notStartedIfProjectActive(projectState);
             } else {
                 return projectState.isActive() ?

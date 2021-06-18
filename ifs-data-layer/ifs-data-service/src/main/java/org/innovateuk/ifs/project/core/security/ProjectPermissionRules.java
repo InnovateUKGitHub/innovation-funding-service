@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +26,7 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "Stakeholders OR Auditors can see project resources")
     public boolean stakeholdersCanViewProjects(final ProjectResource project, final UserResource user) {
-        return userIsStakeholderInCompetition(project.getCompetition(), user.getId()) || auditorHasStakeholderAutorityCanViewAllCompetitions(user);
+        return userIsStakeholderInCompetition(project.getCompetition(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
     }
 
     @PermissionRule(value = "READ", description = "Competition finance users can see project resources")
@@ -51,7 +52,7 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Stakeholders/Auditors can view finance reviewer.")
     public boolean stakeholderCanViewFinanceReviewer(final ProjectResource project, final UserResource user) {
-        return project != null && (userIsStakeholderInCompetition(project.getCompetition(), user.getId()) || auditorHasStakeholderAutorityCanViewAllCompetitions(user));
+        return project != null && (userIsStakeholderInCompetition(project.getCompetition(), user.getId()) || user.hasAuthority(Authority.AUDITOR));
     }
 
     @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Project finance users can view finance reviewer.")

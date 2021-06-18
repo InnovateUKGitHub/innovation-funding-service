@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,7 @@ public class CompetitionSummaryPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "VIEW_COMPETITION_SUMMARY", description = "Stakeholders can view competition summary of competitions assigned to them OR Auditors can view all competitions.")
     public boolean stakeholdersCanViewCompetitionSummaryOnAssignedComps(CompetitionResource competition, UserResource user) {
-        return userIsStakeholderInCompetition(competition.getId(), user.getId()) || auditorHasStakeholderAutorityCanViewAllCompetitions(user);
+        return userIsStakeholderInCompetition(competition.getId(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
     }
 
     @PermissionRule(value = "VIEW_COMPETITION_SUMMARY", description = "Competition finance users can view competition summary of competitions assigned to them.")
