@@ -44,7 +44,7 @@ public class ApplicationSecurityHelper extends BasePermissionRules {
     private boolean isStakeHolder(final long applicationId, final UserResource user) {
         Application application = applicationRepository.findById(applicationId).get();
         return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId())
-                || user.hasAuthority(Authority.STAKEHOLDER);
+                || user.hasAuthority(Authority.AUDITOR);
     }
 
     private boolean isLinkedToProject(long applicationId, final UserResource user) {

@@ -72,7 +72,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
     @Test
     public void stakeholdersCanSeeAllOrganisations() {
         allGlobalRoleUsers.forEach(user -> {
-            if (user.hasRole(STAKEHOLDER)) {
+            if (user.hasRole(STAKEHOLDER) || user.hasAuthority(Authority.STAKEHOLDER)) {
                 assertTrue(rules.stakeholdersCanSeeAllOrganisations(newOrganisationResource().build(), user));
             } else {
                 assertFalse(rules.stakeholdersCanSeeAllOrganisations(newOrganisationResource().build(), user));
