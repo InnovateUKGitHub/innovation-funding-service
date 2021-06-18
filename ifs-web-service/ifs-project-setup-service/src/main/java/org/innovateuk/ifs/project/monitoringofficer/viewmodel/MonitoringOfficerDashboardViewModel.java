@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.project.monitoringofficer.viewmodel;
 
-import org.innovateuk.ifs.project.resource.ProjectState;
-
 import java.util.List;
-
-import static org.innovateuk.ifs.util.CollectionFunctions.negate;
+import java.util.stream.Collectors;
 
 /**
  * Monitoring officer dashboard view model
@@ -21,11 +18,23 @@ public class MonitoringOfficerDashboardViewModel {
         return projects;
     }
 
-    public boolean hasAnyInSetup() {
-        return projects.stream().map(ProjectDashboardRowViewModel::getProjectState).anyMatch(negate(ProjectState::isComplete));
+    public int inSetupProjectCount() {
+        List<ProjectDashboardRowViewModel> inSetupProjects = projects.stream()
+                .filter(project -> !project.getProjectState().isComplete())
+                .collect(Collectors.toList());
+
+        return inSetupProjects.size();
     }
 
-    public boolean hasAnyInPrevious() {
-        return projects.stream().map(ProjectDashboardRowViewModel::getProjectState).anyMatch(ProjectState::isComplete);
+    public int previousProjectCount() {
+        List<ProjectDashboardRowViewModel> previousProjects = projects.stream()
+                .filter(project -> project.getProjectState().isComplete())
+                .collect(Collectors.toList());
+
+        return previousProjects.size();
+    }
+
+    public int projectCount() {
+        return projects.size();
     }
 }
