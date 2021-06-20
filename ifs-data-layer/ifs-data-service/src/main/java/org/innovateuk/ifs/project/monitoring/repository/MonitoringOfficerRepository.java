@@ -4,6 +4,7 @@ import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -53,6 +54,15 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
     String NOT_KTP = "AND project.application.competition.fundingType != (org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP)";
     String IS_KTP = "AND project.application.competition.fundingType = org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP ";
 
+    String FILTER_PROJECTS = "SELECT monitoringOfficer " +
+            "FROM MonitoringOfficer monitoringOfficer " +
+            "JOIN Project project " +
+            "   ON monitoringOfficer.project.id = project.id " +
+            "   AND monitoringOfficer.role = org.innovateuk.ifs.project.core.ProjectParticipantRole.MONITORING_OFFICER " +
+            "WHERE " +
+            "   monitoringOfficer.user.id = :userId " +
+            "   AND project.projectProcess.activityState in :projectStates";
+
     List<MonitoringOfficer> findByUserId(long userId);
 
     Optional<MonitoringOfficer> findOneByProjectIdAndRole(long projectId, ProjectParticipantRole role);
@@ -94,4 +104,7 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
             IS_KTP +
             "ORDER BY project.application.id")
     List<MonitoringOfficerAssignedProjectResource> findAssignedKTPProjects(Long userId);
+
+    @Query(FILTER_PROJECTS)
+    List<MonitoringOfficer> filterMonitoringOfficerProjects(Long userId, List<ProjectState> projectStates);
 }

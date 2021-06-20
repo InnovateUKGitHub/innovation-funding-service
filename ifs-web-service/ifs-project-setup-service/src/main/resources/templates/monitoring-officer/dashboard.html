@@ -15,7 +15,8 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="my-applications">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project setup',size='govuk-heading-l'" />
-            <div class="govuk-grid-row">
+            <form th:object="${form}" method="post" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+                <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-third">
                     <form id="filter-projects" method="GET">
                         <fieldset class="govuk-fieldset">
@@ -31,13 +32,23 @@
                                 </h2>
                                 <div class="govuk-checkboxes">
                                     <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" type="checkbox" />
+                                        <input id="projectInSetup"
+                                               class="govuk-checkboxes__input"
+                                               type="checkbox"
+                                               value="projectInSetup"
+                                               th:field="${form.projectInSetup}"
+                                        />
                                         <label class="govuk-label govuk-checkboxes__label">
                                             <span th:text="'In setup (' + ${model.inSetupProjectCount} + ')'">In setup (18)</span>
                                         </label>
                                     </div>
                                     <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input assessment-submit-checkbox" type="checkbox" />
+                                        <input id="previousProject"
+                                               class="govuk-checkboxes__input"
+                                               type="checkbox"
+                                               value="previousProject"
+                                               th:field="${form.previousProject}"
+                                        />
                                         <label class="govuk-label govuk-checkboxes__label">
                                             <span th:text="'Previous (' + ${model.previousProjectCount} + ')'">Previous (5)</span>
                                         </label>
@@ -82,6 +93,7 @@
                     </div>
                 </div>
             </div>
+            </form>
             <section class="terms-and-conditions">
                 <p class="govuk-body"><a href="/info/terms-and-conditions" class="govuk-link">Read the terms and conditions</a></p>
             </section>

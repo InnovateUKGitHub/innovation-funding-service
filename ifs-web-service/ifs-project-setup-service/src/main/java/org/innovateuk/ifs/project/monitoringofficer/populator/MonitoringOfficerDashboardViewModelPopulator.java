@@ -22,8 +22,21 @@ public class MonitoringOfficerDashboardViewModelPopulator {
 
     public MonitoringOfficerDashboardViewModel populate(UserResource user) {
         List<ProjectResource> projects = monitoringOfficerRestService.getProjectsForMonitoringOfficer(user.getId()).getSuccess();
-        List<ProjectDashboardRowViewModel> projectViews = projects.stream().map(project ->
-                new ProjectDashboardRowViewModel(project)).collect(toList());
+        return buildMonitoringOfficerDashboardViewModel(projects);
+    }
+
+    private MonitoringOfficerDashboardViewModel buildMonitoringOfficerDashboardViewModel(List<ProjectResource> projects) {
+        List<ProjectDashboardRowViewModel> projectViews = projects.stream()
+                .map(project -> new ProjectDashboardRowViewModel(project))
+                .collect(toList());
+
         return new MonitoringOfficerDashboardViewModel(projectViews);
+    }
+
+    public MonitoringOfficerDashboardViewModel populate(UserResource user, boolean projectInSetup, boolean previousProject) {
+        List<ProjectResource> projects = monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(),
+                projectInSetup, previousProject).getSuccess();
+
+        return buildMonitoringOfficerDashboardViewModel(projects);
     }
 }
