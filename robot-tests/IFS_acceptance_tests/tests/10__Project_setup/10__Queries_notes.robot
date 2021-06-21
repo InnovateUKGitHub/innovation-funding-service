@@ -468,12 +468,16 @@ the user uploads multiple file types as attachment and removes them
 
 the user is able to download attachments
     [Arguments]  ${attachment1}  ${attachment2}
-    The user downloads the file                 ${PublicSector_lead_applicant_credentials["email"]}  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check  ${DOWNLOAD_FOLDER}/${attachment1}
-    Download should be done
-    remove the file from the operating system   ${attachment1}
-    The user downloads the file                 ${PublicSector_lead_applicant_credentials["email"]}  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check  ${DOWNLOAD_FOLDER}/${attachment2}
-    Download should be done
-    remove the file from the operating system   ${attachment2}
+    the user clicks the button/link             link = ${attachment1} (opens in a new window)
+    the user should not see an error in the page
+#    The user downloads the file                 ${PublicSector_lead_applicant_credentials["email"]}  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check  ${DOWNLOAD_FOLDER}/${attachment1}
+#    Download should be done
+#    remove the file from the operating system   ${attachment1}
+    the user clicks the button/link             link = ${attachment2} (opens in a new window)
+    the user should not see an error in the page
+#    The user downloads the file                 ${PublicSector_lead_applicant_credentials["email"]}  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check  ${DOWNLOAD_FOLDER}/${attachment2}
+#    Download should be done
+#    remove the file from the operating system   ${attachment2}
 
 The query conversation can be resolved by
     [Arguments]  ${user}  ${section}
