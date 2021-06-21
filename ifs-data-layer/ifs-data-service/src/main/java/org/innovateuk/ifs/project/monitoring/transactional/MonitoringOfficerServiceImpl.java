@@ -144,8 +144,22 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
 
     @Override
     public ServiceResult<List<ProjectResource>> filterMonitoringOfficerProjects(long userId, boolean projectInSetup, boolean previousProject) {
+        List<ProjectState> projectStates = applyProjectStatesFilter(projectInSetup, previousProject);
+        List<MonitoringOfficer> monitoringOfficers = monitoringOfficerRepository.filterMonitoringOfficerProjects(userId, projectStates);
 
+        return serviceSuccess(monitoringOfficers.stream()
+                .map(MonitoringOfficer::getProcess)
+                .map(projectMapper::mapToResource)
+                .collect(toList()));
+    }
+
+    private List<ProjectState> applyProjectStatesFilter(boolean projectInSetup, boolean previousProject) {
         List<ProjectState> projectStates = new ArrayList<>();
+
+        if (!previousProject && !projectInSetup) {
+            projectStates.addAll(Stream.of(ProjectState.values())
+                    .collect(Collectors.toList()));
+        }
 
         if (previousProject) {
             projectStates.addAll(ProjectState.COMPLETED_STATES);
@@ -156,12 +170,7 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
                     .filter(projectState -> !projectState.isComplete())
                     .collect(Collectors.toList()));
         }
-
-        List<MonitoringOfficer> monitoringOfficers = monitoringOfficerRepository.filterMonitoringOfficerProjects(userId, projectStates);
-        return serviceSuccess(monitoringOfficers.stream()
-                .map(MonitoringOfficer::getProcess)
-                .map(projectMapper::mapToResource)
-                .collect(toList()));
+        return projectStates;
     }
 
     @Override
