@@ -22,6 +22,9 @@ Documentation     INFUND-4840 As a project finance team member I want to be able
 ...               IFS-3559 Email subject for new finance queries to include competition name and application ID
 ...
 ...               IFS-7215 Project finance user and lead applicant can upload multiple documents of different file types as a part of finance queries and response to it.
+...
+...               IFS-9774 Investigate if its possible to fix AT's failure due to IDP upgrade
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -432,15 +435,15 @@ Note comment can be posted
     Then the user should not see the element    jQuery = .govuk-button:contains("Save comment")
 
 Applicant - Finance Contact can download attachments
-    [Documentation]   IFS-7215
+    [Documentation]   IFS-7215  IFS-9774
     [Tags]  HappyPath
-    Given log in as a different user                 &{PublicSector_lead_applicant_credentials}
-    When the user navigates to the page              ${server}/project-setup/project/${Queries_Application_Project}/finance-check
-    And the user expands the section                 an eligibility query's title
+    Given log in as a different user                  &{PublicSector_lead_applicant_credentials}
+    When the user navigates to the page               ${server}/project-setup/project/${Queries_Application_Project}/finance-check
+    And the user expands the section                  an eligibility query's title
     Then the user is able to download attachments     ${ods_file}  ${valid_odt}
 
 Project Finance user can doenload supporting documents
-    [Documentation]   IFS-7215
+    [Documentation]   IFS-7215  IFS-9774
     Given log in as a different user                &{internal_finance_credentials}
     When the user navigates to the page             ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     Then the user clicks the button/link            css = table.table-progress tr:nth-child(1) td:nth-child(6)  # View
@@ -479,14 +482,8 @@ the user is able to download attachments
     [Arguments]  ${attachment1}  ${attachment2}
     the user clicks the button/link             link = ${attachment1} (opens in a new window)
     the user should not see an error in the page
-#    The user downloads the file                 ${PublicSector_lead_applicant_credentials["email"]}  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check  ${DOWNLOAD_FOLDER}/${attachment1}
-#    Download should be done
-#    remove the file from the operating system   ${attachment1}
     the user clicks the button/link             link = ${attachment2} (opens in a new window)
     the user should not see an error in the page
-#    The user downloads the file                 ${PublicSector_lead_applicant_credentials["email"]}  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check  ${DOWNLOAD_FOLDER}/${attachment2}
-#    Download should be done
-#    remove the file from the operating system   ${attachment2}
 
 The query conversation can be resolved by
     [Arguments]  ${user}  ${section}

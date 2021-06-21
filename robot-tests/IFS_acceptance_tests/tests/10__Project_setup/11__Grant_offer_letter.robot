@@ -57,6 +57,8 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...
 ...               IFS-9611 IFS Expert user can remove uploaded Grant Offer Letter documents
 ...
+...               IFS-9774 Investigate if its possible to fix AT's failure due to IDP upgrade
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -114,13 +116,11 @@ Status updates correctly for internal user's table
     And the user should see the element     css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(5) > a     # GOL
 
 Project Finance can download GOL
-    [Documentation]  INFUND-6377
+    [Documentation]  INFUND-6377  IFS-9774
     [Tags]   HappyPath
     [Setup]  log in as a different user                        &{internal_finance_credentials}
     When the user navigates to the page                        ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/grant-offer-letter
     Then the user should not see an error in the page
-    #Then the user downloads the file                           ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
-    #[Teardown]    remove the file from the operating system    grant_offer_letter.pdf
 
 Non lead should not be able to see GOL until it is sent by IUK
     [Documentation]  INFUND-7027
@@ -364,14 +364,12 @@ Internal Dashboard should be updated
     Then the user should see the element     jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(8).status.action
 
 Internal user can download the signed GOL
-    [Documentation]    INFUND-6377
+    [Documentation]    INFUND-6377  IFS-9774
     [Tags]
     Given the user navigates to the page                       ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
     And the user should see the element                       jQuery = h2:contains("Signed grant offer letter") + .upload-section a
     When the user navigates to the page                       ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/signed-grant-offer-letter
     Then the user should not see an error in the page
-    #And the user downloads the file                            ${Comp_admin1_credentials["email"]}  ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/signed-grant-offer-letter  ${DOWNLOAD_FOLDER}/testing.pdf
-    #[Teardown]    remove the file from the operating system    testing.pdf
 
 Comp Admin can accept the signed grant offer letter
     [Documentation]  INFUND-6377 IFS-2174
@@ -446,13 +444,11 @@ Non lead can see the GOL approved
     And the user should see the element   jQuery = .success-alert p:contains("Your signed grant offer letter has been received and accepted by Innovate UK")
 
 Non lead can download the GOL
-    [Documentation]  INFUND-6377
+    [Documentation]  INFUND-6377  IFS-9774
     [Tags]
     Given the user navigates to the page                  ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
     When the user navigates to the page                   ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/grant-offer-letter
     Then the user should not see an error in the page
-    #Then the user downloads the file        ${Elbow_Grease_Partner_Email}  ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/testing.pdf
-    #[Teardown]    remove the file from the operating system    testing.pdf
 
 Non lead cannot see the signed GOL
     [Documentation]    INFUND-7170

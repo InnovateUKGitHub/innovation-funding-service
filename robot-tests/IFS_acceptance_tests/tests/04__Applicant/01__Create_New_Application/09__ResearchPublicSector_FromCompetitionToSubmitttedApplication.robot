@@ -15,6 +15,8 @@ Documentation     IFS-1012 As a comp exec I am able to set Research and Public s
 ...
 ...               IFS-8847 Always open competitions: new comp setup configuration
 ...
+...               IFS-9774 Investigate if its possible to fix AT's failure due to IDP upgrade
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -82,12 +84,12 @@ Applicant Applies to Public content leading Competition
     And the user accept the competition terms and conditions             Return to application overview
     And collaborating is required to submit the application if Research participation is not 100pc  ${openCompetitionPublicSector_name}  ${publicLeadApp}  becky.mason@gmail.com  no
 
-#Project Finance is able to see the Overheads costs file
-#    [Documentation]  IFS-1724
-#    [Tags]  CompAdmin  HappyPath
-#    [Setup]  log in as a different user    &{internal_finance_credentials}
-#    Given the competition is now in Project Setup
-#    Then the user is able to download the overheads file
+Project Finance is able to see the Overheads costs file
+    [Documentation]  IFS-1724  IFS-9774
+    [Tags]  CompAdmin  HappyPath
+    [Setup]  log in as a different user    &{internal_finance_credentials}
+    Given the competition is now in Project Setup
+    Then the user is able to download the overheads file
 
 *** Keywords ***
 Custom Suite Setup

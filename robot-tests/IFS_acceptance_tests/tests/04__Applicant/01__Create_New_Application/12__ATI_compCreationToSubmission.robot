@@ -31,6 +31,8 @@ Documentation     IFS-2396  ATI Competition type template
 ...
 ...               IFS-8847 Always open competitions: new comp setup configuration
 ...
+...               IFS-9774 Investigate if its possible to fix AT's failure due to IDP upgrade
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -285,7 +287,7 @@ IFS admin can see applicant response for funding rule query and mark discussion 
     Then the user marks the query as resolved
 
 Project Finance is able to see the Overheads costs file
-    [Documentation]  IFS-2332
+    [Documentation]  IFS-2332  IFS-9774
     Given Log in as a different user            &{internal_finance_credentials}
     When the user navigates to the page         ${SERVER}/project-setup-management/project/${ProjectID}/finance-check/
     And the user clicks the button/link         jQuery = tr:contains("Empire Ltd") td:nth-child(6) a:contains("Review")
