@@ -7,9 +7,10 @@ import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.sections.SectionAccess.NOT_ACCESSIBLE;
-import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
@@ -51,16 +52,23 @@ public class SetupSectionInternalUser {
 
     public SectionAccess canAccessBankDetailsSection(UserResource userResource) {
 
-        if (!userResource.hasAuthority(Authority.PROJECT_FINANCE) || !projectSetupProgressChecker.isBankDetailsAccessible()) {
+        if (!userResource.hasAnyAuthority(asList(Authority.PROJECT_FINANCE, Authority.AUDITOR)) || !projectSetupProgressChecker.isBankDetailsAccessible() ) {
             return NOT_ACCESSIBLE;
         }
 
         return ACCESSIBLE;
+
+//        return (userResource.hasAuthority(Authority.PROJECT_FINANCE)
+//                || userResource.hasAuthority(Authority.AUDITOR)
+//                || projectSetupProgressChecker.isBankDetailsAccessible())
+//                ? ACCESSIBLE : NOT_ACCESSIBLE;
     }
 
     public SectionAccess canAccessFinanceChecksSection(UserResource userResource) {
-        return (userResource.hasAuthority(Authority.PROJECT_FINANCE) || userResource.hasRole(EXTERNAL_FINANCE)) ?
-                ACCESSIBLE : NOT_ACCESSIBLE;
+        return (userResource.hasAuthority(Authority.PROJECT_FINANCE)
+                || userResource.hasRole(EXTERNAL_FINANCE)
+                || userResource.hasAuthority(Authority.AUDITOR))
+                ? ACCESSIBLE : NOT_ACCESSIBLE;
     }
 
     public SectionAccess canAccessSpendProfileSection(UserResource userResource) {
@@ -72,7 +80,7 @@ public class SetupSectionInternalUser {
         boolean approved = projectSetupProgressChecker.isSpendProfileApproved();
         boolean submitted = projectSetupProgressChecker.isSpendProfileSubmitted();
         if (approved || submitted) {
-            if (isSupport(userResource) || isInnovationLead(userResource) || userResource.hasAuthority(Authority.STAKEHOLDER)) {
+            if (isSupport(userResource) || isInnovationLead(userResource) || userResource.hasRole(STAKEHOLDER)) {
                 if (approved) {
                     return ACCESSIBLE;
                 } else {
@@ -117,7 +125,7 @@ public class SetupSectionInternalUser {
                 && projectSetupProgressChecker.isSpendProfileApproved()
                 && projectSetupProgressChecker.isBankDetailsApproved()
                 && projectSetupProgressChecker.isApplicationSuccessful()) {
-            if (isSupport(userResource) || isInnovationLead(userResource) || userResource.hasAuthority(Authority.STAKEHOLDER)) {
+            if (isSupport(userResource) || isInnovationLead(userResource) || userResource.hasRole(STAKEHOLDER)) {
                 if (projectSetupProgressChecker.isGrantOfferLetterApproved()) {
                     return ACCESSIBLE;
                 } else {
@@ -145,13 +153,17 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessFinanceChecksQueriesSection(UserResource userResource) {
-        return (userResource.hasAuthority(Authority.PROJECT_FINANCE) || userResource.hasRole(EXTERNAL_FINANCE) || userResource.hasRole(EXTERNAL_FINANCE))  ?
-                ACCESSIBLE : NOT_ACCESSIBLE;
+        return (userResource.hasAuthority(Authority.PROJECT_FINANCE)
+                || userResource.hasRole(EXTERNAL_FINANCE)
+                || userResource.hasRole(AUDITOR))
+                ? ACCESSIBLE : NOT_ACCESSIBLE;
     }
 
     public SectionAccess canAccessFinanceChecksNotesSection(UserResource userResource) {
-        return (userResource.hasAuthority(Authority.PROJECT_FINANCE) || userResource.hasRole(EXTERNAL_FINANCE)) ?
-                ACCESSIBLE : NOT_ACCESSIBLE;
+        return (userResource.hasAuthority(Authority.PROJECT_FINANCE)
+                || userResource.hasRole(EXTERNAL_FINANCE)
+                || userResource.hasAuthority(Authority.AUDITOR))
+                ? ACCESSIBLE : NOT_ACCESSIBLE;
     }
 
     private SectionAccess fail(String message) {

@@ -37,12 +37,12 @@ public class ProjectSpendProfileApprovalControllerSecurityTest extends BaseProje
 
     @Test
     public void viewSpendProfileApproval() {
-        assertSecured(() -> classUnderTest.viewSpendProfileApproval(projectCompositeId.id(), null));
+        assertSecured(() -> classUnderTest.viewSpendProfileApproval(projectCompositeId.id(), null, null));
     }
 
     @Test
     public void saveSpendProfileApproval() {
-        assertSecured(() -> classUnderTest.saveSpendProfileApproval(projectCompositeId.id(), null, null, null, null, null));
+        assertSecured(() -> classUnderTest.saveSpendProfileApproval(projectCompositeId.id(), null, null, null, null, null, null));
     }
 
     @Override

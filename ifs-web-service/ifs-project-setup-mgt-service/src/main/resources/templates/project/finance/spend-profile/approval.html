@@ -67,7 +67,7 @@
                 </li>
             </ul>
 
-            <th:block th:if="${model.notApprovedOrRejected and model.projectIsActive}">
+            <th:block th:if="${model.notApprovedOrRejected and model.projectIsActive and !model.isAuditor()}">
                 <h2 class="govuk-heading-m">Approved by Innovate UK</h2>
                 <div class="govuk-form-group">
                     <div class="govuk-checkboxes">

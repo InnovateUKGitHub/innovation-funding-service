@@ -226,7 +226,7 @@
                 </th:block>
             </th:block>
         </th:block>
-        <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true and model.projectIsActive}">
+        <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true and model.projectIsActive and !model.auditor}">
             <form th:action="@{/project/{id}/grant-offer-letter/signed(id=${model.projectId})}" id="gol-decision-form" method="post" novalidate="novalidate">
                 <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset">

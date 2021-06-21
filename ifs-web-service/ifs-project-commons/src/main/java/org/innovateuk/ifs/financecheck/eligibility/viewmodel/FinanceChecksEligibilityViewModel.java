@@ -48,6 +48,7 @@ public class FinanceChecksEligibilityViewModel {
     private final boolean showChangesLink;
     private final Boolean fecModelEnabled;
     private final boolean canEditProjectCosts;
+    private final boolean isAuditor;
 
     public FinanceChecksEligibilityViewModel(ProjectResource project,
                                              CompetitionResource competition,
@@ -69,7 +70,8 @@ public class FinanceChecksEligibilityViewModel {
                                              List<ProjectFinanceResource> projectFinances,
                                              boolean resetableGolState,
                                              boolean showChangesLink,
-                                             boolean canEditProjectCosts) {
+                                             boolean canEditProjectCosts,
+                                             boolean isAuditor) {
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
         this.projectId = project.getId();
@@ -99,6 +101,7 @@ public class FinanceChecksEligibilityViewModel {
         this.showChangesLink = showChangesLink;
         this.fecModelEnabled = hasFecModelEnabled(projectFinances, organisationId);
         this.canEditProjectCosts = canEditProjectCosts;
+        this.isAuditor = isAuditor;
     }
 
     public boolean isApproved() {
@@ -269,7 +272,7 @@ public class FinanceChecksEligibilityViewModel {
     }
 
     public boolean isCanReset() {
-        return isApproved() && projectIsActive && resetableGolState;
+        return isApproved() && projectIsActive && resetableGolState && !isAuditor;
     }
 
     public LocalDate getResetDate() {
@@ -290,5 +293,9 @@ public class FinanceChecksEligibilityViewModel {
 
     public boolean isCanEditProjectCosts() {
         return canEditProjectCosts;
+    }
+
+    public boolean isAuditor() {
+        return isAuditor;
     }
 }

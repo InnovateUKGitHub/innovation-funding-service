@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.financechecks.viewmodel;
 
-import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleNoneMatch;
@@ -17,6 +16,7 @@ public class ProjectFinanceCheckSummaryViewModel {
     private boolean userHasExternalFinanceRole;
     private final boolean hasSpendProfileStage;
     private final boolean subsidyControlCompetition;
+    private final boolean userHasAuditorAuthority;
 
     public ProjectFinanceCheckSummaryViewModel(FinanceCheckSummaryResource financeCheckSummaryResource,
                                                boolean projectIsActive,
@@ -24,7 +24,8 @@ public class ProjectFinanceCheckSummaryViewModel {
                                                boolean hasOrganisationSizeChanged,
                                                boolean userHasExternalFinanceRole,
                                                boolean hasSpendProfileStage,
-                                               boolean subsidyControlCompetition) {
+                                               boolean subsidyControlCompetition,
+                                               boolean userHasAuditorAuthority) {
         this.financeCheckSummaryResource = financeCheckSummaryResource;
         this.projectIsActive = projectIsActive;
         this.collaborativeProject = collaborativeProject;
@@ -32,6 +33,7 @@ public class ProjectFinanceCheckSummaryViewModel {
         this.userHasExternalFinanceRole = userHasExternalFinanceRole;
         this.hasSpendProfileStage = hasSpendProfileStage;
         this.subsidyControlCompetition = subsidyControlCompetition;
+        this.userHasAuditorAuthority = userHasAuditorAuthority;
     }
 
     private boolean isGenerateSpendProfileReady() {
@@ -83,8 +85,12 @@ public class ProjectFinanceCheckSummaryViewModel {
         return userHasExternalFinanceRole;
     }
 
+    public boolean isUserHasAuditorAuthority() {
+        return userHasAuditorAuthority;
+    }
+
     public boolean canEditProjectDuration()  {
-        return !userHasExternalFinanceRole && !financeCheckSummaryResource.isSpendProfilesGenerated();
+        return !userHasExternalFinanceRole && !financeCheckSummaryResource.isSpendProfilesGenerated() && !userHasAuditorAuthority;
     }
 
     public boolean isHasSpendProfileStage() {

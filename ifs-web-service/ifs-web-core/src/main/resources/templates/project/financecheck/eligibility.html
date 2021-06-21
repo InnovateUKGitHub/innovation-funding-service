@@ -255,7 +255,7 @@
 
                 <th:block th:insert="application/your-project-costs-fragments :: vat"/>
 
-                <th:block th:if="${model.isInternal() and model.open and !summaryModel.isApproved() and !model.canEditProjectCosts}">
+                <th:block th:if="${model.isInternal() and model.open and !summaryModel.isApproved() and !model.canEditProjectCosts and !model.isAuditor()}">
                     <div class="form-footer govuk-!-margin-top-4">
                         <a th:href="@{${#ifsUtil.formPostUri(#httpServletRequest) + '#project-cost-actions'}(editProjectCosts=${true})}"
                            name="edit-project-costs"

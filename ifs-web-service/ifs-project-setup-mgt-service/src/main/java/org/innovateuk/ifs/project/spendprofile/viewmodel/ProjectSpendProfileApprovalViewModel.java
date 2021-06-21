@@ -22,13 +22,15 @@ public class ProjectSpendProfileApprovalViewModel {
     private final String projectName;
     private final boolean projectIsActive;
     private final boolean collaborativeProject;
+    private final boolean auditor;
 
 
     public ProjectSpendProfileApprovalViewModel(CompetitionSummaryResource competitionSummary,
                                                 String leadTechnologist,
                                                 ApprovalType approvalType,
                                                 List<OrganisationResource> organisations,
-                                                ProjectResource project) {
+                                                ProjectResource project,
+                                                boolean auditor) {
         this.competitionSummary = competitionSummary;
         this.leadTechnologist = leadTechnologist;
         this.approvalType = approvalType;
@@ -37,6 +39,7 @@ public class ProjectSpendProfileApprovalViewModel {
         this.projectName = project.getName();
         this.projectIsActive = project.getProjectState().isActive();
         this.collaborativeProject = project.isCollaborativeProject();
+        this.auditor = auditor;
     }
 
     public CompetitionSummaryResource getCompetitionSummary() {
@@ -81,6 +84,10 @@ public class ProjectSpendProfileApprovalViewModel {
 
     public boolean isCollaborativeProject() {
         return collaborativeProject;
+    }
+
+    public boolean isAuditor() {
+        return auditor;
     }
 
     @Override

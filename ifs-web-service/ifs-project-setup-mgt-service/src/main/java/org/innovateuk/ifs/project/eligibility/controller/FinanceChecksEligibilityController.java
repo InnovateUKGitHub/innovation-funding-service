@@ -40,6 +40,7 @@ import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.AjaxResult;
@@ -148,7 +149,15 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                 Optional<ProjectFinanceResource> organisationProjectFinance = projectFinances.stream()
                         .filter(projectFinance -> projectFinance.getOrganisation().longValue() == organisationId)
                         .findFirst();
-                model.addAttribute("model", new FinanceChecksProjectCostsViewModel(project.getApplication(), competition.get().getName(), open, competition.get().getFinanceRowTypesByFinance(organisationProjectFinance), competition.get().isOverheadsAlwaysTwenty(), competition.get().getFundingType() == FundingType.KTP, canEditProjectCosts));
+                model.addAttribute("model", new FinanceChecksProjectCostsViewModel(
+                        project.getApplication(),
+                        competition.get().getName(),
+                        open,
+                        competition.get().getFinanceRowTypesByFinance(organisationProjectFinance),
+                        competition.get().isOverheadsAlwaysTwenty(),
+                        competition.get().getFundingType() == FundingType.KTP,
+                        canEditProjectCosts,
+                        user.hasAuthority(Authority.AUDITOR)));
                 if (form == null) {
                     future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId, organisation.get().getId())));
                 }
@@ -191,7 +200,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                     projectFinances,
                     resetableGolState,
                     showChangesLink,
-                    canEditProjectCosts
+                    canEditProjectCosts,
+                    user.hasAuthority(Authority.AUDITOR)
             ));
 
             model.addAttribute("eligibilityForm", eligibilityForm);

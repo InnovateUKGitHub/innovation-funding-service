@@ -16,9 +16,9 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -81,7 +81,7 @@ public class YourProjectCostsViewModelPopulator {
         boolean includeVat = STANDARD_WITH_VAT.equals(competition.getApplicationFinanceType());
 
         if (isUserCanEditFecFinance(competition, section, open)) {
-            return getYourFecProjectCostsViewModel(application, competition, organisation, section, finance, completedSectionIds, open, complete, includeVat);
+            return getYourFecProjectCostsViewModel(application, competition, organisation, section, finance, completedSectionIds, open, complete, includeVat, user);
         } else {
             return new YourProjectCostsViewModel(applicationId,
                     competition.getName(),
@@ -115,7 +115,7 @@ public class YourProjectCostsViewModelPopulator {
     private YourProjectCostsViewModel getYourFecProjectCostsViewModel(ApplicationResource application, CompetitionResource competition,
                                                                       OrganisationResource organisation, ApplicantSectionResource section,
                                                                       BaseFinanceResource finance, List<Long> completedSectionIds,
-                                                                      boolean open, boolean complete, boolean includeVat) {
+                                                                      boolean open, boolean complete, boolean includeVat, UserResource user) {
         Long yourFundingSectionId = getYourFundingSectionId(section);
         boolean yourFundingRequired = !completedSectionIds.contains(yourFundingSectionId);
         Long yourFecCostSectionId = getYourFecCostSectionId(section);
