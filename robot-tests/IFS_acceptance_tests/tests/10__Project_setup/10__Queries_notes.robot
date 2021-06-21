@@ -171,12 +171,11 @@ Applicant - Finance contact can view the query
     Then The user clicks the button/link             jQuery = h2:contains("an eligibility query's title")
     And the user should see the element              jQuery = h2:contains("a viability query's title")
 
-Applicant - Finance Contact can view all the attachments and download them
+Applicant - Finance Contact can view all the attachments
     [Documentation]   IFS-7215
     [Tags]  HappyPath
     Given the user should see all the attachments
     And open pdf link                                 jQuery = a:contains("${valid_pdf}")
-    And the user is able to download attachments      ${ods_file}  ${valid_odt}
 
 Applicant - Response to query validations
     [Documentation]  INFUND-4843 IFS-2746
@@ -241,10 +240,6 @@ Project finance user can view the response and supporting documents
     [Setup]  log in as a different user                      &{internal_finance_credentials}
     When the user navigates to the page                     ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     Then the project finance user view the query details
-
-Project Finance user can doenload supporting documents
-    [Documentation]   IFS-7215
-    Given the user is able to download attachments    ${valid_docx}  ${excel_file}
 
 Project finance user can continue the conversation
     [Documentation]    INFUND-7752
@@ -331,7 +326,6 @@ Project finance can view the file in notes
     Given the user should see the element  link = ${valid_pdf} (opens in a new window)
     Then the user should see the element   jQuery = button:contains("Save note")
     And open pdf link        link = ${valid_pdf} (opens in a new window)
-
 
 Project finance can upload more than one file to notes
     [Documentation]    INFUND-4845
@@ -436,6 +430,21 @@ Note comment can be posted
     [Tags]
     Given the user clicks the button/link       jQuery = .govuk-button:contains("Save comment")
     Then the user should not see the element    jQuery = .govuk-button:contains("Save comment")
+
+Applicant - Finance Contact can download attachments
+    [Documentation]   IFS-7215
+    [Tags]  HappyPath
+    Given log in as a different user                 &{PublicSector_lead_applicant_credentials}
+    When the user navigates to the page              ${server}/project-setup/project/${Queries_Application_Project}/finance-check
+    And the user expands the section                 an eligibility query's title
+    Then the user is able to download attachments     ${ods_file}  ${valid_odt}
+
+Project Finance user can doenload supporting documents
+    [Documentation]   IFS-7215
+    Given log in as a different user                &{internal_finance_credentials}
+    When the user navigates to the page             ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
+    Then the user clicks the button/link            css = table.table-progress tr:nth-child(1) td:nth-child(6)  # View
+    And the user is able to download attachments    ${valid_docx}  ${excel_file}
 
 *** Keywords ***
 Custom Suite Setup
