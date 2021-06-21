@@ -124,14 +124,6 @@ PM can upload both documents
     [Setup]    log in as a different user     &{lead_applicant_credentials_bd}
     Given PM uploads the project documents    ${Grade_Crossing_Project_Id}
 
-Assign a MO to the project
-    [Documentation]  IFS-9578
-    [Setup]  log in as a different user            &{Comp_admin1_credentials}
-    Given the user navigates to the page           ${server}/project-setup-management/monitoring-officer/view-all?ktp=false
-    When search for MO                             Orvill  Orville Gibbs
-    Then the user should see the element           jQuery = span:contains("Assign projects to Monitoring Officer")
-    And the internal user assign project to MO     ${Grade_Crossing_Applicaiton_No}   ${Grade_Crossing_Application_Title}
-
 Lead partner can view both documents
     [Documentation]  INFUND-3011  INFUND-2621
     [Tags]  HappyPath
