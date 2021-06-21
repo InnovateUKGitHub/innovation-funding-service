@@ -8,6 +8,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -40,8 +41,16 @@ public class MonitoringOfficerDashboardViewModelPopulator {
     }
 
     private List<ProjectDashboardRowViewModel> buildProjectDashboardRows(List<ProjectResource> projects) {
-        return projects.stream()
+        List<ProjectResource> sortedProjects = sortProjects(projects);
+
+        return sortedProjects.stream()
                 .map(project -> new ProjectDashboardRowViewModel(project))
+                .collect(toList());
+    }
+
+    private List<ProjectResource> sortProjects(List<ProjectResource> projects) {
+        return projects.stream()
+                .sorted(Comparator.comparing(projectResource -> projectResource.getProjectState().getMoDisplayOrder()))
                 .collect(toList());
     }
 }

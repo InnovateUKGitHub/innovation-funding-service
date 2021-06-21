@@ -45,7 +45,7 @@ public class MonitoringOfficerDashboardController {
                                   UserResource user,
                                   @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerDashboardForm form) {
 
-        if (!form.isPreviousProject() && !form.isPreviousProject()) {
+        if (!form.isProjectInSetup() && !form.isPreviousProject()) {
             return viewDashboard(model, user, form);
         } else {
             model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user,
