@@ -90,6 +90,8 @@
 
         <h2 class="govuk-heading-m" th:text="|${model.title} upload|"></h2>
 
+<!--        <th:block th:unless="${model.isAuditor()}">-->
+
         <div class="upload-section">
             <form th:action="@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})}"
                   th:object="${form}" method="post" enctype="multipart/form-data">
@@ -108,7 +110,7 @@
                         </ul>
                     </div>
                 </details>
-                <th:block th:with="uploadViewmode=${model.projectIsActive} ? 'edit' : 'readonly',
+                <th:block th:with="uploadViewmode=${model.projectIsActive and !model.isAuditor()} ? 'edit' : 'readonly',
                                downloadUrl=@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})},
                                filename=${model.grantOfferLetterFile?.filename},
                                inputField='grantOfferLetter',
@@ -144,7 +146,7 @@
                         </ul>
                     </div>
                 </details>
-                <th:block th:with="uploadViewmode=${model.isSentToProjectTeam() or !model.projectIsActive} ? 'readonly' : 'edit',
+                <th:block th:with="uploadViewmode=${model.isSentToProjectTeam() or !model.projectIsActive or model.isAuditor()} ? 'readonly' : 'edit',
                                downloadUrl=@{/project/{id}/grant-offer-letter/additional-contract(id=${model.projectId})},
                                filename=${model.additionalContractFile?.filename},
                                inputField='annex',
@@ -156,6 +158,9 @@
                 </th:block>
             </form>
         </div>
+
+<!--        </th:block>-->
+
         <th:block th:if="${!model.isSentToProjectTeam() and model.projectIsActive}">
             <div data-js-toggle-on-file-upload="grant-letter-upload"
                 th:attr="aria-hidden=${model.grantOfferLetterFile == null}">
