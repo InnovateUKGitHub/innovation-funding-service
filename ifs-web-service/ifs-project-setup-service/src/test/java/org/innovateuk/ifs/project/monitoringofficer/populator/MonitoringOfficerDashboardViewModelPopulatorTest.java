@@ -51,8 +51,5 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
         assertTrue(viewModel.getProjects().get(0).isUnsuccessful());
         assertFalse(viewModel.getProjects().get(0).isLiveOrCompletedOffline());
         assertFalse(viewModel.getProjects().get(0).isWithdrawn());
-
-        assertTrue(viewModel.hasAnyInPrevious());
-        assertFalse(viewModel.hasAnyInSetup());
     }
 }
