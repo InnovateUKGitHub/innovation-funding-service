@@ -235,207 +235,207 @@ IFS Admin can see applicant's response flagged in Query responses tab and mark d
     When the user clicks the button/link  link = Queries (1)
     Then the user mark the discussion as resolved
 
-#Project finance user can view the response and supporting documents
-#    [Documentation]   INFUND-4843  IFS-2716 IFS-7215
-#    [Tags]
-#    [Setup]  log in as a different user                      &{internal_finance_credentials}
-#    When the user navigates to the page                     ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
-#    Then the project finance user view the query details
-#
-#Project Finance user can download supporting documents
-#    [Documentation]   IFS-7215
-#    Given the user is able to download attachments    ${valid_docx}  ${excel_file}
-#
-#Project finance user can continue the conversation
-#    [Documentation]    INFUND-7752
-#    [Tags]
-#    When the user clicks the button/link      jQuery = #accordion-queries-content-2 a:contains("Respond")
-#    And the user enters text to a text field  css = .editor  This is a response to a response
-#    And the user clicks the button/link       jQuery = .govuk-button:contains("Post response")
-#
-#Finance contact receives an email when a new response is posted
-#    [Documentation]    INFUND-7753 IFS-3559
-#    [Tags]
-#    Given the user reads his email    ${PublicSector_lead_applicant_credentials["email"]}  ${PS_Competition_Name}: You have a reply to your query for project ${Queries_Application_No}  We have replied to a query regarding your project finances
-#
-#Finance contact can view the new response
-#    [Documentation]    INFUND-7752
-#    [Tags]
-#    Given log in as a different user      &{PublicSector_lead_applicant_credentials}
-#    When the user clicks the button/link  jQuery = .projects-in-setup a:contains("${Queries_Application_Title}")
-#    And the user clicks the button/link   link = Finance checks
-#    And the user expands the section      Open all
-#    Then the user should see the element  jQuery = .govuk-heading-s:contains("Finance team") + .wysiwyg-styles:contains("This is a response to a response")
-#
-#Project Finance user is able to mark a query discussion as complete
-#    [Documentation]  IFS-1987
-#    [Tags]
-#    Given log in as a different user                &{internal_finance_credentials}
-#    When the user navigates to the page             ${dreambit_finance_checks}/query
-#    And the user expands the section                an eligibility query's title
-#    Then the query conversation can be resolved by  Lee Bowman  1
-#    And the user should not see the element         jQuery = #accordion-pending-queries-content-2 a:contains("Respond")
-#    [Teardown]  the user collapses the section      an eligibility query's title
-#
-#Applicant can see the the queries resolved
-#    [Documentation]  IFS-1987 IFS-2746
-#    [Tags]
-#    Given log in as a different user      &{PublicSector_lead_applicant_credentials}
-#    When the user navigates to the page   ${server}/project-setup/project/${Queries_Application_Project}/finance-check
-#    Then the user should see the element  jQuery = h2:contains("an eligibility query's title") .section-complete
-#    And the user should see the element   jQuery = h2:contains("a viability query's title") .section-complete
-#    And the user should not be able to respond to resolved queries
-#
-#Link to notes from viability section
-#    [Documentation]    INFUND-4845
-#    [Tags]
-#    Given log in as a different user      &{internal_finance_credentials}
-#    When the user navigates to the page   ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
-#    Then the user navigates to notes section
-#
-#Link to notes from eligibility section
-#    [Documentation]    INFUND-4845
-#    [Tags]
-#    Given the user navigates to the page  ${dreambit_finance_checks}/note
-#    Then the user should see the element  jQuery = .govuk-button:contains("Create a new note")
-#
-#Link to notes from main finance checks summary page
-#    [Documentation]    INFUND-4845
-#    [Tags]
-#    Given the user navigates to the page   ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
-#    Then the user clicks the button/link   css = table.table-progress tr:nth-child(1) td:nth-child(7)  # View Notes of Empire Ltd
-#
-#Project finance can upload a pdf file to notes
-#    [Documentation]    INFUND-4845
-#    [Tags]
-#    Given the user clicks the button/link  jQuery = .govuk-button:contains("Create a new note")
-#    When the user uploads the file         name = attachment  ${valid_pdf}
-#    Then the user should see the element   jQuery = h2:contains("Supporting documents") + ul:contains("${valid_pdf}")
-#
-#Project finance can remove the file from notes
-#    [Documentation]    INFUND-4845
-#    [Tags]
-#    Given the user clicks the button/link       name = removeAttachment
-#    Then the user should not see the element    jQuery = form a:contains("${valid_pdf}")
-#    And the user should not see an error in the page
-#
-#Project finance can re-upload the file to notes
-#    [Documentation]    INFUND-4845
-#    [Tags]
-#    Given the user uploads the file         name = attachment    ${valid_pdf}
-#    Then the user should see the element    jQuery = form a:contains("${valid_pdf}")
-#
-#Project finance can view the file in notes
-#    [Documentation]    INFUND-4845  IFS-2716
-#    [Tags]
-#    Given the user should see the element  link = ${valid_pdf} (opens in a new window)
-#    Then the user should see the element   jQuery = button:contains("Save note")
-#    And open pdf link        link = ${valid_pdf} (opens in a new window)
-#
-#
-#Project finance can upload more than one file to notes
-#    [Documentation]    INFUND-4845
-#    [Tags]
-#    Given the user uploads the file       name = attachment  ${valid_pdf}
-#    Then the user should see the element  jQuery = form li:nth-of-type(2) a:contains("${valid_pdf}")
-#
-#Project finance can still view both files in notes
-#    [Documentation]    INFUND-4845
-#    [Tags]
-#    Given the user should see the element   jQuery = li:nth-of-type(1) a:contains("${valid_pdf}")
-#    And the user should see the element     jQuery = li:nth-of-type(2) a:contains("${valid_pdf}")
-#    Then the user clicks the button/link    css = button[name='removeAttachment']:nth-last-of-type(1)
-#
-#Create new note validations
-#    [Documentation]    INFUND-4845
-#    [Tags]
-#    Given the user should see new note client side validations
-#    Then the user should see new note server side validations
-#    And the user should see word count validations
-#
-#New note can be cancelled
-#    [Documentation]    INFUND-4845
-#    [Tags]
-#    Given the user clicks the button/link      jQuery = a:contains("Cancel")
-#    Then the user should not see the element   id = noteTitle
-#    And the user should not see the element    css = .editor
-#
-#Note can be re-entered and posted
-#    [Documentation]    INFUND-4845
-#    [Tags]
-#    Given the user enters new note details
-#    Then the user post created note details
-#
-#Note sections are no longer editable
-#    [Documentation]    INFUND-4845
-#    [Tags]
-#    When the user should not see the element    css = .editor
-#    And the user should not see the element     id = noteTitle
-#
-#Project finance user can comment on the note
-#    [Documentation]    INFUND-7756
-#    [Tags]
-#    When the user should see the element             jQuery = h2:contains("an eligibility query's title")
-#    And the user should see the element              jQuery = p:contains("this is some note text")
-#    And the user should see the element              id = post-new-comment
-#
-#Large pdf uploads not allowed for note comments
-#    [Documentation]    INFUND-7756
-#    [Tags]
-#    Given the user clicks the button/link            id = post-new-comment
-#    When the user uploads the file                   name = attachment    ${too_large_pdf}
-#    Then the user should see a field error           ${too_large_10MB_validation_error}
-#
-#Non pdf uploads not allowed for note comments
-#    [Documentation]    INFUND-7756
-#    [Tags]
-#    Given the user uploads the file                  name = attachment    ${text_file}
-#    Then the user should see a field error           ${finance_query_notes_filetype_error}
-#
-#Project finance can upload a pdf file to note comments
-#    [Documentation]    INFUND-7756
-#    [Tags]
-#    Given the user uploads the file                  name = attachment   ${valid_pdf}
-#    Then the user should see the element             link = ${valid_pdf} (opens in a new window)
-#
-#Project finance can remove the file from note comments
-#    [Documentation]    INFUND-7756
-#    [Tags]
-#    Given the user clicks the button/link       name = removeAttachment
-#    Then the user should not see the element    jQuery = form a:contains("${valid_pdf}")
-#    And the user should not see an error in the page
-#
-#Project finance can re-upload the file to note comments
-#    [Documentation]    INFUND-7756
-#    [Tags]
-#    Given the user uploads the file         name = attachment    ${valid_pdf}
-#    Then the user should see the element    jQuery = form a:contains("${valid_pdf}")
-#
-#Project finance can view the file in note comments
-#    [Documentation]    INFUND-7756
-#    [Tags]
-#    Given the user should see the element    link = ${valid_pdf} (opens in a new window)
-#    When the file has been scanned for viruses
-#    And the user should see the element      jQuery = button:contains("Save comment")
-#
-#Project finance can upload more than one file to note comments
-#    [Documentation]    INFUND-7756
-#    [Tags]
-#    Given the user uploads the file         name = attachment    ${valid_pdf}
-#    Then project finance can view both files in note comments
-#
-#Note comments validations
-#    [Documentation]    INFUND-7756
-#    [Tags]
-#    Given the user should see the note comments client side validations
-#    Then the user should see the note comments server side validations
-#    And the user should see word count validations
-#
-#Note comment can be posted
-#    [Documentation]    INFUND-7756
-#    [Tags]
-#    Given the user clicks the button/link       jQuery = .govuk-button:contains("Save comment")
-#    Then the user should not see the element    jQuery = .govuk-button:contains("Save comment")
+Project finance user can view the response and supporting documents
+    [Documentation]   INFUND-4843  IFS-2716 IFS-7215
+    [Tags]
+    [Setup]  log in as a different user                      &{internal_finance_credentials}
+    When the user navigates to the page                     ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
+    Then the project finance user view the query details
+
+Project Finance user can doenload supporting documents
+    [Documentation]   IFS-7215
+    Given the user is able to download attachments    ${valid_docx}  ${excel_file}
+
+Project finance user can continue the conversation
+    [Documentation]    INFUND-7752
+    [Tags]
+    When the user clicks the button/link      jQuery = #accordion-queries-content-2 a:contains("Respond")
+    And the user enters text to a text field  css = .editor  This is a response to a response
+    And the user clicks the button/link       jQuery = .govuk-button:contains("Post response")
+
+Finance contact receives an email when a new response is posted
+    [Documentation]    INFUND-7753 IFS-3559
+    [Tags]
+    Given the user reads his email    ${PublicSector_lead_applicant_credentials["email"]}  ${PS_Competition_Name}: You have a reply to your query for project ${Queries_Application_No}  We have replied to a query regarding your project finances
+
+Finance contact can view the new response
+    [Documentation]    INFUND-7752
+    [Tags]
+    Given log in as a different user      &{PublicSector_lead_applicant_credentials}
+    When the user clicks the button/link  jQuery = .projects-in-setup a:contains("${Queries_Application_Title}")
+    And the user clicks the button/link   link = Finance checks
+    And the user expands the section      Open all
+    Then the user should see the element  jQuery = .govuk-heading-s:contains("Finance team") + .wysiwyg-styles:contains("This is a response to a response")
+
+Project Finance user is able to mark a query discussion as complete
+    [Documentation]  IFS-1987
+    [Tags]
+    Given log in as a different user                &{internal_finance_credentials}
+    When the user navigates to the page             ${dreambit_finance_checks}/query
+    And the user expands the section                an eligibility query's title
+    Then the query conversation can be resolved by  Lee Bowman  1
+    And the user should not see the element         jQuery = #accordion-pending-queries-content-2 a:contains("Respond")
+    [Teardown]  the user collapses the section      an eligibility query's title
+
+Applicant can see the the queries resolved
+    [Documentation]  IFS-1987 IFS-2746
+    [Tags]
+    Given log in as a different user      &{PublicSector_lead_applicant_credentials}
+    When the user navigates to the page   ${server}/project-setup/project/${Queries_Application_Project}/finance-check
+    Then the user should see the element  jQuery = h2:contains("an eligibility query's title") .section-complete
+    And the user should see the element   jQuery = h2:contains("a viability query's title") .section-complete
+    And the user should not be able to respond to resolved queries
+
+Link to notes from viability section
+    [Documentation]    INFUND-4845
+    [Tags]
+    Given log in as a different user      &{internal_finance_credentials}
+    When the user navigates to the page   ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
+    Then the user navigates to notes section
+
+Link to notes from eligibility section
+    [Documentation]    INFUND-4845
+    [Tags]
+    Given the user navigates to the page  ${dreambit_finance_checks}/note
+    Then the user should see the element  jQuery = .govuk-button:contains("Create a new note")
+
+Link to notes from main finance checks summary page
+    [Documentation]    INFUND-4845
+    [Tags]
+    Given the user navigates to the page   ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
+    Then the user clicks the button/link   css = table.table-progress tr:nth-child(1) td:nth-child(7)  # View Notes of Empire Ltd
+
+Project finance can upload a pdf file to notes
+    [Documentation]    INFUND-4845
+    [Tags]
+    Given the user clicks the button/link  jQuery = .govuk-button:contains("Create a new note")
+    When the user uploads the file         name = attachment  ${valid_pdf}
+    Then the user should see the element   jQuery = h2:contains("Supporting documents") + ul:contains("${valid_pdf}")
+
+Project finance can remove the file from notes
+    [Documentation]    INFUND-4845
+    [Tags]
+    Given the user clicks the button/link       name = removeAttachment
+    Then the user should not see the element    jQuery = form a:contains("${valid_pdf}")
+    And the user should not see an error in the page
+
+Project finance can re-upload the file to notes
+    [Documentation]    INFUND-4845
+    [Tags]
+    Given the user uploads the file         name = attachment    ${valid_pdf}
+    Then the user should see the element    jQuery = form a:contains("${valid_pdf}")
+
+Project finance can view the file in notes
+    [Documentation]    INFUND-4845  IFS-2716
+    [Tags]
+    Given the user should see the element  link = ${valid_pdf} (opens in a new window)
+    Then the user should see the element   jQuery = button:contains("Save note")
+    And open pdf link        link = ${valid_pdf} (opens in a new window)
+
+
+Project finance can upload more than one file to notes
+    [Documentation]    INFUND-4845
+    [Tags]
+    Given the user uploads the file       name = attachment  ${valid_pdf}
+    Then the user should see the element  jQuery = form li:nth-of-type(2) a:contains("${valid_pdf}")
+
+Project finance can still view both files in notes
+    [Documentation]    INFUND-4845
+    [Tags]
+    Given the user should see the element   jQuery = li:nth-of-type(1) a:contains("${valid_pdf}")
+    And the user should see the element     jQuery = li:nth-of-type(2) a:contains("${valid_pdf}")
+    Then the user clicks the button/link    css = button[name='removeAttachment']:nth-last-of-type(1)
+
+Create new note validations
+    [Documentation]    INFUND-4845
+    [Tags]
+    Given the user should see new note client side validations
+    Then the user should see new note server side validations
+    And the user should see word count validations
+
+New note can be cancelled
+    [Documentation]    INFUND-4845
+    [Tags]
+    Given the user clicks the button/link      jQuery = a:contains("Cancel")
+    Then the user should not see the element   id = noteTitle
+    And the user should not see the element    css = .editor
+
+Note can be re-entered and posted
+    [Documentation]    INFUND-4845
+    [Tags]
+    Given the user enters new note details
+    Then the user post created note details
+
+Note sections are no longer editable
+    [Documentation]    INFUND-4845
+    [Tags]
+    When the user should not see the element    css = .editor
+    And the user should not see the element     id = noteTitle
+
+Project finance user can comment on the note
+    [Documentation]    INFUND-7756
+    [Tags]
+    When the user should see the element             jQuery = h2:contains("an eligibility query's title")
+    And the user should see the element              jQuery = p:contains("this is some note text")
+    And the user should see the element              id = post-new-comment
+
+Large pdf uploads not allowed for note comments
+    [Documentation]    INFUND-7756
+    [Tags]
+    Given the user clicks the button/link            id = post-new-comment
+    When the user uploads the file                   name = attachment    ${too_large_pdf}
+    Then the user should see a field error           ${too_large_10MB_validation_error}
+
+Non pdf uploads not allowed for note comments
+    [Documentation]    INFUND-7756
+    [Tags]
+    Given the user uploads the file                  name = attachment    ${text_file}
+    Then the user should see a field error           ${finance_query_notes_filetype_error}
+
+Project finance can upload a pdf file to note comments
+    [Documentation]    INFUND-7756
+    [Tags]
+    Given the user uploads the file                  name = attachment   ${valid_pdf}
+    Then the user should see the element             link = ${valid_pdf} (opens in a new window)
+
+Project finance can remove the file from note comments
+    [Documentation]    INFUND-7756
+    [Tags]
+    Given the user clicks the button/link       name = removeAttachment
+    Then the user should not see the element    jQuery = form a:contains("${valid_pdf}")
+    And the user should not see an error in the page
+
+Project finance can re-upload the file to note comments
+    [Documentation]    INFUND-7756
+    [Tags]
+    Given the user uploads the file         name = attachment    ${valid_pdf}
+    Then the user should see the element    jQuery = form a:contains("${valid_pdf}")
+
+Project finance can view the file in note comments
+    [Documentation]    INFUND-7756
+    [Tags]
+    Given the user should see the element    link = ${valid_pdf} (opens in a new window)
+    When the file has been scanned for viruses
+    And the user should see the element      jQuery = button:contains("Save comment")
+
+Project finance can upload more than one file to note comments
+    [Documentation]    INFUND-7756
+    [Tags]
+    Given the user uploads the file         name = attachment    ${valid_pdf}
+    Then project finance can view both files in note comments
+
+Note comments validations
+    [Documentation]    INFUND-7756
+    [Tags]
+    Given the user should see the note comments client side validations
+    Then the user should see the note comments server side validations
+    And the user should see word count validations
+
+Note comment can be posted
+    [Documentation]    INFUND-7756
+    [Tags]
+    Given the user clicks the button/link       jQuery = .govuk-button:contains("Save comment")
+    Then the user should not see the element    jQuery = .govuk-button:contains("Save comment")
 
 *** Keywords ***
 Custom Suite Setup
@@ -468,21 +468,16 @@ the user uploads multiple file types as attachment and removes them
 
 the user is able to download attachments
     [Arguments]  ${attachment1}  ${attachment2}
-    the user clicks the button/link                  link = ${attachment1} (opens in a new window)
-    the user should not see an error in the page
-    #The user downloads the file                 ${PublicSector_lead_applicant_credentials["email"]}  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check  ${DOWNLOAD_FOLDER}/${attachment1}
-    #Download should be done
-    #remove the file from the operating system   ${attachment1}
-    the user clicks the button/link                  link = ${attachment2} (opens in a new window)
-    the user should not see an error in the page
-    #The user downloads the file                 ${PublicSector_lead_applicant_credentials["email"]}  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check  ${DOWNLOAD_FOLDER}/${attachment2}
-    #Download should be done
-    #remove the file from the operating system   ${attachment2}
+    The user downloads the file                 ${PublicSector_lead_applicant_credentials["email"]}  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check  ${DOWNLOAD_FOLDER}/${attachment1}
+    Download should be done
+    remove the file from the operating system   ${attachment1}
+    The user downloads the file                 ${PublicSector_lead_applicant_credentials["email"]}  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check  ${DOWNLOAD_FOLDER}/${attachment2}
+    Download should be done
+    remove the file from the operating system   ${attachment2}
 
 The query conversation can be resolved by
     [Arguments]  ${user}  ${section}
-    #the user clicks the button/link  jQuery = #accordion-queries-content-${section} a:contains("Mark as resolved")    #a viability query
-    the user clicks the button/link   jQuery = div h3:contains("Viability") + div + div ~ a:contains("Mark as resolved")
+    the user clicks the button/link  jQuery = #accordion-queries-content-${section} a:contains("Mark as resolved")    #a viability query
     the user clicks the button/link  css = button[name="markAsResolved"]  # Submit
     the user should see the element  jQuery = #accordion-queries-heading-${section} .yes  # Resolved green check
     the user should see the element  jQuery = p:contains("${user}")
@@ -573,7 +568,7 @@ the user should see the response to query client side validations
     the user should see a field error             ${empty_field_warning_message}
 
 the user should see word count validations
-    the user enters text to a text field   css = .editor  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus.
+    the user enters text to a text field   css = .editor  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vit
     Set Focus To Element                   link = Sign out
     the user should see a field error      Maximum word count exceeded. Please reduce your word count to 400.
     the user should see a field error      This field cannot contain more than 4,000 characters.
