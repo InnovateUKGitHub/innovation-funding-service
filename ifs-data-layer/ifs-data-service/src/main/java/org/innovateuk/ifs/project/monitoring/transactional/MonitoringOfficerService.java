@@ -57,4 +57,8 @@ public interface MonitoringOfficerService {
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'IS_MONITORING_OFFICER')")
     ServiceResult<Boolean> isMonitoringOfficer(long userId);
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_MONITORING_OFFICER')")
+    ServiceResult<Void> sendDocumentReviewNotification(long projectId, long userId);
+
 }

@@ -8,11 +8,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Arrays;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
 
 public class SilContactJsonTest {
 
@@ -29,9 +27,6 @@ public class SilContactJsonTest {
         address.setPostcode("postcode");
 
         SilOrganisation organisation = new SilOrganisation();
-        organisation.setDateOfIncorporation(DATE);
-        organisation.setExecutiveOfficers(Arrays.asList("officer 1", "officer 2"));
-        organisation.setSicCodes(Arrays.asList("code 1", "code 2"));
         organisation.setName("name");
         organisation.setRegisteredAddress(address);
         organisation.setRegistrationNumber("registration number");
@@ -70,16 +65,10 @@ public class SilContactJsonTest {
                 ",\"town\":\"town\"" +
                 ",\"postcode\":\"postcode\"" +
                 ",\"country\":\"country\"}" +
-                ",\"srcSysOrgId\":\"sys org id\"" +
-                ",\"dateOfIncorporation\":\"10/12/2020\"" +
-                ",\"sicCodes\":[\"code 1\",\"code 2\"]" +
-                ",\"executiveOfficers\":[\"officer 1\",\"officer 2\"]}"));
+                ",\"srcSysOrgId\":\"sys org id\"}"));
         assertThat(json, containsString("\"srcSysContactId\":\"sys contact id\""));
         assertThat(json, containsString("\"sourceSystem\":\"IFS\""));
 
         SilContact out = new ObjectMapper().readValue(json, SilContact.class);
-        assertThat(out.getOrganisation().getDateOfIncorporation().getYear(), equalTo(2020));
-        assertThat(out.getOrganisation().getDateOfIncorporation().getMonthValue(), equalTo(12));
-        assertThat(out.getOrganisation().getDateOfIncorporation().getDayOfMonth(), equalTo(10));
     }
 }

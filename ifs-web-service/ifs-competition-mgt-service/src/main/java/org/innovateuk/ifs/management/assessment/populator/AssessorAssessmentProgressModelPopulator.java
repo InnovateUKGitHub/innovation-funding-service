@@ -45,7 +45,8 @@ public class AssessorAssessmentProgressModelPopulator {
                                                              long assessmentPeriodId,
                                                              int page,
                                                              Sort sort,
-                                                             String filter) {
+                                                             String filter,
+                                                             boolean isSuperAdmin) {
         AssessorCompetitionSummaryResource summaryResource = assessorCompetitionSummaryRestService
                 .getAssessorSummary(assessorId, competitionId)
                 .getSuccess();
@@ -70,6 +71,7 @@ public class AssessorAssessmentProgressModelPopulator {
         ApplicationCountSummaryPageResource applicationCounts = getApplicationCounts(
                 competitionId,
                 assessorId,
+                assessmentPeriodId,
                 page,
                 filter,
                 sort);
@@ -99,7 +101,8 @@ public class AssessorAssessmentProgressModelPopulator {
                 assigned,
                 rejected,
                 previouslyAssigned,
-                applicationsViewModel
+                applicationsViewModel,
+                isSuperAdmin
         );
     }
 
@@ -163,6 +166,7 @@ public class AssessorAssessmentProgressModelPopulator {
 
     private ApplicationCountSummaryPageResource getApplicationCounts(long competitionId,
                                                                      long assessorId,
+                                                                     long assessmentPeriodId,
                                                                      int page,
                                                                      String filter,
                                                                      Sort sort) {
@@ -170,6 +174,7 @@ public class AssessorAssessmentProgressModelPopulator {
                 .getApplicationCountSummariesByCompetitionIdAndAssessorId(
                         competitionId,
                         assessorId,
+                        assessmentPeriodId,
                         page,
                         sort,
                         filter)

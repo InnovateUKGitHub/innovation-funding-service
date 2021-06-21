@@ -30,6 +30,7 @@ import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.sav
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.IndirectCostsUtil.calculateIndirectCost;
 
 @Component
+@SuppressWarnings("unchecked")
 public class YourProjectCostsAutosaver {
 
     private final static Logger LOG = LoggerFactory.getLogger(YourProjectCostsAutosaver.class);

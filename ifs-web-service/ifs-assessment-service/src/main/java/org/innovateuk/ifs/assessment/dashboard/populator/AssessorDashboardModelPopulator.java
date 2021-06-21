@@ -3,7 +3,9 @@ package org.innovateuk.ifs.assessment.dashboard.populator;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.*;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileStatusViewModel;
 import org.innovateuk.ifs.assessment.service.CompetitionParticipantRestService;
+import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.AssessmentPeriodRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
@@ -11,7 +13,10 @@ import org.innovateuk.ifs.invite.resource.InterviewParticipantResource;
 import org.innovateuk.ifs.invite.resource.ReviewParticipantResource;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.review.service.ReviewInviteRestService;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.RoleProfileState;
+import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.RoleProfileStatusRestService;
 import org.springframework.stereotype.Component;
 
@@ -39,18 +44,22 @@ public class AssessorDashboardModelPopulator {
 
     private RoleProfileStatusRestService roleProfileStatusRestService;
 
+    private AssessmentPeriodRestService assessmentPeriodRestService;
+
     public AssessorDashboardModelPopulator(CompetitionParticipantRestService competitionParticipantRestService,
                                            InterviewInviteRestService interviewInviteRestService,
                                            ProfileRestService profileRestService,
                                            ReviewInviteRestService reviewInviteRestService,
                                            CompetitionRestService competitionRestService,
-                                           RoleProfileStatusRestService roleProfileStatusRestService) {
+                                           RoleProfileStatusRestService roleProfileStatusRestService,
+                                           AssessmentPeriodRestService assessmentPeriodRestService) {
         this.competitionParticipantRestService = competitionParticipantRestService;
         this.interviewInviteRestService = interviewInviteRestService;
         this.profileRestService = profileRestService;
         this.reviewInviteRestService = reviewInviteRestService;
         this.competitionRestService = competitionRestService;
         this.roleProfileStatusRestService = roleProfileStatusRestService;
+        this.assessmentPeriodRestService = assessmentPeriodRestService;
     }
 
     public AssessorDashboardViewModel populateModel(UserResource user) {
@@ -71,13 +80,16 @@ public class AssessorDashboardModelPopulator {
         List<CompetitionParticipantResource> participantResourceList = competitionParticipantRestService
                 .getAssessorParticipants(user.getId()).getSuccess();
 
+        List<CompetitionParticipantResource> participantListWithAssessmentPeriod = competitionParticipantRestService
+                .getAssessorParticipantsWithAssessmentPeriod(user.getId()).getSuccess();
+
         List<ReviewParticipantResource> reviewParticipantResourceList = reviewInviteRestService.getAllInvitesByUser(user.getId()).getSuccess();
 
         List<InterviewParticipantResource> interviewParticipantResourceList = interviewInviteRestService.getAllInvitesByUser(user.getId()).getSuccess();
 
         return new AssessorDashboardViewModel(
                 getProfileStatus(profileStatusResource, roleProfileState),
-                getActiveCompetitions(participantResourceList),
+                getActiveCompetitions(participantListWithAssessmentPeriod),
                 getUpcomingCompetitions(participantResourceList),
                 getPendingParticipations(participantResourceList),
                 getAssessmentPanelInvites(reviewParticipantResourceList),
@@ -91,10 +103,10 @@ public class AssessorDashboardModelPopulator {
         return new AssessorProfileStatusViewModel(assessorProfileStatusResource, roleProfileState);
     }
 
-    private List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions(List<CompetitionParticipantResource> participantResourceList) {
-        return participantResourceList.stream()
+    private List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions(List<CompetitionParticipantResource> participantListWithAssessmentPeriod) {
+        return participantListWithAssessmentPeriod.stream()
                 .filter(CompetitionParticipantResource::isAccepted)
-                .filter(CompetitionParticipantResource::isInAssessment)
+                .filter(competitionParticipant -> isInAssessment(competitionParticipant))
                 .map(cpr -> new AssessorDashboardActiveCompetitionViewModel(
                         cpr.getCompetitionId(),
                         cpr.getCompetitionName(),
@@ -103,22 +115,35 @@ public class AssessorDashboardModelPopulator {
                         cpr.getPendingAssessments(),
                         cpr.getAssessorDeadlineDate().toLocalDate(),
                         cpr.getAssessmentDaysLeft(),
-                        cpr.getAssessmentDaysLeftPercentage()
+                        cpr.getAssessmentDaysLeftPercentage(),
+                        cpr.isCompetitionAlwaysOpen(),
+                        cpr.getAssessmentPeriodNumber()
                 ))
                 .collect(toList());
     }
 
-    private List<AssessorDashboardUpcomingCompetitionViewModel> getUpcomingCompetitions(List<CompetitionParticipantResource> participantResources) {
-        return participantResources.stream()
+    private boolean isInAssessment(CompetitionParticipantResource competitionParticipant) {
+        return competitionParticipant.getAssessmentPeriod().isInAssessment();
+    }
+
+    private List<AssessorDashboardUpcomingCompetitionViewModel> getUpcomingCompetitions(List<CompetitionParticipantResource> participantListWithAssessmentPeriod) {
+        return participantListWithAssessmentPeriod.stream()
                 .filter(CompetitionParticipantResource::isAccepted)
-                .filter(CompetitionParticipantResource::isAnUpcomingAssessment)
+                .filter(competitionParticipant -> isAnUpcomingAssessment(competitionParticipant))
                 .map(p -> new AssessorDashboardUpcomingCompetitionViewModel(
                         p.getCompetitionId(),
                         p.getCompetitionName(),
-                        p.getAssessorAcceptsDate().toLocalDate(),
-                        p.getAssessorDeadlineDate().toLocalDate()
+                        p.getAssessorAcceptsDate() != null ? p.getAssessorAcceptsDate().toLocalDate() : null,
+                        p.getAssessorDeadlineDate() != null ? p.getAssessorDeadlineDate().toLocalDate() : null,
+                        p.isCompetitionAlwaysOpen()
                 ))
                 .collect(toList());
+    }
+
+    private boolean isAnUpcomingAssessment(CompetitionParticipantResource competitionParticipant) {
+        List<AssessmentPeriodResource> assessmentPeriods = assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionParticipant.getCompetitionId()).getSuccess();
+        return assessmentPeriods.stream()
+                .allMatch(assessmentPeriodResource -> !assessmentPeriodResource.isInAssessment());
     }
 
     private List<AssessorDashboardPendingInviteViewModel> getPendingParticipations(List<CompetitionParticipantResource> participantResourceList) {
@@ -127,8 +152,9 @@ public class AssessorDashboardModelPopulator {
                 .map(cpr -> new AssessorDashboardPendingInviteViewModel(
                         cpr.getInvite().getHash(),
                         cpr.getCompetitionName(),
-                        cpr.getAssessorAcceptsDate().toLocalDate(),
-                        cpr.getAssessorDeadlineDate().toLocalDate()
+                        cpr.getAssessorAcceptsDate() != null ? cpr.getAssessorAcceptsDate().toLocalDate() : null,
+                        cpr.getAssessorDeadlineDate() != null ? cpr.getAssessorDeadlineDate().toLocalDate() : null,
+                        cpr.isCompetitionAlwaysOpen()
                 ))
                 .collect(toList());
     }

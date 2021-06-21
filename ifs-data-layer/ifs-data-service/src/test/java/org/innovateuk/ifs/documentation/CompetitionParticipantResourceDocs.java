@@ -30,8 +30,10 @@ public class CompetitionParticipantResourceDocs {
             fieldWithPath("submittedAssessments").description("Number of submitted assessments for the competition"),
             fieldWithPath("totalAssessments").description("Total number of assessments accepted by the assessor for the competition"),
             fieldWithPath("competitionStatus").description("Status for the competition"),
-            fieldWithPath("pendingAssessments").description("Total number of pending assessments for the competition")
-
+            fieldWithPath("pendingAssessments").description("Total number of pending assessments for the competition"),
+            fieldWithPath("competitionAlwaysOpen").description("Always open enabled for the competition"),
+            fieldWithPath("assessmentPeriod").description("Assessment period attached to the assessment"),
+            fieldWithPath("assessmentPeriodNumber").description("Assessment period index for display")
     };
 
     public static final CompetitionParticipantResourceBuilder competitionParticipantResourceBuilder = newCompetitionParticipantResource()

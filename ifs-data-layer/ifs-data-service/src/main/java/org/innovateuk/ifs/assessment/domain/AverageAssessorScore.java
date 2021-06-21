@@ -17,6 +17,7 @@ public class AverageAssessorScore {
     @JoinColumn(name="applicationId", referencedColumnName = "id")
     private Application application;
 
+    @Column(columnDefinition = "double")
     private BigDecimal score;
 
     AverageAssessorScore() {}

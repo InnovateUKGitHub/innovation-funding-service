@@ -25,4 +25,9 @@ public class CompetitionParticipantController {
     public RestResult<List<CompetitionParticipantResource>> getAssessorParticipants(@PathVariable("userId") long userId) {
         return competitionParticipantService.getCompetitionAssessors(userId).toGetResponse();
     }
+
+    @GetMapping("/with-assessment-period/user/{userId}")
+    public RestResult<List<CompetitionParticipantResource>> getAssessorParticipantsWithAssessmentPeriod(@PathVariable("userId") long userId) {
+        return competitionParticipantService.getCompetitionAssessorsWithAssessmentPeriod(userId).toGetResponse();
+    }
 }

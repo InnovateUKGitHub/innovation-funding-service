@@ -11,6 +11,7 @@ import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.innovateuk.ifs.project.documents.form.DocumentForm;
 import org.innovateuk.ifs.project.documents.service.DocumentsRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.core.io.ByteArrayResource;
@@ -25,13 +26,14 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class DocumentsControllerTest extends BaseControllerMockMVCTest<DocumentsController> {
 
@@ -53,8 +55,7 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
                 .build();
 
         AllDocumentsViewModel viewModel =
-                new AllDocumentsViewModel(project, emptyList(), true, false);
-
+                new AllDocumentsViewModel(project, emptyList(), true, false, false);
 
         when(populator.populateAllDocuments(projectId, loggedInUser.getId())).thenReturn(viewModel);
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/document/all"))
@@ -71,12 +72,22 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
         long projectId = 1L;
         long documentConfigId = 2L;
         long applicationId = 3L;
+        DocumentViewModel viewModel = new DocumentViewModel(
+                projectId,
+                "Project 12",
+                applicationId,
+                documentConfigId,
+                "Risk Register",
+                "Guidance for Risk Register",
+                null,
+                DocumentStatus.UNSET,
+                "",
+                true,
+                true,
+                false,
+                false);
 
-        DocumentViewModel viewModel = new DocumentViewModel(projectId, "Project 12", applicationId,
-                documentConfigId, "Risk Register", "Guidance for Risk Register",
-                null, DocumentStatus.UNSET, "",true, true);
-
-        when(populator.populateViewDocument(projectId, loggedInUser.getId(), documentConfigId)).thenReturn(viewModel);
+        when(populator.populateViewDocument(projectId, loggedInUser, documentConfigId)).thenReturn(viewModel);
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/document/config/" + documentConfigId))
                 .andExpect(view().name("project/document"))
                 .andReturn();
@@ -86,6 +97,31 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
         assertEquals(viewModel, returnedViewModel);
         assertEquals(new DocumentForm(), model.get("form"));
     }
+
+    @Test
+    public void IFSAdminCanViewDocument() throws Exception {
+
+        long projectId = 1L;
+        long documentConfigId = 2L;
+        long applicationId = 3L;
+        UserResource ifsAdmin = newUserResource()
+                .withId(88L)
+                .withRoleGlobal(IFS_ADMINISTRATOR)
+                .build();
+
+        DocumentForm form = new DocumentForm();
+
+        DocumentViewModel viewModel = new DocumentViewModel(projectId, "Project 12", applicationId,
+                documentConfigId, "Collaboration agreement", "Guidance for collaboration agreement",
+                null, DocumentStatus.UNSET, "", false, true, false, true);
+
+        when(populator.populateViewDocument(projectId, ifsAdmin, documentConfigId)).thenReturn(viewModel);
+        mockMvc.perform(get("/project/" + projectId + "/document/config/" + documentConfigId))
+                .andExpect(view().name("project/document"))
+                .andExpect(model().attribute("form", form))
+                .andExpect(status().isOk());
+    }
+
     @Test
     public void downloadDocumentWhenFileDoesNotExist() throws Exception {
 
@@ -157,9 +193,9 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
 
         DocumentViewModel viewModel = new DocumentViewModel(projectId, "Project 12", applicationId,
                 documentConfigId, "Risk Register", "Guidance for Risk Register",
-                fileDetailsViewModel, DocumentStatus.UNSET, "",true, true);
+                fileDetailsViewModel, DocumentStatus.UNSET, "",true, true, false, true);
 
-        when(populator.populateViewDocument(projectId, loggedInUser.getId(), documentConfigId)).thenReturn(viewModel);
+        when(populator.populateViewDocument(projectId, loggedInUser, documentConfigId)).thenReturn(viewModel);
 
         MvcResult result = mockMvc.perform(
                 post("/project/" + projectId + "/document/config/" + documentConfigId)

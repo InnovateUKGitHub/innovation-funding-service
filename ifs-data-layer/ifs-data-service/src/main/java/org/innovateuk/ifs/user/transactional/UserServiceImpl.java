@@ -72,6 +72,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 /**
  * A Service that covers basic operations concerning Users
  */
+@SuppressWarnings("unchecked")
 @Service
 public class UserServiceImpl extends UserTransactionalService implements UserService {
 

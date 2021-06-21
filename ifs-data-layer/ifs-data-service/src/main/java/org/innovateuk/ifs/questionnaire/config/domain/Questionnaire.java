@@ -19,6 +19,7 @@ public class Questionnaire {
     @Enumerated(EnumType.STRING)
     private QuestionnaireSecurityType securityType;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
     private String title;
 

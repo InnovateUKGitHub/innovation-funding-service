@@ -230,13 +230,13 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         if (setupComplete != null && setupComplete) {
             if (!isMilestoneReached(OPEN_DATE)) {
                 return READY_TO_OPEN;
-            } else if (!isMilestoneReached(SUBMISSION_DATE)) {
+            } else if (!getMilestoneDate(SUBMISSION_DATE).isPresent() || !isMilestoneReached(SUBMISSION_DATE)) {
                 return OPEN;
             } else if (CompetitionCompletionStage.COMPETITION_CLOSE.equals(getCompletionStage())) {
                 return PREVIOUS;
             } else if (!isMilestoneReached(ASSESSORS_NOTIFIED)) {
                 return CLOSED;
-            } else if (!isMilestoneReached(MilestoneType.ASSESSMENT_CLOSED)) {
+            } else if (!isMilestoneReached(ASSESSMENT_CLOSED)) {
                 return IN_ASSESSMENT;
             } else if (!isMilestoneReached(MilestoneType.NOTIFICATIONS)) {
                 return CompetitionStatus.FUNDERS_PANEL;
@@ -506,6 +506,13 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     private boolean isMilestoneReached(MilestoneType milestoneType) {
         ZonedDateTime today = ZonedDateTime.now();
         return getMilestone(milestoneType).map(milestone -> milestone.isReached(today)).orElse(false);
+    }
+
+    private boolean isMilestoneReachedForAssessmentPeriod(MilestoneType milestoneType, AssessmentPeriod assessmentPeriod) {
+        ZonedDateTime today = ZonedDateTime.now();
+        return getMilestone(milestoneType, assessmentPeriod)
+                .map(milestone -> milestone.isReached(today))
+                .orElse(false);
     }
 
     private Optional<ZonedDateTime> getMilestoneDate(MilestoneType milestoneType) {
@@ -1038,6 +1045,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setAlwaysOpen(Boolean alwaysOpen) {
         this.alwaysOpen = alwaysOpen;
+    }
+
+    public Boolean getAlwaysOpen() {
+        return alwaysOpen;
     }
 
     public boolean isAlwaysOpen() {

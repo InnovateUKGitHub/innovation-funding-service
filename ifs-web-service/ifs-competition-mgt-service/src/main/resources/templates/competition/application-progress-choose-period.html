@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Choose an assessment period to manage applications'" />
+</head>
+<body class="govuk-template__body competition-management">
+<th:block th:insert="fragments/modals :: modal-overlay" />
+<th:block th:insert="fragments/competition-setup :: comp-setup-remove-assigned-assessor-modal" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to manage assessments',
+                linkUrl=@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}" />
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Choose an assessment period to manage applications',
+                    subTitle=|${model.competitionId} : ${model.competitionName}|,
+                    size='govuk-heading-xl'" />
+        <form method="POST" novalidate="novalidate"
+              th:action="@{/assessment/competition/{competitionId}/applications(competitionId=${model.competitionId})}"
+              th:object="${form}">
+            <th:block th:insert="competition/choose-period-fragment :: choose-period(${model.assessmentPeriods}, ${form})" />
+        </form>
+        <a th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}"
+           class="govuk-button govuk-button--secondary govuk-!-margin-0">Return to manage assessments</a>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>

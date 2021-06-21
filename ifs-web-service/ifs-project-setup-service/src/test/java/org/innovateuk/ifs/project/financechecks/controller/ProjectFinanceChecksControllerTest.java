@@ -76,6 +76,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@SuppressWarnings("unchecked")
 public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockMVCTest<ProjectFinanceChecksController> {
 
     @Mock
@@ -276,6 +277,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         FinanceChecksEligibilityViewModel viewModel = (FinanceChecksEligibilityViewModel) model.get("summaryModel");
 
         assertNull(viewModel.getFecModelEnabled());
+        assertFalse(viewModel.isCanEditProjectCosts());
     }
 
     @Test
@@ -338,6 +340,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         FinanceChecksProjectCostsViewModel projectCostViewModel = (FinanceChecksProjectCostsViewModel) model.get("model");
 
         assertNotNull(projectCostViewModel);
+        assertFalse(projectCostViewModel.isCanEditProjectCosts());
 
         assertThat(projectCostViewModel.getOrderedAccordionFinanceRowTypes(), containsInAnyOrder(expectedFinanceRowTypes.toArray()));
     }
