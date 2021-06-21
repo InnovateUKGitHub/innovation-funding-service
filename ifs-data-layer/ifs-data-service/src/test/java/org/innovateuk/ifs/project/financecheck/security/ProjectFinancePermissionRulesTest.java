@@ -61,7 +61,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     @Test
     public void projectFinanceUserCanViewViability() {
 
-        Long organisationId = 1L;
+        long organisationId = 1L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
 
@@ -89,6 +89,20 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
 
         assertTrue(rules.competitionFinanceUserCanViewViability(projectOrganisationCompositeId, userResource));
         assertFalse(rules.competitionFinanceUserCanViewViability(projectOrganisationCompositeId, userResourceNotInCompetition));
+    }
+
+    @Test
+    public void auditorUserCanViewViability() {
+
+        long organisationId = 1L;
+        UserResource userResource = newUserResource().withRoleGlobal(AUDITOR).build();
+        Competition competition = newCompetition().build();
+        Project competitionFinanceProject = newProject().withId(project.getId()).withApplication(newApplication().withCompetition(competition).build()).build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
+
+        when(projectRepository.findById(competitionFinanceProject.getId())).thenReturn(Optional.of(competitionFinanceProject));
+
+        assertTrue(rules.auditorUserCanViewViability(projectOrganisationCompositeId, userResource));
     }
 
     @Test
@@ -141,6 +155,20 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
                 assertFalse(rules.projectFinanceUserCanViewEligibility(projectOrganisationCompositeId, user));
             }
         });
+    }
+
+    @Test
+    public void auditorUserCanViewEligibility() {
+
+        long organisationId = 1L;
+        UserResource userResource = newUserResource().withRoleGlobal(AUDITOR).build();
+        Competition competition = newCompetition().build();
+        Project competitionFinanceProject = newProject().withId(project.getId()).withApplication(newApplication().withCompetition(competition).build()).build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
+
+        when(projectRepository.findById(competitionFinanceProject.getId())).thenReturn(Optional.of(competitionFinanceProject));
+
+        assertTrue(rules.auditorUserCanViewEligibility(projectOrganisationCompositeId, userResource));
     }
 
     @Test

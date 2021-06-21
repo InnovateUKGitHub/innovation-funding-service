@@ -92,10 +92,6 @@ public enum Role implements Identifiable {
         return newArrayList(APPLICANT, ASSESSOR, STAKEHOLDER, MONITORING_OFFICER, LIVE_PROJECTS_USER, SUPPORTER);
     }
 
-    public static Set<Role> readOnlyRoles() {
-        return EnumSet.of(AUDITOR);
-    }
-
     public static boolean containsMultiDashboardRole(Collection<Role> roles) {
         return multiDashboardRoles().stream().anyMatch(roles::contains);
     }

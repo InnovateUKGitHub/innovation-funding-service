@@ -43,9 +43,9 @@ public class ProjectFinanceCheckSummaryViewModel {
     }
 
     public boolean isShowEnabledGenerateSpendProfilesButton() {
-        return !financeCheckSummaryResource.isSpendProfilesGenerated() &&
-                isGenerateSpendProfileReady() &&
-                projectIsActive;
+        return !financeCheckSummaryResource.isSpendProfilesGenerated()
+                && isGenerateSpendProfileReady()
+                && projectIsActive;
     }
 
     public boolean isShowDisabledGenerateSpendProfilesButton() {

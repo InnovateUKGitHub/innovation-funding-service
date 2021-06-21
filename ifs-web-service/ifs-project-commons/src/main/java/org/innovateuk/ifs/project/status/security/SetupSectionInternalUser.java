@@ -57,11 +57,6 @@ public class SetupSectionInternalUser {
         }
 
         return ACCESSIBLE;
-
-//        return (userResource.hasAuthority(Authority.PROJECT_FINANCE)
-//                || userResource.hasAuthority(Authority.AUDITOR)
-//                || projectSetupProgressChecker.isBankDetailsAccessible())
-//                ? ACCESSIBLE : NOT_ACCESSIBLE;
     }
 
     public SectionAccess canAccessFinanceChecksSection(UserResource userResource) {

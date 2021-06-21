@@ -33,12 +33,14 @@
                 <p class="govuk-body">
                     Use this section to make notes related to the finance checks. Notes can only be seen by the internal team. After the finance checks are completed, this section will no longer be editable.
                 </p>
-                <th:block th:if="${model.projectIsActive}">
-                    <div class="govuk-grid-row govuk-!-margin-top-6">
-                        <div class="govuk-grid-column-one-half">
-                            <a id="post-new-note" th:href="@{{baseUrl}/new-note(baseUrl=${baseUrl})}" class="govuk-button">Create a new note</a>
+                <th:block th:if="${!model.isAuditor}">
+                    <th:block th:if="${model.projectIsActive}">
+                        <div class="govuk-grid-row govuk-!-margin-top-6">
+                            <div class="govuk-grid-column-one-half">
+                                <a id="post-new-note" th:href="@{{baseUrl}/new-note(baseUrl=${baseUrl})}" class="govuk-button">Create a new note</a>
+                            </div>
                         </div>
-                    </div>
+                    </th:block>
                 </th:block>
                 <ul>
                     <li th:each="note : ${model.getNotes()}">

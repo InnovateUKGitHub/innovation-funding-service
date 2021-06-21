@@ -156,8 +156,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                         competition.get().getFinanceRowTypesByFinance(organisationProjectFinance),
                         competition.get().isOverheadsAlwaysTwenty(),
                         competition.get().getFundingType() == FundingType.KTP,
-                        canEditProjectCosts,
-                        user.hasAuthority(Authority.AUDITOR)));
+                        canEditProjectCosts));
                 if (form == null) {
                     future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId, organisation.get().getId())));
                 }

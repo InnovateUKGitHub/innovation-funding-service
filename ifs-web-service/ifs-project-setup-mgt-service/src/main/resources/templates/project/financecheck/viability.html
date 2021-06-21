@@ -101,7 +101,7 @@
             <div class="govuk-form-group">
                 <div class="govuk-checkboxes">
                     <div class="govuk-checkboxes__item">
-                        <input th:disabled="${model.isReadOnly()}"
+                        <input th:disabled="${model.isReadOnly() or model.isAuditor()}"
                                id="costs-reviewed"
                                class="govuk-checkboxes__input"
                                type="checkbox"

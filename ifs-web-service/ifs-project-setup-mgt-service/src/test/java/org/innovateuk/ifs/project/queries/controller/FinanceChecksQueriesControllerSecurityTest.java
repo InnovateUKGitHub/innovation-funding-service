@@ -70,8 +70,8 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
 
     @Test
     public void testShowPage() {
-        setLoggedInUser(newUserResource().withRoleGlobal(PROJECT_FINANCE).build());
-        assertSecured(() -> classUnderTest.showPage(projectCompositeId.id(), 2L, "", null));
+        UserResource loggedInUser = setLoggedInUser(newUserResource().withRoleGlobal(PROJECT_FINANCE).build());
+        assertSecured(() -> classUnderTest.showPage(projectCompositeId.id(), 2L, "", loggedInUser, null));
 
         List<Role> nonFinanceTeamRoles = asList(Role.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
@@ -81,7 +81,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
             setLoggedInUser(
                     newUserResource().withRoleGlobal(role).build());
             try {
-                classUnderTest.showPage(projectCompositeId.id(), 2L, "", null);
+                classUnderTest.showPage(projectCompositeId.id(), 2L, "", loggedInUser, null);
                 Assert.fail("Should not have been able to view the page without the project finance role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
@@ -154,8 +154,8 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
 
     @Test
     public void testSaveResponseAttachment() {
-        setLoggedInUser(newUserResource().withRoleGlobal(PROJECT_FINANCE).build());
-        assertSecured(() -> classUnderTest.saveNewResponseAttachment(null, projectCompositeId.id(), 2L, 3L, "", null, null, null, null, null));
+        UserResource loggedInUser = setLoggedInUser(newUserResource().withRoleGlobal(PROJECT_FINANCE).build());
+        assertSecured(() -> classUnderTest.saveNewResponseAttachment(null, projectCompositeId.id(), 2L, 3L, "", null, null, null, null, null, loggedInUser));
 
         List<Role> nonFinanceTeamRoles = asList(Role.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
@@ -165,7 +165,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
             setLoggedInUser(
                     newUserResource().withRoleGlobal(role).build());
             try {
-                classUnderTest.saveNewResponseAttachment(null, projectCompositeId.id(), 2L, 3L, "", null, null, null, null, null);
+                classUnderTest.saveNewResponseAttachment(null, projectCompositeId.id(), 2L, 3L, "", null, null, null, null, null, loggedInUser);
                 Assert.fail("Should not have been able to save a response attachment without the project finance role");
             } catch (AccessDeniedException e) {
                 // expected behaviour

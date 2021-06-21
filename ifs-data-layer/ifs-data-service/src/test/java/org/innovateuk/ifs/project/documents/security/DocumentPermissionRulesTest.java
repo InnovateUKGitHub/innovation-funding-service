@@ -188,7 +188,6 @@ public class DocumentPermissionRulesTest extends BasePermissionRulesTest<Documen
         });
     }
 
-
     @Test
     public void projectManagerCanDeleteDocument() {
         ProjectResource project = newProjectResource().build();

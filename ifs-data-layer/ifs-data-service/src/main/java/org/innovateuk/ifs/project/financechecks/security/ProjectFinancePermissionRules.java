@@ -30,7 +30,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
     @PermissionRule(
             value = "VIEW_VIABILITY",
             description = "Auditor Users can view Viability")
-    public boolean auditoreUserCanViewViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+    public boolean auditorUserCanViewViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
         return hasAuditorAuthority(user);
     }
 

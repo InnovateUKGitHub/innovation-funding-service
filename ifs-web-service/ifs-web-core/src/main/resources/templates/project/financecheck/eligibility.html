@@ -255,7 +255,7 @@
 
                 <th:block th:insert="application/your-project-costs-fragments :: vat"/>
 
-                <th:block th:if="${model.isInternal() and model.open and !summaryModel.isApproved() and !model.canEditProjectCosts and !model.isAuditor()}">
+                <th:block th:if="${model.isInternal() and model.open and !summaryModel.isApproved() and !model.canEditProjectCosts and !summaryModel.isAuditor}">
                     <div class="form-footer govuk-!-margin-top-4">
                         <a th:href="@{${#ifsUtil.formPostUri(#httpServletRequest) + '#project-cost-actions'}(editProjectCosts=${true})}"
                            name="edit-project-costs"
@@ -377,7 +377,7 @@
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
               th:object="${eligibilityForm}"
-              th:unless="${summaryModel.isExternalView()}"
+              th:unless="${summaryModel.isExternalView() or summaryModel.isAuditor()}"
                           th:with="projectCostsInEdit=${summaryModel.canEditAcademicFinances}">
             <th:block th:unless="${summaryModel.isApproved() or !summaryModel.projectIsActive or projectCostsInEdit or summaryModel.canEditProjectCosts}">
                 <h2 class="govuk-heading-m">Approve eligibility</h2>
