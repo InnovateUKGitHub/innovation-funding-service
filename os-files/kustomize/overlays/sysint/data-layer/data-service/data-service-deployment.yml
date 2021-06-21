@@ -4,7 +4,6 @@ metadata:
   name: data-service
   annotations:
     monitor: monitor
-    waitForDb: waitForDb
     pullSecrets: pullSecrets
 spec:
   replicas: 1

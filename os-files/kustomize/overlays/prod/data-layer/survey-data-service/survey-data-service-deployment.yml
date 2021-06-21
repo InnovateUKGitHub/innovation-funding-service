@@ -4,7 +4,6 @@ metadata:
   name: survey-data-svc
   annotations:
     monitor: monitor
-    waitForDb: waitForDb
     pullSecrets: pullSecrets
 spec:
   replicas: 2
