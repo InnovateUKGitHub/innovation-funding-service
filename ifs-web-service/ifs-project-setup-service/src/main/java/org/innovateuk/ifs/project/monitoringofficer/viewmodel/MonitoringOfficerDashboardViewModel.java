@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.monitoringofficer.viewmodel;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Monitoring officer dashboard view model
@@ -9,32 +8,27 @@ import java.util.stream.Collectors;
 public class MonitoringOfficerDashboardViewModel {
 
     private final List<ProjectDashboardRowViewModel> projects;
+    private final MonitoringOfficerSummaryViewModel monitoringOfficerSummaryView;
 
-    public MonitoringOfficerDashboardViewModel(List<ProjectDashboardRowViewModel> projects) {
+    public MonitoringOfficerDashboardViewModel(List<ProjectDashboardRowViewModel> projects,
+                                               MonitoringOfficerSummaryViewModel monitoringOfficerSummaryView) {
         this.projects = projects;
+        this.monitoringOfficerSummaryView = monitoringOfficerSummaryView;
     }
 
     public List<ProjectDashboardRowViewModel> getProjects() {
         return projects;
     }
 
-    public int inSetupProjectCount() {
-        List<ProjectDashboardRowViewModel> inSetupProjects = projects.stream()
-                .filter(project -> !project.getProjectState().isComplete())
-                .collect(Collectors.toList());
-
-        return inSetupProjects.size();
-    }
-
-    public int previousProjectCount() {
-        List<ProjectDashboardRowViewModel> previousProjects = projects.stream()
-                .filter(project -> project.getProjectState().isComplete())
-                .collect(Collectors.toList());
-
-        return previousProjects.size();
+    public MonitoringOfficerSummaryViewModel getMonitoringOfficerSummaryView() {
+        return monitoringOfficerSummaryView;
     }
 
     public int projectCount() {
         return projects.size();
+    }
+
+    public boolean isEmptyResults() {
+        return projects.size() == 0;
     }
 }

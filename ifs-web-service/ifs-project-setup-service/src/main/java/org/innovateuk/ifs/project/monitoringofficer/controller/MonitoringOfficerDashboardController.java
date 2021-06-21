@@ -33,8 +33,10 @@ public class MonitoringOfficerDashboardController {
 
     @GetMapping
     public String viewDashboard(Model model,
-                                UserResource user) {
+                                UserResource user,
+                                @ModelAttribute(name = FORM_ATTR_NAME, binding = false) MonitoringOfficerDashboardForm form) {
         model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user));
+        model.addAttribute(FORM_ATTR_NAME, form);
         return "monitoring-officer/dashboard";
     }
 
@@ -44,7 +46,7 @@ public class MonitoringOfficerDashboardController {
                                   @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerDashboardForm form) {
 
         if (!form.isPreviousProject() && !form.isPreviousProject()) {
-            return viewDashboard(model, user);
+            return viewDashboard(model, user, form);
         } else {
             model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user,
                     form.isProjectInSetup(), form.isPreviousProject()));

@@ -39,7 +39,7 @@
                                                th:field="${form.projectInSetup}"
                                         />
                                         <label class="govuk-label govuk-checkboxes__label">
-                                            <span th:text="'In setup (' + ${model.inSetupProjectCount} + ')'">In setup (18)</span>
+                                            <span th:text="'In setup (' + ${model.monitoringOfficerSummaryView.inSetupProjectCount} + ')'">In setup (18)</span>
                                         </label>
                                     </div>
                                     <div class="govuk-checkboxes__item">
@@ -50,7 +50,7 @@
                                                th:field="${form.previousProject}"
                                         />
                                         <label class="govuk-label govuk-checkboxes__label">
-                                            <span th:text="'Previous (' + ${model.previousProjectCount} + ')'">Previous (5)</span>
+                                            <span th:text="'Previous (' + ${model.monitoringOfficerSummaryView.previousProjectCount} + ')'">Previous (5)</span>
                                         </label>
                                     </div>
                                 </div>
@@ -64,33 +64,38 @@
                 <div class="govuk-grid-column-two-thirds">
                     <h2 class="govuk-heading-s govuk-!-margin-0" th:text="${model.projectCount} + ' projects'">37 projects</h2>
                     <hr class="govuk-section-break govuk-section-break--visible" />
-                    <div class="progress-list progress-list--individual-blocks">
-                        <ul>
-                            <li th:each="projectView : ${model.projects}">
-                                <div class="task">
-                                    <h3 class="govuk-heading-s">
-                                        <a th:href="${projectView.linkUrl}" th:text="${projectView.title}" class="govuk-link">PROJECT NAME</a>
-                                    </h3>
-                                    <ul class="application-details">
-                                        <li>Project number: <span th:text="${projectView.applicationNumber}">PROJECT NUMBER</span></li>
-                                        <li>Competition: <span th:text="${projectView.competitionTitle}">COMPETITION NAME</span></li>
-                                    </ul>
-                                </div>
-                                <div class="status">
-                                    <th:block th:unless="${projectView.projectState.complete}">
-                                        <strong class="status-msg msg-progress">
-                                            Monitor project
-                                        </strong>
-                                    </th:block>
-                                    <th:block th:if="${projectView.projectState.complete}">
-                                        <p th:if="${projectView.liveOrCompletedOffline}" class="govuk-body status-msg msg-progress">Live project</p>
-                                        <p th:if="${projectView.unsuccessful}" class="govuk-body status-msg msg-progress msg-negative">Unsuccessful</p>
-                                        <p th:if="${projectView.withdrawn}" class="govuk-body status-msg msg-progress">Withdrawn</p>
-                                    </th:block>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+                    <th:block th:unless="${model.emptyResults}">
+                        <div class="progress-list progress-list--individual-blocks">
+                            <ul>
+                                <li th:each="projectView : ${model.projects}">
+                                    <div class="task">
+                                        <h3 class="govuk-heading-s">
+                                            <a th:href="${projectView.linkUrl}" th:text="${projectView.title}" class="govuk-link">PROJECT NAME</a>
+                                        </h3>
+                                        <ul class="application-details">
+                                            <li>Project number: <span th:text="${projectView.applicationNumber}">PROJECT NUMBER</span></li>
+                                            <li>Competition: <span th:text="${projectView.competitionTitle}">COMPETITION NAME</span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="status">
+                                        <th:block th:unless="${projectView.projectState.complete}">
+                                            <strong class="status-msg msg-progress">
+                                                Monitor project
+                                            </strong>
+                                        </th:block>
+                                        <th:block th:if="${projectView.projectState.complete}">
+                                            <p th:if="${projectView.liveOrCompletedOffline}" class="govuk-body status-msg msg-progress">Live project</p>
+                                            <p th:if="${projectView.unsuccessful}" class="govuk-body status-msg msg-progress msg-negative">Unsuccessful</p>
+                                            <p th:if="${projectView.withdrawn}" class="govuk-body status-msg msg-progress">Withdrawn</p>
+                                        </th:block>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </th:block>
+                    <th:block th:if="${model.emptyResults}">
+                        <p class="govuk-body icon-info">No results found.<br/>Please check your search criteria and try again.</p>
+                    </th:block>
                 </div>
             </div>
             </form>
