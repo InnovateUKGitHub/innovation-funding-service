@@ -40,8 +40,7 @@ import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.AUDITOR;
 import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.hasProjectFinanceAuthority;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -324,9 +323,36 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
+    public void auditorUserCanViewCreditReport() {
+
+        ProjectCompositeId projectId = ProjectCompositeId.id(1L);
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasAuthority(Authority.AUDITOR)) {
+                assertTrue(rules.auditorUserCanViewCreditReport(projectId, user));
+            } else {
+                assertFalse(rules.auditorUserCanViewCreditReport(projectId, user));
+            }
+        });
+    }
+
+    @Test
     public void internalUserCanViewFinanceChecks() {
         ProjectCompositeId projectId = ProjectCompositeId.id(1L);
         allInternalUsers.forEach(user -> assertTrue(rules.internalUsersCanSeeTheProjectFinanceOverviewsForAllProjects(projectId, user)));
+    }
+
+    @Test
+    public void auditorUserCanViewFinanceChecks() {
+        ProjectCompositeId projectId = ProjectCompositeId.id(1L);
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasAuthority(Authority.AUDITOR)) {
+                assertTrue(rules.auditorUsersCanSeeTheProjectFinanceOverviewsForAllProjects(projectId, user));
+            } else {
+                assertFalse(rules.auditorUsersCanSeeTheProjectFinanceOverviewsForAllProjects(projectId, user));
+            }
+        });
     }
 
     @Test
@@ -516,6 +542,19 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
                 assertTrue(rules.internalUsersCanSeeTheProjectFinancesForTheirOrganisation(financeCheckEligibilityResource, user));
             } else {
                 assertFalse(rules.internalUsersCanSeeTheProjectFinancesForTheirOrganisation(financeCheckEligibilityResource, user));
+            }
+        });
+    }
+
+    @Test
+    public void auditorUserCanSeeTheProjectFinancesForTheirOrganisation() {
+        FinanceCheckEligibilityResource financeCheckEligibilityResource = newFinanceCheckEligibilityResource().withProjectId(project.getId()).build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (isAuditor(user)) {
+                assertTrue(rules.auditorCanSeeTheProjectFinancesForTheirOrganisation(financeCheckEligibilityResource, user));
+            } else {
+                assertFalse(rules.auditorCanSeeTheProjectFinancesForTheirOrganisation(financeCheckEligibilityResource, user));
             }
         });
     }

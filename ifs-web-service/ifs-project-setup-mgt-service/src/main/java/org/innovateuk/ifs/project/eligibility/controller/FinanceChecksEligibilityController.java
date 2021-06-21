@@ -126,7 +126,16 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         return doViewEligibility(projectId, organisationId, model, null, new ResetEligibilityForm(), null, null, editAcademicFinances, user, editProjectCosts);
     }
 
-    private String doViewEligibility(long projectId, long organisationId, Model model, FinanceChecksEligibilityForm eligibilityForm, ResetEligibilityForm resetEligibilityForm, YourProjectCostsForm form, AcademicCostForm academicCostForm, boolean editAcademicFinances, UserResource user, boolean canEditProjectCosts) {
+    private String doViewEligibility(long projectId,
+                                     long organisationId,
+                                     Model model,
+                                     FinanceChecksEligibilityForm eligibilityForm,
+                                     ResetEligibilityForm resetEligibilityForm,
+                                     YourProjectCostsForm form,
+                                     AcademicCostForm academicCostForm,
+                                     boolean editAcademicFinances,
+                                     UserResource user,
+                                     boolean canEditProjectCosts) {
         ProjectResource project = projectService.getById(projectId);
         Future<CompetitionResource> competition = async(() -> competitionRestService.getCompetitionById(project.getCompetition()).getSuccess());
         Future<OrganisationResource> organisation = async(() -> organisationRestService.getOrganisationById(organisationId).getSuccess());

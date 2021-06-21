@@ -71,7 +71,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         return newUserResource().withRoleGlobal(STAKEHOLDER).build();
     }
 
-    private UserResource auditorUser(){
+    private UserResource auditorUser() {
         return newUserResource().withRoleGlobal(AUDITOR).build();
     }
 
@@ -138,7 +138,6 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
 
         stream(Role.values()).forEach(role -> {
             if (role != PROJECT_FINANCE && role != AUDITOR) {
-
                 List<Role> roles = singletonList(role);
                 UserResource nonFinanceTeam = newUserResource().withRolesGlobal(roles).build();
                 assertEquals(NOT_ACCESSIBLE, internalUser.canAccessBankDetailsSection(nonFinanceTeam));

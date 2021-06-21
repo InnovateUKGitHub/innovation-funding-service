@@ -67,30 +67,32 @@
                 </li>
             </ul>
 
-            <th:block th:if="${model.notApprovedOrRejected and model.projectIsActive and !model.isAuditor()}">
-                <h2 class="govuk-heading-m">Approved by Innovate UK</h2>
-                <div class="govuk-form-group">
-                    <div class="govuk-checkboxes">
-                        <div class="govuk-checkboxes__item">
-                            <input id="approvedByLeadTechnologist"
-                                   class="govuk-checkboxes__input"
-                                   value="yes"
-                                   type="checkbox"
-                                   data-switches-button-status="#accept-profile" />
-                            <label for="approvedByLeadTechnologist"
-                                   class="govuk-label govuk-checkboxes__label">
-                                The spend profile has been approved by Innovate UK.
-                            </label>
+            <th:block th:unless="${model.isAuditor()}">
+                <th:block th:if="${model.notApprovedOrRejected and model.projectIsActive and !model.isAuditor()}">
+                    <h2 class="govuk-heading-m">Approved by Innovate UK</h2>
+                    <div class="govuk-form-group">
+                        <div class="govuk-checkboxes">
+                            <div class="govuk-checkboxes__item">
+                                <input id="approvedByLeadTechnologist"
+                                       class="govuk-checkboxes__input"
+                                       value="yes"
+                                       type="checkbox"
+                                       data-switches-button-status="#accept-profile" />
+                                <label for="approvedByLeadTechnologist"
+                                       class="govuk-label govuk-checkboxes__label">
+                                    The spend profile has been approved by Innovate UK.
+                                </label>
+                            </div>
                         </div>
-                    </div>
 
-                </div>
-                <button data-js-modal="modal-accept-profile" id="accept-profile" class="govuk-button govuk-!-margin-right-4">
-                    Approved
-                </button>
-                <button data-js-modal="modal-reject-profile" class="govuk-button govuk-button--warning">
-                    Reject
-                </button>
+                    </div>
+                    <button data-js-modal="modal-accept-profile" id="accept-profile" class="govuk-button govuk-!-margin-right-4">
+                        Approved
+                    </button>
+                    <button data-js-modal="modal-reject-profile" class="govuk-button govuk-button--warning">
+                        Reject
+                    </button>
+                </th:block>
             </th:block>
         </th:block>
 
