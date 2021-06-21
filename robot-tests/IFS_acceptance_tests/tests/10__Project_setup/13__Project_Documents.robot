@@ -370,14 +370,14 @@ After rejection, status in the dashboard remains action required after uploads
 Project Manager can remove the offending documents
     [Documentation]    INFUND-7342
     [Tags]  HappyPath
-    [Setup]    log in as a different user     &{lead_applicant_credentials_bd}
-    Given the user navigates to the page      ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
-    When the user clicks the button/link      link = Collaboration agreement
-    And the user clicks the button/link       name = deleteDocument
-    Then the user should not see the element  jQuery = a:contains("${valid_pdf} (opens in a new window)")
-    When the user goes to documents page      Back to document overview  Exploitation plan
-    And the user clicks the button/link       name = deleteDocument
-    Then the user should not see the element  jQuery = a:contains("${valid_pdf} (opens in a new window)")
+    [Setup]  log in as a different user         &{lead_applicant_credentials_bd}
+    Given the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
+    When the user clicks the button/link        link = Collaboration agreement
+    And the user clicks the button/link         name = deleteDocument
+    Then the user should not see the element    jQuery = a:contains("${valid_pdf} (opens in a new window)")
+    When the user goes to documents page        Back to document overview  Exploitation plan
+    And the user clicks the button/link         name = deleteDocument
+    Then the user should not see the element    jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
 After rejection, non-lead partner cannot upload either document
     [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258, INFUND-5806, INFUND-7342
@@ -596,14 +596,14 @@ ifs admin approves uploaded documents
 
 Partners can see both documents rejected
     [Arguments]  ${warningMessage}
-    the user navigates to the page       ${SERVER}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
-    the user clicks the button/link      link = Collaboration agreement
-    the user should see the element      jQuery = h2:contains(${warningMessage})
-    the user should not see the element  jQuery = label:contains("Upload")
-    the user clicks the button/link      link = Back to document overview
-    the user clicks the button/link      link = Exploitation plan
-    the user should see the element      jQuery = h2:contains(${warningMessage})
-    the user should not see the element  jQuery = label:contains("Upload")
+    the user navigates to the page         ${SERVER}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
+    the user clicks the button/link        link = Collaboration agreement
+    the user should see the element        jQuery = h2:contains(${warningMessage})
+    the user should not see the element    jQuery = label:contains("Upload")
+    the user clicks the button/link        link = Back to document overview
+    the user clicks the button/link        link = Exploitation plan
+    the user should see the element        jQuery = h2:contains(${warningMessage})
+    the user should not see the element    jQuery = label:contains("Upload")
 
 Partners can see both documents approved
     the user navigates to the page      ${SERVER}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
@@ -661,6 +661,6 @@ the user sees MO rejected document banner and reason
 the user sees Innovate Uk approved document banner
     the user clicks the button/link    link = Collaboration agreement
     the user should see the element    jQuery = p:contains("Innovate UK approved this document on ${today}.")
-    the user clicks the button/link     jQuery = a:contains("Return to documents")
-    the user clicks the button/link     link = Exploitation plan
-    the user should see the element     jQuery = p:contains("Innovate UK approved this document on ${today}.")
+    the user clicks the button/link    jQuery = a:contains("Return to documents")
+    the user clicks the button/link    link = Exploitation plan
+    the user should see the element    jQuery = p:contains("Innovate UK approved this document on ${today}.")
