@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.user.resource.Authority;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import static java.util.Arrays.asList;
@@ -95,7 +96,7 @@ public class SetupSectionInternalUser {
             return NOT_ACCESSIBLE;
         }
 
-        if ((isSupport(userResource) || isInnovationLead(userResource) || userResource.hasAuthority(Authority.STAKEHOLDER)) && !projectSetupProgressChecker.allDocumentsApproved()) {
+        if ((isSupport(userResource) || isInnovationLead(userResource) || userResource.hasRole(Role.STAKEHOLDER)) && !projectSetupProgressChecker.allDocumentsApproved()) {
             return NOT_ACCESSIBLE;
         }
 
