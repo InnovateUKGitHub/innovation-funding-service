@@ -20,6 +20,7 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -54,6 +55,9 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
 
     @Mock
     private PartnerOrganisationRestService partnerOrganisationRestService;
+
+    @Mock
+    private UserRestService userRestService;
 
     private long competitionId = 18L;
     private long applicationId = 19L;
@@ -122,6 +126,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
                 .build();
 
         when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
+        when(userRestService.retrieveUserById(loggedInUserId)).thenReturn(restSuccess(userResource));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(singletonList(partnerOrganisationResource)));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));

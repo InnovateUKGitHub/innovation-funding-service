@@ -9,12 +9,15 @@ import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentStatus;
+import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -23,7 +26,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
-import static org.innovateuk.ifs.user.resource.Authority.SUPER_ADMIN_USER;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindAny;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -39,6 +41,12 @@ public class DocumentsPopulator {
 
     @Autowired
     private ProjectRestService projectRestService;
+
+    @Autowired
+    private MonitoringOfficerRestService monitoringOfficerRestService;
+
+    @Autowired
+    private UserRestService userRestService;
 
     @Value("${ifs.monitoringofficer.journey.update.enabled}")
     private boolean isMOJourneyUpdateEnabled;
@@ -64,7 +72,9 @@ public class DocumentsPopulator {
                 new ProjectDocumentStatus(configuredDocument.getId(), configuredDocument.getTitle(),
                         getProjectDocumentStatus(projectDocuments, configuredDocument.getId())));
 
-        return new AllDocumentsViewModel(project, documents, isProjectManager(loggedInUserId, projectId), competition.isProcurement());
+        boolean isMOCanApproveOrRejectDocuments = isMOJourneyUpdateEnabled && isMonitoringOfficer(loggedInUserId, projectId);
+
+        return new AllDocumentsViewModel(project, documents, isProjectManager(loggedInUserId, projectId), competition.isProcurement(), isMOCanApproveOrRejectDocuments);
     }
 
     private DocumentStatus getProjectDocumentStatus(List<ProjectDocumentResource> projectDocuments, Long documentConfigId) {
@@ -92,8 +102,7 @@ public class DocumentsPopulator {
                 .map(FileDetailsViewModel::new)
                 .orElse(null);
 
-        // if isMOJourneyUpdateEnabled toggle is set to false, IFSAdmin CompAdmin and Finance user can approve (excluding MO). If set to True, only IFSAdmin can approve.
-        boolean userCanApproveOrRejectDocuments = !isMOJourneyUpdateEnabled ? loggedInUser.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR) : loggedInUser.hasRole(IFS_ADMINISTRATOR);
+        boolean userCanApproveOrRejectDocuments = isMOJourneyUpdateEnabled ? loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, MONITORING_OFFICER, SUPER_ADMIN_USER) : loggedInUser.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR, SUPER_ADMIN_USER);
 
         return new DocumentViewModel(project.getId(),
                 project.getName(),
@@ -106,7 +115,7 @@ public class DocumentsPopulator {
                 projectDocument.map(ProjectDocumentResource::getStatusComments).orElse(""),
                 isProjectManager(loggedInUser.getId(), projectId),
                 project.getProjectState().isActive(),
-                loggedInUser.hasAuthority(SUPER_ADMIN_USER),
+                loggedInUser.hasAuthority(Authority.SUPER_ADMIN_USER),
                 userCanApproveOrRejectDocuments);
     }
 
@@ -117,6 +126,10 @@ public class DocumentsPopulator {
                 .map(ProjectUserResource::getUser)
                 .map(userId -> userId.equals(loggedInUserId))
                 .orElse(false);
+    }
+
+    private boolean isMonitoringOfficer(long loggedInUserId, long projectId) {
+        return monitoringOfficerRestService.isMonitoringOfficerOnProject(projectId, loggedInUserId).getSuccess();
     }
 
     private CompetitionResource getCompetition(long competitionId) {
