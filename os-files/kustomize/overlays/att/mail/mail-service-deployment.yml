@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mail
+  annotations:
+    pullSecrets: pullSecrets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mail
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: mail
+    spec:
+      containers:
+        - image: docker-ifs.devops.innovateuk.org/releases/mail-sink:1.0.0
+          name: mail-container
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: FQDN
+              value: ${MAIL_ADDRESS}
+          ports:
+            - containerPort: 8025
+            - containerPort: 4443
+            - containerPort: 8143
+          resources:
+            requests:
+              memory: 50M
+            limits:
+              memory: 60M
