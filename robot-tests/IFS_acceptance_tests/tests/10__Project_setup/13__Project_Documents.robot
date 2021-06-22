@@ -47,7 +47,6 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...
 ...               IFS-9578 MO documents: design changes for other roles (not MO or Project manager)
 ...
-#Suite Setup       the user logs-in in new browser     &{collaborator1_credentials_bd}
 Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -358,13 +357,6 @@ IfsAdmin rejects both documents
     When the user goes to documents page        Return to documents  Exploitation plan
     Then ifs admin reject uploaded documents
 
-#MO can see the Documents are set back to incomplete
-#    [Documentation]    IFS-9701
-#    [Tags]
-#    Given the user logs-in in new browser     &{monitoring_officer_one_credentials}
-#    When the user navigates to the page       ${server}/project-setup/project/${Grade_Crossing_Project_Id}
-#    Then the user should see the element      jQuery = ul li:contains("Documents") span:contains("Incomplete")
-    
 MO can view Incomplete status on rejected document
     [Documentation]  IFS-9578  IFS-9701
     [Setup]  Log in as a different user      &{monitoring_officer_one_credentials}
@@ -444,13 +436,6 @@ ifsAdmin approves both documents
     When the user goes to documents page              Return to documents  Exploitation plan
     Then internal user approve uploaded documents
 
-#MO can see the Documents have been completed
-#    [Documentation]    IFS-9701
-#    [Tags]
-#    Given the user logs-in in new browser     &{monitoring_officer_one_credentials}
-#    WHen the user navigates to the page       ${server}/project-setup/project/${Grade_Crossing_Project_Id}
-#    Then the user should see the element      jQuery = ul li:contains("Documents") span:contains("Completed")
-    
 MO can view ifsAdmin approved the document banners
     [Documentation]  IFS-9578  IFS-9701
     Given Log in as a different user                           &{monitoring_officer_one_credentials}
