@@ -31,7 +31,6 @@
                     <th:block th:if="${model.projectFinanceUser}">
                         <a href="/project-setup-management/competitions/status/pending-bank-details-approvals" class="govuk-link govuk-!-margin-right-2"><span th:text="'Review bank details (' + ${model.countBankDetails} + ')'">2</span></a> |
                     </th:block>
-
                     <th:block th:unless="${model.externalFinanceUser or model.auditorUser}">
                         <a href="/project-setup-management/monitoring-officer/view-all" class="govuk-link">Assign monitoring officers</a>
                     </th:block>

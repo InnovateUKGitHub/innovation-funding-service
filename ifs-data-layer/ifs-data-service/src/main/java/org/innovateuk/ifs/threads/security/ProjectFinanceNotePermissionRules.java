@@ -62,7 +62,7 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
     public boolean projectFinanceUsersCanViewNotes(final NoteResource note, final UserResource user) {
         return hasProjectFinanceAuthority(user);
     }
-Not
+
     @PermissionRule(value = "NOTES_READ", description = "Auditor Users can view Notes")
     public boolean auditorUsersCanViewNotes(final NoteResource note, final UserResource user) {
         return hasAuditorAuthority(user);

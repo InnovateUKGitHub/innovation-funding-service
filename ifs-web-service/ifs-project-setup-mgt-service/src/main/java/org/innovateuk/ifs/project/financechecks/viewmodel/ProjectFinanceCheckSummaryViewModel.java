@@ -104,6 +104,10 @@ public class ProjectFinanceCheckSummaryViewModel {
                 .isPresent();
     }
 
+    public boolean isReadOnly() {
+        return userHasAuditorAuthority;
+    }
+
     public boolean isSubsidyControlCompetition() {
         return subsidyControlCompetition;
     }

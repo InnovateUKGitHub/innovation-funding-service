@@ -313,7 +313,7 @@
                     internal=${!summaryModel.externalView}
                 )" />
 
-                <th:block th:unless="${summaryModel.externalView or summaryModel.isApproved()}">
+                <th:block th:unless="${summaryModel.externalView or summaryModel.isApproved() or summaryModel.isAuditor()}">
                     <a th:unless="${summaryModel.canEditAcademicFinances}"
                        th:href="@{${#ifsUtil.formPostUri(#httpServletRequest) + '#academic-cost-actions'}(editAcademicFinances=${true})}" class="govuk-button govuk-button--secondary" name="edit-academic-finances">Edit</a>
                     <div id="academic-cost-actions" th:if="${summaryModel.canEditAcademicFinances}">

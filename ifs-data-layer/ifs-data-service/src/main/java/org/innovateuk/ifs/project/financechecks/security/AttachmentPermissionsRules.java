@@ -19,8 +19,7 @@ import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isExternalFinanceUser;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.hasProjectFinanceAuthority;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /*
   Provides the Permission Rules to manage Queries' Attachments under the context of a ProjectFinance.
@@ -89,6 +88,11 @@ public class AttachmentPermissionsRules extends BasePermissionRules {
     @PermissionRule(value = "PF_ATTACHMENT_DOWNLOAD", description = "Project Finance users can download any Attachment saved with a post or any attachment they have uploaded that has yet to be saved with a post.")
     public boolean projectFinanceUsersCanDownloadAnyAttachment(AttachmentResource attachment, UserResource user) {
         return attachmentIsStillOrphan(attachment) ? attachmentMapper.mapToDomain(attachment).wasUploadedBy(user.getId()) : hasProjectFinanceAuthority(user);
+    }
+
+    @PermissionRule(value = "PF_ATTACHMENT_DOWNLOAD", description = "Auditor users can download any Attachment saved with a post or any attachment they have uploaded that has yet to be saved with a post.")
+    public boolean auditorUsersCanDownloadAnyAttachment(AttachmentResource attachment, UserResource user) {
+        return attachmentIsStillOrphan(attachment) ? attachmentMapper.mapToDomain(attachment).wasUploadedBy(user.getId()) : hasAuditorAuthority(user);
     }
 
     @PermissionRule(value = "PF_ATTACHMENT_DOWNLOAD", description = "Finance Contact users can only download an Attachment saved with a post they are related to, or any attachment they have uploaded that has yet to be saved with a post.")

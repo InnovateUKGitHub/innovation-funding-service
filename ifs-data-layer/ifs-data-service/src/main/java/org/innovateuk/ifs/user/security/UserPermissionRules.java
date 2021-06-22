@@ -342,7 +342,7 @@ public class UserPermissionRules {
     }
 
     @PermissionRule(value = "GRANT_ROLE", description = "Users such as assessor, stakeholder, monitoring_officer, live_projects_user, " +
-            "supporter and auditor can request applicant role")
+            "supporter can request applicant role")
     public boolean isMultipleRoleDashboardUsersCanRequestApplicantRole(GrantRoleCommand roleCommand, UserResource user) {
         return user.hasAnyRoles(Role.multiDashboardRoles());
     }

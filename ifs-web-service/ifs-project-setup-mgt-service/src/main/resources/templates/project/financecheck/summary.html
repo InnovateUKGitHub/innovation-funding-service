@@ -195,8 +195,7 @@
             </table>
         </div>
 
-        <th:block th:if="${!model.userHasAuditorAuthority}"
-                th:insert="fragments/modals :: generate-spend-profile">
+        <th:block th:unless="${model.isReadOnly()}">
             <form method="POST"
                   th:action="@{/project/{projectId}/finance-check(projectId=${model.financeCheckSummaryResource.projectId})}"
                   th:if="${model.showEnabledGenerateSpendProfilesButton or model.showDisabledGenerateSpendProfilesButton}">
