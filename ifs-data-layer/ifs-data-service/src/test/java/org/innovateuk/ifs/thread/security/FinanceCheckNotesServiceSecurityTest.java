@@ -60,7 +60,7 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
                 .thenReturn(serviceSuccess(new NoteResource(1L, null, null, null, null)));
 
         assertAccessDenied(() -> classUnderTest.findOne(1L), () -> {
-            verify(noteRules).onlyProjectFinanceUsersCanViewNotes(isA(NoteResource.class), eq(user));
+            verify(noteRules).projectFinanceUsersCanViewNotes(isA(NoteResource.class), eq(user));
             verifyNoMoreInteractions(noteRules);
         });
     }

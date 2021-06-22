@@ -90,8 +90,6 @@
 
         <h2 class="govuk-heading-m" th:text="|${model.title} upload|"></h2>
 
-<!--        <th:block th:unless="${model.isAuditor()}">-->
-
         <div class="upload-section">
             <form th:action="@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})}"
                   th:object="${form}" method="post" enctype="multipart/form-data">
@@ -158,8 +156,6 @@
                 </th:block>
             </form>
         </div>
-
-<!--        </th:block>-->
 
         <th:block th:if="${!model.isSentToProjectTeam() and model.projectIsActive}">
             <div data-js-toggle-on-file-upload="grant-letter-upload"
