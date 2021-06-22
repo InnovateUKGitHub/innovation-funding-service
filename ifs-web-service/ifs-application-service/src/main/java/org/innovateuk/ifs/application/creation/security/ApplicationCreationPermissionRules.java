@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationCreationPermissionRules {
 
-    @PermissionRule(value = "APPLICATION_CREATION", description = "Users such as assessor, stakeholder, monitoring_officer, live_projects_user and " +
-            "supporter can create application")
+    @PermissionRule(value = "APPLICATION_CREATION", description = "Users such as assessor, stakeholder, monitoring_officer, live_projects_user, " +
+            "supporter and auditor can create application")
     public boolean applicationCreationAuthentication(CompetitionCompositeId compositeId, UserResource user) {
              return user.hasAnyRoles(Role.multiDashboardRoles());
     }
 
-    @PermissionRule(value = "APPLICATION_CREATION", description = "Users such as assessor, stakeholder, monitoring_officer, live_projects_user and " +
-            "supporter can accept invite and select organisation to create application")
+    @PermissionRule(value = "APPLICATION_CREATION", description = "Users such as assessor, stakeholder, monitoring_officer, live_projects_user, " +
+            "supporter and auditor can accept invite and select organisation to create application")
     public boolean acceptInviteAndSelectOrganisationAuthentication(UserResource userToAccept, UserResource user) {
         return user.hasAnyRoles(Role.multiDashboardRoles());
     }

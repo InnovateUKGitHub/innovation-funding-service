@@ -89,7 +89,7 @@ public enum Role implements Identifiable {
     }
 
     public static List<Role> multiDashboardRoles() {
-        return newArrayList(APPLICANT, ASSESSOR, STAKEHOLDER, MONITORING_OFFICER, LIVE_PROJECTS_USER, SUPPORTER);
+        return newArrayList(APPLICANT, ASSESSOR, STAKEHOLDER, MONITORING_OFFICER, LIVE_PROJECTS_USER, SUPPORTER, AUDITOR);
     }
 
     public static boolean containsMultiDashboardRole(Collection<Role> roles) {
