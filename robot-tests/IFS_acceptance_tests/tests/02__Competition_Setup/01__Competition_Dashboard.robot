@@ -23,10 +23,7 @@ Resource          ../../resources/common/Competition_Commons.robot
 Sections of Live Competitions
     [Documentation]    INFUND-3830 INFUND-3003
     Given the user should see the element      jQuery = h1:contains("All competitions")
-    Then the user should see the element       jQuery = h2:contains("Open")
-    And the user should see the element        jQuery = h2:contains("Closed")
-    And the user should see the element        jQuery = h2:contains("Panel")
-    And the user should see the element        jQuery = h2:contains("Inform")
+    Then the user should see the element       jQuery = section:contains("Open") + section:contains("Closed") + section:contains("In assessment") + section:contains("Panel") + section:contains("Inform")
     And the user should not see the element    link = ${READY_TO_OPEN_COMPETITION_NAME}
     # this step verifies that the ready to open competitions are not visible in other tabs
 

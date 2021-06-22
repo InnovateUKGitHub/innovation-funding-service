@@ -77,18 +77,17 @@ Application has application team details
 
 Comp admin can open the view mode of the application
     [Documentation]    INFUND-2300,INFUND-2304, INFUND-2435, INFUND-7503
-    [Setup]  The user logs-in in new browser                               &{lead_applicant_credentials}
-    When the user can see the option to upload a file on the page          ${APPLICATION_OVERVIEW_URL}
-    Then the user uploads the file                                         css = input.inputfile  ${5mb_pdf}
-    When log in as a different user                                        &{Comp_admin1_credentials}
-    And the user navigates to the page                                     ${applicationsForRTOComp}
-    And the user clicks the button/link                                    link = All applications
-    When the user clicks the button/link                                   link = ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
-    Then the user should be redirected to the correct page                 ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
-    And the user should see the element                                    link = Print application
-    And the user should see the element                                    jQuery = h1 span:contains("Climate science the history of Greenland's ice")
-    And the user should see the element                                    jQuery = h3:contains("Appendix") ~ a:contains("testing_5MB.pdf, 4 MB")
-    And open pdf link                                                      jQuery = a:contains(${5mb_pdf}, 4 MB)
+    [Setup]  The user logs-in in new browser                                &{lead_applicant_credentials}
+    Given the user can see the option to upload a file on the page          ${APPLICATION_OVERVIEW_URL}
+    When the user uploads the file                                          css = input.inputfile  ${5mb_pdf}
+    And log in as a different user                                          &{Comp_admin1_credentials}
+    And the user navigates to the page                                      ${applicationsForRTOComp}
+    And the user clicks the button/link                                     link = All applications
+    And the user clicks the button/link                                     link = ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
+    Then the user should see the element                                    link = Print application
+    And the user should see the element                                     jQuery = h1 span:contains("Climate science the history of Greenland's ice")
+    And the user should see the element                                     jQuery = h3:contains("Appendix") ~ a:contains("testing_5MB.pdf, 4 MB")
+    And open pdf link                                                       jQuery = a:contains(${5mb_pdf}, 4 MB)
 
 Comp admin can link to the comp page from application overview
     [Documentation]  IFS-6060

@@ -15,6 +15,9 @@ Suite Teardown    The user closes the browser
 Force Tags        Guest
 Resource          ../../resources/defaultResources.robot
 
+*** Variables ***
+${dashboard_url}        ${server}/dashboard-selection
+
 *** Test Cases ***
 Invalid Login
     Given the user is not logged-in
@@ -22,25 +25,20 @@ Invalid Login
 
 Valid login with double role as Applicant
     [Documentation]    INFUND-1479
-    Given The guest user inserts user email and password      &{Multiple_user_credentials}
-    And The guest user clicks the log-in button
+    Given Logging in and Error Checking                        &{Multiple_user_credentials}
+#    Given Log in as a different user                           &{Multiple_user_credentials}
     Then the user should see multiple role dashboard view
-    And the user goes to applicant dashboard
-    [Teardown]    Logout as user
+    And the user should see dual role dashboard view
 
 Valid login with Double role as Assessor
     [Documentation]    INFUND-1479
-    Given The guest user inserts user email and password      &{Multiple_user_credentials}
-    When The guest user clicks the log-in button
-    And the user clicks the button/link                       id = dashboard-link-ASSESSOR
-    Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
-    And the user should see the element                       jQuery = h1:contains("Assessments")
-    [Teardown]    Logout as user
+    Given Log in as a different user                           &{Multiple_user_credentials}
+    When the user navigates to the assessor dashboard
+    Then the user should see the element                       jQuery = h1:contains("Assessments")
 
 Valid login with triple role Assessor
     [Documentation]  IFS-4568
-    Given the guest user inserts user email and password      &{triple_user_credentials}
-    And The guest user clicks the log-in button
+    Given Log in as a different user                          &{triple_user_credentials}
     When the user clicks the button/link                      id = dashboard-link-APPLICANT
     Then the user should be redirected to the correct page    ${APPLICANT_DASHBOARD_URL}
     And the user should see the element                       jQuery = h1:contains("Applications")
@@ -50,39 +48,25 @@ Valid login with triple role Stakeholder
     [Documentation]  IFS-4568
     Given the guest user inserts user email and password      &{triple_user_credentials}
     And The guest user clicks the log-in button
-    When the user clicks the button/link                      id = dashboard-link-STAKEHOLDER
-    Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
-    And the user should see the element                       jQuery = h1:contains("All competitions")
-    [Teardown]    Logout as user
+    When the user navigates to the stakeholder dashboard
+    Then the user should see the element                       jQuery = h1:contains("All competitions")
 
 Valid login with triple role Applicant
     [Documentation]  IFS-4568
-    Given the guest user inserts user email and password      &{triple_user_credentials}
-    And The guest user clicks the log-in button
-    And the user clicks the button/link                       id = dashboard-link-ASSESSOR
-    Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
-    And the user should see the element                       jQuery = h1:contains("Assessments")
+    When the user navigates to the assessor dashboard
+    And the user should see the element                        jQuery = h1:contains("Assessments")
     [Teardown]    Logout as user
-
-Should not see the Sign in link when on the login page
-    Given the user navigates to the page        ${LOGIN_URL}
-    Then the user should not see the element    link = Sign in
-
-Should see the Sign in link when not logged in
-    Given the user is not logged-in
-    And the user navigates to the page      ${frontDoor}
-    Then the user should see the element    link = Sign in
 
 Reset password
     [Documentation]    INFUND-1889
     [Tags]  HappyPath
-    Given the user navigates to the page           ${LOGIN_URL}
+    Given the user navigates to the page                ${LOGIN_URL}
     When the user clicks the forgot psw link
-    And the user enters text to a text field       id = email  ${test_mailbox_one}+changepsw@gmail.com
-    And the user clicks the button/link            id = forgotten-password-cta
-    Then the user should see the element           jQuery = p:contains("If your email address is recognised and valid, you’ll receive a notification with instructions about how to reset your password. If you do not receive a notification, please check your junk folder or try again.")
-    And the user reads his email and clicks the link  ${test_mailbox_one}+changepsw@gmail.com  Reset your password  If you didn't request this
-    And the user should see the element            jQuery = h1:contains("Password reset")
+    And the user enters text to a text field            id = email  ${test_mailbox_one}+changepsw@gmail.com
+    And the user clicks the button/link                 id = forgotten-password-cta
+    Then the user should see the element                jQuery = p:contains("If your email address is recognised and valid, you’ll receive a notification with instructions about how to reset your password. If you do not receive a notification, please check your junk folder or try again.")
+    And the user reads his email and clicks the link    ${test_mailbox_one}+changepsw@gmail.com  Reset your password  If you didn't request this
+    And the user should see the element                 jQuery = h1:contains("Password reset")
 
 Reset password user enters new psw
     [Documentation]    INFUND-1889
@@ -106,7 +90,16 @@ Clear the login fields
     Mouse Out                                  id = password
     wait for autosave
 
-the user goes to applicant dashboard
+the user navigates to the stakeholder dashboard
+    the user clicks the button/link                      id = dashboard-link-STAKEHOLDER
+    the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
+
+the user navigates to the assessor dashboard
+    the user navigates to the page                        ${dashboard_url}
+    the user clicks the button/link                       id = dashboard-link-ASSESSOR
+    the user should be redirected to the correct page     ${ASSESSOR_DASHBOARD_URL}
+
+the user should see dual role dashboard view
     the user clicks the button/link                      css = #dashboard-link-APPLICANT
     the user should be redirected to the correct page    ${APPLICANT_DASHBOARD_URL}
     the user should see the element                      jQuery = h1:contains("Applications")

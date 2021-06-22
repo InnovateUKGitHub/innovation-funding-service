@@ -63,7 +63,6 @@ Display errors for invalid inputs of the First name
     When the user fills in the first name                 ${EMPTY}
     Then the user should see a field error                ${enter_a_first_name}
     And browser validations have been disabled
-    And browser validations have been disabled
     And the user fills in the first name                  testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttes
     And the user clicks the button/link                   css = [name="create-account"]
     And the user should see a field and summary error     Your first name cannot have more than 70 characters.
@@ -78,7 +77,6 @@ Display errors for invalid inputs of the Last name
     And browser validations have been disabled
     When the user fills in the last name                  ${EMPTY}
     Then the user should see a field error                ${enter_a_last_name}
-    And browser validations have been disabled
     And browser validations have been disabled
     And the user fills in the last name                   testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttes
     And the user clicks the button/link                   css = [name="create-account"]

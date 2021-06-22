@@ -49,7 +49,6 @@ Competition dashboard ready to Open competition
     When The user clicks the button/link in the paginated list    link = ${READY_TO_OPEN_COMPETITION_NAME}
     Then the user should see the element    jQuery = span:contains("${READY_TO_OPEN_COMPETITION_NAME}")
     And the user should see the element     jQuery = h1:contains("Ready to open")
-    And the user should see the element     jQuery = h1:contains("Ready to open")
     And the user should see the element     jQuery = dt:contains("Competition type") ~ dd:contains("Programme")
     And the user should see the element     jQuery = dt:contains("Innovation sector") ~ dd:contains("Materials and manufacturing")
     And the user should see the element     jQuery = dt:contains("Innovation area") ~ dd:contains("Digital manufacturing")
