@@ -70,11 +70,14 @@
                                 <li th:each="projectView : ${model.projects}">
                                     <div class="task">
                                         <h3 class="govuk-heading-s">
-                                            <a th:href="${projectView.linkUrl}" th:text="${projectView.title}" class="govuk-link">PROJECT NAME</a>
+                                            <a th:href="${projectView.linkUrl}" th:text="${projectView.title}"
+                                               class="govuk-link">PROJECT NAME</a>
                                         </h3>
                                         <ul class="application-details">
-                                            <li>Project number: <span th:text="${projectView.applicationNumber}">PROJECT NUMBER</span></li>
-                                            <li>Competition: <span th:text="${projectView.competitionTitle}">COMPETITION NAME</span></li>
+                                            <li>Project number: <span th:text="${projectView.applicationNumber}">PROJECT NUMBER</span>
+                                            </li>
+                                            <li>Competition: <span th:text="${projectView.competitionTitle}">COMPETITION NAME</span>
+                                            </li>
                                         </ul>
                                     </div>
                                     <div class="status">
@@ -84,11 +87,24 @@
                                             </strong>
                                         </th:block>
                                         <th:block th:if="${projectView.projectState.complete}">
-                                            <p th:if="${projectView.liveOrCompletedOffline}" class="govuk-body status-msg msg-progress">Live project</p>
-                                            <p th:if="${projectView.unsuccessful}" class="govuk-body status-msg msg-progress msg-negative">Unsuccessful</p>
-                                            <p th:if="${projectView.withdrawn}" class="govuk-body status-msg msg-progress">Withdrawn</p>
+                                            <p th:if="${projectView.liveOrCompletedOffline}"
+                                               class="govuk-body status-msg msg-progress">Live project</p>
+                                            <p th:if="${projectView.unsuccessful}"
+                                               class="govuk-body status-msg msg-progress msg-negative">Unsuccessful</p>
+                                            <p th:if="${projectView.withdrawn}"
+                                               class="govuk-body status-msg msg-progress">Withdrawn</p>
                                         </th:block>
                                     </div>
+                                    <!-- <hr class="govuk-section-break govuk-section-break&--visible" />-->
+                                    <div th:if="${projectView.documentSectionViewModel.hasDocumentSection}"
+                                         class="task govuk-!-margin-top-4">
+                                        <h3 class="govuk-heading-s">
+                                            <a th:href="${projectView.documentSectionViewModel.getDocumentLinkUrl}"
+                                               class="govuk-link" th:text="Documents"/>
+                                        </h3>
+                                    </div>
+                                    <th:block class="status"
+                                              th:insert="project/fragments :: project-setup-status-indicator(${projectView.documentSectionViewModel.documentSectionStatus})"/>
                                 </li>
                             </ul>
                         </div>
