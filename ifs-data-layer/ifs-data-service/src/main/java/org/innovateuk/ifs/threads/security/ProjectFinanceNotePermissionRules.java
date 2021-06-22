@@ -69,7 +69,7 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
     }
 
     @PermissionRule(value = "NOTES_READ", description = "All internal users are able to see notes")
-    public boolean onlyInternalUsersCanViewNotes(final NoteResource note, final UserResource user) {
+    public boolean internalUsersCanViewNotes(final NoteResource note, final UserResource user) {
         return isInternal(user);
     }
 

@@ -47,6 +47,12 @@ public class ProjectSpendProfileApprovalControllerSecurityTest extends BaseProje
 
     @Override
     protected Consumer<SetupSectionsPermissionRules> getVerification() {
-        return permissionRules -> permissionRules.internalCanAccessSpendProfileSection(eq(projectCompositeId), isA(UserResource.class));
+        return permissionRules -> {
+            permissionRules.internalCanAccessSpendProfileSection(eq(projectCompositeId), isA(UserResource.class));
+            permissionRules.competitionFinanceUsersCanAccessSpendProfileSection(eq(projectCompositeId), isA(UserResource.class));
+            permissionRules.supportCanAccessSpendProfileSection(eq(projectCompositeId), isA(UserResource.class));
+            permissionRules.innovationLeadCanAccessSpendProfileSection(eq(projectCompositeId), isA(UserResource.class));
+            permissionRules.stakeholderCanAccessSpendProfileSection(eq(projectCompositeId), isA(UserResource.class));
+        };
     }
 }

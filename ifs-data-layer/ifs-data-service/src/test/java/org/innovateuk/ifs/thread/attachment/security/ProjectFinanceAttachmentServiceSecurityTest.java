@@ -76,7 +76,7 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
     }
 
     @Test
-    public void downloadAttachment() throws Exception {
+    public void downloadAttachment() {
         UserResource user = new UserResource();
         setLoggedInUser(user);
         when(attachmentLookupStrategy.findById(3L))
@@ -89,6 +89,8 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
                     .financeContactUsersCanOnlyDownloadAnAttachmentIfRelatedToItsQuery(isA(AttachmentResource.class), eq(user));
             verify(attachmentPermissionsRules)
                     .competitionFinanceUsersCanOnlyDownloadAnAttachmentIfRelatedToItsQuery(isA(AttachmentResource.class), eq(user));
+            verify(attachmentPermissionsRules)
+                    .auditorUsersCanDownloadAnyAttachment(isA(AttachmentResource.class), eq(user));
             verifyNoMoreInteractions(attachmentPermissionsRules);
         });
 

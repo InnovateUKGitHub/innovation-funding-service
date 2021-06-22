@@ -59,6 +59,10 @@ public class ProjectSetupDashboardViewModel extends DashboardViewModel {
         return auditorUser;
     }
 
+    public boolean isReadOnly() {
+        return isAuditorUser();
+    }
+
     public List<CompetitionSearchResultItem> getNonPrioritisedCompetitions() {
         return competitions.entrySet().stream()
                 .filter(entry -> !asList(PROJECT_SETUP, ASSESSOR_FEEDBACK, FUNDERS_PANEL).contains(entry.getKey()))

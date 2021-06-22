@@ -23,7 +23,6 @@ import static org.mockito.Mockito.*;
 
 public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTest<FinanceCheckNotesService> {
 
-
     private ProjectFinanceNotePermissionRules noteRules;
     private NoteLookupStrategy noteLookupStrategy;
 
@@ -79,9 +78,10 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
         ServiceResult<List<NoteResource>> results = classUnderTest.findAll(22L);
         assertEquals(0, results.getSuccess().size());
 
-        verify(noteRules, times(2)).onlyInternalUsersCanViewNotes(isA(NoteResource.class), eq(user));
+        verify(noteRules, times(2)).internalUsersCanViewNotes(isA(NoteResource.class), eq(user));
         verify(noteRules, times(2)).compFinanceUsersCanViewNotes(isA(NoteResource.class), eq(user));
         verify(noteRules, times(2)).externalFinanceUsersCanViewNotes(isA(NoteResource.class), eq(user));
+        verify(noteRules, times(2)).auditorUsersCanViewNotes(isA(NoteResource.class), eq(user));
         verifyNoMoreInteractions(noteRules);
     }
 

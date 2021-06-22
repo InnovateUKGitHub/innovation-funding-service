@@ -252,5 +252,4 @@ public class SetupSectionsPermissionRules {
 
         return sectionCheckFn.apply(sectionAccessor, user) == ACCESSIBLE;
     }
-
 }

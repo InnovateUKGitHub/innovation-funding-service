@@ -81,7 +81,7 @@ public class YourProjectCostsViewModelPopulator {
         boolean includeVat = STANDARD_WITH_VAT.equals(competition.getApplicationFinanceType());
 
         if (isUserCanEditFecFinance(competition, section, open)) {
-            return getYourFecProjectCostsViewModel(application, competition, organisation, section, finance, completedSectionIds, open, complete, includeVat, user);
+            return getYourFecProjectCostsViewModel(application, competition, organisation, section, finance, completedSectionIds, open, complete, includeVat);
         } else {
             return new YourProjectCostsViewModel(applicationId,
                     competition.getName(),
@@ -115,7 +115,7 @@ public class YourProjectCostsViewModelPopulator {
     private YourProjectCostsViewModel getYourFecProjectCostsViewModel(ApplicationResource application, CompetitionResource competition,
                                                                       OrganisationResource organisation, ApplicantSectionResource section,
                                                                       BaseFinanceResource finance, List<Long> completedSectionIds,
-                                                                      boolean open, boolean complete, boolean includeVat, UserResource user) {
+                                                                      boolean open, boolean complete, boolean includeVat) {
         Long yourFundingSectionId = getYourFundingSectionId(section);
         boolean yourFundingRequired = !completedSectionIds.contains(yourFundingSectionId);
         Long yourFecCostSectionId = getYourFecCostSectionId(section);
