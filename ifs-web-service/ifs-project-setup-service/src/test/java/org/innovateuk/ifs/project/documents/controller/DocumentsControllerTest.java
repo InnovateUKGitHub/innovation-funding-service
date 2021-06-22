@@ -7,6 +7,7 @@ import org.innovateuk.ifs.documents.viewModel.DocumentViewModel;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
+import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.innovateuk.ifs.project.documents.form.DocumentForm;
 import org.innovateuk.ifs.project.documents.service.DocumentsRestService;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
@@ -70,9 +71,33 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
                 .withName("Project 12")
                 .build();
 
-        AllDocumentsViewModel viewModel = new AllDocumentsViewModel(project, emptyList(), true, false);
+        AllDocumentsViewModel viewModel = new AllDocumentsViewModel(project, emptyList(), true, false, false);
 
         when(populator.populateAllDocuments(projectId, loggedInUser.getId())).thenReturn(viewModel);
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/document/all"))
+                .andExpect(view().name("project/documents-all"))
+                .andReturn();
+
+        AllDocumentsViewModel returnedViewModel = (AllDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(viewModel, returnedViewModel);
+    }
+
+    @Test
+    public void monitoringOfficerCanViewAllDocuments() throws Exception {
+
+        setLoggedInUser(monitoringOfficer);
+        long projectId = 1L;
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withApplication(2L)
+                .withCompetition(3L)
+                .withName("Project 12")
+                .build();
+
+        AllDocumentsViewModel viewModel =
+                new AllDocumentsViewModel(project, emptyList(), false, false, true);
+
+        when(populator.populateAllDocuments(projectId, monitoringOfficer.getId())).thenReturn(viewModel);
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/document/all"))
                 .andExpect(view().name("project/documents-all"))
                 .andReturn();
@@ -328,6 +353,23 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
                 .andExpect(view().name("redirect:/project/" + projectId + "/document/config/" + documentConfigId));
 
         verify(documentsRestService).submitDocument(projectId, documentConfigId);
+    }
+
+    @Test
+    public void documentDecision() throws Exception {
+
+        long projectId = 1L;
+        long documentConfigId = 2L;
+
+        when(documentsRestService.documentDecision(projectId, documentConfigId, new ProjectDocumentDecision(true, null))).thenReturn(restSuccess());
+
+        mockMvc.perform(
+                post("/project/" + projectId + "/document/config/" + documentConfigId)
+                        .param("approved", "true"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/project/" + projectId + "/document/config/" + documentConfigId));
+
+        verify(documentsRestService).documentDecision(projectId, documentConfigId, new ProjectDocumentDecision(true, null));
     }
 
     @Override
