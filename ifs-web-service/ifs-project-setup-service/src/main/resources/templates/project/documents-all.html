@@ -11,10 +11,10 @@
 <div class="govuk-width-container">
 
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:unless="${model.isMOCanApproveOrRejectDocuments}"
+    <th:block th:unless="${model.userCanApproveOrRejectDocuments}"
               th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Set up your project',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
-    <th:block th:if="${model.isMOCanApproveOrRejectDocuments}"
+    <th:block th:if="${model.userCanApproveOrRejectDocuments}"
               th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Back to monitor project',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
     
@@ -25,26 +25,26 @@
 	       <p class="govuk-body govuk-!-margin-top-6">You can upload and submit additional documents to support your application.</p>
         </th:block>
 
-        <th:block th:if="${model.isMOCanApproveOrRejectDocuments}">
+        <th:block th:if="${model.userCanApproveOrRejectDocuments}">
             <p class="govuk-body govuk-!-margin-top-6 govuk-!-margin-bottom-9">Please review the documents submitted by the project manager. You must accept or reject them based on the Innovate UK's requirements.</p>
         </th:block>
 
-        <th:block th:unless="${model.projectManager or model.isMOCanApproveOrRejectDocuments}">
+        <th:block th:unless="${model.projectManager or model.userCanApproveOrRejectDocuments}">
             <p class="govuk-body govuk-!-margin-top-6"> Only the project manager can upload and submit additional documents to support your<th:block th:text="${model.IsProcurement() ? ' ' : ' grant '}"></th:block>application.</p>
         </th:block>
 
-        <p class="govuk-body govuk-!-margin-top-6" th:unless="${!model.isCollaborativeProject() or model.isMOCanApproveOrRejectDocuments}">These documents should be reviewed by all partners in the project team.</p>
+        <p class="govuk-body govuk-!-margin-top-6" th:unless="${!model.isCollaborativeProject() or model.userCanApproveOrRejectDocuments}">These documents should be reviewed by all partners in the project team.</p>
 
         <ul class="task-list">
             <li th:each="document : ${model.documents}">
                 <div class="task">
                     <span class="govuk-heading-s">
-                        <div th:unless="${model.isMOCanApproveOrRejectDocuments}">
+                        <div th:unless="${model.userCanApproveOrRejectDocuments}">
                             <a th:href="@{/project/{id}/document/config/{documentConfigId}(id=${model.projectId}, documentConfigId=${document.documentConfigId})}"
                                th:text=${document.title}
                                class="govuk-link" />
                         </div>
-                        <div th:if="${model.isMOCanApproveOrRejectDocuments}">
+                        <div th:if="${model.userCanApproveOrRejectDocuments}">
                             <a th:unless="${document.notSubmitted or document.rejected}"
                                th:href="@{/project/{id}/document/config/{documentConfigId}(id=${model.projectId}, documentConfigId=${document.documentConfigId})}"
                                th:text=${document.title}
@@ -53,8 +53,8 @@
                         </div>
                     </span>
                 </div>
-                <th:block th:unless="${model.isMOCanApproveOrRejectDocuments}">
-                    <div th:if="${document.notSubmitted || document.rejected}"
+                <th:block th:unless="${model.userCanApproveOrRejectDocuments}">
+                    <div th:if="${document.notSubmitted or document.rejected}"
                          class="task-status-incomplete">
                         <span>Incomplete</span>
                     </div>
@@ -67,7 +67,7 @@
                         <span>Complete</span>
                     </div>
                 </th:block>
-                <th:block th:if="${model.isMOCanApproveOrRejectDocuments}">
+                <th:block th:if="${model.userCanApproveOrRejectDocuments}">
                     <div th:if="${document.notSubmitted}"
                          class="task-status-info">
                         <span>No file uploaded</span>
@@ -88,7 +88,7 @@
             </li>
         </ul>
 
-        <div class="govuk-!-margin-top-6" th:unless="${model.isMOCanApproveOrRejectDocuments}">
+        <div class="govuk-!-margin-top-6" th:unless="${model.userCanApproveOrRejectDocuments}">
             <a th:href="@{/project/{projectId}(projectId=${model.projectId})}" class="govuk-button govuk-button--secondary">Return to set up your project</a>
         </div>
 

@@ -14,6 +14,7 @@ import org.innovateuk.ifs.documents.viewModel.DocumentViewModel;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.project.documents.builder.ProjectDocumentResourceBuilder;
+import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -28,6 +29,7 @@ import org.mockito.Mock;
 
 import java.util.List;
 
+import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
@@ -59,6 +61,9 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     @Mock
     private UserRestService userRestService;
 
+    @Mock
+    private MonitoringOfficerRestService monitoringOfficerRestService;
+
     private long competitionId = 18L;
     private long applicationId = 19L;
 
@@ -75,13 +80,15 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     private String documentConfigGuidance2 = "Guidance Plan Document";
     private String collaborationAgreement = COLLABORATION_AGREEMENT_TITLE;
     private UserResource userResource;
+    private List<CompetitionDocumentResource> configuredProjectDocuments;
+    private ApplicationResource application;
 
     @Before
     public void setup() {
 
         super.setup();
 
-        List<CompetitionDocumentResource> configuredProjectDocuments = CompetitionDocumentResourceBuilder
+        configuredProjectDocuments = CompetitionDocumentResourceBuilder
                 .newCompetitionDocumentResource()
                 .withId(documentConfigId1, documentConfigId2, collaborationAgreementId)
                 .withTitle(documentConfigTitle1, documentConfigTitle2, collaborationAgreement)
@@ -93,20 +100,22 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
                 .withId(competitionId)
                 .withProjectDocument(configuredProjectDocuments)
                 .build();
-        ApplicationResource application = ApplicationResourceBuilder
+        application = ApplicationResourceBuilder
                 .newApplicationResource()
                 .withId(applicationId)
                 .withCompetition(competitionId)
+                .build();
+
+        userResource = newUserResource()
+                .withId(loggedInUserId)
                 .build();
 
         ProjectDocumentResource projectDocumentResource = ProjectDocumentResourceBuilder
                 .newProjectDocumentResource()
                 .withCompetitionDocument(configuredProjectDocuments.get(0))
                 .withStatus(UPLOADED)
-                .build();
-
-        userResource = newUserResource()
-                .withId(loggedInUserId)
+                .withStatusModifiedBy(userResource)
+                .withStatusModifiedDate(now())
                 .build();
 
         ProjectUserResource projectUserResource = newProjectUserResource()
@@ -131,6 +140,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(singletonList(partnerOrganisationResource)));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(projectRestService.getProjectManager(projectId)).thenReturn(restSuccess(projectUserResource));
+        when(monitoringOfficerRestService.isMonitoringOfficerOnProject(projectId, userResource.getId())).thenReturn(restSuccess(false));
 
     }
 
@@ -189,5 +199,38 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
         assertEquals(2, viewModel.getDocuments().size());
 
         verify(partnerOrganisationRestService).getProjectPartnerOrganisations(projectId);
+    }
+
+    @Test
+    public void populateViewDocumentWithNullModifiedNameAndDate() {
+
+        ProjectDocumentResource projectDocument = ProjectDocumentResourceBuilder
+                .newProjectDocumentResource()
+                .withCompetitionDocument(configuredProjectDocuments.get(0))
+                .withStatus(UPLOADED)
+                .withStatusModifiedBy(null)
+                .withStatusModifiedDate(null)
+                .build();
+
+        ProjectResource project = ProjectResourceBuilder
+                .newProjectResource()
+                .withId(projectId)
+                .withName(projectName)
+                .withProjectState(SETUP)
+                .withCompetition(competitionId)
+                .withApplication(application)
+                .withProjectDocuments(singletonList(projectDocument))
+                .build();
+
+        DocumentViewModel viewModel = populator.populateViewDocument(projectId, userResource, documentConfigId1);
+
+        assertEquals(projectId, viewModel.getProjectId());
+        assertEquals(projectName, viewModel.getProjectName());
+        assertEquals(applicationId, viewModel.getApplicationId());
+        assertEquals(documentConfigId1, viewModel.getDocumentConfigId());
+        assertEquals(documentConfigTitle1, viewModel.getTitle());
+        assertNull(viewModel.getFileDetails());
+        assertEquals(UPLOADED, viewModel.getStatus());
+        assertEquals("", viewModel.getStatusComments());
     }
 }
