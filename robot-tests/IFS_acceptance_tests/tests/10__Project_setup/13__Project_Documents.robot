@@ -217,14 +217,9 @@ Non-lead partner cannot view either document once removed
 Assign a MO to the project and they check the documents are incomplete
     [Documentation]  IFS-9577  IFS-9701
     [Tags]
-    [Setup]  log in as a different user            &{Comp_admin1_credentials}
-    Given the user navigates to the page           ${server}/project-setup-management/monitoring-officer/view-all?ktp=false
-    When search for MO                             Orvill  Orville Gibbs
-    Then the user should see the element           jQuery = span:contains("Assign projects to Monitoring Officer")
-    And the internal user assign project to MO     ${Grade_Crossing_Applicaiton_No}   ${Grade_Crossing_Application_Title}
-    And the user logs-in in new browser            &{monitoring_officer_one_credentials}
-    And the user navigates to the page             ${server}/project-setup/project/${Grade_Crossing_Project_Id}
-    And the user should see the element            jQuery = ul li:contains("Documents") span:contains("Incomplete")
+    Given the user logs-in in new browser     &{monitoring_officer_one_credentials}
+    When the user navigates to the page       ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+    Then the user should see the element      jQuery = ul li:contains("Documents") span:contains("Incomplete")
 
 PM can upload both documents after they have been removed
     [Documentation]    INFUND-3011
