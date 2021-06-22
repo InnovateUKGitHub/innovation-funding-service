@@ -620,15 +620,6 @@ moving competition to Project Setup
     the user navigates to the page   ${server}/management/competition/${compID}
     the user clicks the button/link  css = button[type="submit"][formaction$="release-feedback"]
 
-The project finance user is able to download the Overheads file
-    [Arguments]   ${ProjectID}  ${organisationId}
-    the user navigates to the page                   ${server}/project-setup-management/project/${ProjectID}/finance-check/organisation/${organisationId}/project-eligibility
-    the user clicks the button/link                  id = accordion-finances-heading-2
-    the user clicks the button/link                  link = testing.xlsx
-    the user should not see an error in the page
-    #the user downloads the file                   ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${ProjectID}/finance-check/organisation/${organisationId}/project-eligibility  ${DOWNLOAD_FOLDER}/${excel_file}
-    #remove the file from the operating system     ${excel_file}
-
 the user set assessor score notification to yes
     the user clicks the button/link         link = View and update competition details
     the user clicks the button/link         link = Assessors
