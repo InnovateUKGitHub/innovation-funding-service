@@ -153,9 +153,14 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessDocumentsSection, SecurityRuleUtil::hasStakeholderAuthority);
     }
 
+    @PermissionRule(value = "ACCESS_DOCUMENTS_SECTION", description = "A monitoring officer can access the Documents section")
+    public boolean monitoringOfficerCanAccessDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessDocumentsSection, SecurityRuleUtil::isMonitoringOfficer);
+    }
+
     @PermissionRule(value = "APPROVE_DOCUMENTS", description = "Internal users can approve or reject documents")
     public boolean internalAdminUserCanApproveDocuments(ProjectCompositeId projectCompositeId, UserResource user) {
-        return isMOJourneyUpdateEnabled ? hasIFSAdminAuthority(user) : isInternalAdmin(user) || hasIFSAdminAuthority(user);
+        return isMOJourneyUpdateEnabled ? (hasIFSAdminAuthority(user) || isMonitoringOfficer(user)) : (isInternalAdmin(user) || hasIFSAdminAuthority(user));
     }
 
     @PermissionRule(value = "RESET_GRANT_OFFER_LETTER", description = "Super admin user can reset the grant offer letter section")

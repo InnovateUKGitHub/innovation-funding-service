@@ -134,6 +134,7 @@ public class DocumentViewModel {
                 .append(guidance, that.guidance)
                 .append(projectManager, that.projectManager)
                 .append(projectIsActive, that.projectIsActive)
+                .append(userCanApproveOrRejectDocuments, that.userCanApproveOrRejectDocuments)
                 .isEquals();
     }
 
@@ -149,6 +150,7 @@ public class DocumentViewModel {
                 .append(guidance)
                 .append(projectManager)
                 .append(projectIsActive)
+                .append(userCanApproveOrRejectDocuments)
                 .toHashCode();
     }
 }
