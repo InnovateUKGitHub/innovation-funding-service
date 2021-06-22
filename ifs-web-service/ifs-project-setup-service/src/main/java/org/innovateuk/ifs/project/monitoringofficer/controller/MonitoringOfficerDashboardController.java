@@ -44,7 +44,6 @@ public class MonitoringOfficerDashboardController {
     public String filterDashboard(Model model,
                                   UserResource user,
                                   @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerDashboardForm form) {
-
         model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user,
                 form.isProjectInSetup(), form.isPreviousProject()));
         return "monitoring-officer/dashboard";
