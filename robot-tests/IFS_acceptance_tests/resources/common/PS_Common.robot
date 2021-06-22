@@ -618,7 +618,7 @@ internal user approve uploaded documents
     the user selects the radio button      approved   true
     the user clicks the button/link        id = submit-button
     the user clicks the button/link        id = accept-document
-    the user should see the element        jQuery = p:contains("You have approved this document.")
+    the user should see the element        jQuery = p:contains("You approved this document on ${today}.")
 
 the user enter the Correspondence address
     the user looks for address using postcode
