@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 
+import java.time.LocalDate;
+
 /**
  * View model for viewing/actions on each document
  */
@@ -23,6 +25,11 @@ public class DocumentViewModel {
     private final boolean projectIsActive;
     private final boolean isSuperAdminUser;
     private final boolean userCanApproveOrRejectDocuments;
+    private final String statusModifiedBy;
+    private final LocalDate statusModifiedDate;
+    private final boolean isStatusModifiedByLoggedInUser;
+    private final boolean statusModifiedByMO;
+    private final boolean isInternalUser;
 
     public DocumentViewModel(long projectId,
                              String projectName,
@@ -36,7 +43,12 @@ public class DocumentViewModel {
                              boolean projectManager,
                              boolean projectIsActive,
                              boolean isSuperAdminUser,
-                             boolean userCanApproveOrRejectDocuments) {
+                             boolean userCanApproveOrRejectDocuments,
+                             String statusModifiedBy,
+                             LocalDate statusModifiedDate,
+                             boolean isStatusModifiedByLoggedInUser,
+                             boolean statusModifiedByMO,
+                             boolean isInternalUser) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.applicationId = applicationId;
@@ -50,6 +62,11 @@ public class DocumentViewModel {
         this.projectIsActive = projectIsActive;
         this.isSuperAdminUser = isSuperAdminUser;
         this.userCanApproveOrRejectDocuments = userCanApproveOrRejectDocuments;
+        this.statusModifiedBy = statusModifiedBy;
+        this.statusModifiedDate = statusModifiedDate;
+        this.isStatusModifiedByLoggedInUser = isStatusModifiedByLoggedInUser;
+        this.statusModifiedByMO = statusModifiedByMO;
+        this.isInternalUser = isInternalUser;
     }
 
     public long getProjectId() {
@@ -104,6 +121,26 @@ public class DocumentViewModel {
         return userCanApproveOrRejectDocuments;
     }
 
+    public String getStatusModifiedBy() {
+        return statusModifiedBy;
+    }
+
+    public LocalDate getStatusModifiedDate() {
+        return statusModifiedDate;
+    }
+
+    public boolean isStatusModifiedByLoggedInUser() {
+        return isStatusModifiedByLoggedInUser;
+    }
+
+    public boolean isStatusModifiedByMO() {
+        return statusModifiedByMO;
+    }
+
+    public boolean isInternalUser() {
+        return isInternalUser;
+    }
+
     public boolean isEditable() {
         return projectManager && status != DocumentStatus.APPROVED && status != DocumentStatus.SUBMITTED;
     }
@@ -134,6 +171,7 @@ public class DocumentViewModel {
                 .append(guidance, that.guidance)
                 .append(projectManager, that.projectManager)
                 .append(projectIsActive, that.projectIsActive)
+                .append(userCanApproveOrRejectDocuments, that.userCanApproveOrRejectDocuments)
                 .isEquals();
     }
 
@@ -149,6 +187,7 @@ public class DocumentViewModel {
                 .append(guidance)
                 .append(projectManager)
                 .append(projectIsActive)
+                .append(userCanApproveOrRejectDocuments)
                 .toHashCode();
     }
 }

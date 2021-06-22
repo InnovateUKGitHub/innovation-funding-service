@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="banner-messages-document-approved(model)">
+    <!--    approved by IUK and not by loggedInUser-->
+    <p th:if="${!model.statusModifiedByMO and (model.statusModifiedDate != null) and !model.isStatusModifiedByLoggedInUser}"
+       class="govuk-heading-s govuk-!-margin-top-0"
+       th:text="|Innovate UK approved this document on ${#temporals.format(model.statusModifiedDate, 'd MMMM yyyy')}.|"></p>
+
+    <!--    approved by MO and not by loggedInUser-->
+    <p th:if="${model.statusModifiedByMO and !model.isStatusModifiedByLoggedInUser and (model.statusModifiedDate != null)}"
+       class="govuk-heading-s govuk-!-margin-0"
+       th:text="|${model.statusModifiedBy} (monitoring officer) approved this document on ${#temporals.format(model.statusModifiedDate, 'd MMMM yyyy')}.|"></p>
+
+    <!--   approved by LoggedInUser-->
+    <p th:if="${model.isStatusModifiedByLoggedInUser and (model.statusModifiedDate != null)}"
+       class="govuk-heading-s govuk-!-margin-top-0"
+       th:text="|You approved this document on ${#temporals.format(model.statusModifiedDate, 'd MMMM yyyy')}.|"></p>
+
+        <p th:if="${(model.statusModifiedDate == null) and !model.isInternalUser}"
+           class="govuk-heading-s govuk-!-margin-top-0"
+           th:text="|This document has been approved by us.|"></p>
+
+        <p th:if="${(model.statusModifiedDate == null) and model.isInternalUser}"
+           class="govuk-heading-s govuk-!-margin-top-0"
+           th:text="|You have approved this document.|"></p>
+</th:block>
+
+<th:block th:fragment="banner-messages-document-rejected(model)">
+    <!--    rejected by loggedInUser or if document is null-->
+    <p th:if="${(model.statusModifiedDate == null) or (model.isStatusModifiedByLoggedInUser)}"
+       class="govuk-heading-s govuk-!-margin-top-0"
+       th:text="|You have rejected this document.|"></p>
+
+    <!--    rejected by IUK and not by loggedInUser-->
+    <p th:if="${(model.statusModifiedBy != null) and !model.isStatusModifiedByLoggedInUser and !model.statusModifiedByMO}"
+       class="govuk-heading-s govuk-!-margin-top-0"
+       th:text="|Innovate UK rejected this document.|"></p>
+
+    <!--    rejected by MO and not by loggedInUser-->
+    <p th:if="${(model.statusModifiedBy != null) and !model.isStatusModifiedByLoggedInUser and model.statusModifiedByMO}"
+       class="govuk-heading-s govuk-!-margin-top-0"
+       th:text="|${model.statusModifiedBy} (monitoring officer) rejected this document.|"></p>
+</th:block>
+
+<th:block th:fragment="banner-message-team-change-rejected(model)">
+    <p class="govuk-body govuk-!-margin-top-0">This document is now marked as incomplete.</p>
+</th:block>

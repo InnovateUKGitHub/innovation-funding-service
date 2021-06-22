@@ -20,6 +20,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...               IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
 ...
 ...               IFS-3609 Extend internal view of application finances to other internal roles
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant

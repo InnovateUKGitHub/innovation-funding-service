@@ -64,9 +64,9 @@ Super admin can reject an approved document
     Given the user navigates to the page      ${server}/project-setup-management/project/${projectID}/document/all
     And the user should see the element       jQuery = li:nth-child(1) span:contains("Approved")
     When the user rejects the document
-    Then the user should see the element      jQuery = p:contains("You have rejected this document. Please contact the Project Manager to explain your decision.")
+    Then the user should see the element      jQuery = p:contains("You have rejected this document.")
     And the user clicks the button/link       jQuery = a:contains("Return to documents")
-    And the user should see the element       jQuery = div span:contains("Rejected")
+    And the user should see the element       jQuery = div span:contains("Incomplete")
 
 Super admin user cannot reject a document once the project is completed
     [Documentation]  IFS-9692
@@ -82,6 +82,8 @@ Super admin user cannot reject a document once the project is completed
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
+    ${today}  get today
+    set suite variable  ${today}
     Connect to database  @{database}
 
 Custom suite teardown
