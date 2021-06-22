@@ -5,3 +5,5 @@ commonAnnotations:
 bases:
   - ../../base
 
+patchesStrategicMerge:
+  - data-layer/data-service/data-service-deployment.yml
