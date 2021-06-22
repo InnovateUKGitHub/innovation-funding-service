@@ -15,10 +15,6 @@ version project.version
 processResources.dependsOn applyProfiles
 
 project.version = nexusVersion
-tagDocker.tag = nexusVersion
-osStageRemote.tag = nexusVersion
-tagDockerLocal.tag = nexusVersion
-osStageLocal.tag = nexusVersion
 
 ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
 
@@ -28,16 +24,6 @@ afterEvaluate {
     }
 }
 
-buildDocker.dependsOn prepareDockerInput
-buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-buildDocker.inputDir = project.file("$project.buildDir/docker")
-tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-
-
-def enabled = project.hasProperty('ifs.alert-service.enabled') ? project.property('ifs.alert-service.enabled').toBoolean() : true
-[stop, removeContainer, createContainer, deploy, wait].each { task ->
-    task.enabled = enabled
-}
 deploy.dependsOn ":docker:ifs-mysql:ifs-database:wait"
 deploy.mustRunAfter ":docker:ifs-mysql:ifs-database:deploy"
 
@@ -70,8 +56,6 @@ task stopAlerts(type: Exec) {
         args 'delete', 'dc', 'data-service-alerts', "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
     }
 }
-
-createContainer.networkAliases = ["data-service-alerts"]
 
 dependencies {
     compile project(":ifs-commons")
