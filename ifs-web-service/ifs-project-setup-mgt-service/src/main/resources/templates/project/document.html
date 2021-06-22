@@ -22,21 +22,22 @@
 
         <form th:object="${form}" id="other-documents-form" th:action="@{/project/{projectId}/document/config/{documentConfigId}(projectId=${model.projectId}, documentConfigId=${model.documentConfigId})}" method="post" novalidate="novalidate">
 
-            <th:block th:insert="fragments/modals :: modal-accept-configured-doc" />
-            <th:block th:insert="fragments/modals :: modal-reject-configured-doc" />
+            <th:block th:insert="fragments/modals :: modal-accept-configured-doc"/>
+            <th:block th:insert="fragments/modals :: modal-reject-configured-doc"/>
 
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
+            <th:block th:insert="fragments/layout :: page-title"
+                      th:with="pageTitle=${model.title},subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'"/>
 
             <div class="success-alert govuk-!-margin-bottom-6" th:if="${model.status.name() == 'APPROVED'}">
-                <p class="govuk-heading-s govuk-!-margin-top-0">You have approved this document.</p>
+                <th:block th:insert="fragments/documentStatus :: banner-messages-document-approved(model=${model})"/>
             </div>
 
             <div class="warning-alert govuk-!-margin-bottom-6" th:if="${model.status.name() == 'REJECTED'}">
-                <p class="govuk-heading-s govuk-!-margin-top-0">You have rejected this document. Please contact the Project Manager to explain your decision.</p>
+                <th:block th:insert="fragments/documentStatus :: banner-messages-document-rejected(model=${model})"/>
             </div>
 
             <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.status.name() == 'REJECTED_DUE_TO_TEAM_CHANGE'}">
-                <p class="govuk-body govuk-!-margin-top-0">This document is now marked as incomplete.</p>
+                <th:block th:insert="fragments/documentStatus :: banner-message-team-change-rejected(model=${model})"/>
             </div>
 
             <th:block th:unless="${model.fileDetails == null}">

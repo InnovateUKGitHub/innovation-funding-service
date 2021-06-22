@@ -154,6 +154,8 @@ Competition goes into previous
 Custom Suite Setup
     The user logs-in in new browser   &{lead_applicant_credentials}
     Set predefined date variables
+    ${today}  get today
+    set suite variable  ${today}
     Connect to database  @{database}
 
 Custom Suite teardown

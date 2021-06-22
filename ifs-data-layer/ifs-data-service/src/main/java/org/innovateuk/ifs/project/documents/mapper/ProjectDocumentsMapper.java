@@ -7,6 +7,7 @@ import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
+import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.mapstruct.Mapper;
 
 @Mapper(
@@ -14,7 +15,8 @@ import org.mapstruct.Mapper;
         uses = {
                 ProjectMapper.class,
                 CompetitionDocumentMapper.class,
-                FileEntryMapper.class
+                FileEntryMapper.class,
+                UserMapper.class
         }
 )
 public abstract class ProjectDocumentsMapper extends BaseMapper<ProjectDocument, ProjectDocumentResource, Long> {
