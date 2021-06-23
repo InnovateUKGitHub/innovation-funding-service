@@ -24,6 +24,7 @@ import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,7 +109,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         return find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
                 andOnSuccess((project, projectDocumentConfig) -> validateProjectActive(project)
                         .andOnSuccess(() -> fileService.createFile(fileEntryResource, inputStreamSupplier))
-                        .andOnSuccessReturn(fileDetails -> createProjectDocument(project, projectDocumentConfig, fileDetails)));
+                        .andOnSuccessReturn(fileDetails -> createProjectDocument(project, projectDocumentConfig, fileDetails, getCurrentlyLoggedInUser().getSuccess())));
     }
 
     private ServiceResult<Void> validateProjectActive(Project project) {
@@ -119,10 +120,10 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         return serviceSuccess();
     }
 
-    private FileEntryResource createProjectDocument(Project project, CompetitionDocument competitionDocumentConfig, Pair<File, FileEntry> fileDetails) {
+    private FileEntryResource createProjectDocument(Project project, CompetitionDocument competitionDocumentConfig, Pair<File, FileEntry> fileDetails, User modifiedBy) {
 
         FileEntry fileEntry = fileDetails.getValue();
-        ProjectDocument projectDocument = new ProjectDocument(project, competitionDocumentConfig, fileEntry, UPLOADED);
+        ProjectDocument projectDocument = new ProjectDocument(project, competitionDocumentConfig, fileEntry, UPLOADED, modifiedBy, ZonedDateTime.now());
         projectDocumentRepository.save(projectDocument);
         return fileEntryMapper.mapToResource(fileEntry);
     }
@@ -246,6 +247,8 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         if (SUBMITTED.equals(projectDocument.getStatus())) {
             projectDocument.setStatus(decision.getApproved() ? APPROVED : REJECTED);
             projectDocument.setStatusComments(!decision.getApproved() ? decision.getRejectionReason() : null);
+            projectDocument.setModifiedBy(getCurrentlyLoggedInUser().getSuccess());
+            projectDocument.setModifiedDate(ZonedDateTime.now());
             projectDocumentRepository.save(projectDocument);
             if (allDocumentsSubmitted(project)) {
                 setOtherDocsApproved(project);
@@ -256,6 +259,8 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         if (APPROVED.equals(projectDocument.getStatus())) {
             projectDocument.setStatus(REJECTED);
             projectDocument.setStatusComments(decision.getRejectionReason());
+            projectDocument.setModifiedBy(getCurrentlyLoggedInUser().getSuccess());
+            projectDocument.setModifiedDate(ZonedDateTime.now());
             projectDocumentRepository.save(projectDocument);
 
             return serviceSuccess();

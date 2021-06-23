@@ -594,6 +594,8 @@ the user edits the org size
 
 Custom suite setup
     Connect to database  @{database}
+    ${today}  get today
+    set suite variable  ${today}
 
 Custom suite teardown
     The user closes the browser

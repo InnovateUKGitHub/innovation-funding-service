@@ -4,17 +4,13 @@ import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
+import org.innovateuk.ifs.user.domain.User;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.ZonedDateTime;
 
 import static javax.persistence.EnumType.STRING;
 
@@ -46,14 +42,25 @@ public class ProjectDocument {
 
     private String statusComments;
 
+    @LastModifiedBy
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="modifiedBy", referencedColumnName="id")
+    private User modifiedBy;
+
+    @LastModifiedDate
+    @Column
+    private ZonedDateTime modifiedDate;
+
     public ProjectDocument() {
     }
 
-    public ProjectDocument(Project project, CompetitionDocument competitionDocument, FileEntry fileEntry, DocumentStatus status) {
+    public ProjectDocument(Project project, CompetitionDocument competitionDocument, FileEntry fileEntry, DocumentStatus status, User modifiedBy, ZonedDateTime modifiedDate) {
         this.project = project;
         this.competitionDocument = competitionDocument;
         this.fileEntry = fileEntry;
         this.status = status;
+        this.modifiedBy = modifiedBy;
+        this.modifiedDate = modifiedDate;
     }
 
     public Long getId() {
@@ -102,5 +109,21 @@ public class ProjectDocument {
 
     public void setStatusComments(String statusComments) {
         this.statusComments = statusComments;
+    }
+
+    public User getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(User modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    public ZonedDateTime getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(ZonedDateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 }

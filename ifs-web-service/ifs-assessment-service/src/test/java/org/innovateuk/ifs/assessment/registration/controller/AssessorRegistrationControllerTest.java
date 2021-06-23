@@ -32,6 +32,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
+import static org.hamcrest.Matchers.samePropertyValuesAs;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
@@ -98,11 +99,11 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
 
         when(competitionInviteRestService.getInvite("hash")).thenReturn(RestResult.restSuccess(competitionInviteResource));
-        RegistrationViewModel expectedViewModel = aRegistrationViewModel().withButtonText("Continue").withAddressRequired(true).withPhoneRequired(true).withInvitee(true).build();
+        RegistrationViewModel expectedViewModel = aRegistrationViewModel().withButtonText("Continue").withAddressRequired(true).withPhoneRequired(true).withInvitee(true).withShowBackLink(true).build();
 
         mockMvc.perform(get("/registration/{inviteHash}/register", "hash"))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("model", refEq(expectedViewModel)))
+                .andExpect(model().attribute("model", samePropertyValuesAs(expectedViewModel)))
                 .andExpect(view().name("registration/register"));
     }
 
