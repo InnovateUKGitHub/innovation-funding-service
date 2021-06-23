@@ -232,7 +232,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         UserResource auditorResource = newUserResource().withId(auditor.getId()).withRoleGlobal(AUDITOR).build();
         ProjectResource project = newProjectResource().build();
 
-        assertFalse(rules.auditorCanViewFinanceReviewer(project, auditorResource));
+        assertTrue(rules.auditorCanViewFinanceReviewer(project, auditorResource));
     }
 
 }

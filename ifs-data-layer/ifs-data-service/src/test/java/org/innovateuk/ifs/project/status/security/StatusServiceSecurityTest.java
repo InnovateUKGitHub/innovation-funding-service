@@ -41,6 +41,7 @@ public class StatusServiceSecurityTest extends BaseServiceSecurityTest<StatusSer
             verify(statusPermissionRules).internalUsersCanViewTeamStatus(project, getLoggedInUser());
             verify(statusPermissionRules).stakeholdersCanViewTeamStatus(project, getLoggedInUser());
             verify(statusPermissionRules).monitoringOfficersCanViewTeamStatus(project, getLoggedInUser());
+            verify(statusPermissionRules).auditorCanViewTeamStatus(project, getLoggedInUser());
             verifyNoMoreInteractions(statusPermissionRules);
         });
     }

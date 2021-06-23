@@ -43,6 +43,7 @@ public class MilestoneServiceSecurityTest extends BaseServiceSecurityTest<Milest
             verify(rules).allInternalUsersCanViewCompetitionMilestonesOtherThanInnovationLeads(compositeId, user);
             verify(rules).innovationLeadsCanViewMilestonesOnAssignedComps(compositeId, user);
             verify(rules).stakeholdersCanViewMilestonesOnAssignedComps(compositeId, user);
+            verify(rules).auditorsCanViewMilestonesOnAllComps(compositeId, user);
             verifyNoMoreInteractions(rules);
         });
     }
