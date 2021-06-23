@@ -246,6 +246,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
     private SetupStatusStageViewModel documentsStageViewModel(ProjectSetupStage stage, ProjectResource project, CompetitionResource competition, UserResource user, CompletableFuture<OrganisationResource> organisationRequest, SetupSectionAccessibilityHelper statusAccessor) {
         boolean isProjectManager = projectService.getProjectManager(project.getId()).map(pu -> pu.isUser(user.getId())).orElse(false);
+        boolean isProjectMO = monitoringOfficerService.isMonitoringOfficerOnProject(project.getId(), user.getId()).getSuccess();
         return new SetupStatusStageViewModel(stage, stage.getShortName(),
                 isProjectManager ? "You must upload supporting documents to be reviewed."
                         : "The Project Manager must upload supporting documents to be reviewed.",
@@ -253,7 +254,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 sectionStatus.documentsSectionStatus(
                         isProjectManager,
                         project,
-                        competition
+                        competition,
+                        isProjectMO
                 ),
                 statusAccessor.canAccessDocumentsSection(resolve(organisationRequest))
         );

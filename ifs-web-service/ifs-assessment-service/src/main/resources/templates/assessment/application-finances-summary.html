@@ -29,6 +29,11 @@
         <h2 class="govuk-heading-m govuk-!-margin-top-6" th:text="${model.ktpCompetition ? 'Project cost summary' : 'Project cost breakdown'}">Project cost breakdown</h2>
         <th:block th:insert="finance/finance-summary :: finance-breakdown-table(${model.applicationFundingBreakdownViewModel})"/>
 
+        <th:block th:if="${model.procurementMilestones}">
+            <h3 class="govuk-heading-s govuk-!-margin-top-6">Payment milestones</h3>
+            <th:block  th:insert="finance/finance-summary :: payment-milestones-table (${model.applicationProcurementMilestonesSummaryViewModel})"/>
+        </th:block>
+
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
 </div>
