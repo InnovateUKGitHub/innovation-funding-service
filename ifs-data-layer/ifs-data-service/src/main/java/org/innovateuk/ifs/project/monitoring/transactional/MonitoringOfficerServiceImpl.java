@@ -46,16 +46,22 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
 
     @Autowired
     private MonitoringOfficerRepository monitoringOfficerRepository;
+
     @Autowired
     private MonitoringOfficerInviteService monitoringOfficerInviteService;
+
     @Autowired
     private ProjectMapper projectMapper;
+
     @Autowired
     private LegacyMonitoringOfficerService legacyMonitoringOfficerService;
+
     @Autowired
     private UserMapper userMapper;
+
     @Autowired
     private ProjectRepository projectRepository;
+
     @Autowired
     private MonitoringOfficerReviewNotificationService monitoringOfficerReviewNotificationService;
 
@@ -170,6 +176,7 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
                     .filter(projectState -> !projectState.isComplete())
                     .collect(Collectors.toList()));
         }
+
         return projectStates;
     }
 
