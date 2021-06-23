@@ -20,22 +20,20 @@ ${applicationIdToSearch}     ${application_ids["${applicationToSearch}"]}
 *** Test Cases ***
 Auditor can view correct number of competitions in live tab
     [Documentation]  IFS-9884  IFS-9885
-    Given the user logs-in in new browser                               &{auditorCredentials}
-    Then the user views correct number of coompetitions in live tab
+    Given log in as a different user                                    &{auditorCredentials}
+    Then auditor views correct number of live competitions
     And the user should not see the element                             jQuery = a:contains("Upcoming")
     And the user should not see the element                             jQuery = a:contains("Non-IFS")
 
 Auditor can view correct number of competitions in project setup tab
     [Documentation]  IFS-9885
-    [Setup]  Get number of competitions in project setup
     When the user clicks the button/link                     jQuery = a:contains(Project setup)
-    Then page should contain element                         jQuery = a:contains("Project setup (${psCompCount})")
+    Then page should contain element                         jQuery = a:contains("${psTabCompCount}")
 
 Auditor can view correct number of competitions in previous tab
     [Documentation]  IFS-9885
-    [Setup]  Get number of competitions in previous tab
     When the user clicks the button/link                    jQuery = a:contains(Previous)
-    Then page should contain element                        jQuery = a:contains("Previous (${previousCompCount})")
+    Then page should contain element                        jQuery = a:contains("${previousTabCompCount}")
 
 Auditor can search for competition
     [Documentation]  IFS-9885
@@ -71,35 +69,41 @@ Auditor can not be added as a collaborator to an application
 *** Keywords ***
 Custom suite setup
     Connect to Database  @{database}
+    the user logs-in in new browser                                    &{ifs_admin_user_credentials}
+    ifs admin gets the counts of competitions in live tab
+    ifs admin gets the counts of competitions in project setup tab
+    ifs admin gets the counts of competitions in previous tab
 
 Custom suite teardown
     Close browser and delete emails
     Disconnect from database
 
-the user views correct number of coompetitions in live tab
-    the total calculation in dashboard should be correct     Open    //section[1]/ul/li
-    the total calculation in dashboard should be correct     Closed    //section[2]/ul/li
-    the total calculation in dashboard should be correct     In assessment    //section[3]/ul/li
-    the total calculation in dashboard should be correct     Panel    //section[4]/ul/li
-    the total calculation in dashboard should be correct     Inform    //section[5]/ul/li
-    the total calculation in dashboard should be correct     Live    //section/ul/li
+Ifs admin gets the counts of competitions in live tab
+    ${openCompCount} =              get text        jQuery = section:nth-child(1) h2
+    set suite variable  ${openCompCount}
+    ${closedCompCount} =            get text        jQuery = section:nth-child(2) h2
+    set suite variable  ${closedCompCount}
+    ${inAssessmentCompCount} =      get text        jQuery = section:nth-child(3) h2
+    set suite variable  ${inAssessmentCompCount}
+    ${panelCompCount} =             get text        jQuery = section:nth-child(4) h2
+    set suite variable  ${panelCompCount}
+    ${informCompCount} =            get text        jQuery = section:nth-child(5) h2
+    set suite variable  ${informCompCount}
+    ${liveTabCompCount} =    get text               id = section-1
+    set suite variable  ${liveTabCompCount}
 
-Get number of competitions in project setup
-    ${psCompCount} =   Get count of project setup competitions
-    Set suite variable  ${psCompCount}
+Ifs admin gets the counts of competitions in project setup tab
+    ${psTabCompCount} =    get text           id = section-4
+    set suite variable  ${psTabCompCount}
 
-Get number of competitions in previous tab
-    ${previousCompCount} =   get count of previous competitions
-    Set suite variable  ${previousCompCount}
+Ifs admin gets the counts of competitions in previous tab
+    ${previousTabCompCount} =    get text           id = section-5
+    set suite variable  ${previousTabCompCount}
 
-Get count of project setup competitions
-    ${result} =  query  SELECT COUNT(*) FROM `${database_name}`.`competition` where `project_setup_started` is NOT null;
-    ${result} =  get from list  ${result}  0
-    ${compCount} =   get from list  ${result}  0
-    [Return]  ${compCount}
-
-get count of previous competitions
-     ${result} =  query  SELECT COUNT(*) FROM `${database_name}`.`competition` `c` WHERE (SELECT `m`.`date` FROM `milestone` `m` WHERE `m`.`type` = 'FEEDBACK_RELEASED' AND `m`.`competition_id` = `c`.`id`) AND `c`.`setup_complete` = TRUE AND `c`.`non_ifs` = FALSE;
-     ${result} =  get from list  ${result}  0
-     ${pcompCount} =   get from list  ${result}  0
-     [Return]  ${pcompCount}
+Auditor views correct number of live competitions
+    page should contain element     jQuery = a:contains("${liveTabCompCount}")
+    page should contain element     jQuery = h2:contains("${openCompCount}")
+    page should contain element     jQuery = h2:contains("${closedCompCount}")
+    page should contain element     jQuery = h2:contains("${inAssessmentCompCount}")
+    page should contain element     jQuery = h2:contains("${panelCompCount}")
+    page should contain element     jQuery = h2:contains("${informCompCount}")
