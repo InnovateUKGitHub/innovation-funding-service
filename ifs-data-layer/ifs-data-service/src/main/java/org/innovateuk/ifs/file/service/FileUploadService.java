@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 
 public interface FileUploadService {
 
-    @SecuredBySpring(value = "UPLOAD_FILE", description = "An ifs admin can create file.")
-    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @SecuredBySpring(value = "UPLOAD_FILE", description = "A system maintainer can upload file.")
+    @PreAuthorize("hasAuthority('system_maintainer')")
     ServiceResult<FileEntryResource> uploadFile(@P("uploadedFileType")String uploadedFileType, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 }
