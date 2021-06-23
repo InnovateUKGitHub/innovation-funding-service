@@ -625,6 +625,8 @@ Custom Suite Setup
     Connect to Database  @{database}
     The user logs-in in new browser      &{Comp_admin1_credentials}
     Set predefined date variables
+    ${today}  get today
+    set suite variable  ${today}
 
 Custom suite teardown
     Close browser and delete emails
