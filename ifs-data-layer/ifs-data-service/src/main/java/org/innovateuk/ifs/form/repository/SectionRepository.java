@@ -31,5 +31,4 @@ public interface SectionRepository extends PagingAndSortingRepository<Section, L
     List<Section> findByCompetitionIdAndDisplayInAssessmentApplicationSummaryTrueOrderByPriorityAsc(Long competitionId);
 
     Optional<Section> findByTypeAndCompetitionId(SectionType type, long competitionId);
-
 }

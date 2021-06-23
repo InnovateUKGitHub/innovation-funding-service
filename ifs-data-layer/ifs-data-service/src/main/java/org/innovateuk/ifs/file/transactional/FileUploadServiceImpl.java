@@ -7,8 +7,6 @@ import org.innovateuk.ifs.file.domain.UploadFiles;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.repository.UploadFilesRepository;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.BasicFileAndContents;
-import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FileUploadService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -43,7 +39,7 @@ public class FileUploadServiceImpl extends BaseTransactionalService implements F
 
     @Override
     @Transactional
-    public ServiceResult<FileEntryResource> createFileEntry(String uploadFileType, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+    public ServiceResult<FileEntryResource> uploadFile(String uploadFileType, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         buildDataFromFile.buildFromFile(inputStreamSupplier.get());
         return serviceSuccess(new FileEntryResource());
 
@@ -51,7 +47,7 @@ public class FileUploadServiceImpl extends BaseTransactionalService implements F
 //        return  fileService.createFile(fileEntryResource, inputStreamSupplier).
 //            andOnSuccessReturn(fileResults -> linkFileEntryToUploadFile(uploadFileType, fileResults))
 //                .andOnSuccessReturn(e -> {
-//                    //This is the main logic we bukld data from csvs.
+//                    //This is the main logic we build data from csvs.
 //                    buildDataFromFile.buildFromFile(inputStreamSupplier.get());
 //                    return e;
 //                });
@@ -64,28 +60,5 @@ public class FileUploadServiceImpl extends BaseTransactionalService implements F
         uploadFiles.setFileEntry(fileEntry);
         uploadFilesRepository.save(uploadFiles);
         return fileEntryMapper.mapToResource(fileEntry);
-    }
-
-    @Override
-    public ServiceResult<Void> deleteFileEntry(long uploadId) {
-        return null;
-    }
-
-    @Override
-    public ServiceResult<FileAndContents> getFileContents(long fileEntryId) {
-        return  fileEntryService.findOne(fileEntryId)
-                .andOnSuccess(fileEntry ->fileService.getFileByFileEntryId(fileEntryId)
-                .andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntry, inputStream)));
-    }
-
-    @Override
-    public ServiceResult<List<FileEntryResource>> getAllUploadedFileEntryResources() {
-        Iterable<UploadFiles> uploaddFiles = uploadFilesRepository.findAll();
-        List<FileEntryResource> uploadedfFileEntryResources = new ArrayList<FileEntryResource>();
-        uploaddFiles.forEach(uploadedFile -> {
-            FileEntryResource fileEntryResource = fileEntryMapper.mapToResource(uploadedFile.getFileEntry());
-            uploadedfFileEntryResources.add(fileEntryResource);
-        });
-        return serviceSuccess(uploadedfFileEntryResources);
     }
 }
