@@ -130,6 +130,8 @@ public class CompetitionWebTestData {
                         .withName("The Sustainable Innovation Fund: SBRI phase 1"),
                 procurementCompetition()
                         .withName("SBRI competition"),
+                procurementCompetition()
+                        .withName("sbri competition pahse 2"),
                 ktpCompetition()
                         .withName("KTP Africa project setup"),
                 grantCompetition()
