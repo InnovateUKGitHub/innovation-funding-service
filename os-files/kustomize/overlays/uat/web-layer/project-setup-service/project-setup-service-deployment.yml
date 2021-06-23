@@ -1,0 +1,9 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-setup-svc
+  annotations:
+    monitor: monitor
+    pullSecrets: pullSecrets
+spec:
+  replicas: 2

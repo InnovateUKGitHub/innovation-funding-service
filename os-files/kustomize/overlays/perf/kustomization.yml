@@ -4,3 +4,8 @@ commonAnnotations:
 
 bases:
   - ../../base
+
+patchesStrategicMerge:
+  - auth/sp/sp-deployment.yml
+  - data-layer/data-service/data-service-deployment.yml
+  - web-layer/registration-service/registration-service-deployment.yml
