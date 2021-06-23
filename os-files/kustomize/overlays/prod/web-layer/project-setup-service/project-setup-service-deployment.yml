@@ -7,3 +7,10 @@ metadata:
     pullSecrets: pullSecrets
 spec:
   replicas: 3
+  selector:
+    matchLabels:
+      app: project-setup-svc
+  template:
+    metadata:
+      labels:
+        app: project-setup-svc

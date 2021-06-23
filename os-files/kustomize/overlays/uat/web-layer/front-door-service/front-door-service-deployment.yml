@@ -7,3 +7,10 @@ metadata:
     pullSecrets: pullSecrets
 spec:
   replicas: 2
+  selector:
+    matchLabels:
+      app: front-door-svc
+  template:
+    metadata:
+      labels:
+        app: front-door-svc
