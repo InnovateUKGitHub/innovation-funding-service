@@ -116,6 +116,9 @@ public class Application implements ProcessActivity {
     @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
     private ProjectToBeCreated projectToBeCreated;
 
+    private Long clientApplicationId;
+
+    private String applicantName;
 
     public Application() {
     }
@@ -542,5 +545,21 @@ public class Application implements ProcessActivity {
 
     public void setAssessments(List<Assessment> assessments) {
         this.assessments = assessments;
+    }
+
+    public Long getClientApplicationId() {
+        return clientApplicationId;
+    }
+
+    public void setClientApplicationId(Long clientApplicationId) {
+        this.clientApplicationId = clientApplicationId;
+    }
+
+    public String getApplicantName() {
+        return applicantName;
+    }
+
+    public void setApplicantName(String applicantName) {
+        this.applicantName = applicantName;
     }
 }
