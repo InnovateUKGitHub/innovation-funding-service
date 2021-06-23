@@ -331,9 +331,9 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
         CompetitionSearchResultItem competitionSearchProjectSetupResultItem = newProjectSetupCompetitionSearchResultItem().withCompetitionStatus(PROJECT_SETUP).build();
         CompetitionSearchResultItem competitionSearchPreviousResultItem = newPreviousCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.ASSESSOR_FEEDBACK).withId(2L).build();
 
-        assertTrue(rules.stakeholderCanViewCompetitionAssignedToThem(competitionSearchLiveResultItem, audtior));
-        assertTrue(rules.stakeholderCanViewCompetitionAssignedToThem(competitionSearchProjectSetupResultItem, audtior));
-        assertTrue(rules.stakeholderCanViewCompetitionAssignedToThem(competitionSearchPreviousResultItem, audtior));
+        assertTrue(rules.auditorCanViewAllCompetitions(competitionSearchLiveResultItem, audtior));
+        assertTrue(rules.auditorCanViewAllCompetitions(competitionSearchProjectSetupResultItem, audtior));
+        assertTrue(rules.auditorCanViewAllCompetitions(competitionSearchPreviousResultItem, audtior));
 
     }
 }

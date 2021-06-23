@@ -23,10 +23,9 @@ public class PartnerOrganisationPermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value = "READ", description = "Stakeholders can see partner organisations on projects in competitions they are assigned to OR " +
-            "Auditors can see partner organisations on projects in all competitions")
+    @PermissionRule(value = "READ", description = "Stakeholders can see partner organisations on projects in competitions they are assigned to")
     public boolean stakeholdersCanViewProjects(PartnerOrganisationResource partnerOrganisation, final UserResource user) {
-        return userIsStakeholderOnCompetitionForProject(partnerOrganisation.getProject(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
+        return userIsStakeholderOnCompetitionForProject(partnerOrganisation.getProject(), user.getId());
     }
 
     @PermissionRule(value = "READ", description = "Competition finances users can see partner organisations on projects in competitions they are assigned to")
@@ -49,10 +48,9 @@ public class PartnerOrganisationPermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value = "READ_PENDING_PARTNER_PROGRESS", description = "Stakeholders can read partner progress in project setup in competitions they are assigned to OR" +
-            "Auditors can read partner progress in project setup for all competitions")
+    @PermissionRule(value = "READ_PENDING_PARTNER_PROGRESS", description = "Stakeholders can read partner progress in project setup in competitions they are assigned to")
     public boolean stakeholdersCanReadPendingPartnerProgress(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
-        return userIsStakeholderOnCompetitionForProject(partnerOrganisation.getProject(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
+        return userIsStakeholderOnCompetitionForProject(partnerOrganisation.getProject(), user.getId());
     }
 
     @PermissionRule(value = "READ_PENDING_PARTNER_PROGRESS", description = "Competition finance users can read partner progress in project setup in competitions they are assigned to")
@@ -68,5 +66,15 @@ public class PartnerOrganisationPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "REMOVE_PARTNER_ORGANISATION", description = "Internal users can remove partner organisations for any project")
     public boolean internalUsersCanRemovePartnerOrganisations(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
         return isInternalAdmin(user);
+    }
+
+    @PermissionRule(value = "READ", description = "Auditors can see partner organisations on projects in all competitions")
+    public boolean auditorsCanViewProjects(PartnerOrganisationResource partnerOrganisation, final UserResource user) {
+        return user.hasAuthority(Authority.AUDITOR);
+    }
+
+    @PermissionRule(value = "READ_PENDING_PARTNER_PROGRESS", description = "Auditors can read partner progress in project setup for all competitions")
+    public boolean auditorsCanReadPendingPartnerProgress(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
+        return user.hasAuthority(Authority.AUDITOR);
     }
 }

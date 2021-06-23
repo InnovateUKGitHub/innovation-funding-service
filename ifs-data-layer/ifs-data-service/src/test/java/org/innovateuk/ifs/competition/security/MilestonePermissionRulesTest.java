@@ -144,7 +144,6 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
     public void auditorsCanViewMilestoneOntheCompetitions() {
         List<Role> auditorRoles = singletonList(AUDITOR);
         UserResource audtior = newUserResource().withRolesGlobal(auditorRoles).build();
-        CompetitionResource competition = newCompetitionResource().withId(competitionId).build();
-        assertTrue(rules.stakeholdersCanViewMilestonesOnAssignedComps(compositeId, audtior));
+        assertTrue(rules.auditorsCanViewMilestonesOnAllComps(compositeId, audtior));
     }
 }

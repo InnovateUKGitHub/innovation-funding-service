@@ -34,9 +34,9 @@ public class StatusPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_TEAM_STATUS",
-            description = "Stakeholders/Auditors can see a team's status for a project on their(all) competitions")
+            description = "Stakeholders can see a team's status for a project on their competitions")
     public boolean stakeholdersCanViewTeamStatus(ProjectResource project, UserResource user) {
-        return userIsStakeholderInCompetition(project.getCompetition(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
+        return userIsStakeholderInCompetition(project.getCompetition(), user.getId());
     }
 
     @PermissionRule(
@@ -75,10 +75,9 @@ public class StatusPermissionRules extends BasePermissionRules {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
 
-    @PermissionRule(value = "VIEW_PROJECT_SETUP_COMPETITION_STATUS", description = "Stakeholders should be able to access current status of competition that are assigned to them OR" +
-            "Auditors can able to access the current status of all competitions")
+    @PermissionRule(value = "VIEW_PROJECT_SETUP_COMPETITION_STATUS", description = "Stakeholders should be able to access current status of competition that are assigned to them")
     public boolean assignedStakeholderCanViewCompetitionStatus(CompetitionResource competition, UserResource user){
-        return userIsStakeholderInCompetition(competition.getId(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
+        return userIsStakeholderInCompetition(competition.getId(), user.getId());
     }
 
     @PermissionRule(value = "VIEW_PROJECT_SETUP_COMPETITION_STATUS", description = "Competition finance users should be able to access current status of competition that are assigned to them")
@@ -101,14 +100,28 @@ public class StatusPermissionRules extends BasePermissionRules {
         return userIsInnovationLeadOnCompetition(project.getCompetition(), user.getId());
     }
 
-    @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Stakeholders should be able to view current status of project from competition assigned to them OR" +
-            "Auditors should be able to view the current status of project ")
+    @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Stakeholders should be able to view current status of project from competition assigned to them")
     public boolean assignedStakeholderCanViewProjectStatus(ProjectResource project, UserResource user){
-        return userIsStakeholderInCompetition(project.getCompetition(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
+        return userIsStakeholderInCompetition(project.getCompetition(), user.getId());
     }
 
     @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Competition finance users should be able to view current status of project from competition assigned to them")
     public boolean assignedCompetitionFinanceUsersCanViewProjectStatus(ProjectResource project, UserResource user){
         return userIsExternalFinanceInCompetition(project.getCompetition(), user.getId());
+    }
+    @PermissionRule(value = "VIEW_PROJECT_SETUP_COMPETITION_STATUS", description = "Auditors should be able to access current status of competitions.")
+    public boolean assignedAuditorCanViewCompetitionStatus(CompetitionResource competition, UserResource user){
+        return user.hasAuthority(Authority.AUDITOR);
+    }
+
+    @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Auditors should be able to view the current status of project.")
+    public boolean assignedAuditorCanViewProjectStatus(ProjectResource project, UserResource user){
+        return user.hasAuthority(Authority.AUDITOR);
+    }
+    @PermissionRule(
+            value = "VIEW_TEAM_STATUS",
+            description = "Auditors can see a team's status for a project on the competitions")
+    public boolean auditorCanViewTeamStatus(ProjectResource project, UserResource user) {
+        return user.hasAuthority(Authority.AUDITOR);
     }
 }

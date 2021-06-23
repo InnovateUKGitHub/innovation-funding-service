@@ -84,10 +84,10 @@ public class CompetitionSummaryPermissionRulesTest extends BasePermissionRulesTe
         assertFalse(rules.competitionFinanceUsersCanViewCompetitionSummaryOnAssignedComps(competitionResource, competitionFinanceUserNotAssignedToCompetition));
     }
     @Test
-    public void auditorsCanViewAllCompetitionSummarys() {
+    public void auditorsCanViewAllCompetitionsSummary() {
         CompetitionResource competitionResource = newCompetitionResource().build();
         List<Role> auditorRoles = singletonList(AUDITOR);
         UserResource audtior = newUserResource().withRolesGlobal(auditorRoles).build();
-        assertTrue(rules.stakeholdersCanViewCompetitionSummaryOnAssignedComps(competitionResource, audtior));
+        assertTrue(rules.auditorsCanViewAllCompetitionsSummary(competitionResource, audtior));
     }
 }

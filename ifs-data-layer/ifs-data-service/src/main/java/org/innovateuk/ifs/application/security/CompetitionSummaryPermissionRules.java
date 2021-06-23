@@ -18,9 +18,9 @@ public class CompetitionSummaryPermissionRules extends BasePermissionRules {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
 
-    @PermissionRule(value = "VIEW_COMPETITION_SUMMARY", description = "Stakeholders can view competition summary of competitions assigned to them OR Auditors can view all competitions.")
+    @PermissionRule(value = "VIEW_COMPETITION_SUMMARY", description = "Stakeholders can view competition summary of competitions assigned to them.")
     public boolean stakeholdersCanViewCompetitionSummaryOnAssignedComps(CompetitionResource competition, UserResource user) {
-        return userIsStakeholderInCompetition(competition.getId(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
+        return userIsStakeholderInCompetition(competition.getId(), user.getId());
     }
 
     @PermissionRule(value = "VIEW_COMPETITION_SUMMARY", description = "Competition finance users can view competition summary of competitions assigned to them.")
@@ -31,5 +31,10 @@ public class CompetitionSummaryPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "VIEW_COMPETITION_SUMMARY", description = "Internal users (except innovation leads and stakeholders) can view competition summary of any competition.")
     public boolean allInternalUsersCanViewCompetitionSummaryOtherThanInnovationLeadsAndStakeholders(CompetitionResource competition, UserResource user) {
         return isInternal(user) && !isInnovationLead(user) && !isStakeholder(user);
+    }
+
+    @PermissionRule(value = "VIEW_COMPETITION_SUMMARY", description = "Auditors can view all competition summary of competitions.")
+    public boolean auditorsCanViewAllCompetitionsSummary(CompetitionResource competition, UserResource user) {
+        return user.hasAuthority(Authority.AUDITOR);
     }
 }

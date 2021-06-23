@@ -47,10 +47,9 @@ public class MonitoringOfficerPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_MONITORING_OFFICER",
-            description = "Stakeholders can view Monitoring Officers on any Project in their competitions OR" +
-                    "Auditors can view Monitoring Officers on any Project ")
+            description = "Stakeholders can view Monitoring Officers on any Project in their competitions")
     public boolean stakeholdersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(ProjectResource project, UserResource user) {
-        return userIsStakeholderInCompetition(project.getCompetition(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
+        return userIsStakeholderInCompetition(project.getCompetition(), user.getId());
     }
 
     @PermissionRule(
@@ -72,5 +71,12 @@ public class MonitoringOfficerPermissionRules extends BasePermissionRules {
             description = "Partners can view Monitoring Officers on Projects that they are partners on")
     public boolean partnersCanViewMonitoringOfficersOnTheirProjects(ProjectResource project, UserResource user) {
         return isPartner(project.getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_MONITORING_OFFICER",
+            description = "Auditors can view Monitoring Officers on any Project in the competition ")
+    public boolean auditorsCanViewMonitoringOfficersForAProjectOnTheCompetitions(ProjectResource project, UserResource user) {
+        return user.hasAuthority(Authority.AUDITOR);
     }
 }

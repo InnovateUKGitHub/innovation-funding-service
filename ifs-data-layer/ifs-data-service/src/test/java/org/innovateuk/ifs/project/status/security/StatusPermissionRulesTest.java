@@ -230,16 +230,16 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
 
     @Test
     public void auditorCanViewProjectStatus() {
-        assertTrue(rules.assignedStakeholderCanViewProjectStatus(projectResource1, auditorUser));
+        assertTrue(rules.assignedAuditorCanViewProjectStatus(projectResource1, auditorUser));
     }
 
     @Test
     public void auditorCanViewCompetitionStatus() {
-        assertTrue(rules.assignedStakeholderCanViewCompetitionStatus(competitionResource, auditorUser));
+        assertTrue(rules.assignedAuditorCanViewCompetitionStatus(competitionResource, auditorUser));
     }
 
     @Test
     public void auditorCanViewTeamStatus() {
-        assertTrue(rules.stakeholdersCanViewTeamStatus(projectResource1, auditorUser));
+        assertTrue(rules.auditorCanViewTeamStatus(projectResource1, auditorUser));
     }
 }
