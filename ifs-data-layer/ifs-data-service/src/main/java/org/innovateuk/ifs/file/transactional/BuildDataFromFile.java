@@ -58,7 +58,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -229,7 +228,7 @@ public class BuildDataFromFile {
         Map<String, CompetitionResource> results = new HashMap<>();
         Multimap<String, BuildQuestion> compToQuestionMap = Multimaps.index(questions, BuildQuestion::getCompetition);
         competitions.forEach(c -> {
-            String name = c.getName() + LocalDateTime.now();
+            String name = c.getName();
             LOG.error("CREATING COMP " + name);
             CompetitionResource competition = competitionSetupService.create().getSuccess();
             competition.setName(name);
