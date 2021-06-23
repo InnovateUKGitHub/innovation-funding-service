@@ -214,7 +214,6 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
     @Test
     public void auditorsCanViewProjects() {
-
         User auditor = newUser().withRoles(singleton(AUDITOR)).build();
         UserResource auditorResource = newUserResource().withId(auditor.getId()).withRoleGlobal(AUDITOR).build();
         Competition competition = newCompetition().build();
@@ -223,7 +222,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
                 .withCompetition(competition.getId())
                 .build();
 
-        assertTrue(rules.stakeholdersCanViewProjects(project, auditorResource));
+        assertTrue(rules.auditorsCanViewProjects(project, auditorResource));
 
     }
 
@@ -233,7 +232,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         UserResource auditorResource = newUserResource().withId(auditor.getId()).withRoleGlobal(AUDITOR).build();
         ProjectResource project = newProjectResource().build();
 
-        assertFalse(rules.supportCanViewFinanceReviewer(project, auditorResource));
+        assertTrue(rules.auditorCanViewFinanceReviewer(project, auditorResource));
     }
 
 }

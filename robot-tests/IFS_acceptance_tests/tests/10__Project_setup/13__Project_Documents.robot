@@ -43,6 +43,8 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...
 ...               IFS-9577 MO documents: approve or reject
 ...
+...               IFS-9701 MO documents: Monitor project page status updates
+...
 ...               IFS-9578 MO documents: design changes for other roles (not MO or Project manager)
 ...
 Suite Setup       Custom Suite Setup
@@ -212,6 +214,13 @@ Non-lead partner cannot view either document once removed
     When the user goes to documents page          Back to document overview  Exploitation plan
     Then the user should not see the element      jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
+Assign a MO to the project and they check the documents are incomplete
+    [Documentation]  IFS-9577  IFS-9701
+    [Tags]
+    Given the user logs-in in new browser     &{monitoring_officer_one_credentials}
+    When the user navigates to the page       ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+    Then the user should see the element      jQuery = ul li:contains("Documents") span:contains("Incomplete")
+
 PM can upload both documents after they have been removed
     [Documentation]    INFUND-3011
     [Tags]  HappyPath
@@ -234,14 +243,22 @@ Mandatory document submission
     And the user reloads the page
     Then PM submits both documents     ${Grade_Crossing_Project_Id}
 
+MO can see the Documents are awaiting review
+    [Documentation]    IFS-9701
+    [Tags]
+    Given the user logs-in in new browser     &{monitoring_officer_one_credentials}
+    When the user navigates to the page       ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+    Then the user should see the element      jQuery = ul li:contains("Documents") span:contains("Awaiting review")
+
 PM can still view both documents after submitting
     [Documentation]    INFUND-3012
     [Tags]
-    Given the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
-    When the user clicks the button/link    link = Collaboration agreement
-    And open pdf link                       jQuery = a:contains("${valid_pdf} (opens in a new window)")
-    When the user goes to documents page    Return to documents  Exploitation plan
-    Then open pdf link                      jQuery = a:contains("${valid_pdf} (opens in a new window)")
+    Given log in as a different user         &{lead_applicant_credentials_bd}
+    And the user navigates to the page       ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
+    When the user clicks the button/link     link = Collaboration agreement
+    And open pdf link                        jQuery = a:contains("${valid_pdf} (opens in a new window)")
+    Then the user goes to documents page     Return to documents  Exploitation plan
+    And open pdf link                        jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
 PM cannot remove the documents after submitting
     [Documentation]    INFUND-3012
@@ -336,7 +353,7 @@ IfsAdmin rejects both documents
     Then ifs admin reject uploaded documents
 
 MO can view Incomplete status on rejected document
-    [Documentation]  IFS-9578
+    [Documentation]  IFS-9578  IFS-9701
     [Setup]  Log in as a different user      &{monitoring_officer_one_credentials}
     Given the user navigates to the page     ${SERVER}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     Then the user should see the element     jQuery = div:contains("Collaboration agreement") ~ div span:contains("Incomplete")
@@ -415,7 +432,7 @@ ifsAdmin approves both documents
     Then internal user approve uploaded documents
 
 MO can view ifsAdmin approved the document banners
-    [Documentation]  IFS-9578
+    [Documentation]  IFS-9578  IFS-9701
     Given Log in as a different user                           &{monitoring_officer_one_credentials}
     When the user navigates to the page                        ${SERVER}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     Then the user sees Innovate Uk approved document banner

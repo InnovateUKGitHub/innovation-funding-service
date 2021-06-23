@@ -162,7 +162,6 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
     }
     @Test
     public void auditorsCanViewMonitoringOfficersForAProjectOnTheCompetitions() {
-
         User auditor = newUser().withRoles(singleton(AUDITOR)).build();
         UserResource auditorResource = newUserResource().withId(auditor.getId()).withRoleGlobal(AUDITOR).build();
         Competition competition = newCompetition().build();
@@ -171,8 +170,6 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
                 .withCompetition(competition.getId())
                 .build();
 
-
-        assertTrue(rules.stakeholdersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(project, auditorResource));
-
+        assertTrue(rules.auditorsCanViewMonitoringOfficersForAProjectOnTheCompetitions(project, auditorResource));
     }
 }

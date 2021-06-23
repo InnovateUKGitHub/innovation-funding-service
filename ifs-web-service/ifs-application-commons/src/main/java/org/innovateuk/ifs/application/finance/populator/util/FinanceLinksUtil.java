@@ -45,7 +45,7 @@ public class FinanceLinksUtil {
         Optional<ProcessRoleResource> currentUserRole = getCurrentUsersRole(processRoles, user);
 
         UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(httpServletUtil.request());
-        if (authenticatedUser.isInternalUser() || authenticatedUser.hasAuthority(Authority.STAKEHOLDER) || authenticatedUser.getRoles().contains(STAKEHOLDER) || authenticatedUser.getRoles().contains(EXTERNAL_FINANCE)) {
+        if (authenticatedUser.isInternalUser() || authenticatedUser.hasAuthority(Authority.STAKEHOLDER) || authenticatedUser.getRoles().contains(EXTERNAL_FINANCE)) {
             if (!application.isSubmitted()) {
                 if (authenticatedUser.getRoles().contains(IFS_ADMINISTRATOR) || authenticatedUser.getRoles().contains(SUPPORT) || authenticatedUser.getRoles().contains(EXTERNAL_FINANCE)) {
                     return Optional.of(organisationIdInLink(application.getId(), organisation));

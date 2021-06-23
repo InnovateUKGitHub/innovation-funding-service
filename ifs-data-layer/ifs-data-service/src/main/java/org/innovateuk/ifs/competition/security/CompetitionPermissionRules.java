@@ -42,9 +42,9 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
 
-    @PermissionRule(value = "READ", description = "Stakeholders can view competitions that are assigned to them OR Auditors can view all competitions")
+    @PermissionRule(value = "READ", description = "Stakeholders can view competitions that are assigned to them")
     public boolean stakeholderCanViewCompetitionAssignedToThem(CompetitionResource competition, UserResource user) {
-        return userIsStakeholderInCompetition(competition.getId(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
+        return userIsStakeholderInCompetition(competition.getId(), user.getId());
     }
 
     @PermissionRule(value = "READ", description = "Competition finance users can view competitions that are assigned to them")
@@ -67,9 +67,9 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
 
-    @PermissionRule(value = "READ", description = "Stakeholders can see competitions that are assigned to them OR Auditors can view all competitions")
+    @PermissionRule(value = "READ", description = "Stakeholders can see competitions that are assigned to them")
     public boolean stakeholderCanViewCompetitionAssignedToThem(CompetitionSearchResultItem competition, UserResource user) {
-        return userIsStakeholderInCompetition(competition.getId(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
+        return userIsStakeholderInCompetition(competition.getId(), user.getId());
     }
 
     @PermissionRule(value = "MANAGE_INNOVATION_LEADS", description = "Competition Admin and Project Finance can add, remove and view innovation leads for a competition")
@@ -86,9 +86,9 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
 
-    @PermissionRule(value = "VIEW_PREVIOUS_APPLICATIONS", description = "Stakeholders for the competition can view previous applications OR Auditors can view all previous competitions")
+    @PermissionRule(value = "VIEW_PREVIOUS_APPLICATIONS", description = "Stakeholders for the competition can view previous applications")
     public boolean stakeholderForCompetitionCanViewPreviousApplications(CompetitionResource competition, UserResource user) {
-        return userIsStakeholderInCompetition(competition.getId(), user.getId()) || user.hasAuthority(Authority.AUDITOR);
+        return userIsStakeholderInCompetition(competition.getId(), user.getId());
     }
 
     @PermissionRule(value = "DELETE",
@@ -122,5 +122,19 @@ public class CompetitionPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ_POST_AWARD_SERVICE", description = "Allowed for users part of project on competition to read post award service during project setup")
     public boolean projectUsersCanReadPostAwardServiceForCompetition(CompetitionResource competition, UserResource user) {
         return projectUserRepository.existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), user.getId());
+    }
+    @PermissionRule(value = "READ", description = "Auditors can view all competitions")
+    public boolean auditorCanViewAllCompetitions(CompetitionResource competition, UserResource user) {
+        return user.hasAuthority(Authority.AUDITOR);
+    }
+
+    @PermissionRule(value = "READ", description = "Auditors can view all competitions")
+    public boolean auditorCanViewAllCompetitions(CompetitionSearchResultItem competition, UserResource user) {
+        return user.hasAuthority(Authority.AUDITOR);
+    }
+
+    @PermissionRule(value = "VIEW_PREVIOUS_APPLICATIONS", description = "Auditors can view all previous competitions")
+    public boolean auditorCanViewPreviousApplications(CompetitionResource competition, UserResource user) {
+        return  user.hasAuthority(Authority.AUDITOR);
     }
 }
