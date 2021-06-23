@@ -2,4 +2,4 @@
 
 ALTER TABLE application
 ADD COLUMN client_application_id bigint(20) DEFAULT NULL,
-ADD COLUMN client_applicant_name varchar(255) DEFAULT NULL;
+ADD COLUMN applicant_name varchar(255) DEFAULT NULL;
