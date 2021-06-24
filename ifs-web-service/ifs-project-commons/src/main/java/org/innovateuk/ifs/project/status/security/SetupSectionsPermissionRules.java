@@ -84,7 +84,7 @@ public class SetupSectionsPermissionRules {
     }
 
     @PermissionRule(value = "ACCESS_BANK_DETAILS_SECTION", description = "An Auditor user can access the Bank Details " +
-            "section when submitted by Partners (Individual)")
+            "section when all bank details have been approved")
     public boolean auditorCanAccessBankDetailsSection(ProjectCompositeId projectCompositeId, UserResource user) {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessBankDetailsSection, SecurityRuleUtil::hasAuditorAuthority);
     }

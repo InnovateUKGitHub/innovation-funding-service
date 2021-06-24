@@ -8,7 +8,6 @@ import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.sections.SectionAccess.NOT_ACCESSIBLE;
 import static org.innovateuk.ifs.user.resource.Role.*;
@@ -53,7 +52,11 @@ public class SetupSectionInternalUser {
 
     public SectionAccess canAccessBankDetailsSection(UserResource userResource) {
 
-        if (!userResource.hasAnyAuthority(asList(Authority.PROJECT_FINANCE, Authority.AUDITOR)) || !projectSetupProgressChecker.isBankDetailsAccessible() ) {
+        if (userResource.hasAuthority(Authority.AUDITOR) && projectSetupProgressChecker.isBankDetailsApproved()) {
+            return ACCESSIBLE;
+        }
+
+        if (!userResource.hasAuthority(Authority.PROJECT_FINANCE) || !projectSetupProgressChecker.isBankDetailsAccessible()) {
             return NOT_ACCESSIBLE;
         }
 
