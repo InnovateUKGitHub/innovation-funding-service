@@ -20,7 +20,7 @@ public class FileUploadController {
     private Long maxFilesizeBytesForUpload;
 
     @Value("${ifs.data.service.file.upload.files.valid.media.types}")
-    private List<String> validMediaTypesForApplicationFinance;
+    private List<String> validMediaTypes;
 
     @Autowired
     private FileUploadService fileUploadService;
@@ -32,14 +32,14 @@ public class FileUploadController {
     private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
     @PostMapping(value = "/upload-file", produces = "application/json")
-    public RestResult<FileEntryResource> addFile(
+    public RestResult<FileEntryResource> uploadFile(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
             @RequestParam(value = "fileType") String fileType,
             @RequestParam(value = "fileName", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForApplicationFinance, maxFilesizeBytesForUpload, request, (fileAttributes, inputStreamSupplier) ->
+        return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypes, maxFilesizeBytesForUpload, request, (fileAttributes, inputStreamSupplier) ->
                 fileUploadService.uploadFile(fileType, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 }
