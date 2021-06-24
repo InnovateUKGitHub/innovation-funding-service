@@ -117,8 +117,7 @@
               <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).VIABILITY.name()})}" class="govuk-button govuk-button--secondary govuk-!-margin-right-4">Queries</a>
               <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.projectId},organisationId=${model.organisationId})}" class="govuk-button govuk-button--secondary">Notes</a>
           </div>
-            <th:block th:unless="${model.isReadOnly()}">
-                <details th:if="${model.canReset}" class="govuk-details" data-module="govuk-details">
+            <details th:if="${model.canReset}" class="govuk-details" data-module="govuk-details">
                   <summary class="govuk-details__summary">
                         <span class="govuk-details__summary-text">
                           Reset viability check
@@ -193,7 +192,6 @@
 
                   <th:block th:insert="fragments/modals :: modal-confirm-viability (${model})" />
               </th:block>
-            </th:block>
           <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
           <button th:if="${model.showSaveAndContinueButton}" class="govuk-button govuk-button--secondary" name="save-and-continue">Save and return to finance checks</button>
           <a th:if="${model.showBackToFinanceCheckButton}" class="govuk-button govuk-button--secondary" th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">Return to finance checks</a>

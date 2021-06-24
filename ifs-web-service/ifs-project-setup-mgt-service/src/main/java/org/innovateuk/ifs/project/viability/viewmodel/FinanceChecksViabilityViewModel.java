@@ -178,7 +178,7 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public boolean isCanReset() {
-        return approved && projectIsActive && resetableGolState;
+        return approved && projectIsActive && resetableGolState && !isAuditor();
     }
 
     public LocalDate getApprovalDate() {
