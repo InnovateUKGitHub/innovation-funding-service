@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface ApplicationSummaryService {
 
-    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support')")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support','auditor')")
     @SecuredBySpring(value = "READ", description = "Internal users, apart from innovation lead,  can see all Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)
     ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(long competitionId,
                                                                                          String sortBy,
