@@ -186,7 +186,7 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public boolean isShowSaveAndContinueButton() {
-        return !isApproved() && projectIsActive || !isReadOnly();
+        return !isApproved() && projectIsActive && !isReadOnly();
     }
 
     public boolean isShowBackToFinanceCheckButton() {
