@@ -42,6 +42,7 @@ public class CompetitionSummaryServiceSecurityTest extends BaseServiceSecurityTe
             verify(rules).innovationLeadsCanViewCompetitionSummaryOnAssignedComps(any(CompetitionResource.class), eq(user));
             verify(rules).stakeholdersCanViewCompetitionSummaryOnAssignedComps(any(CompetitionResource.class), eq(user));
             verify(rules).competitionFinanceUsersCanViewCompetitionSummaryOnAssignedComps(competitionResource, user);
+            verify(rules).auditorsCanViewAllCompetitionsSummary(competitionResource, user);
             verifyNoMoreInteractions(rules);
         });
     }

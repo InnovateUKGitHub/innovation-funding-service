@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.monitoring.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
-import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.Authority;
@@ -72,5 +71,12 @@ public class MonitoringOfficerPermissionRules extends BasePermissionRules {
             description = "Partners can view Monitoring Officers on Projects that they are partners on")
     public boolean partnersCanViewMonitoringOfficersOnTheirProjects(ProjectResource project, UserResource user) {
         return isPartner(project.getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_MONITORING_OFFICER",
+            description = "Auditors can view Monitoring Officers on any Project in the competition ")
+    public boolean auditorsCanViewMonitoringOfficersForAProjectOnTheCompetitions(ProjectResource project, UserResource user) {
+        return user.hasAuthority(Authority.AUDITOR);
     }
 }
