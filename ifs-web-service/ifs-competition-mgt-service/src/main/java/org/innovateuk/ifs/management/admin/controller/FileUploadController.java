@@ -33,7 +33,7 @@ public class FileUploadController {
     private FileUploadRestService fileUploadRestService;
 
     @GetMapping("/upload-files")
-    public String UploadFiles(Model model) {
+    public String uploadFiles(Model model) {
         UploadFilesForm form = new UploadFilesForm();
         model.addAttribute(FORM_ATTR_NAME, form);
 
