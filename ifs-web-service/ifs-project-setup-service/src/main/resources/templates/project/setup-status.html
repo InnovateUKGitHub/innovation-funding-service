@@ -95,8 +95,10 @@
                         </h2>
                         <p class="govuk-body govuk-!-margin-0" th:text="${stage.subtitle}">Confirm the proposed start date and location of the project.</p>
                     </div>
-                    <th:block th:if="${model.shouldShowStatus(stage)}"
+                    <th:block th:unless="${model.shouldShowStatus(stage) and model.monitoringOfficer}"
                         th:insert="project/fragments :: project-setup-status-indicator(${stage.statusOverride ?: stage.status.status})"/>
+                    <th:block th:if="${model.shouldShowStatus(stage) and model.monitoringOfficer}"
+                              th:insert="project/fragments :: mo-document-status-indicator(${stage.statusOverride ?: stage.status.status})"/>
                 </li>
             </ul>
         </div>
