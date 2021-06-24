@@ -154,7 +154,7 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public boolean isReadOnly() {
-        return viabilityState == ViabilityState.APPROVED || !projectIsActive;
+        return viabilityState == ViabilityState.APPROVED || !projectIsActive || isAuditor();
     }
 
     public boolean isShowApprovalMessage() {
@@ -186,11 +186,11 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public boolean isShowSaveAndContinueButton() {
-        return !isApproved() && projectIsActive;
+        return !isApproved() && projectIsActive || !isReadOnly();
     }
 
     public boolean isShowBackToFinanceCheckButton() {
-        return isApproved() || !projectIsActive;
+        return isApproved() || !projectIsActive || isReadOnly();
     }
 
     private boolean isApproved() {
