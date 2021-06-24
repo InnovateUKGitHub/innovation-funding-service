@@ -24,6 +24,7 @@ public class YourOrganisationControllerSecurityTest extends BaseControllerSecuri
         roles.add(Role.SUPPORTER);
         roles.add(Role.ASSESSOR);
         roles.add(Role.SYSTEM_MAINTAINER);
+        roles.add(Role.AUDITOR);
 
         assertRolesCanPerform(() -> classUnderTest.viewPage(0L, 0L, 0L, 0L), roles);
     }

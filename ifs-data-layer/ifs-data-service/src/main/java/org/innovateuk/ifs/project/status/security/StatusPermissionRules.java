@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
@@ -107,5 +108,20 @@ public class StatusPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Competition finance users should be able to view current status of project from competition assigned to them")
     public boolean assignedCompetitionFinanceUsersCanViewProjectStatus(ProjectResource project, UserResource user){
         return userIsExternalFinanceInCompetition(project.getCompetition(), user.getId());
+    }
+    @PermissionRule(value = "VIEW_PROJECT_SETUP_COMPETITION_STATUS", description = "Auditors should be able to access current status of competitions.")
+    public boolean assignedAuditorCanViewCompetitionStatus(CompetitionResource competition, UserResource user){
+        return user.hasAuthority(Authority.AUDITOR);
+    }
+
+    @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Auditors should be able to view the current status of project.")
+    public boolean assignedAuditorCanViewProjectStatus(ProjectResource project, UserResource user){
+        return user.hasAuthority(Authority.AUDITOR);
+    }
+    @PermissionRule(
+            value = "VIEW_TEAM_STATUS",
+            description = "Auditors can see a team's status for a project on the competitions")
+    public boolean auditorCanViewTeamStatus(ProjectResource project, UserResource user) {
+        return user.hasAuthority(Authority.AUDITOR);
     }
 }

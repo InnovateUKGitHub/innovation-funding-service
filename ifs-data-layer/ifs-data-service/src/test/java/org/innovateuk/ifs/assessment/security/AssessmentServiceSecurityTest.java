@@ -136,7 +136,8 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
                 COMP_ADMIN,
                 PROJECT_FINANCE,
                 INNOVATION_LEAD,
-                STAKEHOLDER
+                STAKEHOLDER,
+                AUDITOR
         );
     }
 

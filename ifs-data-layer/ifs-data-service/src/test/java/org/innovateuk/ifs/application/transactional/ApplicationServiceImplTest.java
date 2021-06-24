@@ -649,7 +649,6 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         assertTrue(serviceResult.isSuccess());
         assertTrue(serviceResult.getSuccess());
     }
-
     @Test
     public void showApplicationTeamNoUser() {
 
@@ -744,5 +743,15 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
             assertNotSame(applicationOrganisationAddress.getOrganisationAddress(), organisationAddress);
             assertNotSame(applicationOrganisationAddress.getOrganisationAddress().getAddress(), organisationAddress.getAddress());
         }));
+    }
+    @Test
+    public void showApplicationTeamForAuditor() {
+        User user = newUser().withRoles(singleton(Role.AUDITOR)).build();
+        when(userRepositoryMock.findById(234L)).thenReturn(of(user));
+
+        ServiceResult<Boolean> serviceResult = service.showApplicationTeam(123L, 234L);
+
+        assertTrue(serviceResult.isSuccess());
+        assertTrue(serviceResult.getSuccess());
     }
 }

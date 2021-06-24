@@ -25,6 +25,7 @@ public class YourProjectFinancesControllerSecurityTest extends BaseControllerSec
         roles.add(Role.SUPPORTER);
         roles.add(Role.ASSESSOR);
         roles.add(Role.SYSTEM_MAINTAINER);
+        roles.add(Role.AUDITOR);
 
         assertRolesCanPerform(() -> classUnderTest.viewFinancesOverview(0L, 0L, 0L, null, null), roles);
     }
