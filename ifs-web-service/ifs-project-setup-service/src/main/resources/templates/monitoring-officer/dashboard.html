@@ -55,6 +55,46 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="govuk-form-group govuk-!-margin-top-6">
+                                <h2 class="govuk-heading-s">
+                                    Documents status
+                                </h2>
+                                <div class="govuk-checkboxes">
+                                    <div class="govuk-checkboxes__item">
+                                        <input id="documentsComplete"
+                                               class="govuk-checkboxes__input"
+                                               type="checkbox"
+                                               value="documentsComplete"
+                                               th:field="${form.documentsComplete}"
+                                        />
+                                        <label class="govuk-label govuk-checkboxes__label">
+                                            <span th:text="'Complete (' + ${model.monitoringOfficerSummaryView.documentsCompleteCount} + ')'">Complete (7)</span>
+                                        </label>
+                                    </div>
+                                    <div class="govuk-checkboxes__item">
+                                        <input id="documentsIncomplete"
+                                               class="govuk-checkboxes__input"
+                                               type="checkbox"
+                                               value="documentsInComplete"
+                                               th:field="${form.documentsIncomplete}"
+                                        />
+                                        <label class="govuk-label govuk-checkboxes__label">
+                                            <span th:text="'Incomplete (' + ${model.monitoringOfficerSummaryView.documentsIncompleteCount} + ')'">Incomplete (5)</span>
+                                        </label>
+                                    </div>
+                                    <div class="govuk-checkboxes__item">
+                                        <input id="documentsAwaitingReview"
+                                               class="govuk-checkboxes__input"
+                                               type="checkbox"
+                                               value="documentsAwaitingReview"
+                                               th:field="${form.documentsAwaitingReview}"
+                                        />
+                                        <label class="govuk-label govuk-checkboxes__label">
+                                            <span th:text="'Awaiting review (' + ${model.monitoringOfficerSummaryView.documentsAwaitingReviewCount} + ')'">Awaiting review (7)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="govuk-form-group">
                                 <button class="govuk-button" id="update-competition-results-button">Update results</button>
                             </div>
@@ -98,13 +138,13 @@
                                     <!-- <hr class="govuk-section-break govuk-section-break&--visible" />-->
                                     <div th:if="${projectView.documentSectionViewModel.hasDocumentSection}"
                                          class="task govuk-!-margin-top-4">
-                                        <h3 class="govuk-heading-s">
+                                        <p class="govuk-heading-s">
                                             <a th:href="${projectView.documentSectionViewModel.getDocumentLinkUrl}"
                                                class="govuk-link" th:text="Documents"/>
-                                        </h3>
+                                        </p>
+                                        <p class="status-msg msg-progress"
+                                              th:insert="project/fragments :: mo-document-status-indicator(${projectView.documentSectionViewModel.documentSectionStatus})"/>
                                     </div>
-                                    <th:block class="status"
-                                              th:insert="project/fragments :: project-setup-status-indicator(${projectView.documentSectionViewModel.documentSectionStatus})"/>
                                 </li>
                             </ul>
                         </div>

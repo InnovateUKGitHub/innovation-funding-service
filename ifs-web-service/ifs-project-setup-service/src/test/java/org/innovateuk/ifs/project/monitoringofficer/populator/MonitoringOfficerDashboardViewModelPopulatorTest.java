@@ -81,13 +81,13 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
                 .withProjectState(ProjectState.LIVE)
                 .build();
 
-        MonitoringOfficerSummaryViewModel monitoringOfficerSummaryViewModel = new MonitoringOfficerSummaryViewModel(1, 1);
+        MonitoringOfficerSummaryViewModel monitoringOfficerSummaryViewModel = new MonitoringOfficerSummaryViewModel(1, 1, 2, 0, 1);
 
-        when(monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(), true, true))
+        when(monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(), true, true, false, true, false))
                 .thenReturn(restSuccess(asList(projectResourceInLive, projectResourceInSetup)));
         when(monitoringOfficerSummaryViewModelPopulator.populate(user)).thenReturn(monitoringOfficerSummaryViewModel);
 
-        MonitoringOfficerDashboardViewModel viewModel = populator.populate(user, true, true);
+        MonitoringOfficerDashboardViewModel viewModel = populator.populate(user, true, true, false, true, false);
         assertEquals(2, viewModel.getProjects().size());
 
         assertEquals((long) projectResourceInSetup.getId(), viewModel.getProjects().get(0).getProjectId());

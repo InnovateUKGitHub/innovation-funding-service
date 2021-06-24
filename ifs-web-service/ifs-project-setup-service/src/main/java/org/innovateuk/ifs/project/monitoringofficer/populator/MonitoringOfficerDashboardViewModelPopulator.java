@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.monitoringofficer.populator;
 
-import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerDashboardDocumentSectionViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerDashboardViewModel;
@@ -43,21 +43,26 @@ public class MonitoringOfficerDashboardViewModelPopulator {
         return new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projects), monitoringOfficerSummaryViewModel);
     }
 
-    public MonitoringOfficerDashboardViewModel populate(UserResource user, boolean projectInSetup, boolean previousProject) {
+    public MonitoringOfficerDashboardViewModel populate(UserResource user,
+                                                        boolean projectInSetup,
+                                                        boolean previousProject,
+                                                        boolean documentsComplete,
+                                                        boolean documentsIncomplete,
+                                                        boolean documentsAwaitingReview) {
         List<ProjectResource> projects = monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(),
-                projectInSetup, previousProject).getSuccess();
+                projectInSetup, previousProject, documentsComplete, documentsIncomplete, documentsAwaitingReview).getSuccess();
         MonitoringOfficerSummaryViewModel monitoringOfficerSummaryViewModel = monitoringOfficerSummaryViewModelPopulator.populate(user);
 
         return new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projects), monitoringOfficerSummaryViewModel);
     }
 
-    private String documentSectionStatus(ProjectResource project, CompetitionResource competition) {
-        return sectionStatus.documentsSectionStatus(false, project, competition).getStatus();
+    private String documentSectionStatusMOView(ProjectResource project, CompetitionResource competition) {
+        return sectionStatus.documentsSectionStatus(false, project, competition, true).getStatus();
     }
 
-    private boolean hasDocumentSection(CompetitionResource competition) {
-        List<CompetitionDocumentResource> competitionDocuments = competition.getCompetitionDocuments();
-        return competitionDocuments.size() != 0;
+    private boolean hasDocumentSection(ProjectResource project) {
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+        return competitionResource.getProjectSetupStages().contains(ProjectSetupStage.DOCUMENTS);
     }
 
     private List<ProjectDashboardRowViewModel> buildProjectDashboardRows(List<ProjectResource> projects) {
@@ -65,10 +70,11 @@ public class MonitoringOfficerDashboardViewModelPopulator {
 
         return sortedProjects.stream()
                 .map(project ->
-                    new ProjectDashboardRowViewModel(project, new MonitoringOfficerDashboardDocumentSectionViewModel(documentSectionStatus(project,
-                            competitionRestService.getCompetitionById(project.getCompetition()).getSuccess()),
-                            hasDocumentSection(competitionRestService.getCompetitionById(project.getCompetition()).getSuccess()),
-                            project.getId())))
+                        new ProjectDashboardRowViewModel(project,
+                                new MonitoringOfficerDashboardDocumentSectionViewModel(documentSectionStatusMOView(project,
+                                        competitionRestService.getCompetitionById(project.getCompetition()).getSuccess()),
+                                        hasDocumentSection(project),
+                                        project.getId())))
                 .collect(toList());
     }
 

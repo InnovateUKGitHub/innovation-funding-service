@@ -79,9 +79,9 @@ public class MonitoringOfficerRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<List<ProjectResource>> filterProjectsForMonitoringOfficer(long monitoringOfficerId, boolean projectInSetup, boolean previousProject) {
+    public RestResult<List<ProjectResource>> filterProjectsForMonitoringOfficer(long monitoringOfficerId, boolean projectInSetup, boolean previousProject, boolean documentsComplete, boolean documentsIncomplete, boolean documentsAwaitingReview) {
         String uriWithParams = buildUri(String.format("%s/{monitoringOfficerId}/filter-projects", PROJECT_MONITORING_OFFICER_REST_URL),
-                projectInSetup, previousProject, monitoringOfficerId);
+                projectInSetup, previousProject, documentsComplete, documentsIncomplete, documentsAwaitingReview, monitoringOfficerId);
         return getWithRestResult(uriWithParams, projectResourceListType());
     }
 

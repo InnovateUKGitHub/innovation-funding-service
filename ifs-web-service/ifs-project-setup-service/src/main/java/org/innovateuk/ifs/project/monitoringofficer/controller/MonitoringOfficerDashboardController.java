@@ -45,7 +45,7 @@ public class MonitoringOfficerDashboardController {
                                   UserResource user,
                                   @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerDashboardForm form) {
         model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user,
-                form.isProjectInSetup(), form.isPreviousProject()));
+                form.isProjectInSetup(), form.isPreviousProject(), form.isDocumentsComplete(), form.isDocumentsIncomplete(), form.isDocumentsAwaitingReview()));
         return "monitoring-officer/dashboard";
     }
 }

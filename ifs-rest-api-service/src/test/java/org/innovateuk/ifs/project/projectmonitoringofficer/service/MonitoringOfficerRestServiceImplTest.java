@@ -49,7 +49,7 @@ public class MonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTes
         setupGetWithRestResultExpectations("/monitoring-officer/1/filter-projects?projectInSetup=true&previousProject=true",
                 projectResourceListType(), expected, OK);
 
-        RestResult<List<ProjectResource>> result = service.filterProjectsForMonitoringOfficer(userId, true, true);
+        RestResult<List<ProjectResource>> result = service.filterProjectsForMonitoringOfficer(userId, true, true, false, true, false);
 
         assertTrue(result.isSuccess());
         assertEquals(result.getSuccess(), expected);
