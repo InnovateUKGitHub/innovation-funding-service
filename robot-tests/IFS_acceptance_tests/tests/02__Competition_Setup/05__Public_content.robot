@@ -159,13 +159,12 @@ Summary: Contains the correct values when viewed
 Eligibility: server side validation and autosave
     [Documentation]    INFUND-6916, INFUND-7487
     [Tags]
-    When the user clicks the button/link            link = Eligibility
-    And the user should see the element             jQuery = p:contains("Text entered into this section will appear within the eligibility tab.")
-    And the user clicks the button/link             jQuery = button:contains("Save and review")
-    Then the user should see a summary error        Please enter content.
-    And the user should see a summary error         Please enter a heading.
-    When the user enters valid data in the eligibility details
-    And the user should see the element             jQuery = .button-clear:contains("+ add new section")
+    Given the user clicks the button/link            link = Eligibility
+    And the user should see the element              jQuery = p:contains("Text entered into this section will appear within the eligibility tab.")
+    When the user clicks the button/link             jQuery = button:contains("Save and review")
+    Then the user should see a summary error         Please enter content.
+    And the user should see a summary error          Please enter a heading.
+    And the user should see the element              jQuery = .button-clear:contains("+ add new section")
 
 Eligibility: User enters valid values and saves
     [Documentation]    INFUND-6916, INFUND-7487

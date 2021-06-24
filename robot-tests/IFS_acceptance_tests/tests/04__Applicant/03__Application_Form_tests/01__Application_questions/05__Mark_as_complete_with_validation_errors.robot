@@ -19,7 +19,6 @@ Mark as complete is impossible for empty questions
     And the error should not be visible when the text area is not empty
 
 *** Keywords ***
-
 the error should not be visible when the text area is not empty
     the applicant inserts some text again in the "Project Summary" question
     the applicant should be able to mark the question as complete
