@@ -198,7 +198,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     private Boolean alwaysOpen;
 
-    private Long clientCompetitionId;
+    private String clientCompetitionId;
 
     public Competition() {
         setupComplete = false;
@@ -1075,11 +1075,11 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
                 && questions.stream().anyMatch(question -> LOAN_BUSINESS_AND_FINANCIAL_INFORMATION == question.getQuestionSetupType());
     }
 
-    public Long getClientCompetitionId() {
+    public String getClientCompetitionId() {
         return clientCompetitionId;
     }
 
-    public void setClientCompetitionId(Long clientCompetitionId) {
+    public void setClientCompetitionId(String clientCompetitionId) {
         this.clientCompetitionId = clientCompetitionId;
     }
 }
