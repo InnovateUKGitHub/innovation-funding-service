@@ -118,7 +118,7 @@ public class Application implements ProcessActivity {
 
     private Long clientApplicationId;
 
-    private String applicantName;
+    private String clientApplicantName;
 
     public Application() {
     }
@@ -555,11 +555,11 @@ public class Application implements ProcessActivity {
         this.clientApplicationId = clientApplicationId;
     }
 
-    public String getApplicantName() {
-        return applicantName;
+    public String getClientApplicantName() {
+        return clientApplicantName;
     }
 
-    public void setApplicantName(String applicantName) {
-        this.applicantName = applicantName;
+    public void setClientApplicantName(String clientApplicantName) {
+        this.clientApplicantName = clientApplicantName;
     }
 }
