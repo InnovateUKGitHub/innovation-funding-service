@@ -71,6 +71,8 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
                     .financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(isA(AttachmentResource.class), eq(user));
             verify(attachmentPermissionsRules)
                     .competitionFinanceUsersCanFetchAnyAttachment(isA(AttachmentResource.class), eq(user));
+            verify(attachmentPermissionsRules)
+                    .auditorUsersCanFetchAnyAttachment(isA(AttachmentResource.class), eq(user));
             verifyNoMoreInteractions(attachmentPermissionsRules);
         });
     }

@@ -73,6 +73,11 @@ public class AttachmentPermissionsRules extends BasePermissionRules {
         return attachmentIsStillOrphan(attachment) ? attachmentMapper.mapToDomain(attachment).wasUploadedBy(user.getId()) : isExternalFinanceUser(user);
     }
 
+    @PermissionRule(value = "PF_ATTACHMENT_READ", description = "Competition Finance users can fetch any Attachment saved with a post, or any attachment they have uploaded that has yet to be saved with a post.")
+    public boolean auditorUsersCanFetchAnyAttachment(AttachmentResource attachment, UserResource user) {
+        return attachmentIsStillOrphan(attachment) ? attachmentMapper.mapToDomain(attachment).wasUploadedBy(user.getId()) : hasAuditorAuthority(user);
+    }
+
     @PermissionRule(value = "PF_ATTACHMENT_READ", description = "Finance Contact users can only fetch an Attachment saved with a post they are related to, or any attachment they have uploaded that has yet to be saved with a post.")
     public boolean financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(AttachmentResource attachment, UserResource user) {
         return attachmentIsStillOrphan(attachment) ? attachmentMapper.mapToDomain(attachment).wasUploadedBy(user.getId()) : projectPartnerIsAllowedToFetchQueryAttachment(attachment, user);
