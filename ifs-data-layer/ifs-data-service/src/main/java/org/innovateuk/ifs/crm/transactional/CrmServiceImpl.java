@@ -8,10 +8,13 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationAddressService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.sil.crm.resource.SilAddress;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.innovateuk.ifs.sil.crm.resource.SilOrganisation;
@@ -37,6 +40,12 @@ public class CrmServiceImpl implements CrmService {
     private BaseUserService userService;
 
     @Autowired
+    private PublicContentService publicContentService;
+
+    @Autowired
+    private CompetitionService competitionService;
+
+    @Autowired
     private OrganisationService organisationService;
 
     @Autowired
@@ -51,13 +60,15 @@ public class CrmServiceImpl implements CrmService {
     @Override
     public ServiceResult<Void> syncCrmContact(long userId) {
         return userService.getUserById(userId).andOnSuccess(user -> {
-
             syncExternalUser(user);
             syncMonitoringOfficer(user);
 
             return serviceSuccess();
         });
     }
+
+
+
 
     @Override
     public ServiceResult<Void> syncCrmContact(long userId, long projectId) {
@@ -70,7 +81,21 @@ public class CrmServiceImpl implements CrmService {
         });
     }
 
+    @Override
+    public ServiceResult<Void> syncCrmContact(long userId, long competitionId, Long applicationId) {
+      FundingType fundingType =  competitionService.getCompetitionById(competitionId).getSuccess().getFundingType();
+
+        return userService.getUserById(userId).andOnSuccess(user -> {
+            syncExternalUser(user);
+            syncMonitoringOfficer(user);
+
+            return serviceSuccess();
+        });
+    }
+
     private void syncExternalUser(UserResource user) {
+
+
         if (!user.isInternalUser()) {
             organisationService.getAllByUserId(user.getId()).andOnSuccessReturn(organisations -> {
                 ServiceResult<Void> result = serviceSuccess();
@@ -170,6 +195,9 @@ public class CrmServiceImpl implements CrmService {
         silContact.setLastName(user.getLastName());
         silContact.setTitle(Optional.ofNullable(user.getTitle()).map(Title::getDisplayName).orElse(null));
         silContact.setSrcSysContactId(String.valueOf(user.getId()));
+        silContact.setExperienceType(null);
+        silContact.setIfsAppID(null);
+        silContact.setIfsUuid(user.getUid());
         return silContact;
     }
 

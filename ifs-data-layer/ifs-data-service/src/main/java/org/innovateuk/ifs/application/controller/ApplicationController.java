@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.IneligibleOutcomeMapper;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.*;
@@ -11,12 +10,16 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+
+
 
 /**
  * ApplicationController exposes Application data and operations through a REST API.
@@ -32,6 +35,8 @@ public class ApplicationController {
     private static final String DEFAULT_SORT_BY = "id";
 
     private static final String PREVIOUS_APP_DEFAULT_FILTER = "ALL";
+
+    private static final Logger LOG = LoggerFactory.getLogger(ApplicationController.class);
 
     @Autowired
     private IneligibleOutcomeMapper ineligibleOutcomeMapper;
@@ -141,9 +146,11 @@ public class ApplicationController {
             @RequestBody JsonNode jsonObj) {
 
         String name = jsonObj.get("name").textValue();
+
         return applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId, organisationId)
                 .andOnSuccessReturn(result -> {
-                    crmService.syncCrmContact(userId);
+                    LOG.info("%s %s %s",userId,competitionId,result.getId());
+                    crmService.syncCrmContact(userId,competitionId,result.getId());
                     return result;
                 })
                 .toPostCreateResponse();

@@ -3,7 +3,9 @@ package org.innovateuk.ifs.sil.crm.resource;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class SilContact {
-
+    private String ifsUuid;
+    private String experienceType;
+    private String ifsAppID;
     private String email;
     private String lastName;
     private String firstName;
@@ -82,4 +84,29 @@ public class SilContact {
     public void setSrcSysContactId(String srcSysContactId) {
         this.srcSysContactId = srcSysContactId;
     }
+
+    public String getExperienceType() {
+        return experienceType;
+    }
+
+    public void setExperienceType(String experienceType) {
+        this.experienceType = experienceType;
+    }
+
+    public String getIfsAppID() {
+        return ifsAppID;
+    }
+
+    public void setIfsAppID(String ifsAppID) {
+        this.ifsAppID = ifsAppID;
+    }
+
+    public String getIfsUuid() {
+        return ifsUuid;
+    }
+
+    public void setIfsUuid(String ifsUuid) {
+        this.ifsUuid = ifsUuid;
+    }
+
 }
