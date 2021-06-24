@@ -90,6 +90,10 @@ public class ProjectSpendProfileApprovalViewModel {
         return auditor;
     }
 
+    public boolean isReadOnly() {
+        return isAuditor();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

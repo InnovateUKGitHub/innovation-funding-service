@@ -199,4 +199,8 @@ public class FinanceChecksQueriesViewModel {
     public boolean isAuditor() {
         return isAuditor;
     }
+
+    public boolean isReadOnly() {
+        return isAuditor();
+    }
 }

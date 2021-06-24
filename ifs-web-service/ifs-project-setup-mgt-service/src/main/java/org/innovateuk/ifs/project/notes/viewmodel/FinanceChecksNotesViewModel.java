@@ -158,4 +158,8 @@ public class FinanceChecksNotesViewModel {
     public boolean isAuditor() {
         return isAuditor;
     }
+
+    public boolean isReadOnly() {
+        return isAuditor();
+    }
 }

@@ -67,8 +67,8 @@
                 </li>
             </ul>
 
-            <th:block th:unless="${model.isAuditor()}">
-                <th:block th:if="${model.notApprovedOrRejected and model.projectIsActive and !model.isAuditor()}">
+            <th:block th:unless="${model.isReadOnly()}">
+                <th:block th:if="${model.notApprovedOrRejected and model.projectIsActive and !model.isReadOnly()}">
                     <h2 class="govuk-heading-m">Approved by Innovate UK</h2>
                     <div class="govuk-form-group">
                         <div class="govuk-checkboxes">

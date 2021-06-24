@@ -108,7 +108,7 @@
                         </ul>
                     </div>
                 </details>
-                <th:block th:with="uploadViewmode=${model.projectIsActive and !model.isAuditor()} ? 'edit' : 'readonly',
+                <th:block th:with="uploadViewmode=${model.projectIsActive and !model.isReadOnly()} ? 'edit' : 'readonly',
                                downloadUrl=@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})},
                                filename=${model.grantOfferLetterFile?.filename},
                                inputField='grantOfferLetter',
@@ -144,7 +144,7 @@
                         </ul>
                     </div>
                 </details>
-                <th:block th:with="uploadViewmode=${model.isSentToProjectTeam() or !model.projectIsActive or model.isAuditor()} ? 'readonly' : 'edit',
+                <th:block th:with="uploadViewmode=${model.isSentToProjectTeam() or !model.projectIsActive or model.isReadOnly()} ? 'readonly' : 'edit',
                                downloadUrl=@{/project/{id}/grant-offer-letter/additional-contract(id=${model.projectId})},
                                filename=${model.additionalContractFile?.filename},
                                inputField='annex',
@@ -229,7 +229,7 @@
                 </th:block>
             </th:block>
         </th:block>
-        <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true and model.projectIsActive and !model.auditor}">
+        <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true and model.projectIsActive and !model.isReadOnly()}">
             <form th:action="@{/project/{id}/grant-offer-letter/signed(id=${model.projectId})}" id="gol-decision-form" method="post" novalidate="novalidate">
                 <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset">

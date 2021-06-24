@@ -31,12 +31,12 @@
 
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
                     <h2 class="govuk-heading-m">Review notes</h2>
-                        <th:block th:unless="${model.isAuditor() and model.getNotes().isEmpty()}">
+                        <th:block th:unless="${model.isReadOnly() and model.getNotes().isEmpty()}">
                             <p class="govuk-body">
                                 Use this section to make notes related to the finance checks. Notes can only be seen by the internal team. After the finance checks are completed, this section will no longer be editable.
                             </p>
                         </th:block>
-                <th:block th:if="${!model.isAuditor}">
+                <th:block th:if="${!model.isReadOnly()}">
                     <th:block th:if="${model.projectIsActive}">
                         <div class="govuk-grid-row govuk-!-margin-top-6">
                             <div class="govuk-grid-column-one-half">
@@ -69,7 +69,7 @@
                                 </th:block>
                             </div>
                         </th:block>
-                        <th:block th:unless="${model.isAuditor}">
+                        <th:block th:unless="${model.isReadOnly()}">
                             <th:block th:if="${model.projectIsActive}">
                                 <th:block th:if="${model.noteId == null}">
                                     <a id="post-new-comment" th:href="@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl},noteId=${note.id})}" class="govuk-!-margin-top-6 govuk-button govuk-button--secondary">Comment</a>
