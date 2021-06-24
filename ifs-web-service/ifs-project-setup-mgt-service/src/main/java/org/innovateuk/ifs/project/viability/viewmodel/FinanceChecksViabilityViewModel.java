@@ -154,7 +154,7 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public boolean isReadOnly() {
-        return viabilityState == ViabilityState.APPROVED || !projectIsActive || isAuditor();
+        return isAuditor() || viabilityState == ViabilityState.APPROVED || !projectIsActive;
     }
 
     public boolean isShowApprovalMessage() {
