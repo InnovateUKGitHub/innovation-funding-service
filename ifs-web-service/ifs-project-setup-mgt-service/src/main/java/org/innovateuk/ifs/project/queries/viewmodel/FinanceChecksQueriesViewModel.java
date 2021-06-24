@@ -28,7 +28,7 @@ public class FinanceChecksQueriesViewModel {
     private final boolean projectIsActive;
     private final boolean procurementMilestonesCompetition;
     private final boolean subsidyControlCompetition;
-    private final boolean isAuditor;
+    private final boolean isReadOnly;
 
     public FinanceChecksQueriesViewModel(String organisationName,
                                          boolean leadPartnerOrganisation,
@@ -47,7 +47,7 @@ public class FinanceChecksQueriesViewModel {
                                          boolean projectIsActive,
                                          boolean procurementMilestonesCompetition,
                                          boolean subsidyControlCompetition,
-                                         boolean isAuditor) {
+                                         boolean isReadOnly) {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.financeContact= financeContact;
@@ -65,7 +65,7 @@ public class FinanceChecksQueriesViewModel {
         this.projectIsActive = projectIsActive;
         this.procurementMilestonesCompetition = procurementMilestonesCompetition;
         this.subsidyControlCompetition = subsidyControlCompetition;
-        this.isAuditor = isAuditor;
+        this.isReadOnly = isReadOnly;
     }
 
     public String getOrganisationName() {
@@ -196,11 +196,7 @@ public class FinanceChecksQueriesViewModel {
         return subsidyControlCompetition;
     }
 
-    public boolean isAuditor() {
-        return isAuditor;
-    }
-
     public boolean isReadOnly() {
-        return isAuditor();
+        return isReadOnly;
     }
 }

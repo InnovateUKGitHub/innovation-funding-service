@@ -16,7 +16,7 @@ public class ProjectFinanceCheckSummaryViewModel {
     private boolean userHasExternalFinanceRole;
     private final boolean hasSpendProfileStage;
     private final boolean subsidyControlCompetition;
-    private final boolean userHasAuditorAuthority;
+    private final boolean isReadOnly;
 
     public ProjectFinanceCheckSummaryViewModel(FinanceCheckSummaryResource financeCheckSummaryResource,
                                                boolean projectIsActive,
@@ -25,7 +25,7 @@ public class ProjectFinanceCheckSummaryViewModel {
                                                boolean userHasExternalFinanceRole,
                                                boolean hasSpendProfileStage,
                                                boolean subsidyControlCompetition,
-                                               boolean userHasAuditorAuthority) {
+                                               boolean isReadOnly) {
         this.financeCheckSummaryResource = financeCheckSummaryResource;
         this.projectIsActive = projectIsActive;
         this.collaborativeProject = collaborativeProject;
@@ -33,7 +33,7 @@ public class ProjectFinanceCheckSummaryViewModel {
         this.userHasExternalFinanceRole = userHasExternalFinanceRole;
         this.hasSpendProfileStage = hasSpendProfileStage;
         this.subsidyControlCompetition = subsidyControlCompetition;
-        this.userHasAuditorAuthority = userHasAuditorAuthority;
+        this.isReadOnly = isReadOnly;
     }
 
     private boolean isGenerateSpendProfileReady() {
@@ -85,12 +85,8 @@ public class ProjectFinanceCheckSummaryViewModel {
         return userHasExternalFinanceRole;
     }
 
-    public boolean isUserHasAuditorAuthority() {
-        return userHasAuditorAuthority;
-    }
-
     public boolean canEditProjectDuration()  {
-        return !userHasExternalFinanceRole && !financeCheckSummaryResource.isSpendProfilesGenerated() && !userHasAuditorAuthority;
+        return !userHasExternalFinanceRole && !financeCheckSummaryResource.isSpendProfilesGenerated() && !isReadOnly;
     }
 
     public boolean isHasSpendProfileStage() {
@@ -105,7 +101,7 @@ public class ProjectFinanceCheckSummaryViewModel {
     }
 
     public boolean isReadOnly() {
-        return userHasAuditorAuthority;
+        return isReadOnly;
     }
 
     public boolean isSubsidyControlCompetition() {

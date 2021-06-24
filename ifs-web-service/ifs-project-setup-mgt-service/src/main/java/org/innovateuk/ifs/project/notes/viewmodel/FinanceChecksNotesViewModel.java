@@ -22,7 +22,7 @@ public class FinanceChecksNotesViewModel {
     private Long noteId;
     private Long applicationId;
     private final boolean projectIsActive;
-    private final boolean isAuditor;
+    private final boolean isReadOnly;
 
     public FinanceChecksNotesViewModel(String organisationName,
                                        boolean leadPartnerOrganisation,
@@ -37,7 +37,7 @@ public class FinanceChecksNotesViewModel {
                                        Long noteId,
                                        Long applicationId,
                                        boolean projectIsActive,
-                                       boolean isAuditor) {
+                                       boolean isReadOnly) {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.projectId = projectId;
@@ -51,7 +51,7 @@ public class FinanceChecksNotesViewModel {
         this.noteId = noteId;
         this.applicationId = applicationId;
         this.projectIsActive = projectIsActive;
-        this.isAuditor = isAuditor;
+        this.isReadOnly = isReadOnly;
     }
 
     public String getOrganisationName() {
@@ -155,11 +155,7 @@ public class FinanceChecksNotesViewModel {
         return projectIsActive;
     }
 
-    public boolean isAuditor() {
-        return isAuditor;
-    }
-
     public boolean isReadOnly() {
-        return isAuditor();
+        return isReadOnly;
     }
 }
