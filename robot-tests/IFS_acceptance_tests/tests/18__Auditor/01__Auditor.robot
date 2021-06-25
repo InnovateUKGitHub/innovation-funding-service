@@ -92,7 +92,7 @@ Auditor can view MO in the project setup
     Then the user sees read only view of MO
 
 Auditor can view the finance details of the organisations
-    [Documentation]  IFS-9886
+    [Documentation]  IFS-9886  IFS-9887
     Then the user sees the read only view of completed finance checks
     And the user sees the read only view of under review finance checks
 
@@ -111,8 +111,8 @@ Auditor can view the GOL for the organisations
 
 Auditor cannot view the bank details with the 'Review' status for the organisation
     [Documentation]  IFS-9886
-    Given the user navigates to the page       ${SERVER}/project-setup-management/competition/${competitionID}/status/all
-    Then the user cannot click the element
+    Given the user navigates to the page            ${SERVER}/project-setup-management/competition/${competitionID}/status/all
+    Then the user cannot click the review button
 
 *** Keywords ***
 Custom suite setup
@@ -200,6 +200,6 @@ the user sees the read only view of under review finance checks
     the user navigates to the page         ${SERVER}/project-setup-management/project/${projectID2}/finance-check/organisation/${Gabtype_Id}/note
     the user should not see the element    id="post-new-note"
 
-the user cannot click the element
+the user cannot click the review button
     ${pagination} =   Run Keyword And Ignore Error Without Screenshots   The user should see the element in the paginated list    jQuery = tr:nth-of-type(2) td:nth-of-type(5).status.action
     run keyword if    ${pagination} == 'PASS'   the element should be disabled       jQuery = tr:nth-of-type(2) td:nth-of-type(5).status.action:contains("Review")
