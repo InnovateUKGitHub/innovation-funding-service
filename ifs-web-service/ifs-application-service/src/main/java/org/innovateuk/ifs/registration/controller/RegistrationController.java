@@ -187,7 +187,7 @@ public class RegistrationController {
 
         return validationHandler.failNowOrSucceedWith(
                 () -> registerForm(registrationForm, model, user, request, response),
-                () -> createUser(registrationForm, getOrganisationId(request), getCompetitionId(request)).handleSuccessOrFailure(
+                () -> createUser(registrationForm, getOrganisationId(request), getCompetitionId(request),getApplicationId(request)).handleSuccessOrFailure(
                         failure -> {
                             addValidationErrors(validationHandler, failure);
                             return registerForm(registrationForm, model, user, request, response);
@@ -339,11 +339,12 @@ public class RegistrationController {
         }
     }
 
-    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId, Long competitionId) {
+    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId, Long competitionId, Long applicationId) {
         return userRestService.createUser(
                 registrationForm.constructUserCreationResource()
                 .withOrganisationId(organisationId)
                 .withCompetitionId(competitionId)
+                 .withApplicationId(applicationId)
                 .withRole(Role.APPLICANT)
                 .build())
                 .toServiceResult();
@@ -355,6 +356,9 @@ public class RegistrationController {
 
     private Long getOrganisationId(HttpServletRequest request) {
         return registrationCookieService.getOrganisationIdCookieValue(request).orElse(null);
+    }
+    private Long getApplicationId(HttpServletRequest request) {
+        return registrationCookieService.getApplicationIdCookieValue(request).orElse(null);
     }
 
     private void setOrganisationIdCookie(HttpServletRequest request, HttpServletResponse response) {

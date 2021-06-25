@@ -16,7 +16,7 @@ public interface UserRestService {
 
     RestResult<UserResource> retrieveUserById(long id);
 
-    RestResult<UserResource> createUser(UserCreationResource user);
+    RestResult<UserResource> createUser(Object user);
 
     RestResult<List<UserResource>> findAll();
 

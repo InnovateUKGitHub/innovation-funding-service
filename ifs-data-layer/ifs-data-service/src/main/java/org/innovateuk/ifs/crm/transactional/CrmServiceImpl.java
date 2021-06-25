@@ -60,7 +60,7 @@ public class CrmServiceImpl implements CrmService {
     @Override
     public ServiceResult<Void> syncCrmContact(long userId) {
         return userService.getUserById(userId).andOnSuccess(user -> {
-            syncExternalUser(user);
+            syncExternalUser(user,null,null);
             syncMonitoringOfficer(user);
 
             return serviceSuccess();
@@ -86,14 +86,14 @@ public class CrmServiceImpl implements CrmService {
       FundingType fundingType =  competitionService.getCompetitionById(competitionId).getSuccess().getFundingType();
 
         return userService.getUserById(userId).andOnSuccess(user -> {
-            syncExternalUser(user);
+            syncExternalUser(user,fundingType.getDisplayName(),applicationId);
             syncMonitoringOfficer(user);
 
             return serviceSuccess();
         });
     }
 
-    private void syncExternalUser(UserResource user) {
+    private void syncExternalUser(UserResource user, String fundingType, Long applicationId) {
 
 
         if (!user.isInternalUser()) {
@@ -101,7 +101,7 @@ public class CrmServiceImpl implements CrmService {
                 ServiceResult<Void> result = serviceSuccess();
                 for (OrganisationResource organisation : organisations) {
                     result = result.andOnSuccess(() -> {
-                        SilContact silContact = externalUserToSilContact(user, organisation);
+                        SilContact silContact = externalUserToSilContact(user, organisation,fundingType,applicationId);
                         getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
                     });
                 }
@@ -113,7 +113,7 @@ public class CrmServiceImpl implements CrmService {
     private void syncExternalUser(UserResource user, long projectId) {
         if (!user.isInternalUser()) {
             organisationService.getByUserAndProjectId(user.getId(), projectId).andOnSuccessReturn(organisation -> {
-                SilContact silContact = externalUserToSilContact(user, organisation);
+                SilContact silContact = externalUserToSilContact(user, organisation, null, null);
                 getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
                 return serviceSuccess();
             });
@@ -135,14 +135,11 @@ public class CrmServiceImpl implements CrmService {
         return silCrmEndpoint.updateContact(silContact);
     }
 
-    private SilContact externalUserToSilContact(UserResource user, OrganisationResource organisation) {
+    private SilContact externalUserToSilContact(UserResource user, OrganisationResource organisation, String displayName, Long applicationId) {
 
-        SilContact silContact = setSilContactDetails(user);
+        SilContact silContact = setSilContactDetails(user,displayName,applicationId);
 
-        SilOrganisation silOrganisation = new SilOrganisation();
-        silOrganisation.setName(organisation.getName());
-        silOrganisation.setRegistrationNumber(organisation.getCompaniesHouseNumber());
-        silOrganisation.setSrcSysOrgId(String.valueOf(organisation.getId()));
+        SilOrganisation silOrganisation = setSilOrganisation(organisation.getName(), organisation.getCompaniesHouseNumber(), String.valueOf(organisation.getId()));
 
         if (newOrganisationSearchEnabled) {
             silOrganisation.setRegisteredAddress(getRegisteredAddress(organisation));
@@ -151,6 +148,14 @@ public class CrmServiceImpl implements CrmService {
         silContact.setOrganisation(silOrganisation);
 
         return silContact;
+    }
+
+    private SilOrganisation setSilOrganisation(String name, String companiesHouseNumber, String s) {
+        SilOrganisation silOrganisation = new SilOrganisation();
+        silOrganisation.setName(name);
+        silOrganisation.setRegistrationNumber(companiesHouseNumber);
+        silOrganisation.setSrcSysOrgId(s);
+        return silOrganisation;
     }
 
     private SilAddress getRegisteredAddress(OrganisationResource organisation) {
@@ -187,7 +192,7 @@ public class CrmServiceImpl implements CrmService {
         return silAddress;
     }
 
-    private SilContact setSilContactDetails(UserResource user) {
+    private SilContact setSilContactDetails(UserResource user, String displayName, Long applicationId) {
 
         SilContact silContact = new SilContact();
         silContact.setEmail(user.getEmail());
@@ -195,20 +200,17 @@ public class CrmServiceImpl implements CrmService {
         silContact.setLastName(user.getLastName());
         silContact.setTitle(Optional.ofNullable(user.getTitle()).map(Title::getDisplayName).orElse(null));
         silContact.setSrcSysContactId(String.valueOf(user.getId()));
-        silContact.setExperienceType(null);
-        silContact.setIfsAppID(null);
+        silContact.setExperienceType(displayName);
+        silContact.setIfsAppID(String.valueOf(applicationId));
         silContact.setIfsUuid(user.getUid());
         return silContact;
     }
 
     private SilContact monitoringOfficerToSilContact(UserResource user) {
 
-        SilContact silContact = setSilContactDetails(user);
+        SilContact silContact = setSilContactDetails(user, null, null);
 
-        SilOrganisation moSilOrganisation = new SilOrganisation();
-        moSilOrganisation.setName("IFS MO Company");
-        moSilOrganisation.setRegistrationNumber("");
-        moSilOrganisation.setSrcSysOrgId("IFSMO01");
+        SilOrganisation moSilOrganisation = setSilOrganisation("IFS MO Company", "", "IFSMO01");
 
         silContact.setOrganisation(moSilOrganisation);
 

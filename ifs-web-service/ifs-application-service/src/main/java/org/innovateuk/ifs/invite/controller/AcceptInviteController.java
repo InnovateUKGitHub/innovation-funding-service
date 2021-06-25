@@ -105,8 +105,13 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
                             OrganisationResource organisation =
                                     organisationRestService.getOrganisationByIdForAnonymousUserFlow(
                                     inviteOrganisation.getOrganisation()).getSuccess();
-                            registrationCookieService.saveToOrganisationIdCookie(inviteOrganisation.getOrganisation()
-                                    , response);
+                    registrationCookieService.saveToOrganisationIdCookie(inviteOrganisation.getOrganisation()
+                            , response);
+                    registrationCookieService.saveToApplicationIdIdCookie(invite.getApplication()
+                            , response);
+
+
+
                     ConfirmOrganisationInviteOrganisationViewModel viewModel =
                             confirmOrganisationInviteModelPopulator.populate(invite, organisation,
                             RegistrationController.BASE_URL);
