@@ -26,6 +26,9 @@ import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -69,6 +72,12 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
     private List<PartnerOrganisation> partnerOrganisations;
 
     @Mock
+    private User user;
+
+    @Mock
+    private UserResource userResource;
+
+    @Mock
     private ProjectRepository projectRepository;
 
     @Mock
@@ -85,6 +94,9 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
     @Mock
     private ActivityLogService activityLogService;
+
+    @Mock
+    private UserRepository userRepository;
 
     @Before
     public void setUp() {
@@ -132,6 +144,10 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         when(competitionDocumentConfigRepository.findById(documentConfigId)).thenReturn(Optional.of(configuredCompetitionDocument));
         when(partnerOrganisationRepository.findByProjectId(projectId)).thenReturn(partnerOrganisations);
         when(competitionDocumentConfigRepository.findByCompetitionId(competition.getId())).thenReturn(competitionDocuments);
+
+        when(userResource.getId()).thenReturn(3L);
+        when(userRepository.findById(3L)).thenReturn(Optional.of(user));
+        setLoggedInUser(userResource);
     }
 
     @Test
@@ -365,6 +381,10 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
     @Test
     public void documentDecisionWhenRejected() {
+
+        when(userResource.getId()).thenReturn(3L);
+        when(userRepository.findById(3L)).thenReturn(Optional.of(user));
+        setLoggedInUser(userResource);
 
         String rejectionReason = "Missing details";
         projectDocument.setStatus(SUBMITTED);

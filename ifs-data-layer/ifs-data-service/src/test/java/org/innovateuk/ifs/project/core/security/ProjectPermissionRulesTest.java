@@ -11,18 +11,17 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
-import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectPermissionRules> {
@@ -212,4 +211,28 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
         assertFalse(rules.supportCanViewFinanceReviewer(project, user));
     }
+
+    @Test
+    public void auditorsCanViewProjects() {
+        User auditor = newUser().withRoles(singleton(AUDITOR)).build();
+        UserResource auditorResource = newUserResource().withId(auditor.getId()).withRoleGlobal(AUDITOR).build();
+        Competition competition = newCompetition().build();
+
+        ProjectResource project = newProjectResource()
+                .withCompetition(competition.getId())
+                .build();
+
+        assertTrue(rules.auditorsCanViewProjects(project, auditorResource));
+
+    }
+
+    @Test
+    public void auditorCanViewFinanceReviewer() {
+        User auditor = newUser().withRoles(singleton(AUDITOR)).build();
+        UserResource auditorResource = newUserResource().withId(auditor.getId()).withRoleGlobal(AUDITOR).build();
+        ProjectResource project = newProjectResource().build();
+
+        assertTrue(rules.auditorCanViewFinanceReviewer(project, auditorResource));
+    }
+
 }
