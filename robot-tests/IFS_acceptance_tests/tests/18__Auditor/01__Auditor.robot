@@ -75,20 +75,20 @@ Auditor can not be added as a collaborator to an application
 Auditor can view Project detials in the Project setup
     [Documentation]  IFS-9886
     Given log in as a different user                            &{auditorCredentials}
-    And The user navigates to the page                          ${SERVER}/project-setup-management/competition/${competitionID}/status/all
-    When The user clicks the button/link                        jQuery = #table-project-status tr:nth-of-type(1) td:nth-of-type(1) a:contains("Complete")
+    And the user navigates to the page                          ${SERVER}/project-setup-management/competition/${competitionID}/status/all
+    When the user clicks the button/link                        jQuery = #table-project-status tr:nth-of-type(1) td:nth-of-type(1) a:contains("Complete")
     Then the user sees the read only view of project details
 
 Auditor can view Project team in the project setup
     [Documentation]  IFS-9886
-    Given The user navigates to the page                    ${SERVER}/project-setup-management/competition/${competitionID}/status/all
-    When The user clicks the button/link                    jQuery = #table-project-status tr:nth-of-type(1) td:nth-of-type(2) a:contains("Complete")
+    Given the user navigates to the page                    ${SERVER}/project-setup-management/competition/${competitionID}/status/all
+    When the user clicks the button/link                    jQuery = #table-project-status tr:nth-of-type(1) td:nth-of-type(2) a:contains("Complete")
     Then the user sees the read only view of project team
 
 Auditor can view MO in the project setup
     [Documentation]  IFS-9886
-    Given The user navigates to the page       ${SERVER}/project-setup-management/competition/${competitionID}/status/all
-    When The user clicks the button/link       jQuery = #table-project-status tr:nth-of-type(1) td:nth-of-type(4) a:contains("Assigned")
+    Given the user navigates to the page       ${SERVER}/project-setup-management/competition/${competitionID}/status/all
+    When the user clicks the button/link       jQuery = #table-project-status tr:nth-of-type(1) td:nth-of-type(4) a:contains("Assigned")
     Then the user sees read only view of MO
 
 Auditor can view the finance details of the organisations
@@ -98,8 +98,8 @@ Auditor can view the finance details of the organisations
 
 Auditor can view the bank details for the organisations
     [Documentation]  IFS-9886
-    Given the user navigates to the page       ${SERVER}/project-setup-management/project/${projectID2}/organisation/${Gabtype_Id}/review-bank-details
-    Then the user should see the element       jQuery = h2:contains("Gabtype - Account details")
+    Given the user navigates to the page       ${SERVER}/project-setup-management/project/${projectID1}/organisation/${Crystalrover_Id}/review-bank-details
+    Then the user should see the element       jQuery = h2:contains("Crystalrover - Account details")
     And the user should not see the element    jQuery = button:contains("Approve bank account details")
     And the user should not see the element    jQuery = a:contains("Change bank account details")
 
@@ -108,6 +108,11 @@ Auditor can view the GOL for the organisations
     Given the user navigates to the page       ${SERVER}/project-setup-management/project/${projectID1}/grant-offer-letter/send
     Then the user should see the element       jQuery = h1:contains("Grant offer letter")
     And the user should not see the element    jQuery = label:contains("Upload")
+
+Auditor cannot view bank details for teh organisation if in review state
+    [Documentation]  IFS-9886
+    Given the user navigates to the page       ${SERVER}/project-setup-management/competition/${competitionID}/status/all
+    Then the user cannot click the element
 
 *** Keywords ***
 Custom suite setup
@@ -157,8 +162,8 @@ the user sees the read only view of project details
     the user should not see the element   jQuery = a:contains("Edit")
 
 the user sees the read only view of project team
-   the user should see the element       jQuery = h1:contains("Project team")
-   the user should not see the element   jQuery = button:contains("Add team member")
+    the user should see the element       jQuery = h1:contains("Project team")
+    the user should not see the element   jQuery = button:contains("Add team member")
 
 the user sees read only view of MO
     the user navigates to the page         ${SERVER}/project-setup-management/project/${projectID}/monitoring-officer
@@ -166,9 +171,10 @@ the user sees read only view of MO
     the user should not see the element    jQuery = a:contains("Change monitoring officer")
 
 the user sees the read only view of completed finance checks
-    The user navigates to the page         ${SERVER}/project-setup-management/project/${projectID1}/finance-check/organisation/${Crystalrover_Id}/viability
+    the user navigates to the page         ${SERVER}/project-setup-management/project/${projectID1}/finance-check/organisation/${Crystalrover_Id}/viability
     the user should see the element        jQuery = h1:contains("Viability check for Crystalrover")
     the user should not see the element    jQuery = span:contains("Reset viability check")
+    the user clicks the button/link        jQuery = a:contains("Return to finance checks")
     the user navigates to the page         ${SERVER}/project-setup-management/project/${projectID1}/finance-check/organisation/${Crystalrover_Id}/eligibility
     the user should see the element        jQuery = h1:contains("Eligibility check for Crystalrover")
     the user should not see the element    jQuery = span:contains("Reset eligibility check")
@@ -179,11 +185,12 @@ the user sees the read only view of completed finance checks
     the user should not see the element    id="post-new-note"
 
 the user sees the read only view of under review finance checks
-    The user navigates to the page         ${SERVER}/project-setup-management/project/${projectID2}/finance-check/organisation/${Gabtype_Id}/viability
+    the user navigates to the page         ${SERVER}/project-setup-management/project/${projectID2}/finance-check/organisation/${Gabtype_Id}/viability
     the user should see the element        jQuery = h1:contains("Viability check for Gabtype")
     the user should not see the element    jQuery = span:contains("Reset viability check")
     the user should not see the element    id = confirm-button
-    The user navigates to the page         ${SERVER}/project-setup-management/project/${projectID2}/finance-check/organisation/${Gabtype_Id}/eligibility
+    the user clicks the button/link        jQuery = a:contains("Return to finance checks")
+    the user navigates to the page         ${SERVER}/project-setup-management/project/${projectID2}/finance-check/organisation/${Gabtype_Id}/eligibility
     the user should see the element        jQuery = h1:contains("Eligibility check for Gabtype")
     the user should not see the element    jQuery = a:contains("Edit project costs")
     the user should not see the element    id = confirm-button
@@ -192,3 +199,7 @@ the user sees the read only view of under review finance checks
     the user should not see the element    jQuery = a:contains("Post a new query")
     the user navigates to the page         ${SERVER}/project-setup-management/project/${projectID2}/finance-check/organisation/${Gabtype_Id}/note
     the user should not see the element    id="post-new-note"
+
+the user cannot click the element
+    ${pagination} =   Run Keyword And Ignore Error Without Screenshots   The user should see the element in the paginated list    jQuery = tr:nth-of-type(2) td:nth-of-type(5).status.action
+    run keyword if    ${pagination} == 'PASS'   the element should be disabled       jQuery = tr:nth-of-type(2) td:nth-of-type(5).status.action:contains("Review")
