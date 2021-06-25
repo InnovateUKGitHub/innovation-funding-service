@@ -96,7 +96,7 @@ Auditor can view the finance details of the organisations
     Then the user sees the read only view of completed finance checks
     And the user sees the read only view of under review finance checks
 
-Auditor can view the bank details for the organisations
+Auditor can view the bank details with the 'Complete' status for the organisations
     [Documentation]  IFS-9886
     Given the user navigates to the page       ${SERVER}/project-setup-management/project/${projectID1}/organisation/${Crystalrover_Id}/review-bank-details
     Then the user should see the element       jQuery = h2:contains("Crystalrover - Account details")
@@ -109,7 +109,7 @@ Auditor can view the GOL for the organisations
     Then the user should see the element       jQuery = h1:contains("Grant offer letter")
     And the user should not see the element    jQuery = label:contains("Upload")
 
-Auditor cannot view bank details for teh organisation if in review state
+Auditor cannot view the bank details with the 'Review' status for the organisation
     [Documentation]  IFS-9886
     Given the user navigates to the page       ${SERVER}/project-setup-management/competition/${competitionID}/status/all
     Then the user cannot click the element
