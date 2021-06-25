@@ -17,6 +17,6 @@ data:
   LDAP_BINDDN: "${LDAP_BINDDN}"
   LDAP_PASSWORD: "${LDAP_PASSWORD}"
   LDAP_USERFILTER: "(&(mail={user})(!(employeeType=inactive)))"
-  LDAP_ATTRIBUTE_SEARCHFILTER: "(mail=\$resolutionContext.principal)"
+  LDAP_ATTRIBUTE_SEARCHFILTER: "(mail=$resolutionContext.principal)"
   LDAP_RETURNATTRIBUTES: "mail,uid"
   LDAP_AUTHENTICATOR: "${LDAP_AUTHENTICATOR}"

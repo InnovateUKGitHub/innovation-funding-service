@@ -6,6 +6,9 @@ metadata:
     pullSecrets: pullSecrets
 spec:
   replicas: 2
+  selector:
+    matchLabels:
+      app: shib
   template:
     metadata:
       labels:
