@@ -17,7 +17,7 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project setup',size='govuk-heading-l'" />
             <form th:object="${form}" method="post" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
                 <div class="govuk-grid-row">
-                <div class="govuk-grid-column-one-third">
+                    <div class="govuk-grid-column-one-third">
                     <form id="filter-projects" method="GET">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-0">
@@ -38,7 +38,7 @@
                                                value="projectInSetup"
                                                th:field="${form.projectInSetup}"
                                         />
-                                        <label class="govuk-label govuk-checkboxes__label">
+                                        <label for="projectInSetup" class="govuk-label govuk-checkboxes__label">
                                             <span th:text="'In setup (' + ${model.monitoringOfficerSummaryView.inSetupProjectCount} + ')'">In setup (18)</span>
                                         </label>
                                     </div>
@@ -49,7 +49,7 @@
                                                value="previousProject"
                                                th:field="${form.previousProject}"
                                         />
-                                        <label class="govuk-label govuk-checkboxes__label">
+                                        <label for="previousProject" class="govuk-label govuk-checkboxes__label">
                                             <span th:text="'Previous (' + ${model.monitoringOfficerSummaryView.previousProjectCount} + ')'">Previous (5)</span>
                                         </label>
                                     </div>
@@ -61,51 +61,51 @@
                         </fieldset>
                     </form>
                 </div>
-                <div class="govuk-grid-column-two-thirds">
-                    <h2 class="govuk-heading-s govuk-!-margin-0" th:text="${model.projectCount} + ' projects'">37 projects</h2>
-                    <hr class="govuk-section-break govuk-section-break--visible" />
-                    <th:block th:unless="${model.emptyResults}">
-                        <div class="progress-list progress-list--individual-blocks">
-                            <ul>
-                                <li th:each="projectView : ${model.projects}">
-                                    <div class="task">
-                                        <h3 class="govuk-heading-s">
-                                            <a th:href="${projectView.linkUrl}" th:text="${projectView.title}" class="govuk-link">PROJECT NAME</a>
-                                        </h3>
-                                        <ul class="application-details">
-                                            <li>Project number: <span th:text="${projectView.applicationNumber}">PROJECT NUMBER</span></li>
-                                            <li>Competition: <span th:text="${projectView.competitionTitle}">COMPETITION NAME</span></li>
-                                        </ul>
-                                    </div>
-                                    <div class="status">
-                                        <th:block th:unless="${projectView.projectState.complete}">
-                                            <strong class="status-msg msg-progress">
+                    <div class="govuk-grid-column-two-thirds">
+                        <h2 class="govuk-heading-s govuk-!-margin-0" th:text="${model.projectCount == 1 ? '1 project' : model.projectCount + ' projects' }">37 projects</h2>
+                        <th:block th:if="${model.emptyResults}">
+                            <div class="govuk-!-margin-bottom-6">
+                                <h2 class="govuk-heading-l">Please try:</h2>
+                                <ul class="govuk-list govuk-list--bullet">
+                                    <li>searching again using different keywords</li>
+                                    <li>removing your filters</li>
+                                </ul>
+                            </div>
+                        </th:block>
+                        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0" />
+                        <th:block th:unless="${model.emptyResults}">
+                            <div class="progress-list progress-list--individual-blocks">
+                                <ul>
+                                    <li th:each="projectView : ${model.projects}">
+                                        <div class="task">
+                                            <h3 class="govuk-heading-s">
+                                                <a th:href="${projectView.linkUrl}" th:text="${projectView.title}" class="govuk-link">PROJECT NAME</a>
+                                            </h3>
+                                            <ul class="application-details">
+                                                <li>Project number: <span th:text="${projectView.applicationNumber}">PROJECT NUMBER</span></li>
+                                                <li>Competition: <span th:text="${projectView.competitionTitle}">COMPETITION NAME</span></li>
+                                            </ul>
+                                        </div>
+                                        <div class="status">
+                                            <th:block th:unless="${projectView.projectState.complete}">
+                                                <strong class="status-msg msg-progress">
                                                 Monitor project
                                             </strong>
-                                        </th:block>
-                                        <th:block th:if="${projectView.projectState.complete}">
-                                            <p th:if="${projectView.liveOrCompletedOffline}" class="govuk-body status-msg msg-progress">Live project</p>
-                                            <p th:if="${projectView.unsuccessful}" class="govuk-body status-msg msg-progress msg-negative">Unsuccessful</p>
-                                            <p th:if="${projectView.withdrawn}" class="govuk-body status-msg msg-progress">Withdrawn</p>
-                                        </th:block>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </th:block>
-                    <th:block th:if="${model.emptyResults}">
-                        <p class="govuk-body icon-info">No results found.<br/>Please check your search criteria and try again.</p>
-                    </th:block>
+                                            </th:block>
+                                            <th:block th:if="${projectView.projectState.complete}">
+                                                <p th:if="${projectView.liveOrCompletedOffline}" class="govuk-body status-msg msg-progress">Live project</p>
+                                                <p th:if="${projectView.unsuccessful}" class="govuk-body status-msg msg-progress msg-negative">Unsuccessful</p>
+                                                <p th:if="${projectView.withdrawn}" class="govuk-body status-msg msg-progress">Withdrawn</p>
+                                            </th:block>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </th:block>
+                    </div>
                 </div>
-            </div>
             </form>
-            <section class="terms-and-conditions">
-                <p class="govuk-body"><a href="/info/terms-and-conditions" class="govuk-link">Read the terms and conditions</a></p>
-            </section>
         </div>
-
-
-        <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>
 

@@ -31,7 +31,9 @@ import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProj
 import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class MonitoringOfficerRepositoryTest extends BaseRepositoryIntegrationTest<MonitoringOfficerRepository> {
 
@@ -120,6 +122,8 @@ public class MonitoringOfficerRepositoryTest extends BaseRepositoryIntegrationTe
         List<MonitoringOfficer> monitoringOfficerOnProjects = repository.filterMonitoringOfficerProjects(monitoringOfficer.getId(),
                 asList(SETUP, LIVE));
 
+        assertEquals(2, monitoringOfficerOnProjects.size());
+
         assertTrue(monitoringOfficerOnProjects.stream()
                 .anyMatch(mp -> mp.getUser().getId().equals(monitoringOfficer.getId())
                         && mp.getProject().getId().equals(project1.getId())
@@ -128,5 +132,8 @@ public class MonitoringOfficerRepositoryTest extends BaseRepositoryIntegrationTe
                 .anyMatch(mp -> mp.getUser().getId().equals(monitoringOfficer.getId())
                         && mp.getProject().getId().equals(project2.getId())
                         && mp.getProject().getProjectState().equals(LIVE)));
+
+        assertTrue(monitoringOfficerOnProjects.get(0).getProject().getId() <  monitoringOfficerOnProjects.get(1).getProject().getId());
+        assertThat(monitoringOfficerOnProjects).containsExactlyInAnyOrder(monitoringOfficerProject1, monitoringOfficerProject2);
     }
 }
