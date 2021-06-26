@@ -111,7 +111,7 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
         when(projectMapper.mapToResource(projectInSetup)).thenReturn(projectResourceInSetup);
         when(projectMapper.mapToResource(projectLive)).thenReturn(projectResourceLive);
 
-        ServiceResult<List<ProjectResource>> result = service.filterMonitoringOfficerProjects(userId, true, true);
+        ServiceResult<List<ProjectResource>> result = service.filterMonitoringOfficerProjects(userId, true, true, false, true, false);
 
         assertTrue(result.isSuccess());
         assertEquals(2, result.getSuccess().size());
@@ -127,7 +127,7 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
         when(projectMapper.mapToResource(projectInSetup)).thenReturn(projectResourceInSetup);
         when(projectMapper.mapToResource(projectLive)).thenReturn(projectResourceLive);
 
-        ServiceResult<List<ProjectResource>> result = service.filterMonitoringOfficerProjects(userId, false, false);
+        ServiceResult<List<ProjectResource>> result = service.filterMonitoringOfficerProjects(userId, false, false, false, false, false);
 
         assertTrue(result.isSuccess());
         assertEquals(2, result.getSuccess().size());

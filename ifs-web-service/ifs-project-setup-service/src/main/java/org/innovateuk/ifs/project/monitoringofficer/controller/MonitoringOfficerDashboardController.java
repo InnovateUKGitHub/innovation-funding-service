@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/monitoring-officer/dashboard")
 @Controller
@@ -43,9 +40,13 @@ public class MonitoringOfficerDashboardController {
     @PostMapping
     public String filterDashboard(Model model,
                                   UserResource user,
-                                  @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerDashboardForm form) {
-        model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user,
-                form.isProjectInSetup(), form.isPreviousProject(), form.isDocumentsComplete(), form.isDocumentsIncomplete(), form.isDocumentsAwaitingReview()));
+                                  @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerDashboardForm form,
+                                  @RequestParam(value = "projectInSetup", required = false) boolean projectInSetup,
+                                  @RequestParam(value = "previousProject", required = false) boolean previousProject,
+                                  @RequestParam(value = "documentsComplete", required = false) boolean documentsComplete,
+                                  @RequestParam(value = "documentsInComplete", required = false) boolean documentsInComplete,
+                                  @RequestParam(value = "documentsAwaitingReview", required = false) boolean documentsAwaitingReview) {
+        model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user, projectInSetup, previousProject, documentsComplete, documentsInComplete, documentsAwaitingReview));
         return "monitoring-officer/dashboard";
     }
 }

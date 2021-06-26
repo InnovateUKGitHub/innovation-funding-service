@@ -61,8 +61,11 @@ public class MonitoringOfficerController {
     @GetMapping("{userId}/filter-projects")
     public RestResult<List<ProjectResource>> filterMonitoringOfficerProjects(@PathVariable final long userId,
                                                                              @RequestParam(value = "projectInSetup", required = false, defaultValue = "false") boolean projectInSetup,
-                                                                             @RequestParam(value = "previousProject", required = false, defaultValue = "false") boolean previousProject) {
-        return monitoringOfficerService.filterMonitoringOfficerProjects(userId, projectInSetup, previousProject).toGetResponse();
+                                                                             @RequestParam(value = "previousProject", required = false, defaultValue = "false") boolean previousProject,
+                                                                             @RequestParam(value = "documentsComplete", required = false, defaultValue = "false") boolean documentsComplete,
+                                                                             @RequestParam(value = "documentsIncomplete", required = false, defaultValue = "false") boolean documentsIncomplete,
+                                                                             @RequestParam(value = "documentsAwaitingReview", required = false, defaultValue = "false") boolean documentsAwaitingReview) {
+        return monitoringOfficerService.filterMonitoringOfficerProjects(userId, projectInSetup, previousProject, documentsComplete, documentsIncomplete, documentsAwaitingReview).toGetResponse();
     }
 
     @GetMapping("/project/{projectId}")

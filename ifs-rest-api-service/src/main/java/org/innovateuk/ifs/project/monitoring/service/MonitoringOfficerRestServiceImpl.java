@@ -85,7 +85,7 @@ public class MonitoringOfficerRestServiceImpl extends BaseRestService implements
         return getWithRestResult(uriWithParams, projectResourceListType());
     }
 
-    protected String buildUri(String url, boolean projectInSetup, boolean previousProject, Object... uriParameters) {
+    protected String buildUri(String url, boolean projectInSetup, boolean previousProject, boolean documentsComplete, boolean documentsIncomplete, boolean documentsAwaitingReview, Object... uriParameters) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         if(projectInSetup) {
@@ -94,6 +94,18 @@ public class MonitoringOfficerRestServiceImpl extends BaseRestService implements
 
         if(previousProject) {
             params.put("previousProject", singletonList("true"));
+        }
+
+        if(documentsComplete) {
+            params.put("documentsComplete", singletonList("true"));
+        }
+
+        if(documentsIncomplete) {
+            params.put("documentsIncomplete", singletonList("true"));
+        }
+
+        if(documentsAwaitingReview) {
+            params.put("documentsAwaitingReview", singletonList("true"));
         }
 
         return UriComponentsBuilder
