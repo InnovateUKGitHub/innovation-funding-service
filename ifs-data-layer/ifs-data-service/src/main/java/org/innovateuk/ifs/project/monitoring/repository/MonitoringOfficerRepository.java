@@ -62,7 +62,8 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
             "   AND monitoringOfficer.role = org.innovateuk.ifs.project.core.ProjectParticipantRole.MONITORING_OFFICER " +
             "WHERE " +
             "   monitoringOfficer.user.id = :userId " +
-            "   AND project.projectProcess.activityState in :projectStates";
+            "   AND project.projectProcess.activityState in :projectStates " +
+            "ORDER BY project.id";
 
     List<MonitoringOfficer> findByUserId(long userId);
 

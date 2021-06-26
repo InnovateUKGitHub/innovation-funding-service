@@ -212,5 +212,4 @@ public abstract class BasePermissionRules extends RootPermissionRules {
                 .findFirst()
                 .isPresent();
     }
-
 }

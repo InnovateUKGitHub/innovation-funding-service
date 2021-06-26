@@ -101,6 +101,8 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
                             .stakeholdersCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
                     verify(projectPermissionRules, times(1))
                             .competitionFinanceUsersCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
+                    verify(projectPermissionRules, times(1))
+                            .auditorsCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
                     verifyNoMoreInteractions(projectPermissionRules);
                 }
         );
