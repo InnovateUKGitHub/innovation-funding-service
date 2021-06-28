@@ -22,6 +22,7 @@ import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -272,7 +273,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<Boolean> showApplicationTeam(Long applicationId,
                                                       Long userId) {
         return find(userRepository.findById(userId), notFoundError(User.class, userId))
-                .andOnSuccessReturn(user -> user.isInternalUser() || user.hasRole(STAKEHOLDER));
+                .andOnSuccessReturn(user -> user.isInternalUser() || user.hasAuthority(Authority.STAKEHOLDER));
     }
 
     @Override

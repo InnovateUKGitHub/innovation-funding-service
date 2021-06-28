@@ -76,9 +76,14 @@ public class NavigationUtilsTest {
     }
 
     @Test
+    public void getDirectDashboardUrlForAuditorRole() {
+        System.out.println("Auditor" + navigationUtils.getDirectDashboardUrlForRole(request, AUDITOR));
+        assertEquals("https://site:8080/management/dashboard", navigationUtils.getDirectDashboardUrlForRole(request, AUDITOR));
+    }
+
+    @Test
     public void getRedirectToSameDomainUrl() {
         String url = "management/dashboard";
-
         assertEquals("redirect:https://site:8080/" + url, navigationUtils.getRedirectToSameDomainUrl(request, url));
     }
 

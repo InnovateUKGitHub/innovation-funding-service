@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.security;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.security.BasePermissionRules;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
@@ -41,11 +42,9 @@ public class ApplicationSecurityHelper extends BasePermissionRules {
     }
 
     private boolean isStakeHolder(final long applicationId, final UserResource user) {
-        if (!user.hasRole(Role.STAKEHOLDER)) {
-            return false;
-        }
         Application application = applicationRepository.findById(applicationId).get();
-        return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
+        return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId())
+                || user.hasAuthority(Authority.AUDITOR);
     }
 
     private boolean isLinkedToProject(long applicationId, final UserResource user) {

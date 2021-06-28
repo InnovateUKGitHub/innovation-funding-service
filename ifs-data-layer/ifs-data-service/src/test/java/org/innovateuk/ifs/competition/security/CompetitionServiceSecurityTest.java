@@ -62,6 +62,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionResource.class), eq(user));
         verify(rules, times(2)).stakeholderCanViewCompetitionAssignedToThem(isA(CompetitionResource.class), eq(user));
         verify(rules, times(2)).monitoringOfficersCanViewCompetitionAssignedToThem(isA(CompetitionResource.class), eq(user));
+        verify(rules, times(2)).auditorCanViewAllCompetitions(isA(CompetitionResource.class), eq(user));
         verifyNoMoreInteractions(rules);
     }
 
@@ -79,6 +80,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
             verify(rules).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionResource.class),  eq(user));
             verify(rules).stakeholderCanViewCompetitionAssignedToThem(isA(CompetitionResource.class), eq(user));
             verify(rules).monitoringOfficersCanViewCompetitionAssignedToThem(isA(CompetitionResource.class), eq(user));
+            verify(rules).auditorCanViewAllCompetitions(isA(CompetitionResource.class), eq(user));
             verifyNoMoreInteractions(rules);
         });
     }
