@@ -196,10 +196,10 @@ profiles:
             args:
               - "-DskipTests"
     deploy:
-      kubeContext: att
+      kubeContext: at
       kustomize:
         paths:
-          - os-files/kustomize/overlays/att
+          - os-files/kustomize/overlays/at
 
   - name: sysint
     build:
