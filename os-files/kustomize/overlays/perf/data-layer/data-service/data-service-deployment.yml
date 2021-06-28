@@ -6,7 +6,7 @@ metadata:
     monitor: monitor
     pullSecrets: pullSecrets
 spec:
-    replicas: 1
+  replicas: 1
   selector:
     matchLabels:
       app: data-service

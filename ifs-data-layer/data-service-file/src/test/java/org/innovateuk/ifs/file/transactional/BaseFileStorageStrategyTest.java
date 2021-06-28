@@ -297,6 +297,7 @@ public abstract class BaseFileStorageStrategyTest {
         }
     }
 
+    @Ignore
     @Test
     public void testCreateFileFailureToCreateFoldersHandledGracefully() {
 
@@ -315,6 +316,7 @@ public abstract class BaseFileStorageStrategyTest {
         }
     }
 
+    @Ignore
     @Test
     public void testCreateFileFailureToCreateFileHandledGracefully() throws IOException {
 
