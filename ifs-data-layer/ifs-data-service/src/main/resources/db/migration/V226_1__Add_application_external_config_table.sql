@@ -1,5 +1,3 @@
--- IFS-9961: Assessment as a Service, addition of 2 new columns client application Id, and applicant name.
-
 CREATE TABLE application_external_config (
   id bigint(20) NOT NULL AUTO_INCREMENT,
   external_application_id varchar(255) UNIQUE DEFAULT NULL,
