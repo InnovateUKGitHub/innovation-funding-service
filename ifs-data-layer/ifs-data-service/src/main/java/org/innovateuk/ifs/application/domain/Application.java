@@ -5,9 +5,9 @@ import org.innovateuk.ifs.application.resource.CompanyAge;
 import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
 import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
-import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
@@ -116,9 +116,9 @@ public class Application implements ProcessActivity {
     @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
     private ProjectToBeCreated projectToBeCreated;
 
-    private String clientApplicationId;
-
-    private String clientApplicantName;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "applicationExternalConfigId", referencedColumnName = "application_external_config_id")
+    private ApplicationExternalConfig applicationExternalConfig;
 
     public Application() {
     }
@@ -547,19 +547,11 @@ public class Application implements ProcessActivity {
         this.assessments = assessments;
     }
 
-    public String getClientApplicationId() {
-        return clientApplicationId;
+    public ApplicationExternalConfig getApplicationExternalConfig() {
+        return applicationExternalConfig;
     }
 
-    public void setClientApplicationId(String clientApplicationId) {
-        this.clientApplicationId = clientApplicationId;
-    }
-
-    public String getClientApplicantName() {
-        return clientApplicantName;
-    }
-
-    public void setClientApplicantName(String clientApplicantName) {
-        this.clientApplicantName = clientApplicantName;
+    public void setApplicationExternalConfig(ApplicationExternalConfig applicationExternalConfig) {
+        this.applicationExternalConfig = applicationExternalConfig;
     }
 }
