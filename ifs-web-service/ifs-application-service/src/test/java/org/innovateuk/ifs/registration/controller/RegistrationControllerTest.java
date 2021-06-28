@@ -463,6 +463,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 .withEmail("invited@email.com")
                 .withRole(Role.APPLICANT)
                 .withOrganisationId(1L)
+                .withApplicationId(2L)
                 .withCompetitionId(1L)
                 .withAgreedTerms(true)
                 .build();

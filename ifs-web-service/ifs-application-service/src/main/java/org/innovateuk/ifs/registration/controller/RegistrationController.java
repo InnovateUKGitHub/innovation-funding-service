@@ -187,7 +187,7 @@ public class RegistrationController {
 
         return validationHandler.failNowOrSucceedWith(
                 () -> registerForm(registrationForm, model, user, request, response),
-                () -> createUser(registrationForm, getOrganisationId(request), getCompetitionId(request),getApplicationId(request)).handleSuccessOrFailure(
+                () -> createUser(registrationForm, getOrganisationId(request), getCompetitionId(request)).handleSuccessOrFailure(
                         failure -> {
                             addValidationErrors(validationHandler, failure);
                             return registerForm(registrationForm, model, user, request, response);
@@ -341,12 +341,11 @@ public class RegistrationController {
         }
     }
 
-    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId, Long competitionId, Long applicationId) {
+    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId, Long competitionId) {
         return userRestService.createUser(
                 registrationForm.constructUserCreationResource()
                 .withOrganisationId(organisationId)
                 .withCompetitionId(competitionId)
-                 .withApplicationId(applicationId)
                 .withRole(Role.APPLICANT)
                 .build())
                 .toServiceResult();
