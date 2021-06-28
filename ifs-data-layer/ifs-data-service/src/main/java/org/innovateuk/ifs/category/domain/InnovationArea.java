@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @DiscriminatorValue("INNOVATION_AREA")
 public class InnovationArea extends Category {
-
+    public static final long NONE = 67;
     public static final long DIGITAL_MANUFACTORING_ID = 22L;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
