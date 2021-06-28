@@ -317,7 +317,8 @@ public class RegistrationController {
         Optional<String> inviteHash = registrationCookieService.getInviteHashCookieValue(request);
         if (inviteHash.isPresent()) {
             Optional<Long> organisationId = registrationCookieService.getOrganisationIdCookieValue(request);
-            return inviteRestService.acceptInvite(inviteHash.get(), userResource.getId(), organisationId.get()).toServiceResult();
+            Optional<Long> applicationId = registrationCookieService.getApplicationIdCookieValue(request);
+            return inviteRestService.acceptInvite(inviteHash.get(), userResource.getId(), organisationId.get(),applicationId.get()).toServiceResult();
         }
 
         Optional<InviteAndIdCookie> projectInvite = registrationCookieService.getProjectInviteHashCookieValue(request);

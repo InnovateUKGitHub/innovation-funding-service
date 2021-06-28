@@ -85,6 +85,17 @@ public class ApplicationInviteController {
                 .toPutResponse();
     }
 
+    @PutMapping("/accept-invite/{hash}/{userId}/{organisationId}/{applicationId}")
+    public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") long userId, @PathVariable("organisationId") long organisationId, @PathVariable("applicationId") long applicationId) {
+        return acceptApplicationInviteService.acceptInvite(hash, userId, Optional.of(organisationId))
+                .andOnSuccessReturn(result -> {
+                    crmService.syncCrmContactWithApplicationId(userId,applicationId);
+                    return result;
+                })
+                .toPutResponse();
+    }
+
+
     @DeleteMapping("/remove-invite/{inviteId}")
     public RestResult<Void> removeApplicationInvite(@PathVariable("inviteId") long applicationInviteResourceId) {
         return applicationInviteService.removeApplicationInvite(applicationInviteResourceId).toDeleteResponse();

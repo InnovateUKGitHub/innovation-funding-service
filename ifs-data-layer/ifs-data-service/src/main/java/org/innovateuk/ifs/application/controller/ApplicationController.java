@@ -150,7 +150,7 @@ public class ApplicationController {
         return applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId, organisationId)
                 .andOnSuccessReturn(result -> {
                     LOG.info(String.format("%s-%s-%s",userId,competitionId,result.getId()));
-                    crmService.syncCrmContact(userId,competitionId,result.getId());
+                    crmService.syncCrmContact(userId,result.getId());
                     return result;
                 })
                 .toPostCreateResponse();
