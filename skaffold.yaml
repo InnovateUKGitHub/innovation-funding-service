@@ -480,7 +480,6 @@ profiles:
         paths:
           - os-files/kustomize/overlays/demo
 
-
   - name: perf
     build:
       artifacts:
@@ -573,7 +572,6 @@ profiles:
       kustomize:
         paths:
           - os-files/kustomize/overlays/perf
-
 
   - name: prod
     build:
