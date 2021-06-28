@@ -149,7 +149,7 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
     }
 
     @Override
-    public ServiceResult<List<ProjectResource>> filterMonitoringOfficerProjects(long userId, boolean projectInSetup, boolean previousProject, boolean documentsComplete, boolean documentsIncomplete, boolean documentsAwaitingReview) {
+    public ServiceResult<List<ProjectResource>> filterMonitoringOfficerProjects(long userId, boolean projectInSetup, boolean previousProject) {
         List<ProjectState> projectStates = applyProjectStatesFilter(projectInSetup, previousProject);
         List<MonitoringOfficer> monitoringOfficers = monitoringOfficerRepository.filterMonitoringOfficerProjects(userId, projectStates);
 

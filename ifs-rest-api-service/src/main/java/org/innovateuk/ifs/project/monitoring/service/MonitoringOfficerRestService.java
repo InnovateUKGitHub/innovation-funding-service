@@ -34,8 +34,5 @@ public interface MonitoringOfficerRestService {
 
     RestResult<List<ProjectResource>> filterProjectsForMonitoringOfficer(long projectMonitoringOfficerId,
                                                                          boolean projectInSetup,
-                                                                         boolean previousProject,
-                                                                         boolean documentsComplete,
-                                                                         boolean documentsIncomplete,
-                                                                         boolean documentsAwaitingReview);
+                                                                         boolean previousProject);
 }

@@ -40,13 +40,8 @@ public class MonitoringOfficerDashboardController {
     @PostMapping
     public String filterDashboard(Model model,
                                   UserResource user,
-                                  @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerDashboardForm form,
-                                  @RequestParam(value = "projectInSetup", required = false) boolean projectInSetup,
-                                  @RequestParam(value = "previousProject", required = false) boolean previousProject,
-                                  @RequestParam(value = "documentsComplete", required = false) boolean documentsComplete,
-                                  @RequestParam(value = "documentsInComplete", required = false) boolean documentsInComplete,
-                                  @RequestParam(value = "documentsAwaitingReview", required = false) boolean documentsAwaitingReview) {
-        model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user, projectInSetup, previousProject, documentsComplete, documentsInComplete, documentsAwaitingReview));
+                                  @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerDashboardForm form) {
+        model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user, form.isProjectInSetup(), form.isPreviousProject(), form.isDocumentsComplete(), form.isDocumentsIncomplete(), form.isDocumentsAwaitingReview()));
         return "monitoring-officer/dashboard";
     }
 }

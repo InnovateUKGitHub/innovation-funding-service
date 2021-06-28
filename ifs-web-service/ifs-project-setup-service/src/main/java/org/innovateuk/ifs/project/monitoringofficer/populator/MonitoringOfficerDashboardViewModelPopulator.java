@@ -13,10 +13,14 @@ import org.innovateuk.ifs.project.status.populator.SetupSectionStatus;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.sections.SectionStatus.*;
 
 @Component
 public class MonitoringOfficerDashboardViewModelPopulator {
@@ -49,11 +53,12 @@ public class MonitoringOfficerDashboardViewModelPopulator {
                                                         boolean documentsComplete,
                                                         boolean documentsIncomplete,
                                                         boolean documentsAwaitingReview) {
-        List<ProjectResource> projects = monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(),
-                projectInSetup, previousProject, documentsComplete, documentsIncomplete, documentsAwaitingReview).getSuccess();
+        List<ProjectResource> projectsFilteredByState = monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(),
+                projectInSetup, previousProject).getSuccess();
+        List<ProjectResource> projectsFilteredByDocuments = projectsFilteredByDocuments(projectsFilteredByState, documentsComplete, documentsIncomplete, documentsAwaitingReview);
         MonitoringOfficerSummaryViewModel monitoringOfficerSummaryViewModel = monitoringOfficerSummaryViewModelPopulator.populate(user);
 
-        return new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projects), monitoringOfficerSummaryViewModel);
+        return new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projectsFilteredByDocuments), monitoringOfficerSummaryViewModel);
     }
 
     private String documentSectionStatusMOView(ProjectResource project, CompetitionResource competition) {
@@ -74,7 +79,8 @@ public class MonitoringOfficerDashboardViewModelPopulator {
                                 new MonitoringOfficerDashboardDocumentSectionViewModel(documentSectionStatusMOView(project,
                                         competitionRestService.getCompetitionById(project.getCompetition()).getSuccess()),
                                         hasDocumentSection(project),
-                                        project.getId())))
+                                        project.getId(),
+                                        hasDocumentAwaitingReview(project))))
                 .collect(toList());
     }
 
@@ -82,5 +88,48 @@ public class MonitoringOfficerDashboardViewModelPopulator {
         return projects.stream()
                 .sorted(Comparator.comparing(projectResource -> projectResource.getProjectState().getMoDisplayOrder()))
                 .collect(toList());
+    }
+
+    private List<ProjectResource> getDocumentsComplete(List<ProjectResource> projects) {
+        return projects.stream()
+                .filter(project -> hasDocumentSection(project)
+                        && sectionStatus.documentsSectionStatus(false, project, competitionRestService.getCompetitionForProject(project.getId()).getSuccess(), true).equals(TICK))
+                .collect(Collectors.toList());
+    }
+
+    private List<ProjectResource> getDocumentsInComplete(List<ProjectResource> projects) {
+        return projects.stream()
+                .filter(project -> hasDocumentSection(project)
+                        && sectionStatus.documentsSectionStatus(false, project, competitionRestService.getCompetitionForProject(project.getId()).getSuccess(), true).equals(INCOMPLETE))
+                .collect(Collectors.toList());
+    }
+
+    private List<ProjectResource> getDocumentsAwaitingReview(List<ProjectResource> projects) {
+        return projects.stream()
+                .filter(this::hasDocumentAwaitingReview)
+                .collect(Collectors.toList());
+    }
+
+    private List<ProjectResource> projectsFilteredByDocuments(List<ProjectResource> projects, boolean documentsComplete, boolean documentsIncomplete, boolean documentsAwaitingReview) {
+
+        if (documentsComplete && documentsIncomplete && documentsAwaitingReview) {
+            return Stream.of(getDocumentsComplete(projects), getDocumentsInComplete(projects), getDocumentsAwaitingReview(projects)).flatMap(Collection::stream).distinct().collect(Collectors.toList());
+        } else if (documentsComplete && documentsIncomplete) {
+            return Stream.of(getDocumentsComplete(projects), getDocumentsInComplete(projects)).flatMap(Collection::stream).distinct().collect(Collectors.toList());
+        } else if (documentsAwaitingReview && documentsComplete) {
+            return Stream.of(getDocumentsComplete(projects), getDocumentsAwaitingReview(projects)).flatMap(Collection::stream).distinct().collect(Collectors.toList());
+        } else if (documentsIncomplete && documentsAwaitingReview) {
+            return Stream.of(getDocumentsInComplete(projects), getDocumentsAwaitingReview(projects)).flatMap(Collection::stream).distinct().collect(Collectors.toList());
+        } else if (documentsComplete) {
+            return getDocumentsComplete(projects);
+        } else if (documentsIncomplete) {
+            return getDocumentsInComplete(projects);
+        } else if (documentsAwaitingReview) {
+            return getDocumentsAwaitingReview(projects);
+        } else return projects;
+    }
+
+    private boolean hasDocumentAwaitingReview(ProjectResource project) {
+        return hasDocumentSection(project) && sectionStatus.documentsSectionStatus(false, project, competitionRestService.getCompetitionForProject(project.getId()).getSuccess(), true).equals(MO_ACTION_REQUIRED);
     }
 }

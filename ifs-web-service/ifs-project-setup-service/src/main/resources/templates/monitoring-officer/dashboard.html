@@ -138,6 +138,24 @@
                                                 <p th:if="${projectView.withdrawn}" class="govuk-body status-msg msg-progress">Withdrawn</p>
                                             </th:block>
                                         </div>
+
+<!--                                        <hr />-->
+                                        <div class="task govuk-!-margin-top-2 govuk-!-margin-bottom-1">
+                                            <h4 class="govuk-heading-s"
+                                                    th:if="${projectView.documentSectionViewModel.hasDocumentSection}">
+                                                <div th:if="${projectView.documentSectionViewModel.hasDocumentForReview}">
+                                                <a th:href="${projectView.documentSectionViewModel.getDocumentLinkUrl}"
+                                                   class="govuk-link">Documents</a>
+                                                </div>
+                                                <div th:unless="${projectView.documentSectionViewModel.hasDocumentForReview}">Documents</div>
+                                            </h4>
+                                            <div th:unless="${projectView.documentSectionViewModel.hasDocumentSection}">
+                                                <p></p>
+                                            </div>
+                                        </div>
+                                            <th:block th:if="${projectView.documentSectionViewModel.hasDocumentSection}"
+                                                      class="status-msg msg-progress"
+                                                      th:insert="project/fragments :: mo-document-status-indicator(${projectView.documentSectionViewModel.documentSectionStatus})"/>
                                     </li>
                                 </ul>
                             </div>

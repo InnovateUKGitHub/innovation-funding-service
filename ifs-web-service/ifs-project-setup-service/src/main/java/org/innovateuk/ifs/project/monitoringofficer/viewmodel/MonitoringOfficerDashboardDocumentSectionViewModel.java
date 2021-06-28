@@ -8,11 +8,13 @@ public class MonitoringOfficerDashboardDocumentSectionViewModel {
     private final String documentSectionStatus;
     private final boolean hasDocumentSection;
     private final long projectId;
+    private final boolean hasDocumentForReview;
 
-    public MonitoringOfficerDashboardDocumentSectionViewModel(String documentSectionStatus, boolean hasDocumentSection, long projectId) {
+    public MonitoringOfficerDashboardDocumentSectionViewModel(String documentSectionStatus, boolean hasDocumentSection, long projectId, boolean hasDocumentForReview) {
         this.documentSectionStatus = documentSectionStatus;
         this.hasDocumentSection = hasDocumentSection;
         this.projectId = projectId;
+        this.hasDocumentForReview = hasDocumentForReview;
     }
 
     public String getDocumentSectionStatus() {
@@ -25,6 +27,10 @@ public class MonitoringOfficerDashboardDocumentSectionViewModel {
 
     public long getProjectId() {
         return projectId;
+    }
+
+    public boolean isHasDocumentForReview() {
+        return hasDocumentForReview;
     }
 
     public String getDocumentLinkUrl() {

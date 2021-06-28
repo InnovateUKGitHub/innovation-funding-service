@@ -83,7 +83,7 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
 
         MonitoringOfficerSummaryViewModel monitoringOfficerSummaryViewModel = new MonitoringOfficerSummaryViewModel(1, 1, 2, 0, 1);
 
-        when(monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(), true, true, false, true, false))
+        when(monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(), true, true))
                 .thenReturn(restSuccess(asList(projectResourceInLive, projectResourceInSetup)));
         when(monitoringOfficerSummaryViewModelPopulator.populate(user)).thenReturn(monitoringOfficerSummaryViewModel);
 
