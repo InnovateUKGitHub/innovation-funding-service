@@ -106,7 +106,7 @@ deploy:
     paths:
       - os-files/kustomize/overlays/local
 profiles:
-  - name: att
+  - name: at
     build:
       artifacts:
         - image: robot-framework
