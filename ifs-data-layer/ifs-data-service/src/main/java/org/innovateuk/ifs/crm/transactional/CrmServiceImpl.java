@@ -42,9 +42,9 @@ public class CrmServiceImpl implements CrmService {
 
     @Autowired
     private PublicContentService publicContentService;
-//
-//    @Autowired
-//    private CompetitionService competitionService;
+
+    @Autowired
+    private CompetitionService competitionService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -86,8 +86,8 @@ public class CrmServiceImpl implements CrmService {
     }
 
     @Override
-    public ServiceResult<Void> syncCrmContactWithApplicationId(long userId, long applicationId) {
-        FundingType fundingType =  applicationService.getCompetitionByApplicationId(applicationId).getSuccess().getFundingType();
+    public ServiceResult<Void> syncCrmContact(long userId, long competitionId, Long applicationId) {
+      FundingType fundingType =  competitionService.getCompetitionById(competitionId).getSuccess().getFundingType();
 
         return userService.getUserById(userId).andOnSuccess(user -> {
             syncExternalUser(user,fundingType.getDisplayName(),applicationId);
@@ -96,8 +96,6 @@ public class CrmServiceImpl implements CrmService {
             return serviceSuccess();
         });
     }
-
-
 
     private void syncExternalUser(UserResource user, String fundingType, Long applicationId) {
 

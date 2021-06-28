@@ -15,5 +15,5 @@ public interface CrmService {
     ServiceResult<Void> syncCrmContact(final long userId, final long projectId);
 
     @NotSecured(value = "Anyone can update crm", mustBeSecuredByOtherServices = false)
-    ServiceResult<Void> syncCrmContactWithApplicationId(long userId, long applicationId);
+    ServiceResult<Void> syncCrmContact(long userId, long competitionId, Long applicationId);
 }

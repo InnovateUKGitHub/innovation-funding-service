@@ -66,7 +66,7 @@ public class ApplicationInviteController {
     }
 
     @PutMapping("/accept-invite/{hash}/{userId}")
-    public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
+    public RestResult<Void> acceptInvite(@PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
         return acceptApplicationInviteService.acceptInvite(hash, userId, Optional.empty())
                 .andOnSuccessReturn(result -> {
                     crmService.syncCrmContact(userId);
@@ -76,7 +76,7 @@ public class ApplicationInviteController {
     }
 
     @PutMapping("/accept-invite/{hash}/{userId}/{organisationId}")
-    public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") long userId, @PathVariable("organisationId") long organisationId) {
+    public RestResult<Void> acceptInvite(@PathVariable("hash") String hash, @PathVariable("userId") long userId, @PathVariable("organisationId") long organisationId) {
         return acceptApplicationInviteService.acceptInvite(hash, userId, Optional.of(organisationId))
                 .andOnSuccessReturn(result -> {
                     crmService.syncCrmContact(userId);
@@ -85,11 +85,12 @@ public class ApplicationInviteController {
                 .toPutResponse();
     }
 
-    @PutMapping("/accept-invite/{hash}/{userId}/{organisationId}/{applicationId}")
-    public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") long userId, @PathVariable("organisationId") long organisationId, @PathVariable("applicationId") long applicationId) {
+    @PutMapping("/accept-invite/{hash}/{userId}/{competitionId}/{organisationId}/{applicationId}")
+    public RestResult<Void> acceptInvite(@PathVariable("hash") String hash, @PathVariable("userId") long userId, @PathVariable("competitionId") long competitionId,
+                                         @PathVariable("organisationId") long organisationId, @PathVariable("applicationId") long applicationId) {
         return acceptApplicationInviteService.acceptInvite(hash, userId, Optional.of(organisationId))
                 .andOnSuccessReturn(result -> {
-                    crmService.syncCrmContactWithApplicationId(userId,applicationId);
+                    crmService.syncCrmContact(userId, competitionId, applicationId);
                     return result;
                 })
                 .toPutResponse();

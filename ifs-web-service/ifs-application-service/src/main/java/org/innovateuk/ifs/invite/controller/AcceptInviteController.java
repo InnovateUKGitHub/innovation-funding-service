@@ -109,6 +109,8 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
                             , response);
                     registrationCookieService.saveToApplicationIdIdCookie(invite.getApplication()
                             , response);
+                    registrationCookieService.saveToCompetitionIdCookie(invite.getCompetitionId()
+                            , response);
 
 
 
