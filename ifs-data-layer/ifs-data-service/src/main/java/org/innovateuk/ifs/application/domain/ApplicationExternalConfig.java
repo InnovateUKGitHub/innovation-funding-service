@@ -8,7 +8,7 @@ public class ApplicationExternalConfig {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long applicationExternalConfigId;
+    private Long id;
 
     @OneToOne(mappedBy = "applicationExternalConfig",fetch = FetchType.LAZY)
     private Application application;
@@ -27,12 +27,12 @@ public class ApplicationExternalConfig {
         this.externalApplicantName = externalApplicantName;
     }
 
-    public Long getApplicationExternalConfigId() {
-        return applicationExternalConfigId;
+    public Long getId() {
+        return id;
     }
 
-    public void setApplicationExternalConfigId(Long applicationExternalConfigId) {
-        this.applicationExternalConfigId = applicationExternalConfigId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Application getApplication() {

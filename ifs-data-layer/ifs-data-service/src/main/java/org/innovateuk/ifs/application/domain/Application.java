@@ -117,7 +117,7 @@ public class Application implements ProcessActivity {
     private ProjectToBeCreated projectToBeCreated;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "applicationExternalConfigId", referencedColumnName = "application_external_config_id")
+    @JoinColumn(name = "applicationExternalConfigId", referencedColumnName = "id")
     private ApplicationExternalConfig applicationExternalConfig;
 
     public Application() {
