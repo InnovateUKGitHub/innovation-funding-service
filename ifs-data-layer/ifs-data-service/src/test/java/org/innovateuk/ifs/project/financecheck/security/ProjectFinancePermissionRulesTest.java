@@ -38,6 +38,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProj
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.AUDITOR;
 import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.hasProjectFinanceAuthority;
@@ -505,6 +506,13 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         setupUserAsPartner(project, user);
         assertTrue(rules.competitionFinanceUsersCanSeeTheProjectFinancesForTheirOrganisation(financeCheckEligibilityResource, user));
         assertFalse(rules.competitionFinanceUsersCanSeeTheProjectFinancesForTheirOrganisation(financeCheckEligibilityResource, userNotInCompetition));
+    }
+
+    @Test
+    public void auditorCanSeeProjectFinancesForOrganisations() {
+        UserResource user = newUserResource().withRoleGlobal(AUDITOR).build();
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(project.getId()).build();
+        assertTrue(rules.stakeholderUserCanSeeProjectFinancesForOrganisations(projectFinanceResource, user));
     }
 
     @Override

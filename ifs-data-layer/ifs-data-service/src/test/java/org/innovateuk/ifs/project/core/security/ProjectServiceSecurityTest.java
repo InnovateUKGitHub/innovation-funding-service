@@ -125,6 +125,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             verify(projectPermissionRules).monitoringOfficerOnProjectCanView(project, getLoggedInUser());
             verify(projectPermissionRules).stakeholdersCanViewProjects(project, getLoggedInUser());
             verify(projectPermissionRules).competitionFinanceUsersCanViewProjects(project, getLoggedInUser());
+            verify(projectPermissionRules).auditorsCanViewProjects(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -141,6 +142,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             verify(projectPermissionRules).monitoringOfficerOnProjectCanView(project, getLoggedInUser());
             verify(projectPermissionRules).stakeholdersCanViewProjects(project, getLoggedInUser());
             verify(projectPermissionRules).competitionFinanceUsersCanViewProjects(project, getLoggedInUser());
+            verify(projectPermissionRules).auditorsCanViewProjects(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }

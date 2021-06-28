@@ -61,7 +61,7 @@ public class CompetitionInFlightModelPopulator {
                 simpleMap(milestones, MilestonesRowViewModel::new),
                 changesSinceLastNotify,
                 statsViewModel,
-                user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER),
+                user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) || user.hasAuthority(Authority.STAKEHOLDER),
                 user.hasAuthority(Authority.SUPER_ADMIN_USER));
     }
 }

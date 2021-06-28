@@ -38,7 +38,7 @@ public class SetupSectionInternalUser {
             return fail("Unable to access Monitoring Officer section until Project Details are submitted");
         }
 
-        if (isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) {
+        if (isSupport(userResource) || isInnovationLead(userResource) || userResource.hasAuthority(Authority.STAKEHOLDER)) {
             return projectSetupProgressChecker.isMonitoringOfficerSubmitted() ? ACCESSIBLE : NOT_ACCESSIBLE;
         }
 
@@ -72,7 +72,7 @@ public class SetupSectionInternalUser {
         boolean approved = projectSetupProgressChecker.isSpendProfileApproved();
         boolean submitted = projectSetupProgressChecker.isSpendProfileSubmitted();
         if (approved || submitted) {
-            if (isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) {
+            if (isSupport(userResource) || isInnovationLead(userResource) || userResource.hasAuthority(Authority.STAKEHOLDER)) {
                 if (approved) {
                     return ACCESSIBLE;
                 } else {
@@ -92,7 +92,7 @@ public class SetupSectionInternalUser {
             return NOT_ACCESSIBLE;
         }
 
-        if ((isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) && !projectSetupProgressChecker.allDocumentsApproved()) {
+        if ((isSupport(userResource) || isInnovationLead(userResource) || userResource.hasAuthority(Authority.STAKEHOLDER)) && !projectSetupProgressChecker.allDocumentsApproved()) {
             return NOT_ACCESSIBLE;
         }
 
@@ -117,7 +117,7 @@ public class SetupSectionInternalUser {
                 && projectSetupProgressChecker.isSpendProfileApproved()
                 && projectSetupProgressChecker.isBankDetailsApproved()
                 && projectSetupProgressChecker.isApplicationSuccessful()) {
-            if (isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) {
+            if (isSupport(userResource) || isInnovationLead(userResource) || userResource.hasAuthority(Authority.STAKEHOLDER)) {
                 if (projectSetupProgressChecker.isGrantOfferLetterApproved()) {
                     return ACCESSIBLE;
                 } else {

@@ -26,6 +26,7 @@ public class YourProjectLocationControllerSecurityTest extends BaseControllerSec
         roles.add(SUPPORTER);
         roles.add(ASSESSOR);
         roles.add(Role.SYSTEM_MAINTAINER);
+        roles.add(AUDITOR);
 
         assertRolesCanPerform(() -> classUnderTest.viewPage(0L, 0L, 0L, null, null), roles);
     }
