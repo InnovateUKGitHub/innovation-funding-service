@@ -1,7 +1,7 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: surve-data-service-config
+  name: survey-data-service-config
 data:
   SURVEY_DB_NAME: "ifs_survey"
   SURVEY_DB_USER: "root"

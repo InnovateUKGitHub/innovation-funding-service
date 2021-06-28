@@ -17,6 +17,6 @@ data:
   LDAP_BINDDN: "cn=admin,dc=nodomain"
   LDAP_PASSWORD: "default"
   LDAP_USERFILTER: "(&(mail={user})(!(employeeType=inactive)))"
-  LDAP_ATTRIBUTE_SEARCHFILTER: "(mail=\$resolutionContext.principal)"
+  LDAP_ATTRIBUTE_SEARCHFILTER: "(mail=$resolutionContext.principal)"
   LDAP_RETURNATTRIBUTES: "mail,uid"
   LDAP_AUTHENTICATOR: "anonSearchAuthenticator"

@@ -16,11 +16,11 @@ resources:
   - data-layer/databases/ifs-database.yml
   - data-layer/databases/ifs-database-deployment.yml
   - data-layer/databases/mysql-configmap.yml
-  - mail/mail-service.yml
-  - mail/mail-config.yml
-  - mail/mail-service-deployment.yml
   - cache-provider/cache-provider-service.yml
   - cache-provider/cache-provider-service-deployment.yml
+  - robot/chrome.yml
+  - robot/chrome-deployment.yml
+  - robot/robot-framework-deployment.yml
 
 patchesStrategicMerge:
   - cache-config.yml
