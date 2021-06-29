@@ -926,7 +926,7 @@ the user approves funding rules of lead and partner
 
 the user accepts electronic record and signature disclosure if exist
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element   link = Electronic Record and Signature Disclosure
-    Run Keyword If  '${status}' == 'PASS'    the user selects the checkbox     disclosureAccepted
+    Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link     css = label[for="disclosureAccepted"]
 
 the user adopts initial details if exist
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element   jQuery = button:contains("Adopt and Initial")
