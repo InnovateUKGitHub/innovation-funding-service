@@ -33,12 +33,13 @@ Monitoring officer can filter both in-setup and previous projects
 Monitoring officer can view no results text when none of the projects been assigned to him
     [Documentation]  IFS-9576
     Given log in as a different user         &{emptyMonitoringOfficerDashboard}
-    Then the user should see the element     jQuery = .icon-info:contains("No results found")
+    Then the user should see the element     jQuery = li:contains("searching again using different keywords")
     And page should contain element          jQuery = h2:contains("0 projects")
 
 *** Keywords ***
 Custom suite setup
-    the user logs-in in new browser     orville.gibbs@gmail.com  ${short_password}
+    the user logs-in in new browser                         orville.gibbs@gmail.com  ${short_password}
+    the user clicks the project setup tile if displayed
 
 Custom suite teardown
     the user closes the browser
@@ -47,8 +48,8 @@ Check correct number of in-setup projects filtered
     [Arguments]  ${filterName}
     ${elementCountOnPage} =    Get Element Count    jQuery = .status
     page should contain element     jQuery = .govuk-checkboxes__label:contains("${filterName} (${elementCountOnPage})")
-    page should contain element     jQuery = h2:contains("${elementCountOnPage} projects")
+    page should contain element     jQuery = h2:contains("${elementCountOnPage} project")
 
 Check correct total number of projects displaying
     ${elementCountOnPage} =    Get Element Count    jQuery = .status
-    page should contain element     jQuery = h2:contains("${elementCountOnPage} projects")
+    page should contain element     jQuery = h2:contains("${elementCountOnPage} project")
