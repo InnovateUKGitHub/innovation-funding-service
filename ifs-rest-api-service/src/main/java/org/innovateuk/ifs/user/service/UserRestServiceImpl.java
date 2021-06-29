@@ -38,7 +38,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         return getWithRestResultAnonymous(USER_REST_URL + "/uid/" + uid, UserResource.class);
     }
     @Override
-    public RestResult<UserResource> createUser(Object user) {
+    public RestResult<UserResource> createUser(UserCreationResource user) {
         return postWithRestResultAnonymous(USER_REST_URL, user, UserResource.class);
     }
     @Override
