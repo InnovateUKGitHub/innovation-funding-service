@@ -42,6 +42,9 @@ public class SilContactJsonTest {
         silContact.setOrganisation(organisation);
         silContact.setSrcSysContactId("sys contact id");
 
+        System.out.println(silContact);
+
+
         String json = new ObjectMapper().writeValueAsString(silContact);
         assertThat(json, containsString("\"title\":\"title\""));
         assertThat(json, containsString("\"firstName\":\"first name\""));
