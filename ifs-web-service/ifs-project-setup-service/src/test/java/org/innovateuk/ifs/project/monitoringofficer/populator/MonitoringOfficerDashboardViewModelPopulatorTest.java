@@ -9,7 +9,7 @@ import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerD
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerSummaryViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
-import org.innovateuk.ifs.project.status.populator.SetupSectionStatus;
+import org.innovateuk.ifs.status.populator.SetupSectionStatus;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;

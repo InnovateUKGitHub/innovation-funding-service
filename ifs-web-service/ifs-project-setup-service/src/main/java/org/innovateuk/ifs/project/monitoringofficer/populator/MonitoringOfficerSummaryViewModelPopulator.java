@@ -1,20 +1,17 @@
 package org.innovateuk.ifs.project.monitoringofficer.populator;
 
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.project.internal.ProjectSetupStage;
+import org.innovateuk.ifs.documents.populator.FilterDocumentsPopulator;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerSummaryViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.status.populator.SetupSectionStatus;
+import org.innovateuk.ifs.status.populator.SetupSectionStatus;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.innovateuk.ifs.sections.SectionStatus.*;
 
 @Component
 public class MonitoringOfficerSummaryViewModelPopulator {
@@ -23,10 +20,7 @@ public class MonitoringOfficerSummaryViewModelPopulator {
     private MonitoringOfficerRestService monitoringOfficerRestService;
 
     @Autowired
-    private SetupSectionStatus sectionStatus;
-
-    @Autowired
-    private CompetitionRestService competitionRestService;
+    private FilterDocumentsPopulator filterDocumentsPopulator;
 
     public MonitoringOfficerSummaryViewModelPopulator() {
     }
@@ -57,34 +51,14 @@ public class MonitoringOfficerSummaryViewModelPopulator {
     }
 
     public int getDocumentsComplete(List<ProjectResource> projects) {
-        List<ProjectResource> documentsComplete = projects.stream()
-                .filter(project -> hasDocumentSection(project)
-                        && sectionStatus.documentsSectionStatus(false, project, competitionRestService.getCompetitionForProject(project.getId()).getSuccess(), true).equals(TICK))
-                .collect(Collectors.toList());
-
-        return documentsComplete.size();
+        return filterDocumentsPopulator.getProjectsWithDocumentsComplete(projects).size();
     }
 
     public int getDocumentsInComplete(List<ProjectResource> projects) {
-        List<ProjectResource> documentsInComplete = projects.stream()
-                .filter(project -> hasDocumentSection(project)
-                        && sectionStatus.documentsSectionStatus(false, project, competitionRestService.getCompetitionForProject(project.getId()).getSuccess(), true).equals(INCOMPLETE))
-                .collect(Collectors.toList());
-
-        return documentsInComplete.size();
+        return filterDocumentsPopulator.getProjectsWithDocumentsInComplete(projects).size();
     }
 
     public int getDocumentsAwaitingReview(List<ProjectResource> projects) {
-        List<ProjectResource> documentsAwaitingReview = projects.stream()
-                .filter(project -> hasDocumentSection(project)
-                        && sectionStatus.documentsSectionStatus(false, project, competitionRestService.getCompetitionForProject(project.getId()).getSuccess(), true).equals(MO_ACTION_REQUIRED))
-                .collect(Collectors.toList());
-
-        return documentsAwaitingReview.size();
-    }
-
-    private boolean hasDocumentSection(ProjectResource project) {
-        CompetitionResource competitionResource = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
-        return competitionResource.getProjectSetupStages().contains(ProjectSetupStage.DOCUMENTS);
+        return filterDocumentsPopulator.getProjectsWithDocumentsAwaitingReview(projects).size();
     }
 }

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.status.populator;
+package org.innovateuk.ifs.status.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;

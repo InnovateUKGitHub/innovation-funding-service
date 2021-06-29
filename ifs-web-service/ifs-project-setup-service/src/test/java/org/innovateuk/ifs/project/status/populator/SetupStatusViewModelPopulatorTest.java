@@ -31,6 +31,7 @@ import org.innovateuk.ifs.project.status.viewmodel.SetupStatusStageViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.SetupStatusViewModel;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.sections.SectionStatus;
+import org.innovateuk.ifs.status.populator.SetupSectionStatus;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
