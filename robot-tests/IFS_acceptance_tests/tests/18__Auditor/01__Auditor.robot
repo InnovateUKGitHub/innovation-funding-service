@@ -125,10 +125,10 @@ Auditor can open and view the fEC model certificate in the project setup
     Given Log in as a different user                     &{auditorCredentials}
     And the user navigates to the page                   ${SERVER}/management/competition/${competitionId}/application/${ApplicationID}
     And the user clicks the button/link                  jQuery =button:contains("Finances summary")
-    And the user clicks the button/link                  jQuery = div:contains("Middlesex University Higher Education Corporation") ~ a:contains("View finances")
+    And the user clicks the button/link                  jQuery = div:contains("A base of knowledge") ~ a:contains("View finances")
     And The user clicks the button/link                  jQuery = a:contains("Your fEC model")
     When the user clicks the button/link                 jQuery = a:contains(".pdf (opens in a new window)")
-    Then the user should not see an error in the page
+    Then the user should not see internal server and forbidden errors
 
 *** Keywords ***
 Custom suite setup
