@@ -106,6 +106,16 @@ build:
 #    paths:
 #      - os-files/kustomize/overlays/local
 profiles:
+  - name: tmp
+    build:
+      artifacts:
+        - image: robot-framework
+          context: robot-tests
+    deploy:
+      kubeContext: tmp
+      kustomize:
+        paths:
+          - os-files/kustomize/overlays/tmp
   - name: at
     build:
       artifacts:
