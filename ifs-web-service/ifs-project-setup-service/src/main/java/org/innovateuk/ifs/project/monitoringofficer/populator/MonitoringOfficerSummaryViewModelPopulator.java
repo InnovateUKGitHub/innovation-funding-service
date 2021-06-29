@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class MonitoringOfficerSummaryViewModelPopulator {
@@ -17,7 +16,7 @@ public class MonitoringOfficerSummaryViewModelPopulator {
     private MonitoringOfficerRestService monitoringOfficerRestService;
 
     @Autowired
-    private FilterDocumentsPopulator filterDocumentsPopulator;
+    private ProjectFilterPopulator projectFilterPopulator;
 
     public MonitoringOfficerSummaryViewModelPopulator() {
     }
@@ -32,30 +31,22 @@ public class MonitoringOfficerSummaryViewModelPopulator {
     }
 
     public int getInSetupProjectCount(List<ProjectResource> projects) {
-        List<ProjectResource> inSetupProjects = projects.stream()
-                .filter(project -> !project.getProjectState().isComplete())
-                .collect(Collectors.toList());
-
-        return inSetupProjects.size();
+        return projectFilterPopulator.getInSetupProjects(projects).size();
     }
 
     public int getPreviousProjectCount(List<ProjectResource> projects) {
-        List<ProjectResource> previousProjects = projects.stream()
-                .filter(project -> project.getProjectState().isComplete())
-                .collect(Collectors.toList());
-
-        return previousProjects.size();
+        return  projectFilterPopulator.getPreviousProject(projects).size();
     }
 
     public int getDocumentsCompleteCount(List<ProjectResource> projects) {
-        return filterDocumentsPopulator.getProjectsWithDocumentsComplete(projects).size();
+        return projectFilterPopulator.getProjectsWithDocumentsComplete(projects).size();
     }
 
     public int getDocumentsInCompleteCount(List<ProjectResource> projects) {
-        return filterDocumentsPopulator.getProjectsWithDocumentsInComplete(projects).size();
+        return projectFilterPopulator.getProjectsWithDocumentsInComplete(projects).size();
     }
 
     public int getDocumentsAwaitingReviewCount(List<ProjectResource> projects) {
-        return filterDocumentsPopulator.getProjectsWithDocumentsAwaitingReview(projects).size();
+        return projectFilterPopulator.getProjectsWithDocumentsAwaitingReview(projects).size();
     }
 }

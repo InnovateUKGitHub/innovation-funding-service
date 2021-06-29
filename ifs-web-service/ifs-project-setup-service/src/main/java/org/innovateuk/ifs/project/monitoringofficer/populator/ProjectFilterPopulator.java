@@ -13,14 +13,27 @@ import java.util.stream.Collectors;
 import static org.innovateuk.ifs.sections.SectionStatus.*;
 
 @Component
-public class FilterDocumentsPopulator {
+public class ProjectFilterPopulator {
 
     private final CompetitionRestService competitionRestService;
     private final SetupSectionStatus sectionStatus;
 
-    public FilterDocumentsPopulator(CompetitionRestService competitionRestService, SetupSectionStatus sectionStatus) {
+    public ProjectFilterPopulator(CompetitionRestService competitionRestService, SetupSectionStatus sectionStatus) {
         this.competitionRestService = competitionRestService;
         this.sectionStatus = sectionStatus;
+    }
+
+    public List<ProjectResource> getInSetupProjects(List<ProjectResource> projects) {
+        return projects.stream()
+                .filter(project -> !project.getProjectState().isComplete())
+                .collect(Collectors.toList());
+
+    }
+
+    public List<ProjectResource> getPreviousProject(List<ProjectResource> projects) {
+        return projects.stream()
+                .filter(project -> project.getProjectState().isComplete())
+                .collect(Collectors.toList());
     }
 
     public List<ProjectResource> getProjectsWithDocumentsComplete(List<ProjectResource> projects) {

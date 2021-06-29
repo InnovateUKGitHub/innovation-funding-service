@@ -43,7 +43,7 @@ public class MonitoringOfficerSummaryViewModelPopulatorTest {
     private MonitoringOfficerRestService monitoringOfficerRestService;
 
     @Mock
-    private FilterDocumentsPopulator filterDocumentsPopulator;
+    private ProjectFilterPopulator projectFilterPopulator;
 
     private UserResource user;
     private List<ProjectResource> projectResourceList = new ArrayList<>();
@@ -97,9 +97,11 @@ public class MonitoringOfficerSummaryViewModelPopulatorTest {
 
         when(monitoringOfficerRestService.getProjectsForMonitoringOfficer(user.getId())).thenReturn(restSuccess(projectResourceList));
 
-        when(filterDocumentsPopulator.getProjectsWithDocumentsComplete(projectResourceList)).thenReturn(singletonList(projectResourceList.get(1)));
-        when(filterDocumentsPopulator.getProjectsWithDocumentsInComplete(projectResourceList)).thenReturn(emptyList());
-        when(filterDocumentsPopulator.getProjectsWithDocumentsAwaitingReview(projectResourceList)).thenReturn(singletonList(projectResourceList.get(0)));
+        when(projectFilterPopulator.getInSetupProjects(projectResourceList)).thenReturn(singletonList(projectResourceList.get(0)));
+        when(projectFilterPopulator.getPreviousProject(projectResourceList)).thenReturn(singletonList(projectResourceList.get(1)));
+        when(projectFilterPopulator.getProjectsWithDocumentsComplete(projectResourceList)).thenReturn(singletonList(projectResourceList.get(1)));
+        when(projectFilterPopulator.getProjectsWithDocumentsInComplete(projectResourceList)).thenReturn(emptyList());
+        when(projectFilterPopulator.getProjectsWithDocumentsAwaitingReview(projectResourceList)).thenReturn(singletonList(projectResourceList.get(0)));
     }
 
     @Test

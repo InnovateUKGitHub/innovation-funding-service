@@ -57,7 +57,7 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
     private SetupSectionStatus setupSectionStatus;
 
     @Mock
-    private FilterDocumentsPopulator filterDocumentsPopulator;
+    private ProjectFilterPopulator projectFilterPopulator;
 
     private UserResource user;
     private CompetitionResource competition;
@@ -95,7 +95,7 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(monitoringOfficerSummaryViewModelPopulator.populate(anyList())).thenReturn(monitoringOfficerSummaryViewModel);
         when(setupSectionStatus.documentsSectionStatus(false, project, competition, true)).thenReturn(EMPTY);
-        when(filterDocumentsPopulator.hasDocumentSection(project)).thenReturn(false);
+        when(projectFilterPopulator.hasDocumentSection(project)).thenReturn(false);
 
         MonitoringOfficerDashboardViewModel viewModel = populator.populate(user);
         assertEquals(1, viewModel.getProjects().size());
@@ -157,11 +157,11 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
         when(competitionRestService.getCompetitionForProject(projectResourceList.get(1).getId())).thenReturn(restSuccess(competition));
         when(setupSectionStatus.documentsSectionStatus(false, projectResourceList.get(1), competition, true)).thenReturn(TICK);
 
-        when(filterDocumentsPopulator.hasDocumentSection(projectResourceList.get(1))).thenReturn(true);
-        when(filterDocumentsPopulator.hasDocumentSection(projectResourceList.get(0))).thenReturn(true);
-        when(filterDocumentsPopulator.getProjectsWithDocumentsComplete(projectResourceList)).thenReturn(singletonList(projectResourceList.get(1)));
-        when(filterDocumentsPopulator.getProjectsWithDocumentsInComplete(projectResourceList)).thenReturn(null);
-        when(filterDocumentsPopulator.getProjectsWithDocumentsAwaitingReview(projectResourceList)).thenReturn(singletonList(projectResourceList.get(0)));
+        when(projectFilterPopulator.hasDocumentSection(projectResourceList.get(1))).thenReturn(true);
+        when(projectFilterPopulator.hasDocumentSection(projectResourceList.get(0))).thenReturn(true);
+        when(projectFilterPopulator.getProjectsWithDocumentsComplete(projectResourceList)).thenReturn(singletonList(projectResourceList.get(1)));
+        when(projectFilterPopulator.getProjectsWithDocumentsInComplete(projectResourceList)).thenReturn(null);
+        when(projectFilterPopulator.getProjectsWithDocumentsAwaitingReview(projectResourceList)).thenReturn(singletonList(projectResourceList.get(0)));
 
         MonitoringOfficerSummaryViewModel monitoringOfficerSummaryViewModel = new MonitoringOfficerSummaryViewModel(1, 1, 1, 0, 1);
 
