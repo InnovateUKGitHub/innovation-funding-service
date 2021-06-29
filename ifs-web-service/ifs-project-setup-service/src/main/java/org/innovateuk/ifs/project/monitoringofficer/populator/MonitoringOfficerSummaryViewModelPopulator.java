@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.project.monitoringofficer.populator;
 
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.documents.populator.FilterDocumentsPopulator;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerSummaryViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.status.populator.SetupSectionStatus;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,11 +25,11 @@ public class MonitoringOfficerSummaryViewModelPopulator {
 
     public MonitoringOfficerSummaryViewModel populate(UserResource user) {
         List<ProjectResource> projects = monitoringOfficerRestService.getProjectsForMonitoringOfficer(user.getId()).getSuccess();
-        return new MonitoringOfficerSummaryViewModel(getInSetupProjectCount(projects), getPreviousProjectCount(projects), getDocumentsComplete(projects), getDocumentsInComplete(projects), getDocumentsAwaitingReview(projects));
+        return new MonitoringOfficerSummaryViewModel(getInSetupProjectCount(projects), getPreviousProjectCount(projects), getDocumentsCompleteCount(projects), getDocumentsInCompleteCount(projects), getDocumentsAwaitingReviewCount(projects));
     }
 
     public MonitoringOfficerSummaryViewModel populate(List<ProjectResource> projects) {
-        return new MonitoringOfficerSummaryViewModel(getInSetupProjectCount(projects), getPreviousProjectCount(projects), getDocumentsComplete(projects), getDocumentsInComplete(projects), getDocumentsAwaitingReview(projects));
+        return new MonitoringOfficerSummaryViewModel(getInSetupProjectCount(projects), getPreviousProjectCount(projects), getDocumentsCompleteCount(projects), getDocumentsInCompleteCount(projects), getDocumentsAwaitingReviewCount(projects));
     }
 
     public int getInSetupProjectCount(List<ProjectResource> projects) {
@@ -50,15 +48,15 @@ public class MonitoringOfficerSummaryViewModelPopulator {
         return previousProjects.size();
     }
 
-    public int getDocumentsComplete(List<ProjectResource> projects) {
+    public int getDocumentsCompleteCount(List<ProjectResource> projects) {
         return filterDocumentsPopulator.getProjectsWithDocumentsComplete(projects).size();
     }
 
-    public int getDocumentsInComplete(List<ProjectResource> projects) {
+    public int getDocumentsInCompleteCount(List<ProjectResource> projects) {
         return filterDocumentsPopulator.getProjectsWithDocumentsInComplete(projects).size();
     }
 
-    public int getDocumentsAwaitingReview(List<ProjectResource> projects) {
+    public int getDocumentsAwaitingReviewCount(List<ProjectResource> projects) {
         return filterDocumentsPopulator.getProjectsWithDocumentsAwaitingReview(projects).size();
     }
 }
