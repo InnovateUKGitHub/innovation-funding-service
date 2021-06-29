@@ -240,6 +240,7 @@ Applicant uploads the GOL using Docusign
     the user clicks the button/link                                          jQuery = span:contains("Fill In")
     The user enters text to a docusign field                                 jQuery = .text-tab:not(.locked):first ~ .text-tab:not(.locked) input   ${date}
     the user clicks the button/link                                          css = div.signature-tab-content
+    the user adopts signature details if exist
     the user clicks the button/link                                          css = div.documents-finish-button-decoration
     the user should see the element                                          jQuery = h1:contains("Grant offer letter")
 
@@ -926,8 +927,13 @@ the user approves funding rules of lead and partner
 
 the user accepts electronic record and signature disclosure if exist
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element   link = Electronic Record and Signature Disclosure
-    Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link     css = label[for="disclosureAccepted"]
+    Run Keyword If  '${status}' == 'PASS'  run keywords  the user clicks the button/link     css = label[for="disclosureAccepted"]
+    ...         AND                                      the user clicks the button/link     jQuery = button:contains("Continue")
 
 the user adopts initial details if exist
-    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element   jQuery = button:contains("Adopt and Initial")
-    Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link     jQuery = button:contains("Adopt and Initial")
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element   css = button[data-group-item="initials"]
+    Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link     css = button[data-group-item="initials"]
+
+the user adopts signature details if exist
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element   css = button[data-group-item="signature"]
+    Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link     css = button[data-group-item="signature"]
