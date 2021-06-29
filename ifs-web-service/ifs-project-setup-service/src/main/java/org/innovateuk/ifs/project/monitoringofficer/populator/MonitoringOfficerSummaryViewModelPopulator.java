@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.monitoringofficer.populator;
 
-import org.innovateuk.ifs.documents.populator.FilterDocumentsPopulator;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerSummaryViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;

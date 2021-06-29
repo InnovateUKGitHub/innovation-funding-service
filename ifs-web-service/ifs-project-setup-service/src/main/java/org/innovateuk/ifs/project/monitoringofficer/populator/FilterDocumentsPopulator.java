@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.documents.populator;
+package org.innovateuk.ifs.project.monitoringofficer.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.status.populator.SetupSectionStatus;
+import org.innovateuk.ifs.project.status.populator.SetupSectionStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

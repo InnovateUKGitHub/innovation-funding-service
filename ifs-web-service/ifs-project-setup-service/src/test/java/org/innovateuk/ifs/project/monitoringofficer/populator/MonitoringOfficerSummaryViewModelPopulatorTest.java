@@ -2,13 +2,11 @@ package org.innovateuk.ifs.project.monitoringofficer.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerSummaryViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
-import org.innovateuk.ifs.status.populator.SetupSectionStatus;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,9 +15,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder.newCompetitionDocumentResource;
@@ -29,8 +29,6 @@ import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROV
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.SUBMITTED;
 import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentResourceBuilder.newProjectDocumentResource;
 import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
-import static org.innovateuk.ifs.sections.SectionStatus.MO_ACTION_REQUIRED;
-import static org.innovateuk.ifs.sections.SectionStatus.TICK;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -45,29 +43,25 @@ public class MonitoringOfficerSummaryViewModelPopulatorTest {
     private MonitoringOfficerRestService monitoringOfficerRestService;
 
     @Mock
-    private CompetitionRestService competitionRestService;
-
-    @Mock
-    private SetupSectionStatus setupSectionStatus;
+    private FilterDocumentsPopulator filterDocumentsPopulator;
 
     private UserResource user;
-    private ProjectResource projectResourceInSetup;
-    private ProjectResource projectResourceInLive;
+    private List<ProjectResource> projectResourceList = new ArrayList<>();
 
     @Before
     public void setUp() {
         user = newUserResource().build();
         List<ProjectSetupStage> setUpStages = asList(PROJECT_DETAILS, PROJECT_TEAM, DOCUMENTS, MONITORING_OFFICER, BANK_DETAILS, FINANCE_CHECKS, SPEND_PROFILE, GRANT_OFFER_LETTER, PROJECT_SETUP_COMPLETE);
-        List<CompetitionDocumentResource> competitionDocument = singletonList(newCompetitionDocumentResource()
+        CompetitionDocumentResource competitionDocument = newCompetitionDocumentResource()
                 .withCompetition(9L)
                 .withTitle("Exploitation Plan")
-                .build());
+                .build();
         CompetitionResource competition = newCompetitionResource()
                 .withId(9L)
                 .withProjectSetupStages(setUpStages)
-                .withProjectDocument(competitionDocument)
+                .withProjectDocument(singletonList(competitionDocument))
                 .build();
-        projectResourceInSetup = newProjectResource()
+        ProjectResource projectResourceInSetup = newProjectResource()
                 .withId(88L)
                 .withCompetition(competition.getId())
                 .withCompetitionName("Competition name")
@@ -76,13 +70,14 @@ public class MonitoringOfficerSummaryViewModelPopulatorTest {
                 .withMonitoringOfficerUser(user.getId())
                 .withProjectState(ProjectState.SETUP)
                 .withCollaborativeProject(false)
+                .withMonitoringOfficerUser(user.getId())
                 .withProjectDocuments(singletonList(newProjectDocumentResource()
                         .withProject(88L)
-                        .withCompetitionDocument(competitionDocument.get(0))
+                        .withCompetitionDocument(competitionDocument)
                         .withStatus(SUBMITTED)
                         .build()))
                 .build();
-        projectResourceInLive = newProjectResource()
+        ProjectResource projectResourceInLive = newProjectResource()
                 .withCompetition(competition.getId())
                 .withCompetitionName("Competition name")
                 .withApplication(2L)
@@ -90,26 +85,27 @@ public class MonitoringOfficerSummaryViewModelPopulatorTest {
                 .withMonitoringOfficerUser(user.getId())
                 .withCollaborativeProject(false)
                 .withProjectState(ProjectState.LIVE)
+                .withMonitoringOfficerUser(user.getId())
                 .withProjectDocuments(singletonList(newProjectDocumentResource()
                         .withProject(88L)
-                        .withCompetitionDocument(competitionDocument.get(0))
+                        .withCompetitionDocument(competitionDocument)
                         .withStatus(APPROVED)
                         .build()))
                 .build();
+        projectResourceList.add(projectResourceInSetup);
+        projectResourceList.add(projectResourceInLive);
 
-        when(competitionRestService.getCompetitionById(projectResourceInSetup.getCompetition())).thenReturn(restSuccess(competition));
-        when(competitionRestService.getCompetitionForProject(projectResourceInSetup.getId())).thenReturn(restSuccess(competition));
-        when(setupSectionStatus.documentsSectionStatus(false, projectResourceInSetup, competition, true)).thenReturn(MO_ACTION_REQUIRED);
+        when(monitoringOfficerRestService.getProjectsForMonitoringOfficer(user.getId())).thenReturn(restSuccess(projectResourceList));
 
-        when(competitionRestService.getCompetitionById(projectResourceInLive.getCompetition())).thenReturn(restSuccess(competition));
-        when(competitionRestService.getCompetitionForProject(projectResourceInLive.getId())).thenReturn(restSuccess(competition));
-        when(setupSectionStatus.documentsSectionStatus(false, projectResourceInLive, competition, true)).thenReturn(TICK);
+        when(filterDocumentsPopulator.getProjectsWithDocumentsComplete(projectResourceList)).thenReturn(singletonList(projectResourceList.get(1)));
+        when(filterDocumentsPopulator.getProjectsWithDocumentsInComplete(projectResourceList)).thenReturn(emptyList());
+        when(filterDocumentsPopulator.getProjectsWithDocumentsAwaitingReview(projectResourceList)).thenReturn(singletonList(projectResourceList.get(0)));
     }
 
     @Test
     public void populateByProjects() {
 
-        MonitoringOfficerSummaryViewModel viewModel = populator.populate(asList(projectResourceInSetup, projectResourceInLive));
+        MonitoringOfficerSummaryViewModel viewModel = populator.populate(projectResourceList);
 
         assertEquals(1, viewModel.getInSetupProjectCount());
         assertEquals(1, viewModel.getPreviousProjectCount());
@@ -122,7 +118,7 @@ public class MonitoringOfficerSummaryViewModelPopulatorTest {
     public void populateByUser() {
 
         when(monitoringOfficerRestService.getProjectsForMonitoringOfficer(user.getId()))
-                .thenReturn(restSuccess(asList(projectResourceInSetup, projectResourceInLive)));
+                .thenReturn(restSuccess(projectResourceList));
 
         MonitoringOfficerSummaryViewModel viewModel = populator.populate(user);
 

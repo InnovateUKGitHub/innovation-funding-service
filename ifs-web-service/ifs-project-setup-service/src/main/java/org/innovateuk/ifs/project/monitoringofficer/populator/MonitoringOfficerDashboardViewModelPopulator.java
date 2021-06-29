@@ -2,14 +2,13 @@ package org.innovateuk.ifs.project.monitoringofficer.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.documents.populator.FilterDocumentsPopulator;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerDashboardDocumentSectionViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerDashboardViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerSummaryViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.ProjectDashboardRowViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.status.populator.SetupSectionStatus;
+import org.innovateuk.ifs.project.status.populator.SetupSectionStatus;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
