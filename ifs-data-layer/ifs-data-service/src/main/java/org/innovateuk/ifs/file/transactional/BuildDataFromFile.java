@@ -22,10 +22,12 @@ import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.repository.CompetitionExternalConfigRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionAssessmentConfigService;
+import org.innovateuk.ifs.competition.transactional.CompetitionExternalConfigService;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
@@ -140,6 +142,12 @@ public class BuildDataFromFile {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired
+    private CompetitionExternalConfigService competitionExternalConfigService;
+
+    @Autowired
+    private CompetitionExternalConfigRepository competitionExternalConfigRepository;
+
     public void buildFromFile(InputStream input) {
         try {
             CSVReaderBuilder builder = new CSVReaderBuilder(new InputStreamReader(input));
@@ -148,7 +156,7 @@ public class BuildDataFromFile {
             List<List<String>> lists = simpleMap(data, Arrays::asList);
             List<BuildDataFromFileLine> lines = lists.stream()
                     .map(
-                            rows -> new BuildDataFromFileLine(rows.get(0), rows.get(1), rows.get(2), rows.get(3))
+                            rows -> new BuildDataFromFileLine(rows.get(0), rows.get(1), rows.get(2), rows.get(3), rows.get(4))
                     ).collect(Collectors.toList());
             buildData(lines);
         } catch (FileNotFoundException e) {
@@ -161,18 +169,20 @@ public class BuildDataFromFile {
 
     private void buildData(List<BuildDataFromFileLine> lines) {
         Set<BuildCompetition> competitions = new LinkedHashSet<>();
+        Set<BuildExternalCompetition> externalCompetitions = new LinkedHashSet<>();
         Set<BuildQuestion> questions = new LinkedHashSet<>();
         Set<BuildApplication> applications = new LinkedHashSet<>();
         Set<BuildResponse> responses = new LinkedHashSet<>();
 
         lines.forEach(line -> {
             competitions.add(new BuildCompetition(line.getCompetitionName()));
+            externalCompetitions.add(new BuildExternalCompetition(line.getCompetitionName(), line.getExternalCompId()));
             questions.add(new BuildQuestion(line.getQuestionName(), line.getCompetitionName()));
             applications.add(new BuildApplication(line.getApplicationName(), line.getCompetitionName()));
             responses.add(new BuildResponse(line.getResponse(), line.getQuestionName(), line.getApplicationName()));
         });
 
-        Map<String, CompetitionResource> createdCompetitions = createCompetitionsAndQuestions(competitions, questions);
+        Map<String, CompetitionResource> createdCompetitions = createCompetitionsAndQuestions(competitions, externalCompetitions, questions);
         createApplications(applications, responses, createdCompetitions);
         createdCompetitions.values().stream().forEach(c -> setMilestones(c, MilestoneType.ASSESSOR_BRIEFING));
     }
@@ -224,9 +234,10 @@ public class BuildDataFromFile {
         throw new IFSRuntimeException("error" + validations.toString());
     }
 
-    private Map<String, CompetitionResource> createCompetitionsAndQuestions(Set<BuildCompetition> competitions, Set<BuildQuestion> questions) {
+    private Map<String, CompetitionResource> createCompetitionsAndQuestions(Set<BuildCompetition> competitions, Set<BuildExternalCompetition> externalCompetitions, Set<BuildQuestion> questions) {
         Map<String, CompetitionResource> results = new HashMap<>();
         Multimap<String, BuildQuestion> compToQuestionMap = Multimaps.index(questions, BuildQuestion::getCompetition);
+        Multimap<String, BuildExternalCompetition> compToExternalCompetitionMap = Multimaps.index(externalCompetitions, BuildExternalCompetition::getCompetitionName);
         competitions.forEach(c -> {
             String name = c.getName();
             LOG.error("CREATING COMP " + name);
@@ -243,6 +254,7 @@ public class BuildDataFromFile {
             competition.setInnovationAreas(newHashSet(InnovationArea.NONE));
             competitionSetupService.save(competition.getId(), competition).getSuccess();
             competitionSetupService.copyFromCompetitionTypeTemplate(competition.getId(), 13L).getSuccess();
+            setExternalCompData(compToExternalCompetitionMap.get(c.getName()), competition);
             MilestoneResource milestone = milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competition.getId())
                     .getOrElse(new MilestoneResource(MilestoneType.OPEN_DATE, ZonedDateTime.now().minusDays(20 - MilestoneType.OPEN_DATE.getPriority()), competition.getId()));
             milestoneService.updateMilestone(milestone).getSuccess();
@@ -258,6 +270,17 @@ public class BuildDataFromFile {
             results.put(c.getName(), competition);
         });
         return results;
+    }
+
+    private void setExternalCompData(Collection<BuildExternalCompetition> buildexternalCompetitions, CompetitionResource competitionResource) {
+        buildexternalCompetitions.forEach(externalCompetition -> {
+            if (competitionResource.getName().equals(externalCompetition.getCompetitionName())) {
+                CompetitionExternalConfigResource competitionExternalConfigResource = new CompetitionExternalConfigResource();
+                competitionExternalConfigResource.setExternalCompetitionId(externalCompetition.getExternalCompId());
+                competitionExternalConfigService.update(competitionResource.getId(), competitionExternalConfigResource).getSuccess();
+            }
+        });
+
     }
 
     private void setMilestones(CompetitionResource competition, MilestoneType milestoneType) {
@@ -549,6 +572,54 @@ public class BuildDataFromFile {
         public int hashCode() {
             return new HashCodeBuilder(17, 37)
                     .append(name)
+                    .toHashCode();
+        }
+    }
+
+    private static class BuildExternalCompetition {
+        private String competitionName;
+        private String externalCompId;
+
+        public BuildExternalCompetition(String competitionName, String externalCompId) {
+            this.competitionName = competitionName;
+            this.externalCompId = externalCompId;
+        }
+
+        public String getCompetitionName() {
+            return competitionName;
+        }
+
+        public void setCompetitionName(String competitionName) {
+            this.competitionName = competitionName;
+        }
+
+        public String getExternalCompId() {
+            return externalCompId;
+        }
+
+        public void setExternalCompId(String externalCompId) {
+            this.externalCompId = externalCompId;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+
+            if (o == null || getClass() != o.getClass()) return false;
+
+            BuildExternalCompetition that = (BuildExternalCompetition) o;
+
+            return new EqualsBuilder()
+                    .append(competitionName, that.competitionName)
+                    .append(externalCompId, that.externalCompId)
+                    .isEquals();
+        }
+
+        @Override
+        public int hashCode() {
+            return new HashCodeBuilder(17, 37)
+                    .append(competitionName)
+                    .append(externalCompId)
                     .toHashCode();
         }
     }

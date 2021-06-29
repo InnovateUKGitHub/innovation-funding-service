@@ -1084,4 +1084,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     public void setCompetitionExternalConfig(CompetitionExternalConfig competitionExternalConfig) {
         this.competitionExternalConfig = competitionExternalConfig;
     }
+
+    public boolean isAssesssmentOnly() {
+        return getCompetitionTypeEnum() == CompetitionTypeEnum.ASSESSMENT_ONLY;
+    }
+
 }
