@@ -400,13 +400,13 @@ the total should be correct
     Wait Until Element Contains Without Screenshots    css=.govuk-heading-s  ${Total}
 
 the user should see all application elements
-    the user should see the element  jQuery = h2:contains("Sector competition questions")
-    the user should see the element  link = Application details
-    the user should see the element  link = Project summary
+    the user should see the element   jQuery = h2:contains("Sector competition questions")
+    the user should see the element   link = Application details
+    the user should see the element   link = Project summary
     the user should see the element   link = Public description
     the user should see the element   link = Scope
-    the user should see the element  jQuery = a:contains("${amendedQuestion}")
-    the user should see the element  jQuery = a:contains("Approach and innovation")
+    the user should see the element   jQuery = a:contains("${amendedQuestion}")
+    the user should see the element   jQuery = a:contains("Approach and innovation")
     the user should see the element   jQuery = a:contains("Team and resources")
     the user should see the element   jQuery = a:contains("Market awareness")
     the user should see the element   jQuery = a:contains("Outcomes and route to market")
