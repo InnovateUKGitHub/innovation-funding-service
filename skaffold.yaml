@@ -99,12 +99,12 @@ build:
     useDockerCLI: true
     useBuildkit: false
     tryImportMissing: true
-    push: false
-deploy:
-  statusCheckDeadlineSeconds: 600
-  kustomize:
-    paths:
-      - os-files/kustomize/overlays/local
+    push: true
+#deploy:
+#  statusCheckDeadlineSeconds: 600
+#  kustomize:
+#    paths:
+#      - os-files/kustomize/overlays/local
 profiles:
   - name: at
     build:
