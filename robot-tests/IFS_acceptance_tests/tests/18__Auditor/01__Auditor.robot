@@ -7,6 +7,8 @@ Documentation     IFS-9884 Auditor role: create role
 ...
 ...               IFS-9887 Auditor role: modify journey
 ...
+...               IFS-9882 download permission error
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Administrator  CompAdmin
@@ -105,16 +107,28 @@ Auditor can view the bank details with the 'Complete' status for the organisatio
     And the user should not see the element    jQuery = button:contains("Approve bank account details")
     And the user should not see the element    jQuery = a:contains("Change bank account details")
 
-Auditor can view the GOL for the organisations
-    [Documentation]  IFS-9886
-    Given the user navigates to the page       ${SERVER}/project-setup-management/project/${projectID1}/grant-offer-letter/send
-    Then the user should see the element       jQuery = h1:contains("Grant offer letter")
-    And the user should not see the element    jQuery = label:contains("Upload")
+Auditor can open and view the GOL for the organisations
+    [Documentation]  IFS-9886    IFS-9882
+    Given the user navigates to the page                ${SERVER}/project-setup-management/project/${projectID1}/grant-offer-letter/send
+    And the user should see the element                 jQuery = h1:contains("Grant offer letter")
+    When the user clicks the button/link                jQuery = a:contains(".pdf (opens in a new window)")
+    Then the user should not see an error in the page
+    And the user should not see the element             jQuery = label:contains("Upload")
 
 Auditor cannot view the bank details with the 'Review' status for the organisation
     [Documentation]  IFS-9886
     Given the user navigates to the page            ${SERVER}/project-setup-management/competition/${competitionID}/status/all
     Then the user cannot click the review button
+
+Auditor can open and view the fEC model certificate in the project setup
+    [Documentation]  IFS-9882
+    Given Log in as a different user                     &{auditorCredentials}
+    And the user navigates to the page                   ${SERVER}/management/competition/${competitionId}/application/${ApplicationID}
+    And the user clicks the button/link                  jQuery =button:contains("Finances summary")
+    And the user clicks the button/link                  jQuery = div:contains("Middlesex University Higher Education Corporation") ~ a:contains("View finances")
+    And The user clicks the button/link                  jQuery = a:contains("Your fEC model")
+    When the user clicks the button/link                 jQuery = a:contains(".pdf (opens in a new window)")
+    Then the user should not see an error in the page
 
 *** Keywords ***
 Custom suite setup
