@@ -62,13 +62,9 @@ Display errors for invalid inputs of the First name
     And browser validations have been disabled
     When the user fills in the first name                 ${EMPTY}
     Then the user should see a field error                ${enter_a_first_name}
-    And browser validations have been disabled
-    And the user fills in the first name                  testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttes
-    And the user clicks the button/link                   css = [name="create-account"]
-    And the user should see a field and summary error     Your first name cannot have more than 70 characters.
-    And browser validations have been disabled
     And the user fills in the first name                  A
     And the user should see a field error                 Your first name should have at least 2 characters.
+    And the user fills in the first name                  Aname
 
 Display errors for invalid inputs of the Last name
     [Documentation]    INFUND-1042
@@ -77,13 +73,9 @@ Display errors for invalid inputs of the Last name
     And browser validations have been disabled
     When the user fills in the last name                  ${EMPTY}
     Then the user should see a field error                ${enter_a_last_name}
-    And browser validations have been disabled
-    And the user fills in the last name                   testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttes
-    And the user clicks the button/link                   css = [name="create-account"]
-    And the user should see a field and summary error     Your last name cannot have more than 70 characters.
-    And browser validations have been disabled
     And the user fills in the last name                   B
     And the user should see a field error                 Your last name should have at least 2 characters.
+    And the user fills in the last name                   testname
 
 Display errors for invalid inputs of the Phone field
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
@@ -92,11 +84,9 @@ Display errors for invalid inputs of the Phone field
     And browser validations have been disabled
     When the user fills in the Phone field                 ${EMPTY}
     Then the user should see a field error                 ${enter_a_phone_number}
-    And browser validations have been disabled
     And the user fills in the Phone field                  121212121212121212121
-    And the user clicks the button/link                    css = [name="create-account"]
+    And the user clicks the button/link                    jQuery = button:contains("Save changes")
     And the user should see a field and summary error      ${enter_a_phone_number_between_8_and_20_digits}
-    And browser validations have been disabled
     And the user fills in the Phone field                  12
     And the user should see a field error                  ${enter_a_phone_number_between_8_and_20_digits}
 
