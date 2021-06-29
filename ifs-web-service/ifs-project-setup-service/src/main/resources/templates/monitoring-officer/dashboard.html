@@ -139,25 +139,27 @@
                                             </th:block>
                                         </div>
 
-
-<!--                                        <hr />-->
-
-                                        <div class="task">
-                                            <h4 class="govuk-heading-s"
-                                                    th:if="${projectView.documentSectionViewModel.hasDocumentSection}">
-                                                <div th:if="${projectView.documentSectionViewModel.hasDocumentForReview}">
+                                        <div class="task govuk-!-margin-bottom-2">
+                                            <ul>
+                                                <li>
+                                                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-4 govuk-!-margin-bottom-2"/>
+                                                    <div class="task">
+                                            <span class="govuk-heading-s"
+                                                  th:if="${projectView.documentSectionViewModel.hasDocumentSection and projectView.documentSectionViewModel.hasDocumentForReview}">
                                                 <a th:href="${projectView.documentSectionViewModel.getDocumentLinkUrl}"
                                                    class="govuk-link">Documents</a>
-                                                </div>
-                                                <div th:unless="${projectView.documentSectionViewModel.hasDocumentForReview}">Documents</div>
-                                            </h4>
-                                            <div th:unless="${projectView.documentSectionViewModel.hasDocumentSection}">
-                                                <p></p>
-                                            </div>
+                                            </span>
+                                                        <h3 th:if="${projectView.documentSectionViewModel.hasDocumentSection and !projectView.documentSectionViewModel.hasDocumentForReview}"
+                                                            class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">
+                                                            Documents</h3>
+                                                        <h3 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2" th:unless="${projectView.documentSectionViewModel.hasDocumentSection}"></h3>
+                                                    </div>
+
+                                                    <div th:if="${projectView.documentSectionViewModel.hasDocumentSection}"
+                                                         th:insert="project/fragments :: mo-document-status-indicator(${projectView.documentSectionViewModel.documentSectionStatus})"></div>
+                                                </li>
+                                            </ul>
                                         </div>
-                                            <th:block th:if="${projectView.documentSectionViewModel.hasDocumentSection}"
-                                                      class="status-msg msg-progress"
-                                                      th:insert="project/fragments :: mo-document-status-indicator(${projectView.documentSectionViewModel.documentSectionStatus})"/>
                                     </li>
                                 </ul>
                             </div>
