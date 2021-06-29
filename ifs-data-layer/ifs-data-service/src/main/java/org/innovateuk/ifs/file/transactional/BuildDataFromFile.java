@@ -160,11 +160,12 @@ public class BuildDataFromFile {
                     ).collect(Collectors.toList());
             buildData(lines);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            LOG.error("Unable to supply input stream for file ", e);
+            throw new IllegalStateException("Unable to supply input stream for file ", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Unable to open an input stream from request", e);
+            throw new RuntimeException("Unable to open an input stream from request", e);
         }
-
     }
 
     private void buildData(List<BuildDataFromFileLine> lines) {

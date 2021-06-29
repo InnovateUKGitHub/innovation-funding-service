@@ -2,8 +2,6 @@ package org.innovateuk.ifs.file.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.mapper.FileEntryMapper;
-import org.innovateuk.ifs.file.repository.UploadFilesRepository;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -17,18 +15,6 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
 public class FileUploadServiceImplTest extends BaseServiceUnitTest<FileUploadServiceImpl> {
-
-    @Mock
-    private FileService fileServiceMock;
-
-    @Mock
-    private FileEntryMapper fileEntryMapperMock;
-
-    @Mock
-    private UploadFilesRepository uploadFilesRepositoryMock;
-
-    @Mock
-    private FileEntryService fileEntryServiceMock;
 
     @Mock
     private BuildDataFromFile buildDataFromFileMock;
