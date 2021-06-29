@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.token.transactional;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -56,18 +57,24 @@ public class TokenServiceImpl implements TokenService {
 
     /**
      * if there are extra attributes in the token, then maybe we need to create a new application, or add the user to a application.
+     *
+     * @return
      */
     @Override
     @Transactional
-    public void handleExtraAttributes(Token token) {
+    public ServiceResult<ApplicationResource> handleExtraAttributes(Token token) {
+        ServiceResult<ApplicationResource> applicationResourceServiceResult = null;
+
         JsonNode extraInfo = token.getExtraInfo();
         if (User.class.getName().equals(token.getClassName()) && extraInfo.has("competitionId")) {
             Long competitionId = extraInfo.get("competitionId").asLong();
             Long organisationId = extraInfo.get("organisationId").asLong();
             if (competitionId != null && competitionId != 0L && organisationId != null && organisationId != 0) {
-                applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId("", competitionId, token.getClassPk(), organisationId);
+                applicationResourceServiceResult = applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId("", competitionId, token.getClassPk(), organisationId);
             }
         }
+
+        return applicationResourceServiceResult;
     }
 
     private boolean isTokenValid(final Token token) {

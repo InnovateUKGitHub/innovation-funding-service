@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
@@ -91,34 +92,34 @@ public class UserController {
 
     @GetMapping("/active")
     public RestResult<ManageUserPageResource> findActiveUsers(@RequestParam(required = false) String filter,
-                                                        @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
-                                                        @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
+                                                              @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                              @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
         return userService.findActive(filter, PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
     }
 
     @GetMapping("/inactive")
-    public RestResult<ManageUserPageResource> findInactiveUsers(@RequestParam(required = false)  String filter,
-                                                          @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
-                                                          @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
+    public RestResult<ManageUserPageResource> findInactiveUsers(@RequestParam(required = false) String filter,
+                                                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
         return userService.findInactive(filter, PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
     }
 
     @GetMapping("/external/active")
-    public RestResult<ManageUserPageResource> findActiveExternalUsers(@RequestParam(required = false)  String filter,
-                                                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
-                                                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
+    public RestResult<ManageUserPageResource> findActiveExternalUsers(@RequestParam(required = false) String filter,
+                                                                      @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                      @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
         return userService.findActiveExternal(filter, PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
     }
 
     @GetMapping("/external/inactive")
-    public RestResult<ManageUserPageResource> findInactiveExternalUsers(@RequestParam(required = false)  String filter,
-                                                                  @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
-                                                                  @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
+    public RestResult<ManageUserPageResource> findInactiveExternalUsers(@RequestParam(required = false) String filter,
+                                                                        @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                        @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
         return userService.findInactiveExternal(filter, PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
     }
 
     @PostMapping("/internal/create/{inviteHash}")
-    public RestResult<Void> createInternalUser(@PathVariable("inviteHash") String inviteHash, @Valid @RequestBody InternalUserRegistrationResource internalUserRegistrationResource){
+    public RestResult<Void> createInternalUser(@PathVariable("inviteHash") String inviteHash, @Valid @RequestBody InternalUserRegistrationResource internalUserRegistrationResource) {
         return registrationService.createUser(anUserCreationResource()
                 .withFirstName(internalUserRegistrationResource.getFirstName())
                 .withLastName(internalUserRegistrationResource.getLastName())
@@ -130,7 +131,7 @@ public class UserController {
     }
 
     @PostMapping("/internal/edit")
-    public RestResult<Void> editInternalUser(@Valid @RequestBody EditUserResource editUserResource){
+    public RestResult<Void> editInternalUser(@Valid @RequestBody EditUserResource editUserResource) {
 
         UserResource userToEdit = getUserToEdit(editUserResource);
 
@@ -199,9 +200,11 @@ public class UserController {
                 failure -> restFailure(failure.getErrors()),
                 token -> {
                     registrationService.activateApplicantAndSendDiversitySurvey(token.getClassPk()).andOnSuccessReturnVoid(v -> {
-                        tokenService.handleExtraAttributes(token);
+                       ApplicationResource applicationResource  = tokenService.handleExtraAttributes(token).getSuccess();
+                        Long competitionId = applicationResource.getCompetition();
+                        Long applicationId = applicationResource.getId();
                         tokenService.removeToken(token);
-                        crmService.syncCrmContact(token.getClassPk());
+                        crmService.syncCrmContact(token.getClassPk(),competitionId,applicationId);
                     });
                     return restSuccess();
                 });
