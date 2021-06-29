@@ -47,12 +47,6 @@
     justify-content: flex-end;
   }
 
-  hr {
-    @include govuk-responsive-margin(6, "top");
-    @include govuk-responsive-margin(6, "bottom");
-    border-bottom: 1px solid $govuk-border-colour;
-  }
-
   .task {
     @include govuk-font(16);
     @include media-down(tablet) {
