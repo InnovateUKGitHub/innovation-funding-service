@@ -5,9 +5,9 @@ import org.innovateuk.ifs.application.resource.CompanyAge;
 import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
 import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
-import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
@@ -116,9 +116,6 @@ public class Application implements ProcessActivity {
     @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
     private ProjectToBeCreated projectToBeCreated;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "applicationExternalConfigId", referencedColumnName = "id")
-    private ApplicationExternalConfig applicationExternalConfig;
 
     public Application() {
     }
@@ -545,13 +542,5 @@ public class Application implements ProcessActivity {
 
     public void setAssessments(List<Assessment> assessments) {
         this.assessments = assessments;
-    }
-
-    public ApplicationExternalConfig getApplicationExternalConfig() {
-        return applicationExternalConfig;
-    }
-
-    public void setApplicationExternalConfig(ApplicationExternalConfig applicationExternalConfig) {
-        this.applicationExternalConfig = applicationExternalConfig;
     }
 }
