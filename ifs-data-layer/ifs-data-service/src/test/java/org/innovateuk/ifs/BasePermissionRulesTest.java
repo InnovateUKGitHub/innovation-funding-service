@@ -32,6 +32,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.user.resource.Role.AUDITOR;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.mockito.Mockito.when;
 
@@ -117,6 +118,11 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     protected void setUpUserAsProjectFinanceUser(ProjectResource project, UserResource user) {
         List<Role> projectFinanceUser = singletonList(Role.PROJECT_FINANCE);
         user.setRoles(projectFinanceUser);
+    }
+
+    protected void setUpUserAsAuditor(ProjectResource project, UserResource user) {
+        List<Role> auditorRoleResource = singletonList(AUDITOR);
+        user.setRoles(auditorRoleResource);
     }
 
     protected void setUpUserNotAsProjectFinanceUser(ProjectResource project, UserResource user) {

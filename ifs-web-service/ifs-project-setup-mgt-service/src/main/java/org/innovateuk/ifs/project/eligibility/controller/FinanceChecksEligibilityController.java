@@ -40,6 +40,7 @@ import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.AjaxResult;
@@ -125,7 +126,16 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         return doViewEligibility(projectId, organisationId, model, null, new ResetEligibilityForm(), null, null, editAcademicFinances, user, editProjectCosts);
     }
 
-    private String doViewEligibility(long projectId, long organisationId, Model model, FinanceChecksEligibilityForm eligibilityForm, ResetEligibilityForm resetEligibilityForm, YourProjectCostsForm form, AcademicCostForm academicCostForm, boolean editAcademicFinances, UserResource user, boolean canEditProjectCosts) {
+    private String doViewEligibility(long projectId,
+                                     long organisationId,
+                                     Model model,
+                                     FinanceChecksEligibilityForm eligibilityForm,
+                                     ResetEligibilityForm resetEligibilityForm,
+                                     YourProjectCostsForm form,
+                                     AcademicCostForm academicCostForm,
+                                     boolean editAcademicFinances,
+                                     UserResource user,
+                                     boolean canEditProjectCosts) {
         ProjectResource project = projectService.getById(projectId);
         Future<CompetitionResource> competition = async(() -> competitionRestService.getCompetitionById(project.getCompetition()).getSuccess());
         Future<OrganisationResource> organisation = async(() -> organisationRestService.getOrganisationById(organisationId).getSuccess());
@@ -148,7 +158,14 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                 Optional<ProjectFinanceResource> organisationProjectFinance = projectFinances.stream()
                         .filter(projectFinance -> projectFinance.getOrganisation().longValue() == organisationId)
                         .findFirst();
-                model.addAttribute("model", new FinanceChecksProjectCostsViewModel(project.getApplication(), competition.get().getName(), open, competition.get().getFinanceRowTypesByFinance(organisationProjectFinance), competition.get().isOverheadsAlwaysTwenty(), competition.get().getFundingType() == FundingType.KTP, canEditProjectCosts));
+                model.addAttribute("model", new FinanceChecksProjectCostsViewModel(
+                        project.getApplication(),
+                        competition.get().getName(),
+                        open,
+                        competition.get().getFinanceRowTypesByFinance(organisationProjectFinance),
+                        competition.get().isOverheadsAlwaysTwenty(),
+                        competition.get().getFundingType() == FundingType.KTP,
+                        canEditProjectCosts));
                 if (form == null) {
                     future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId, organisation.get().getId())));
                 }
@@ -191,7 +208,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                     projectFinances,
                     resetableGolState,
                     showChangesLink,
-                    canEditProjectCosts
+                    canEditProjectCosts,
+                    user.hasAuthority(Authority.AUDITOR)
             ));
 
             model.addAttribute("eligibilityForm", eligibilityForm);

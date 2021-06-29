@@ -184,6 +184,17 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
+    public void auditorsCanDownloadGrantOfferLetterDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserAsAuditor(project, user);
+
+        assertTrue(rules.auditorUsersCanDownloadGrantOfferLetter(project, user));
+    }
+
+    @Test
     public void nonCompAdminsCannotDownloadGrantOfferLetterDocuments() {
 
         ProjectResource project = newProjectResource().build();
@@ -415,6 +426,20 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
+    public void auditorUserCanViewSendGrantOfferLetterStatus() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(auditorUser())) {
+                assertTrue(rules.auditorUserCanViewSendGrantOfferLetterStatus(project, user));
+            } else {
+                assertFalse(rules.auditorUserCanViewSendGrantOfferLetterStatus(project, user));
+            }
+        });
+    }
+
+    @Test
     public void onlyStakeholdersAssignedToCompetitionCanViewSendGrantOfferLetterStatus() {
         when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), stakeholderUserResourceOnCompetition.getId())).thenReturn(true);
 
@@ -486,6 +511,20 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
                 assertTrue(rules.supportUsersCanViewGrantOfferLetter(project, user));
             } else {
                 assertFalse(rules.supportUsersCanViewGrantOfferLetter(project, user));
+            }
+        });
+    }
+
+    @Test
+    public void auditorUsersCanViewGrantOfferLetter() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(auditorUser())) {
+                assertTrue(rules.auditorUsersCanViewGrantOfferLetter(project, user));
+            } else {
+                assertFalse(rules.auditorUsersCanViewGrantOfferLetter(project, user));
             }
         });
     }

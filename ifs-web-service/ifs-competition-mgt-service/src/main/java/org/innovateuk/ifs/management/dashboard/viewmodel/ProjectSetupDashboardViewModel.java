@@ -20,19 +20,22 @@ public class ProjectSetupDashboardViewModel extends DashboardViewModel {
     private Long countBankDetails;
     private boolean projectFinanceUser;
     private boolean externalFinanceUser;
+    private boolean isReadOnly;
 
     public ProjectSetupDashboardViewModel(CompetitionSearchResult searchResult,
                                           CompetitionCountResource counts,
                                           Long countBankDetails,
                                           DashboardTabsViewModel tabs,
                                           boolean projectFinanceUser,
-                                          boolean externalFinanceUser) {
+                                          boolean externalFinanceUser,
+                                          boolean isReadOnly) {
         this.counts = counts;
         this.tabs = tabs;
         this.countBankDetails = countBankDetails;
         this.projectFinanceUser = projectFinanceUser;
         this.result = searchResult;
         this.externalFinanceUser = externalFinanceUser;
+        this.isReadOnly = isReadOnly;
 
     }
 
@@ -50,6 +53,10 @@ public class ProjectSetupDashboardViewModel extends DashboardViewModel {
 
     public boolean isExternalFinanceUser() {
         return externalFinanceUser;
+    }
+
+    public boolean isReadOnly() {
+        return isReadOnly;
     }
 
     public List<CompetitionSearchResultItem> getNonPrioritisedCompetitions() {

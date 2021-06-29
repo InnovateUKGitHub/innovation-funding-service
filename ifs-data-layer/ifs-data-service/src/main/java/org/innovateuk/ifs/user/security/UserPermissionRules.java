@@ -255,6 +255,11 @@ public class UserPermissionRules {
         return userIsInCompetitionAssignedToStakeholder(userToView.getId(), user);
     }
 
+    @PermissionRule(value = "READ", description = "Auditor users can view everyone")
+    public boolean auditorUsersCanViewEveryone(UserResource userToView, UserResource user) {
+        return hasAuditorAuthority(user);
+    }
+
     @PermissionRule(value = "READ", description = "Competition finance users can view users in competitions they are assigned to")
     public boolean competitionFinanceUsersCanViewUsersInCompetitionsTheyAreAssignedTo(UserResource userToView, UserResource user) {
         return userIsInCompetitionAssignedToCompetitionFinance(userToView, user);
@@ -336,7 +341,7 @@ public class UserPermissionRules {
         return hasPermissionToGrantRole(user) && roleCommand.getTargetRole().equals(SUPPORTER);
     }
 
-    @PermissionRule(value = "GRANT_ROLE", description = "Users such as assessor, stakeholder, monitoring_officer, live_projects_user and " +
+    @PermissionRule(value = "GRANT_ROLE", description = "Users such as assessor, stakeholder, monitoring_officer, live_projects_user, " +
             "supporter can request applicant role")
     public boolean isMultipleRoleDashboardUsersCanRequestApplicantRole(GrantRoleCommand roleCommand, UserResource user) {
         return user.hasAnyRoles(Role.multiDashboardRoles());

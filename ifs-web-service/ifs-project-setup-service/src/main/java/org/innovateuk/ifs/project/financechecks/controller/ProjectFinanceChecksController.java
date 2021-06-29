@@ -509,6 +509,7 @@ public class ProjectFinanceChecksController {
                 false,
                 projectFinances, false,
                 showChangesLink,
+                false,
                 false));
 
         model.addAttribute("eligibilityForm", eligibilityForm);

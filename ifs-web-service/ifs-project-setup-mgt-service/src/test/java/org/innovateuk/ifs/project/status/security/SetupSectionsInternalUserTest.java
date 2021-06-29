@@ -71,6 +71,10 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         return newUserResource().withRoleGlobal(STAKEHOLDER).build();
     }
 
+    private UserResource auditorUser() {
+        return newUserResource().withRoleGlobal(AUDITOR).build();
+    }
+
     private UserResource compAdmin(){
         return newUserResource().withRoleGlobal(COMP_ADMIN).build();
     }
@@ -133,8 +137,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     public void checkAccessToBankDetailsSectionButNotFinanceTeamMember() {
 
         stream(Role.values()).forEach(role -> {
-            if (role != PROJECT_FINANCE) {
-
+            if (role != PROJECT_FINANCE && role != AUDITOR) {
                 List<Role> roles = singletonList(role);
                 UserResource nonFinanceTeam = newUserResource().withRolesGlobal(roles).build();
                 assertEquals(NOT_ACCESSIBLE, internalUser.canAccessBankDetailsSection(nonFinanceTeam));
@@ -143,7 +146,6 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
                 verify(setupProgressChecker, never()).isBankDetailsActionRequired();
             }
         });
-
     }
 
     @Test
@@ -161,7 +163,12 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     @Test
     public void checkAccessToFinanceChecksSectionAsNonFinanceTeamMembers() {
         stream(Role.values()).forEach(role -> {
-            if (role != PROJECT_FINANCE && role != EXTERNAL_FINANCE && role != IFS_ADMINISTRATOR && role != SUPER_ADMIN_USER && role != SYSTEM_MAINTAINER) {
+            if (role != PROJECT_FINANCE
+                    && role != EXTERNAL_FINANCE
+                    && role != IFS_ADMINISTRATOR
+                    && role != SUPER_ADMIN_USER
+                    && role != SYSTEM_MAINTAINER
+                    && role != AUDITOR) {
                 System.out.println(role.getDisplayName());
                 List<Role> roles = singletonList(role);
                 UserResource nonFinanceTeam = newUserResource().withRolesGlobal(roles).build();

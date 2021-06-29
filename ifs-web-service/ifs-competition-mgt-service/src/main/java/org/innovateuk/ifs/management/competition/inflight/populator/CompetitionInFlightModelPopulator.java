@@ -44,8 +44,8 @@ public class CompetitionInFlightModelPopulator {
     private MilestoneRestService milestoneRestService;
 
     public CompetitionInFlightViewModel populateModel(Long competitionId, UserResource user) {
-        CompetitionResource competititon = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        return populateModel(competititon, user);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        return populateModel(competition, user);
     }
 
     public CompetitionInFlightViewModel populateModel(CompetitionResource competition, UserResource user) {

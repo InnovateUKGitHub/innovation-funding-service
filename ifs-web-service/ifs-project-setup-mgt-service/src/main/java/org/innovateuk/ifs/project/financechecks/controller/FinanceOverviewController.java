@@ -20,6 +20,7 @@ import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,7 @@ public class FinanceOverviewController {
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'external_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'external_finance', 'auditor')")
     public String view(@PathVariable("projectId") Long projectId,
                        @RequestParam(required = false, defaultValue = "false") boolean showFundingLevelMessage,
                        @RequestParam(required = false, defaultValue = "false") boolean showFundingAmountMessage,
@@ -87,7 +88,7 @@ public class FinanceOverviewController {
         boolean canChangeFundingSought =
                 competition.getFinanceRowTypes().contains(FinanceRowType.GRANT_CLAIM_AMOUNT) && !financeCheckSummary.isSpendProfilesGenerated();
         boolean canChangeFundingLevel =
-                competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE) && financeCheckSummary.isAllEligibilityAndViabilityInReview();
+                competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE) && financeCheckSummary.isAllEligibilityAndViabilityInReview() && !loggedInUser.hasAuthority(Authority.AUDITOR);
 
         ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populateFromProject(project, loggedInUser);
 

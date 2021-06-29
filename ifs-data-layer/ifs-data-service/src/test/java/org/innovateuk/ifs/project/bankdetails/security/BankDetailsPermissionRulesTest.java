@@ -44,6 +44,7 @@ public class BankDetailsPermissionRulesTest extends BasePermissionRulesTest<Bank
 
     private UserResource user;
     private UserResource projectFinanceUser;
+    private UserResource auditorUser;
     private ProjectResource project;
     private List<ProjectUser> partnerProjectUser;
     private OrganisationResource organisationResource;
@@ -56,6 +57,7 @@ public class BankDetailsPermissionRulesTest extends BasePermissionRulesTest<Bank
         project = newProjectResource().build();
         Project projectProcessProject = newProject().build();
         projectFinanceUser = newUserResource().withRoleGlobal(Role.PROJECT_FINANCE).build();
+        auditorUser = newUserResource().withRoleGlobal(Role.AUDITOR).build();
         partnerProjectUser = newProjectUser().build(1);
         organisationResource = newOrganisationResource().build();
         bankDetailsResource = newBankDetailsResource().withOrganisation(organisationResource.getId()).withProject(project.getId()).build();
@@ -116,5 +118,10 @@ public class BankDetailsPermissionRulesTest extends BasePermissionRulesTest<Bank
     public void projectFinanceUserCanUpdateBankDetailsForAllOrganisations() {
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertTrue(rules.projectFinanceUsersCanUpdateAnyOrganisationsBankDetails(bankDetailsResource, projectFinanceUser));
+    }
+
+    @Test
+    public void auditorUserCanSeeAllBankDetailsForAllOrganisations() {
+        assertTrue(rules.auditorUsersCanSeeAllBankDetailsOnAllProjects(bankDetailsResource, auditorUser));
     }
 }

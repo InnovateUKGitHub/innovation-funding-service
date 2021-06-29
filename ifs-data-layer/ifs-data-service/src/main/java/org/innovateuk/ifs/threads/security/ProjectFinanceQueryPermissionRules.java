@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.util.SecurityRuleUtil.hasProjectFinanceAuthority;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
  * Defines the permissions for interaction with project finance queries.
@@ -58,9 +58,14 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
         return hasProjectFinanceAuthority(user);
     }
 
-    @PermissionRule(value = "PF_READ", description = "Competition Finance users can view Queries")
+    @PermissionRule(value = "PF_READ", description = "Competition Finance and Auditor users can view Queries")
     public boolean compFinanceUsersCanViewQueries(final QueryResource query, final UserResource user) {
         return userIsExternalFinanceOnProject(query.contextClassPk, user.getId());
+    }
+
+    @PermissionRule(value = "PF_READ", description = "Auditor users can view Queries")
+    public boolean auditorUsersCanViewQueries(final QueryResource query, final UserResource user) {
+        return hasAuditorAuthority(user);
     }
 
     @PermissionRule(value = "PF_READ", description = "Project partners can view Queries")
