@@ -14,6 +14,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.spendprofile.form.ProjectSpendProfileApprovalForm;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileApprovalViewModel;
 import org.innovateuk.ifs.spendprofile.SpendProfileService;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +58,8 @@ public class ProjectSpendProfileApprovalController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION')")
     @GetMapping("/approval")
-    public String viewSpendProfileApproval(@P("projectId")@PathVariable Long projectId, Model model) {
-        return doViewSpendProfileApproval(projectId, model);
+    public String viewSpendProfileApproval(@P("projectId")@PathVariable Long projectId, Model model, UserResource loggedInUser) {
+        return doViewSpendProfileApproval(projectId, model, loggedInUser);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION')")
@@ -67,9 +68,10 @@ public class ProjectSpendProfileApprovalController {
                                            @PathVariable ApprovalType approvalType,
                                            @ModelAttribute ProjectSpendProfileApprovalForm form,
                                            Model model,
+                                           UserResource loggedInUser,
                                            @SuppressWarnings("unused") BindingResult bindingResult,
                                            ValidationHandler validationHandler) {
-        Supplier<String> failureView = () -> doViewSpendProfileApproval(projectId, model);
+        Supplier<String> failureView = () -> doViewSpendProfileApproval(projectId, model , loggedInUser);
         ServiceResult<Void> generateResult = spendProfileService.approveOrRejectSpendProfile(projectId, approvalType);
 
         return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () ->
@@ -77,21 +79,22 @@ public class ProjectSpendProfileApprovalController {
         );
     }
 
-    private String doViewSpendProfileApproval(Long projectId, Model model) {
-        ProjectSpendProfileApprovalViewModel viewModel = populateSpendProfileApprovalViewModel(projectId);
+    private String doViewSpendProfileApproval(Long projectId, Model model, UserResource loggedInUser) {
+        ProjectSpendProfileApprovalViewModel viewModel = populateSpendProfileApprovalViewModel(projectId, loggedInUser);
 
         model.addAttribute("model", viewModel);
 
         return "project/finance/spend-profile/approval";
     }
 
-    private ProjectSpendProfileApprovalViewModel populateSpendProfileApprovalViewModel(Long projectId) {
+    private ProjectSpendProfileApprovalViewModel populateSpendProfileApprovalViewModel(Long projectId, UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(project.getCompetition()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         UserResource user = userRestService.retrieveUserById(competition.getLeadTechnologist()).getSuccess();
         String leadTechnologist = competition.getLeadTechnologist() != null ? user.getName() : "";
         ApprovalType approvalType = spendProfileService.getSpendProfileStatusByProjectId(projectId);
+        boolean isAuditor = loggedInUser.hasAuthority(Authority.AUDITOR);
 
         List<OrganisationResource> organisationResources = projectService.getPartnerOrganisationsForProject(projectId);
 
@@ -99,7 +102,8 @@ public class ProjectSpendProfileApprovalController {
                                                         leadTechnologist,
                                                         approvalType,
                                                         organisationResources,
-                                                        project);
+                                                        project,
+                                                        isAuditor);
     }
 
     private String redirectToCompetitionSummaryPage(Long projectId) {

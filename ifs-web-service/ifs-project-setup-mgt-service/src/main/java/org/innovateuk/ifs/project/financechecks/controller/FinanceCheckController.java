@@ -19,6 +19,7 @@ import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceCheckSum
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.spendprofile.SpendProfileService;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -121,7 +122,8 @@ public class FinanceCheckController {
                 hasOrganisationSizeChanged(projectId),
                 userResource.hasRole(EXTERNAL_FINANCE),
                 hasSpendProfileStage,
-                competitionResource.isSubsidyControl()));
+                competitionResource.isSubsidyControl(),
+                userResource.hasAuthority(Authority.AUDITOR)));
         return "project/financecheck/summary";
     }
 
