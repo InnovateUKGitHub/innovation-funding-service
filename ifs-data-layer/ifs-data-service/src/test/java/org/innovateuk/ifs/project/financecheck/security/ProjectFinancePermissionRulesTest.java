@@ -132,7 +132,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.hasAuthority(Authority.PROJECT_FINANCE)) {
+            if (hasProjectFinanceAuthority(user)) {
                 assertTrue(rules.projectFinanceUserCanSaveViability(projectOrganisationCompositeId, user));
             } else {
                 assertFalse(rules.projectFinanceUserCanSaveViability(projectOrganisationCompositeId, user));
@@ -148,7 +148,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.hasAuthority(Authority.PROJECT_FINANCE)) {
+            if (hasProjectFinanceAuthority(user)) {
                 assertTrue(rules.projectFinanceUserCanViewEligibility(projectOrganisationCompositeId, user));
             } else {
                 assertFalse(rules.projectFinanceUserCanViewEligibility(projectOrganisationCompositeId, user));
@@ -390,7 +390,6 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         assertTrue(rules.partnersCanSeeTheProjectFinanceOverviewsForTheirProject(ProjectCompositeId.id(project.getId()), user));
     }
 
-
     private void setupFinanceContactExpectations(ProjectResource project, UserResource user) {
         List<ProjectUser> partnerProjectUser = newProjectUser().build(1);
 
@@ -555,6 +554,66 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
                 assertTrue(rules.auditorCanSeeTheProjectFinancesForTheirOrganisation(financeCheckEligibilityResource, user));
             } else {
                 assertFalse(rules.auditorCanSeeTheProjectFinancesForTheirOrganisation(financeCheckEligibilityResource, user));
+            }
+        });
+    }
+
+    @Test
+    public void projectFinanceUserCanSaveMilestoneCheck() {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId =
+                new ProjectOrganisationCompositeId(project.getId(), newOrganisation().build().getId());
+
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (hasProjectFinanceAuthority(user)) {
+                assertTrue(rules.projectFinanceUserCanSaveMilestoneCheck(projectOrganisationCompositeId, user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanSaveMilestoneCheck(projectOrganisationCompositeId, user));
+            }
+        });
+    }
+
+    @Test
+    public void projectFinanceUserCanResetMilestoneCheck() {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId =
+                new ProjectOrganisationCompositeId(project.getId(), newOrganisation().build().getId());
+
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (hasProjectFinanceAuthority(user)) {
+                assertTrue(rules.projectFinanceUserCanResetMilestoneCheck(projectOrganisationCompositeId, user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanResetMilestoneCheck(projectOrganisationCompositeId, user));
+            }
+        });
+    }
+
+    @Test
+    public void projectFinanceUserCanViewMilestoneCheck() {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId =
+                new ProjectOrganisationCompositeId(project.getId(), newOrganisation().build().getId());
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (hasProjectFinanceAuthority(user)) {
+                assertTrue(rules.projectFinanceUserCanViewMilestoneCheck(projectOrganisationCompositeId, user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanViewMilestoneCheck(projectOrganisationCompositeId, user));
+            }
+        });
+    }
+
+    @Test
+    public void auditorUserCanViewMilestoneCheck() {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId =
+                new ProjectOrganisationCompositeId(project.getId(), newOrganisation().build().getId());
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (hasAuditorAuthority(user)) {
+                assertTrue(rules.auditorUserCanViewMilestoneCheck(projectOrganisationCompositeId, user));
+            } else {
+                assertFalse(rules.auditorUserCanViewMilestoneCheck(projectOrganisationCompositeId, user));
             }
         });
     }

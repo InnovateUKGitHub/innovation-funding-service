@@ -135,7 +135,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_MILESTONE_STATUS",
-            description = "Project Finance Users can view Milestone Check")
+            description = "Auditor Users can view Milestone Check")
     public boolean auditorUserCanViewMilestoneCheck(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
         return hasAuditorAuthority(user);
     }
