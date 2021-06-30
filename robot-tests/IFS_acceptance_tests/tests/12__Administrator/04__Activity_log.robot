@@ -91,11 +91,9 @@ The user completes documents
 The user completes project team
     the user clicks the button/link     link = Project team
     the user clicks the button/link     jQuery = a:contains("Project"):contains("manager")
-    # the user selects the radio button   projectManager   54
     the user clicks the button/link     jQuery = label:contains("Jesse Edwards")
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user clicks the button/link     jQuery = a:contains("Your finance contact")
-    # the user selects the radio button   financeContact   54
     the user clicks the button/link     jQuery = label:contains("Jesse Edwards")
     the user clicks the button/link     jQuery = button:contains("Save and continue")
 
