@@ -61,6 +61,7 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
             verify(queryRules).projectFinanceUsersCanViewQueries(isA(QueryResource.class), eq(user));
             verify(queryRules).projectPartnersCanViewQueries(isA(QueryResource.class), eq(user));
             verify(queryRules).compFinanceUsersCanViewQueries(isA(QueryResource.class), eq(user));
+            verify(queryRules).auditorUsersCanViewQueries(isA(QueryResource.class), eq(user));
 
             verifyNoMoreInteractions(queryRules);
         });
@@ -83,6 +84,7 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
         verify(queryRules, times(2)).projectFinanceUsersCanViewQueries(isA(QueryResource.class), eq(user));
         verify(queryRules, times(2)).projectPartnersCanViewQueries(isA(QueryResource.class), eq(user));
         verify(queryRules, times(2)).compFinanceUsersCanViewQueries(isA(QueryResource.class), eq(user));
+        verify(queryRules, times(2)).auditorUsersCanViewQueries(isA(QueryResource.class), eq(user));
 
         verifyNoMoreInteractions(queryRules);
     }

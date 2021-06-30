@@ -69,8 +69,8 @@ public class FinanceChecksNotesControllerSecurityTest extends BaseProjectSetupCo
 
     @Test
     public void testShowPage() {
-        setLoggedInUser(newUserResource().withRoleGlobal(PROJECT_FINANCE).build());
-        assertSecured(() -> classUnderTest.showPage(projectCompositeId.id(), 2L, null));
+        UserResource loggedInUser = setLoggedInUser(newUserResource().withRoleGlobal(PROJECT_FINANCE).build());
+        assertSecured(() -> classUnderTest.showPage(projectCompositeId.id(), 2L, loggedInUser, null));
 
         List<Role> nonFinanceTeamRoles = asList(Role.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
@@ -80,7 +80,7 @@ public class FinanceChecksNotesControllerSecurityTest extends BaseProjectSetupCo
             setLoggedInUser(
                     newUserResource().withRoleGlobal(PROJECT_FINANCE).build());
             try {
-                classUnderTest.showPage(projectCompositeId.id(), 2L, null);
+                classUnderTest.showPage(projectCompositeId.id(), 2L, loggedInUser, null);
                 Assert.fail("Should not have been able to view the page without the project finance role");
             } catch (AccessDeniedException e) {
                 // expected behaviour

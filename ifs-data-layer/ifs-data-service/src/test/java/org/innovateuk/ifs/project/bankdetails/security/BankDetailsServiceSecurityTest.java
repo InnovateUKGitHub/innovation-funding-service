@@ -5,6 +5,7 @@ import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsServiceImpl;
 import org.junit.Test;
 
+import static org.innovateuk.ifs.user.resource.Role.AUDITOR;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 public class BankDetailsServiceSecurityTest extends BaseServiceSecurityTest<BankDetailsService> {
@@ -15,9 +16,9 @@ public class BankDetailsServiceSecurityTest extends BaseServiceSecurityTest<Bank
     }
 
     @Test
-    public void testGetProjectBankDetailsStatusSummaryAllowedIfProjectFinanceRole() {
+    public void getProjectBankDetailsStatusSummaryAllowedIfProjectFinanceRole() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getProjectBankDetailsStatusSummary(123L),
-                PROJECT_FINANCE);
+                PROJECT_FINANCE, AUDITOR);
     }
 
     @Test

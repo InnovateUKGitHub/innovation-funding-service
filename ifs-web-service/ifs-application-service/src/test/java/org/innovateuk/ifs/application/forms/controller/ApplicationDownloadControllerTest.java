@@ -37,9 +37,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicationDownloadControllerTest extends AbstractApplicationMockMVCTest<ApplicationDownloadController> {
 
-    private ArgumentCaptor<Long> fileProcessRoleArgumentCaptor = ArgumentCaptor.forClass(Long.class);
+    private final ArgumentCaptor<Long> fileProcessRoleArgumentCaptor = ArgumentCaptor.forClass(Long.class);
 
-    private ArgumentCaptor<Long> fileDetailsProcessRoleArgumentCaptor = ArgumentCaptor.forClass(Long.class);
+    private final ArgumentCaptor<Long> fileDetailsProcessRoleArgumentCaptor = ArgumentCaptor.forClass(Long.class);
+
+    private long questionId;
+    private long formInputId;
+    private long fileEntryId;
+    private Long leadApplicantProcessRoleId;
+    private String fileName;
+
 
     @Override
     protected ApplicationDownloadController supplyControllerUnderTest() {
@@ -55,6 +62,13 @@ public class ApplicationDownloadControllerTest extends AbstractApplicationMockMV
         this.setupApplicationResponses();
         this.setupFinances();
         this.setupInvites();
+
+        questionId = 1L;
+        formInputId = 1L;
+        fileEntryId = 1L;
+        leadApplicantProcessRoleId = 2L;
+        fileName = "finance-file.pdf";
+
         when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(ofNullable(organisations.get(0)));
     }
 
@@ -62,11 +76,7 @@ public class ApplicationDownloadControllerTest extends AbstractApplicationMockMV
     public void downloadApplicationFinanceFileAsInnovationLead() throws Exception {
         UserResource userResource = newUserResource().withRoleGlobal(Role.INNOVATION_LEAD).build();
         setLoggedInUser(userResource);
-        Long questionId = 1L;
-        Long formInputId = 1L;
-        Long fileEntryId = 1L;
-        Long leadApplicantProcessRoleId = 2L;
-        String fileName = "finance-file.pdf";
+
 
         ApplicationResource app = applications.get(0);
         ProcessRoleResource processRoleResource = newProcessRoleResource()
@@ -98,12 +108,72 @@ public class ApplicationDownloadControllerTest extends AbstractApplicationMockMV
 
     @Test
     public void downloadApplicationFinanceFileAsSupporter() throws Exception {
-        Long questionId = 1L;
-        Long formInputId = 1L;
-        Long fileEntryId = 1L;
-        Long leadApplicantProcessRoleId = 2L;
-        String fileName = "finance-file.pdf";
 
+        ApplicationResource app = applications.get(0);
+        ProcessRoleResource processRoleResource = newProcessRoleResource()
+                .withId(leadApplicantProcessRoleId)
+                .withRole(ProcessRoleType.LEADAPPLICANT).build();
+        MultipartFile file = new MockMultipartFile(fileName, fileName.getBytes());
+        ByteArrayResource byteArrayResource = new ByteArrayResource(file.getBytes());
+        FileEntryResource fileEntryResource = newFileEntryResource().withMediaType("application/pdf").build();
+        FormInputResponseFileEntryResource formInputResponseFileEntryResource = newFormInputResponseFileEntryResource()
+                .withFileEntryResource(fileEntryResource)
+                .build();
+
+        when(processRoleRestService.findProcessRole(anyLong())).thenReturn(restSuccess(Collections.singletonList(processRoleResource)));
+        when(formInputResponseRestService.getFile(anyLong(), anyLong(), anyLong(), anyLong())).thenReturn(restSuccess(byteArrayResource));
+        when(formInputResponseRestService.getFileDetails(anyLong(), anyLong(), anyLong(), anyLong())).thenReturn(restSuccess(formInputResponseFileEntryResource));
+
+        mockMvc.perform(get("/application/" + app.getId() + "/form/question/" + questionId + "/forminput/"
+                + formInputId + "/file/" + fileEntryId + "/download"))
+                .andExpect(status().isOk());
+
+        verify(formInputResponseRestService).getFile(anyLong(), anyLong(), fileProcessRoleArgumentCaptor.capture(), anyLong());
+        Long impersonatedFileProcessRoleId = fileProcessRoleArgumentCaptor.getValue();
+        assertEquals(leadApplicantProcessRoleId, impersonatedFileProcessRoleId);
+
+        verify(formInputResponseRestService).getFileDetails(anyLong(), anyLong(), fileDetailsProcessRoleArgumentCaptor.capture(), anyLong());
+        Long impersonatedFileDetailsProcessRoleId = fileDetailsProcessRoleArgumentCaptor.getValue();
+        assertEquals(leadApplicantProcessRoleId, impersonatedFileDetailsProcessRoleId);
+    }
+
+    @Test
+    public void downloadApplicationFinanceFileAsStakeholder() throws Exception {
+        UserResource userResource = newUserResource().withRoleGlobal(Role.STAKEHOLDER).build();
+        setLoggedInUser(userResource);
+
+        ApplicationResource app = applications.get(0);
+        ProcessRoleResource processRoleResource = newProcessRoleResource()
+                .withId(leadApplicantProcessRoleId)
+                .withRole(ProcessRoleType.LEADAPPLICANT).build();
+        MultipartFile file = new MockMultipartFile(fileName, fileName.getBytes());
+        ByteArrayResource byteArrayResource = new ByteArrayResource(file.getBytes());
+        FileEntryResource fileEntryResource = newFileEntryResource().withMediaType("application/pdf").build();
+        FormInputResponseFileEntryResource formInputResponseFileEntryResource = newFormInputResponseFileEntryResource()
+                .withFileEntryResource(fileEntryResource)
+                .build();
+
+        when(processRoleRestService.findProcessRole(anyLong())).thenReturn(restSuccess(Collections.singletonList(processRoleResource)));
+        when(formInputResponseRestService.getFile(anyLong(), anyLong(), anyLong(), anyLong())).thenReturn(restSuccess(byteArrayResource));
+        when(formInputResponseRestService.getFileDetails(anyLong(), anyLong(), anyLong(), anyLong())).thenReturn(restSuccess(formInputResponseFileEntryResource));
+
+        mockMvc.perform(get("/application/" + app.getId() + "/form/question/" + questionId + "/forminput/"
+                + formInputId + "/file/" + fileEntryId + "/download"))
+                .andExpect(status().isOk());
+
+        verify(formInputResponseRestService).getFile(anyLong(), anyLong(), fileProcessRoleArgumentCaptor.capture(), anyLong());
+        Long impersonatedFileProcessRoleId = fileProcessRoleArgumentCaptor.getValue();
+        assertEquals(leadApplicantProcessRoleId, impersonatedFileProcessRoleId);
+
+        verify(formInputResponseRestService).getFileDetails(anyLong(), anyLong(), fileDetailsProcessRoleArgumentCaptor.capture(), anyLong());
+        Long impersonatedFileDetailsProcessRoleId = fileDetailsProcessRoleArgumentCaptor.getValue();
+        assertEquals(leadApplicantProcessRoleId, impersonatedFileDetailsProcessRoleId);
+    }
+
+    @Test
+    public void downloadApplicationFinanceFileAsAuditor() throws Exception {
+        UserResource userResource = newUserResource().withRoleGlobal(Role.AUDITOR).build();
+        setLoggedInUser(userResource);
 
         ApplicationResource app = applications.get(0);
         ProcessRoleResource processRoleResource = newProcessRoleResource()
