@@ -110,7 +110,6 @@ profiles:
     build:
       tagPolicy:
         gitCommit:
-          prefix: xxx-
           ignoreChanges: true
       artifacts:
         - image: data-service
@@ -129,7 +128,6 @@ profiles:
     build:
       tagPolicy:
         gitCommit:
-          prefix: xxx-
           ignoreChanges: true
       artifacts:
         - image: robot-framework
@@ -228,7 +226,6 @@ profiles:
     build:
       tagPolicy:
         gitCommit:
-          prefix: xxx-
           ignoreChanges: true
       artifacts:
         - image: data-service
@@ -325,7 +322,6 @@ profiles:
     build:
       tagPolicy:
         gitCommit:
-          prefix: xxx-
           ignoreChanges: true
       artifacts:
         - image: data-service
@@ -422,7 +418,6 @@ profiles:
     build:
       tagPolicy:
         gitCommit:
-          prefix: xxx-
           ignoreChanges: true
       artifacts:
         - image: data-service
@@ -519,7 +514,7 @@ profiles:
     build:
       tagPolicy:
         gitCommit:
-          prefix: xxx-
+          
           ignoreChanges: true
       artifacts:
         - image: data-service
@@ -616,7 +611,6 @@ profiles:
     build:
       tagPolicy:
         gitCommit:
-          prefix: xxx-
           ignoreChanges: true
       artifacts:
         - image: data-service
