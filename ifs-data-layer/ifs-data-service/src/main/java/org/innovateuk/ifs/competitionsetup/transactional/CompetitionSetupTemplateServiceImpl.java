@@ -4,14 +4,16 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionAssessmentConfig;
-import org.innovateuk.ifs.competition.domain.CompetitionExternalConfig;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionAssessmentConfigRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules.FundingRulesTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.FundingTypeTemplate;
@@ -108,10 +110,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         Competition competition = competitionOptional.get();
 
         competition.setCompetitionType(competitionType.get());
-
-        if (competition.isAssesssmentOnly()) {
-            setCompetitionExternalConfig(competition);
-        }
         setDefaultAssessorPayAndCountAndAverageAssessorScore(competition);
         setDefaultProjectDocuments(competition);
 
@@ -201,13 +199,4 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         return !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP);
     }
 
-    private Competition setCompetitionExternalConfig(Competition competition) {
-        if (competition.getCompetitionExternalConfig() == null) {
-            CompetitionExternalConfig competitionExternalConfig = new CompetitionExternalConfig();
-            competitionExternalConfig.setCompetition(competition);
-            competition.setCompetitionExternalConfig(competitionExternalConfig);
-        }
-        return competition;
-    }
-
-    }
+}

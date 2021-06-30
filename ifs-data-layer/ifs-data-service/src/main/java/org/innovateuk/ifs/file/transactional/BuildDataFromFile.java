@@ -18,6 +18,7 @@ import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionExternalConfig;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -261,6 +262,7 @@ public class BuildDataFromFile {
             competition.setInnovationAreas(newHashSet(InnovationArea.NONE));
             competitionSetupService.save(competition.getId(), competition).getSuccess();
             competitionSetupService.copyFromCompetitionTypeTemplate(competition.getId(), 13L).getSuccess();
+            setCompetitionExternalConfig(competition);
             setExternalCompData(compToExternalCompetitionMap.get(c.getName()), competition);
             MilestoneResource milestone = milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competition.getId())
                     .getOrElse(new MilestoneResource(MilestoneType.OPEN_DATE, ZonedDateTime.now().minusDays(20 - MilestoneType.OPEN_DATE.getPriority()), competition.getId()));
@@ -383,6 +385,16 @@ public class BuildDataFromFile {
                 .forEach(question -> questionSetupService.markQuestionInSetupAsComplete(question.getId(), competition.getId(), CompetitionSetupSection.APPLICATION_FORM));
 
         competitionSetupService.markAsSetup(competition.getId());
+    }
+
+    private Competition setCompetitionExternalConfig(CompetitionResource competitionResource) {
+        Competition competition = competitionRepository.findById(competitionResource.getId()).get();
+        if (competition.getCompetitionExternalConfig() == null) {
+            CompetitionExternalConfig competitionExternalConfig = new CompetitionExternalConfig();
+            competitionExternalConfig.setCompetition(competition);
+            competition.setCompetitionExternalConfig(competitionExternalConfig);
+        }
+        return competition;
     }
 
     private Application setApplicationExternalConfig(ApplicationResource applicationResource) {
