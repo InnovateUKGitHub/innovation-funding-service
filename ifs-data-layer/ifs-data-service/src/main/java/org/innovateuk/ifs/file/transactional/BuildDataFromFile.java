@@ -9,11 +9,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationExternalConfig;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
-import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
@@ -140,6 +138,9 @@ public class BuildDataFromFile {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired
+    private ApplicationExternalConfigService applicationExternalConfigService;
+
     public void buildFromFile(InputStream input) {
         try {
             CSVReaderBuilder builder = new CSVReaderBuilder(new InputStreamReader(input));
@@ -148,7 +149,7 @@ public class BuildDataFromFile {
             List<List<String>> lists = simpleMap(data, Arrays::asList);
             List<BuildDataFromFileLine> lines = lists.stream()
                     .map(
-                            rows -> new BuildDataFromFileLine(rows.get(0), rows.get(1), rows.get(2), rows.get(3))
+                            rows -> new BuildDataFromFileLine(rows)
                     ).collect(Collectors.toList());
             buildData(lines);
         } catch (FileNotFoundException e) {
@@ -162,24 +163,29 @@ public class BuildDataFromFile {
 
     private void buildData(List<BuildDataFromFileLine> lines) {
         Set<BuildCompetition> competitions = new LinkedHashSet<>();
-        Set<BuildQuestion> questions = new LinkedHashSet<>();
         Set<BuildApplication> applications = new LinkedHashSet<>();
+        Set<BuildExternalApplication> externalApplications = new LinkedHashSet<>();
+        Set<BuildQuestion> questions = new LinkedHashSet<>();
         Set<BuildResponse> responses = new LinkedHashSet<>();
 
         lines.forEach(line -> {
             competitions.add(new BuildCompetition(line.getCompetitionName()));
-            questions.add(new BuildQuestion(line.getQuestionName(), line.getCompetitionName()));
             applications.add(new BuildApplication(line.getApplicationName(), line.getCompetitionName()));
+            externalApplications.add(new BuildExternalApplication(line.getApplicationName(),
+                            line.getCompetitionName(), line.getExternalApplicationId(), line.getExternalApplicantName()));
+            questions.add(new BuildQuestion(line.getQuestionName(), line.getCompetitionName()));
             responses.add(new BuildResponse(line.getResponse(), line.getQuestionName(), line.getApplicationName()));
         });
 
         Map<String, CompetitionResource> createdCompetitions = createCompetitionsAndQuestions(competitions, questions);
-        createApplications(applications, responses, createdCompetitions);
+        createApplications(applications, responses, createdCompetitions, externalApplications);
         createdCompetitions.values().stream().forEach(c -> setMilestones(c, MilestoneType.ASSESSOR_BRIEFING));
     }
 
-    private void createApplications(Set<BuildApplication> applications, Set<BuildResponse> responses, Map<String, CompetitionResource> createdCompetitions) {
+    private void createApplications(Set<BuildApplication> applications, Set<BuildResponse> responses, Map<String,
+            CompetitionResource> createdCompetitions, Set<BuildExternalApplication> externalApplications) {
         Multimap<String, BuildResponse> appToResponseMap = Multimaps.index(responses, BuildResponse::getApplication);
+        Multimap<String, BuildExternalApplication> appToExternalAppMap = Multimaps.index(externalApplications, BuildExternalApplication::getApplicationName);
         User user = userRepository.findByEmail(applicantDummyEmail).get();
         Organisation organisation = organisationRepository.findOneByName(applicantDummyOrganisation);
         applications.forEach(a -> {
@@ -194,7 +200,9 @@ public class BuildDataFromFile {
             applicationInnovationAreaService.setNoInnovationAreaApplies(application.getId()).getSuccess();
             application.setStartDate(LocalDate.now().plusDays(5));
             application.setDurationInMonths(2L);
+            setApplicationExternalConfig(appE);
             applicationService.saveApplicationDetails(application.getId(), application).getSuccess();
+            setExternalApplicationData(appToExternalAppMap.get(a.getName()), appE);
             ProcessRole role = processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(), ProcessRoleType.LEADAPPLICANT, application.getId());
             saveResponses(application, appToResponseMap.get(a.getName()), role);
 
@@ -356,6 +364,27 @@ public class BuildDataFromFile {
         competitionSetupService.markAsSetup(competition.getId());
     }
 
+    private Application setApplicationExternalConfig(Application application) {
+        if (application.getApplicationExternalConfig() == null) {
+            ApplicationExternalConfig applicationExternalConfig = new ApplicationExternalConfig();
+            applicationExternalConfig.setApplication(application);
+            application.setApplicationExternalConfig(applicationExternalConfig);
+        }
+        return application;
+    }
+
+    private void setExternalApplicationData(Collection<BuildExternalApplication> buildExternalApplication, Application application) {
+        buildExternalApplication.forEach((externalApplication -> {
+            if(application.getName().equals(externalApplication.getApplicationName())) {
+                ApplicationExternalConfigResource applicationExternalConfigResource = new ApplicationExternalConfigResource();
+                applicationExternalConfigResource.setExternalApplicationId(externalApplication.getExternalApplicationId());
+                applicationExternalConfigResource.setExternalApplicantName(externalApplication.getExternalApplicantName());
+                applicationExternalConfigService.update(application.getId(), applicationExternalConfigResource).getSuccess();
+            }
+        }));
+
+    }
+
     private static class BuildQuestion {
         private String name;
         private String competition;
@@ -451,6 +480,79 @@ public class BuildDataFromFile {
             return new HashCodeBuilder(17, 37)
                     .append(name)
                     .append(competition)
+                    .toHashCode();
+        }
+    }
+
+
+    private static class BuildExternalApplication {
+        private String applicationName;
+        private String competitionName;
+        private String externalApplicationId;
+        private String externalApplicantName;
+
+        public BuildExternalApplication(String applicationName, String competitionName, String externalApplicationId, String externalApplicantName) {
+            this.applicationName = applicationName;
+            this.competitionName = competitionName;
+            this.externalApplicationId = externalApplicationId;
+            this.externalApplicantName = externalApplicantName;
+        }
+
+        public String getApplicationName() {
+            return applicationName;
+        }
+
+        public void setApplicationName(String applicationName) {
+            this.applicationName = applicationName;
+        }
+
+        public String getCompetitionName() {
+            return competitionName;
+        }
+
+        public void setCompetitionName(String competitionName) {
+            this.competitionName = competitionName;
+        }
+
+        public String getExternalApplicationId() {
+            return externalApplicationId;
+        }
+
+        public void setExternalApplicationId(String externalApplicationId) {
+            this.externalApplicationId = externalApplicationId;
+        }
+
+        public String getExternalApplicantName() {
+            return externalApplicantName;
+        }
+
+        public void setExternalApplicantName(String externalApplicantName) {
+            this.externalApplicantName = externalApplicantName;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+
+            if (o == null || getClass() != o.getClass()) return false;
+
+            BuildExternalApplication that = (BuildExternalApplication) o;
+
+            return new EqualsBuilder()
+                    .append(applicationName, that.applicationName)
+                    .append(competitionName, that.competitionName)
+                    .append(externalApplicationId, that.externalApplicationId)
+                    .append(externalApplicantName, that.externalApplicantName)
+                    .isEquals();
+        }
+
+        @Override
+        public int hashCode() {
+            return new HashCodeBuilder(17, 37)
+                    .append(applicationName)
+                    .append(competitionName)
+                    .append(externalApplicationId)
+                    .append(externalApplicantName)
                     .toHashCode();
         }
     }
