@@ -234,9 +234,9 @@ Applicant uploads the GOL using Docusign
     the user clicks the button/link                                          jQuery = span:contains("Start")
     the user clicks the button/link                                          css = div.initials-tab-content
     the user adopts initial details if exist
-    the user should see the element                                          css=.page.page-loaded
+    # the user should see the element                                          css=.page.page-loaded
     The user enters text to a docusign field                                 jQuery = .text-tab:not(.locked):first input  ${date}
-    the user should see the element                                          css=.page.page-loaded
+    # the user should see the element                                          css=.page.page-loaded
     the user clicks the button/link                                          jQuery = span:contains("Fill In")
     The user enters text to a docusign field                                 jQuery = .text-tab:not(.locked):first ~ .text-tab:not(.locked) input   ${date}
     the user clicks the button/link                                          css = div.signature-tab-content
@@ -926,14 +926,14 @@ the user approves funding rules of lead and partner
     the user approves funding rules     table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Review")
 
 the user accepts electronic record and signature disclosure if exist
-    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element   link = Electronic Record and Signature Disclosure
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   The user should see the element   link = Electronic Record and Signature Disclosure
     Run Keyword If  '${status}' == 'PASS'  run keywords  the user clicks the button/link     css = label[for="disclosureAccepted"]
     ...         AND                                      the user clicks the button/link     jQuery = button:contains("Continue")
 
 the user adopts initial details if exist
-    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element   css = button[data-group-item="initials"]
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   The user should see the element   css = button[data-group-item="initials"]
     Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link     css = button[data-group-item="initials"]
 
 the user adopts signature details if exist
-    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element   css = button[data-group-item="signature"]
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   The user should see the element   css = button[data-group-item="signature"]
     Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link     css = button[data-group-item="signature"]
