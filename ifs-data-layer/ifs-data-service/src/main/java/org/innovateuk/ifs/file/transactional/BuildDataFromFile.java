@@ -24,6 +24,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionAssessmentConfigService;
+import org.innovateuk.ifs.competition.transactional.CompetitionExternalConfigService;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
@@ -139,6 +140,9 @@ public class BuildDataFromFile {
     private EntityManager entityManager;
 
     @Autowired
+    private CompetitionExternalConfigService competitionExternalConfigService;
+
+    @Autowired
     private ApplicationExternalConfigService applicationExternalConfigService;
 
     public void buildFromFile(InputStream input) {
@@ -149,7 +153,8 @@ public class BuildDataFromFile {
             List<List<String>> lists = simpleMap(data, Arrays::asList);
             List<BuildDataFromFileLine> lines = lists.stream()
                     .map(
-                            rows -> new BuildDataFromFileLine(rows)
+                          rows -> new BuildDataFromFileLine(rows)
+
                     ).collect(Collectors.toList());
             buildData(lines);
         } catch (FileNotFoundException e) {
@@ -163,6 +168,7 @@ public class BuildDataFromFile {
 
     private void buildData(List<BuildDataFromFileLine> lines) {
         Set<BuildCompetition> competitions = new LinkedHashSet<>();
+        Set<BuildExternalCompetition> externalCompetitions = new LinkedHashSet<>();
         Set<BuildApplication> applications = new LinkedHashSet<>();
         Set<BuildExternalApplication> externalApplications = new LinkedHashSet<>();
         Set<BuildQuestion> questions = new LinkedHashSet<>();
@@ -170,6 +176,7 @@ public class BuildDataFromFile {
 
         lines.forEach(line -> {
             competitions.add(new BuildCompetition(line.getCompetitionName()));
+            externalCompetitions.add(new BuildExternalCompetition(line.getCompetitionName(), line.getExternalCompId()));
             applications.add(new BuildApplication(line.getApplicationName(), line.getCompetitionName()));
             externalApplications.add(new BuildExternalApplication(line.getApplicationName(),
                             line.getCompetitionName(), line.getExternalApplicationId(), line.getExternalApplicantName()));
@@ -177,8 +184,8 @@ public class BuildDataFromFile {
             responses.add(new BuildResponse(line.getResponse(), line.getQuestionName(), line.getApplicationName()));
         });
 
-        Map<String, CompetitionResource> createdCompetitions = createCompetitionsAndQuestions(competitions, questions);
-        createApplications(applications, responses, createdCompetitions, externalApplications);
+        Map<String, CompetitionResource> createdCompetitions = createCompetitionsAndQuestions(competitions, externalCompetitions, questions);
+        createApplications(applications, responses, createdCompetitions,externalApplications);
         createdCompetitions.values().stream().forEach(c -> setMilestones(c, MilestoneType.ASSESSOR_BRIEFING));
     }
 
@@ -234,9 +241,10 @@ public class BuildDataFromFile {
         throw new IFSRuntimeException("error" + validations.toString());
     }
 
-    private Map<String, CompetitionResource> createCompetitionsAndQuestions(Set<BuildCompetition> competitions, Set<BuildQuestion> questions) {
+    private Map<String, CompetitionResource> createCompetitionsAndQuestions(Set<BuildCompetition> competitions, Set<BuildExternalCompetition> externalCompetitions, Set<BuildQuestion> questions) {
         Map<String, CompetitionResource> results = new HashMap<>();
         Multimap<String, BuildQuestion> compToQuestionMap = Multimaps.index(questions, BuildQuestion::getCompetition);
+        Multimap<String, BuildExternalCompetition> compToExternalCompetitionMap = Multimaps.index(externalCompetitions, BuildExternalCompetition::getCompetitionName);
         competitions.forEach(c -> {
             String name = c.getName();
             LOG.error("CREATING COMP " + name);
@@ -253,6 +261,7 @@ public class BuildDataFromFile {
             competition.setInnovationAreas(newHashSet(InnovationArea.NONE));
             competitionSetupService.save(competition.getId(), competition).getSuccess();
             competitionSetupService.copyFromCompetitionTypeTemplate(competition.getId(), 13L).getSuccess();
+            setExternalCompData(compToExternalCompetitionMap.get(c.getName()), competition);
             MilestoneResource milestone = milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competition.getId())
                     .getOrElse(new MilestoneResource(MilestoneType.OPEN_DATE, ZonedDateTime.now().minusDays(20 - MilestoneType.OPEN_DATE.getPriority()), competition.getId()));
             milestoneService.updateMilestone(milestone).getSuccess();
@@ -268,6 +277,17 @@ public class BuildDataFromFile {
             results.put(c.getName(), competition);
         });
         return results;
+    }
+
+    private void setExternalCompData(Collection<BuildExternalCompetition> buildexternalCompetitions, CompetitionResource competitionResource) {
+        buildexternalCompetitions.forEach(externalCompetition -> {
+            if (competitionResource.getName().equals(externalCompetition.getCompetitionName())) {
+                CompetitionExternalConfigResource competitionExternalConfigResource = new CompetitionExternalConfigResource();
+                competitionExternalConfigResource.setExternalCompetitionId(externalCompetition.getExternalCompId());
+                competitionExternalConfigService.update(competitionResource.getId(), competitionExternalConfigResource).getSuccess();
+            }
+        });
+
     }
 
     private void setMilestones(CompetitionResource competition, MilestoneType milestoneType) {
@@ -654,6 +674,54 @@ public class BuildDataFromFile {
         public int hashCode() {
             return new HashCodeBuilder(17, 37)
                     .append(name)
+                    .toHashCode();
+        }
+    }
+
+    private static class BuildExternalCompetition {
+        private String competitionName;
+        private String externalCompId;
+
+        public BuildExternalCompetition(String competitionName, String externalCompId) {
+            this.competitionName = competitionName;
+            this.externalCompId = externalCompId;
+        }
+
+        public String getCompetitionName() {
+            return competitionName;
+        }
+
+        public void setCompetitionName(String competitionName) {
+            this.competitionName = competitionName;
+        }
+
+        public String getExternalCompId() {
+            return externalCompId;
+        }
+
+        public void setExternalCompId(String externalCompId) {
+            this.externalCompId = externalCompId;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+
+            if (o == null || getClass() != o.getClass()) return false;
+
+            BuildExternalCompetition that = (BuildExternalCompetition) o;
+
+            return new EqualsBuilder()
+                    .append(competitionName, that.competitionName)
+                    .append(externalCompId, that.externalCompId)
+                    .isEquals();
+        }
+
+        @Override
+        public int hashCode() {
+            return new HashCodeBuilder(17, 37)
+                    .append(competitionName)
+                    .append(externalCompId)
                     .toHashCode();
         }
     }
