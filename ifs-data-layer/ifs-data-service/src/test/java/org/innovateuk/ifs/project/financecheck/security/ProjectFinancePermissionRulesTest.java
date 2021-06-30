@@ -38,9 +38,9 @@ import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProj
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.AUDITOR;
 import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.hasProjectFinanceAuthority;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -60,7 +60,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     @Test
     public void projectFinanceUserCanViewViability() {
 
-        Long organisationId = 1L;
+        long organisationId = 1L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
 
@@ -88,6 +88,20 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
 
         assertTrue(rules.competitionFinanceUserCanViewViability(projectOrganisationCompositeId, userResource));
         assertFalse(rules.competitionFinanceUserCanViewViability(projectOrganisationCompositeId, userResourceNotInCompetition));
+    }
+
+    @Test
+    public void auditorUserCanViewViability() {
+
+        long organisationId = 1L;
+        UserResource userResource = newUserResource().withRoleGlobal(AUDITOR).build();
+        Competition competition = newCompetition().build();
+        Project competitionFinanceProject = newProject().withId(project.getId()).withApplication(newApplication().withCompetition(competition).build()).build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
+
+        when(projectRepository.findById(competitionFinanceProject.getId())).thenReturn(Optional.of(competitionFinanceProject));
+
+        assertTrue(rules.auditorUserCanViewViability(projectOrganisationCompositeId, userResource));
     }
 
     @Test
@@ -140,6 +154,20 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
                 assertFalse(rules.projectFinanceUserCanViewEligibility(projectOrganisationCompositeId, user));
             }
         });
+    }
+
+    @Test
+    public void auditorUserCanViewEligibility() {
+
+        long organisationId = 1L;
+        UserResource userResource = newUserResource().withRoleGlobal(AUDITOR).build();
+        Competition competition = newCompetition().build();
+        Project competitionFinanceProject = newProject().withId(project.getId()).withApplication(newApplication().withCompetition(competition).build()).build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
+
+        when(projectRepository.findById(competitionFinanceProject.getId())).thenReturn(Optional.of(competitionFinanceProject));
+
+        assertTrue(rules.auditorUserCanViewEligibility(projectOrganisationCompositeId, userResource));
     }
 
     @Test
@@ -295,9 +323,36 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
+    public void auditorUserCanViewCreditReport() {
+
+        ProjectCompositeId projectId = ProjectCompositeId.id(1L);
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasAuthority(Authority.AUDITOR)) {
+                assertTrue(rules.auditorUserCanViewCreditReport(projectId, user));
+            } else {
+                assertFalse(rules.auditorUserCanViewCreditReport(projectId, user));
+            }
+        });
+    }
+
+    @Test
     public void internalUserCanViewFinanceChecks() {
         ProjectCompositeId projectId = ProjectCompositeId.id(1L);
         allInternalUsers.forEach(user -> assertTrue(rules.internalUsersCanSeeTheProjectFinanceOverviewsForAllProjects(projectId, user)));
+    }
+
+    @Test
+    public void auditorUserCanViewFinanceChecks() {
+        ProjectCompositeId projectId = ProjectCompositeId.id(1L);
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasAuthority(Authority.AUDITOR)) {
+                assertTrue(rules.auditorUsersCanSeeTheProjectFinanceOverviewsForAllProjects(projectId, user));
+            } else {
+                assertFalse(rules.auditorUsersCanSeeTheProjectFinanceOverviewsForAllProjects(projectId, user));
+            }
+        });
     }
 
     @Test
@@ -492,6 +547,19 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
+    public void auditorUserCanSeeTheProjectFinancesForTheirOrganisation() {
+        FinanceCheckEligibilityResource financeCheckEligibilityResource = newFinanceCheckEligibilityResource().withProjectId(project.getId()).build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (isAuditor(user)) {
+                assertTrue(rules.auditorCanSeeTheProjectFinancesForTheirOrganisation(financeCheckEligibilityResource, user));
+            } else {
+                assertFalse(rules.auditorCanSeeTheProjectFinancesForTheirOrganisation(financeCheckEligibilityResource, user));
+            }
+        });
+    }
+
+    @Test
     public void competitionFinanceUsersCanSeeTheProjectFinancesForTheirOrganisation() {
         UserResource user = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
         UserResource userNotInCompetition = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
@@ -505,6 +573,13 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         setupUserAsPartner(project, user);
         assertTrue(rules.competitionFinanceUsersCanSeeTheProjectFinancesForTheirOrganisation(financeCheckEligibilityResource, user));
         assertFalse(rules.competitionFinanceUsersCanSeeTheProjectFinancesForTheirOrganisation(financeCheckEligibilityResource, userNotInCompetition));
+    }
+
+    @Test
+    public void auditorCanSeeProjectFinancesForOrganisations() {
+        UserResource user = newUserResource().withRoleGlobal(AUDITOR).build();
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(project.getId()).build();
+        assertTrue(rules.stakeholderUserCanSeeProjectFinancesForOrganisations(projectFinanceResource, user));
     }
 
     @Override

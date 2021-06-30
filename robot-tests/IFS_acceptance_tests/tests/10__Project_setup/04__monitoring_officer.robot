@@ -41,6 +41,8 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...
 ...               IFS-8958  SBRI Milestones - Application overview / summary
 ...
+...               IFS-9578 MO documents: design changes for other roles (not MO or Project manager)
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -279,6 +281,17 @@ MO can now view payment milestones in SBRI application
     And the user clicks the button/link                                     link = view application feedback
     Then the payment milestone table is visible in application overview
 
+Change MO for the project
+    [Documentation]   IFS-9578
+    Given Log in as a different user               &{Comp_admin1_credentials}
+    When the user navigates to the page            ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/monitoring-officer
+    And the user clicks the button/link            jQuery = a:contains("Change monitoring officer")
+    And search for MO                              Nilesh  Nilesh Patti
+    And the user clicks the button/link            jQuery = a:contains("Remove")
+    And the user clicks the button/link            jQuery = a:contains("Back to assign monitoring officers")
+    Then search for MO                             Orvill  Orville Gibbs
+    And the internal user assign project to MO     ${Grade_Crossing_Applicaiton_No}   ${Grade_Crossing_Application_Title}
+
 *** Keywords ***
 The MO user is able to access all of the links
     the user is able to see Project details section
@@ -294,7 +307,7 @@ The user is able to see Project details section
 The user is able to see Documents section
     the user clicks the button/link   link = Documents
     the user should see the element   jQuery = h1:contains("Documents")
-    the user clicks the button/link   jQuery = a:contains("Set up your project")
+    the user clicks the button/link   jQuery = a:contains("Back to monitor project")
 
 The user is able to see Monitoring officer section
     the user clicks the button/link   jQuery = a:contains("Monitoring Officer")
@@ -306,7 +319,7 @@ The user is able to see Spend profile section
     the user clicks the button/link   jQuery = a:contains("Set up your project")
 
 Requesting IDs of this application
-    ${sbri_projectID} =  get project id by name    ${sbri_applicaton_name}
+    ${sbri_projectID} =  get project id by name     ${sbri_applicaton_name}
     Set suite variable    ${sbri_projectID}
 
 The SBRI MO assignee has been changed

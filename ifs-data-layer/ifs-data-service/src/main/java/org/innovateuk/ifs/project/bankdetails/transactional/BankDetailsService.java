@@ -39,8 +39,8 @@ public interface BankDetailsService {
         }
     }
 
-    @PreAuthorize("hasAuthority('project_finance')")
-    @SecuredBySpring(value = "READ", description = "Project Finance users can see bank details status summary for all partners", securedType = ProjectBankDetailsStatusSummary.class)
+    @PreAuthorize("hasAnyAuthority('project_finance', 'auditor')")
+    @SecuredBySpring(value = "READ", description = "Project Finance and Auditor users can see bank details status summary for all partners", securedType = ProjectBankDetailsStatusSummary.class)
     ServiceResult<ProjectBankDetailsStatusSummary> getProjectBankDetailsStatusSummary(Long projectId);
 
     @PreAuthorize("hasAuthority('project_finance')")

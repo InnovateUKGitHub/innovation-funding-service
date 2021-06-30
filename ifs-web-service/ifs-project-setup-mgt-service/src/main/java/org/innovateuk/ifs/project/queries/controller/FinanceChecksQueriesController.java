@@ -25,6 +25,7 @@ import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
@@ -94,9 +95,10 @@ public class FinanceChecksQueriesController {
     public String showPage(@P("projectId")@PathVariable Long projectId,
                            @PathVariable Long organisationId,
                            @RequestParam(value = "query_section", required = false) String querySection,
+                           UserResource loggedInUser,
                            Model model) {
         partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId);
-        FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, null, querySection, null);
+        FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, null, querySection, null, loggedInUser);
         model.addAttribute("model", viewModel);
         return QUERIES_VIEW;
     }
@@ -135,13 +137,13 @@ public class FinanceChecksQueriesController {
                                   HttpServletRequest request) {
         partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
-        populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments, model);
+        populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments, model, loggedInUser);
         model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId, queryId).orElse(new FinanceChecksQueriesAddResponseForm()));
         return QUERIES_VIEW;
     }
 
-    private void populateQueriesViewModel(Long projectId, Long organisationId, Long queryId, String querySection, List<Long> attachments, Model model) {
-        FinanceChecksQueriesViewModel financeChecksQueriesViewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments);
+    private void populateQueriesViewModel(Long projectId, Long organisationId, Long queryId, String querySection, List<Long> attachments, Model model, UserResource loggedInUser) {
+        FinanceChecksQueriesViewModel financeChecksQueriesViewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments, loggedInUser);
         validateQueryId(financeChecksQueriesViewModel, queryId);
         model.addAttribute("model", financeChecksQueriesViewModel);
     }
@@ -167,14 +169,14 @@ public class FinanceChecksQueriesController {
                                HttpServletResponse response) {
         Supplier<String> failureView = () -> {
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
-            FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments);
+            FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments, loggedInUser);
             model.addAttribute("model", viewModel);
             model.addAttribute(FORM_ATTR, form);
             return QUERIES_VIEW;
         };
 
         Supplier<String> saveFailureView = () -> {
-            FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, null, querySection, null);
+            FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, null, querySection, null, loggedInUser);
             model.addAttribute("model", viewModel);
             model.addAttribute("nonFormErrors", validationHandler.getAllErrors());
             model.addAttribute(FORM_ATTR, null);
@@ -220,11 +222,12 @@ public class FinanceChecksQueriesController {
                                             @SuppressWarnings("unused") BindingResult bindingResult,
                                             ValidationHandler validationHandler,
                                             HttpServletRequest request,
-                                            HttpServletResponse response) {
+                                            HttpServletResponse response,
+                                            UserResource loggedInUser) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         Supplier<String> onSuccess = () -> redirectTo(rootView(projectId, organisationId, queryId, querySection));
         Supplier<String> onError = () -> {
-            FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments);
+            FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments, loggedInUser);
             model.addAttribute("model", viewModel);
             model.addAttribute("nonFormErrors", validationHandler.getAllErrors());
             model.addAttribute("form", form);
@@ -241,7 +244,7 @@ public class FinanceChecksQueriesController {
                 saveFormToCookie(response, projectId, organisationId, queryId, form);
             });
 
-            model.addAttribute("model", populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments));
+            model.addAttribute("model", populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments, loggedInUser));
             return result;
         });
     }
@@ -315,7 +318,7 @@ public class FinanceChecksQueriesController {
         }
     }
 
-    private FinanceChecksQueriesViewModel populateQueriesViewModel(Long projectId, Long organisationId, Long queryId, String querySection, List<Long> attachments) {
+    private FinanceChecksQueriesViewModel populateQueriesViewModel(Long projectId, Long organisationId, Long queryId, String querySection, List<Long> attachments, UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
@@ -344,7 +347,8 @@ public class FinanceChecksQueriesController {
                 project.getApplication(),
                 project.getProjectState().isActive(),
                 competition.isProcurementMilestones(),
-                northernIrelandSubsidyControlToggle && (FundingRules.SUBSIDY_CONTROL == competition.getFundingRules())
+                northernIrelandSubsidyControlToggle && (FundingRules.SUBSIDY_CONTROL == competition.getFundingRules()),
+                loggedInUser.hasAuthority(Authority.AUDITOR)
         );
     }
 

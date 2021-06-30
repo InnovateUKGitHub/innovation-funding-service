@@ -31,6 +31,7 @@ public class ApplicationTermsControllerSecurityTest extends BaseControllerSecuri
         roles.add(Role.SUPPORTER);
         roles.add(Role.SYSTEM_MAINTAINER);
         roles.add(Role.SUPER_ADMIN_USER);
+        roles.add(Role.AUDITOR);
 
         assertRolesCanPerform(() -> classUnderTest.getTerms(0L, 0L, 0L,  null, null, null, false), roles);
     }

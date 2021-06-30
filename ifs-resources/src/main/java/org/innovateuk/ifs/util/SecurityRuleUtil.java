@@ -41,8 +41,16 @@ public final class SecurityRuleUtil {
         return user.hasAuthority(Authority.IFS_ADMINISTRATOR);
     }
 
+    public static boolean hasStakeholderAuthority(UserResource user) {
+        return user.hasAuthority(Authority.STAKEHOLDER);
+    }
+
     public static boolean hasSuperAdminAuthority(UserResource user) {
         return user.hasAuthority(Authority.SUPER_ADMIN_USER);
+    }
+
+    public static boolean hasAuditorAuthority(UserResource user) {
+        return user.hasAuthority(Authority.AUDITOR);
     }
 
     public static boolean isSupport(UserResource user) {
@@ -53,6 +61,10 @@ public final class SecurityRuleUtil {
 
     public static boolean isStakeholder(UserResource user) {
         return user.hasRole(STAKEHOLDER);
+    }
+
+    public static boolean isAuditor(UserResource user) {
+        return user.hasRole(AUDITOR);
     }
 
     public static boolean isExternalFinanceUser(UserResource user) {

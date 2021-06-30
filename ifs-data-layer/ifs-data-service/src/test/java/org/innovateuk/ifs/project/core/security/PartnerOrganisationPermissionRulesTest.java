@@ -217,4 +217,26 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
             }
         });
     }
+
+    @Test
+    public void auditorsCanViewPartnerOrgs() {
+        UserResource user = newUserResource().withRoleGlobal(AUDITOR).build();
+        Project project = newProject().build();
+        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withProject(project.getId()).build();
+
+        assertTrue(rules.auditorsCanViewProjects(partnerOrg, user));
+    }
+
+    @Test
+    public void auditorsCanViewPendingPartnerProgress() {
+        long projectId = 1L;
+        long organisationId = 2L;
+        Competition competition = newCompetition().build();
+        UserResource user = newUserResource().withRoleGlobal(AUDITOR).build();
+        Project project = newProject().withId(projectId).withApplication(newApplication()
+                .withCompetition(competition).build()).build();
+        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withOrganisation(organisationId).withProject(project.getId()).build();
+
+        assertTrue(rules.auditorsCanReadPendingPartnerProgress(partnerOrg, user));
+    }
 }

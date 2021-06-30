@@ -102,6 +102,7 @@ public class CompetitionManagementDashboardController {
                         countBankDetails,
                         new DashboardTabsViewModel(user),
                         projectFinanceUser,
+                        SecurityRuleUtil.hasAuditorAuthority(user),
                         SecurityRuleUtil.isExternalFinanceUser(user)));
 
         return TEMPLATE_PATH + "projectSetup";

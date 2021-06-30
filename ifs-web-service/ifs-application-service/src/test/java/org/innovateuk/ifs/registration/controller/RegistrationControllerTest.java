@@ -156,6 +156,22 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     }
 
     @Test
+    public void onGetRequestRegistrationViewIsReturnedWithShowBackLink() throws Exception {
+        OrganisationResource organisation = newOrganisationResource().build();
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisation.getId())).thenReturn(restSuccess(organisation));
+
+        MvcResult result = mockMvc.perform(get("/registration/register")
+                .cookie(inviteHashCookie, organisationCookie)
+        )
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("registration/register"))
+                .andReturn();
+
+        RegistrationViewModel viewmodel = (RegistrationViewModel) result.getModelAndView().getModel().get("model");
+        assertTrue(viewmodel.isShowBackLink());
+    }
+
+    @Test
     public void onGetRequestRegistrationViewIsReturnedWithUsedInviteEmail() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(ACCEPTED_INVITE_HASH));
