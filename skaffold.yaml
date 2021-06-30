@@ -127,6 +127,10 @@ profiles:
           - os-files/kustomize/overlays/tmp
   - name: at
     build:
+      tagPolicy:
+        gitCommit:
+          prefix: xxx-
+          ignoreChanges: true
       artifacts:
         - image: robot-framework
           context: robot-tests
@@ -222,6 +226,10 @@ profiles:
 
   - name: sysint
     build:
+      tagPolicy:
+        gitCommit:
+          prefix: xxx-
+          ignoreChanges: true
       artifacts:
         - image: data-service
           context: .
@@ -315,6 +323,10 @@ profiles:
 
   - name: uat
     build:
+      tagPolicy:
+        gitCommit:
+          prefix: xxx-
+          ignoreChanges: true
       artifacts:
         - image: data-service
           context: .
@@ -408,6 +420,10 @@ profiles:
 
   - name: demo
     build:
+      tagPolicy:
+        gitCommit:
+          prefix: xxx-
+          ignoreChanges: true
       artifacts:
         - image: data-service
           context: .
@@ -501,6 +517,10 @@ profiles:
 
   - name: perf
     build:
+      tagPolicy:
+        gitCommit:
+          prefix: xxx-
+          ignoreChanges: true
       artifacts:
         - image: data-service
           context: .
@@ -594,6 +614,10 @@ profiles:
 
   - name: prod
     build:
+      tagPolicy:
+        gitCommit:
+          prefix: xxx-
+          ignoreChanges: true
       artifacts:
         - image: data-service
           context: .
