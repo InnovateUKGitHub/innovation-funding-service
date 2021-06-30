@@ -164,6 +164,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
     @Test
     public void applicationControllerCanCreateApplication() throws Exception {
+        long applicationId = 1L;
         long competitionId = 1L;
         long userId = 1L;
         long organisationId = 1L;
@@ -181,7 +182,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", notNullValue()));
 
-        verify(crmService, only()).syncCrmContact(userId);
+        verify(crmService, only()).syncCrmContact(userId,applicationId,competitionId);
     }
 
     @Test

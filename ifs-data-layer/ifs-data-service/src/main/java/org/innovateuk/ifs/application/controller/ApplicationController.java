@@ -148,10 +148,10 @@ public class ApplicationController {
         String name = jsonObj.get("name").textValue();
 
         return applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId, organisationId)
-                .andOnSuccessReturn(result -> {
-                    LOG.info(String.format("%s-%s-%s",userId,competitionId,result.getId()));
-                    crmService.syncCrmContact(userId,competitionId,result.getId());
-                    return result;
+                .andOnSuccessReturn(application -> {
+                    LOG.info(String.format("%s-%s-%s",userId,competitionId,application.getId()));
+                    crmService.syncCrmContact(userId,competitionId,application.getId());
+                    return application;
                 })
                 .toPostCreateResponse();
     }
