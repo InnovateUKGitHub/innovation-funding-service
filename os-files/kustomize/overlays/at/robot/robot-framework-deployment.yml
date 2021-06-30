@@ -15,7 +15,7 @@ spec:
       imagePullSecrets:
         - name: imagePullSecretsName
       containers:
-        - image: docker-ifs.devops.innovateuk.org/innovateuk/robot-framework:1.0-SNAPSHOT
+        - image: robot-framework
           name: robot-framework
           imagePullPolicy: IfNotPresent
           resources:
