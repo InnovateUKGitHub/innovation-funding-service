@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.user.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
@@ -165,7 +167,14 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final Long userId = 1L;
         final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(), null);
         when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
-        when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(1L)).thenReturn(serviceSuccess());
+
+        ApplicationResource applicationResource = new ApplicationResource();
+        applicationResource.setCompetition(1L);
+        applicationResource.setId(1L);
+
+
+        when(tokenServiceMock.handleExtraAttributes(token)).thenReturn(serviceSuccess((applicationResource)));
+        when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(anyLong())).thenReturn(serviceSuccess());
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
@@ -176,7 +185,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                         ))
                 );
 
-        verify(crmService).syncCrmContact(userId);
+        verify(crmService).syncCrmContact(userId,applicationResource.getId(),applicationResource.getCompetition());
     }
 
 
