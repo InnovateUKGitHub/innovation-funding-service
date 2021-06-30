@@ -24,14 +24,14 @@ public class ApplicationExternalConfigServiceImpl extends RootTransactionalServi
 
     @Override
     public ServiceResult<ApplicationExternalConfigResource> findOneByApplicationId(long applicationId) {
-        return find(applicationExternalConfigRepository.findById(applicationId), notFoundError(ApplicationExternalConfig.class, applicationId))
+        return find(applicationExternalConfigRepository.findOneByApplicationId(applicationId), notFoundError(ApplicationExternalConfig.class, applicationId))
                 .andOnSuccessReturn(mapper::mapToResource);
     }
 
     @Override
     @Transactional
     public ServiceResult<Void> update(long applicationId, ApplicationExternalConfigResource applicationExternalConfigResource) {
-        return find(applicationExternalConfigRepository.findById(applicationId), notFoundError(ApplicationExternalConfig.class, applicationId))
+        return find(applicationExternalConfigRepository.findOneByApplicationId(applicationId), notFoundError(ApplicationExternalConfig.class, applicationId))
                 .andOnSuccessReturnVoid((config) -> {
                     config.setExternalApplicationId(applicationExternalConfigResource.getExternalApplicationId());
                     config.setExternalApplicantName(applicationExternalConfigResource.getExternalApplicantName());

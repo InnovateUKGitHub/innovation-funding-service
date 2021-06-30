@@ -200,9 +200,10 @@ public class BuildDataFromFile {
             applicationInnovationAreaService.setNoInnovationAreaApplies(application.getId()).getSuccess();
             application.setStartDate(LocalDate.now().plusDays(5));
             application.setDurationInMonths(2L);
-            setApplicationExternalConfig(appE);
+
             applicationService.saveApplicationDetails(application.getId(), application).getSuccess();
-            setExternalApplicationData(appToExternalAppMap.get(a.getName()), appE);
+            setApplicationExternalConfig(application);
+            setExternalApplicationData(appToExternalAppMap.get(a.getName()), application);
             ProcessRole role = processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(), ProcessRoleType.LEADAPPLICANT, application.getId());
             saveResponses(application, appToResponseMap.get(a.getName()), role);
 
@@ -364,7 +365,8 @@ public class BuildDataFromFile {
         competitionSetupService.markAsSetup(competition.getId());
     }
 
-    private Application setApplicationExternalConfig(Application application) {
+    private Application setApplicationExternalConfig(ApplicationResource applicationResource) {
+        Application application = applicationRepository.findById(applicationResource.getId()).get();
         if (application.getApplicationExternalConfig() == null) {
             ApplicationExternalConfig applicationExternalConfig = new ApplicationExternalConfig();
             applicationExternalConfig.setApplication(application);
@@ -373,13 +375,13 @@ public class BuildDataFromFile {
         return application;
     }
 
-    private void setExternalApplicationData(Collection<BuildExternalApplication> buildExternalApplication, Application application) {
+    private void setExternalApplicationData(Collection<BuildExternalApplication> buildExternalApplication, ApplicationResource applicationResource) {
         buildExternalApplication.forEach((externalApplication -> {
-            if(application.getName().equals(externalApplication.getApplicationName())) {
+            if(applicationResource.getName().equals(externalApplication.getApplicationName())) {
                 ApplicationExternalConfigResource applicationExternalConfigResource = new ApplicationExternalConfigResource();
                 applicationExternalConfigResource.setExternalApplicationId(externalApplication.getExternalApplicationId());
                 applicationExternalConfigResource.setExternalApplicantName(externalApplication.getExternalApplicantName());
-                applicationExternalConfigService.update(application.getId(), applicationExternalConfigResource).getSuccess();
+                applicationExternalConfigService.update(applicationResource.getId(), applicationExternalConfigResource).getSuccess();
             }
         }));
 

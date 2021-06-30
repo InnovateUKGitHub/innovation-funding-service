@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 @Mapper(config = GlobalMapperConfig.class)
 public abstract class ApplicationExternalConfigMapper {
 
-    public  ApplicationExternalConfigResource mapToResource(ApplicationExternalConfig domain) {
+    public ApplicationExternalConfigResource mapToResource(ApplicationExternalConfig domain) {
         ApplicationExternalConfigResource applicationExternalConfigResource = new ApplicationExternalConfigResource();
 
         if (domain != null) {
