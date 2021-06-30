@@ -109,8 +109,13 @@ profiles:
   - name: tmp
     build:
       artifacts:
-        - image: robot-framework
-          context: robot-tests
+        - image: data-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-data-layer:ifs-data-service
+            args:
+              - "-DskipTests"
     deploy:
       kubeContext: tmp
       kustomize:

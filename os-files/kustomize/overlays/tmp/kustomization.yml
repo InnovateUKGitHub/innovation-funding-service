@@ -3,6 +3,4 @@ commonAnnotations:
   environment: tmp
 
 resources:
-  - robot/chrome.yml
-  - robot/chrome-deployment.yml
-  - robot/robot-framework-deployment.yml
+  - data-service-deployment.yml
