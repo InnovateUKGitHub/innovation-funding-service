@@ -41,6 +41,8 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...
 ...               IFS-8958  SBRI Milestones - Application overview / summary
 ...
+...               IFS-9578 MO documents: design changes for other roles (not MO or Project manager)
+...
 ...               IFS-9774 Investigate if its possible to fix AT's failure due to IDP upgrade
 ...
 Suite Setup       Custom suite setup
@@ -282,6 +284,17 @@ MO can now view payment milestones in SBRI application
     And the user navigates to the page                                      ${server}/project-setup/project/${sbri_projectID}
     And the user clicks the button/link                                     link = view application feedback
     Then the payment milestone table is visible in application overview
+
+Change MO for the project
+    [Documentation]   IFS-9578
+    Given Log in as a different user               &{Comp_admin1_credentials}
+    When the user navigates to the page            ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/monitoring-officer
+    And the user clicks the button/link            jQuery = a:contains("Change monitoring officer")
+    And search for MO                              Nilesh  Nilesh Patti
+    And the user clicks the button/link            jQuery = a:contains("Remove")
+    And the user clicks the button/link            jQuery = a:contains("Back to assign monitoring officers")
+    Then search for MO                             Orvill  Orville Gibbs
+    And the internal user assign project to MO     ${Grade_Crossing_Applicaiton_No}   ${Grade_Crossing_Application_Title}
 
 *** Keywords ***
 The MO user is able to access all of the links

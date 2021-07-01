@@ -213,6 +213,8 @@ Custom Suite Setup
     Set suite variable  ${month}
     ${lastYear} =  get last year
     Set suite variable  ${lastYear}
+    ${today}  get today
+    set suite variable  ${today}
     Connect to database  @{database}
 
 The user is able to see that the application is now in project setup

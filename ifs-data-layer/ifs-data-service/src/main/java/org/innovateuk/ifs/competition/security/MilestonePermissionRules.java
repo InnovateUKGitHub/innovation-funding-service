@@ -56,4 +56,9 @@ public class MilestonePermissionRules extends BasePermissionRules {
         Competition competition = competitionRepository.findById(competitionCompositeId.id()).get();
         return COMPETITION_SETUP.equals(competition.getCompetitionStatus());
     }
+
+    @PermissionRule(value = "VIEW_MILESTONE", description = "Auditors can view milestones on all competitions.")
+    public boolean auditorsCanViewMilestonesOnAllComps(CompetitionCompositeId competitionId, UserResource user) {
+        return user.hasAuthority(Authority.AUDITOR);
+    }
 }
