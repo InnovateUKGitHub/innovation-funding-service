@@ -19,11 +19,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -36,7 +36,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
-import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
+import static org.innovateuk.ifs.project.resource.ProjectState.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.AUDITOR;
 import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
@@ -45,8 +45,10 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<ProjectFinancePermissionRules> {
+
     private ProjectProcess projectProcess;
     private ProjectResource project;
+    private long organisationId;
 
     @Mock
     private ProjectProcessRepository projectProcessRepository;
@@ -55,12 +57,11 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     public void setUp() throws Exception {
         projectProcess = newProjectProcess().withActivityState(SETUP).build();
         project = newProjectResource().withId(1L).withProjectState(SETUP).build();
+        organisationId = 1L;
     }
 
     @Test
     public void projectFinanceUserCanViewViability() {
-
-        long organisationId = 1L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
 
@@ -76,7 +77,6 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     @Test
     public void externalFinanceUserCanViewViability() {
 
-        Long organisationId = 1L;
         UserResource userResource = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
         UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
         Competition competition = newCompetition().build();
@@ -93,7 +93,6 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     @Test
     public void auditorUserCanViewViability() {
 
-        long organisationId = 1L;
         UserResource userResource = newUserResource().withRoleGlobal(AUDITOR).build();
         Competition competition = newCompetition().build();
         Project competitionFinanceProject = newProject().withId(project.getId()).withApplication(newApplication().withCompetition(competition).build()).build();
@@ -107,7 +106,6 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     @Test
     public void competitionFinanceUserCanSaveViability() {
 
-        Long organisationId = 1L;
         UserResource userResource = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
         UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
         Competition competition = newCompetition().build();
@@ -125,8 +123,6 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     @Test
     public void projectFinanceUserCanSaveViability() {
 
-        Long organisationId = 1L;
-
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
 
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
@@ -143,8 +139,6 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     @Test
     public void projectFinanceUserCanViewEligibility() {
 
-        Long organisationId = 1L;
-
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
 
         allGlobalRoleUsers.forEach(user -> {
@@ -159,7 +153,6 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     @Test
     public void auditorUserCanViewEligibility() {
 
-        long organisationId = 1L;
         UserResource userResource = newUserResource().withRoleGlobal(AUDITOR).build();
         Competition competition = newCompetition().build();
         Project competitionFinanceProject = newProject().withId(project.getId()).withApplication(newApplication().withCompetition(competition).build()).build();
@@ -173,7 +166,6 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     @Test
     public void competitionFinanceUserCanViewEligibility() {
 
-        Long organisationId = 1L;
         UserResource userResource = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
         UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
         Competition competition = newCompetition().build();
@@ -190,7 +182,6 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     @Test
     public void competitionFinanceUserCanSaveEligibility() {
 
-        Long organisationId = 1L;
         UserResource userResource = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
         UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
         Competition competition = newCompetition().build();
@@ -208,8 +199,6 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     @Test
     public void projectFinanceUserCanSaveEligibility() {
 
-        Long organisationId = 1L;
-
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
 
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
@@ -226,7 +215,6 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     @Test
     public void competitionFinanceUserCanSaveFundingRules() {
 
-        Long organisationId = 1L;
         UserResource userResource = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
         UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
         Competition competition = newCompetition().build();
@@ -243,8 +231,6 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
 
     @Test
     public void projectFinanceUserCanSaveFundingRules() {
-
-        Long organisationId = 1L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
 
@@ -384,7 +370,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         UserResource user = newUserResource().build();
 
         setupFinanceContactExpectations(project, user);
-        List<Role> financeContact = asList(Role.APPLICANT);
+        List<Role> financeContact = singletonList(Role.APPLICANT);
         user.setRoles(financeContact);
 
         assertTrue(rules.partnersCanSeeTheProjectFinanceOverviewsForTheirProject(ProjectCompositeId.id(project.getId()), user));
@@ -393,7 +379,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     private void setupFinanceContactExpectations(ProjectResource project, UserResource user) {
         List<ProjectUser> partnerProjectUser = newProjectUser().build(1);
 
-        when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(project.getId(), user.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(partnerProjectUser);
+        when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(project.getId(), user.getId(), new ArrayList<>(PROJECT_USER_ROLES))).thenReturn(partnerProjectUser);
 
         when(projectUserRepository.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_FINANCE_CONTACT)).thenReturn(partnerProjectUser);
     }
@@ -575,6 +561,18 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
+    public void projectFinanceUserCannotSaveMilestoneCheck() {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId =
+                new ProjectOrganisationCompositeId(project.getId(), newOrganisation().build().getId());
+
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+
+        projectProcess.setProcessState(WITHDRAWN);
+
+        allGlobalRoleUsers.forEach(user -> assertFalse(rules.projectFinanceUserCanSaveMilestoneCheck(projectOrganisationCompositeId, user)));
+    }
+
+    @Test
     public void projectFinanceUserCanResetMilestoneCheck() {
         ProjectOrganisationCompositeId projectOrganisationCompositeId =
                 new ProjectOrganisationCompositeId(project.getId(), newOrganisation().build().getId());
@@ -588,6 +586,18 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
                 assertFalse(rules.projectFinanceUserCanResetMilestoneCheck(projectOrganisationCompositeId, user));
             }
         });
+    }
+
+    @Test
+    public void projectFinanceUserCannotResetMilestoneCheck() {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId =
+                new ProjectOrganisationCompositeId(project.getId(), newOrganisation().build().getId());
+
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+
+        projectProcess.setProcessState(WITHDRAWN);
+
+        allGlobalRoleUsers.forEach(user -> assertFalse(rules.projectFinanceUserCanResetMilestoneCheck(projectOrganisationCompositeId, user)));
     }
 
     @Test
@@ -620,6 +630,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
 
     @Test
     public void competitionFinanceUsersCanSeeTheProjectFinancesForTheirOrganisation() {
+
         UserResource user = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
         UserResource userNotInCompetition = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
         FinanceCheckEligibilityResource financeCheckEligibilityResource = newFinanceCheckEligibilityResource().withProjectId(project.getId()).build();
