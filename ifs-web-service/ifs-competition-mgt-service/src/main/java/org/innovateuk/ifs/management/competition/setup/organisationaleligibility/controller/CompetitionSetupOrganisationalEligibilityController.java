@@ -37,7 +37,7 @@ import static org.innovateuk.ifs.management.competition.setup.CompetitionSetupCo
 @Controller
 @RequestMapping("/competition/setup/{competitionId}/section/organisational-eligibility")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionSetupOrganisationalEligibilityController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin')")
 public class CompetitionSetupOrganisationalEligibilityController {
 
     public static final String ORGANISATIONAL_ELIGIBILITY_LANDING_REDIRECT = "redirect:/competition/setup/%d/section/organisational-eligibility";
@@ -73,7 +73,7 @@ public class CompetitionSetupOrganisationalEligibilityController {
         }
 
         model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, ORGANISATIONAL_ELIGIBILITY));
-        model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupService.getSectionFormData(competition, ORGANISATIONAL_ELIGIBILITY));
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupService.getSectionFormPopulator(ORGANISATIONAL_ELIGIBILITY).populateForm(competition));
 
         return "competition/setup";
     }

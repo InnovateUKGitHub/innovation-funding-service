@@ -70,13 +70,12 @@ public class SpendProfileCostValidatorTest {
 
         validator.validate(table, bindingResult);
         assertTrue(bindingResult.hasErrors());
-        Assert.assertEquals(4, bindingResult.getErrorCount());
+        Assert.assertEquals(3, bindingResult.getErrorCount());
 
         ValidatorTestUtil.verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_FRACTIONAL.getErrorKey(), 0, FIELD_NAME_TEMPLATE, 1L, 0);
         ValidatorTestUtil.verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO.getErrorKey(), 1, FIELD_NAME_TEMPLATE, 2L, 1);
         ValidatorTestUtil.verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_NULL.getErrorKey(), 2, FIELD_NAME_TEMPLATE, 2L, 2);
-        ValidatorTestUtil.verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 3, FIELD_NAME_TEMPLATE, 3L, 2);
-    }
+          }
 
     @Test
     public void testCostsAreFractional() {
@@ -111,21 +110,7 @@ public class SpendProfileCostValidatorTest {
         ValidatorTestUtil.verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO.getErrorKey(), 2, FIELD_NAME_TEMPLATE, 3L, 2);
     }
 
-    @Test
-    public void testCostsAreMoreThanMaxAllowed() {
-        table.setMonthlyCostsPerCategoryMap(asMap(
-                1L, asList(new BigDecimal("1000000"), new BigDecimal("30"), new BigDecimal("40")),
-                2L, asList(new BigDecimal("999999"), new BigDecimal("1000001"), new BigDecimal("60")),
-                3L, asList(new BigDecimal("50"), new BigDecimal("2000000"), new BigDecimal("10"))));
 
-        validator.validate(table, bindingResult);
-        assertTrue(bindingResult.hasErrors());
-        Assert.assertEquals(3, bindingResult.getErrorCount());
-
-        ValidatorTestUtil.verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 0, FIELD_NAME_TEMPLATE, 1L, 0);
-        ValidatorTestUtil.verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 1, FIELD_NAME_TEMPLATE, 2L, 1);
-        ValidatorTestUtil.verifyFieldError(bindingResult, SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT.getErrorKey(), 2, FIELD_NAME_TEMPLATE, 3L, 1);
-    }
 
     @Test
     public void testCostsAreNull() {

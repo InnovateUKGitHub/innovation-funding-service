@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isAssessor;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.hasAssessorAuthority;
 
 @PermissionRules
 @Component
@@ -32,7 +32,7 @@ public class UpcomingCompetitionPermissionRules {
             " for which they are invited.")
     public boolean upcomingCompetition(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
-        return isAssessor(loggedInUser)
+        return hasAssessorAuthority(loggedInUser)
                 && !competition.getCompetitionStatus().isLaterThan(CompetitionStatus.IN_ASSESSMENT)
                 && assessorHasAcceptedInvite(competitionCompositeId, loggedInUser);
     }

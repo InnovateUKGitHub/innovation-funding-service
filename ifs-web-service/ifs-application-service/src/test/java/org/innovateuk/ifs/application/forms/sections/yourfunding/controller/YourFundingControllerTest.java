@@ -15,7 +15,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResou
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -65,7 +65,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
     private SectionStatusRestService sectionStatusRestService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Mock
     private YourFundingFormValidator yourFundingFormValidator;
@@ -120,7 +120,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
     @Test
     public void edit() throws Exception {
         YourFundingViewModel viewModel = mockUnlockedViewModel();
-        when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
+        when(processRoleRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
                 .thenReturn(restSuccess(newProcessRoleResource().withId(PROCESS_ROLE_ID).build()));
         when(sectionStatusRestService.markAsInComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID)).thenReturn(restSuccess());
 
@@ -145,7 +145,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
         CompetitionApplicationConfigResource competitionApplicationConfigResource = newCompetitionApplicationConfigResource().build();
 
         when(saver.save(eq(APPLICATION_ID), eq(ORGANISATION_ID), any(YourFundingPercentageForm.class))).thenReturn(serviceSuccess());
-        when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
+        when(processRoleRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
                 .thenReturn(restSuccess(newProcessRoleResource().withId(PROCESS_ROLE_ID).build()));
         when(sectionStatusRestService.markAsComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID)).thenReturn(restSuccess(noErrors()));
 
@@ -190,7 +190,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
-                .param("add_cost", "true")
+                .param("add_row", "true")
                 .param("grantClaimPercentage", "100"))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))
@@ -206,7 +206,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
-                .param("remove_cost", rowToRemove)
+                .param("remove_row", rowToRemove)
                 .param("grantClaimPercentage", "100"))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))

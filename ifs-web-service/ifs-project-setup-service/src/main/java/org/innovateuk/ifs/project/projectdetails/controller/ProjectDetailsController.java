@@ -8,6 +8,7 @@ import org.innovateuk.ifs.controller.ErrorToObjectErrorConverter;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.projectdetails.form.PartnerProjectLocationForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.PartnerProjectLocationViewModel;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsStartDateViewModel;
@@ -36,7 +37,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
-import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -72,7 +72,6 @@ public class ProjectDetailsController {
                                      UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
-        boolean partnerProjectLocationRequired = competitionResource.isLocationPerPartner();
 
         List<ProjectUserResource> projectUsers = projectRestService.getProjectUsersForProject(projectResource.getId()).getSuccess();
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
@@ -86,8 +85,7 @@ public class ProjectDetailsController {
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 organisations,
-                partnerProjectLocationRequired ? partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess()
-                        : Collections.emptyList(),
+                partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess(),
                 leadOrganisation,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()),
                 spendProfileGenerated, statusAccessor.isGrantOfferLetterGenerated(), false, competitionResource));
@@ -102,7 +100,6 @@ public class ProjectDetailsController {
 
         ProjectResource projectResource = projectService.getById(projectId);
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
-        boolean partnerProjectLocationRequired = competitionResource.isLocationPerPartner();
 
         List<ProjectUserResource> projectUsers = projectRestService.getProjectUsersForProject(projectResource.getId()).getSuccess();
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
@@ -116,8 +113,7 @@ public class ProjectDetailsController {
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 organisations,
-                partnerProjectLocationRequired ? partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess()
-                        : Collections.emptyList(),
+                partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess(),
                 leadOrganisation,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()),
                 spendProfileGenerated, true, true, competitionResource));
@@ -203,7 +199,7 @@ public class ProjectDetailsController {
         final Supplier<SortedSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
 
         SortedSet<OrganisationResource> organisationSet = projectRoles.stream()
-                .filter(uar -> uar.getRole() == PARTNER.getId())
+                .filter(uar -> uar.getRole() == ProjectParticipantRole.PROJECT_PARTNER)
                 .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccess())
                 .collect(Collectors.toCollection(supplier));
 
@@ -212,7 +208,7 @@ public class ProjectDetailsController {
 
     private List<Long> getUsersPartnerOrganisations(UserResource loggedInUser, List<ProjectUserResource> projectUsers) {
         List<ProjectUserResource> partnerProjectUsers = simpleFilter(projectUsers,
-                user -> loggedInUser.getId().equals(user.getUser()) && user.getRoleName().equals(PARTNER.getName()));
+                user -> loggedInUser.getId().equals(user.getUser()) && user.getRole() == ProjectParticipantRole.PROJECT_PARTNER);
         return simpleMap(partnerProjectUsers, ProjectUserResource::getOrganisation);
     }
 

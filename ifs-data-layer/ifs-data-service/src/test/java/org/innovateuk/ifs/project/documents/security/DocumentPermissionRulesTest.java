@@ -20,6 +20,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentResourceBuilder.newProjectDocumentResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.AUDITOR;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
@@ -127,6 +128,15 @@ public class DocumentPermissionRulesTest extends BasePermissionRulesTest<Documen
     }
 
     @Test
+    public void auditorCannotDownloadDocument() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().withRoleGlobal(AUDITOR).build();
+
+        assertTrue(rules.auditorCanDownloadDocument(project, user));
+    }
+
+    @Test
     public void stakeholderCannotDownloadDocument() {
         long projectId = 100L;
 
@@ -178,7 +188,6 @@ public class DocumentPermissionRulesTest extends BasePermissionRulesTest<Documen
         });
     }
 
-
     @Test
     public void projectManagerCanDeleteDocument() {
         ProjectResource project = newProjectResource().build();
@@ -224,7 +233,7 @@ public class DocumentPermissionRulesTest extends BasePermissionRulesTest<Documen
         ProjectResource project = newProjectResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (SecurityRuleUtil.isInternalAdmin(user) || SecurityRuleUtil.isIFSAdmin(user)) {
+            if (SecurityRuleUtil.isInternalAdmin(user) || SecurityRuleUtil.hasIFSAdminAuthority(user)) {
                 assertTrue(rules.internalAdminCanApproveDocument(project, user));
             } else {
                 assertFalse(rules.internalAdminCanApproveDocument(project, user));

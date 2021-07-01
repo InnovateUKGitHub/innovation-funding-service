@@ -7,6 +7,8 @@ Resource          ../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
 ${assessor_myra_id}          ${user_ids['myra.cole@gmail.com']}
+${comp_id}             ${competition_ids["Sustainable living models for the future"]}
+
 
 *** Test Cases ***
 Admin can view assessor status unavailable
@@ -86,7 +88,7 @@ Assessor should not appear in any lists when unavailable
 
 Assessor dashboard should see correct banner when unavailable
     [Documentation]  IFS-7025
-    Given Log in as a different user          myra.cole@gmail.com  Passw0rd
+    Given Log in as a different user          myra.cole@gmail.com   ${short_password}
     When the user should see the element      jQuery = .message-alert:contains("Your assessor role is unavailable")
     Then the user should not see the element  css = .progress-list
 
@@ -106,7 +108,7 @@ Assessor should not appear in any lists when disabled
 
 Assessor dashboard should see correct banner when disabled
     [Documentation]  IFS-7025
-    Given Log in as a different user          myra.cole@gmail.com  Passw0rd
+    Given Log in as a different user          myra.cole@gmail.com    ${short_password}
     When the user should see the element      jQuery = .message-alert:contains("Your assessor role has been disabled")
     Then the user should not see the element  css = .progress-list
 
@@ -125,7 +127,7 @@ Assessor should appear lists when available
 
 Assessor dashboard should see correct dashboard when available
     [Documentation]  IFS-7025
-    Given Log in as a different user             myra.cole@gmail.com  Passw0rd
+    Given Log in as a different user             myra.cole@gmail.com    ${short_password}
     When the user should not see the element     jQuery = .message-alert:contains("Your assessor role has been disabled")
     Then the user should see the element         link = ${IN_ASSESSMENT_COMPETITION_NAME}
 
@@ -151,7 +153,7 @@ the finance user searches for an assessor
     the user clicks the button/link         link = View details
 
 the assessor is assigned an application
-    the user navigates to the page                ${server}/management/assessment/competition/11/assessors/${assessor_myra_id}
+    the user navigates to the page                ${server}/management/assessment/competition/${comp_id}/assessors/${assessor_myra_id}
     the user adds an application to an assessor   jQuery = tr:contains("Park living") :checkbox
 
 the user should be blocked from changing the role profile
@@ -163,7 +165,7 @@ the user should be blocked from changing the role profile
     the user should see the element         css = .message-alert
 
 the assessor is removed from all applications
-    the user navigates to the page       ${server}/management/assessment/competition/11/assessors/${assessor_myra_id}
+    the user navigates to the page       ${server}/management/assessment/competition/${comp_id}/assessors/${assessor_myra_id}
     the user clicks the button/link      jQuery = td:contains("Park living") ~ td button:contains("Remove")
 
 the user should not be blocked from changing the role profile

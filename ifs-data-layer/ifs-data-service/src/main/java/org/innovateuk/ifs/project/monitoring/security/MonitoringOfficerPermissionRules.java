@@ -4,10 +4,10 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 @PermissionRules
@@ -19,7 +19,7 @@ public class MonitoringOfficerPermissionRules extends BasePermissionRules {
             description = "Monitoring officers can get their own projects."
     )
     public boolean monitoringOfficerCanSeeTheirOwnProjects(UserResource monitoringOfficerUser, UserResource user) {
-        return user.getId().equals(monitoringOfficerUser.getId()) && user.hasRole(MONITORING_OFFICER);
+        return user.getId().equals(monitoringOfficerUser.getId()) && user.hasAuthority(Authority.MONITORING_OFFICER);
     }
 
     @PermissionRule(
@@ -71,5 +71,12 @@ public class MonitoringOfficerPermissionRules extends BasePermissionRules {
             description = "Partners can view Monitoring Officers on Projects that they are partners on")
     public boolean partnersCanViewMonitoringOfficersOnTheirProjects(ProjectResource project, UserResource user) {
         return isPartner(project.getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_MONITORING_OFFICER",
+            description = "Auditors can view Monitoring Officers on any Project in the competition ")
+    public boolean auditorsCanViewMonitoringOfficersForAProjectOnTheCompetitions(ProjectResource project, UserResource user) {
+        return user.hasAuthority(Authority.AUDITOR);
     }
 }

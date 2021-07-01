@@ -15,12 +15,22 @@ public class FinanceCheckEligibilityResource {
     private BigDecimal otherPublicSectorFunding;
     private BigDecimal contributionToProject;
     private boolean hasApplicationFinances;
+    private BigDecimal contributionPercentage;
 
     public FinanceCheckEligibilityResource() {
 
     }
 
-    public FinanceCheckEligibilityResource(Long projectId, Long organisationId, Long durationInMonths, BigDecimal totalCost, BigDecimal percentageGrant, BigDecimal fundingSought, BigDecimal otherPublicSectorFunding, BigDecimal contributionToProject, boolean hasApplicationFinances) {
+    public FinanceCheckEligibilityResource(Long projectId,
+                                           Long organisationId,
+                                           Long durationInMonths,
+                                           BigDecimal totalCost,
+                                           BigDecimal percentageGrant,
+                                           BigDecimal fundingSought,
+                                           BigDecimal otherPublicSectorFunding,
+                                           BigDecimal contributionToProject,
+                                           boolean hasApplicationFinances,
+                                           BigDecimal contributionPercentage) {
         this.projectId = projectId;
         this.organisationId = organisationId;
         this.durationInMonths = durationInMonths;
@@ -30,6 +40,7 @@ public class FinanceCheckEligibilityResource {
         this.otherPublicSectorFunding = otherPublicSectorFunding;
         this.contributionToProject = contributionToProject;
         this.hasApplicationFinances = hasApplicationFinances;
+        this.contributionPercentage = contributionPercentage;
     }
 
     public Long getProjectId() {
@@ -66,5 +77,13 @@ public class FinanceCheckEligibilityResource {
 
     public boolean isHasApplicationFinances() {
         return hasApplicationFinances;
+    }
+
+    public BigDecimal getContributionPercentage() {
+        return contributionPercentage;
+    }
+
+    public void setContributionPercentage(BigDecimal contributionPercentage) {
+        this.contributionPercentage = contributionPercentage;
     }
 }

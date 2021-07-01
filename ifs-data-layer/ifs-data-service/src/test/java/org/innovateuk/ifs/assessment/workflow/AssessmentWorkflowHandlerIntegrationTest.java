@@ -7,6 +7,7 @@ import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.workflow.actions.BaseAssessmentAction;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.junit.Test;
@@ -28,7 +29,9 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOut
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
@@ -123,6 +126,11 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
     }
 
     @Test
+    public void unsubmitAssessment_submittedToReadyToSubmit() {
+        assertWorkflowStateChange(assessment -> assessmentWorkflowHandler.unsubmitAssessment(assessment), setupCompleteAssessment(SUBMITTED), READY_TO_SUBMIT);
+    }
+
+    @Test
     public void feedback_openToOpen() {
         assertWorkflowStateChangeForFeedback((assessment) -> assessmentWorkflowHandler.feedback(assessment), setupIncompleteAssessment(OPEN), OPEN);
     }
@@ -181,10 +189,17 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
                             .withCompetition(
                                     newCompetition()
                                             .withCompetitionStatus(CLOSED)
+                                            .withAssessmentPeriods(newAssessmentPeriod().build(1))
                                             .withAssessorsNotifiedDate(now().minusDays(10L))
                                             .withAssessmentClosedDate(now().plusDays(10L))
                                             .build()
                             )
+                            .withAssessmentPeriod(newAssessmentPeriod()
+                                    .withMilestones(newMilestone()
+                                            .withType(MilestoneType.ASSESSORS_NOTIFIED, MilestoneType.ASSESSMENT_CLOSED)
+                                            .withDate(now().minusDays(10L), now().plusDays(10L))
+                                            .build(2))
+                                    .build())
                             .build()
             );
 
@@ -202,6 +217,7 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
                         .withCompetition(
                                 newCompetition()
                                         .withCompetitionStatus(CLOSED)
+                                        .withAssessmentPeriods(newAssessmentPeriod().build(1))
                                         .withAssessorsNotifiedDate(now().plusDays(10L))
                                         .withAssessmentClosedDate(now().plusDays(20L))
                                         .build()

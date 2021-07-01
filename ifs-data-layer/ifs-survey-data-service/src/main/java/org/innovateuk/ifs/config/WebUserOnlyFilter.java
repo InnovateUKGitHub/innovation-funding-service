@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.config;
 
-import org.innovateuk.ifs.security.WebUserSecuritySetter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;

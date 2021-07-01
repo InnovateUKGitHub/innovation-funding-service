@@ -5,10 +5,10 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 import java.util.Set;
@@ -42,6 +42,9 @@ public interface OrganisationService {
     @PreAuthorize("hasPermission(#organisation, 'UPDATE')")
     ServiceResult<OrganisationResource> update(@P("organisation") OrganisationResource organisationResource);
 
+    @PreAuthorize("hasPermission(#organisation, 'SYNC_COMPANIES_HOUSE_DETAILS')")
+    ServiceResult<OrganisationResource> syncCompaniesHouseDetails(@P("organisation") OrganisationResource organisationResource);
+
     @PreAuthorize("hasPermission(#organisationId, 'org.innovateuk.ifs.organisation.resource.OrganisationResource', 'UPDATE')")
     ServiceResult<OrganisationResource> updateOrganisationNameAndRegistration(final long organisationId, final String organisationName, final String registrationNumber);
 
@@ -53,4 +56,13 @@ public interface OrganisationService {
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<OrganisationSearchResult> getSearchOrganisation(@P("organisationId") long searchOrganisationId);
+
+    @PreAuthorize("hasPermission(#organisation, 'UPDATE')")
+    ServiceResult<List<OrganisationResource>> findOrganisationsByCompaniesHouseId(String companiesHouseId);
+
+    @PreAuthorize("hasPermission(#organisation, 'UPDATE')")
+    ServiceResult<List<OrganisationResource>> findOrganisationsByName(String organisationName);
+
+    @PreAuthorize("hasPermission(#organisation, 'UPDATE')")
+    ServiceResult<OrganisationResource> updateOrganisationName(Long organisationId, String name);
 }

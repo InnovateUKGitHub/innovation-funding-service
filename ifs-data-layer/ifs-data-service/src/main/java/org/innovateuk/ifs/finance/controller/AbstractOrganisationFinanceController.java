@@ -55,11 +55,4 @@ public abstract class AbstractOrganisationFinanceController {
             @RequestBody OrganisationFinancesKtpYearsResource finances) {
         return getOrganisationFinanceService().updateOrganisationKtpYears(targetId, organisationId, finances).toPostResponse();
     }
-
-    @GetMapping("/show-state-aid")
-    public RestResult<Boolean> isShowStateAidAgreement(
-            @PathVariable long targetId,
-            @PathVariable long organisationId) {
-        return getOrganisationFinanceService().isShowStateAidAgreement(targetId, organisationId).toGetResponse();
-    }
 }

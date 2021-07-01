@@ -54,7 +54,7 @@ public class MonitoringOfficerRegistrationControllerTest extends BaseControllerM
         MonitoringOfficerInviteResource monitoringOfficerInviteResource = newMonitoringOfficerInviteResource()
                 .withEmail("tom@poly.io")
                 .build();
-        RegistrationViewModel expectedViewModel = RegistrationViewModelBuilder.aRegistrationViewModel().withPhoneRequired(true).withTermsRequired(false).withInvitee(true).build();
+        RegistrationViewModel expectedViewModel = RegistrationViewModelBuilder.aRegistrationViewModel().withPhoneRequired(true).withTermsRequired(false).withInvitee(true).withShowBackLink(false).build();
 
         when(competitionSetupMonitoringOfficerRestServiceMock.openMonitoringOfficerInvite(hash)).thenReturn(restSuccess(monitoringOfficerInviteResource));
 
@@ -107,7 +107,7 @@ public class MonitoringOfficerRegistrationControllerTest extends BaseControllerM
         RegistrationForm registrationForm = new RegistrationForm();
         registrationForm.setFirstName("Tom");
         registrationForm.setLastName("Baldwin");
-        registrationForm.setPassword("Passw0rd");
+        registrationForm.setPassword("Passw0rd1357");
         registrationForm.setEmail("tom.baldwin@gmail.com");
         registrationForm.setPhoneNumber("0114 286 6356");
 

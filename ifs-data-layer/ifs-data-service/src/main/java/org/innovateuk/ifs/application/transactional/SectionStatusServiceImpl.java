@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.application.validation.ApplicationValidatorService;
+import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
@@ -15,6 +16,7 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.transactional.SectionService;
+import org.innovateuk.ifs.procurement.milestone.transactional.ApplicationProcurementMilestoneService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +29,7 @@ import static java.util.Collections.singleton;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
-import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
+import static org.innovateuk.ifs.form.resource.SectionType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -47,6 +48,9 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
 
     @Autowired
     private ApplicationFinanceService financeService;
+
+    @Autowired
+    private ApplicationProcurementMilestoneService applicationProcurementMilestoneService;
 
     @Autowired
     private ApplicationValidationUtil validationUtil;
@@ -137,11 +141,30 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
     }
 
     private void markSectionAsCompleteNoValidate(Section section, Application application, long markedAsCompleteById) {
+        if (section.getType() == PROJECT_COST_FINANCES
+            && section.getCompetition().isProcurementMilestones()) {
+            resetProcurementMilestoneIfProjectCostsAreNotEqualToPaymentTotal(application, markedAsCompleteById);
+        }
         sectionService.getQuestionsForSectionAndSubsections(section.getId()).andOnSuccessReturnVoid(questions -> questions.forEach(q -> {
             questionStatusService.markAsCompleteNoValidate(new QuestionApplicationCompositeId(q, application.getId()), markedAsCompleteById);
             // Assign back to lead applicant.
-            questionStatusService.assign(new QuestionApplicationCompositeId(q, application.getId()), application.getLeadApplicantProcessRole().getId(), markedAsCompleteById);
+            //TODO seems weird? Remove??
+//            questionStatusService.assign(new QuestionApplicationCompositeId(q, application.getId()), application.getLeadApplicantProcessRole().getId(), markedAsCompleteById);
         }));
+    }
+
+    private void resetProcurementMilestoneIfProjectCostsAreNotEqualToPaymentTotal(Application application, long markedAsCompleteById) {
+        find(
+                processRole(markedAsCompleteById),
+                () -> find(sectionRepository.findByTypeAndCompetitionId(PAYMENT_MILESTONES, application.getCompetition().getId()), CommonErrors.notFoundError(Section.class, PAYMENT_MILESTONES, application.getCompetition().getId())))
+                .andOnSuccessReturnVoid((processRole, section) -> {
+                    questionStatusService.getQuestionStatusForOrganisationOnApplication(section.getQuestions().get(0).getId(), application.getId(), processRole.getOrganisationId()).andOnSuccessReturnVoid(questionStatus -> {
+                       if (!applicationProcurementMilestoneService.arePaymentMilestonesEqualToFunding(application.getId(), processRole.getOrganisationId()).getSuccess()
+                           && !questionStatus.isEmpty() && Boolean.TRUE.equals(questionStatus.get(0).getMarkedAsComplete())) {
+                            questionStatusService.markAsInComplete(new QuestionApplicationCompositeId(section.getQuestions().get(0).getId(), application.getId()), markedAsCompleteById);
+                       };
+                    });
+                });
     }
 
 

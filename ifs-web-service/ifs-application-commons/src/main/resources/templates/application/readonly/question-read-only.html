@@ -7,31 +7,70 @@
 
 <th:block th:fragment="generic (model)">
     <div class="govuk-form-group">
-        <label th:if="${model.question != null}" class="govuk-label">
-            <span th:text="${model.question}" class="govuk-heading-s"></span>
-        </label>
-        <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${model.answer}" >Answer</p>
 
-        <div class="govuk-inset-text govuk-!-margin-bottom-6" th:if="${model.templateFile != null}">
-            <h1 class="govuk-heading-s" th:text="|Uploaded ${model.templateFile.filename}|">
-                Uploaded project plan and methodology
-            </h1>
-            <p class="uploaded-file govuk-body">
-                <a class="govuk-link"
-                   th:href="${model.templateFile.url}"
-                   th:text="|${model.templateFile.filename} (opens in a new window)|"
-                   target="_blank">file</a>.
-            </p>
-        </div>
+        <th:block th:unless="${model.isKtpAssessmentQuestion()}">
+            <label th:if="${model.question != null}" class="govuk-label">
+                <span th:text="${model.question}" class="govuk-heading-s"></span>
+            </label>
 
-        <div class="govuk-!-margin-top-6" th:unless="${model.appendices.isEmpty()}">
-            <p class="uploaded-file govuk-body" th:each="appendix : ${model.appendices}">
-                <a class="govuk-link"
-                   th:href="${appendix.url}"
-                   th:text="|${appendix.filename} (opens in a new window)|"
-                   target="_blank">file</a>.
-            </p>
-        </div>
+            <th:block th:if="${model.multipleStatuses}">
+
+                <th:block th:if="${model.hasAnswerNotMarkedAsComplete()}">
+                    <div class="warning-alert">
+                        <p class="govuk-body">The following organisations have not yet marked this question as complete:</p>
+                        <ul class="govuk-list govuk-list--bullet">
+                            <th:block th:each="nonMarkedAsCompletePartner : ${model.nonMarkedAsCompletePartners}">
+                                <li th:text="${nonMarkedAsCompletePartner.partnerName}">Non marked as complete partner organisation</li>
+                            </th:block>
+                        </ul>
+                        <p class="govuk-body">This application cannot be submitted until all partners mark this question as complete.</p>
+                    </div>
+                </th:block>
+
+                <table class="govuk-table">
+
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">Partner</th>
+                        <th scope="col" class="govuk-table__header">Answer</th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    <tr th:each="answerRow : ${model.answers}" class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            <th:block th:text="${answerRow.partnerName}">Org</th:block><th:block th:if="${answerRow.lead}"> <span class="hint">(Lead)</span></th:block>
+                        </td>
+                        <td class="govuk-table__cell">
+                            <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${answerRow.answer}"></p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </th:block>
+
+            <p th:unless="${model.multipleStatuses}" data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${model.answer != null ? model.answer  : 'Answer yet to be provided'}" >Answer</p>
+
+            <div class="govuk-inset-text govuk-!-margin-bottom-6" th:if="${model.templateFile != null}">
+                <h1 class="govuk-heading-s" th:text="|Uploaded ${model.templateFile.filename}|">
+                    Uploaded project plan and methodology
+                </h1>
+                <p class="uploaded-file govuk-body">
+                    <a class="govuk-link"
+                       th:href="${model.templateFile.url}"
+                       th:text="|${model.templateFile.filename} (opens in a new window)|"
+                       target="_blank">file</a>.
+                </p>
+            </div>
+
+            <div class="govuk-!-margin-top-6" th:unless="${model.appendices.isEmpty()}">
+                <p class="uploaded-file govuk-body" th:each="appendix : ${model.appendices}">
+                    <a class="govuk-link"
+                       th:href="${appendix.url}"
+                       th:text="|${appendix.filename} (opens in a new window)|"
+                       target="_blank">file</a>.
+                </p>
+            </div>
+        </th:block>
 
         <th:block th:if="${model.hasFeedback()}">
             <h2 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-font-weight-bold">Assessor feedback</h2>
@@ -63,7 +102,7 @@
                     <dd th:if="${model.startDate}" th:text="${#temporals.format(model.startDate, 'd MMMM yyyy')}"></dd>
                     <dd th:unless="${model.startDate}"><span class="invisible">Not specified</span></dd>
                 </th:block>
-                <dt>Duration in months</dt>
+                <dt>Project duration in months</dt>
                 <dd>
                     <th:block th:text="${model.duration}"/>
                     months
@@ -73,7 +112,7 @@
                     <dd th:text="${model.innovationAreaName} ?: 'Not listed'"></dd>
                 </th:block>
                 <th:block th:unless="${model.resubmission == null}">
-                    <dt>Is this application a resubmission?</dt>
+                    <dt>Has this application been previously submitted to Innovate UK?</dt>
                     <dd th:text="${model.resubmission ? 'Yes' : 'No'}"></dd>
                     <th:block th:if="${model.resubmission == true}">
                         <dt>Previous application number</dt>
@@ -99,6 +138,39 @@
     </div>
 </th:block>
 
+<!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.readonly.viewmodel.SubsidyBasisReadOnlyViewModel"*/-->
+<th:block th:fragment="subsidy-basis (model)">
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header table-header-width-one-third">Partner</th>
+                <th scope="col" class="govuk-table__header table-header-width-one-third">Funding rules</th>
+                <th scope="col" class="govuk-table__header table-header-width-one-third"></th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            <tr th:each="row : ${model.partners}"
+                class="govuk-table__row">
+                <td class="govuk-table__cell">
+                    <th:block th:text="${row.name}"></th:block>
+                    <th:block th:if="${row.lead}">(Lead)</th:block>
+                </td>
+                <td class="govuk-table__cell">
+                    <th:block th:if="${row.northernIslandDeclaration != null && row.questionnaireMarkedAsComplete}">
+                        <th:block th:text="${row.northernIslandDeclaration ? 'State aid' : 'Subsidy control'}"></th:block>
+                    </th:block>
+                    <th:block th:unless="${row.northernIslandDeclaration != null && row.questionnaireMarkedAsComplete}">Not determined</th:block>
+                </td>
+                <td class="govuk-table__cell ifs-table__email">
+                    <a th:if="${row.questionnaireMarkedAsComplete}"
+                       th:href="@{~/application/{applicationId}/form/organisation/{organisationId}/question/{questionId}/questionnaire(applicationId=${row.applicationId}, organisationId=${row.organisationId}, questionId=${row.questionId})}">
+                       View answers</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</th:block>
+
 <th:block th:fragment="research-category (model)">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
@@ -110,26 +182,36 @@
     </div>
 </th:block>
 
-<th:block th:fragment="finance-summary (model)">
-    <p class="govuk-body" th:unless="${model.fullyFunded}">This is the overview of the finances
-        provided by all partners in this project.</p>
+<th:block th:fragment="finance-summary (model)" th:with="print=${print} ?: false">
+    <section class="portrait"
+             th:remove="${print} ? tag : none">
+        <p class="govuk-body" th:unless="${model.fullyFunded}">The finances of all project partners are included in this summary.</p>
 
-    <p class="govuk-body" th:if="${model.open}">
-        To make changes to your organisations' finances, go back to the
-        <a th:href="@{/application/{applicationId}/form/section/{financeSectionId}/(applicationId=${model.applicationId},financeSectionId=${model.financeSectionId})}"
-           class="govuk-link">your project finances</a> section.
-    </p>
+        <p class="govuk-body" th:if="${model.open}">
+            <a th:href="@{/application/{applicationId}/form/section/{financeSectionId}/(applicationId=${model.applicationId},financeSectionId=${model.financeSectionId})}"
+               class="govuk-link">Return to your project finances</a> to complete or make changes to your organisation's financial information.
+        </p>
 
-    <div>
         <th:block th:unless="${model.fullyFunded}">
             <th:block th:replace="finance/finance-summary :: application-finances-summary (${model.applicationFinanceSummaryViewModel})" />
             <th:block th:replace="finance/finance-summary :: research-participation-alert (${model.applicationResearchParticipationViewModel})"
                       th:if="${model.open}"/>
         </th:block>
+    </section>
 
-        <h2 class="govuk-heading-s" th:unless="${model.fullyFunded}" th:text="${model.ktpCompetition} ? 'Project costs summary' : 'Funding breakdown'">Funding breakdown</h2>
+    <section class="portrait"
+        th:remove="${print} ? tag : none">
+        <h2 class="govuk-heading-s print-break-before" th:unless="${model.fullyFunded}" th:text="${model.ktpCompetition} ? 'Project costs summary' : 'Funding breakdown'">Funding breakdown</h2>
+
+        <h3 th:if="${model.procurementMilestones}" class="govuk-heading-s govuk-!-margin-top-6">Project cost breakdown</h3>
         <th:block th:insert="finance/finance-summary :: finance-breakdown-table (${model.applicationFundingBreakdownViewModel})"/>
-    </div>
+
+        <th:block th:if="${model.procurementMilestones}">
+            <h3 class="govuk-heading-s govuk-!-margin-top-6">Payment milestones</h3>
+            <th:block  th:insert="finance/finance-summary :: payment-milestones-table (${model.applicationProcurementMilestonesSummaryViewModel})"/>
+        </th:block>
+
+    </section>
 </th:block>
 
 <th:block th:fragment="application-team (model)">
@@ -143,8 +225,8 @@
             <table class="govuk-table govuk-!-margin-bottom-2">
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">Organisation details</th>
-                    <th scope="col" class="govuk-table__header" th:classappend="${model.internal} ? 'govuk-!-width-two-thirds' : 'govuk-!-width-one-third'"></th>
+                    <th scope="col" class="govuk-table__header table-header-width-one-third">Organisation details</th>
+                    <th scope="col" class="govuk-table__header" th:classappend="${model.internal} ? 'table-header-width-two-thirds' : 'table-header-width-one-third'"></th>
                 </tr>
                 </thead>
                 <tbody class="govuk-table__body">
@@ -163,9 +245,9 @@
         <table class="govuk-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header govuk-!-width-one-third">Full name</th>
-                <th th:if="${model.internal}" scope="col" class="govuk-table__header govuk-!-width-one-third">Phone number</th>
-                <th scope="col" class="govuk-table__header govuk-!-width-one-third">Email</th>
+                <th scope="col" class="govuk-table__header table-header-width-one-third">Full name</th>
+                <th th:if="${model.internal}" scope="col" class="govuk-table__header table-header-width-one-third">Phone number</th>
+                <th scope="col" class="govuk-table__header table-header-width-one-third">Email</th>
             </tr>
             </thead>
             <tbody class="govuk-table__body">
@@ -190,9 +272,9 @@
             <table class="govuk-table">
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">Full name</th>
-                    <th th:if="${model.internal}" scope="col" class="govuk-table__header govuk-!-width-one-third">Phone number</th>
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">Email</th>
+                    <th scope="col" class="govuk-table__header table-header-width-one-third">Full name</th>
+                    <th th:if="${model.internal}" scope="col" class="govuk-table__header table-header-width-one-third">Phone number</th>
+                    <th scope="col" class="govuk-table__header table-header-width-one-third">Email</th>
                 </tr>
                 </thead>
                 <tbody class="govuk-table__body">
@@ -255,32 +337,64 @@
     </th:block>
 </th:block>
 
-<th:block th:fragment="terms-and-conditions (model)">
-    <th:block th:unless="${model.complete}">
-        <div class="warning-alert">
-            <p class="govuk-body">The following organisations have not yet accepted:</p>
-            <ul class="govuk-list govuk-list--bullet">
-                <th:block th:each="nonAcceptedPartner : ${model.applicationTermsPartnerViewModel.nonAcceptedPartners}">
-                    <li th:text="${nonAcceptedPartner.name}">Non accepted partner organisation</li>
-                </th:block>
-            </ul>
-            <p class="govuk-body">This application cannot be submitted until all partners accept our terms and conditions.</p>
-        </div>
-    </th:block>
-    <p class="govuk-body" th:if="${model.complete}">
-        Terms and conditions have been accepted by all partners in this project.
-        <a th:href="@{~/application/{applicationId}/form/question/{questionId}/terms-and-conditions(applicationId=${model.applicationId},questionId=${model.questionId})}">
-            View terms and conditions</a>
-    </p>
+<th:block th:fragment="terms-and-conditions-partner-table (applicationId, questionId, partners, includeFundingRules, displayCompleteStatus)">
+    <!--/*@thymesVar id="applicationId" type="java.lang.Long"*/-->
+    <!--/*@thymesVar id="questionId" type="java.lang.Long"*/-->
+    <!--/*@thymesVar id="partners" type="java.util.List"*/-->
+    <!--/*@thymesVar id="includeFundingRules" type="java.lang.Boolean"*/-->
+    <!--/*@thymesVar id="displayCompleteStatus" type="java.lang.Boolean"*/-->
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Partner</th>
+            <th scope="col" class="govuk-table__header"
+                th:if="${includeFundingRules}">Funding rules</th>
+            <th scope="col" class="govuk-table__header">Terms and conditions</th>
+            <th scope="col" class="govuk-table__header"
+                th:if="${displayCompleteStatus}">Status</th>
+        </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+        <tr th:each="partner : ${partners}" class="govuk-table__row">
+            <!--/*@thymesVar id="partner" type="org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsRowReadOnlyViewModel"*/-->
+            <td class="govuk-table__cell">
+                <th:block  th:text="${partner.partnerName}"></th:block>
+                <span class="hint" th:if="${partner.lead}">(Lead)</span>
+                <span th:if="${displayCompleteStatus and !partner.accepted}" class="error-icon-after"></span>
+            </td>
+            <td class="govuk-table__cell" th:text="${partner.fundingRules.displayName}"
+                th:if="${includeFundingRules}"></td>
+            <td class="govuk-table__cell">
+                <a th:href="@{~/application/{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}(applicationId=${applicationId},questionId=${questionId},organisationId=${partner.partnerId})}"
+                   class="govuk-link"
+                   th:text="${partner.getTermsName()}"></a>
+            </td>
+            <td class="govuk-table__cell"
+                th:if="${displayCompleteStatus}">
+                <span th:if="${partner.accepted}" class="accepted">Accepted</span>
+                <span th:unless="${partner.accepted}" class="unaccepted">Not yet accepted</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </th:block>
 
-<th:block th:fragment="terms-and-conditions-assessment(model)">
-    <h2 class="govuk-heading-m govuk-!-margin-top-6">Terms and conditions</h2>
-    <p class="govuk-body">
-        <a class="govuk-link"
-           th:href="@{~/application/{apId}/form/question/{qId}(apId=${model.applicationId},qId=${model.questionId})}"
-           th:text="${model.termsAndConditionsTerminology}"></a>
-    </p>
+<th:block th:fragment="terms-and-conditions (model)">
+    <div class="govuk-!-margin-bottom-3">
+        <!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsReadOnlyViewModel"*/-->
+        <th:block th:unless="${model.complete}">
+            <div class="warning-alert">
+                <p class="govuk-body">The following organisations have not yet accepted:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <th:block th:each="nonAcceptedPartner : ${model.nonAcceptedPartners}">
+                        <li th:text="${nonAcceptedPartner.partnerName}">Non accepted partner organisation</li>
+                    </th:block> 
+                </ul>
+                <p class="govuk-body">This application cannot be submitted until all partners accept our terms and conditions.</p>
+            </div>
+        </th:block>
+        <th:block th:insert="this :: terms-and-conditions-partner-table (${model.applicationId}, ${model.questionId}, ${model.partners}, ${model.includeFundingRules}, ${model.displayCompleteStatus})" />
+    </div>
 </th:block>
 
 </html>

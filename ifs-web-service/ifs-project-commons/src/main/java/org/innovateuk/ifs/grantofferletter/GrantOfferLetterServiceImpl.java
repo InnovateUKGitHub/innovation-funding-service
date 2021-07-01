@@ -57,6 +57,11 @@ public class GrantOfferLetterServiceImpl implements GrantOfferLetterService {
     }
 
     @Override
+    public ServiceResult<Void> resetGrantOfferLetter(Long projectId) {
+        return grantOfferLetterRestService.resetGrantOfferLetter(projectId).toServiceResult();
+    }
+
+    @Override
     public ServiceResult<Void> removeAdditionalContractFile(Long projectId) {
         return grantOfferLetterRestService.removeAdditionalContractFile(projectId).toServiceResult();
     }
@@ -64,6 +69,11 @@ public class GrantOfferLetterServiceImpl implements GrantOfferLetterService {
     @Override
     public ServiceResult<Void> removeSignedGrantOfferLetter(Long projectId) {
         return grantOfferLetterRestService.removeSignedGrantOfferLetter(projectId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> removeSignedAdditionalContract(Long projectId) {
+        return grantOfferLetterRestService.removeSignedAdditionalContractFile(projectId).toServiceResult();
     }
 
     @Override
@@ -97,8 +107,23 @@ public class GrantOfferLetterServiceImpl implements GrantOfferLetterService {
     }
 
     @Override
+    public Optional<ByteArrayResource> getSignedAdditionalContractFile(Long projectId) {
+        return grantOfferLetterRestService.getSignedAdditionalContractFile(projectId).getSuccess();
+    }
+
+    @Override
+    public Optional<FileEntryResource> getSignedAdditionalContractFileDetails(Long projectId) {
+        return grantOfferLetterRestService.getSignedAdditionalContractFileDetails(projectId).getSuccess();
+    }
+
+    @Override
     public ServiceResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
         return grantOfferLetterRestService.addAdditionalContractFile(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> addSignedAdditionalContract(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
+        return grantOfferLetterRestService.addSignedAdditionalContractFile(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
     }
 
     @Override

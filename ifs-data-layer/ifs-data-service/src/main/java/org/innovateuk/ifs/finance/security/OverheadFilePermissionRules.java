@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.security;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
@@ -9,14 +8,16 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.security.BasePermissionRules;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Authority.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Authority.SUPPORT;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 
@@ -26,9 +27,6 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 @Component
 @PermissionRules
 public class OverheadFilePermissionRules extends BasePermissionRules {
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
 
     @PermissionRule(value = "CREATE_OVERHEAD_FILE", description = "The consortium can create the overhead file for their application and organisation")
     public boolean consortiumCanCreateAnOverheadsFileForTheirApplicationAndOrganisation(final ApplicationFinanceRow overheads, final UserResource user) {
@@ -74,13 +72,13 @@ public class OverheadFilePermissionRules extends BasePermissionRules {
         final ApplicationFinance applicationFinance = overheads.getTarget();
         final Long applicationId = applicationFinance.getApplication().getId();
         final Long organisationId = applicationFinance.getOrganisation().getId();
-        final boolean isLead = checkProcessRole(user, applicationId, organisationId, LEADAPPLICANT, processRoleRepository);
-        final boolean isCollaborator = checkProcessRole(user, applicationId, organisationId, COLLABORATOR, processRoleRepository);
+        final boolean isLead = checkProcessRole(user, applicationId, organisationId, ProcessRoleType.LEADAPPLICANT, processRoleRepository);
+        final boolean isCollaborator = checkProcessRole(user, applicationId, organisationId, ProcessRoleType.COLLABORATOR, processRoleRepository);
         return isLead || isCollaborator;
     }
 
     private boolean isDownloadableBeforeSubmission(final ApplicationFinanceRow overheads, final UserResource user) {
-        boolean isSupportOrAdmin = user.hasAnyRoles(SUPPORT, IFS_ADMINISTRATOR);
+        boolean isSupportOrAdmin = user.hasAnyAuthority(asList(IFS_ADMINISTRATOR, SUPPORT));
         return !isApplicationSubmitted(overheads) && isSupportOrAdmin;
     }
 

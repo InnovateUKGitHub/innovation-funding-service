@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.pendingpartner.controller;
 
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.ApplicationYourOrganisationViewModel;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -50,7 +50,7 @@ public abstract class AbstractProjectYourOrganisationFormController<F> extends A
             UserResource loggedInUser,
             Model model) {
 
-        Future<YourOrganisationViewModel> viewModelRequest = async(() ->
+        Future<ApplicationYourOrganisationViewModel> viewModelRequest = async(() ->
                 getViewModel(projectId, organisationId, loggedInUser));
 
         Future<F> formRequest = async(() ->
@@ -88,7 +88,7 @@ public abstract class AbstractProjectYourOrganisationFormController<F> extends A
             Model model) {
 
         Supplier<String> failureHandler = () -> {
-            YourOrganisationViewModel viewModel = getViewModel(projectId, organisationId, loggedInUser);
+            ApplicationYourOrganisationViewModel viewModel = getViewModel(projectId, organisationId, loggedInUser);
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
             model.addAttribute("formFragment", formFragment());
@@ -115,7 +115,7 @@ public abstract class AbstractProjectYourOrganisationFormController<F> extends A
         return redirectToViewPage(projectId, organisationId);
     }
 
-    private YourOrganisationViewModel getViewModel(long projectId, long organisationId, UserResource user) {
+    private ApplicationYourOrganisationViewModel getViewModel(long projectId, long organisationId, UserResource user) {
         return viewModelPopulator.populate(projectId, organisationId, user);
     }
 

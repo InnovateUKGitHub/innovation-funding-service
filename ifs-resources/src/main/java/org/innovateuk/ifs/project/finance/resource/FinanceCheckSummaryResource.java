@@ -8,8 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.*;
 
 /**
  * A resource object to return finance check status for a project (for all partner organisations).
@@ -190,7 +189,10 @@ public class FinanceCheckSummaryResource {
 
     @JsonIgnore
     public boolean isFinanceChecksAllApproved() {
-        return isViabilityAllApprovedOrNotRequired() && isEligibilityAllApprovedOrNotRequired();
+        return isViabilityAllApprovedOrNotRequired()
+                && isEligibilityAllApprovedOrNotRequired()
+                && isPaymentMilestoneAllApprovedOrNotRequired()
+                && isFundingRulesAllApprovedOrNotRequired();
     }
 
     private boolean isViabilityAllApprovedOrNotRequired() {
@@ -211,11 +213,30 @@ public class FinanceCheckSummaryResource {
         return partnerStatusResources.stream().allMatch(org -> relevantStatuses.contains(org.getEligibility()));
     }
 
+    private boolean isPaymentMilestoneAllApprovedOrNotRequired() {
+        return partnerStatusResources.stream()
+                .filter(status -> status.getPaymentMilestoneState() != null)
+                .allMatch(org -> PaymentMilestoneState.APPROVED == org.getPaymentMilestoneState());
+    }
+
+    private boolean isFundingRulesAllApprovedOrNotRequired() {
+        return partnerStatusResources.stream()
+                .filter(status -> status.getFundingRulesState() != null)
+                .allMatch(org -> FundingRulesState.APPROVED == org.getFundingRulesState());
+    }
+
     public boolean isAllEligibilityAndViabilityInReview() {
         return partnerStatusResources
                 .stream()
                 .allMatch(partner ->
                         partner.getViability().isInReviewOrNotApplicable() && partner.getEligibility().isInReviewOrNotApplicable());
+    }
+
+    public boolean isAllEligibilityAndViabilityApproved() {
+        return partnerStatusResources
+                .stream()
+                .allMatch(partner ->
+                        partner.getViability().isApprovedOrNotApplicable() && partner.getEligibility().isApprovedOrNotApplicable());
     }
 
     public void setSpendProfileGeneratedBy(String spendProfileGeneratedBy) {
@@ -278,5 +299,10 @@ public class FinanceCheckSummaryResource {
     @JsonIgnore
     public boolean isProcurement() {
         return fundingType == PROCUREMENT;
+    }
+
+    @JsonIgnore
+    public boolean isKtp(){
+        return this.fundingType.equals(KTP);
     }
 }

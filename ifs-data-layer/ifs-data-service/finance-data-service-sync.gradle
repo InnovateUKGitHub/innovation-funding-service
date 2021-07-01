@@ -3,7 +3,9 @@ import com.bmuschko.gradle.docker.tasks.image.*
 buildscript {
 
     repositories {
-        jcenter()
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://plugins.gradle.org/m2/"}
+        mavenCentral()
     }
 
     dependencies {
@@ -17,7 +19,7 @@ buildscript {
 apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
 task financeDataServiceSyncEnv {
     dependsOn "build"
-    dependsOn ":docker:ifs-mysql-client:buildDocker"
+
 
     def inputDir = project.file("$project.buildDir/docker-finance-data-service-sync")
     doFirst {

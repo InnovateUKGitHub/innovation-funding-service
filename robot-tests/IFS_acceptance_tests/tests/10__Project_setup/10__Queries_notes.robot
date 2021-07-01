@@ -167,7 +167,7 @@ Applicant - Finance contact can view the query
     [Documentation]    INFUND-4843
     [Tags]  HappyPath
     Given log in as a different user                 &{PublicSector_lead_applicant_credentials}
-    When the user navigates to the page              ${server}/project-setup/project/${Queries_Application_Project}/finance-checks
+    When the user navigates to the page              ${server}/project-setup/project/${Queries_Application_Project}/finance-check
     Then The user clicks the button/link             jQuery = h2:contains("an eligibility query's title")
     And the user should see the element              jQuery = h2:contains("a viability query's title")
 
@@ -281,7 +281,7 @@ Applicant can see the the queries resolved
     [Documentation]  IFS-1987 IFS-2746
     [Tags]
     Given log in as a different user      &{PublicSector_lead_applicant_credentials}
-    When the user navigates to the page   ${server}/project-setup/project/${Queries_Application_Project}/finance-checks
+    When the user navigates to the page   ${server}/project-setup/project/${Queries_Application_Project}/finance-check
     Then the user should see the element  jQuery = h2:contains("an eligibility query's title") .section-complete
     And the user should see the element   jQuery = h2:contains("a viability query's title") .section-complete
     And the user should not be able to respond to resolved queries
@@ -296,8 +296,7 @@ Link to notes from viability section
 Link to notes from eligibility section
     [Documentation]    INFUND-4845
     [Tags]
-    Given the user navigates to the page  ${dreambit_finance_checks}/eligibility
-    And the user clicks the button/link   jQuery = a:contains("Notes")
+    Given the user navigates to the page  ${dreambit_finance_checks}/note
     Then the user should see the element  jQuery = .govuk-button:contains("Create a new note")
 
 Link to notes from main finance checks summary page
@@ -548,7 +547,7 @@ the user should see list of posted queries
     the user should see the element      jQuery = #accordion-queries-heading-1:contains("a viability query's title")
     the user should see the element      jQuery = #accordion-queries-heading-2:contains("an eligibility query's title")
     # Query responses tab
-    the user navigates to the page       ${server}/project-setup-management/competition/${Queries_Application_Project}/status/queries
+    the user navigates to the page       ${server}/project-setup-management/competition/${PS_Competition_Id}/status/queries
     the user should see the element      jQuery = p:contains("There are no outstanding queries.")
 
 the user should see the response to query server side validation
@@ -645,6 +644,5 @@ the user should see the note comments client side validations
     the user should see a field error        ${empty_field_warning_message}
 
 the user navigates to queries page
-    the user navigates to the page       ${dreambit_finance_checks}/eligibility
-    the user clicks the button/link      jQuery = a:contains("Queries")
+    the user navigates to the page       ${dreambit_finance_checks}/query
     the user should see the element      jQuery = h2:contains("Queries")

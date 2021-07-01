@@ -10,7 +10,7 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -28,7 +28,7 @@ import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.COLLABORATOR;
 import static org.mockito.ArgumentMatchers.anyCollectionOf;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
@@ -60,7 +60,7 @@ public class QuestionReassignmentServiceImplTest extends BaseUnitTestMocksTest {
                 .build(1);
 
         leadApplicantProcessRole = newProcessRole()
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withUser(newUser().build())
                 .build();
     }

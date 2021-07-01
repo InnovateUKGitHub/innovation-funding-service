@@ -58,6 +58,24 @@
     }
   }
 
+  .project-cost-breakdown,
+  .finance-summary,
+  .payment-milestones-breakdown {
+    table {
+      td,
+      th {
+        padding: 2px 4px 2px 0;
+      }
+
+      td,
+      th,
+      small {
+        font-size: 12px;
+        line-height: 14px;
+      }
+    }
+  }
+
   table {
     th,
     small{
@@ -153,6 +171,28 @@
               font-size:9pt;
             }
           }
+        }
+      }
+    }
+
+    .print-break-before {
+      page-break-before: always;
+    }
+
+    .project-cost-breakdown,
+    .finance-summary,
+    .payment-milestones-breakdown {
+      table {
+        td,
+        th {
+          padding: 2px 4px 2px 0;
+        }
+
+        td,
+        th,
+        small {
+          font-size: 12px;
+          line-height: 14px;
         }
       }
     }

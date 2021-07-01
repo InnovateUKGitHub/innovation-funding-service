@@ -102,11 +102,11 @@ finance checks are RO
     the user clicks the button/link      jQuery = tr:contains(Tanzone) a.govuk-link.viability-0
     the user should not see the element  jQuery = input[id="costs-reviewed"]
     the user should not see the element  jQuery = input[id="project-viable"]
-    the user clicks the button/link      link = Finance checks
+    the user clicks the button/link      link = Back to finance checks
     #Eligibility page is RO
     the user clicks the button/link      jQuery = tr:contains(Tanzone) a.govuk-link.eligibility-0
     the user should not see the element  jQuery = input[id="project-eligible"]
-    the user clicks the button/link      link = Finance checks
+    the user clicks the button/link      link = Back to finance checks
     #Queries page is RO
     the user clicks the button/link      jQuery = table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("View")
     the user should not see the element  jQuery = button:contains("Post a new query")

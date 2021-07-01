@@ -3,7 +3,9 @@ package org.innovateuk.ifs.finance.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.junit.Test;
+import org.springframework.core.ParameterizedTypeReference;
 
+import java.util.List;
 import java.util.Set;
 
 import static java.lang.String.format;
@@ -37,16 +39,30 @@ public class GrantClaimMaximumRestServiceMocksTest extends BaseRestServiceUnitTe
     }
 
     @Test
-    public void getGrantClaimMaximumsForCompetitionType() {
-        long competitionTypeId = 1L;
+    public void getGrantClaimMaximumByCompetitionId() {
+        long competitionId = 1L;
+        List<GrantClaimMaximumResource> expected = newGrantClaimMaximumResource().build(2);
+
+        setupGetWithRestResultExpectations(format("%s/competition/%s", grantClaimMaximumRestURL, competitionId), new ParameterizedTypeReference<List<GrantClaimMaximumResource>>() {}, expected);
+
+        List<GrantClaimMaximumResource> result = service.getGrantClaimMaximumByCompetitionId(competitionId)
+                .getSuccess();
+
+        assertEquals(expected, result);
+    }
+
+
+    @Test
+    public void revertToDefaultForCompetitionType() {
+        long competitionId = 1L;
 
         Set<Long> expected = newGrantClaimMaximumResource().build(2).stream().map(GrantClaimMaximumResource::getId)
                 .collect(toSet());
 
-        setupGetWithRestResultExpectations(format("%s/get-for-competition-type/%s", grantClaimMaximumRestURL,
-                competitionTypeId), longsSetType(), expected);
+        setupPostWithRestResultExpectations(format("%s/revert-to-default/%d", grantClaimMaximumRestURL,
+                competitionId), longsSetType(), null, expected);
 
-        Set<Long> result = service.getGrantClaimMaximumsForCompetitionType(competitionTypeId)
+        Set<Long> result = service.revertToDefaultForCompetitionType(competitionId)
                 .getSuccess();
 
         assertEquals(expected, result);
@@ -72,6 +88,6 @@ public class GrantClaimMaximumRestServiceMocksTest extends BaseRestServiceUnitTe
         setupGetWithRestResultExpectations(format("%s/maximum-funding-level-overridden/%s", grantClaimMaximumRestURL,
                 competitionId), Boolean.class, true);
 
-        assertTrue(service.isMaximumFundingLevelOverridden(competitionId).getSuccess());
+        assertTrue(service.isMaximumFundingLevelConstant(competitionId).getSuccess());
     }
 }

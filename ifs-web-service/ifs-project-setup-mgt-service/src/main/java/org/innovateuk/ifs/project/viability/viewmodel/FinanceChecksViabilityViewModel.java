@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.math.BigDecimal;
@@ -28,10 +29,12 @@ public class FinanceChecksViabilityViewModel {
 
     private Long projectId;
     private Long organisationId;
-    private boolean viabilityConfirmed;
+    private ViabilityState viabilityState;
     private boolean approved;
     private String approverName;
     private LocalDate approvalDate;
+    private String resetName;
+    private LocalDate resetDate;
     private String organisationSizeDescription;
     private Long applicationId;
     private String projectName;
@@ -41,7 +44,9 @@ public class FinanceChecksViabilityViewModel {
     private final boolean procurementCompetition;
     private final boolean viabilityReadyToConfirm;
     private final boolean hasGrantClaimPercentage;
-
+    private final boolean ktpCompetition;
+    private final boolean resetableGolState;
+    private final boolean auditor;
 
     public FinanceChecksViabilityViewModel(ProjectResource project,
                                            CompetitionResource competition,
@@ -56,13 +61,17 @@ public class FinanceChecksViabilityViewModel {
                                            Long turnover,
                                            Long headCount,
                                            Long projectId,
-                                           boolean viabilityConfirmed,
+                                           ViabilityState viabilityState,
                                            boolean approved,
                                            String approverName,
                                            LocalDate approvalDate,
+                                           String resetName,
+                                           LocalDate resetDate,
                                            Long organisationId,
                                            String organisationSizeDescription,
-                                           List<ProjectFinanceResource> projectFinances) {
+                                           List<ProjectFinanceResource> projectFinances,
+                                           boolean resetableGolState,
+                                           boolean auditor) {
 
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
@@ -75,10 +84,12 @@ public class FinanceChecksViabilityViewModel {
         this.turnover = turnover;
         this.headCount = headCount;
         this.projectId = projectId;
-        this.viabilityConfirmed = viabilityConfirmed;
+        this.viabilityState = viabilityState;
         this.approved = approved;
         this.approverName = approverName;
         this.approvalDate = approvalDate;
+        this.resetName = resetName;
+        this.resetDate = resetDate;
         this.organisationId = organisationId;
         this.organisationSizeDescription = organisationSizeDescription;
         this.applicationId = project.getApplication();
@@ -89,6 +100,9 @@ public class FinanceChecksViabilityViewModel {
         this.procurementCompetition  = competition.isProcurement();
         this.viabilityReadyToConfirm = hasAllFundingLevelsWithinMaximum(projectFinances);
         this.hasGrantClaimPercentage = competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE);
+        this.ktpCompetition = competition.isKtp();
+        this.resetableGolState = resetableGolState;
+        this.auditor = auditor;
     }
 
     public String getOrganisationName() {
@@ -140,16 +154,31 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public boolean isReadOnly() {
-        return viabilityConfirmed || !projectIsActive;
+        return isAuditor() || viabilityState == ViabilityState.APPROVED || !projectIsActive;
     }
 
     public boolean isShowApprovalMessage() {
         return isApproved();
     }
 
-    public String getApproverName() {
+    public boolean isShowResetMessage() {
+        return ViabilityState.REVIEW == viabilityState && resetDate != null && resetName != null;
+    }
 
+    public String getApproverName() {
         return StringUtils.trim(approverName);
+    }
+
+    public String getResetName() {
+        return resetName;
+    }
+
+    public LocalDate getResetDate() {
+        return resetDate;
+    }
+
+    public boolean isCanReset() {
+        return approved && projectIsActive && resetableGolState && !isAuditor();
     }
 
     public LocalDate getApprovalDate() {
@@ -157,11 +186,11 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public boolean isShowSaveAndContinueButton() {
-        return !isApproved() && projectIsActive;
+        return !isApproved() && projectIsActive && !isReadOnly();
     }
 
     public boolean isShowBackToFinanceCheckButton() {
-        return isApproved() || !projectIsActive;
+        return isApproved() || !projectIsActive || isReadOnly();
     }
 
     private boolean isApproved() {
@@ -200,6 +229,10 @@ public class FinanceChecksViabilityViewModel {
         return loanCompetition;
     }
 
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
+    }
+
     public boolean isProcurementCompetition() {
         return procurementCompetition;
     }
@@ -210,6 +243,10 @@ public class FinanceChecksViabilityViewModel {
 
     public boolean isHasGrantClaimPercentage() {
         return hasGrantClaimPercentage;
+    }
+
+    public boolean isAuditor() {
+        return auditor;
     }
 
     private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {

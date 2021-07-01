@@ -6,7 +6,6 @@ import org.innovateuk.ifs.assessment.overview.form.AssessmentOverviewForm;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentDetailedFinancesModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentFinancesSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentOverviewModelPopulator;
-import org.innovateuk.ifs.assessment.overview.populator.AssessmentTermsAndConditionsModelPopulator;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -16,7 +15,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -51,16 +50,13 @@ public class AssessmentOverviewController {
     private AssessmentDetailedFinancesModelPopulator assessmentDetailedFinancesModelPopulator;
 
     @Autowired
-    private AssessmentTermsAndConditionsModelPopulator assessmentTermsAndConditionsModelPopulator;
-
-    @Autowired
     private AssessmentService assessmentService;
 
     @Autowired
     private FormInputResponseRestService formInputResponseRestService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private TermsAndConditionsRestService termsAndConditionsRestService;
@@ -79,12 +75,6 @@ public class AssessmentOverviewController {
         return "assessment/application-finances-summary";
     }
 
-    @GetMapping("/{assessmentId}/terms-and-conditions")
-    public String getTermsAndConditions(Model model, @PathVariable("assessmentId") long assessmentId) {
-        model.addAttribute("model", assessmentTermsAndConditionsModelPopulator.populate(assessmentId));
-        return "assessment/application-terms-and-conditions";
-    }
-
     @GetMapping("/application/{applicationId}/detailed-finances/organisation/{organisationId}")
     public String getDetailedFinances(Model model,
                                       @PathVariable long applicationId,
@@ -100,7 +90,7 @@ public class AssessmentOverviewController {
             @PathVariable("formInputId") Long formInputId,
             @PathVariable("fileEntryId") Long fileEntryId,
             UserResource loggedInUser) {
-        ProcessRoleResource processRole = userRestService.findProcessRole(applicationId).getSuccess().stream()
+        ProcessRoleResource processRole = processRoleRestService.findProcessRole(applicationId).getSuccess().stream()
                 .filter(role -> loggedInUser.getId().equals(role.getUser()))
                 .findAny()
                 .orElseThrow(ObjectNotFoundException::new);

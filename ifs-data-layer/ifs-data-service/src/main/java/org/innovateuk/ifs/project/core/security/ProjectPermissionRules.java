@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
@@ -56,7 +57,7 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Project finance users can view finance reviewer.")
     public boolean projectFinanceCanViewFinanceReviewer(final ProjectResource project, final UserResource user) {
-        return isProjectFinanceUser(user);
+        return hasProjectFinanceAuthority(user);
     }
 
     @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Comp admin users can view finance reviewer.")
@@ -67,5 +68,15 @@ public class ProjectPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Support users can view finance reviewer.")
     public boolean supportCanViewFinanceReviewer(final ProjectResource project, final UserResource user) {
         return isSupport(user);
+    }
+
+    @PermissionRule(value = "READ", description = "Auditors can see project resources")
+    public boolean auditorsCanViewProjects(final ProjectResource project, final UserResource user) {
+        return user.hasAuthority(Authority.AUDITOR);
+    }
+
+    @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Auditors can view finance reviewer.")
+    public boolean auditorCanViewFinanceReviewer(final ProjectResource project, final UserResource user) {
+        return  user.hasAuthority(Authority.AUDITOR);
     }
 }

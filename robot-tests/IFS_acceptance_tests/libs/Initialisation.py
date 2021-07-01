@@ -129,6 +129,8 @@ for comp in cursor.fetchall():
     dates_for_milestone['rawDate'] = milestoneDate
     dates_for_milestone['simpleDate'] = milestoneDate.strftime('%Y-%m-%d') if milestoneDate else None            # 2002-03-28
     dates_for_milestone['prettyDayMonth'] = milestoneDate.strftime('%-d %B') if milestoneDate else None          # 4 February
+    dates_for_milestone['prettyDayMth'] = milestoneDate.strftime('%-d %b') if milestoneDate else None            # 4 Feb
+    dates_for_milestone['prettyDayMthYear'] = milestoneDate.strftime('%-d %b %Y') if milestoneDate else None     # 4 Feb 2020
     dates_for_milestone['prettyDate'] = milestoneDate.strftime('%-d %B %Y') if milestoneDate else None           # 4 February 2002
     dates_for_milestone['prettyDateTime'] = milestoneDate.strftime('%-d %B %Y %-I:%M') + milestoneDate.strftime('%p').lower() if milestoneDate else None  # 4 February 2002 2:04am
     dates_for_milestone['prettyLongDate'] = milestoneDate.strftime('%A %-d %B %Y') if milestoneDate else None    # Sunday 2 February 2002
@@ -149,6 +151,14 @@ def getSimpleMilestoneDate(competitionId, milestoneType):
 # format 1 January (no zero padding)
 def getPrettyMilestoneDayMonth(competitionId, milestoneType):
     return competition_milestones[competitionId][milestoneType]['prettyDayMonth']
+
+# format 1 January (no zero padding)
+def getPrettyMilestoneDayMth(competitionId, milestoneType):
+    return competition_milestones[competitionId][milestoneType]['prettyDayMth']
+
+# format 1 Jan 2020 (no zero padding)
+def getPrettyMilestoneDayMthYear(competitionId, milestoneType):
+    return competition_milestones[competitionId][milestoneType]['prettyDayMthYear']
 
 # format 1 January 2018 (no zero padding)
 def getPrettyMilestoneDate(competitionId, milestoneType):

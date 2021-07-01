@@ -10,6 +10,7 @@ public class CompetitionInAssessmentKeyAssessmentStatisticsResource {
     private int assignmentsAccepted;
     private int assessmentsStarted;
     private int assessmentsSubmitted;
+    private int supportersInvited;
 
     public int getAssignmentCount() {
         return assignmentCount;
@@ -51,6 +52,14 @@ public class CompetitionInAssessmentKeyAssessmentStatisticsResource {
         this.assessmentsSubmitted = assessmentsSubmitted;
     }
 
+    public int getSupportersInvited() {
+        return supportersInvited;
+    }
+
+    public void setSupportersInvited(int supportersInvited) {
+        this.supportersInvited = supportersInvited;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -65,6 +74,7 @@ public class CompetitionInAssessmentKeyAssessmentStatisticsResource {
                 .append(assignmentsAccepted, that.assignmentsAccepted)
                 .append(assessmentsStarted, that.assessmentsStarted)
                 .append(assessmentsSubmitted, that.assessmentsSubmitted)
+                .append(supportersInvited, that.supportersInvited)
                 .isEquals();
     }
 
@@ -76,6 +86,7 @@ public class CompetitionInAssessmentKeyAssessmentStatisticsResource {
                 .append(assignmentsAccepted)
                 .append(assessmentsStarted)
                 .append(assessmentsSubmitted)
+                .append(supportersInvited)
                 .toHashCode();
     }
 }

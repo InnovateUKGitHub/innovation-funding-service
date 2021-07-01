@@ -96,12 +96,28 @@ public class ActivityLog {
         this.organisation = organisation;
     }
 
+    public ActivityLog(Application application, ActivityType type, Organisation organisation, CompetitionDocument competitionDocument,
+                       Query query, ZonedDateTime createdOn, User createdBy, User author) {
+        this.application = application;
+        this.type = type;
+        this.organisation = organisation;
+        this.competitionDocument = competitionDocument;
+        this.query = query;
+        this.createdOn = createdOn;
+        this.createdBy = createdBy;
+        this.author = author;
+    }
+
     public Long getId() {
         return id;
     }
 
     public Application getApplication() {
         return application;
+    }
+
+    public void setApplication(Application application) {
+        this.application = application;
     }
 
     public Optional<Organisation> getOrganisation() {

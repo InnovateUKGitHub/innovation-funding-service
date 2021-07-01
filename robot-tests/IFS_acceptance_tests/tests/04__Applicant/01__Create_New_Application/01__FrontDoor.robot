@@ -6,6 +6,9 @@ Documentation    INFUND-6923 Create new public Competition listings page for App
 ...              IFS-247 As an applicant I am able to see the competitions in 'Competition listings' in reverse chronological order
 ...
 ...              IFS-1117 As a comp exec I am able to set Application milestones in Non-IFS competition details (Initial view)
+...
+...              IFS-8463 Implement Azure ChatBot in local environment
+...
 Suite Setup      Custom suite setup
 Suite Teardown   Custom suite teardown
 Force Tags       Applicant
@@ -29,6 +32,13 @@ Guest user navigates to Front Door
     And the user should not see an error in the page
     And the user should see the element        jQuery = a:contains("feedback")
 
+Guest user can open chatbot on contact us page
+    [Documentation]     IFS-8463
+    When The user clicks the button/link        link = Use our virtual assistant (opens in new window)
+    And Select Window                           NEW  #URL = ${server}/info/contact/virtual-assistant
+    Then The user should see the element        css = [class='wc-message-pane']
+    And the user closes the last opened tab
+
 Guest user can see Competitions and their information
     [Documentation]    INFUND-6923
     [Tags]
@@ -44,12 +54,15 @@ Guest user can see the opening and closing status of competitions
     [Documentation]  IFS-268
     [Tags]  HappyPath
     Given the user navigates to the page  ${frontDoor}
+    And the user should see the element in the paginated list     link = ${READY_TO_OPEN_COMPETITION_NAME}
     Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Opening soon  Opens
     Given update milestone to yesterday     ${READY_TO_OPEN_COMPETITION}  OPEN_DATE
     When the user navigates to the page  ${frontDoor}
+    And the user should see the element in the paginated list     link = ${READY_TO_OPEN_COMPETITION_NAME}
     Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Open now  Opened
     Given Change the close date of the Competition in the database to thirteen days  ${READY_TO_OPEN_COMPETITION_NAME}
     When the user navigates to the page  ${frontDoor}
+    And the user should see the element in the paginated list     link = ${READY_TO_OPEN_COMPETITION_NAME}
     Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Closing soon  Opened
     [Teardown]  Return the competition's milestones to their initial values  ${READY_TO_OPEN_COMPETITION}  ${READY_TO_OPEN_COMPETITION_OPEN_DATE_DB}  ${READY_TO_OPEN_COMPETITION_CLOSE_DATE_DB}
 

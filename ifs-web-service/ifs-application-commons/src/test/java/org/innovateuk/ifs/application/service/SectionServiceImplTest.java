@@ -140,4 +140,24 @@ public class SectionServiceImplTest extends BaseServiceUnitTest<SectionServiceIm
 
         assertEquals(section, result);
     }
+
+    @Test
+    public void getFundingFinanceSection() {
+        SectionResource section = newSectionResource().build();
+        when(sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.FUNDING_FINANCES)).thenReturn(restSuccess(singletonList(section)));
+
+        SectionResource result = service.getFundingFinanceSection(competition.getId());
+
+        assertEquals(section, result);
+    }
+
+    @Test
+    public void getFecCostFinanceSection() {
+        SectionResource section = newSectionResource().build();
+        when(sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.FEC_COSTS_FINANCES)).thenReturn(restSuccess(singletonList(section)));
+
+        SectionResource result = service.getFecCostFinanceSection(competition.getId());
+
+        assertEquals(section, result);
+    }
 }

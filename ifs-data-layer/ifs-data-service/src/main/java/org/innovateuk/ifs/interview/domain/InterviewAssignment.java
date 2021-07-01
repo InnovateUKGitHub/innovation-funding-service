@@ -6,13 +6,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
 
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.LAZY;
-import static org.innovateuk.ifs.user.resource.Role.INTERVIEW_LEAD_APPLICANT;
 
 /**
  * An invitation for an application to participate on an interview panel.
@@ -44,7 +44,7 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
         if (application == null) throw new NullPointerException("target cannot be null");
         if (participant == null) throw new NullPointerException("participant cannot be null");
 
-        if (participant.getRole() != INTERVIEW_LEAD_APPLICANT)
+        if (participant.getRole() != ProcessRoleType.INTERVIEW_LEAD_APPLICANT)
             throw new IllegalArgumentException("participant must be INTERVIEW_LEAD_APPLICANT");
         if (participant.getApplicationId() != application.getId())
             throw new IllegalArgumentException("participant application must match the application");

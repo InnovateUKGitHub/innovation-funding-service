@@ -2,6 +2,8 @@
 
 . ldap-base-commands.sh
 
-email=$1
-
-addUserToShibboleth $email
+emails=$1
+for email in $(echo $emails | sed "s/,/ /g")
+do
+    addUserToShibboleth "$email"
+done

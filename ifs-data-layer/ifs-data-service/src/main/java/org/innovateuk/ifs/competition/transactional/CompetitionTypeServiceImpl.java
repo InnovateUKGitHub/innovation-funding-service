@@ -12,6 +12,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
+@SuppressWarnings("unchecked")
 @Service
 public class CompetitionTypeServiceImpl extends BaseTransactionalService implements CompetitionTypeService {
 
@@ -23,6 +24,6 @@ public class CompetitionTypeServiceImpl extends BaseTransactionalService impleme
 
     @Override
     public ServiceResult<List<CompetitionTypeResource>> findAllTypes() {
-        return serviceSuccess((List) competitionTypeMapper.mapToResource(competitionTypeRepository.findAll()));
+        return serviceSuccess((List) competitionTypeMapper.mapToResource(competitionTypeRepository.findAllByOrderByNameAsc()));
     }
 }

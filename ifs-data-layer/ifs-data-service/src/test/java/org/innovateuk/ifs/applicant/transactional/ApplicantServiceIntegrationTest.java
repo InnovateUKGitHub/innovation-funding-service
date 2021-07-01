@@ -24,7 +24,7 @@ public class ApplicantServiceIntegrationTest extends BaseAuthenticationAwareInte
     private static final long USER_ID = 1L;
     private static final long QUESTION_ID = 1L;
     private static final long APPLICATION_ID = 1L;
-    private static final long FINANCES_SECTION_ID = 22L;
+    private static final long FINANCES_SECTION_ID = 7L;
 
     @Autowired
     private ApplicantService applicantService;

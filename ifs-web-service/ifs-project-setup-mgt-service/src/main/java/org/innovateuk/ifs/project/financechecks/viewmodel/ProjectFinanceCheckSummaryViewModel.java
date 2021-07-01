@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.financechecks.viewmodel;
 
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
+
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleNoneMatch;
 
 /**
@@ -13,17 +14,26 @@ public class ProjectFinanceCheckSummaryViewModel {
     private boolean collaborativeProject;
     private boolean hasOrganisationSizeChanged;
     private boolean userHasExternalFinanceRole;
+    private final boolean hasSpendProfileStage;
+    private final boolean subsidyControlCompetition;
+    private final boolean isReadOnly;
 
     public ProjectFinanceCheckSummaryViewModel(FinanceCheckSummaryResource financeCheckSummaryResource,
                                                boolean projectIsActive,
                                                boolean collaborativeProject,
                                                boolean hasOrganisationSizeChanged,
-                                               boolean userHasExternalFinanceRole) {
+                                               boolean userHasExternalFinanceRole,
+                                               boolean hasSpendProfileStage,
+                                               boolean subsidyControlCompetition,
+                                               boolean isReadOnly) {
         this.financeCheckSummaryResource = financeCheckSummaryResource;
         this.projectIsActive = projectIsActive;
         this.collaborativeProject = collaborativeProject;
         this.hasOrganisationSizeChanged = hasOrganisationSizeChanged;
         this.userHasExternalFinanceRole = userHasExternalFinanceRole;
+        this.hasSpendProfileStage = hasSpendProfileStage;
+        this.subsidyControlCompetition = subsidyControlCompetition;
+        this.isReadOnly = isReadOnly;
     }
 
     private boolean isGenerateSpendProfileReady() {
@@ -33,9 +43,9 @@ public class ProjectFinanceCheckSummaryViewModel {
     }
 
     public boolean isShowEnabledGenerateSpendProfilesButton() {
-        return !financeCheckSummaryResource.isSpendProfilesGenerated() &&
-                isGenerateSpendProfileReady() &&
-                projectIsActive;
+        return !financeCheckSummaryResource.isSpendProfilesGenerated()
+                && isGenerateSpendProfileReady()
+                && projectIsActive;
     }
 
     public boolean isShowDisabledGenerateSpendProfilesButton() {
@@ -76,7 +86,25 @@ public class ProjectFinanceCheckSummaryViewModel {
     }
 
     public boolean canEditProjectDuration()  {
-        return !userHasExternalFinanceRole && !financeCheckSummaryResource.isSpendProfilesGenerated();
+        return !userHasExternalFinanceRole && !financeCheckSummaryResource.isSpendProfilesGenerated() && !isReadOnly;
     }
 
+    public boolean isHasSpendProfileStage() {
+        return hasSpendProfileStage;
+    }
+
+    public boolean displayMilestoneColumn() {
+        return this.financeCheckSummaryResource.getPartnerStatusResources().stream()
+                .filter(partner -> partner.getPaymentMilestoneState() != null)
+                .findAny()
+                .isPresent();
+    }
+
+    public boolean isReadOnly() {
+        return isReadOnly;
+    }
+
+    public boolean isSubsidyControlCompetition() {
+        return subsidyControlCompetition;
+    }
 }

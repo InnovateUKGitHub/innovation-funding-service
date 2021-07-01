@@ -18,12 +18,13 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
     private ApplicationState applicationState;
     private boolean leadApplicant;
     private ZonedDateTime endDate;
-    private long daysLeft;
+    private Long daysLeft;
     private int applicationProgress;
     private boolean assignedToInterview;
     private LocalDate startDate;
     private boolean showReopenLink;
     private boolean hasAssessmentStage;
+    private boolean alwaysOpen;
 
     // Private constructor to enforce immutability
     private DashboardInProgressRowResource() {
@@ -46,7 +47,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
         return endDate;
     }
 
-    public long getDaysLeft() {
+    public Long getDaysLeft() {
         return daysLeft;
     }
 
@@ -70,6 +71,10 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
         return hasAssessmentStage;
     }
 
+    public boolean isAlwaysOpen() {
+        return alwaysOpen;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -90,6 +95,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
                 .append(startDate, that.startDate)
                 .append(hasAssessmentStage, that.hasAssessmentStage)
                 .append(showReopenLink, that.showReopenLink)
+                .append(alwaysOpen, that.alwaysOpen)
                 .isEquals();
     }
 
@@ -110,8 +116,10 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
                 .append(startDate)
                 .append(hasAssessmentStage)
                 .append(showReopenLink)
+                .append(alwaysOpen)
                 .toHashCode();
     }
+
 
     public static class DashboardApplicationInProgressResourceBuilder {
 
@@ -122,12 +130,13 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
         private ApplicationState applicationState;
         private boolean leadApplicant;
         private ZonedDateTime endDate;
-        private long daysLeft;
+        private Long daysLeft;
         private int applicationProgress;
         private boolean assignedToInterview;
         private LocalDate startDate;
         private boolean hasAssessmentStage;
         private boolean showReopenLink;
+        private boolean alwaysOpen;
 
         public DashboardApplicationInProgressResourceBuilder withTitle(String title) {
             this.title = title;
@@ -164,7 +173,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
             return this;
         }
 
-        public DashboardApplicationInProgressResourceBuilder withDaysLeft(long daysLeft) {
+        public DashboardApplicationInProgressResourceBuilder withDaysLeft(Long daysLeft) {
             this.daysLeft = daysLeft;
             return this;
         }
@@ -194,7 +203,12 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
             return this;
         }
 
-        public DashboardInProgressRowResource build(){
+        public DashboardApplicationInProgressResourceBuilder withAlwaysOpen(boolean alwaysOpen) {
+            this.alwaysOpen = alwaysOpen;
+            return this;
+        }
+
+        public DashboardInProgressRowResource build() {
             DashboardInProgressRowResource result = new DashboardInProgressRowResource();
             result.title = this.title;
             result.applicationId = this.applicationId;
@@ -208,6 +222,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
             result.assignedToInterview = this.assignedToInterview;
             result.startDate = this.startDate;
             result.showReopenLink = this.showReopenLink;
+            result.alwaysOpen = this.alwaysOpen;
 
             result.hasAssessmentStage = this.hasAssessmentStage;
             return result;

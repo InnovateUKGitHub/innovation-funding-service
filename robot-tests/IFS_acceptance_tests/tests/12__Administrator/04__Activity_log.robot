@@ -1,5 +1,9 @@
 *** Settings ***
 Documentation     IFS-6062 Activity Log front-end
+...
+...               IFS-9579 MO documents: Change of internal approve/reject authority
+...
+Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  HappyPath
 Resource          ../../resources/defaultResources.robot
@@ -55,8 +59,8 @@ Documents added log entry
     And the admin is able to navigate to log entry link   View exploitation plan   Exploitation plan
 
 Documents approved log entry
-    [Documentation]  IFS-6062
-    [Setup]  log in as a different user                   &{Comp_admin1_credentials}
+    [Documentation]  IFS-6062  IFS-9579
+    [Setup]  log in as a different user                   &{ifs_admin_user_credentials}
     Given the user navigates to the page                  ${AdminPsActivityLogCompUrl}
     When the user approves documents
     Then the admin is able to see log entry               Document approved
@@ -68,6 +72,10 @@ The admin is able to see existing log entries
     Then The admin is able to see all existing log entries
 
 *** Keywords ***
+Custom suite setup
+    ${today}  get today
+    set suite variable  ${today}
+
 The user approves documents
     the user navigates to the page         ${server}/project-setup-management/project/${PsActivityLogProjectId}/document/all
     the user clicks the button/link        link = Exploitation plan
@@ -83,11 +91,11 @@ The user completes documents
 The user completes project team
     the user clicks the button/link     link = Project team
     the user clicks the button/link     jQuery = a:contains("Project"):contains("manager")
-    the user selects the radio button   projectManager   53
-    the user clicks the button/link     jQuery = button:contains("Save project manager")
+    the user selects the radio button   projectManager   54
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user clicks the button/link     jQuery = a:contains("Your finance contact")
-    the user selects the radio button   financeContact   53
-    the user clicks the button/link     jQuery = button:contains("Save finance contact")
+    the user selects the radio button   financeContact   54
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
 
 The admin navigates to project activity log
     the user navigates to the page     ${AdminPsActivityLogCompUrl}

@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.management.competition.inflight.viewmodel;
 
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 
 import java.math.BigInteger;
@@ -19,6 +21,7 @@ public class CompetitionInFlightViewModel {
     private CompetitionStatus competitionStatus;
     private boolean fundingDecisionAllowedBeforeAssessment;
     private String competitionType;
+    private FundingType competitionFundingType;
     private String innovationSector;
     private String innovationArea;
     private String executive;
@@ -33,18 +36,23 @@ public class CompetitionInFlightViewModel {
     private boolean competitionHasAssessmentStage;
     private AssessorFinanceView assessorFinanceView;
     private CompetitionCompletionStage competitionCompletionStage;
+    private boolean supporterEnabled;
+    private boolean alwaysOpen;
+    private boolean isSuperAdminUser;
 
     public CompetitionInFlightViewModel(CompetitionResource competitionResource,
                                         CompetitionAssessmentConfigResource competitionAssessmentConfigResource,
                                         List<MilestonesRowViewModel> milestones,
                                         long changesSinceLastNotify,
                                         CompetitionInFlightStatsViewModel keyStatistics,
-                                        boolean readOnly) {
+                                        boolean readOnly,
+                                        boolean isSuperAdminUser) {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
         this.competitionCompletionStage = competitionResource.getCompletionStage();
         this.competitionStatus = competitionResource.getCompetitionStatus();
         this.competitionType = competitionResource.getCompetitionTypeName();
+        this.competitionFundingType = competitionResource.getFundingType();
         this.fundingDecisionAllowedBeforeAssessment = !competitionResource.isHasAssessmentStage();
         this.innovationSector = competitionResource.getInnovationSectorName();
         this.innovationArea = StringUtils.join(competitionResource.getInnovationAreaNames(), ", ");
@@ -55,10 +63,13 @@ public class CompetitionInFlightViewModel {
         this.milestones = milestones;
         this.changesSinceLastNotify = changesSinceLastNotify;
         this.readOnly = readOnly;
+        this.isSuperAdminUser = isSuperAdminUser;
         this.assessmentPanelEnabled = competitionAssessmentConfigResource.getHasAssessmentPanel() != null ? competitionAssessmentConfigResource.getHasAssessmentPanel() : false;
         this.interviewPanelEnabled = competitionAssessmentConfigResource.getHasInterviewStage() != null ? competitionAssessmentConfigResource.getHasInterviewStage() : false;
         this.assessorFinanceView = competitionAssessmentConfigResource.getAssessorFinanceView();
         this.competitionHasAssessmentStage = competitionResource.isHasAssessmentStage();
+        this.supporterEnabled = competitionResource.isKtp();
+        this.alwaysOpen = competitionResource.isAlwaysOpen();
     }
 
     public Long getCompetitionId() {
@@ -75,6 +86,10 @@ public class CompetitionInFlightViewModel {
 
     public String getCompetitionType() {
         return competitionType;
+    }
+
+    public FundingType getCompetitionFundingType() {
+        return competitionFundingType;
     }
 
     public String getInnovationSector() {
@@ -117,6 +132,10 @@ public class CompetitionInFlightViewModel {
         return readOnly;
     }
 
+    public boolean isSuperAdminUser() {
+        return isSuperAdminUser;
+    }
+
     public CompetitionCompletionStage getCompetitionCompletionStage() {
         return competitionCompletionStage;
     }
@@ -137,7 +156,8 @@ public class CompetitionInFlightViewModel {
 
     public boolean isFundingDecisionEnabled() {
         return fundingDecisionAllowedBeforeAssessment
-                || !asList(READY_TO_OPEN, OPEN, CLOSED, IN_ASSESSMENT).contains(competitionStatus);
+                || !asList(READY_TO_OPEN, OPEN, CLOSED, IN_ASSESSMENT).contains(competitionStatus)
+                || (alwaysOpen && hasAClosedAssessmentPeriod());
     }
 
     public boolean isFundingNotificationDisplayed() {
@@ -148,5 +168,32 @@ public class CompetitionInFlightViewModel {
     public boolean isInviteAssessorsLinkEnabled() {
         return competitionHasAssessmentStage &&
                 !asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competitionStatus);
+    }
+
+    public boolean isManageSupportersLinkEnabled() {
+        return supporterEnabled;
+    }
+
+    public boolean isAlwaysOpen() {
+        return alwaysOpen;
+    }
+
+    public MilestonesRowViewModel findMilestoneByType(MilestoneType milestoneType) {
+        return milestones
+                .stream()
+                .filter(m -> m.getMilestoneType() == milestoneType)
+                .findAny()
+                .orElseThrow(ObjectNotFoundException::new);
+    }
+
+    public boolean hasAClosedAssessmentPeriod() {
+        return milestones
+                .stream()
+                .anyMatch(m -> m.getMilestoneType() == MilestoneType.ASSESSMENT_CLOSED && m.isPassed());
+    }
+
+    public boolean isManageAssessmentLinkEnabled() {
+        return competitionStatus != READY_TO_OPEN
+                && (competitionStatus != OPEN || alwaysOpen);
     }
 }

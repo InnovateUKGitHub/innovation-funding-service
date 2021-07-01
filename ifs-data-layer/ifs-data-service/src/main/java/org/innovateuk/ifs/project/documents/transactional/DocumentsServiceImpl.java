@@ -16,7 +16,6 @@ import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
@@ -25,6 +24,7 @@ import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,9 +56,6 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
     @Autowired
     private ProjectDocumentRepository projectDocumentRepository;
-
-    @Autowired
-    private ProjectRepository projectRepository;
 
     @Autowired
     private ProjectWorkflowHandler projectWorkflowHandler;
@@ -99,6 +96,8 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
                 case SPREADSHEET_FILE_TYPE:
                     validMediaTypes.addAll(SPREADSHEET.getMimeTypes());
                     break;
+                default:
+                    // do nothing
             }
         }
         return validMediaTypes;
@@ -110,7 +109,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         return find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
                 andOnSuccess((project, projectDocumentConfig) -> validateProjectActive(project)
                         .andOnSuccess(() -> fileService.createFile(fileEntryResource, inputStreamSupplier))
-                        .andOnSuccessReturn(fileDetails -> createProjectDocument(project, projectDocumentConfig, fileDetails)));
+                        .andOnSuccessReturn(fileDetails -> createProjectDocument(project, projectDocumentConfig, fileDetails, getCurrentlyLoggedInUser().getSuccess())));
     }
 
     private ServiceResult<Void> validateProjectActive(Project project) {
@@ -121,10 +120,10 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         return serviceSuccess();
     }
 
-    private FileEntryResource createProjectDocument(Project project, CompetitionDocument competitionDocumentConfig, Pair<File, FileEntry> fileDetails) {
+    private FileEntryResource createProjectDocument(Project project, CompetitionDocument competitionDocumentConfig, Pair<File, FileEntry> fileDetails, User modifiedBy) {
 
         FileEntry fileEntry = fileDetails.getValue();
-        ProjectDocument projectDocument = new ProjectDocument(project, competitionDocumentConfig, fileEntry, UPLOADED);
+        ProjectDocument projectDocument = new ProjectDocument(project, competitionDocumentConfig, fileEntry, UPLOADED, modifiedBy, ZonedDateTime.now());
         projectDocumentRepository.save(projectDocument);
         return fileEntryMapper.mapToResource(fileEntry);
     }
@@ -248,14 +247,26 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         if (SUBMITTED.equals(projectDocument.getStatus())) {
             projectDocument.setStatus(decision.getApproved() ? APPROVED : REJECTED);
             projectDocument.setStatusComments(!decision.getApproved() ? decision.getRejectionReason() : null);
+            projectDocument.setModifiedBy(getCurrentlyLoggedInUser().getSuccess());
+            projectDocument.setModifiedDate(ZonedDateTime.now());
             projectDocumentRepository.save(projectDocument);
             if (allDocumentsSubmitted(project)) {
                 setOtherDocsApproved(project);
             }
             return serviceSuccess();
-        } else {
-            return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_ACCEPTED_OR_REJECTED);
         }
+
+        if (APPROVED.equals(projectDocument.getStatus())) {
+            projectDocument.setStatus(REJECTED);
+            projectDocument.setStatusComments(decision.getRejectionReason());
+            projectDocument.setModifiedBy(getCurrentlyLoggedInUser().getSuccess());
+            projectDocument.setModifiedDate(ZonedDateTime.now());
+            projectDocumentRepository.save(projectDocument);
+
+            return serviceSuccess();
+        }
+
+        return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_ACCEPTED_OR_REJECTED);
     }
 
     private void setOtherDocsApproved(Project project) {

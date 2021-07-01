@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectfinances.populator;
 
 import org.innovateuk.ifs.application.ApplicationUrlHelper;
+import org.innovateuk.ifs.application.finance.populator.FinanceSummaryTableViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectfinances.viewmodel.YourFinancesRowViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourprojectfinances.viewmodel.YourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -9,7 +10,6 @@ import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -46,39 +46,33 @@ public class YourProjectFinancesModelPopulator {
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
+    @Autowired
+    private FinanceSummaryTableViewModelPopulator financeSummaryTableViewModelPopulator;
+
     public YourProjectFinancesViewModel populate(long applicationId, long sectionId, long organisationId) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         List<Long> completedSections = sectionStatusRestService.getCompletedSectionIds(applicationId, organisationId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        ApplicationFinanceResource applicationFinanceResource = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
-
         List<YourFinancesRowViewModel> rows = sectionRestService.getChildSectionsByParentId(sectionId).getSuccess()
                 .stream()
-                .filter(subSection -> !isSectionExcluded(subSection, competition, organisation))
+                .filter(subSection -> !subSection.getType().isSectionTypeNotRequiredForOrganisationAndCompetition(competition, organisation.getOrganisationTypeEnum(), organisation.getId().equals(application.getLeadOrganisationId())))
                 .map(subSection ->
                         new YourFinancesRowViewModel(sectionName(competition, application, organisation, subSection),
                                 applicationUrlHelper.getSectionUrl(subSection.getType(), subSection.getId(), applicationId, organisationId, application.getCompetition()).get(),
                                 completedSections.contains(subSection.getId()))
                 ).collect(toList());
         return new YourProjectFinancesViewModel(applicationId, application.getName(), competition,
-                applicationFinanceResource,
+                financeSummaryTableViewModelPopulator.populateSingleOrganisation(application, competition, organisation),
                 rows);
     }
 
     private String sectionName(CompetitionResource competition, ApplicationResource application, OrganisationResource organisation, SectionResource subSection) {
-        if (!application.getLeadOrganisationId().equals(organisation.getId())) {
-            if ("Your funding".equals(subSection.getName()) && competition.isKtp() && (application.getLeadOrganisationId() != organisation.getId())) {
-                return "Other funding";
-            }
+        if (competition.isKtp()
+                && !application.getLeadOrganisationId().equals(organisation.getId())
+                && subSection.getType().equals(SectionType.FUNDING_FINANCES)) {
+            return "Other funding";
         }
         return subSection.getName();
-    }
-
-    private boolean isSectionExcluded(SectionResource section, CompetitionResource competition, OrganisationResource organisation) {
-        if (section.getType() == SectionType.ORGANISATION_FINANCES) {
-            return !competition.applicantShouldSeeYourOrganisationSection(organisation.getOrganisationTypeEnum());
-        }
-        return section.getType() == SectionType.FUNDING_FINANCES && competition.isFullyFunded();
     }
 }

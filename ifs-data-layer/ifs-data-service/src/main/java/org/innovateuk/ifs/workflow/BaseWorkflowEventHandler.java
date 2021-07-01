@@ -26,6 +26,7 @@ import static org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction.testi
  * A superclass for workflow handlers that expose public handler methods for pushing Process subclasses through
  * workflows
  */
+@SuppressWarnings("unchecked")
 public abstract class BaseWorkflowEventHandler<
         ProcessType extends Process<ParticipantType, TargetType, StateType>,
         StateType extends ProcessState,

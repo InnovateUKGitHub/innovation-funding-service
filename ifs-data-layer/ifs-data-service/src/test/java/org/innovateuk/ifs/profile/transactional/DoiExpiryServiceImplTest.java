@@ -83,8 +83,8 @@ public class DoiExpiryServiceImplTest {
         verify(notificationService).sendNotificationWithFlush(argumentCaptor.capture(), eq(EMAIL));
         Notification notification = argumentCaptor.getValue();
         assertEquals(notification.getTo().size(), 1);
-        assertEquals(notification.getTo().get(0).getEmailAddress(), userToNotify.getEmail());
-        assertEquals(notification.getTo().get(0).getName(), userToNotify.getName());
+        assertEquals(notification.getTo().get(0).getTo().getEmailAddress(), userToNotify.getEmail());
+        assertEquals(notification.getTo().get(0).getTo().getName(), userToNotify.getName());
         assertEquals(notification.getMessageKey().name(), "ASSESSOR_AFFILIATION_EXPIRED");
         assertEquals(notification.getGlobalArguments().get("webBaseUrl"), webBaseUrl);
         assertEquals(notification.getGlobalArguments().get("affiliationModifiedDate"), "6 April 2019");

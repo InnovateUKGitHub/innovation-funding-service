@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationProcurementMilestonesSummaryViewModel;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 
 /**
@@ -19,8 +20,14 @@ public class AssessmentFinancesSummaryViewModel {
     private final FundingType fundingType;
     private final ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel;
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
+    private final ApplicationProcurementMilestonesSummaryViewModel applicationProcurementMilestonesSummaryViewModel;
+    private final boolean procurementMilestones;
 
-    public AssessmentFinancesSummaryViewModel(long assessmentId, long applicationId, String applicationName, long daysLeft, long daysLeftPercentage, FundingType fundingType, ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel) {
+    public AssessmentFinancesSummaryViewModel(long assessmentId, long applicationId, String applicationName, long daysLeft,
+                                              long daysLeftPercentage, FundingType fundingType, ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
+                                              ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
+                                              ApplicationProcurementMilestonesSummaryViewModel applicationProcurementMilestonesSummaryViewModel,
+                                              boolean procurementMilestones) {
         this.assessmentId = assessmentId;
         this.applicationId = applicationId;
         this.applicationName = applicationName;
@@ -29,6 +36,8 @@ public class AssessmentFinancesSummaryViewModel {
         this.fundingType = fundingType;
         this.applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModel;
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
+        this.applicationProcurementMilestonesSummaryViewModel = applicationProcurementMilestonesSummaryViewModel;
+        this.procurementMilestones = procurementMilestones;
     }
 
     public long getAssessmentId() {
@@ -55,12 +64,24 @@ public class AssessmentFinancesSummaryViewModel {
         return fundingType;
     }
 
+    public boolean isKtpCompetition() {
+        return FundingType.KTP.equals(fundingType);
+    }
+
     public ApplicationFinanceSummaryViewModel getApplicationFinanceSummaryViewModel() {
         return applicationFinanceSummaryViewModel;
     }
 
     public ApplicationFundingBreakdownViewModel getApplicationFundingBreakdownViewModel() {
         return applicationFundingBreakdownViewModel;
+    }
+
+    public ApplicationProcurementMilestonesSummaryViewModel getApplicationProcurementMilestonesSummaryViewModel() {
+        return applicationProcurementMilestonesSummaryViewModel;
+    }
+
+    public boolean isProcurementMilestones() {
+        return procurementMilestones;
     }
 
     @Override
@@ -80,6 +101,8 @@ public class AssessmentFinancesSummaryViewModel {
                 .append(fundingType, that.fundingType)
                 .append(applicationFinanceSummaryViewModel, that.applicationFinanceSummaryViewModel)
                 .append(applicationFundingBreakdownViewModel, that.applicationFundingBreakdownViewModel)
+                .append(applicationProcurementMilestonesSummaryViewModel, that.applicationProcurementMilestonesSummaryViewModel)
+                .append(procurementMilestones, that.procurementMilestones)
                 .isEquals();
     }
 
@@ -94,6 +117,8 @@ public class AssessmentFinancesSummaryViewModel {
                 .append(fundingType)
                 .append(applicationFinanceSummaryViewModel)
                 .append(applicationFundingBreakdownViewModel)
+                .append(applicationProcurementMilestonesSummaryViewModel)
+                .append(procurementMilestones)
                 .toHashCode();
     }
 }

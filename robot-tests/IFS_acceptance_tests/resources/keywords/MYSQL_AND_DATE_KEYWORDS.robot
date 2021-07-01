@@ -8,7 +8,7 @@ Resource          ../defaultResources.robot
 the assessment start period changes in the db in the past
     [Arguments]   ${competition_id}
     ${yesterday} =    get yesterday
-    execute sql string     INSERT IGNORE INTO `${database_name}`.`milestone` (date, type, competition_id) VALUES('${yesterday}', 'OPEN_DATE', '${competition_id}'), ('${yesterday}', 'SUBMISSION_DATE', '${competition_id}'), ('${yesterday}', 'ASSESSORS_NOTIFIED', '${competition_id}');
+    execute sql string     INSERT IGNORE INTO `${database_name}`.`milestone` (date, type, competition_id, parent_id) VALUES('${yesterday}', 'ASSESSORS_NOTIFIED', '${competition_id}', '3');
     execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${competition_id}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
     reload page
 
@@ -226,6 +226,13 @@ get table id by email
     ${id} =      get from list  ${result}  0
     [Return]  ${id}
 
+get table count by id
+    [Arguments]  ${table}  ${filterVal}  ${id}
+    ${result} =  query  SELECT COUNT(*) FROM `${database_name}`.`${table}` WHERE `${filterVal}` = '${id}';
+    ${result} =  get from list  ${result}  0
+    ${count} =   get from list  ${result}  0
+    [Return]  ${count}
+
 # The below keyword gets date from first selector and checks if it is greater than the date from second selector
 # For example 12 February 2018 > 26 January 2017 . Greater in this case means latest.
 verify first date is greater than or equal to second
@@ -287,3 +294,35 @@ get spend profile value
     ${result} =  get from list  ${result}  0
     ${result} =  get from list  ${result}  0
     [Return]  ${result}
+
+get details of existing organisation
+    ${result} =  query  SELECT o.name, o.date_of_incorporation, s.sic_code, eo.name, a.address_line1, a.address_line2, a.address_line3, a.town, a.postcode, a.county, a.country FROM organisation o INNER JOIN sic_code s ON s.organisation_id = o.id INNER JOIN executive_officer eo ON eo.organisation_id = o.id INNER JOIN organisation_address oa ON oa.id = o.id INNER JOIN address a ON a.id = oa.address_id WHERE o.name = 'HAMPSHIRE COUNTY CRICKET COMPANY LIMITED';
+    log   ${result}
+    ${result} =  get from list  ${result}  0
+    [Return]  ${result}
+
+user queries previous application id
+    [Arguments]     ${application_id}
+    ${result} =  query  SELECT `previous_application_id` FROM `${database_name}`.`application` WHERE `id` = "${application_id}";
+    ${result} =  get from list  ${result}  0
+    ${previous_application_id} =  get from list  ${result}  0
+    [Return]  ${previous_application_id}
+
+user inserts application into application migration table
+    [Arguments]     ${application_id}
+    execute sql string     INSERT INTO `${database_name}`.`application_migration` (`application_id`) VALUES ("${application_id}");
+    reload page
+
+user queries migrated application id
+    [Arguments]     ${application_id}
+    ${result} =  query  SELECT `id` FROM `${database_name}`.`application` WHERE `previous_application_id` = "${application_id}";
+    ${result} =  get from list  ${result}  0
+    ${id} =      get from list  ${result}  0
+    [Return]  ${id}
+
+get assessment period using competition id
+    [Arguments]  ${competition_id}
+    ${result} =  query  SELECT `id` FROM `${database_name}`.`assessment_period` WHERE `competition_id` = "${competition_id}";
+    ${result} =  get from list  ${result}  0
+    ${id} =      get from list  ${result}  0
+    [Return]  ${id}

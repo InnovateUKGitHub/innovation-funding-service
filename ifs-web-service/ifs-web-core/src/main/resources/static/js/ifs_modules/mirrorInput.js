@@ -6,8 +6,11 @@ IFS.core.mirrorElements = (function () {
         var element = jQuery(this)
         var source = element.attr('data-mirror')
 
-        IFS.core.mirrorElements.updateElement(element, source)
-        IFS.core.mirrorElements.bindMirrorElement(element, source)
+        if (!element.data('mirror-bound')) {
+          IFS.core.mirrorElements.updateElement(element, source)
+          IFS.core.mirrorElements.bindMirrorElement(element, source)
+        }
+        element.data('mirror-bound', true)
       })
     },
     bindMirrorElement: function (element, source) {
@@ -26,8 +29,8 @@ IFS.core.mirrorElements = (function () {
     getSourceText: function (element) {
       var sourceEl = jQuery(element)
       if (sourceEl.length === 1) {
-        if (sourceEl.val().length) {
-          return sourceEl.val()
+        if (sourceEl.is(':input')) {
+          return sourceEl.val() === null ? '' : sourceEl.val()
         } else if (sourceEl.text().length) {
           return sourceEl.text()
         }

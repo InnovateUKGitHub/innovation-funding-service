@@ -4,12 +4,12 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipant;
-import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
 
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONITORING_OFFICER;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.MONITORING_OFFICER;
 
 /**
  * A monitoring officer on a project.
@@ -18,26 +18,16 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONI
 @DiscriminatorValue("PROJECT_MONITORING_OFFICER")
 public class MonitoringOfficer extends ProjectParticipant {
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "projectId", referencedColumnName = "id")
-    private Project project;
-
     public MonitoringOfficer() {
-        super(null, MONITORING_OFFICER);
+        super(null, MONITORING_OFFICER, null);
     }
 
     public MonitoringOfficer(User user, Project project) {
-        super(user, MONITORING_OFFICER);
+        super(user, MONITORING_OFFICER, project);
         this.project = project;
     }
     public MonitoringOfficer(User user, Project project, ProjectParticipantRole role) {
-        super(user, role);
-        this.project = project;
-    }
-
-    @Override
-    public Project getProcess() {
-        return project;
+        super(user, role, project);
     }
 
     @Override

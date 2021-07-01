@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.questionnaire.config.domain.Questionnaire;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -24,6 +25,9 @@ public class Question {
 
     @Column(length = 5000)
     private String description;
+
+    @Column(length = 5000)
+    private String description2;
 
     private Boolean markAsCompletedEnabled = false;
 
@@ -54,6 +58,10 @@ public class Question {
     private QuestionSetupType questionSetupType;
 
     private Integer assessorMaximumScore;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "questionnaire_id", referencedColumnName = "id")
+    private Questionnaire questionnaire;
 
     public Question() {
         //default constructor
@@ -158,6 +166,8 @@ public class Question {
         this.description = description;
     }
 
+
+
     public void setMarkAsCompletedEnabled(Boolean markAsCompletedEnabled) {
         this.markAsCompletedEnabled = markAsCompletedEnabled;
     }
@@ -198,11 +208,27 @@ public class Question {
         this.questionSetupType = questionSetupType;
     }
 
+    public Questionnaire getQuestionnaire() {
+        return questionnaire;
+    }
+
+    public void setQuestionnaire(Questionnaire questionnaire) {
+        this.questionnaire = questionnaire;
+    }
+
     public boolean isScope() {
         return this.questionSetupType == QuestionSetupType.SCOPE;
     }
 
     public boolean isCompetitionOpen() {
         return competition.getCompetitionStatus().isLaterThan(READY_TO_OPEN);
+    }
+
+    public String getDescription2() {
+        return description2;
+    }
+
+    public void setDescription2(String description2) {
+        this.description2 = description2;
     }
 }

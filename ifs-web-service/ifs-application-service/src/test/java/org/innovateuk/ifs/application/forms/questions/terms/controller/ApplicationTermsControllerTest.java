@@ -5,15 +5,15 @@ import org.innovateuk.ifs.application.common.populator.ApplicationTermsModelPopu
 import org.innovateuk.ifs.application.common.populator.ApplicationTermsPartnerModelPopulator;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsPartnerViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsViewModel;
+import org.innovateuk.ifs.application.forms.questions.terms.form.ApplicationTermsForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
-import org.innovateuk.ifs.application.forms.questions.terms.form.ApplicationTermsForm;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -40,26 +40,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<ApplicationTermsController> {
 
     @Mock
-    private UserRestService userRestServiceMock;
+    private ProcessRoleRestService processRoleRestServiceMock;
     @Mock
     private QuestionStatusRestService questionStatusRestServiceMock;
     @Mock
-    private ApplicationRestService applicationRestServiceMock;
-    @Mock
     private ApplicationTermsModelPopulator applicationTermsModelPopulatorMock;
+    @Mock
+    private ApplicationRestService applicationRestServiceMock;
     @Mock
     private ApplicationTermsPartnerModelPopulator applicationTermsPartnerModelPopulatorMock;
 
     @Override
     protected ApplicationTermsController supplyControllerUnderTest() {
-        return new ApplicationTermsController(userRestServiceMock, questionStatusRestServiceMock, applicationRestServiceMock,
-                applicationTermsPartnerModelPopulatorMock, applicationTermsModelPopulatorMock);
+        return new ApplicationTermsController();
     }
 
     @Test
     public void getTerms() throws Exception {
         long applicationId = 3L;
         long compeitionId = 5L;
+        long organisationId = 6L;
         long questionId = 7L;
         String competitionTermsTemplate = "terms-template";
         boolean collaborativeApplication = false;
@@ -71,25 +71,26 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .build();
         ZonedDateTime termsAcceptedOn = now();
 
-        ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(applicationId, "compName", compeitionId, questionId,
-                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), termsAcceptedOn, true, additionalTerms);
+        ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(applicationId, "app", "compName", compeitionId, questionId, "question",
+                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), termsAcceptedOn, true, additionalTerms, true, "/blah");
 
-        when(applicationTermsModelPopulatorMock.populate(loggedInUser, applicationId, questionId, false)).thenReturn(viewModel);
+        when(applicationTermsModelPopulatorMock.populate(loggedInUser, applicationId, questionId, organisationId, false)).thenReturn(viewModel);
 
         setLoggedInUser(loggedInUser);
 
-        mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/terms-and-conditions", applicationId, questionId))
+        mockMvc.perform(get("/application/{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}/", applicationId, organisationId ,questionId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name("application/sections/terms-and-conditions/terms-and-conditions"));
 
-        verify(applicationTermsModelPopulatorMock, only()).populate(loggedInUser, applicationId, questionId, false);
+        verify(applicationTermsModelPopulatorMock, only()).populate(loggedInUser, applicationId, questionId, organisationId, false);
     }
 
     @Test
     public void getTerms_readOnly() throws Exception {
         long applicationId = 3L;
         long compeitionId = 5L;
+        long organisationId = 6L;
         long questionId = 7L;
         String competitionTermsTemplate = "terms-template";
         boolean collaborativeApplication = false;
@@ -101,24 +102,25 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .build();
         ZonedDateTime termsAcceptedOn = now();
 
-        ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(applicationId, "compeName", compeitionId, questionId,
-                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), termsAcceptedOn, true, additionalTerms);
+        ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(applicationId, "app", "compeName", compeitionId, questionId, "question",
+                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), termsAcceptedOn, true, additionalTerms, true, "/blah");
 
-        when(applicationTermsModelPopulatorMock.populate(loggedInUser, applicationId, questionId, true)).thenReturn(viewModel);
+        when(applicationTermsModelPopulatorMock.populate(loggedInUser, applicationId, questionId, organisationId, true)).thenReturn(viewModel);
 
         setLoggedInUser(loggedInUser);
 
-        mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/terms-and-conditions?readonly=true", applicationId, questionId))
+        mockMvc.perform(get("/application/{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}?readonly=true", applicationId, organisationId, questionId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name("application/sections/terms-and-conditions/terms-and-conditions"));
 
-        verify(applicationTermsModelPopulatorMock, only()).populate(loggedInUser, applicationId, questionId, true);
+        verify(applicationTermsModelPopulatorMock, only()).populate(loggedInUser, applicationId, questionId, organisationId,  true);
     }
 
     @Test
     public void acceptTerms() throws Exception {
         long questionId = 7L;
+        long orgId = 1l;
         CompetitionResource competition = newCompetitionResource()
                 .build();
 
@@ -134,20 +136,20 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .withApplication(application.getId())
                 .build();
 
-        when(userRestServiceMock.findProcessRole(processRole.getUser(), processRole.getApplicationId())).thenReturn(restSuccess(processRole));
+        when(processRoleRestServiceMock.findProcessRole(processRole.getUser(), processRole.getApplicationId())).thenReturn(restSuccess(processRole));
         when(questionStatusRestServiceMock.markAsComplete(questionId, application.getId(), processRole.getId())).thenReturn(restSuccess(emptyList()));
 
         ApplicationTermsForm form = new ApplicationTermsForm();
 
-        mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/terms-and-conditions", application.getId(), questionId)
+        mockMvc.perform(post("/application/{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}", application.getId(), orgId, questionId)
                 .param("agreed", "true"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().attribute("form", form))
                 .andExpect(model().hasNoErrors())
-                .andExpect(redirectedUrlTemplate("/application/{applicationId}/form/question/{questionId}/terms-and-conditions#terms-accepted", application.getId(), questionId));
+                .andExpect(redirectedUrlTemplate("/application/{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}#terms-accepted", application.getId(), orgId, questionId));
 
-        InOrder inOrder = inOrder(userRestServiceMock, questionStatusRestServiceMock);
-        inOrder.verify(userRestServiceMock).findProcessRole(processRole.getUser(), processRole.getApplicationId());
+        InOrder inOrder = inOrder(processRoleRestServiceMock, questionStatusRestServiceMock);
+        inOrder.verify(processRoleRestServiceMock).findProcessRole(processRole.getUser(), processRole.getApplicationId());
         inOrder.verify(questionStatusRestServiceMock).markAsComplete(questionId, application.getId(), processRole.getId());
         inOrder.verifyNoMoreInteractions();
     }
@@ -160,6 +162,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         boolean additionalTerms = true;
 
         long questionId = 7L;
+        long organisationId = 6L;
         CompetitionResource competition = newCompetitionResource()
                 .withId(5L)
                 .build();
@@ -169,25 +172,23 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .withCompetition(competition.getId())
                 .build();
 
-        SectionResource termsAndConditionsSection = newSectionResource().build();
-
         ProcessRoleResource processRole = newProcessRoleResource()
                 .withUser(getLoggedInUser())
                 .withApplication(application.getId())
                 .build();
 
-        when(userRestServiceMock.findProcessRole(processRole.getUser(), processRole.getApplicationId())).thenReturn(restSuccess(processRole));
+        when(processRoleRestServiceMock.findProcessRole(processRole.getUser(), processRole.getApplicationId())).thenReturn(restSuccess(processRole));
         when(questionStatusRestServiceMock.markAsComplete(questionId, application.getId(), processRole.getId()))
                 .thenReturn(restFailure(fieldError("agreed", "false", "")));
 
-        ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(application.getId(), "compName",competition.getId(), questionId,
-                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), null, true, additionalTerms);
+        ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(application.getId(), "app", "compName",competition.getId(), questionId, "question",
+                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), null, true, additionalTerms, true, "/blah");
 
-        when(applicationTermsModelPopulatorMock.populate(loggedInUser, application.getId(), questionId, false)).thenReturn(viewModel);
+        when(applicationTermsModelPopulatorMock.populate(loggedInUser, application.getId(), questionId, organisationId, false)).thenReturn(viewModel);
 
         ApplicationTermsForm form = new ApplicationTermsForm();
 
-        mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/terms-and-conditions", application.getId(), questionId)
+        mockMvc.perform(post("/application/{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}", application.getId(), organisationId, questionId)
                 .param("agreed", "false"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", form))
@@ -195,10 +196,10 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .andExpect(model().attributeHasFieldErrors("form", "agreed"))
                 .andExpect(view().name("application/sections/terms-and-conditions/terms-and-conditions"));
 
-        InOrder inOrder = inOrder(userRestServiceMock, questionStatusRestServiceMock, applicationTermsModelPopulatorMock);
-        inOrder.verify(userRestServiceMock).findProcessRole(processRole.getUser(), processRole.getApplicationId());
+        InOrder inOrder = inOrder(processRoleRestServiceMock, questionStatusRestServiceMock, applicationTermsModelPopulatorMock);
+        inOrder.verify(processRoleRestServiceMock).findProcessRole(processRole.getUser(), processRole.getApplicationId());
         inOrder.verify(questionStatusRestServiceMock).markAsComplete(questionId, application.getId(), processRole.getId());
-        inOrder.verify(applicationTermsModelPopulatorMock).populate(loggedInUser, application.getId(), questionId, false);
+        inOrder.verify(applicationTermsModelPopulatorMock).populate(loggedInUser, application.getId(), questionId, organisationId, false);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -220,7 +221,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(applicationTermsPartnerModelPopulatorMock.populate(application, questionId)).thenReturn(viewModel);
 
-        mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/terms-and-conditions/partner-status", application.getId(), questionId))
+        mockMvc.perform(get("/application/{applicationId}/form/terms-and-conditions/question/{questionId}/partner-status", application.getId(), questionId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name("application/sections/terms-and-conditions/terms-and-conditions-partner-status"));
@@ -247,7 +248,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         ApplicationTermsPartnerViewModel viewModel = new ApplicationTermsPartnerViewModel(application.getId(), "compName", questionId, emptyList());
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
-        mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/terms-and-conditions/partner-status", application.getId(), questionId))
+        mockMvc.perform(get("/application/{applicationId}/form/terms-and-conditions/question/{questionId}/partner-status", application.getId(), questionId))
                 .andExpect(status().isForbidden());
 
         InOrder inOrder = inOrder(applicationRestServiceMock, applicationTermsPartnerModelPopulatorMock);
@@ -271,7 +272,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         ApplicationTermsPartnerViewModel viewModel = new ApplicationTermsPartnerViewModel(application.getId(), "compName", questionId, emptyList());
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
-        mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/terms-and-conditions/partner-status", application.getId(), questionId))
+        mockMvc.perform(get("/application/{applicationId}/form/terms-and-conditions/question/{questionId}/partner-status", application.getId(), questionId))
                 .andExpect(status().isForbidden());
 
         InOrder inOrder = inOrder(applicationRestServiceMock, applicationTermsPartnerModelPopulatorMock);

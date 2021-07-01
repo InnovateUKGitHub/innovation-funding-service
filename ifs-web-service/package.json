@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "accessible-autocomplete": "^1.6.2",
+    "call-bind": "^1.0.2",
     "compass-importer": "^0.4.1",
     "cryptiles": "^4.1.2",
     "files-exist": "^1.1.0",
@@ -24,7 +25,8 @@
     "gulp-sass-lint": "^1.4.0",
     "gulp-standard": "^11.0.0",
     "gulp-uglify": "^3.0.0",
-    "jest": "^24.9.0"
+    "jest": "^24.9.0",
+    "lodash": "^4.17.20"
   },
   "engines": {
     "node": "^8.11.1"

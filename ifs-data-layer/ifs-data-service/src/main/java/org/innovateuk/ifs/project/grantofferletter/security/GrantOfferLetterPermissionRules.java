@@ -38,6 +38,13 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "DOWNLOAD_GRANT_OFFER",
+            description = "Auditor users can download grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
+    public boolean auditorUsersCanDownloadGrantOfferLetter(ProjectResource project, UserResource user) {
+        return hasAuditorAuthority(user);
+    }
+
+    @PermissionRule(
+            value = "DOWNLOAD_GRANT_OFFER",
             description = "Innovation lead users can download grant offer documents (Unsigned grant offer, signed grant offer, Additional contract), of projects from competition assigned to them")
     public boolean innovationLeadUsersCanDownloadGrantOfferLetter(ProjectResource project, UserResource user) {
         Application application = applicationRepository.findById(project.getApplication()).get();
@@ -76,6 +83,13 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_GRANT_OFFER",
+            description = "Auditor users can view grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
+    public boolean auditorUsersCanViewGrantOfferLetter(ProjectResource project, UserResource user) {
+        return hasAuditorAuthority(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_GRANT_OFFER",
             description = "Innovation lead users can view grant offer documents (Unsigned grant offer, signed grant offer, Additional contract), of projects from competition assigned to them")
     public boolean innovationLeadUsersCanViewGrantOfferLetter(ProjectResource project, UserResource user) {
         Application application = applicationRepository.findById(project.getApplication()).get();
@@ -109,6 +123,20 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
             description = "Project manager or Lead partner can upload signed grant offer letter")
     public boolean projectManagerCanUploadGrantOfferLetter(ProjectResource project, UserResource user) {
         return isProjectManager(project.getId(), user.getId()) && isProjectActive(project.getId());
+    }
+
+    @PermissionRule(
+            value = "UPLOAD_SIGNED_ADDITIONAL_CONTRACT",
+            description = "Lead partner can upload signed additional contract")
+    public boolean leadPartnerCanUploadSignedAdditionalContract(ProjectResource project, UserResource user) {
+        return isLeadPartner(project.getId(), user.getId()) && isProjectActive(project.getId());
+    }
+
+    @PermissionRule(
+            value = "UPLOAD_SIGNED_ADDITIONAL_CONTRACT",
+            description = "Finance contact can upload signed additional contract")
+    public boolean financeContactCanUploadSignedAdditionalContract(ProjectResource project, UserResource user) {
+        return isFinanceContact(project.getId(), user.getId()) && isProjectActive(project.getId());
     }
 
     @PermissionRule(
@@ -158,6 +186,13 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
             description = "Support users can view the send status of Grant Offer Letter for a project")
     public boolean supportUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
         return isSupport(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
+            description = "Auditor users can view the send status of Grant Offer Letter for a project")
+    public boolean auditorUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
+        return hasAuditorAuthority(user);
     }
 
     @PermissionRule(

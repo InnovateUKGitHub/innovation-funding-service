@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -60,7 +61,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -92,7 +93,7 @@ public class GrantMapperTest {
     private ProjectFinanceHandler projectFinanceHandler;
 
     @InjectMocks
-    protected GrantMapper grantMapper = new GrantMapper();
+    protected GrantMapper grantMapper;
 
     @Before
     public void setupMockInjection() {
@@ -108,12 +109,12 @@ public class GrantMapperTest {
 
         Project project = parameter.createProject();
 
-        when(formInputResponseRepository.findOneByApplicationIdAndFormInputDescription(project.getApplication().getId(), "Project summary"))
+        when(formInputResponseRepository.findOneByApplicationIdAndFormInputQuestionShortName(project.getApplication().getId(), "Project summary"))
                 .thenReturn(parameter.projectSummaryResponse());
-        when(formInputResponseRepository.findOneByApplicationIdAndFormInputDescription(project.getApplication().getId(), "Public description"))
+        when(formInputResponseRepository.findOneByApplicationIdAndFormInputQuestionShortName(project.getApplication().getId(), "Public description"))
                 .thenReturn(parameter.publicDescriptionResponse());
         when(spendProfileRepository.findOneByProjectIdAndOrganisationId(any(), any()))
-                .thenAnswer(i -> Optional.of(parameter.createSpendProfile()));
+                .thenAnswer(i -> Optional.of(parameter.createSpendProfile(project)));
 
         Map<FinanceRowType, FinanceRowCostCategory> industrialOrganisationFinances = asMap(
                 FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
@@ -122,6 +123,7 @@ public class GrantMapperTest {
                                 build(1)).
                         build());
         ProjectFinanceResource projectFinance = newProjectFinanceResource()
+                .withFecEnabled(parameter.fecModelEnabled())
                 .withFinanceOrganisationDetails(industrialOrganisationFinances)
                 .withMaximumFundingLevel(50)
                 .build();
@@ -153,9 +155,10 @@ public class GrantMapperTest {
         assertThat(grant.getStartDate(), equalTo(DEFAULT_START_DATE));
         assertThat(grant.getGrantOfferLetterDate(), equalTo(DEFAULT_GOL_DATE));
         assertThat(grant.getSourceSystem(), equalTo("IFS"));
+        assertThat(grant.getFecModelEnabled(), equalTo(parameter.fecModelEnabled()));
 
         // expect 1 Project Manager record, one Finance Contact record for each Organisation and 1 innovation lead record and 1 monitoring officer
-        int expectedNumberOfParticipantRecords = 1 + (parameter.partnerOrganisationCount) + 1 + 1;
+        int expectedNumberOfParticipantRecords = 1 + (parameter.participantCount()) + 1 + 1;
 
         assertThat(grant.getParticipants(), hasSize(expectedNumberOfParticipantRecords));
 
@@ -178,7 +181,9 @@ public class GrantMapperTest {
 
         forEachWithIndex(financeContactParticipants, (i, participant) -> {
 
-            assertThat(participant.getForecasts().size(), equalTo(parameter.costCategoryCount()));
+            int expectedForecasts = parameter.includeSubcontracting ? parameter.costCategoryCount() : parameter.costCategoryCount() + 1;
+            assertThat(participant.getForecasts().size(), equalTo(expectedForecasts));
+
             Forecast overheads = participant.getForecasts().stream()
                     .filter(forecast -> OVERHEADS.equals(forecast.getCostCategory()))
                     .findFirst()
@@ -192,6 +197,7 @@ public class GrantMapperTest {
             if (parameter.expectedOverheadRates().size() > i) {
                 assertThat(participant.getOverheadRate().longValue(), equalTo(parameter.expectedOverheadRates().get(i)));
             }
+            assertTrue(participant.getForecasts().stream().anyMatch(f -> "Subcontracting".equals(f.getCostCategory())));
         });
 
     }
@@ -199,9 +205,10 @@ public class GrantMapperTest {
     @Parameters
     public static Collection<Parameter> parameters() {
         return asList(
-                newParameter("basic", newProject()),
-                newParameter("single", newProject()).duration(1).expectedOverheads(10L)
-
+                newParameter("basic", newProject()).fundingType(FundingType.GRANT).fecModelEnabled(null),
+                newParameter("single", newProject()).fundingType(FundingType.GRANT).duration(1).expectedOverheads(10L).fecModelEnabled(null),
+                newParameter("no subcontracting", newProject()).fundingType(FundingType.KTP).withoutSubcontracting().fecModelEnabled(true),
+                newParameter("non fec model", newProject()).fundingType(FundingType.KTP).withoutSubcontracting().fecModelEnabled(false)
         );
     }
 
@@ -211,13 +218,11 @@ public class GrantMapperTest {
 
     private static class Parameter {
         private ProjectBuilder projectBuilder;
+        private boolean includeSubcontracting = true;
         private String name;
-        private List<FormInputResponse> formInputResponses = new ArrayList<>();
         private long competitionId = 2L;
         private long applicationId = 1L;
         private long projectId = 1L;
-        private String projectSummary;
-        private String publicDescription;
         private int duration = 12;
         private int partnerOrganisationCount = 3;
         private int costCategoryCount = 2;
@@ -225,28 +230,16 @@ public class GrantMapperTest {
         private int value = 10;
         private List<Long> expectedOverheads = Collections.singletonList(120L);
         private List<Long> expectedOverheadRates = Collections.singletonList(50L);
+        private FundingType fundingType;
+        private Boolean fecModelEnabled;
 
         private Parameter projectBuilder(ProjectBuilder projectBuilder) {
             this.projectBuilder = projectBuilder;
             return this;
         }
 
-        private ProjectBuilder projectBuilder() {
-            return projectBuilder;
-        }
-
-        private Parameter applicationId(long applicationId) {
-            this.applicationId = applicationId;
-            return this;
-        }
-
         private long applicationId() {
             return applicationId;
-        }
-
-        private Parameter competitionId(long competitionId) {
-            this.competitionId = competitionId;
-            return this;
         }
 
         private long competitionId() {
@@ -262,18 +255,8 @@ public class GrantMapperTest {
             return name;
         }
 
-        private Parameter participantCount(int participantCount) {
-            this.partnerOrganisationCount = participantCount;
-            return this;
-        }
-
         private int participantCount() {
             return partnerOrganisationCount;
-        }
-
-        private Parameter costCategoryCount(int costCategoryCount) {
-            this.costCategoryCount = costCategoryCount;
-            return this;
         }
 
         private int costCategoryCount() {
@@ -294,6 +277,11 @@ public class GrantMapperTest {
             return this;
         }
 
+        private Parameter withoutSubcontracting() {
+            this.includeSubcontracting = false;
+            return this;
+        }
+
         private List<Long> expectedOverheads() {
             return expectedOverheads;
         }
@@ -302,18 +290,17 @@ public class GrantMapperTest {
             return expectedOverheadRates;
         }
 
-        private Parameter expectedOverheadRates(Long... expectedOverheadRates) {
-            this.expectedOverheadRates = asList(expectedOverheadRates);
+        private Parameter fundingType(FundingType fundingType) {
+            this.fundingType = fundingType;
             return this;
         }
 
-
         private String publicDescription() {
-            return publicDescription == null ? name + " public description" : publicDescription;
+            return name + " public description";
         }
 
         private String projectSummary() {
-            return publicDescription == null ? name + " project summary" : projectSummary;
+            return name + " project summary";
         }
 
         private FormInputResponse projectSummaryResponse() {
@@ -341,18 +328,27 @@ public class GrantMapperTest {
             return formInputResponse;
         }
 
-        private SpendProfile createSpendProfile() {
+        private SpendProfile createSpendProfile(Project project) {
             List<Cost> eligibleCosts = new ArrayList<>();
             List<Cost> spendProfileFigures = new ArrayList<>();
             for (int costCategoryIndex = 0 ; costCategoryIndex < costCategoryCount ; costCategoryIndex++ ) {
                 for (int durationIndex = 0 ; durationIndex < duration ; durationIndex++ ) {
+
+                    String costCategoryName;
+                    if (costCategoryIndex == 0) {
+                        costCategoryName = OVERHEADS;
+                    } else if (costCategoryIndex == 1 && includeSubcontracting) {
+                        costCategoryName = "Subcontracting";
+                    } else {
+                        costCategoryName = "cost-" + costCategoryIndex;
+                    }
+
                     spendProfileFigures.add(new Cost(BigDecimal.valueOf(value))
                             .withTimePeriod(durationIndex, null, null, null)
-                            .withCategory(new CostCategory(costCategoryIndex == 0
-                                    ? OVERHEADS : "cost-" + costCategoryIndex)));
+                            .withCategory(new CostCategory(costCategoryName)));
                 }
             }
-            return new SpendProfile(null, null, null, eligibleCosts, spendProfileFigures, null, null, true);
+            return new SpendProfile(null, project, null, eligibleCosts, spendProfileFigures, null, null, true);
         }
 
         private Project createProject() {
@@ -406,11 +402,20 @@ public class GrantMapperTest {
                         newApplication()
                                 .withId(applicationId)
                                 .withCompetition(
-                                        newCompetition().withId(competitionId).build())
+                                        newCompetition().withId(competitionId).withFundingType(fundingType).build())
                                 .build())
                     .withProjectUsers(projectUsers)
                     .withProjectMonitoringOfficer(projectMonitoringOfficer)
                     .build();
+        }
+
+        private Parameter fecModelEnabled(Boolean fecModelEnabled) {
+            this.fecModelEnabled = fecModelEnabled;
+            return this;
+        }
+
+        private Boolean fecModelEnabled() {
+            return fecModelEnabled;
         }
     }
 }

@@ -21,7 +21,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -129,7 +129,7 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
         processRoles = newProcessRole()
                 .withId()
-                .withRole(Role.ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .withApplication(applications.get(0), applications.get(1))
                 .withUser(felixWilson, felixWilson)
                 .build(2);
@@ -144,7 +144,7 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
         processRoles.addAll(
                 newProcessRole()
-                        .withRole(Role.LEADAPPLICANT)
+                        .withRole(ProcessRoleType.LEADAPPLICANT)
                         .withApplication(applications.get(0), applications.get(1))
                         .withUser(steveSmith)
                         .withOrganisationId(organisations.get(0).getId(), organisations.get(1).getId())

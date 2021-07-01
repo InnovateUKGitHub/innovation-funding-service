@@ -16,7 +16,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:if="${model.competition.isClosingSoon()}" th:insert="fragments/elements :: competition-closing-warning" />
-        <th:block th:insert="fragments/elements :: competition-status-message (applicationState=${model.application.applicationState}, competition=${model.competition}, projectWithdrawn=${false})" />
+        <th:block th:insert="fragments/elements :: competition-status-message (applicationState=${model.application.applicationState}, competition=${model.competition}, projectWithdrawn=${false}, displayFeedback=${false})" />
 
         <th:block th:with="applicationName=${#strings.isEmpty(model.application.name)} ? #{ifs.application.no_title} : ${model.application.name}">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${applicationName},size='govuk-heading-xl'" />
@@ -51,9 +51,13 @@
                         <dd>Innovate UK</dd>
                         <dt>Application deadline:</dt>
                         <dd>
-                            <th:block
-                                th:text="${#strings.toLowerCase(#temporals.format(model.competition.endDate, 'hh:mma '))}"/>
-                            <th:block th:text="${#temporals.format(model.competition.endDate, 'EEEE d MMMM yyyy')}"/>
+                            <th:block th:if="${model.competition.alwaysOpen}">Decision pending</th:block>
+                            <th:block th:unless="${model.competition.alwaysOpen}">
+                                <th:block
+                                    th:text="${#strings.toLowerCase(#temporals.format(model.competition.endDate, 'hh:mma '))}"/>
+                                <th:block
+                                    th:text="${#temporals.format(model.competition.endDate, 'EEEE d MMMM yyyy')}"/>
+                            </th:block>
                         </dd>
                     </th:block>
                     <th:block th:if="${model.competition.isH2020()}">

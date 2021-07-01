@@ -15,7 +15,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +79,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                 .with(id(null))
                 .withUser(user)
                 .withApplication(application)
-                .withRole(Role.PANEL_ASSESSOR)
+                .withRole(ProcessRoleType.PANEL_ASSESSOR)
                 .build();
         processRoleRepository.save(processRole);
 
@@ -111,7 +111,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                 .with(id(null))
                 .withUser(user)
                 .withApplication(application)
-                .withRole(Role.PANEL_ASSESSOR)
+                .withRole(ProcessRoleType.PANEL_ASSESSOR)
                 .build();
         processRoleRepository.save(processRole);
 
@@ -146,7 +146,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                 .with(id(null))
                 .withUser(user)
                 .withApplication(application)
-                .withRole(Role.PANEL_ASSESSOR)
+                .withRole(ProcessRoleType.PANEL_ASSESSOR)
                 .build();
         processRoleRepository.save(processRole);
 
@@ -185,7 +185,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                 .with(id(null))
                 .withUser(user)
                 .withApplication(application)
-                .withRole(Role.PANEL_ASSESSOR)
+                .withRole(ProcessRoleType.PANEL_ASSESSOR)
                 .build();
         processRoleRepository.save(processRole);
 
@@ -226,7 +226,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                 .with(id(null))
                 .withUser(user)
                 .withApplication(application)
-                .withRole(Role.PANEL_ASSESSOR)
+                .withRole(ProcessRoleType.PANEL_ASSESSOR)
                 .build();
         processRoleRepository.save(processRole);
 
@@ -319,7 +319,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                 .with(id(null))
                 .withUser(user)
                 .withApplication(application)
-                .withRole(Role.PANEL_ASSESSOR)
+                .withRole(ProcessRoleType.PANEL_ASSESSOR)
                 .build();
         processRoleRepository.save(processRole);
 
@@ -373,7 +373,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                 .with(id(null))
                 .withUser(user)
                 .withApplication(application)
-                .withRole(Role.PANEL_ASSESSOR)
+                .withRole(ProcessRoleType.PANEL_ASSESSOR)
                 .build();
         processRoleRepository.save(processRole);
 

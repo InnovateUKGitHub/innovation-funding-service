@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.projectdetails.form.FinanceContactForm;
 import org.innovateuk.ifs.project.projectteam.viewmodel.FinanceContactViewModel;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -26,7 +27,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
-import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -57,7 +57,7 @@ public class FinanceContactController {
                                      Model model,
                                      @ModelAttribute(name = "form", binding = false) FinanceContactForm financeContactForm,
                                      UserResource loggedInUser) {
-        populateOriginalFinanceContactForm(projectId, financeContactForm);
+        populateOriginalFinanceContactForm(projectId, organisationId, financeContactForm);
         return doViewFinanceContact(model, projectId, organisationId, loggedInUser, financeContactForm);
     }
 
@@ -80,14 +80,14 @@ public class FinanceContactController {
         });
     }
 
-    private void populateOriginalFinanceContactForm(final long projectId, FinanceContactForm financeContactForm) {
-        Optional<ProjectUserResource> existingFinanceContact = getFinanceContact(projectId);
+    private void populateOriginalFinanceContactForm(final long projectId, long organisationId, FinanceContactForm financeContactForm) {
+        Optional<ProjectUserResource> existingFinanceContact = getFinanceContact(projectId, organisationId);
         financeContactForm.setFinanceContact(existingFinanceContact.map(ProjectUserResource::getUser).orElse(null));
     }
 
-    private Optional<ProjectUserResource> getFinanceContact(final long projectId) {
+    private Optional<ProjectUserResource> getFinanceContact(final long projectId, final long organisationId) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        return simpleFindFirst(projectUsers, pu -> FINANCE_CONTACT.getId() == pu.getRole());
+        return simpleFindFirst(projectUsers, pu -> ProjectParticipantRole.PROJECT_FINANCE_CONTACT == pu.getRole() && pu.getOrganisation().equals(organisationId));
     }
 
     private String doViewFinanceContact(Model model, long projectId, long organisationId, UserResource loggedInUser, FinanceContactForm form) {
@@ -101,7 +101,7 @@ public class FinanceContactController {
 
         ProjectResource projectResource = projectService.getById(projectId);
         CompetitionResource competition = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
-        FinanceContactViewModel viewModel = new FinanceContactViewModel(organisationProjectUsers, projectId, projectResource.getName(), competition.isLoan());
+        FinanceContactViewModel viewModel = new FinanceContactViewModel(organisationProjectUsers, projectId, projectResource.getName(), competition.isLoan(), competition.isKtp());
 
         model.addAttribute("form", form);
         model.addAttribute("model", viewModel);

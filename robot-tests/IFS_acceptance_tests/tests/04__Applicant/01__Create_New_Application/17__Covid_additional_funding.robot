@@ -129,8 +129,6 @@ External project finance can see Project team
 
 External project finance can see the application finances
     [Documentation]  IFS-7357
-    [Tags]    Pending
-    #Test case commented out until bug IFS-8242 is fixed
     Given the user clicks the button/link    link = ${application_id}
     And the user clicks the button/link      id = accordion-questions-heading-3-1
     When the user clicks the button/link     jQuery = tr:contains("Empire") a:contains("View finances")
@@ -139,8 +137,6 @@ External project finance can see the application finances
 
 External finance can access appendix
     [Documentation]  IFS-7552
-    [Tags]    Pending
-    #Test case commented out until bug IFS-8242 is fixed
     Given the user navigates to the page   ${server}/project-setup-management/competition/${COVIDcompetitionId}/status/all
     When the user clicks the button/link   link = ${application_id}
     Then open pdf link                     link = ${5mb_pdf}, 4 MB (opens in a new window)
@@ -164,7 +160,7 @@ External project finance can raise a query
 
 External project finance can raise a note
     [Documentation]  IFS-7357
-    Given the user clicks the button/link   css = .eligibility-0
+    Given the user clicks the button/link   css =table.table-progress tr:nth-child(1) td:nth-child(7)
     When the user raises a note
     Then the user should see the element    jQuery = h2:contains("an eligibility note's title")
 
@@ -214,12 +210,14 @@ Competition goes into previous
     Given the user clicks the button/link    jQuery = a:contains("Project setup (")
     And The user should not see the element  link = ${COVIDcompetitionTitle}
     when the user clicks the button/link     jQuery = a:contains("Previous (")
-    Then the user should see the element     link = ${COVIDcompetitionTitle}
+    Then The user should see the element in the paginated list       link = ${COVIDcompetitionTitle}
 
 *** Keywords ***
 Custom Suite Setup
     The user logs-in in new browser   &{lead_applicant_credentials}
     Set predefined date variables
+    ${today}  get today
+    set suite variable  ${today}
     Connect to database  @{database}
 
 Custom Suite teardown
@@ -323,8 +321,9 @@ the user can send successful funding notification
     the user clicks the button/link    link = Manage funding notifications
     the user selects the checkbox      app-row-${application_id}
     the user clicks the button/link    id = write-and-send-email
-    the user clicks the button/link    jQuery = button:contains("Send email")[data-js-modal = "send-to-all-applicants-modal"]
+    the user clicks the button/link    jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
     the user clicks the button/link    jQuery = .send-to-all-applicants-modal button:contains("Send email")
+    the user refreshes until element appears on page         jQuery = td:contains("${COVIDapplicationTitle1}") ~ td:contains("Sent")
 
 Complete all PS steps before finance
     Log in as a different user                            &{lead_applicant_credentials}
@@ -339,7 +338,7 @@ Complete all PS steps before finance
     the user selects the radio button                     projectManager    projectManager1
     the user clicks the button/link                       id = save-project-manager-button
     The user selects their finance contact                financeContact1
-    the user clicks the button/link                       link = Set up your project
+    the user clicks the button/link                       link = Return to set up your project
     the user clicks the button/link                       link = Documents
     the user clicks the button/link                       link = Exploitation plan
     the user uploads the file                             css = .inputfile  ${valid_pdf}
@@ -363,7 +362,6 @@ the user raises a query
     the user clicks the button/link                        css = .govuk-grid-column-one-half button[type = "submit"]  # Post query
 
 the user raises a note
-    the user clicks the button/link         jQuery = a:contains("Notes")
     the user should see the element         jQuery = h2:contains("Review notes")
     the user clicks the button/link         jQuery = .govuk-button:contains("Create a new note")
     the user enters text to a text field    id = noteTitle    an eligibility note's title

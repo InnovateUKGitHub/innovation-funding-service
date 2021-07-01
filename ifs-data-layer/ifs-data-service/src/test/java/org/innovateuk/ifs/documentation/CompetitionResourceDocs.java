@@ -3,6 +3,7 @@ package org.innovateuk.ifs.documentation;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
@@ -34,6 +35,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("milestones").description("List of milestone ids").optional(),
             fieldWithPath("competitionType").description("the competition type this competition belongs to").optional(),
             fieldWithPath("competitionTypeName").description("the name of the competition type this competition belongs to").optional(),
+            fieldWithPath("competitionTypeEnum").description("the enum of the competition type this competition belongs to").optional(),
             fieldWithPath("executive").description("the user id of the competition executive").optional(),
             fieldWithPath("executiveName").description("the name of the competition executive").optional(),
             fieldWithPath("leadTechnologist").description("the user id of the competition leadTechnologist").optional(),
@@ -55,21 +57,17 @@ public class CompetitionResourceDocs {
             fieldWithPath("activityCode").description("the activity code entered during competition setup").optional(),
             fieldWithPath("funders").description("the funders for this competition").optional(),
             fieldWithPath("useResubmissionQuestion").description("should applications include the default resubmission question").optional(),
-            fieldWithPath("assessorCount").description("How many assessors are required to assess each application").optional(),
-            fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess").optional(),
             fieldWithPath("applicationFinanceType").description("The type of finances for the application").optional(),
             fieldWithPath("setupComplete").description("Has the setup been completed and will move to open once past the open date").optional(),
             fieldWithPath("completionStage").description("The stage at which the Competition is deemed closed").optional(),
             fieldWithPath("nonIfs").description("Is this competition a non-ifs competition (not managed via IFS)").optional(),
             fieldWithPath("nonIfsUrl").description("The URL to apply to the competition if it is a non-ifs competition").optional(),
-            fieldWithPath("hasAssessmentPanel").description("Indicates if the competition will have an assessment panel stage").optional(),
-            fieldWithPath("hasInterviewStage").description("Indicates if the competition will have an interview stage").optional(),
             fieldWithPath("assessorFinanceView").description("Indicates if the competition will display an overview or a detailed view of the finances for the assessor").optional(),
             fieldWithPath("termsAndConditions").description("The terms and conditions template that applies to this competition").optional(),
-            fieldWithPath("locationPerPartner").description("Indicates if the project location per partner is required during project setup for this competition").optional(),
+            fieldWithPath("otherFundingRulesTermsAndConditions").description("The terms and conditions template that applies to this competition for its other funding rules").optional(),
             fieldWithPath("minProjectDuration").description("The minimum amount of weeks that projects under this competition should last").optional(),
             fieldWithPath("maxProjectDuration").description("The maximum amount of weeks that projects under this competition projects should last").optional(),
-            fieldWithPath("stateAid").description("Indicates if the competition has state aid eligibility").optional(),
+            fieldWithPath("fundingRules").description("Indicates if the competition has state aid eligibility, subsidy control eligibility, or none").optional(),
             fieldWithPath("grantClaimMaximums").description("List of grant claim maximums belonging to the competition").optional(),
             fieldWithPath("competitionDocuments").description("List of documents required during the project setup phase").optional(),
             fieldWithPath("nonFinanceType").description("Does the competition have finance questions").optional(),
@@ -85,6 +83,12 @@ public class CompetitionResourceDocs {
             fieldWithPath("modifiedOn").description("when the competition was modified").optional(),
             fieldWithPath("hasAssessmentStage").description("Does the competition has assessors.").optional(),
             fieldWithPath("covidType").description("The type of covid comp if any").optional(),
+            fieldWithPath("golTemplate").description("template").optional(),
+            fieldWithPath("alwaysOpen").description("Competition always open").optional(),
+            fieldWithPath("procurementMilestones").description("Does the competition have procurement milestones").optional(),
+            fieldWithPath("subsidyControl").description("Is the competition subsidy controlled").optional(),
+            fieldWithPath("hasBusinessAndFinancialInformationQuestion").description("Does the competition have the business and financial information question").optional(),
+            fieldWithPath("assessmentPeriods").description("The assessment periods on the competition").optional(),
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
@@ -118,8 +122,9 @@ public class CompetitionResourceDocs {
             .withNonIfsUrl("https://google.co.uk")
             .withMilestones(asList(1L, 2L, 3L))
             .withTermsAndConditions(new GrantTermsAndConditionsResource("T&C", "terms-and-conditions-template", 1))
-            .withStateAid(true)
+            .withFundingRules(FundingRules.STATE_AID)
             .withIncludeJesForm(true)
             .withFundingType(FundingType.PROCUREMENT)
-            .withCompetitionTerms((FileEntryResource) null);
+            .withCompetitionTerms((FileEntryResource) null)
+            .withAlwaysOpen(false);
 }

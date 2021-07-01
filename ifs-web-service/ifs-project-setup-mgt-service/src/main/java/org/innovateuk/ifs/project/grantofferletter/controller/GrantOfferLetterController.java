@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.CaseInsensitiveConverter;
@@ -16,11 +17,15 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterApprovalForm;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterLetterForm;
 import org.innovateuk.ifs.project.grantofferletter.populator.GrantOfferLetterTemplatePopulator;
+import org.innovateuk.ifs.project.grantofferletter.populator.KtpGrantOfferLetterTemplatePopulator;
+import org.innovateuk.ifs.project.grantofferletter.populator.ProcurementGrantOfferLetterTemplatePopulator;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
+import org.innovateuk.ifs.project.grantofferletter.template.resource.GolTemplateResource;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -41,6 +46,7 @@ import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static org.innovateuk.ifs.project.grantofferletter.template.resource.GolTemplateResource.DEFAULT_GOL_TEMPLATE;
 
 /**
  * This Controller handles Grant Offer Letter activity for the Internal Competition team members
@@ -63,6 +69,12 @@ public class GrantOfferLetterController {
     @Autowired
     private GrantOfferLetterTemplatePopulator grantOfferLetterTemplatePopulator;
 
+    @Autowired
+    private KtpGrantOfferLetterTemplatePopulator ktpGrantOfferLetterTemplatePopulator;
+
+    @Autowired
+    private ProcurementGrantOfferLetterTemplatePopulator procurementGrantOfferLetterTemplatePopulator;
+
     private static final String FORM_ATTR = "form";
     private static final String APPROVAL_FORM_ATTR = "approvalForm";
 
@@ -73,9 +85,9 @@ public class GrantOfferLetterController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @GetMapping("/send")
-    public String viewGrantOfferLetterSend(@P("projectId") @PathVariable Long projectId, Model model) {
+    public String viewGrantOfferLetterSend(@P("projectId") @PathVariable Long projectId, Model model, UserResource loggedInUser) {
         GrantOfferLetterLetterForm form = new GrantOfferLetterLetterForm();
-        return doViewGrantOfferLetterSend(projectId, model, form);
+        return doViewGrantOfferLetterSend(projectId, model, form, loggedInUser);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
@@ -84,8 +96,9 @@ public class GrantOfferLetterController {
                                        Model model,
                                        @ModelAttribute(FORM_ATTR) @Valid GrantOfferLetterLetterForm form,
                                        @SuppressWarnings("unused") BindingResult bindingResult,
-                                       ValidationHandler validationHandler) {
-        Supplier<String> failureView = () -> doViewGrantOfferLetterSend(projectId, model, form);
+                                       ValidationHandler validationHandler,
+                                       UserResource loggedInUser) {
+        Supplier<String> failureView = () -> doViewGrantOfferLetterSend(projectId, model, form, loggedInUser);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -97,8 +110,8 @@ public class GrantOfferLetterController {
 
     }
 
-    private String doViewGrantOfferLetterSend(Long projectId, Model model, GrantOfferLetterLetterForm form) {
-        GrantOfferLetterModel viewModel = populateGrantOfferLetterSendViewModel(projectId);
+    private String doViewGrantOfferLetterSend(Long projectId, Model model, GrantOfferLetterLetterForm form, UserResource loggedInUser) {
+        GrantOfferLetterModel viewModel = populateGrantOfferLetterSendViewModel(projectId, loggedInUser);
         GrantOfferLetterApprovalForm approvalForm = new GrantOfferLetterApprovalForm();
 
         model.addAttribute("model", viewModel);
@@ -114,8 +127,9 @@ public class GrantOfferLetterController {
                                              @ModelAttribute(FORM_ATTR) GrantOfferLetterLetterForm form,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
                                              ValidationHandler validationHandler,
-                                             Model model) {
-        return performActionOrBindErrorsToField(projectId, validationHandler, model, "grantOfferLetter", form, () -> {
+                                             Model model,
+                                             UserResource loggedInUser) {
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "grantOfferLetter", form, () -> {
 
             MultipartFile file = form.getGrantOfferLetter();
 
@@ -129,6 +143,15 @@ public class GrantOfferLetterController {
     public String removeGrantOfferLetterFile(@P("projectId") @PathVariable("projectId") final Long projectId) {
 
         grantOfferLetterService.removeGrantOfferLetter(projectId);
+
+        return redirectToGrantOfferLetterPage(projectId);
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_GRANT_OFFER_LETTER')")
+    @PostMapping("/reset")
+    public String resetGrantOfferLetterSection(@PathVariable("projectId") final Long projectId) {
+
+        grantOfferLetterService.resetGrantOfferLetter(projectId);
 
         return redirectToGrantOfferLetterPage(projectId);
     }
@@ -167,10 +190,10 @@ public class GrantOfferLetterController {
         return false;
     }
 
-    private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, String fieldName, GrantOfferLetterLetterForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
+    private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, GrantOfferLetterLetterForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
 
         Supplier<String> successView = () -> redirectToGrantOfferLetterPage(projectId);
-        Supplier<String> failureView = () -> doViewGrantOfferLetterSend(projectId, model, form);
+        Supplier<String> failureView = () -> doViewGrantOfferLetterSend(projectId, model, form, loggedInUser);
 
         return validationHandler.performActionOrBindErrorsToField(fieldName, failureView, successView, actionFn);
     }
@@ -219,6 +242,19 @@ public class GrantOfferLetterController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
+    @GetMapping("/signed-additional-contract")
+    public
+    @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadSignedAdditionalContractFile(
+            @PathVariable final long projectId) {
+
+        final Optional<ByteArrayResource> content = grantOfferLetterService.getSignedAdditionalContractFile(projectId);
+        final Optional<FileEntryResource> fileDetails = grantOfferLetterService.getSignedAdditionalContractFileDetails(projectId);
+
+        return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @PostMapping(params = "uploadAnnexClicked", value = "/upload-annex")
     public String uploadAnnexFile(
             @P("projectId") @PathVariable("projectId") final Long projectId,
@@ -228,7 +264,7 @@ public class GrantOfferLetterController {
             Model model,
             UserResource loggedInUser) {
 
-        return performActionOrBindErrorsToField(projectId, validationHandler, model, "annex", form, () -> {
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser,"annex", form, () -> {
 
             MultipartFile file = form.getAnnex();
 
@@ -237,7 +273,7 @@ public class GrantOfferLetterController {
         });
     }
 
-    private GrantOfferLetterModel populateGrantOfferLetterSendViewModel(Long projectId) {
+    private GrantOfferLetterModel populateGrantOfferLetterSendViewModel(Long projectId, UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
@@ -248,13 +284,17 @@ public class GrantOfferLetterController {
 
         Optional<FileEntryResource> signedGrantOfferLetterFile = grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId);
 
+        Optional<FileEntryResource> signedAdditionalContractFile = grantOfferLetterService.getSignedAdditionalContractFileDetails(projectId);
+
         GrantOfferLetterStateResource golState = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
 
         return new GrantOfferLetterModel(
                 competition.isProcurement() ? "Contract" : "Grant offer letter",
                 competition.isProcurement() ? "Contract" : "Letter",
                 competition.getId(),
+                competition.isProcurement(),
                 competition.isH2020(),
+                competition.isKtp(),
                 grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
                 projectId,
@@ -263,18 +303,30 @@ public class GrantOfferLetterController {
                 grantOfferFileDetails.isPresent(),
                 additionalContractFile.isPresent(),
                 signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
+                signedAdditionalContractFile.map(FileDetailsViewModel::new).orElse(null),
                 golState,
                 project.getGrantOfferLetterRejectionReason(),
                 project.getProjectState(),
-                project.isUseDocusignForGrantOfferLetter());
+                project.isUseDocusignForGrantOfferLetter(),
+                loggedInUser.hasAuthority(Authority.SUPER_ADMIN_USER),
+                loggedInUser.hasAuthority(Authority.AUDITOR));
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @GetMapping("/template")
     public String viewGrantOfferLetterTemplatePage(@PathVariable("projectId") long projectId,
                                                    Model model) {
-        model.addAttribute("model", grantOfferLetterTemplatePopulator.populate(projectId));
-        return "project/gol-template";
+        ProjectResource project = projectService.getById(projectId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+        GolTemplateResource template = competition.getGolTemplate();
+        if (template.getName().equals(DEFAULT_GOL_TEMPLATE)) {
+            model.addAttribute("model", grantOfferLetterTemplatePopulator.populate(project, competition));
+        } else if (template.getName().equals(FundingType.KTP.getGolType())) {
+            model.addAttribute("model", ktpGrantOfferLetterTemplatePopulator.populate(project));
+        } else if (template.getName().equals(FundingType.PROCUREMENT.getGolType())) {
+            model.addAttribute("model", procurementGrantOfferLetterTemplatePopulator.populate(project, competition));
+        }
+        return "project/" + template.getTemplate();
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {

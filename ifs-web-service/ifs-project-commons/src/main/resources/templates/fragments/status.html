@@ -14,8 +14,10 @@
                     <th class="govuk-table__header" scope="col">Project</th>
                     <th:block th:each="column : ${model.columns}">
                         <th class="govuk-table__header status" scope="col">
+                            <th:block th:if="${model.isLoan && column == T(org.innovateuk.ifs.project.internal.ProjectSetupStage).PROJECT_SETUP_COMPLETE}">Complete project setup</th:block>
                             <th:block th:if="${model.procurement && column == T(org.innovateuk.ifs.project.internal.ProjectSetupStage).GRANT_OFFER_LETTER}">Contract</th:block>
-                            <th:block th:unless="${model.procurement && column == T(org.innovateuk.ifs.project.internal.ProjectSetupStage).GRANT_OFFER_LETTER}"
+                            <th:block th:unless="${(model.procurement && column == T(org.innovateuk.ifs.project.internal.ProjectSetupStage).GRANT_OFFER_LETTER) or
+                            (model.isLoan && column == T(org.innovateuk.ifs.project.internal.ProjectSetupStage).PROJECT_SETUP_COMPLETE)}"
                                       th:text="${column.shortName}"></th:block>
 
                         </th>
@@ -78,11 +80,11 @@
                 </tbody>
                 <tfoot class="govuk-table__foot bank-export">
                 <tr class="govuk-table__row" th:if="${model.canExportBankDetails}">
-                    <td class="govuk-table__cell" colspan="5"></td>
+                    <td class="govuk-table__cell" th:colspan="${model.columnsBeforeBankDetails}"></td>
                     <td class="govuk-table__cell aligncentre">
                         <a th:href="@{/competition/{competitionId}/status/bank-details/export(competitionId=${model.competitionId})}" class="govuk-link">Export all bank details</a>
                     </td>
-                    <td class="govuk-table__cell" colspan="3"></td>
+                    <td class="govuk-table__cell" th:colspan="${model.columnsAfterBankDetails}"></td>
                 </tr>
                 </tfoot>
             </table>

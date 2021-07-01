@@ -9,6 +9,8 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...
 ...               INFUND-4807 As an applicant (lead) I want to be able to remove an invited collaborator who is still pending registration...
 ...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown
 Force Tags        Applicant  AuthServiceTests
@@ -75,7 +77,7 @@ Complete account verification
     Then the user should be redirected to the correct page     ${REGISTRATION_VERIFIED}
 
 Partner should be able to log-in and see the new company name
-    [Documentation]    INFUND-2083  IFS-951
+    [Documentation]    INFUND-2083  IFS-951  IFS-7723
     ...
     ...    INFUND-7976
     [Tags]  HappyPath
@@ -87,10 +89,10 @@ Partner should be able to log-in and see the new company name
     [Teardown]    the user navigates to the page                                 ${APPLICANT_DASHBOARD_URL}
 
 Partner can invite others to his own organisation
-    [Documentation]    INFUND-2335  INFUND-7977
+    [Documentation]    INFUND-2335  INFUND-7977  IFS-7723
     Given the user clicks the button/link                      link = Invite robot test application
     And the user clicks the button/link                        link = Application team
-    When the user clicks the button/link                       jQuery = button:contains("Add person to NOMENSA LTD")
+    When the user clicks the button/link                       jQuery = button:contains("Add person to FIRSTGROUP PLC")
     And the user invites a person to the same organisation     Mark  mark21@innovateuk.com
     Then The user should see the element                       jQuery = td:contains("Mark (pending for")
 
@@ -162,7 +164,7 @@ the user can see the updated company name throughout the application
     Given the user navigates to the page     ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link      link = ${application_name}
     When the user clicks the button/link     link = Application team
-    Then the user should see the element     jQuery = h2:contains("NOMENSA LTD")
+    Then the user should see the element     jQuery = h2:contains("FIRSTGROUP PLC")
     And the user should see the element      jQuery = td:contains("Type")+td:contains("Business")
 
 the user creates an account and signs in
@@ -196,7 +198,7 @@ the user accepts invitation
     the user clicks the button/link                          jQuery = .govuk-button:contains("Yes, accept invitation")
     the user selects the radio button                        organisationTypeId    1
     the user clicks the button/link                          jQuery = .govuk-button:contains("Save and continue")
-    the user selects his organisation in Companies House     Nomensa  NOMENSA LTD
+    the user selects his organisation in Companies House     FIRSTGROUP  FIRSTGROUP PLC
 
 the user still sees pending user
     the user clicks the button/link    link = Invite robot test application

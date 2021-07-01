@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSI
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -32,11 +32,14 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     @Mock
     private UserService userService;
 
+    @Mock
+    private ProcessRoleRestService processRoleRestService;
+
     private UserResource user;
 
     @Override
     protected OrganisationService supplyServiceUnderTest() {
-        return new OrganisationServiceImpl(organisationRestService, userRestService, userService);
+        return new OrganisationServiceImpl(organisationRestService, userRestService, processRoleRestService, userService);
     }
 
     @Before
@@ -58,12 +61,12 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
                 .withOrganisation(organisation.getId())
                 .build();
 
-        when(userRestService.findProcessRole(user.getId(), processRole.getApplicationId())).thenReturn(restSuccess(processRole));
+        when(processRoleRestService.findProcessRole(user.getId(), processRole.getApplicationId())).thenReturn(restSuccess(processRole));
         when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
 
         Long returnedOrganisationType = service.getOrganisationType(user.getId(), processRole.getApplicationId());
 
-        verify(userRestService, times(1)).findProcessRole(user.getId(), processRole.getApplicationId());
+        verify(processRoleRestService, times(1)).findProcessRole(user.getId(), processRole.getApplicationId());
         verify(organisationRestService, times(1)).getOrganisationById(organisation.getId());
         verifyNoMoreInteractions(userRestService);
         verifyNoMoreInteractions(organisationRestService);

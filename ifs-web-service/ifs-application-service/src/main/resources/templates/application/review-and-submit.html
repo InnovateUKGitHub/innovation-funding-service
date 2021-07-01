@@ -42,7 +42,7 @@
         <th:block th:if="${model.competition.isH2020()}"
                   th:insert="fragments/elements :: h2020-information-panel" />
 
-        <th:block th:insert="fragments/elements :: competition-status-message (applicationState=${model.application.applicationState}, competition=${model.competition}, projectWithdrawn=${false})" />
+        <th:block th:insert="fragments/elements :: competition-status-message (applicationState=${model.application.applicationState}, competition=${model.competition}, projectWithdrawn=${false}, displayFeedback=${false})" />
 
         <p class="hint govuk-body-l govuk-!-margin-top-6">
             Please review your application before final submission. Any highlighted sections are incomplete and need further information from you.
@@ -57,6 +57,11 @@
         </div>
         <div th:if="${model.competition.isOpen() and model.application.isOpen()}" class="govuk-!-margin-top-9">
             <th:block th:if="${model.userIsLeadApplicant}">
+
+                <div th:if="${model.competition.hasBusinessAndFinancialInformationQuestion}" class="message-alert">
+                    <p class="govuk-body">You must ensure that the business information and financial spreadsheet have been completed before you click submit below.
+                    Your loan application cannot be considered without these.</p>
+                </div>
 
                  <form id="submit-application-form" class="govuk-!-margin-top-6" th:object="${form}" th:action="@{/application/{id}/confirm-submit(id=${applicationId})}" novalidate="novalidate" method="post">
                     <button id="submit-application-button"

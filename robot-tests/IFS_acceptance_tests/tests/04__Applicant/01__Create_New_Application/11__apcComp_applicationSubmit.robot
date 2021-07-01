@@ -11,6 +11,10 @@ Documentation     IFS-2284 Assign new Ts and Cs for APC competition type templat
 ...
 ...               IFS-7718 EDI question - application form
 ...
+...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
+...               IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -21,19 +25,19 @@ Resource          ../../../resources/common/Competition_Commons.robot
 ${apcCompetitionTitle}         Advanced Propulsion Centre Competition
 ${apcApplicationTitle}         Advanced Propulsion Centre Application
 ${submittedapplication}        ${server}/management/competition
-${termaandconditionsHeading}   Innovate UK grant terms and conditions for an Advanced Propulsion Centre UK Ltd competition
+${termaandconditionsHeading}    Innovate UK terms and conditions of an Advanced Propulsion Centre competition grant award
 
 *** Test Cases ***
 Comp Admin creates an APC competition
-    [Documentation]  IFS-2284, IFS-2286
-    Given The user logs-in in new browser           &{Comp_admin1_credentials}
-    Then the competition admin creates competition  ${business_type_id}  ${apcCompetitionTitle}  APC  ${compType_APC}  1  GRANT  PROJECT_SETUP  yes  1  true  single
+    [Documentation]  IFS-2284, IFS-2286  IFS-8847
+    Given The user logs-in in new browser            &{Comp_admin1_credentials}
+    Then the competition admin creates competition   ${business_type_id}  ${apcCompetitionTitle}  APC  ${compType_APC}  SUBSIDY_CONTROL  GRANT  PROJECT_SETUP  yes  1  true  single  No
 
 Applicant applies to newly created APC competition
     [Documentation]  IFS-2286  IFS-4221  IFS-4222
-    [Setup]   get competition id and set open date to yesterday  ${apcCompetitionTitle}
-    Given Log in as a different user                        &{lead_applicant_credentials}
-    Then logged in user applies to competition              ${apcCompetitionTitle}  1
+    [Setup]   get competition id and set open date to yesterday      ${apcCompetitionTitle}
+    Given log in as a different user                                 &{lead_applicant_credentials}
+    Then logged in user applies to competition                       ${apcCompetitionTitle}  1
     And the applicant cannot add a collaborator to a single comp
     And the applicant sees single comp finance summary
 
@@ -43,8 +47,8 @@ Applicant submits his application
     When the user fills in the Application details                                 ${apcApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant marks EDI question as complete
     Then the lead applicant fills all the questions and marks as complete(APC)
-    When the user navigates to Your-finances page       ${apcApplicationTitle}
-    And the user marks the finances as complete         ${apcApplicationTitle}     labour costs  54,000  yes
+    When the user navigates to Your-finances page                                  ${apcApplicationTitle}
+    And the user marks the finances as complete                                    ${apcApplicationTitle}     labour costs  54,000  yes
     And the user accept the competition terms and conditions                       Return to application overview
     Then the applicant submits the application
 
@@ -52,8 +56,8 @@ The internal user checks accepted terms and conditions for submitted application
     [Documentation]  IFS-5920
     [Setup]  Get competitions id and set it as suite variable   ${apcCompetitionTitle}
     ${acpapplicationId} =  get application id by name  ${apcApplicationTitle}
-    Given log in as a different user                   &{Comp_admin1_credentials}
-    Then the internal user should see read only view of terms and conditions   ${submittedapplication}/${competitionId}/applications/submitted   ${acpapplicationId}   ${termaandconditionsHeading}
+    Given log in as a different user                                            &{Comp_admin1_credentials}
+    Then the internal user should see read only view of terms and conditions    ${submittedapplication}/${competitionId}/applications/submitted   ${acpapplicationId}   ${termaandconditionsHeading}  Advanced Propulsion Centre (APC) - Subsidy control
 
 *** Keywords ***
 Custom Suite Setup

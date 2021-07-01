@@ -18,7 +18,11 @@ version project.version
 apply plugin: 'idea'
 
 buildscript {
-    repositories { jcenter() }
+    repositories {
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://plugins.gradle.org/m2/"}
+        mavenCentral()
+    }
 }
 
 task prepareDockerFile {
@@ -43,11 +47,11 @@ task prepareDockerFile {
 }
 
 buildDocker.dependsOn prepareDockerFile
-project.version = spVersion
-tagDocker.tag = spVersion
-osStageRemote.tag = spVersion
-tagDockerLocal.tag = spVersion
-osStageLocal.tag = spVersion
+project.version = nexusVersion
+tagDocker.tag = nexusVersion
+osStageRemote.tag = nexusVersion
+tagDockerLocal.tag = nexusVersion
+osStageLocal.tag = nexusVersion
 
 createContainer.containerName = "shib"
 createContainer.containerId = "shib"

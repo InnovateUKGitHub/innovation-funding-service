@@ -59,7 +59,7 @@
                 <elementProp name="j_password" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.name">j_password</stringProp>
-                  <stringProp name="Argument.value">Passw0rd</stringProp>
+                  <stringProp name="Argument.value">Passw0rd1357</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 </elementProp>
@@ -12347,7 +12347,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
               <elementProp name="j_password" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">j_password</stringProp>
-                <stringProp name="Argument.value">Passw0rd</stringProp>
+                <stringProp name="Argument.value">Passw0rd1357</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>

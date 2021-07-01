@@ -23,6 +23,12 @@ Documentation     INFUND-6661 As a Competitions team member I want to be able to
 ...
 ...               IFS-7195  Organisational eligibility category in Competition details
 ...
+...               IFS-7958  KTP Your Project Finances - Funding Breakdown
+...
+...               IFS-6775 Initial details type ahead
+...
+...               IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -84,13 +90,15 @@ Assessed Questions are editable (Ready to Open)
     And the user clicks the button/link     link = Return to application questions
 
 Finances are editable (Ready to Open)
-    [Documentation]  INFUND-6941
+    [Documentation]  INFUND-6941  IFS-7958
     [Tags]
-    When The user clicks the button/link         link = Finances
-    And the user should see the element          jQuery = h1:contains("Finances")
-    When the user clicks the button/link         jQuery = a:contains("Edit this question")
-    And the user clicks the button/link          jQuery = button:contains("Done")
-    [Teardown]  the user clicks the button/link  link = Competition details
+    Given the user navigates to the page               ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
+    When The user clicks the button/link               link = Finances
+    And the user should see the element                jQuery = h1:contains("Finances")
+    When the user clicks the button/link               jQuery = a:contains("Edit this question")
+    Then if textarea is empty user enters the text
+    And the user clicks the button/link                jQuery = button:contains("Done")
+    [Teardown]  the user clicks the button/link        link = Back to competition details
 
 Project eligibility is editable (Ready to Open)
     [Documentation]    INFUND-6792
@@ -109,7 +117,7 @@ Organisational eligibility is editable (Ready to Open)
     And the user clicks the button/link                      jQuery = button:contains("Edit")
     When the user selects the radio button                   internationalOrganisationsApplicable       false
     And the user clicks the button/link                      jQuery = button:contains("Save and continue")
-    And the user clicks the button/link                      link = Competition details
+    And the user clicks the button/link                      link = Back to competition details
     Then the user should see the element                     jQuery = li:contains("Organisational eligibility") .task-status-complete
 
 Funding Information is editable (Open)
@@ -129,13 +137,14 @@ Funding Information is editable (Open)
     And the user clicks the button/link         jQuery = button:contains("Done")
     Then The user should see the element        jQuery = button:contains("Edit")
     And The user should see the element         jQuery = td:contains("Aerospace Technology Institute (ATI)")
-    [Teardown]    the user clicks the button/link  link = Competition details
+    [Teardown]    the user clicks the button/link  link = Back to competition details
 
 Milestones are editable (Open)
-    [Documentation]    INFUND-6694
+    [Documentation]    INFUND-6694  IFS-8847
     [Tags]
     When the user clicks the button/link                     link = Milestones
     And the user clicks the button/link                      jQuery = a:contains("Next")
+    And the user clicks the button/link                      jQuery = span:contains("Milestones")
     And the user clicks the button/link                      jQuery = button:contains(Edit)
     Then the user should see that the element is disabled    css = tr:nth-child(1) .year input
     And the user should see that the element is disabled     css = tr:nth-child(2) .year input
@@ -144,7 +153,7 @@ Milestones are editable (Open)
     And the user clicks the button/link                      jQuery = .govuk-button:contains("Edit")
     And the user resets the milestone data
     And the user clicks the button/link                      jQuery = button:contains(Done)
-    [Teardown]    the user clicks the button/link            link = Competition details
+    [Teardown]    the user clicks the button/link            link = Back to competition details
 
 Application details are not editable (Open)
     [Documentation]    INFUND-6937
@@ -160,12 +169,12 @@ Assessed Questions are not editable (Open)
     When the user clicks the button/link             jQuery = a:contains("Business opportunity")
     And the user should see the element              jquery = h1:contains("Business opportunity")
     Then the user should not see the element         jquery = .govuk-button:contains("Edit")
-    [Teardown]    The user clicks the button/link    link = Application
+    [Teardown]    The user clicks the button/link    link = Back to application
 
 Project eligibility is not editable (Open)
     [Documentation]    INFUND-6792
     [Tags]
-    [Setup]    The user clicks the button/link       link = Competition details
+    [Setup]    The user clicks the button/link       link = Back to competition details
     When The user clicks the button/link             link = Project eligibility
     And the user should see the element              jquery = h1:contains("Project eligibility")
     Then The user should not see the element         css = input
@@ -215,8 +224,8 @@ Finances not editable (Open)
     [Teardown]    The user clicks the button/link    link = Return to application questions
 
 Initial details editable before notify date (Open)
-    [Documentation]    INFUND-6661  IFS-4982
-    [Setup]    the user clicks the button/link              link = Competition details
+    [Documentation]    INFUND-6661  IFS-4982  IFS-6775
+    [Setup]    the user clicks the button/link              link = Back to competition details
     Given the user clicks the button/link                   link = Initial details
     And the user clicks the button/link                     jQuery = .govuk-button:contains("Edit")
     And the user should see the element                     jQuery = dt:contains("Funding type") ~ dd:contains("Grant")
@@ -224,13 +233,13 @@ Initial details editable before notify date (Open)
     And the user should see the element                     jQuery = dt:contains("Opening date") ~ dd:contains("9 April 2018")
     And the user should see that the element is disabled    id = innovationSectorCategoryId
     And the user should see that the element is disabled    name = innovationAreaCategoryIds[0]
-    When the user selects the option from the drop-down menu    Ian Cooper    id = innovationLeadUserId
-    And the user selects the option from the drop-down menu     John Doe    id = executiveUserId
+    When the user selects option from type ahead            innovationLeadUserId  i  Ian Cooper
+    And the user selects option from type ahead             executiveUserId  j  John Doe
     And the user clicks the button/link                     jQuery = button:contains("Done")
     Then the user should see the element                    jQuery = .govuk-button:contains("Edit")
     And The user should see the element                     jQuery = dt:contains("Competition Lead") ~ dd:contains("Ian Cooper")
     And The user should see the element                     jQuery = dt:contains("Portfolio Manager") ~ dd:contains("John Doe")
-    [Teardown]    the user clicks the button/link           link = Competition details
+    [Teardown]    the user clicks the button/link           link = Back to competition details
 
 Assessors editable before Notifications Date (Open)
     [Documentation]  INFUND-6695 IFS-380
@@ -255,7 +264,7 @@ Initial details not editable after notify date (Open)
     Given the user clicks the button/link            link = Initial details
     Then the user should not see the element         jQuery = .govuk-button:contains("Edit")
     And the user should not see the element          jQuery = button:contains("Done")
-    [Teardown]    the user clicks the button/link    link = Competition details
+    [Teardown]    the user clicks the button/link    link = Back to competition details
 
 Funding Information not editable after notifications date (Open)
     [Documentation]    INFUND-7183
@@ -265,7 +274,7 @@ Funding Information not editable after notifications date (Open)
     Then The user should not see the element         css = input
     And The user should not see the element          jQuery = .govuk-button:contains("Edit")
     And The user should not see the element          jQuery = button:contains("Done")
-    [Teardown]    the user clicks the button/link    link = Competition details
+    [Teardown]    the user clicks the button/link    link = Back to competition details
 
 Assessors not editable after Notifications Date (Open)
     [Documentation]    INFUND-6695
@@ -316,11 +325,11 @@ return the database to its previous status
     execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE `id`='6';
 
 the user moves the competition back again
-    the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION2}/section/application/landing-page
-    the user clicks the button/link    jQuery = button:contains("Done")   # this action  is marking appication section complete
-    the user clicks the button/link    link = Competition details
-    the user clicks the button/link    jQuery = a:contains("Complete setup")
-    the user clicks the button/link    css = button[type="submit"]
+    the user navigates to the page       ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
+    the user clicks the button/link      jQuery = button:contains("Done")   # this action  is marking appication section complete
+    the user clicks the button/link      link = Back to competition details
+    the user clicks the button/link      jQuery = a:contains("Complete setup")
+    the user clicks the button/link      css = button[type="submit"]
     the user closes the browser
 
 the user fills in the milestone data with valid information
@@ -371,13 +380,10 @@ the user resets the milestone data
     The user resets the milestone data for milestone    NOTIFICATIONS    ${createApplicationOpenCompetitionId}
     The user resets the milestone data for milestone    RELEASE_FEEDBACK    ${createApplicationOpenCompetitionId}
 
-if textarea is empty the proper validation messages are shown
+if textarea is empty user enters the text
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the text in the element  css = .editor  Funding rules for this competition are now entered.
     run keyword if  '${status}'=='FAIL'  Run keywords  Set Focus To Element     css = .editor
-    ...                                           AND  Set Focus To Element     css = .govuk-button[type="submit"]
-    ...                                           AND  the user should see a field error  ${empty_field_warning_message}
-    ...                                           AND  the user clicks the button/link  css = .govuk-button[type="submit"]
-    ...                                           AND  the user should see a field and summary error  ${empty_field_warning_message}
+     ...                                          AND  Set Focus To Element     css = .govuk-button[type="submit"]
     ...                                           AND  the user enters text to a text field  css=.editor  Funding rules for this competition are now entered.
 
 the user resets the milestone data for milestone

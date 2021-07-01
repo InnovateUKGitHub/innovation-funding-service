@@ -3,6 +3,8 @@ package org.innovateuk.ifs.application.forms.controller;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +39,7 @@ public class ApplicationAjaxControllerTest extends AbstractApplicationMockMVCTes
     @Before
     public void setUpData() {
 
-        this.setupCompetition();
+        this.setupCompetition(FundingType.GRANT, AssessorFinanceView.OVERVIEW);
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
         this.setupFinances();
@@ -61,7 +63,6 @@ public class ApplicationAjaxControllerTest extends AbstractApplicationMockMVCTes
                         .param("formInputId", formInputId.toString())
                         .param("fieldName", "formInput[" + formInputId + "]")
                         .param("value", value)
-                        .param("multipleChoiceOptionId", "")
         ).andExpect(status().isOk());
 
         Mockito.inOrder(formInputResponseRestService).verify(formInputResponseRestService, calls(1)).saveQuestionResponse(loggedInUser.getId(), application.getId(), formInputId, value, null, false);

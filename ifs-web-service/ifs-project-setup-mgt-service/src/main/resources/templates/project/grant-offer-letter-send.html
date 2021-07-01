@@ -7,6 +7,7 @@
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/modals :: modal-accept-signed-gol" />
 <th:block th:insert="fragments/modals :: modal-reject-signed-gol" />
+<th:block th:insert="fragments/modals :: modal-reset-grant-offer-letter" />
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
@@ -49,6 +50,22 @@
             <p class="govuk-body" th:text="${model.getGrantOfferLetterRejectionReason()}"></p>
         </div>
 
+        <th:block th:if="${model.isSuperAdmin}">
+            <th:block th:if="${model.isShowResetGrantOfferLetterButton()}">
+                <th:block th:if="${model.grantOfferLetterFileContentAvailable}">
+                    <a class="govuk-button govuk-!-margin-top-3"
+                       data-js-modal="modal-reset-grant-offer-letter"
+                       th:href="${removeActionNonJs}"
+                       th:attr="data-modal-form-action=${removeAction}"
+                       th:text="${model.procurement} ? 'Reset contract' : 'Reset grant offer letter'"
+                       th:with="removeAction=@{/project/{projectId}/grant-offer-letter/reset(projectId=${model.projectId})},
+                                removeActionNonJs=@{/project/{projectId}/grant-offer-letter/reset(projectId=${model.projectId})}">
+                        Reset grant offer letter
+                    </a>
+                </th:block>
+            </th:block>
+        </th:block>
+
         <th:block th:unless="${model.getSignedGrantOfferLetterApproved()}">
             <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
                 <p class="govuk-body" th:text="|Please review the ${model.title.toLowerCase()}. You should confirm that it has been signed by the lead partner and that the project is ready to begin.|"></p>
@@ -64,7 +81,7 @@
         </p>
 
         <ol class="govuk-list govuk-list--number">
-            <li><th:block th:text="|Copy the whole ${model.title.toLowerCase()} and paste it into the|"></th:block> <a href="/files/GOL_template.docx" class="govuk-link">template document</a>.</li>
+            <li><th:block th:text="|Copy the ${model.title.toLowerCase()} and paste it into the relevant section of the|"></th:block> <a th:href="${model.procurement} ? '/files/SBRI_contract_template.docx' : '/files/GOL_template.docx'" class="govuk-link">template document</a>.</li>
             <li>Edit it only if your changes have been fully approved.</li>
             <li>Use the additional information box to get details for your edits.</li>
             <li>Delete the additional information box.</li>
@@ -91,7 +108,7 @@
                         </ul>
                     </div>
                 </details>
-                <th:block th:with="uploadViewmode=${model.projectIsActive} ? 'edit' : 'readonly',
+                <th:block th:with="uploadViewmode=${model.projectIsActive and !model.isReadOnly()} ? 'edit' : 'readonly',
                                downloadUrl=@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})},
                                filename=${model.grantOfferLetterFile?.filename},
                                inputField='grantOfferLetter',
@@ -105,16 +122,15 @@
             </form>
         </div>
 
-        <h2 class="govuk-heading-m">Annex</h2>
-        <p class="govuk-body" th:unless="${model.additionalContractFile}">The annex contains any additional contracts
-            that were agreed upon during the application. In signing the <th:block th:text="|${model.title.toLowerCase()}|"></th:block> you also agree to any
-            conditions stated in the annex.</p>
+        <h2 class="govuk-heading-m govuk-!-margin-top-6">Annex</h2>
+        <p class="govuk-body">The annex contains any additional contracts
+            that were agreed upon during the application. Any supporting documents should be uploaded with the annex.</p>
 
         <div class="upload-section">
 
             <form th:action="@{/project/{id}/grant-offer-letter/upload-annex(id=${model.projectId})}"
                   th:object="${form}" method="post" enctype="multipart/form-data">
-                <p class="govuk-body">Any additional supporting materials should be uploaded to the annex.</p>
+                <p class="govuk-body">Annex upload</p>
                 <details th:unless="${model.isSentToProjectTeam()}"
                          class="govuk-details">
                     <summary class="govuk-details__summary">
@@ -128,7 +144,7 @@
                         </ul>
                     </div>
                 </details>
-                <th:block th:with="uploadViewmode=${model.isSentToProjectTeam() or !model.projectIsActive} ? 'readonly' : 'edit',
+                <th:block th:with="uploadViewmode=${model.isSentToProjectTeam() or !model.projectIsActive or model.isReadOnly()} ? 'readonly' : 'edit',
                                downloadUrl=@{/project/{id}/grant-offer-letter/additional-contract(id=${model.projectId})},
                                filename=${model.additionalContractFile?.filename},
                                inputField='annex',
@@ -140,42 +156,45 @@
                 </th:block>
             </form>
         </div>
-        <th:block th:if="${!model.isSentToProjectTeam() and model.projectIsActive}">
-            <div data-js-toggle-on-file-upload="grant-letter-upload"
-                th:attr="aria-hidden=${model.grantOfferLetterFile == null}">
-                <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/send'}" method="post"
-                      th:object="${form}" novalidate="novalidate" class="govuk-!-margin-top-9">
-                    <th:block th:insert="fragments/modals :: modal-accept-send-gol" />
-                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('confirmation')} ? 'govuk-form-group--error'">
-                        <legend class="govuk-visually-hidden">Confirmation</legend>
-                        <th:block th:if="${#fields.hasErrors('confirmation')}">
-                            <span class="govuk-error-message"
-                                  th:each="err : ${#fields.errors('confirmation')}"
-                                  th:text="${err}"></span>
-                        </th:block>
-                        <div class="govuk-checkboxes">
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input"
-                                       id="confirmation"
-                                       th:field="*{confirmation}"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.project.grant.offer.letter.confirmation}"
-                                       type="checkbox">
-                                <label class="govuk-label govuk-checkboxes__label" for="confirmation">
-                                    I confirm the <th:block th:text="|${model.title.toLowerCase()}|"></th:block> has been thoroughly checked and approved by another
-                                    member of my team. Once sent to the project team and signed, it becomes a legally binding document.
-                                </label>
+
+        <th:block th:unless="${model.isReadOnly()}">
+            <th:block th:if="${!model.isSentToProjectTeam() and model.projectIsActive}">
+                <div data-js-toggle-on-file-upload="grant-letter-upload"
+                    th:attr="aria-hidden=${model.grantOfferLetterFile == null}">
+                    <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/send'}" method="post"
+                          th:object="${form}" novalidate="novalidate" class="govuk-!-margin-top-9">
+                        <th:block th:insert="fragments/modals :: modal-accept-send-gol" />
+                        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('confirmation')} ? 'govuk-form-group--error'">
+                            <legend class="govuk-visually-hidden">Confirmation</legend>
+                            <th:block th:if="${#fields.hasErrors('confirmation')}">
+                                <span class="govuk-error-message"
+                                      th:each="err : ${#fields.errors('confirmation')}"
+                                      th:text="${err}"></span>
+                            </th:block>
+                            <div class="govuk-checkboxes">
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input"
+                                           id="confirmation"
+                                           th:field="*{confirmation}"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.project.grant.offer.letter.confirmation}"
+                                           type="checkbox">
+                                    <label class="govuk-label govuk-checkboxes__label" for="confirmation">
+                                        I confirm the <th:block th:text="|${model.title.toLowerCase()}|"></th:block> and any annex has been thoroughly checked and approved by another
+                                        member of my team. I understand that these become legally binding documents once they have been received and signed by the project team.
+                                    </label>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </form>
-                <button data-js-modal="modal-accept-send-gol" id="send-gol" class="govuk-button"
-                th:text="|Send ${model.shortTitle.toLowerCase()} to project team|"></button>
-            </div>
+                    </form>
+                    <button data-js-modal="modal-accept-send-gol" id="send-gol" class="govuk-button"
+                    th:text="|Send ${model.shortTitle.toLowerCase()} to project team|"></button>
+                </div>
+            </th:block>
         </th:block>
 
         <th:block th:if="${model.isSentToProjectTeam()}">
-            <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|Signed ${model.title.toLowerCase()}|"></h2>
+            <h2 class="govuk-heading-m govuk-!-margin-top-6" th:text="|Signed ${model.title.toLowerCase()}|"></h2>
             <div class="upload-section">
                 <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
                     <p class="uploaded-file govuk-body">
@@ -189,14 +208,33 @@
                     <p class="govuk-body">Awaiting upload by the Project Manager</p>
                 </th:block>
             </div>
+
+            <th:block th:if="${model.ktp}">
+                <th:block th:if="${model.getSignedAdditionalContractFileAvailable()}">
+                    <h2 class="govuk-heading-m govuk-!-margin-top-6" >Signed annex</h2>
+                    <div class="upload-section">
+                        <p class="uploaded-file govuk-body">
+                            <a class="govuk-link"
+                               target="_blank"
+                               th:href="@{/project/{id}/grant-offer-letter/signed-additional-contract(id=${model.projectId})}"
+                               th:text="|${model.signedAdditionalContractFile?.filename} (opens in a new window)|">signed-annex.PDF</a>
+                        </p>
+                    </div>
+                </th:block>
+                <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">
+                    <h2 class="govuk-heading-m govuk-!-margin-top-6" >Signed annex</h2>
+                    <div class="upload-section">
+                        <p class="govuk-body">Awaiting upload by the Project Manager</p>
+                    </div>
+                </th:block>
+            </th:block>
         </th:block>
-        <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true and model.projectIsActive}">
-            <h2 class="govuk-heading-m" th:text="|Confirm signed ${model.title.toLowerCase()}|"></h2>
+        <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true and model.projectIsActive and !model.isReadOnly()}">
             <form th:action="@{/project/{id}/grant-offer-letter/signed(id=${model.projectId})}" id="gol-decision-form" method="post" novalidate="novalidate">
                 <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset">
                         <legend id="decisionGOL" class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-6">
-                            <h2 class="govuk-fieldset__heading" th:text="|Please confirm that these documents meet the requirements for the ${model.title.toLowerCase()}.|"></h2>
+                            <h2 class="govuk-fieldset__heading">Approve or reject the signed documents</h2>
                         </legend>
                         <div class="govuk-radios">
                             <div class="govuk-radios__item">
@@ -212,7 +250,7 @@
                                 />
                                 <label for="acceptGOL"
                                        class="govuk-label govuk-radios__label">
-                                    Accept documents
+                                    Approve
                                 </label>
                             </div>
                             <div class="govuk-radios__item" data-target="reject-gol">
@@ -227,7 +265,7 @@
                                 />
                                 <label for="rejectGOL"
                                        class="govuk-label govuk-radios__label">
-                                    Reject documents
+                                    Reject
                                 </label>
                             </div>
                         </div>

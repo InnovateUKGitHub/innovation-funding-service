@@ -147,9 +147,6 @@ public class UserResource implements Serializable {
 
     @JsonIgnore
     public String getRoleDisplayNames() {
-        if (roles.contains(IFS_ADMINISTRATOR)) {
-            return IFS_ADMINISTRATOR.getDisplayName();
-        }
         return roles.stream().map(Role::getDisplayName).collect(joining(", "));
     }
 
@@ -183,6 +180,14 @@ public class UserResource implements Serializable {
         return roles.contains(role);
     }
 
+    public boolean hasAuthority(Authority auth) {
+        return roles.stream().flatMap(r -> r.getAuthorities().stream()).anyMatch(a -> a == auth);
+    }
+
+    public boolean hasAnyAuthority(List<Authority> auth) {
+        return roles.stream().flatMap(r -> r.getAuthorities().stream()).anyMatch(auth::contains);
+    }
+
     @JsonIgnore
     public boolean isInternalUser() {
         return CollectionUtils.containsAny(internalRoles(), roles);
@@ -190,7 +195,7 @@ public class UserResource implements Serializable {
 
     @JsonIgnore
     public boolean isExternalUser() {
-        return CollectionUtils.containsAny(externalApplicantRoles(), roles);
+        return CollectionUtils.containsAny(externalRoles(), roles);
     }
 
     public boolean hasAnyRoles(Role... acceptedRoles) {
@@ -275,15 +280,10 @@ public class UserResource implements Serializable {
      * See IFS-656.
      */
     @JsonIgnore
-    public String getRolesString(){
-        //TODO: Replace and simplify this once IFS-656 is implemented
-        if (hasRole(IFS_ADMINISTRATOR)) {
-            return IFS_ADMINISTRATOR.getDisplayName();
-        } else {    // Most are not yet hierarchical so in most cases this will also return single role at present.
-            return roles.stream()
-                    .map(Role::getDisplayName)
-                    .collect(joining(", "));
-        }
+    public String getRolesString() {
+        return roles.stream()
+                .map(Role::getDisplayName)
+                .collect(joining(", "));
     }
 
     @Override

@@ -1,11 +1,15 @@
 package org.innovateuk.ifs.assessment.invite.viewmodel;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
 
 /**
  * ViewModel of a CompetitionInvite.
@@ -16,6 +20,8 @@ public class CompetitionInviteViewModel extends BaseInviteViewModel {
     private ZonedDateTime deadlineDate;
     private ZonedDateTime briefingDate;
     private BigDecimal assessorPay;
+    private FundingType competitionFundingType;
+    private Boolean competitionAlwaysOpen;
 
     public CompetitionInviteViewModel(String competitionInviteHash, CompetitionInviteResource invite, boolean userLoggedIn) {
         super(competitionInviteHash, invite.getCompetitionId(), invite.getCompetitionName(), userLoggedIn);
@@ -23,6 +29,8 @@ public class CompetitionInviteViewModel extends BaseInviteViewModel {
         this.deadlineDate = invite.getDeadlineDate();
         this.briefingDate = invite.getBriefingDate();
         this.assessorPay = invite.getAssessorPay();
+        this.competitionFundingType = invite.getCompetitionFundingType();
+        this.competitionAlwaysOpen = invite.getCompetitionAlwaysOpen();
     }
 
     public String getCompetitionInviteHash() {
@@ -43,6 +51,14 @@ public class CompetitionInviteViewModel extends BaseInviteViewModel {
 
     public BigDecimal getAssessorPay() {
         return assessorPay;
+    }
+
+    public Boolean isKtpCompetition() {
+        return KTP.equals(competitionFundingType);
+    }
+
+    public boolean isAlwaysOpenCompetition() {
+        return BooleanUtils.isTrue(competitionAlwaysOpen);
     }
 
     @Override

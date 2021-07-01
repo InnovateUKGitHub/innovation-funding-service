@@ -10,8 +10,10 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackApplicationDetailsModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackNavigationModelPopulator;
+import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackSubsidyBasisModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackApplicationDetailsViewModel;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackNavigationViewModel;
+import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackSubsidyBasisViewModel;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
@@ -25,7 +27,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -81,7 +83,10 @@ public class AssessmentFeedbackController {
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
+
+    @Autowired
+    private AssessmentFeedbackSubsidyBasisModelPopulator assessmentFeedbackSubsidyBasisModelPopulator;
 
     @GetMapping("/question/{questionId}")
     public String getQuestion(Model model,
@@ -93,6 +98,10 @@ public class AssessmentFeedbackController {
 
         if (question.getQuestionSetupType().equals(QuestionSetupType.APPLICATION_DETAILS)) {
             return getApplicationDetails(model, assessmentId, question);
+        }
+
+        if (question.getQuestionSetupType().equals(QuestionSetupType.SUBSIDY_BASIS)) {
+            return getSubsidyBasis(model, assessmentId, question);
         }
 
         populateQuestionForm(form, assessmentId, questionId);
@@ -199,11 +208,25 @@ public class AssessmentFeedbackController {
         model.addAttribute("model", viewModel);
         model.addAttribute("navigation", navigationViewModel);
 
-        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(viewModel.getApplicationId()).getSuccess();
+        List<ProcessRoleResource> userApplicationRoles = processRoleRestService.findProcessRole(viewModel.getApplicationId()).getSuccess();
         organisationDetailsModelPopulator.populateModel(model, viewModel.getApplicationId(), userApplicationRoles);
 
         return "assessment/application-details";
     }
+
+    private String getSubsidyBasis(Model model, long assessmentId, QuestionResource question) {
+        AssessmentFeedbackSubsidyBasisViewModel viewModel = assessmentFeedbackSubsidyBasisModelPopulator.populate(assessmentId, question);
+        AssessmentFeedbackNavigationViewModel navigationViewModel = assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, question);
+        model.addAttribute("model", viewModel);
+        model.addAttribute("navigation", navigationViewModel);
+
+//        List<ProcessRoleResource> userApplicationRoles = processRoleRestService.findProcessRole(viewModel.getApplicationId()).getSuccess();
+//        organisationDetailsModelPopulator.populateModel(model, viewModel.getApplicationId(), userApplicationRoles);
+
+        return "assessment/subsidy-basis";
+    }
+
+
 
     private Optional<FormInputResource> getScopeFormInput(List<FormInputResource> formInputs) {
         return formInputs.stream()

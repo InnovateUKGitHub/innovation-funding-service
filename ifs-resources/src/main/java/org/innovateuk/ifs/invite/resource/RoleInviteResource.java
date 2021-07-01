@@ -9,21 +9,19 @@ public class RoleInviteResource extends InviteResource {
     private Long id;
     private String name;
     private String email;
-    private Long roleId;
-    private String roleName;
     private String hash;
     private Role role;
+    private String organisation;
 
     public RoleInviteResource() {
     }
 
-    public RoleInviteResource(Long id, String name, String email, Long roleId, String roleName, String hash) {
+    public RoleInviteResource(Long id, String name, String email, String hash, String organisation) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.roleId = roleId;
-        this.roleName = roleName;
         this.hash = hash;
+        this.organisation = organisation;
     }
 
     public Long getId() {
@@ -50,28 +48,12 @@ public class RoleInviteResource extends InviteResource {
         this.email = email;
     }
 
-    public Long getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
-    }
-
     public String getHash() {
         return hash;
     }
 
     public void setHash(String hash) {
         this.hash = hash;
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
     }
 
     public Role getRole() {
@@ -82,9 +64,17 @@ public class RoleInviteResource extends InviteResource {
         this.role = role;
     }
 
+    public String getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(String organisation) {
+        this.organisation = organisation;
+    }
+
     @JsonIgnore
     public String getRoleDisplayName() {
-        return Role.getById(roleId).getDisplayName();
+        return role.getDisplayName();
     }
 
     @JsonIgnore

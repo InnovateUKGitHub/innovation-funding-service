@@ -44,6 +44,12 @@ public class ActivityLogUrlHelper {
                 return format("/project-setup-management/project/%d/finance-check/organisation/%d/viability", project.getId(), log.getOrganisation());
             case ELIGIBILITY_APPROVED:
                 return format("/project-setup-management/project/%d/finance-check/organisation/%d/eligibility", project.getId(), log.getOrganisation());
+            case VIABILITY_RESET:
+                return format("/project-setup-management/project/%d/finance-check", project.getId());
+            case ELIGIBILITY_RESET:
+                return format("/project-setup-management/project/%d/finance-check", project.getId());
+            case FINANCE_CHECKS_RESET:
+                return format("/project-setup-management/project/%d/finance-check", project.getId());
             case FINANCE_QUERY:
             case FINANCE_QUERY_RESPONDED:
                 return log.getQueryType() != null ? format("/project-setup-management/project/%d/finance-check/organisation/%d/query?query_section=%s", project.getId(), log.getOrganisation(), log.getQueryType().name()) : null;
@@ -59,6 +65,14 @@ public class ActivityLogUrlHelper {
             case GRANT_OFFER_LETTER_APPROVED:
             case GRANT_OFFER_LETTER_REJECTED:
                 return format("/project-setup-management/project/%d/grant-offer-letter/send", project.getId());
+            case PAYMENT_MILESTONES_APPROVED:
+                return format("/project-setup-management/project/%d/finance-check", project.getId());
+            case PAYMENT_MILESTONES_RESET:
+                return format("/project-setup-management/project/%d/finance-check", project.getId());
+            case FUNDING_RULES_UPDATED:
+                return format("/project-setup-management/project/%d/finance-check/organisation/%d/funding-rules", project.getId(), log.getOrganisation());
+            case FUNDING_RULES_APPROVED:
+                return format("/project-setup-management/project/%d/finance-check/organisation/%d/funding-rules", project.getId(), log.getOrganisation());
             default:
                 return null;
         }

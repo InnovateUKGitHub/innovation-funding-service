@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.projectteam.populator;
 
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -8,6 +9,7 @@ import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -71,6 +73,7 @@ public class ProjectTeamViewModelPopulatorTest {
         UserResource loggedInUser = newUserResource().withId(123L).build();
         CompetitionResource competition = newCompetitionResource()
                 .withName("Imaginative competition name")
+                .withFundingType(FundingType.GRANT)
                 .build();
         ProjectResource project = newProjectResource()
                 .withCompetition(competition.getId())
@@ -86,7 +89,7 @@ public class ProjectTeamViewModelPopulatorTest {
         List<ProjectUserResource> projectUsers = newProjectUserResource()
                 .withUser(123L, 456L, 123L, 456L)
                 .withOrganisation(partnerOne.getId(), partnerTwo.getId(), partnerOne.getId(), partnerTwo.getId())
-                .withRole(11L, 10L, 10L, 9L)
+                .withRole(ProjectParticipantRole.PROJECT_MANAGER, ProjectParticipantRole.PROJECT_PARTNER, ProjectParticipantRole.PROJECT_PARTNER, ProjectParticipantRole.PROJECT_FINANCE_CONTACT)
                 .build(4);
         List<OrganisationResource> projectOrgs = asList(partnerOne, partnerTwo);
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
@@ -113,6 +116,7 @@ public class ProjectTeamViewModelPopulatorTest {
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrg);
         when(statusService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
         when(projectInviteRestService.getInvitesByProject(project.getId())).thenReturn(restSuccess(invites));
+        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competition));
 
         ProjectTeamViewModel model = service.populate(project.getId(), loggedInUser);
 

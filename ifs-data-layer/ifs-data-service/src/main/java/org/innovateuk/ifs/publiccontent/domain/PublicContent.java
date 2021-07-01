@@ -22,6 +22,7 @@ public class PublicContent {
 
     private String projectFundingRange;
 
+    @Column(columnDefinition = "LONGTEXT")
     private String eligibilitySummary;
 
     private String projectSize;

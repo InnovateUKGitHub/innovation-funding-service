@@ -87,7 +87,7 @@ get the expected values from the invite page
     The user clicks the button/link    link = Manage assessments
     The user clicks the button/link    jQuery = a:contains("Allocate applications")
     Get the total number of submitted applications
-    The user clicks the button/link    link = Manage assessments
+    The user clicks the button/link    link = Back to manage assessments
     The user clicks the button/link    link = Competition
 
 the counts of the key statistics of the closed competition should be correct

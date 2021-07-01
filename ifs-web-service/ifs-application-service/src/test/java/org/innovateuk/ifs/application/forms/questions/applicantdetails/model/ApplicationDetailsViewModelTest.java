@@ -22,13 +22,14 @@ public class ApplicationDetailsViewModelTest {
                 .withEndDate(ZonedDateTime.now().plusMonths(12))
                 .withMinProjectDuration(15)
                 .withMaxProjectDuration(30)
+                .withResubmission(false)
                 .withFundingType(FundingType.KTP).build();
         InnovationAreaResource innovationAreaResource = InnovationAreaResourceBuilder.newInnovationAreaResource().build();
         ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource()
                 .withInnovationArea(innovationAreaResource).build();
 
         ApplicationDetailsViewModel viewModel = new ApplicationDetailsViewModel(applicationResource, competitionResource,
-                false, false);
+                false, false, 0);
 
         assertTrue(viewModel.isKtpCompetition());
     }

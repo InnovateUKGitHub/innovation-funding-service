@@ -71,7 +71,7 @@ public class UserSurveyServiceImplTest extends BaseServiceUnitTest<UserSurveySer
 
     private Notification expectedNotification(User user, UserSurveyServiceImpl.UserSurveyNotificationType notificationType) {
        return createLambdaMatcher(n -> {
-            NotificationTarget notificationTarget = n.getTo().get(0);
+            NotificationTarget notificationTarget = n.getTo().get(0).getTo();
             assertEquals(user.getFirstName() + " " + user.getLastName(), notificationTarget.getName());
             assertEquals(user.getEmail(), notificationTarget.getEmailAddress());
             assertEquals(1, n.getGlobalArguments().size());

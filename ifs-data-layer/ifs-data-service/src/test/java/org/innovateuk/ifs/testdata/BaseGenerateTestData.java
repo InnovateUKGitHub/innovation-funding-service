@@ -1,28 +1,31 @@
 package org.innovateuk.ifs.testdata;
 
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.io.FileUtils;
 import org.flywaydb.core.Flyway;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
+import org.innovateuk.ifs.project.core.transactional.ProjectToBeCreatedService;
 import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
 import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
 import org.innovateuk.ifs.sil.experian.resource.ValidationResult;
 import org.innovateuk.ifs.sil.experian.resource.VerificationResult;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
-import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
-import org.innovateuk.ifs.testdata.builders.data.ApplicationFinanceData;
-import org.innovateuk.ifs.testdata.builders.data.ApplicationQuestionResponseData;
-import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
+import org.innovateuk.ifs.testdata.builders.data.*;
 import org.innovateuk.ifs.testdata.services.*;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -38,6 +41,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -47,9 +51,12 @@ import java.util.function.Predicate;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.testdata.data.CompetitionWebTestData.buildCompetitionLines;
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.COMP_ADMIN_EMAIL;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
+import static org.innovateuk.ifs.testdata.services.CsvUtils.readApplicationFinances;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.fail;
@@ -81,10 +88,14 @@ import static org.mockito.Mockito.when;
  *
  *    In conjunction with "ifs.generate.test.data.competition.filter=BY_NAME", this parameter allows you to specify a
  *    single Competition to generate.
+ *
+ *    It looks as though spring starts up before we run table generation so it will fail the schema validation. So set
+ *    spring.jpa.hibernate.ddl-auto=none for this scenario only.
  */
-@ActiveProfiles({"integration-test,seeding-db"})
+@ActiveProfiles({"integration-test","seeding-db"})
 @DirtiesContext
-@SpringBootTest(classes = GenerateTestDataConfiguration.class)
+@SpringBootTest(classes = GenerateTestDataConfiguration.class,
+        properties = {"spring.jpa.hibernate.ddl-auto=none"})
 abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseGenerateTestData.class);
@@ -97,7 +108,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         NO_COMPETITIONS(competitionLine -> false),
         BY_NAME(competitionLine -> {
             assert competitionNameForFilter != null;
-            return competitionNameForFilter.equals(competitionLine.name);
+            return competitionNameForFilter.equals(competitionLine.getName());
         });
 
         private Predicate<CompetitionLine> test;
@@ -129,6 +140,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     @Value("${spring.flyway.placeholders.ifs.system.user.uuid}")
     private String systemUserUUID;
+
+    @Value("${ifs.data.service.file.storage.base}")
+    private String storageLocation;
 
     @Autowired
     private RegistrationService registrationService;
@@ -170,6 +184,12 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @Autowired
     private OrganisationDataBuilderService organisationDataBuilderService;
 
+    @Autowired
+    private SupporterDataService supporterDataService;
+
+    @Autowired
+    private ProjectToBeCreatedService projectToBeCreatedService;
+
     private List<OrganisationLine> organisationLines;
     private List<CompetitionLine> competitionLines;
     private List<CsvUtils.ApplicationLine> applicationLines;
@@ -183,10 +203,11 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationQuestionResponseLine> questionResponseLines;
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
+    private List<CsvUtils.QuestionnaireResponseLine> questionnaireResponseLines;
 
-    @Value("${ifs.generate.test.data.competition.filter.name:Project Setup Comp 18}")
+    @Value("${ifs.generate.test.data.competition.filter.name:Subsidy control comp in assessment}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
-        BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
+       BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
     }
 
     @Before
@@ -199,7 +220,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @Before
     public void readCsvs() {
         organisationLines = readOrganisations();
-        competitionLines = readCompetitions();
         publicContentGroupLines = readPublicContentGroups();
         publicContentDateLines = readPublicContentDates();
         externalUserLines = readExternalUsers();
@@ -212,6 +232,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         inviteLines = readInvites();
         questionResponseLines = readApplicationQuestionResponses();
         applicationFinanceLines = readApplicationFinances();
+        competitionLines = buildCompetitionLines();
+        questionnaireResponseLines = readQuestionnaireResponseLines();
     }
 
     @PostConstruct
@@ -237,6 +259,14 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         BankDetailsService bankDetailsServiceUnwrapped = (BankDetailsService) unwrapProxy(bankDetailsService);
         ReflectionTestUtils.setField(bankDetailsServiceUnwrapped, "silExperianEndpoint", silExperianEndpointMock);
+    }
+
+    @After
+    public void tearDownFiles() throws Exception {
+        File f = new File(storageLocation);
+        if (f.exists()) {
+            FileUtils.deleteDirectory(new File(storageLocation));
+        }
     }
 
     @Test
@@ -270,6 +300,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         CompletableFuture<Void> publicContentFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
                 createPublicContent(createCompetitionFutures), taskExecutor);
 
+        CompletableFuture<Void> supporterFutures = waitForFutureList(createApplicationsFutures).thenRunAsync(() ->
+                createSupporters(createCompetitionFutures, createApplicationsFutures), taskExecutor);
+
         CompletableFuture<Void> assessorFutures = waitForFutureList(createApplicationsFutures).thenRunAsync(() ->
                 createAssessorsAndAssessments(createCompetitionFutures, createApplicationsFutures), taskExecutor);
 
@@ -284,12 +317,22 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         }, taskExecutor);
 
+        CompletableFuture<Void> competitionAssessmentPeriodsFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
+                createAssessmentPeriodsForCompetitions(createCompetitionFutures), taskExecutor);
+
         CompletableFuture.allOf(competitionFundersFutures,
                                 publicContentFutures,
                                 assessorFutures,
                                 competitionsFinalisedFuture,
-                                competitionOrganisationConfigFutures
+                                competitionOrganisationConfigFutures,
+                                supporterFutures,
+                                competitionAssessmentPeriodsFutures
         ).join();
+
+        UserResource user = userService.findByEmail("ifs_system_maintenance_user@innovateuk.org").getSuccess();
+        setLoggedInUser(user);
+
+        projectToBeCreatedService.createAllPendingProjects();
 
         long after = System.currentTimeMillis();
 
@@ -309,7 +352,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         competitions.forEach(competition -> {
 
             CompetitionLine competitionLine = simpleFindFirstMandatory(competitionLines, l ->
-                    Objects.equals(l.name, competition.getCompetition().getName()));
+                    Objects.equals(l.getName(), competition.getCompetition().getName()));
 
             applicationDataBuilderService.createFundingDecisions(competition, competitionLine, applicationLines);
         });
@@ -333,6 +376,21 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     }
 
+    private void createSupporters(List<CompletableFuture<CompetitionData>> createCompetitionFutures, List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures) {
+        simpleMap(createCompetitionFutures, CompletableFuture::join);
+        List<ApplicationData> applications = flattenLists(simpleMap(createApplicationsFutures, CompletableFuture::join));
+
+        List<ApplicationResource> applicationsForCofunding = applications.stream()
+                .filter(app -> app.getCompetition().getFundingType() == FundingType.KTP)
+                .map(ApplicationData::getApplication)
+                .collect(toList());
+
+        List<ExternalUserLine> filteredSupporters = simpleFilter(this.externalUserLines, l -> l.role == Role.SUPPORTER);
+
+        supporterDataService.buildSupporters(applicationsForCofunding, filteredSupporters);
+    }
+
+
     private void createPublicContent(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
         List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
         createPublicContentGroups(competitions);
@@ -349,7 +407,12 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         createCompetitionOrganisationConfig(competitions);
     }
 
-    private List<CompletableFuture<CompetitionData>> createCompetitions(List<CsvUtils.CompetitionLine> competitionLines) {
+    private void createAssessmentPeriodsForCompetitions(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
+        List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
+        createCompetitionAssessmentPeriods(competitions);
+    }
+
+    private List<CompletableFuture<CompetitionData>> createCompetitions(List<CompetitionLine> competitionLines) {
         return simpleMap(competitionLines, line -> CompletableFuture.supplyAsync(() ->
                 competitionDataBuilderService.createCompetition(line), taskExecutor));
     }
@@ -366,7 +429,25 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 applicationDataBuilderService.createApplicationFinances(applicationData, applicationLine, applicationFinanceLines, externalUserLines),
                 taskExecutor);
 
-        CompletableFuture<Void> allQuestionsAnswered = CompletableFuture.allOf(questionResponses, applicationFinances);
+        applicationFinances.join(); // wait for finances to be created.
+
+        CompletableFuture<List<QuestionnaireResponseData>> questionnaireResponses = CompletableFuture.supplyAsync(() ->
+                        applicationDataBuilderService.createQuestionnaireResponse(applicationData, applicationLine, questionnaireResponseLines, externalUserLines),
+                taskExecutor);
+
+        List<QuestionnaireResponseData> questionnaireResponseData = questionnaireResponses.join();
+
+        CompletableFuture<List<SubsidyBasisData>> subsidyBasis = CompletableFuture.supplyAsync(() ->
+                        applicationDataBuilderService.createSubsidyBasis(applicationLine, questionnaireResponseData),
+                taskExecutor);
+
+        CompletableFuture<List<ProcurementMilestoneData>> procurementMilestones = CompletableFuture.supplyAsync(() ->
+                        applicationDataBuilderService.createProcurementMilestones(applicationData, applicationLine, externalUserLines),
+                taskExecutor);
+
+
+
+        CompletableFuture<Void> allQuestionsAnswered = CompletableFuture.allOf(questionResponses, applicationFinances, questionnaireResponses, subsidyBasis, procurementMilestones);
 
         return allQuestionsAnswered.thenApplyAsync(done -> {
 
@@ -432,6 +513,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private void createCompetitionOrganisationConfig(List<CompetitionData> competitions) {
         competitions.forEach(competitionDataBuilderService::createCompetitionOrganisationConfig);
+    }
+
+    private void createCompetitionAssessmentPeriods(List<CompetitionData> competitions) {
+        competitions.forEach(competitionDataBuilderService::createCompetitionAssessmentPeriods);
     }
 
     private void createPublicContentGroups(List<CompetitionData> competitions) {
@@ -506,12 +591,12 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private void cleanAndMigrateDatabaseWithPatches(String[] patchLocations) {
         Map<String, String> placeholders = ImmutableMap.of("ifs.system.user.uuid", systemUserUUID);
-        Flyway f = new Flyway();
-        f.setDataSource(databaseUrl, databaseUser, databasePassword);
-        f.setLocations(patchLocations);
-        f.setPlaceholders(placeholders);
-        f.clean();
-        f.migrate();
+        Flyway flyway = Flyway.configure()
+                .dataSource(databaseUrl, databaseUser, databasePassword)
+                .locations(patchLocations)
+                .placeholders(placeholders).load();
+        flyway.clean();
+        flyway.migrate();
     }
 
     protected abstract boolean cleanDbFirst();

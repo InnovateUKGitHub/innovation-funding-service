@@ -18,13 +18,13 @@ import java.util.Optional;
 
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
-import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -112,7 +112,7 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
             }
         });
 
-        verify(competitionRepository, times(2)).findById(competitionId);
+        verify(competitionRepository, times(5)).findById(competitionId);
     }
 
     @Test
@@ -121,6 +121,7 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
         stream(CompetitionStatus.values()).forEach(status -> {
 
             Competition competitionInSetup = newCompetition().
+                    withAssessmentPeriods(newAssessmentPeriod().build(1)).
                     withCompetitionStatus(status).
                     build();
 
@@ -134,8 +135,15 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
                 }
             });
 
-            verify(competitionRepository, times(2)).findById(competitionId);
+            verify(competitionRepository, times(5)).findById(competitionId);
             reset(competitionRepository);
         });
+    }
+
+    @Test
+    public void auditorsCanViewMilestoneOntheCompetitions() {
+        List<Role> auditorRoles = singletonList(AUDITOR);
+        UserResource audtior = newUserResource().withRolesGlobal(auditorRoles).build();
+        assertTrue(rules.auditorsCanViewMilestonesOnAllComps(compositeId, audtior));
     }
 }

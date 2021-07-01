@@ -16,8 +16,11 @@ import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -32,6 +35,8 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID_PROJECT_ID;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.containsMultiDashboardRole;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -45,6 +50,9 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectUserInvite> i
 
     @Autowired
     private ProjectUserInviteMapper inviteMapper;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ProjectUserInviteRepository projectUserInviteRepository;
@@ -104,6 +112,9 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectUserInvite> i
                 return projectService.addPartner(invite.getTarget().getId(), user.getId(), invite.getOrganisation().getId()).andOnSuccess(pu -> {
                     pu.setInvite(invite);
                     projectUserRepository.save(pu.accept());
+                    if (containsMultiDashboardRole(user.getRoles()) && !user.getRoles().contains(APPLICANT)) {
+                        userService.grantRole(new GrantRoleCommand(userId, APPLICANT)).andOnSuccessReturnVoid();
+                    }
                     return serviceSuccess();
                 });
             }

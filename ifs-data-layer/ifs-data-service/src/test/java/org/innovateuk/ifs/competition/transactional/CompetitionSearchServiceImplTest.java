@@ -106,7 +106,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
     @Before
     public void setUp() {
-        UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
+        UserResource userResource = newUserResource().withRoleGlobal(Role.COMP_ADMIN).build();
         User user = newUser().withId(userResource.getId()).withRoles(singleton(Role.COMP_ADMIN)).build();
         setLoggedInUser(userResource);
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
@@ -157,7 +157,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
     public void findProjectSetupCompetitionsWhenLoggedInAsStakeholder() {
         int page = 0;
         int size = 20;
-        UserResource stakeholderUser = newUserResource().withId(1L).withRolesGlobal(singletonList(STAKEHOLDER)).build();
+        UserResource stakeholderUser = newUserResource().withId(1L).withRoleGlobal(STAKEHOLDER).build();
         User user = newUser().withId(stakeholderUser.getId()).withRoles(singleton(STAKEHOLDER)).build();
         setLoggedInUser(stakeholderUser);
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
@@ -179,7 +179,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
     public void findProjectSetupCompetitionsWhenLoggedInAsCompetitionFinance() {
         int page = 0;
         int size = 20;
-        UserResource competitionFinanceUser = newUserResource().withId(1L).withRolesGlobal(singletonList(EXTERNAL_FINANCE)).build();
+        UserResource competitionFinanceUser = newUserResource().withId(1L).withRoleGlobal(EXTERNAL_FINANCE).build();
         User user = newUser().withId(competitionFinanceUser.getId()).withRoles(singleton(EXTERNAL_FINANCE)).build();
         setLoggedInUser(competitionFinanceUser);
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
@@ -242,7 +242,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
     public void findPreviousCompetitionsWhenLoggedInAsCompetitionFinanceUser() {
         int page = 0;
         int size = 20;
-        UserResource competitionFinanceUser = newUserResource().withId(1L).withRolesGlobal(singletonList(EXTERNAL_FINANCE)).build();
+        UserResource competitionFinanceUser = newUserResource().withId(1L).withRoleGlobal(EXTERNAL_FINANCE).build();
         User user = newUser().withId(competitionFinanceUser.getId()).withRoles(singleton(EXTERNAL_FINANCE)).build();
         setLoggedInUser(competitionFinanceUser);
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
@@ -281,7 +281,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
         // Test for innovation lead user where only competitions they are assigned to should be counted
         // actual query tested in repository integration test, this is only testing correct repository method is called.
-        UserResource innovationLeadUser = newUserResource().withRolesGlobal(singletonList(INNOVATION_LEAD)).build();
+        UserResource innovationLeadUser = newUserResource().withRoleGlobal(INNOVATION_LEAD).build();
         setLoggedInUser(innovationLeadUser);
 
         when(competitionRepositoryMock.countLiveForInnovationLeadOrStakeholder(innovationLeadUser.getId())).thenReturn(countLive);
@@ -296,7 +296,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         assertEquals(countFeedbackReleased, response.getFeedbackReleasedCount());
 
         // Test for Stakeholder user
-        UserResource stakeholderUser = newUserResource().withRolesGlobal(singletonList(Role.STAKEHOLDER)).build();
+        UserResource stakeholderUser = newUserResource().withRoleGlobal(Role.STAKEHOLDER).build();
         setLoggedInUser(stakeholderUser);
 
         when(competitionRepositoryMock.countLiveForInnovationLeadOrStakeholder(stakeholderUser.getId())).thenReturn(countLive);
@@ -361,7 +361,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         String competitionType = "Comp type";
         Competition competition = newCompetition().withId(competitionId).withCompetitionType(newCompetitionType().withName(competitionType).build()).build();
 
-        UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
+        UserResource userResource = newUserResource().withRoleGlobal(Role.INNOVATION_LEAD).build();
         User user = newUser().withId(userResource.getId()).withRoles(singleton(Role.INNOVATION_LEAD)).build();
 
         searchCompetitionsMocking(totalElements, totalPages, page, size, searchQuery, competition, userResource, user);
@@ -430,7 +430,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         String competitionType = "Comp type";
         Competition competition = newCompetition().withId(competitionId).withCompetitionType(newCompetitionType().withName(competitionType).build()).build();
 
-        UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.STAKEHOLDER)).build();
+        UserResource userResource = newUserResource().withRoleGlobal(Role.STAKEHOLDER).build();
         User user = newUser().withId(userResource.getId()).withRoles(singleton(Role.STAKEHOLDER)).build();
 
         searchCompetitionsMocking(totalElements, totalPages, page, size, searchQuery, competition, userResource, user);
@@ -455,7 +455,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         String competitionType = "Comp type";
         Competition competition = newCompetition().withId(competitionId).withCompetitionType(newCompetitionType().withName(competitionType).build()).build();
 
-        UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build();
+        UserResource userResource = newUserResource().withRoleGlobal(Role.SUPPORT).build();
         User user = newUser().withId(userResource.getId()).withRoles(singleton(Role.SUPPORT)).build();
 
         searchCompetitionsMocking(totalElements, totalPages, page, size, searchQuery, competition, userResource, user);

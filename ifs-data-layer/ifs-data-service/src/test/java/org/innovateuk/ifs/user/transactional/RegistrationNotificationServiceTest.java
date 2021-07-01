@@ -19,7 +19,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.Map;
 
 import static java.time.ZonedDateTime.now;
-import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -70,7 +69,7 @@ public class RegistrationNotificationServiceTest extends BaseServiceUnitTest<Reg
         final NotificationSource from = systemNotificationSourceMock;
         final NotificationTarget to = new UserNotificationTarget(userResource.getName(), userResource.getEmail());
 
-        final Notification notification = new Notification(from, singletonList(to), RegistrationNotificationService.Notifications.VERIFY_EMAIL_ADDRESS, expectedNotificationArguments);
+        final Notification notification = new Notification(from, to, RegistrationNotificationService.Notifications.VERIFY_EMAIL_ADDRESS, expectedNotificationArguments);
         when(tokenRepositoryMock.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L)).thenReturn(empty());
         when(tokenRepositoryMock.save(isA(Token.class))).thenReturn(newToken);
         when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
@@ -104,7 +103,7 @@ public class RegistrationNotificationServiceTest extends BaseServiceUnitTest<Reg
         final NotificationSource from = systemNotificationSourceMock;
         final NotificationTarget to = new UserNotificationTarget(userResource.getName(), userResource.getEmail());
 
-        final Notification notification = new Notification(from, singletonList(to), RegistrationNotificationService.Notifications.VERIFY_EMAIL_ADDRESS, expectedNotificationArguments);
+        final Notification notification = new Notification(from, to, RegistrationNotificationService.Notifications.VERIFY_EMAIL_ADDRESS, expectedNotificationArguments);
         when(tokenRepositoryMock.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L)).thenReturn(empty());
         when(tokenRepositoryMock.save(isA(Token.class))).thenReturn(newToken);
         when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
@@ -139,7 +138,7 @@ public class RegistrationNotificationServiceTest extends BaseServiceUnitTest<Reg
         final NotificationSource from = systemNotificationSourceMock;
         final NotificationTarget to = new UserNotificationTarget(userResource.getName(), userResource.getEmail());
 
-        final Notification notification = new Notification(from, singletonList(to), RegistrationNotificationService.Notifications.VERIFY_EMAIL_ADDRESS, expectedNotificationArguments);
+        final Notification notification = new Notification(from, to, RegistrationNotificationService.Notifications.VERIFY_EMAIL_ADDRESS, expectedNotificationArguments);
         when(tokenRepositoryMock.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L)).thenReturn(of(existingToken));
         when(tokenRepositoryMock.save(isA(Token.class))).thenReturn(newToken);
         when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());

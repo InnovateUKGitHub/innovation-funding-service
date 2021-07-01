@@ -26,9 +26,6 @@ public class DocumentsController {
     @Autowired
     private DocumentsService documentsService;
 
-    public DocumentsController() {
-    }
-
     @Autowired
     @Qualifier("mediaTypeStringsFileValidator")
     private FilesizeAndTypeFileValidator<List<String>> fileValidator;
@@ -71,7 +68,7 @@ public class DocumentsController {
 
     @DeleteMapping(value = "/config/{documentConfigId}/delete", produces = "application/json")
     public RestResult<Void> deleteDocument(@PathVariable("projectId") long projectId,
-                                           @PathVariable("documentConfigId") long documentConfigId) throws IOException {
+                                           @PathVariable("documentConfigId") long documentConfigId) {
 
         return documentsService.deleteDocument(projectId, documentConfigId).toDeleteResponse();
     }

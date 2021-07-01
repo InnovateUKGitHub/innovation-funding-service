@@ -4,36 +4,39 @@
   list-style-type: none;
 
   li{
-    border-top: 1px solid $govuk-secondary-text-colour;
-    color: $govuk-secondary-text-colour;
+    border-top: 1px solid $govuk-text-colour;
+    color: $govuk-text-colour;
 
-    h3{
+    h3 {
       margin: 10px 0 0 0;
-      color: $govuk-secondary-text-colour;
+      color: $govuk-text-colour;
     }
 
-    p{
+    p {
       margin: 0 0 10px 0;
-      color: $govuk-secondary-text-colour;
+      color: $govuk-text-colour;
     }
 
     &:first-child{
       border-top: none;
     }
 
-    &.done{
-      @extend %icon-tick;
-      background-position: right 1em;
-      border-top: 1px solid $govuk-text-colour;
-      color: $govuk-text-colour;
+    &.not-done {
+      border-top: 1px solid $govuk-secondary-text-colour;
+      color: $govuk-secondary-text-colour;
 
       h3{
-        color: $govuk-text-colour;
+        color: $govuk-secondary-text-colour;
       }
 
       p{
-        color: $govuk-text-colour;
+        color: $govuk-secondary-text-colour;
       }
+    }
+
+    &.done{
+      @extend %icon-tick;
+      background-position: right 1em;
 
       &:first-child{
         border-top: none;

@@ -9,7 +9,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -38,7 +37,7 @@ public class CompetitionParticipantServiceSecurityTest extends BaseServiceSecuri
     @Test
     public void getCompetitionParticipants() {
         UserResource assessorUserResource = newUserResource()
-                .withRolesGlobal(singletonList(Role.ASSESSOR)
+                .withRoleGlobal(Role.ASSESSOR
                 ).build();
 
         setLoggedInUser(assessorUserResource);

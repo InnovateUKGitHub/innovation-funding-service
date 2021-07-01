@@ -50,24 +50,28 @@
             No assigned contact
         </p>
 
-        <h2 class="govuk-heading-m">Queries</h2>
-        <p class="govuk-body">
-            Raise finance queries to the organisation in this section. You should confirm any changes to finances with
-            the finance contact before you approve them. If the query button is disabled, the organisation has not yet
-            appointed a finance contact.
-        </p>
+        <th:block th:unless="${model.isReadOnly() and model.getQueries().isEmpty()}">
+            <h2 class="govuk-heading-m">Queries</h2>
+            <p class="govuk-body">
+                Raise finance queries to the organisation in this section. You should confirm any changes to finances with
+                the finance contact before you approve them. If the query button is disabled, the organisation has not yet
+                appointed a finance contact.
+            </p>
+        </th:block>
 
-        <div class="govuk-form-group" th:if="${model.projectIsActive}">
-            <th:block th:if="${model.financeContact.isPresent()}">
-                <a id="post-new-query"
-                   th:href="@{{baseUrl}/new-query(baseUrl=${baseUrl},query_section=${model.querySection})}"
-                   class="govuk-button">Post a new query</a>
-            </th:block>
+        <th:block th:unless="${model.isReadOnly()}">
+            <div class="govuk-form-group" th:if="${model.projectIsActive}">
+                <th:block th:if="${model.financeContact.isPresent()}">
+                    <a id="post-new-query"
+                       th:href="@{{baseUrl}/new-query(baseUrl=${baseUrl},query_section=${model.querySection})}"
+                       class="govuk-button">Post a new query</a>
+                </th:block>
 
-            <th:block th:unless="${model.financeContact.isPresent()}">
-                <button disabled="disabled" class="govuk-button">Post a new query</button>
-            </th:block>
-        </div>
+                <th:block th:unless="${model.financeContact.isPresent()}">
+                    <button disabled="disabled" class="govuk-button">Post a new query</button>
+                </th:block>
+            </div>
+        </th:block>
 
         <div class="govuk-form-group">
             <fieldset class="govuk-fieldset">
@@ -83,6 +87,14 @@
                     <option data-elements-to-hide=".queries-filter-list .query"
                             data-elements-to-show=".queries-filter-list .eligibility-section" value="eligibility">
                         Eligibility only
+                    </option>
+                    <option th:if="${model.procurementMilestonesCompetition}" data-elements-to-hide=".queries-filter-list .query"
+                            data-elements-to-show=".queries-filter-list .payment_milestones-section" value="payment_milestones">
+                        Payment milestones
+                    </option>
+                    <option th:if="${model.subsidyControlCompetition}" data-elements-to-hide=".queries-filter-list .query"
+                            data-elements-to-show=".queries-filter-list .funding_rules-section" value="funding_rules">
+                        Funding rules
                     </option>
                 </select>
             </fieldset>
@@ -107,7 +119,7 @@
                      th:aria-labelledby="|accordion-default-heading-${iteration.count}|">
                     <h3 class="govuk-!-margin-0">
                         <span class="govuk-heading-s govuk-!-display-inline">Section: </span>
-                        <span th:text="${#strings.capitalize(querySection)}" class="govuk-body">Section title</span>
+                        <span th:text="${query.sectionType.displayName}" class="govuk-body">Section title</span>
                     </h3>
                     <th:block th:each="(post, iteration : ${query.viewModelPosts})">
                         <div th:class="${iteration.index == 0} ? '' : 'panel'">
@@ -132,116 +144,118 @@
                             </ul>
                         </div>
                     </th:block>
-                    <th:block th:unless="${model.queryId != null} or ${query.isClosed() or !model.projectIsActive}">
-                        <a id="post-new-response"
-                           th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.id}__(baseUrl=${baseUrl},query_section=${model.querySection},queryId=${query.id})}"
-                           class="govuk-!-margin-top-6 govuk-button">Respond</a><br/>
-                        <a class="button-clear govuk-!-padding-left-0"
-                           data-js-modal="modal-confirm-mark-resolved"
-                           th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query/{queryId}/close(projectId=${model.projectId},queryId=${query.id},organisationId=${model.organisationId})}"
-                           th:attr="data-modal-form-action=@{/project/{projectId}/finance-check/organisation/{organisationId}/query/{queryId}/close(projectId=${model.projectId},queryId=${query.id},organisationId=${model.organisationId})}">
-                            Mark as resolved
-                        </a>
-                    </th:block>
-                    <th:block th:if="${model.queryId != null and query.id == model.queryId and model.projectIsActive}"
-                              th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
-                        <form class="govuk-!-margin-top-6"
-                              th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}"
-                              th:id="${'form-query-' + query.id}" th:object="${form}" method="post"
-                              enctype="multipart/form-data" novalidate="novalidate">
-                            <h3 class="govuk-heading-m">Respond to query</h3>
-                            <div class="govuk-form-group"
-                                 th:classappend="${#fields.hasErrors('response')}? 'govuk-form-group--error'">
-                                <label class="govuk-label" for="response">
-                                    Response
-                                </label>
-                                <th:block th:if="${#fields.hasErrors('response')}">
-                                    <span class="govuk-error-message" th:each="err : ${#fields.errors('response')}"
-                                          th:text="${err}"/>
-                                </th:block>
-                                <div class="textarea-wrapped word-count">
-                                    <textarea data-editor="md"
-                                              required="required"
-                                              th:field="*{response}"
-                                              id="response"
-                                              name="response"
-                                              class="govuk-textarea"
-                                              th:attr="maxlength=${model.maxQueryCharacters},
-                                               data-max_words=${model.maxQueryWords},
-                                               data-maxwordslength=${model.maxQueryWords},
-                                               data-maxwordslength-errormessage=#{validation.field.max.word.count(null,${model.maxQueryWords})},
-                                               data-maxlength-errormessage=#{validation.field.too.many.characters(null, ${model.maxQueryCharacters})},
-                                               data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                              th:errorclass="govuk-textarea--error"></textarea>
-                                    <div class="textarea-footer" th:with="response=*{response}" aria-live="polite"
-                                         aria-atomic="true" role="status">
-                                        <th:block
-                                            th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxQueryWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxQueryWords, content)})"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="upload-section">
-                                <div class="ajax-upload"
-                                     data-js-upload-button-name="uploadAttachment"
-                                     data-js-upload-file-input="attachment"
-                                     data-js-number-of-files="10"
-                                     data-js-upload-one-at-a-time="">
-                                    <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documents</h2>
-                                    <details class="govuk-details">
-                                        <summary class="govuk-details__summary">
-                                            <span class="govuk-details__summary-text">What file types can I upload?</span>
-                                        </summary>
-                                        <div class="govuk-details__text wysiwyg-styles">
-                                            <p class="govuk-body"><strong>You can only upload these file types</strong></p>
-                                            <ul class="govuk-list govuk-list--bullet">
-                                                <li>spreadsheet (.ods)</li>
-                                                <li>text document (.odt)</li>
-                                                <li>PDF (.pdf)</li>
-                                            </ul>
-                                            <p>Each document must be less than 10MB</p>
-                                        </div>
-                                    </details>
-                                    <p th:if="${model.newAttachmentLinks.isEmpty()}" class="govuk-body no-file-uploaded">No files have been uploaded yet.</p>
-                                    <ul class="govuk-list file-list">
-                                        <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}"
-                                            class="success">
-                                            <div class="file-row">
-                                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}"
-                                                   th:text="|${model.newAttachmentLinks.get(attachmentId)} (opens in a new window)|"
-                                                   target="_blank"
-                                                   class="govuk-link"
-                                                   aria-describedby="file-hint">File</a>
-                                                <button name="removeAttachment" th:value="${attachmentId}"
-                                                        class="button-clear remove-file"
-                                                        aria-label="Remove uploaded document">Remove
-                                                </button>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
-                                        <th:block th:if="${#fields.hasErrors('attachment')}">
-                                            <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}"
+                    <th:block th:unless="${model.isReadOnly()}">
+                            <th:block th:unless="${model.queryId != null} or ${query.isClosed() or !model.projectIsActive}">
+                                <a id="post-new-response"
+                                   th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.id}__(baseUrl=${baseUrl},query_section=${model.querySection},queryId=${query.id})}"
+                                   class="govuk-!-margin-top-6 govuk-button">Respond</a><br/>
+                                <a class="button-clear govuk-!-padding-left-0"
+                                   data-js-modal="modal-confirm-mark-resolved"
+                                   th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query/{queryId}/close(projectId=${model.projectId},queryId=${query.id},organisationId=${model.organisationId})}"
+                                   th:attr="data-modal-form-action=@{/project/{projectId}/finance-check/organisation/{organisationId}/query/{queryId}/close(projectId=${model.projectId},queryId=${query.id},organisationId=${model.organisationId})}">
+                                    Mark as resolved
+                                </a>
+                            </th:block>
+                            <th:block th:if="${model.queryId != null and query.id == model.queryId and model.projectIsActive}"
+                                      th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
+                                <form class="govuk-!-margin-top-6"
+                                      th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}"
+                                      th:id="${'form-query-' + query.id}" th:object="${form}" method="post"
+                                      enctype="multipart/form-data" novalidate="novalidate">
+                                    <h3 class="govuk-heading-m">Respond to query</h3>
+                                    <div class="govuk-form-group"
+                                         th:classappend="${#fields.hasErrors('response')}? 'govuk-form-group--error'">
+                                        <label class="govuk-label" for="response">
+                                            Response
+                                        </label>
+                                        <th:block th:if="${#fields.hasErrors('response')}">
+                                            <span class="govuk-error-message" th:each="err : ${#fields.errors('response')}"
                                                   th:text="${err}"/>
                                         </th:block>
-                                        <input type="file" id="attachment" class="inputfile" name="attachment">
-                                        <label for="attachment" class="govuk-!-margin-top-6">Upload</label>
-                                        <button name="uploadAttachment" class="govuk-button govuk-button--secondary" type="submit"
-                                                data-for-file-upload="attachment">Save
-                                        </button>
+                                        <div class="textarea-wrapped word-count">
+                                            <textarea data-editor="md"
+                                                      required="required"
+                                                      th:field="*{response}"
+                                                      id="response"
+                                                      name="response"
+                                                      class="govuk-textarea"
+                                                      th:attr="maxlength=${model.maxQueryCharacters},
+                                                       data-max_words=${model.maxQueryWords},
+                                                       data-maxwordslength=${model.maxQueryWords},
+                                                       data-maxwordslength-errormessage=#{validation.field.max.word.count(null,${model.maxQueryWords})},
+                                                       data-maxlength-errormessage=#{validation.field.too.many.characters(null, ${model.maxQueryCharacters})},
+                                                       data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                                      th:errorclass="govuk-textarea--error"></textarea>
+                                            <div class="textarea-footer" th:with="response=*{response}" aria-live="polite"
+                                                 aria-atomic="true" role="status">
+                                                <th:block
+                                                    th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxQueryWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxQueryWords, content)})"/>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <input type="hidden" id="action" value="postResponse">
-                            <div class="govuk-grid-row">
-                                <div class="govuk-grid-column-one-half">
-                                    <button class="govuk-button govuk-!-margin-0">Post response</button>
-                                </div>
-                                <div class="govuk-grid-column-one-half alignright">
-                                    <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl},query_section=${model.querySection})}"
-                                       class="govuk-link">Cancel</a>
-                                </div>
-                            </div>
-                        </form>
+                                    <div class="upload-section">
+                                        <div class="ajax-upload"
+                                             data-js-upload-button-name="uploadAttachment"
+                                             data-js-upload-file-input="attachment"
+                                             data-js-number-of-files="10"
+                                             data-js-upload-one-at-a-time="">
+                                            <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documents</h2>
+                                            <details class="govuk-details">
+                                                <summary class="govuk-details__summary">
+                                                    <span class="govuk-details__summary-text">What file types can I upload?</span>
+                                                </summary>
+                                                <div class="govuk-details__text wysiwyg-styles">
+                                                    <p class="govuk-body"><strong>You can only upload these file types</strong></p>
+                                                    <ul class="govuk-list govuk-list--bullet">
+                                                        <li>spreadsheet (.ods)</li>
+                                                        <li>text document (.odt)</li>
+                                                        <li>PDF (.pdf)</li>
+                                                    </ul>
+                                                    <p>Each document must be less than 10MB</p>
+                                                </div>
+                                            </details>
+                                            <p th:if="${model.newAttachmentLinks.isEmpty()}" class="govuk-body no-file-uploaded">No files have been uploaded yet.</p>
+                                            <ul class="govuk-list file-list">
+                                                <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}"
+                                                    class="success">
+                                                    <div class="file-row">
+                                                        <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}"
+                                                           th:text="|${model.newAttachmentLinks.get(attachmentId)} (opens in a new window)|"
+                                                           target="_blank"
+                                                           class="govuk-link"
+                                                           aria-describedby="file-hint">File</a>
+                                                        <button name="removeAttachment" th:value="${attachmentId}"
+                                                                class="button-clear remove-file"
+                                                                aria-label="Remove uploaded document">Remove
+                                                        </button>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
+                                                <th:block th:if="${#fields.hasErrors('attachment')}">
+                                                    <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}"
+                                                          th:text="${err}"/>
+                                                </th:block>
+                                                <input type="file" id="attachment" class="inputfile" name="attachment">
+                                                <label for="attachment" class="govuk-!-margin-top-6">Upload</label>
+                                                <button name="uploadAttachment" class="govuk-button govuk-button--secondary" type="submit"
+                                                        data-for-file-upload="attachment">Save
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="action" value="postResponse">
+                                    <div class="govuk-grid-row">
+                                        <div class="govuk-grid-column-one-half">
+                                            <button class="govuk-button govuk-!-margin-0">Post response</button>
+                                        </div>
+                                        <div class="govuk-grid-column-one-half alignright">
+                                            <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl},query_section=${model.querySection})}"
+                                               class="govuk-link">Cancel</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </th:block>
                     </th:block>
 
                     <th:block th:if="${query.isClosed()}">

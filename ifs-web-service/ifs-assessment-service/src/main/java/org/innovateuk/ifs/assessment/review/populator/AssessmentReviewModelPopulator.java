@@ -8,8 +8,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.service.ReviewRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -22,17 +21,17 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.PROJECT_SUM
 @Component
 public class AssessmentReviewModelPopulator {
 
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
     private FormInputResponseRestService formInputResponseRestService;
     private ReviewRestService reviewRestService;
     private OrganisationService organisationService;
 
-    public AssessmentReviewModelPopulator(UserRestService userRestService,
+    public AssessmentReviewModelPopulator(ProcessRoleRestService processRoleRestService,
                                           FormInputResponseRestService formInputResponseRestService,
                                           ReviewRestService reviewRestService,
                                           OrganisationService organisationService) {
         this.organisationService = organisationService;
-        this.userRestService = userRestService;
+        this.processRoleRestService = processRoleRestService;
         this.formInputResponseRestService = formInputResponseRestService;
         this.reviewRestService = reviewRestService;
     }
@@ -42,7 +41,7 @@ public class AssessmentReviewModelPopulator {
                 reviewRestService.getAssessmentReview(reviewId).getSuccess();
 
         String projectSummary = getProjectSummary(reviewResource);
-        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(reviewResource.getApplication()).getSuccess();
+        List<ProcessRoleResource> processRoles = processRoleRestService.findProcessRole(reviewResource.getApplication()).getSuccess();
         SortedSet<OrganisationResource> collaborators = organisationService.getApplicationOrganisations(processRoles);
         OrganisationResource leadPartner = organisationService.getApplicationLeadOrganisation(processRoles).orElse(null);
 

@@ -6,7 +6,8 @@ import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
-import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -19,8 +20,10 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.competition.builder.LiveCompetitionSearchResultItemBuilder.newLiveCompetitionSearchResultItem;
+import static org.innovateuk.ifs.competition.builder.ProjectSetupCompetitionSearchResultItemBuilder.newProjectSetupCompetitionSearchResultItem;
+import static org.innovateuk.ifs.competition.builder.PreviousCompetitionSearchResultItemBuilder.newPreviousCompetitionSearchResultItem;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_USER_ROLES;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_USER_ROLES;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
@@ -77,7 +80,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     @Test
     public void internalAdminCanManageInnovationLeadsForCompetition() {
         allGlobalRoleUsers.forEach(user -> {
-            if (getUserWithRole(COMP_ADMIN).equals(user) || getUserWithRole(PROJECT_FINANCE).equals(user)) {
+            if (user.hasAuthority(Authority.COMP_ADMIN)) {
                 assertTrue(rules.internalAdminCanManageInnovationLeadsForCompetition(newCompetitionResource().build(), user));
             } else {
                 assertFalse(rules.internalAdminCanManageInnovationLeadsForCompetition(newCompetitionResource().build(), user));
@@ -89,7 +92,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     public void internalUsersBarringInnovationLeadAndIFSAdminCanViewPreviousApplications() {
         allGlobalRoleUsers.forEach(user -> {
             if ((allInternalUsers.contains(user) && !user.hasRole(INNOVATION_LEAD) && !user.hasRole(STAKEHOLDER))
-                    || getUserWithRole(IFS_ADMINISTRATOR).equals(user)) {
+                    || user.hasAnyAuthority(IFS_ADMINISTRATOR.getAuthorities())) {
                 assertTrue(rules.internalUsersAndIFSAdminCanViewPreviousApplications(newCompetitionResource().build(), user));
             } else {
                 assertFalse(rules.internalUsersAndIFSAdminCanViewPreviousApplications(newCompetitionResource().build(), user));
@@ -231,7 +234,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
                 .build(CompetitionStatus.values().length);
 
         allGlobalRoleUsers.forEach(user -> competitions.forEach(competitionResource -> {
-            if ((user.hasRole(COMP_ADMIN) || user.hasRole(PROJECT_FINANCE) || user.hasRole(IFS_ADMINISTRATOR)) &&
+            if (user.hasAuthority(Authority.COMP_ADMIN) &&
                     (competitionResource.getCompetitionStatus() == COMPETITION_SETUP ||
                             competitionResource.getCompetitionStatus() == READY_TO_OPEN)) {
                 assertTrue(rules.internalAdminAndIFSAdminCanDeleteCompetitionInPreparation(competitionResource, user));
@@ -244,7 +247,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     @Test
     public void internalAdminCanSetPostAwardServiceForCompetition() {
         allGlobalRoleUsers.forEach(user -> {
-            if (getUserWithRole(COMP_ADMIN).equals(user) || getUserWithRole(PROJECT_FINANCE).equals(user)) {
+            if (user.hasAuthority(Authority.COMP_ADMIN)) {
                 assertTrue(rules.internalAdminCanSetPostAwardServiceForCompetition(newCompetitionResource().build(), user));
             } else {
                 assertFalse(rules.internalAdminCanSetPostAwardServiceForCompetition(newCompetitionResource().build(), user));
@@ -255,7 +258,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     @Test
     public void internalAdminCanReadPostAwardServiceForCompetition() {
         allGlobalRoleUsers.forEach(user -> {
-            if (getUserWithRole(COMP_ADMIN).equals(user) || getUserWithRole(PROJECT_FINANCE).equals(user)) {
+            if (user.hasAuthority(Authority.COMP_ADMIN)) {
                 assertTrue(rules.internalAdminCanReadPostAwardServiceForCompetition(newCompetitionResource().build(), user));
             } else {
                 assertFalse(rules.internalAdminCanReadPostAwardServiceForCompetition(newCompetitionResource().build(), user));
@@ -316,5 +319,21 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
 
         assertFalse(rules.projectUsersCanReadPostAwardServiceForCompetition(competition, user));
         verify(projectUserRepository).existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), user.getId());
+    }
+
+    @Test
+    public void auditorCanAccessAllCompetitions() {
+        long competitionId = 1L;
+        List<Role> auditorRoles = singletonList(AUDITOR);
+        UserResource audtior = newUserResource().withRolesGlobal(auditorRoles).build();
+
+        CompetitionSearchResultItem competitionSearchLiveResultItem = newLiveCompetitionSearchResultItem().withCompetitionStatus(OPEN).withId(competitionId).build();
+        CompetitionSearchResultItem competitionSearchProjectSetupResultItem = newProjectSetupCompetitionSearchResultItem().withCompetitionStatus(PROJECT_SETUP).build();
+        CompetitionSearchResultItem competitionSearchPreviousResultItem = newPreviousCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.ASSESSOR_FEEDBACK).withId(2L).build();
+
+        assertTrue(rules.auditorCanViewAllCompetitions(competitionSearchLiveResultItem, audtior));
+        assertTrue(rules.auditorCanViewAllCompetitions(competitionSearchProjectSetupResultItem, audtior));
+        assertTrue(rules.auditorCanViewAllCompetitions(competitionSearchPreviousResultItem, audtior));
+
     }
 }

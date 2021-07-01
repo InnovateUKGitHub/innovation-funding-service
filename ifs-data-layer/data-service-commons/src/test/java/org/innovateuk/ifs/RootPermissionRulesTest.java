@@ -27,7 +27,6 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
     @InjectMocks
     protected T rules = supplyPermissionRulesUnderTest();
 
-
     protected List<Role> allRoles;
 
     protected List<UserResource> allGlobalRoleUsers;
@@ -76,6 +75,10 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return getUserWithRole(SYSTEM_MAINTAINER);
     }
 
+    protected UserResource auditorUser() {
+        return getUserWithRole(AUDITOR);
+    }
+
     protected UserResource anonymousUser() {
         return (UserResource) ReflectionTestUtils.getField(new DefaultPermissionMethodHandler(new PermissionedObjectClassToPermissionsToPermissionsMethods()), "ANONYMOUS_USER");
     }
@@ -84,16 +87,28 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return getUserWithRole(IFS_ADMINISTRATOR);
     }
 
+    protected UserResource superAdminUser() {
+        return getUserWithRole(SUPER_ADMIN_USER);
+    }
+
     protected UserResource ktaUser() {
         return getUserWithRole(KNOWLEDGE_TRANSFER_ADVISER);
+    }
+
+    protected UserResource supporterUser() {
+        return getUserWithRole(SUPPORTER);
+    }
+
+    protected UserResource liveProjectsUser() {
+        return getUserWithRole(LIVE_PROJECTS_USER);
     }
 
     @Before
     public void setupSetsOfData() {
         allRoles = asList(Role.values());
-        allGlobalRoleUsers = simpleMap(allRoles, role -> newUserResource().withRolesGlobal(singletonList(role)).build());
-        allInternalUsers = asList(compAdminUser(), projectFinanceUser(), supportUser(), innovationLeadUser(), ifsAdminUser());
-        compAdminAndProjectFinance = asList(compAdminUser(), projectFinanceUser());
+        allGlobalRoleUsers = simpleMap(allRoles, role -> newUserResource().withRoleGlobal(role).build());
+        allInternalUsers = asList(compAdminUser(), projectFinanceUser(), supportUser(), innovationLeadUser(), ifsAdminUser(), superAdminUser());
+        compAdminAndProjectFinance = asList(compAdminUser(), projectFinanceUser(), ifsAdminUser(), systemMaintenanceUser(), superAdminUser());
     }
 
     protected UserResource getUserWithRole(Role type) {

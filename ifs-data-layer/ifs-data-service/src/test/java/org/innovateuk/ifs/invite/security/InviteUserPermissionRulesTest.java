@@ -8,8 +8,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collections;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -30,11 +28,11 @@ public class InviteUserPermissionRulesTest extends BasePermissionRulesTest<Invit
         invitedUser = UserResourceBuilder.newUserResource().build();
 
         ifsAdmin = UserResourceBuilder.newUserResource()
-                .withRolesGlobal(Collections.singletonList(Role.IFS_ADMINISTRATOR))
+                .withRoleGlobal(Role.IFS_ADMINISTRATOR)
                 .build();
 
         nonIfsAdmin = UserResourceBuilder.newUserResource()
-                .withRolesGlobal(Collections.singletonList(Role.SUPPORT))
+                .withRoleGlobal(Role.SUPPORT)
                 .build();
     }
 

@@ -60,6 +60,7 @@ public class ProjectDocs {
             fieldWithPath("projectSetupCompleteStatus").description("Status of the project setup complete section"),
             fieldWithPath("grantOfferLetterSent").description("Flag to indicate if the Grant Offer Letter notification has been sent"),
             fieldWithPath("projectState").description("State of the project"),
+            fieldWithPath("applicationState").description("State of the application"),
             fieldWithPath("sentToIfsPa").description("Indicates if project has been sent to IFSPA")
     };
 

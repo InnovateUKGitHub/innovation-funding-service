@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
+import static org.assertj.core.util.Lists.newArrayList;
 import static org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluatorTestUtil.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertTrue;
@@ -54,6 +54,7 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
      * @param <T>
      * @return
      */
+    @SuppressWarnings("unchecked")
     protected <T> T getMockPermissionRulesBean(Class<T> clazz) {
         return (T) mockPermissionRulesBeans.get(clazz);
     }
@@ -66,6 +67,7 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
      * @param <T>
      * @return
      */
+    @SuppressWarnings("unchecked")
     protected <T> T getMockPermissionEntityLookupStrategiesBean(Class<T> clazz) {
         return (T) mockPermissionEntityLookupStrategies.get(clazz);
     }
@@ -247,7 +249,7 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
      * the action will raise an error and vice versa any not specified who can will also raise an error
      */
     protected void assertRolesCanPerform(Runnable actionFn, Role... supportedRoles) {
-        assertRolesCanPerform(actionFn, asList(supportedRoles));
+        assertRolesCanPerform(actionFn, newArrayList(supportedRoles));
     }
 
     /**
@@ -255,10 +257,17 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
      * the action will raise an error and vice versa any not specified who can will also raise an error
      */
     protected void assertRolesCanPerform(Runnable actionFn, List<Role> supportedRoles) {
+        if (supportedRoles.contains(Role.ASSESSOR)) {
+            supportedRoles.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
+        } else if (supportedRoles.contains(Role.PROJECT_FINANCE)
+                || supportedRoles.contains(Role.IFS_ADMINISTRATOR)
+                || supportedRoles.contains(Role.SUPER_ADMIN_USER)) {
+            supportedRoles.add(Role.SYSTEM_MAINTAINER);
+        }
 
         asList(Role.values()).forEach(role -> {
 
-            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(role)).build();
+            UserResource userWithRole = newUserResource().withRoleGlobal(role).build();
             setLoggedInUser(userWithRole);
 
             if (supportedRoles.contains(role)) {

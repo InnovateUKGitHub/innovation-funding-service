@@ -8,20 +8,13 @@ import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLette
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.EnumSet;
-
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.Mockito.*;
 
 public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest<GrantOfferLetterService> {
-
-    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = EnumSet.complementOf(EnumSet.of(COMP_ADMIN, PROJECT_FINANCE));
 
     private GrantOfferLetterPermissionRules projectGrantOfferPermissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
@@ -53,6 +46,37 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).monitoringOfficerCanViewGrantOfferLetter(project,
                     getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).auditorUsersCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
+
+            verifyNoMoreInteractions(projectGrantOfferPermissionRules);
+        });
+
+    }
+
+    @Test
+    public void getSignedAdditionalContractFileEntryDetails() {
+
+        final Long projectId = 1L;
+
+        ProjectResource project = newProjectResource().build();
+        when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
+
+        assertAccessDenied(() -> classUnderTest.getSignedAdditionalContractFileEntryDetails(projectId), () -> {
+            verify(projectGrantOfferPermissionRules).partnersCanViewGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).internalUsersCanViewGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).supportUsersCanViewGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).stakeholdersCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).monitoringOfficerCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).auditorUsersCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -79,6 +103,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
             verify(projectGrantOfferPermissionRules).stakeholdersCanViewGrantOfferLetter(project,
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).monitoringOfficerCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).auditorUsersCanViewGrantOfferLetter(project,
                     getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
@@ -108,6 +134,9 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).monitoringOfficerCanViewGrantOfferLetter(project,
                     getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).auditorUsersCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
+
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
     }
@@ -123,6 +152,22 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
         assertAccessDenied(() -> classUnderTest.createSignedGrantOfferLetterFileEntry(projectId, null, null), () -> {
             verify(projectGrantOfferPermissionRules).leadPartnerCanUploadGrantOfferLetter(project, getLoggedInUser());
             verify(projectGrantOfferPermissionRules).projectManagerCanUploadGrantOfferLetter(project, getLoggedInUser
+                    ());
+            verifyNoMoreInteractions(projectGrantOfferPermissionRules);
+        });
+    }
+
+    @Test
+    public void createSignedAdditionalContractFileEntry() {
+
+        final Long projectId = 1L;
+
+        ProjectResource project = newProjectResource().build();
+        when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
+
+        assertAccessDenied(() -> classUnderTest.createSignedAdditionalContractFileEntry(projectId, null, null), () -> {
+            verify(projectGrantOfferPermissionRules).leadPartnerCanUploadSignedAdditionalContract(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).financeContactCanUploadSignedAdditionalContract(project, getLoggedInUser
                     ());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -148,6 +193,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
             verify(projectGrantOfferPermissionRules).innovationLeadUsersCanDownloadGrantOfferLetter(project,
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).stakeholdersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).auditorUsersCanDownloadGrantOfferLetter(project,
                     getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -175,6 +222,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).stakeholdersCanDownloadGrantOfferLetter(project,
                     getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).auditorUsersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
 
@@ -201,8 +250,39 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).stakeholdersCanDownloadGrantOfferLetter(project,
                     getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).auditorUsersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
+    }
+
+    @Test
+    public void getSignedAdditionalContractFileEntryContents() {
+
+        final Long projectId = 1L;
+
+        ProjectResource project = newProjectResource().build();
+        when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
+
+        assertAccessDenied(() -> classUnderTest.getSignedAdditionalContractFileAndContents(projectId), () -> {
+            verify(projectGrantOfferPermissionRules).partnersCanDownloadGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).supportUsersCanDownloadGrantOfferLetter(project, getLoggedInUser
+                    ());
+
+            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).stakeholdersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).auditorUsersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
+
+            verifyNoMoreInteractions(projectGrantOfferPermissionRules);
+        });
+
     }
 
     @Test
@@ -224,6 +304,21 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
         when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
 
         assertAccessDenied(() -> classUnderTest.removeSignedGrantOfferLetterFileEntry(projectId), () -> {
+            verify(projectGrantOfferPermissionRules).leadPartnerCanDeleteSignedGrantOfferLetter(project,
+                    getLoggedInUser());
+            verifyNoMoreInteractions(projectGrantOfferPermissionRules);
+        });
+    }
+
+    @Test
+    public void deleteSignedAdditionalContractFileEntry() {
+
+        final Long projectId = 1L;
+
+        ProjectResource project = newProjectResource().build();
+        when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
+
+        assertAccessDenied(() -> classUnderTest.removeSignedAdditionalContractFileEntry(projectId), () -> {
             verify(projectGrantOfferPermissionRules).leadPartnerCanDeleteSignedGrantOfferLetter(project,
                     getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
@@ -272,6 +367,9 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).monitoringOfficerCanViewSendGrantOfferLetterStatus(project,
                     getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).auditorUserCanViewSendGrantOfferLetterStatus(project,
+                    getLoggedInUser());
+
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
     }

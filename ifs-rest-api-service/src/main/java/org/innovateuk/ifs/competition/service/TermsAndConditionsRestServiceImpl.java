@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
-import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
+import org.innovateuk.ifs.competition.resource.VersionedTemplateResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.grantTermsAndConditionsResourceListType;
 
 /**
- * TermsAndConditionsRestServiceImpl is a utility for CRUD operations on {@link TermsAndConditionsResource}.
+ * TermsAndConditionsRestServiceImpl is a utility for CRUD operations on {@link VersionedTemplateResource}.
  * This class connects to the { org.innovateuk.ifs.competition.controller.TermsAndConditionsController}
  * through a REST call.
  */

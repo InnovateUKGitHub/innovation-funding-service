@@ -13,7 +13,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.workflow.domain.Process;
 import org.junit.Before;
@@ -27,7 +27,8 @@ import java.util.concurrent.atomic.LongAccumulator;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.*;
+import static java.util.Collections.shuffle;
+import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
@@ -81,14 +82,14 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                 .with(id(null))
                 .withApplication(application)
                 .withUser(user)
-                .withRole(Role.ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .build());
 
         ProcessRole participant2 = processRoleRepository.save(newProcessRole()
                 .with(id(null))
                 .withApplication(application)
                 .withUser(user)
-                .withRole(Role.ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .build());
 
         List<Assessment> assessments = newAssessment()
@@ -113,14 +114,14 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                 .with(id(null))
                 .withApplication(application)
                 .withUser(user)
-                .withRole(Role.ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .build());
 
         ProcessRole participant2 = processRoleRepository.save(newProcessRole()
                 .with(id(null))
                 .withApplication(application)
                 .withUser(user)
-                .withRole(Role.ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .build());
 
         List<Assessment> assessments = newAssessment()
@@ -265,19 +266,19 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                 .withId()
                 .withUser(paulPlum)
                 .withApplication(application1)
-                .withRole(Role.ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .build();
         ProcessRole participant2 = newProcessRole()
                 .withId()
                 .withUser(felixWilson)
                 .withApplication(application1)
-                .withRole(Role.ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .build();
         ProcessRole participant3 = newProcessRole()
                 .withId()
                 .withUser(paulPlum)
                 .withApplication(application2)
-                .withRole(Role.ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .build();
 
         processRoleRepository.saveAll(asList(participant1, participant2, participant3));
@@ -448,7 +449,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         processRoleRepository.saveAll(newProcessRole()
                 .with(id(null))
                 .withUser(user)
-                .withRole(Role.ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .withApplication(application)
                 .build(count)).forEach(result::add);
         return result.toArray(new ProcessRole[result.size()]);

@@ -34,11 +34,12 @@
             </div>
             <div class="govuk-grid-column-one-half">
                 <ul class="govuk-list govuk-list--bullet">
-                    <li th:if="${model.showApplicationFeedbackLink}"><a th:href="${'/application/' + model.applicationId + '/summary'}"
-                           class="govuk-link">
+                    <li th:if="${model.showApplicationSummaryLink}"><a th:href="${'/application/' + model.applicationId + '/summary'}"
+                           class="govuk-link"
+                    th:text="${model.applicationFeedbackAvailable ? 'view application feedback' : 'view application overview'}">
                         view application feedback</a></li>
                     <li>
-                        <a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}"
+                        <a th:href="${'/application/' + model.applicationId + '/summary#terms-and-conditions'}"
                            class="govuk-link">
                             <th:block th:if="${model.investorPartnershipCompetition}">
                                 view the Investor Partnerships terms and conditions
@@ -52,7 +53,7 @@
             </div>
         </div>
 
-        <th:block th:if="${model.projectState.live}">
+        <th:block th:if="${model.liveProjectMessageVisible}">
             <div class="success-alert govuk-!-margin-bottom-6">
                 <p th:if="${model.projectManager || model.projectFinanceContact}" class="govuk-body">The project is now live and you can <a th:href="${model.ifsPostAward} ? ${model.liveProjectsLandingPageUrl} : 'https://grants.innovateuk.org'" class="govuk-link">review its progress</a>.</p>
                 <p th:if="${!model.projectManager && !model.projectFinanceContact}" class="govuk-body">The project is now live.</p>
@@ -60,9 +61,9 @@
             <p class="govuk-body">The following steps have been completed by all partners. The project can now start.</p>
         </th:block>
 
-        <th:block th:if="${model.projectState.active && !model.loanCompetition}">
-            <div class="message-alert">
-                <th:block th:unless="${model.monitoringOfficer}">
+        <th:block th:if="${model.bannerVisible}">
+            <th:block th:unless="${model.monitoringOfficer}">
+                <div class="message-alert">
                     <th:block th:if="${model.isCollaborativeProject()}">
                         <p class="govuk-body">You must complete your project and bank details within 30 days of our notification to you.</p>
                         <p class="govuk-body">All project partners have individual steps to complete in this
@@ -73,16 +74,11 @@
                     <th:block th:unless="${model.isCollaborativeProject()}">
                         <p class="govuk-body">You must complete your project and bank details within 30 days of our notification to you.</p>
                     </th:block>
-                </th:block>
-                <th:block th:if="${model.monitoringOfficer}">
-                    <p class="govuk-body">You are viewing project setup exactly as the partners see it.
-                        Partners must complete their project and bank details within 30 days of our notification to
-                        them.
-                        All partners have individual steps to complete in this section.</p>
-                    <p class="govuk-body"><a th:href="@{/project/{id}/team-status(id=${model.projectId})}"
-                                             class="govuk-link">View the status of partners</a>.</p>
-                </th:block>
-            </div>
+                </div>
+            </th:block>
+            <th:block th:if="${model.monitoringOfficer}">
+                <p class="govuk-body govuk-!-margin-bottom-9">You must complete the details for any section you can access and is marked as 'Awaiting review'.</p>
+            </th:block>
         </th:block>
 
         <div class="progress-list progress-list--individual-blocks">

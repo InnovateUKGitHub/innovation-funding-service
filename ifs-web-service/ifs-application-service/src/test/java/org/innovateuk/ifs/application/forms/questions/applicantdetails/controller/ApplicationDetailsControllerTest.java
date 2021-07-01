@@ -12,8 +12,9 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.procurement.milestone.service.ApplicationProcurementMilestoneRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -21,6 +22,7 @@ import org.mockito.Mock;
 import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 import static java.lang.Boolean.FALSE;
@@ -29,6 +31,7 @@ import static java.lang.String.format;
 import static java.lang.String.valueOf;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
+import static java.util.Optional.empty;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.resource.CompanyAge.ESTABLISHED_1_TO_5_YEARS;
 import static org.innovateuk.ifs.application.resource.CompanyPrimaryFocus.AEROSPACE_AND_DEFENCE;
@@ -50,7 +53,9 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
     @Mock
     private QuestionStatusRestService questionStatusRestService;
     @Mock
-    private UserRestService userRestService;
+    private ApplicationProcurementMilestoneRestService applicationProcurementMilestoneRestService;
+    @Mock
+    private ProcessRoleRestService processRoleRestService;
     @Mock
     private ApplicationRestService applicationRestService;
     @Mock
@@ -134,7 +139,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         long questionId = 1L;
         long applicationId = 2L;
         long competitionId = 3L;
-        ZonedDateTime competitionEndDate = ZonedDateTime.now();
+        ZonedDateTime competitionEndDate = ZonedDateTime.now(ZoneId.of("Europe/London"));
         LocalDate ktpProjectStartDate = competitionEndDate.plusMonths(12).toLocalDate();
 
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
@@ -198,6 +203,8 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
                 .withId(competitionId)
                 .withFundingType(FundingType.GRANT)
                 .withInnovationAreas(singleton(1L))
+                .withMaxProjectDuration(36)
+                .withMinProjectDuration(0)
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
@@ -206,8 +213,9 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
         when(applicationRestService.saveApplication(any(ApplicationResource.class))).thenReturn(restSuccess(ValidationMessages.noErrors()));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
-        when(userRestService.findProcessRole(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(processRoleResource));
+        when(processRoleRestService.findProcessRole(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(processRoleResource));
         when(questionStatusRestService.markAsComplete(questionId, applicationId, processRoleResource.getId())).thenReturn(restSuccess(emptyList()));
+        when(applicationProcurementMilestoneRestService.findMaxByApplicationId(applicationId)).thenReturn(restSuccess(empty()));
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}/application-details", applicationId, questionId)
@@ -231,7 +239,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         long questionId = 1L;
         long applicationId = 2L;
         long competitionId = 3L;
-        ZonedDateTime competitionEndDate = ZonedDateTime.now();
+        ZonedDateTime competitionEndDate = ZonedDateTime.now(ZoneId.of("Europe/London"));
         LocalDate ktpProjectStartDate = competitionEndDate.plusMonths(12).toLocalDate();
 
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
@@ -244,6 +252,8 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         applicationDetailsForm.setKtpCompetition(true);
 
         CompetitionResource competition = newCompetitionResource()
+                .withMaxProjectDuration(36)
+                .withMinProjectDuration(0)
                 .withId(competitionId)
                 .withFundingType(FundingType.KTP)
                 .withEndDate(competitionEndDate)
@@ -256,8 +266,9 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
         when(applicationRestService.saveApplication(any(ApplicationResource.class))).thenReturn(restSuccess(ValidationMessages.noErrors()));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
-        when(userRestService.findProcessRole(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(processRoleResource));
+        when(processRoleRestService.findProcessRole(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(processRoleResource));
         when(questionStatusRestService.markAsComplete(questionId, applicationId, processRoleResource.getId())).thenReturn(restSuccess(emptyList()));
+        when(applicationProcurementMilestoneRestService.findMaxByApplicationId(applicationId)).thenReturn(restSuccess(empty()));
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}/application-details", applicationId, questionId)
@@ -318,7 +329,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         long applicationId = 2L;
 
         ProcessRoleResource processRoleResource = newProcessRoleResource().build();
-        when(userRestService.findProcessRole(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(processRoleResource));
+        when(processRoleRestService.findProcessRole(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(processRoleResource));
         when(questionStatusRestService.markAsInComplete(questionId, applicationId, processRoleResource.getId())).thenReturn(restSuccess());
         ApplicationResource application = newApplicationResource().build();
         ApplicationDetailsViewModel viewModel = mock(ApplicationDetailsViewModel.class);

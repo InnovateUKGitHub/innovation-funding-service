@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.form.repository;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -16,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.*;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
@@ -70,7 +70,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
     @Test
     public void test_findByCompetitionId() {
-        List<FormInput> competitionInputs = repository.findByCompetitionIdAndActiveTrueOrderByPriorityAsc(1L);
+        List<FormInput> competitionInputs = repository.findByCompetitionIdAndActiveTrueOrderByPriorityAscIdAsc(1L);
         assertEquals(39, competitionInputs.size());
 
         FormInput first = competitionInputs.get(0);
@@ -89,7 +89,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
     @Test
     public void test_findByCompetitionId_nonExistentCompetition() {
-        List<FormInput> competitionInputs = repository.findByCompetitionIdAndActiveTrueOrderByPriorityAsc(999L);
+        List<FormInput> competitionInputs = repository.findByCompetitionIdAndActiveTrueOrderByPriorityAscIdAsc(999L);
         assertEquals(0, competitionInputs.size());
     }
 
@@ -168,7 +168,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
         FormInputType formInputType = FILEUPLOAD;
         Question question = newQuestion().withId(1L).build();
         Competition competition = newCompetition().withId(1L).build();
-        Set<FormValidator> inputValidators = asSet(
+        Set<FormValidator> inputValidators = ImmutableSet.of(
                 newFormValidator().build(),
                 newFormValidator().build()
         );
@@ -177,9 +177,10 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
         String description = "Description";
         Boolean includedInApplicationSummary = false;
         Integer priority = 1;
-        List<GuidanceRow> guidanceRows = newFormInputGuidanceRow().build(2);
+        List<GuidanceRow> guidanceRows = newFormInputGuidanceRow().withPriority(0).build(2);
+
         Boolean isActive = true;
-        Set<FileTypeCategory> allowedFileTypes = asSet(PDF, SPREADSHEET);
+        Set<FileTypeCategory> allowedFileTypes = ImmutableSet.of(PDF, SPREADSHEET);
 
         FormInput formInput = newFormInput()
                 .withWordCount(wordCount)
@@ -196,6 +197,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
                 .withActive(isActive)
                 .withAllowedFileTypes(allowedFileTypes)
                 .build();
+        guidanceRows.stream().forEach(gr -> gr.setFormInput(formInput));
 
         repository.save(formInput);
 

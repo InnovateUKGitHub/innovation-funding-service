@@ -4,8 +4,11 @@ Documentation     INFUND-1458 As a existing user with an invitation to collabora
 ...               INFUND-2716: Error in where the name of an invited partner doesn't update in 'view and manage contributors and collaborators'
 ...
 ...               INFUND-3759: Existing Applicant should be able to accept invitations for other applications in the same organisation
-Suite Setup       Custom suite setup
-Suite Teardown    Custom suite teardown
+...
+...               IFS-7723 Improvement to company search results
+...
+Suite Setup       The guest user opens the browser
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
@@ -21,13 +24,12 @@ The invited user should not follow the registration flow again
     Then the user should see the element                jQuery = h3:contains("We have found an account with the invited email address")
 
 The user clicks the login link
-    [Documentation]    INFUND-1458
+    [Documentation]    INFUND-1458  IFS-7723
     [Tags]  HappyPath
     When the user clicks the button/link                link = Continue
     And The guest user inserts user email and password  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
-    And the user clicks the button/link                 jQuery = button:contains("Sign in")
-    Then the user should see the element                jQuery = h1:contains("Your organisation")
-    And the user should see the element                 jQuery = dt:contains("INNOVATE LTD")
+    And the guest user clicks the log-in button
+    Then the user should see the element                jQuery = dt:contains("ROYAL MAIL PLC")
     When the user clicks the button/link                css = .govuk-button[type="submit"]    #Save and continue
     Then the user should see the element                jQuery = h1:contains("Application overview")
 
@@ -284,7 +286,7 @@ Existing user creates a new application and invites a user from the same organis
     the user clicks the button/link       jQuery = .govuk-button:contains("Continue")
     the user clicks the button/link       css = .govuk-button[type="submit"]    #Save and continue
     the user clicks the button/link       link = Application team
-    the user clicks the button/link       jQuery = button:contains("Add person to INNOVATE LTD")
+    the user clicks the button/link       jQuery = button:contains("Add person to ROYAL MAIL PLC")
     The user enters text to a text field  css = [name=name]    Olivier Giroud
     The user enters text to a text field  css = [name=email]     ${test_mailbox_one}+invite2@gmail.com
     the user clicks the button/link       jQuery = button:contains("Invite to application")

@@ -28,6 +28,16 @@ public class MonitoringOfficerController {
         return monitoringOfficerService.findAll().toGetResponse();
     }
 
+    @GetMapping("/find-all-ktp")
+    public RestResult<List<SimpleUserResource>> findAllKtp() {
+        return monitoringOfficerService.findAllKtp().toGetResponse();
+    }
+
+    @GetMapping("/find-all-non-ktp")
+    public RestResult<List<SimpleUserResource>> findAllNonKtp() {
+        return monitoringOfficerService.findAllNonKtp().toGetResponse();
+    }
+
     @GetMapping("/{userId}")
     public RestResult<MonitoringOfficerAssignmentResource> getProjectMonitoringOfficer(@PathVariable long userId) {
         return monitoringOfficerService.getProjectMonitoringOfficer(userId).toGetResponse();
@@ -61,6 +71,11 @@ public class MonitoringOfficerController {
     @GetMapping("/is-monitoring-officer/{userId}")
     public RestResult<Boolean> isMonitoringOfficer(@PathVariable final long userId) {
         return monitoringOfficerService.isMonitoringOfficer(userId).toGetResponse();
+    }
+
+    @PostMapping("/{projectId}/notify/{userId}")
+    public RestResult<Void> sendDocumentReviewNotification(@PathVariable long projectId, @PathVariable long userId) {
+        return monitoringOfficerService.sendDocumentReviewNotification(projectId, userId).toPostResponse();
     }
 
 }

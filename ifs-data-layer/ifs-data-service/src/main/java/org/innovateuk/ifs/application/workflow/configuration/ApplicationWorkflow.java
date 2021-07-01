@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.workflow.configuration;
 
 import org.innovateuk.ifs.application.resource.ApplicationEvent;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.workflow.actions.AlwaysOpenKtpStartDateAction;
 import org.innovateuk.ifs.application.workflow.actions.AutoCompleteSectionsAction;
 import org.innovateuk.ifs.application.workflow.actions.MarkIneligibleAction;
 import org.innovateuk.ifs.application.workflow.actions.SendFinanceTotalsAction;
@@ -31,6 +32,9 @@ public class ApplicationWorkflow extends StateMachineConfigurerAdapter<Applicati
 
     @Autowired
     private SendFinanceTotalsAction sendFinanceTotalsAction;
+
+    @Autowired
+    private AlwaysOpenKtpStartDateAction alwaysOpenKtpStartDateAction;
 
     @Autowired
     private AutoCompleteSectionsAction autoCompleteSectionsAction;
@@ -72,6 +76,7 @@ public class ApplicationWorkflow extends StateMachineConfigurerAdapter<Applicati
                 .source(ApplicationState.OPENED)
                 .event(ApplicationEvent.SUBMIT)
                 .action(sendFinanceTotalsAction)
+                .action(alwaysOpenKtpStartDateAction)
                 .target(ApplicationState.SUBMITTED);
     }
 

@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.finance.builder.EmployeesAndTurnoverResourceBuilder;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.EmployeesAndTurnover;
@@ -23,7 +24,6 @@ import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -33,13 +33,13 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 
 import static org.innovateuk.ifs.finance.builder.EmployeesAndTurnoverResourceBuilder.newEmployeesAndTurnoverResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -74,6 +74,9 @@ public class ApplicationFinanceServiceImplTest extends BaseServiceUnitTest<Appli
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private FileEntryRepository fileEntryRepositoryMock;
 
     @Test
     public void findApplicationFinanceByApplicationIdAndOrganisation() {
@@ -176,4 +179,40 @@ public class ApplicationFinanceServiceImplTest extends BaseServiceUnitTest<Appli
         assertEquals(location, applicationFinance.getInternationalLocation());
     }
 
+    @Test
+    public void updateApplicationFinanceFecModel() {
+        Long applicationId = 1L;
+        Long applicationFinanceId = 8L;
+        Long fecFileEntryId = 9L;
+
+        Application application = newApplication()
+                .withId(applicationId)
+                .withCompetition(newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build())
+                .build();
+
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
+
+        ApplicationFinance applicationFinance = newApplicationFinance()
+                .withApplication(application)
+                .withEmployeesAndTurnover(new EmployeesAndTurnover())
+                .build();
+
+        when(applicationFinanceRepositoryMock.findById(applicationFinanceId)).thenReturn(Optional.of(applicationFinance));
+        when(fileEntryRepositoryMock.findById(fecFileEntryId)).thenReturn(Optional.of(newFileEntry().withId(fecFileEntryId).build()));
+
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
+                .withApplication(applicationId)
+                .withFinancialYearAccounts(newEmployeesAndTurnoverResource().build())
+                .withFecEnabled(true)
+                .withFecFileEntry(fecFileEntryId)
+                .build();
+
+        ServiceResult<ApplicationFinanceResource> result = service.updateApplicationFinance(applicationFinanceId, applicationFinanceResource);
+
+        assertTrue(result.isSuccess());
+        verify(applicationFinanceRepositoryMock).save(applicationFinance);
+        assertTrue(applicationFinance.getFecModelEnabled());
+        assertNotNull(applicationFinance.getFecFileEntry());
+        assertEquals(fecFileEntryId, applicationFinance.getFecFileEntry().getId());
+    }
 }

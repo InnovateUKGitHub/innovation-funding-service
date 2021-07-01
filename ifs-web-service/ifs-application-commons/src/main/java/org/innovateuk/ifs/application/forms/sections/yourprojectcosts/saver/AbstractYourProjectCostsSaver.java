@@ -8,21 +8,18 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
-import org.innovateuk.ifs.finance.resource.category.AdditionalCompanyCostCategory;
-import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
-import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
-import org.innovateuk.ifs.finance.resource.category.VatCostCategory;
+import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.*;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.Overhead;
-import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.util.JsonUtil;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -30,13 +27,15 @@ import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.generateUnsavedRowId;
+import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.IndirectCostsUtil.calculateIndirectCostFromForm;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
+@SuppressWarnings("unchecked")
 public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
     private static final Log LOG = LogFactory.getLog(AbstractYourProjectCostsSaver.class);
 
-    public ServiceResult<Void> saveType(YourProjectCostsForm form, FinanceRowType type, long targetId, long organisationId) {
+    public ServiceResult<Void> saveType(YourProjectCostsForm form, FinanceRowType type, long targetId, long organisationId, boolean ktp) {
         try {
             BaseFinanceResource finance = getFinanceResource(targetId, organisationId);
             ValidationMessages messages = new ValidationMessages();
@@ -71,6 +70,11 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                     break;
                 case ASSOCIATE_SALARY_COSTS:
                     messages.addAll(saveRowsAndDeleteBlank(form.getAssociateSalaryCostRows(), finance).get());
+                    if (ktp && !finance.getFecModelEnabled()) {
+                        BigInteger totalAssociateSalaryCosts = getTotalAssociateSalaryCosts(form);
+                        messages.addAll(saveIndirectCostAfterAssociateSalaryUpdate(form, finance, new BigDecimal(totalAssociateSalaryCosts)).get());
+                    }
+
                     break;
                 case ASSOCIATE_DEVELOPMENT_COSTS:
                     messages.addAll(saveRowsAndDeleteBlank(form.getAssociateDevelopmentCostRows(), finance).get());
@@ -87,9 +91,17 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 case CONSUMABLES:
                     messages.addAll(saveRows(form.getConsumableCostRows(), finance).get());
                     break;
+                case KTP_TRAVEL:
+                    messages.addAll(saveRows(form.getKtpTravelCostRows(), finance).get());
+                    break;
                 case ADDITIONAL_COMPANY_COSTS:
                     messages.addAll(saveAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), finance).get());
                     break;
+                case ACADEMIC_AND_SECRETARIAL_SUPPORT:
+                    messages.addAll(saveAcademicAndSecretarialSupport(form, finance).get());
+                    break;
+                default:
+                    // do nothing
             }
             if (messages.getErrors().isEmpty()) {
                 return serviceSuccess();
@@ -101,8 +113,8 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         }
     }
 
-    public ServiceResult<Void> save(YourProjectCostsForm form, long targetId, long organisationId) {
-        BaseFinanceResource finance = getFinanceResource(targetId, organisationId);
+    public ServiceResult<Void> save(YourProjectCostsForm form, long targetId, OrganisationResource organisation, ValidationMessages messages) {
+        BaseFinanceResource finance = getFinanceResource(targetId, organisation.getId());
 
         List<CompletableFuture<ValidationMessages>> futures = new ArrayList<>();
 
@@ -151,11 +163,18 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.CONSUMABLES)) {
             futures.add(saveRows(form.getConsumableCostRows(), finance));
         }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.KTP_TRAVEL)) {
+            futures.add(saveRows(form.getKtpTravelCostRows(), finance));
+        }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.ADDITIONAL_COMPANY_COSTS)) {
             futures.add(saveAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), finance));
         }
-
-        ValidationMessages messages = new ValidationMessages();
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT)) {
+            futures.add(saveAcademicAndSecretarialSupport(form, finance));
+        }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.INDIRECT_COSTS)) {
+            futures.add(saveIndirectCost(form, finance));
+        }
 
         awaitAll(futures)
                 .thenAccept(messages::addAll);
@@ -165,6 +184,65 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         } else {
             return serviceFailure(messages.getErrors());
         }
+    }
+
+    private CompletableFuture<ValidationMessages> saveAcademicAndSecretarialSupport(YourProjectCostsForm form, BaseFinanceResource finance) {
+        return async(() -> {
+            ValidationMessages messages = new ValidationMessages();
+            if (form != null) {
+                DefaultCostCategory defaultCostCategory = (DefaultCostCategory)
+                        finance.getFinanceOrganisationDetails(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT);
+
+                AcademicAndSecretarialSupport academicAndSecretarialSupport = (AcademicAndSecretarialSupport) defaultCostCategory.getCosts().stream()
+                        .filter(costRowItem -> costRowItem.getCostType() == FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT)
+                        .findFirst()
+                        .orElseGet(() -> getFinanceRowService().create(new AcademicAndSecretarialSupport(finance.getId())).getSuccess());
+
+
+                academicAndSecretarialSupport.setCost(form.getAcademicAndSecretarialSupportForm().getCost());
+                messages.addAll(getFinanceRowService().update(academicAndSecretarialSupport).getSuccess());
+
+                DefaultCostCategory defaultCostCategory2 = (DefaultCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.INDIRECT_COSTS);
+
+                IndirectCost indirectCost = (IndirectCost) defaultCostCategory2.getCosts().stream()
+                        .filter(costRowItem -> costRowItem.getCostType() == FinanceRowType.INDIRECT_COSTS)
+                        .findFirst()
+                        .orElseGet(() -> getFinanceRowService().create(new IndirectCost(finance.getId())).getSuccess());
+
+                BigDecimal calculateIndirectCost = IndirectCostsUtil.calculateIndirectCostWithNewAcademicAndSecretarialSupportCost(form, finance, academicAndSecretarialSupport.getTotal());
+
+                indirectCost.setCost(calculateIndirectCost.toBigIntegerExact());
+                messages.addAll(getFinanceRowService().update(indirectCost).getSuccess());
+            }
+
+            return messages;
+        });
+    }
+
+    private CompletableFuture<ValidationMessages> saveIndirectCostAfterAssociateSalaryUpdate(YourProjectCostsForm form, BaseFinanceResource finance, BigDecimal value) {
+        return async(() -> {
+            ValidationMessages messages = new ValidationMessages();
+            DefaultCostCategory defaultCostCategory2 = (DefaultCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.INDIRECT_COSTS);
+
+            IndirectCost indirectCost = (IndirectCost) defaultCostCategory2.getCosts().stream()
+                    .filter(costRowItem -> costRowItem.getCostType() == FinanceRowType.INDIRECT_COSTS)
+                    .findFirst()
+                    .orElseGet(() -> getFinanceRowService().create(new IndirectCost(finance.getId())).getSuccess());
+
+            BigDecimal calculateIndirectCost = IndirectCostsUtil.calculateIndirectCostWithNewAssociateSalaryCost(form, finance, value);
+
+            indirectCost.setCost(calculateIndirectCost.toBigIntegerExact());
+            messages.addAll(getFinanceRowService().update(indirectCost).getSuccess());
+            return messages;
+        });
+    }
+
+    private BigInteger getTotalAssociateSalaryCosts(YourProjectCostsForm form) {
+        return form.getAssociateSalaryCostRows().values().stream()
+                .map(AssociateSalaryCostRowForm::getCost)
+                .filter(Objects::nonNull)
+                .reduce(BigInteger::add)
+                .orElse(new BigInteger("0"));
     }
 
     private CompletableFuture<ValidationMessages> saveLabourCosts(LabourForm labourForm, BaseFinanceResource finance) {
@@ -199,13 +277,14 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
     private CompletableFuture<ValidationMessages> saveVat(VatForm vatForm, BaseFinanceResource finance) {
         return async(() -> {
             ValidationMessages messages = new ValidationMessages();
-            VatCostCategory vatCategory = (VatCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.VAT);
-            Vat vatCost = (Vat) vatCategory.getCosts().stream().findFirst().get();
+            if (vatForm != null) {
+                VatCostCategory vatCategory = (VatCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.VAT);
+                Vat vatCost = (Vat) vatCategory.getCosts().stream().findFirst().get();
 
-            vatCost.setRegistered(vatForm.getRegistered());
+                vatCost.setRegistered(vatForm.getRegistered());
 
-            messages.addAll(getFinanceRowService().update(vatCost).getSuccess());
-
+                messages.addAll(getFinanceRowService().update(vatCost).getSuccess());
+            }
             return messages;
         });
     }
@@ -213,41 +292,76 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
     private CompletableFuture<ValidationMessages> saveAdditionalCompanyCosts(AdditionalCompanyCostForm additionalCompanyCostForm, BaseFinanceResource finance) {
         return async(() -> {
             ValidationMessages messages = new ValidationMessages();
-            AdditionalCompanyCostCategory costCategory = (AdditionalCompanyCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.ADDITIONAL_COMPANY_COSTS);
+            if (additionalCompanyCostForm != null) {
+                AdditionalCompanyCostCategory costCategory = (AdditionalCompanyCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.ADDITIONAL_COMPANY_COSTS);
 
-            AdditionalCompanyCost associateSalary = costCategory.getAssociateSalary();
-            associateSalary.setCost(additionalCompanyCostForm.getAssociateSalary().getCost());
-            associateSalary.setDescription(additionalCompanyCostForm.getAssociateSalary().getDescription());
-            messages.addAll(getFinanceRowService().update(associateSalary).getSuccess());
+                if (additionalCompanyCostForm.getAssociateSalary() != null) {
+                    AdditionalCompanyCost associateSalary = costCategory.getAssociateSalary();
+                    associateSalary.setCost(additionalCompanyCostForm.getAssociateSalary().getCost());
+                    associateSalary.setDescription(additionalCompanyCostForm.getAssociateSalary().getDescription());
+                    messages.addAll(getFinanceRowService().update(associateSalary).getSuccess());
+                }
 
-            AdditionalCompanyCost managementSupervision = costCategory.getManagementSupervision();
-            managementSupervision.setCost(additionalCompanyCostForm.getManagementSupervision().getCost());
-            managementSupervision.setDescription(additionalCompanyCostForm.getManagementSupervision().getDescription());
-            messages.addAll(getFinanceRowService().update(managementSupervision).getSuccess());
+                if (additionalCompanyCostForm.getManagementSupervision() != null) {
+                    AdditionalCompanyCost managementSupervision = costCategory.getManagementSupervision();
+                    managementSupervision.setCost(additionalCompanyCostForm.getManagementSupervision().getCost());
+                    managementSupervision.setDescription(additionalCompanyCostForm.getManagementSupervision().getDescription());
+                    messages.addAll(getFinanceRowService().update(managementSupervision).getSuccess());
+                }
 
-            AdditionalCompanyCost otherStaff = costCategory.getOtherStaff();
-            otherStaff.setCost(additionalCompanyCostForm.getOtherStaff().getCost());
-            otherStaff.setDescription(additionalCompanyCostForm.getOtherStaff().getDescription());
-            messages.addAll(getFinanceRowService().update(otherStaff).getSuccess());
+                if (additionalCompanyCostForm.getOtherStaff() != null) {
+                    AdditionalCompanyCost otherStaff = costCategory.getOtherStaff();
+                    otherStaff.setCost(additionalCompanyCostForm.getOtherStaff().getCost());
+                    otherStaff.setDescription(additionalCompanyCostForm.getOtherStaff().getDescription());
+                    messages.addAll(getFinanceRowService().update(otherStaff).getSuccess());
+                }
 
-            AdditionalCompanyCost capitalEquipment = costCategory.getCapitalEquipment();
-            capitalEquipment.setCost(additionalCompanyCostForm.getCapitalEquipment().getCost());
-            capitalEquipment.setDescription(additionalCompanyCostForm.getCapitalEquipment().getDescription());
-            messages.addAll(getFinanceRowService().update(capitalEquipment).getSuccess());
+                if (additionalCompanyCostForm.getCapitalEquipment() != null) {
+                    AdditionalCompanyCost capitalEquipment = costCategory.getCapitalEquipment();
+                    capitalEquipment.setCost(additionalCompanyCostForm.getCapitalEquipment().getCost());
+                    capitalEquipment.setDescription(additionalCompanyCostForm.getCapitalEquipment().getDescription());
+                    messages.addAll(getFinanceRowService().update(capitalEquipment).getSuccess());
+                }
 
-            AdditionalCompanyCost consumables = costCategory.getConsumables();
-            consumables.setCost(additionalCompanyCostForm.getConsumables().getCost());
-            consumables.setDescription(additionalCompanyCostForm.getConsumables().getDescription());
-            messages.addAll(getFinanceRowService().update(consumables).getSuccess());
+                if (additionalCompanyCostForm.getConsumables() != null) {
+                    AdditionalCompanyCost consumables = costCategory.getConsumables();
+                    consumables.setCost(additionalCompanyCostForm.getConsumables().getCost());
+                    consumables.setDescription(additionalCompanyCostForm.getConsumables().getDescription());
+                    messages.addAll(getFinanceRowService().update(consumables).getSuccess());
+                }
 
-            AdditionalCompanyCost otherCosts = costCategory.getOtherCosts();
-            otherCosts.setCost(additionalCompanyCostForm.getOtherCosts().getCost());
-            otherCosts.setDescription(additionalCompanyCostForm.getOtherCosts().getDescription());
-            messages.addAll(getFinanceRowService().update(otherCosts).getSuccess());
+                if (additionalCompanyCostForm.getOtherCosts() != null) {
+                    AdditionalCompanyCost otherCosts = costCategory.getOtherCosts();
+                    otherCosts.setCost(additionalCompanyCostForm.getOtherCosts().getCost());
+                    otherCosts.setDescription(additionalCompanyCostForm.getOtherCosts().getDescription());
+                    messages.addAll(getFinanceRowService().update(otherCosts).getSuccess());
+                }
+            }
+            return messages;
+        });
+    }
+
+    private CompletableFuture<ValidationMessages> saveIndirectCost(YourProjectCostsForm form, BaseFinanceResource finance) {
+        return async(() -> {
+            ValidationMessages messages = new ValidationMessages();
+            if (form != null) {
+                DefaultCostCategory defaultCostCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.INDIRECT_COSTS);
+
+               IndirectCost indirectCost = (IndirectCost) defaultCostCategory.getCosts().stream()
+                        .filter(costRowItem -> costRowItem.getCostType() == FinanceRowType.INDIRECT_COSTS)
+                        .findFirst()
+                        .orElseGet(() -> getFinanceRowService().create(new IndirectCost(finance.getId())).getSuccess());
+
+                BigDecimal calculateIndirectCost = calculateIndirectCostFromForm(form);
+
+                indirectCost.setCost(calculateIndirectCost.toBigIntegerExact());
+                messages.addAll(getFinanceRowService().update(indirectCost).getSuccess());
+            }
 
             return messages;
         });
     }
+
 
     private <R extends AbstractCostRowForm> CompletableFuture<ValidationMessages> saveRows(Map<String, R> rows, BaseFinanceResource finance) {
         return async(() -> {
@@ -348,6 +462,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
             case CONSUMABLES:
                 map = form.getConsumableCostRows();
                 break;
+            case KTP_TRAVEL:
+                map = form.getKtpTravelCostRows();
+                break;
             default:
                 throw new RuntimeException("Unknown row type");
         }
@@ -389,6 +506,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 break;
             case CONSUMABLES:
                 clazz = ConsumablesRowForm.class;
+                break;
+            case KTP_TRAVEL:
+                clazz = KtpTravelRowForm.class;
                 break;
             default:
                 throw new RuntimeException("Unknown row type");

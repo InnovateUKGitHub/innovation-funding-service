@@ -1,20 +1,17 @@
 package org.innovateuk.ifs.organisation.controller;
 
-import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.populator.OrganisationSelectionViewModelPopulator;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionViewModel;
 import org.innovateuk.ifs.registration.form.OrganisationSelectionForm;
-import org.innovateuk.ifs.registration.service.OrganisationJourneyEnd;
-import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,48 +27,53 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.organisation.controller.OrganisationCreationTypeController.NOT_ELIGIBLE;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.isValidCollaborator;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.isValidKtpCollaborator;
 
 @RequestMapping("/organisation/select")
-@SecuredBySpring(value="Controller", description = "An existing applicant can pick a previous organisation." +
-        " An assessor will be passed on to create an organisation for the first time and become an applicant. ",
-        securedType = OrganisationSelectionController.class)
-@PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'stakeholder', 'monitoring_officer')")
 @Controller
 public class OrganisationSelectionController extends AbstractOrganisationCreationController {
 
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
-    private RegistrationCookieService registrationCookieService;
-
-    @Autowired
     private OrganisationSelectionViewModelPopulator organisationSelectionViewModelPopulator;
-
-    @Autowired
-    private OrganisationJourneyEnd organisationJourneyEnd;
-
-    @Autowired
-    private OrganisationRestService organisationRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
 
+    @Value("${ifs.new.organisation.search.enabled:false}")
+    private Boolean newOrganisationSearchEnabled;
+
+    @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
     @GetMapping
     public String viewPreviousOrganisations(HttpServletRequest request,
                                             @ModelAttribute(FORM_ATTR_NAME) OrganisationSelectionForm form,
                                             BindingResult bindingResult,
                                             UserResource user,
                                             Model model) {
+
         if (cannotSelectOrganisation(user, request)) {
             return "redirect:" + nextPageInFlow();
         }
-        model.addAttribute("model", organisationSelectionViewModelPopulator.populate(user,
-                request,
-                nextPageInFlow()));
+
+        CompetitionResource competition = competitionRestService.getCompetitionById(getCompetitionIdFromInviteOrCookie(request)).getSuccess();
+
+        OrganisationSelectionViewModel viewModel = organisationSelectionViewModelPopulator.populate(user,
+                request, competition,
+                nextPageInFlow());
+
+        if (viewModel.getChoices().isEmpty()) {
+            return "redirect:" + nextPageInFlow();
+        }
+
+        model.addAttribute("model", viewModel);
         addPageSubtitleToModel(request, user, model);
+
         return "registration/organisation/select-organisation";
     }
 
+    @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
     @PostMapping
     public String selectOrganisation(HttpServletRequest request,
                                      HttpServletResponse response,
@@ -87,13 +89,7 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
 
     private boolean cannotSelectOrganisation(UserResource user, HttpServletRequest request) {
         return user == null
-                || !user.hasRole(Role.APPLICANT)
-                || isLinkedToPreviousOrganisations(user.getId(), request);
-    }
-
-    private boolean isLinkedToPreviousOrganisations(long userId, HttpServletRequest request) {
-        final boolean international = registrationCookieService.isInternationalJourney(request);
-        return organisationRestService.getOrganisations(userId, international).getSuccess().isEmpty();
+                || !user.hasRole(Role.APPLICANT);
     }
 
     private String nextPageInFlow() {
@@ -108,25 +104,40 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
             }
 
             if (registrationCookieService.isCollaboratorJourney(request)) {
-                if (isKnowledgeBaseCompetition(request)) {
-                    if (!validateCollaborator(form))
-                        return "redirect:" + BASE_URL + "/" + ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
+                if (!validateCollaborator(request, form)) {
+                    return "redirect:" + BASE_URL + "/" + ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
                 }
+            }
+
+            if (newOrganisationSearchEnabled && isDeprecatedManualEntry(form)) {
+                return "redirect:" + BASE_URL + "/" + EXISTING_ORGANISATION + "/" + form.getSelectedOrganisationId();
             }
 
             return organisationJourneyEnd.completeProcess(request, response, user, form.getSelectedOrganisationId());
         };
     }
 
-    private boolean validateCollaborator(OrganisationSelectionForm form) {
-        OrganisationResource organisation = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess();
+    private boolean isDeprecatedManualEntry(OrganisationSelectionForm form) {
+        OrganisationResource selectedOrganisation = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess();
 
-        return OrganisationTypeEnum.isValidKnowledgeBaseCollaborator(organisation.getOrganisationType());
+        return selectedOrganisation.getCompaniesHouseNumber() == null
+                && selectedOrganisation.getOrganisationNumber() == null
+                // Main way to distinguish old manual entry is lack of address.
+                && selectedOrganisation.getAddresses().isEmpty()
+                && selectedOrganisation.getOrganisationTypeEnum() != OrganisationTypeEnum.RESEARCH
+                && selectedOrganisation.getOrganisationTypeEnum() != OrganisationTypeEnum.KNOWLEDGE_BASE
+                && !selectedOrganisation.isInternational();
     }
 
-    private boolean isKnowledgeBaseCompetition(HttpServletRequest request) {
+    private boolean validateCollaborator(HttpServletRequest request, OrganisationSelectionForm form) {
         CompetitionResource competition = competitionRestService.getCompetitionById(getCompetitionIdFromInviteOrCookie(request)).getSuccess();
-        return competition.getFundingType().equals(FundingType.KTP);
+        OrganisationResource organisation = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess();
+
+        if (competition.isKtp()) {
+            return isValidKtpCollaborator(organisation.getOrganisationType());
+        } else {
+            return isValidCollaborator(organisation.getOrganisationType());
+        }
     }
 
     private boolean validateLeadApplicant(HttpServletRequest request, OrganisationSelectionForm form) {

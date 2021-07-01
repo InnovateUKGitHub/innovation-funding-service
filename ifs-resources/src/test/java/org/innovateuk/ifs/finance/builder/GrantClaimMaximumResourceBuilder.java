@@ -2,7 +2,7 @@ package org.innovateuk.ifs.finance.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
@@ -27,22 +27,21 @@ public class GrantClaimMaximumResourceBuilder extends BaseBuilder<GrantClaimMaxi
         return withArraySetFieldByReflection("id", ids);
     }
 
-    public GrantClaimMaximumResourceBuilder withResearchCategory(ResearchCategoryResource... researchCategories) {
-        return withArraySetFieldByReflection("researchCategory", researchCategories);
+    public GrantClaimMaximumResourceBuilder withResearchCategory(ResearchCategoryResource... researchCategory) {
+        return withArray((value, max) -> max.setResearchCategory(value), researchCategory);
     }
 
-    public GrantClaimMaximumResourceBuilder withOrganisationSize(OrganisationSize... organisationSizes) {
-        return withArraySetFieldByReflection("organisationSize", organisationSizes);
+    public GrantClaimMaximumResourceBuilder withOrganisationSize(OrganisationSize... size) {
+        return withArray((value, max) -> max.setOrganisationSize(value), size);
     }
 
-    public GrantClaimMaximumResourceBuilder withCompetitions(List<CompetitionResource>... competitions) {
-        return withArraySetFieldByReflection("competitions", competitions);
+    public GrantClaimMaximumResourceBuilder withMaximum(Integer... maximum) {
+        return withArray((value, max) -> max.setMaximum(value), maximum);
     }
 
-    public GrantClaimMaximumResourceBuilder withMaximum(Integer... maximums) {
-        return withArraySetFieldByReflection("maximum", maximums);
+    public GrantClaimMaximumResourceBuilder withFundingRules(FundingRules... rules) {
+        return withArray((value, max) -> max.setFundingRules(value), rules);
     }
-
     @Override
     protected GrantClaimMaximumResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, GrantClaimMaximumResource>> actions) {
         return new GrantClaimMaximumResourceBuilder(actions);

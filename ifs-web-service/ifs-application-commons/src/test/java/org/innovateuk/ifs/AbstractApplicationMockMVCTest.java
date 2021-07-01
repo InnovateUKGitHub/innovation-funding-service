@@ -30,7 +30,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.service.*;
 import org.mockito.Mock;
 
@@ -95,6 +95,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     protected UserService userService;
     @Mock
     protected UserRestService userRestService;
+    @Mock
+    protected ProcessRoleRestService processRoleRestService;
     @Mock
     protected CompetitionRestService competitionRestService;
     @Mock
@@ -173,7 +175,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
     }
 
-    public void setupCompetition() {
+    public void setupCompetition(FundingType fundingType, AssessorFinanceView assessorFinanceView) {
         competitionResource = newCompetitionResource()
                 .with(id(competitionId))
                 .with(name("Competition x"))
@@ -183,7 +185,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withMinProjectDuration(1)
                 .withMaxProjectDuration(36)
                 .withIncludeJesForm(true)
-                .withFundingType(FundingType.GRANT)
+                .withFundingType(fundingType)
                 .build();
 
         competitionAssessmentConfigResource = newCompetitionAssessmentConfigResource()
@@ -192,7 +194,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withAssessorPay(BigDecimal.valueOf(100))
                 .withHasAssessmentPanel(false)
                 .withHasInterviewStage(false)
-                .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
+                .withAssessorFinanceView(assessorFinanceView)
                 .build();
 
         competitionResource.setFinanceRowTypes(asList(FinanceRowType.values()));
@@ -204,26 +206,26 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
         QuestionResource q01Resource = setupQuestionResource(1L, "Application details", questionResourceBuilder);
 
-        SectionResource sectionResource1 = sectionResourceBuilder.
-                with(id(1L)).
-                with(name("Application details")).
-                withQuestions(simpleMap(singletonList(q01Resource), QuestionResource::getId)).
-                withPriority(1).
-                withType(SectionType.GENERAL).
-                build();
+        SectionResource sectionResource1 = sectionResourceBuilder
+                .with(id(1L))
+                .with(name("Application details"))
+                .withQuestions(simpleMap(singletonList(q01Resource), QuestionResource::getId))
+                .withPriority(1)
+                .withType(SectionType.GENERAL)
+                .build();
 
         QuestionResource q02Resource = setupQuestionResource(1L, "Research category", questionResourceBuilder);
 
         QuestionResource q10Resource = setupQuestionResource(10L, "How does your project align with the scope of this" +
                 " competition?", questionResourceBuilder);
 
-        SectionResource sectionResource2 = sectionResourceBuilder.
-                with(id(2L)).
-                with(name("Scope (Gateway question)")).
-                withQuestions(simpleMap(singletonList(q10Resource), QuestionResource::getId)).
-                withPriority(2).
-                withType(SectionType.GENERAL).
-                build();
+        SectionResource sectionResource2 = sectionResourceBuilder
+                .with(id(2L))
+                .with(name("Scope (Gateway question)"))
+                .withQuestions(simpleMap(singletonList(q10Resource), QuestionResource::getId))
+                .withPriority(2)
+                .withType(SectionType.GENERAL)
+                .build();
 
         QuestionResource q20Resource = setupQuestionResource(20L, "1. What is the business opportunity that this " +
                 "project addresses?", questionResourceBuilder);
@@ -237,14 +239,14 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         QuestionResource q23Resource = setupQuestionResource(23L, "4. What economic, social and environmental " +
                 "benefits is the project expected to deliver?", questionResourceBuilder);
 
-        SectionResource sectionResource3 = sectionResourceBuilder.
-                with(id(3L)).
-                with(name("Business proposition (Q1 - Q4)")).
-                withQuestions(simpleMap(asList(q20Resource, q21Resource, q22Resource, q23Resource),
-                        QuestionResource::getId)).
-                withPriority(3).
-                withType(SectionType.GENERAL).
-                build();
+        SectionResource sectionResource3 = sectionResourceBuilder
+                .with(id(3L))
+                .with(name("Business proposition (Q1 - Q4)"))
+                .withQuestions(simpleMap(asList(q20Resource, q21Resource, q22Resource, q23Resource),
+                        QuestionResource::getId))
+                .withPriority(3)
+                .withType(SectionType.GENERAL)
+                .build();
 
 
         QuestionResource q30Resource = setupQuestionResource(30L, "5. What technical approach will be adopted and how" +
@@ -260,19 +262,19 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         QuestionResource q33Resource = setupQuestionResource(33L, "8. Does the project team have the right skills and" +
                 " experience and access to facilities to deliver the identified benefits?", questionResourceBuilder);
 
-        SectionResource sectionResource4 = sectionResourceBuilder.
-                with(id(4L)).
-                with(name("Project approach (Q5 - Q8)")).
-                withQuestions(simpleMap(asList(q30Resource, q31Resource, q32Resource, q33Resource),
-                        QuestionResource::getId)).
-                withPriority(4).
-                withType(SectionType.GENERAL).
-                build();
+        SectionResource sectionResource4 = sectionResourceBuilder
+                .with(id(4L))
+                .with(name("Project approach (Q5 - Q8)"))
+                .withQuestions(simpleMap(asList(q30Resource, q31Resource, q32Resource, q33Resource),
+                        QuestionResource::getId))
+                .withPriority(4)
+                .withType(SectionType.GENERAL)
+                .build();
 
         SectionResource sectionResource5 = sectionResourceBuilder.with(id(5L)).with(name("Funding (Q9 - Q10)"))
                 .withPriority(5).withType(SectionType.GENERAL).build();
         SectionResource sectionResource6 = sectionResourceBuilder.with(id(6L)).with(name("Finances")).withPriority(6).withType
-                (SectionType.GENERAL).build();
+                (SectionType.FINANCES).build();
         SectionResource sectionResource7 = sectionResourceBuilder.with(id(7L)).with(name("Your project finances")).withPriority(7).withType
                 (SectionType.FINANCE).build();
         SectionResource sectionResource8 = sectionResourceBuilder.with(id(8L)).with(name("Your project costs"))
@@ -288,7 +290,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         SectionResource termsAndConditionsSection = newSectionResource()
                 .withType(TERMS_AND_CONDITIONS).withQuestions(singletonList(termsAndConditionsQuestion.getId())).build();
 
-        sectionResource6.setChildSections(Arrays.asList(sectionResource7.getId()));
+        sectionResource6.setChildSections(singletonList(sectionResource7.getId()));
         sectionResource7.setChildSections(Arrays.asList(sectionResource8.getId(), sectionResource9.getId(),
                 sectionResource10.getId()));
 
@@ -332,9 +334,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
         sectionResource7.setQuestionGroup(true);
 
-        questionResources.forEach((id, question) -> {
-            when(questionRestService.findById(id)).thenReturn(restSuccess(question));
-        });
+        questionResources.forEach((id, question) -> when(questionRestService.findById(id)).thenReturn(restSuccess(question)));
 
         when(questionService.getPreviousQuestionBySection(any())).thenReturn(Optional.empty());
         when(questionService.getNextQuestionBySection(any())).thenReturn(Optional.empty());
@@ -398,9 +398,9 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                         (newResearchCategoryResource().build()).withCompetition(competitionId).build()
         );
 
-        Role role1 = Role.LEADAPPLICANT;
-        Role role2 = Role.COLLABORATOR;
-        Role assessorRole = Role.ASSESSOR;
+        ProcessRoleType role1 = ProcessRoleType.LEADAPPLICANT;
+        ProcessRoleType role2 = ProcessRoleType.LEADAPPLICANT;
+        ProcessRoleType assessorRole = ProcessRoleType.ASSESSOR;
 
         OrganisationResource organisation1 = newOrganisationResource().withId(1L).withOrganisationType
                 (businessOrganisationTypeResource.getId()).withName("Empire Ltd").build();
@@ -445,13 +445,13 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         application2ProcessRoles = asList(processRole6, processRole10);
         application3ProcessRoles = asList(processRole3, processRole7);
         application4ProcessRoles = asList(processRole4, processRole9);
-        application5ProcessRoles = asList(processRole11);
+        application5ProcessRoles = singletonList(processRole11);
 
         application1Organisations = asList(organisation1, organisation2);
         application2Organisations = asList(organisation1, organisation2);
-        application3Organisations = asList(organisation1);
-        application4Organisations = asList(organisation1);
-        application5Organisations = asList(organisation3);
+        application3Organisations = singletonList(organisation1);
+        application4Organisations = singletonList(organisation1);
+        application5Organisations = singletonList(organisation3);
 
         when(organisationRestService.getOrganisationsByApplicationId(applications.get(0).getId())).thenReturn
                 (restSuccess(application1Organisations));
@@ -467,36 +467,36 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(sectionService.filterParentSections(sectionResources)).thenReturn(sectionResources);
         when(sectionService.getCompleted(applications.get(0).getId(), organisation1.getId())).thenReturn(asList(1L,
                 2L));
-        when(userRestService.findProcessRole(applicant.getId(), applications.get(0).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applicant.getId(), applications.get(0).getId())).thenReturn
                 (restSuccess(processRole1));
-        when(userRestService.findProcessRole(applicant.getId(), applications.get(1).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applicant.getId(), applications.get(1).getId())).thenReturn
                 (restSuccess(processRole2));
-        when(userRestService.findProcessRole(applicant.getId(), applications.get(2).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applicant.getId(), applications.get(2).getId())).thenReturn
                 (restSuccess(processRole3));
-        when(userRestService.findProcessRole(applicant.getId(), applications.get(3).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applicant.getId(), applications.get(3).getId())).thenReturn
                 (restSuccess(processRole4));
-        when(userRestService.findProcessRole(applicant.getId(), applications.get(0).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applicant.getId(), applications.get(0).getId())).thenReturn
                 (restSuccess(processRole5));
-        when(userRestService.findProcessRole(assessor.getId(), applications.get(1).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(assessor.getId(), applications.get(1).getId())).thenReturn
                 (restSuccess(processRole6));
-        when(userRestService.findProcessRole(assessor.getId(), applications.get(2).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(assessor.getId(), applications.get(2).getId())).thenReturn
                 (restSuccess(processRole7));
-        when(userRestService.findProcessRole(assessor.getId(), applications.get(0).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(assessor.getId(), applications.get(0).getId())).thenReturn
                 (restSuccess(processRole8));
-        when(userRestService.findProcessRole(assessor.getId(), applications.get(3).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(assessor.getId(), applications.get(3).getId())).thenReturn
                 (restSuccess(processRole9));
-        when(userRestService.findProcessRole(applicant.getId(), applications.get(4).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applicant.getId(), applications.get(4).getId())).thenReturn
                 (restSuccess(processRole11));
 
-        when(userRestService.findProcessRole(applications.get(0).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applications.get(0).getId())).thenReturn
                 (restSuccess(application1ProcessRoles));
-        when(userRestService.findProcessRole(applications.get(1).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applications.get(1).getId())).thenReturn
                 (restSuccess(application2ProcessRoles));
-        when(userRestService.findProcessRole(applications.get(2).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applications.get(2).getId())).thenReturn
                 (restSuccess(application3ProcessRoles));
-        when(userRestService.findProcessRole(applications.get(3).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applications.get(3).getId())).thenReturn
                 (restSuccess(application4ProcessRoles));
-        when(userRestService.findProcessRole(applications.get(4).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applications.get(4).getId())).thenReturn
                 (restSuccess(application5ProcessRoles));
 
         Map<Long, Set<Long>> completedMap = new HashMap<>();
@@ -565,7 +565,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     public void setupFinances() {
         ApplicationResource application = applications.get(0);
         applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0)
-                .getId(), SMALL, "ABC 123", null);
+                .getId(), SMALL, "ABC 123", null, "");
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = new HashMap<>();
         FinanceRowCostCategory costCategory = new ExcludedCostCategory();
         costCategory.addCost(new GrantClaimPercentage(1L, BigDecimal.valueOf(50), applicationFinanceResource.getId()));
@@ -586,7 +586,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                     questionStatusResource.setMarkedAsComplete(false);
                 }).build(1);
 
-        when(questionService.findQuestionStatusesByQuestionAndApplicationId(1l, application.getId())).thenReturn
+        when(questionService.findQuestionStatusesByQuestionAndApplicationId(1L, application.getId())).thenReturn
                 (questionStatusResources);
     }
 

@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.management.competition.setup.initialdetail.populator;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.management.competition.setup.service.CategoryFormatter;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm;
@@ -24,7 +26,6 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -63,7 +64,7 @@ public class InitialDetailsFormPopulatorTest {
 				.withPafCode("paf")
 				.withName("name")
 				.withBudgetCode("budgetcode")
-                .withStateAid(Boolean.TRUE)
+                .withFundingRules(FundingRules.STATE_AID)
 				.withFundingType(FundingType.GRANT)
 				.withId(8L).build();
 
@@ -85,7 +86,7 @@ public class InitialDetailsFormPopulatorTest {
 		assertEquals(Integer.valueOf(1), form.getOpeningDateMonth());
 		assertEquals(Integer.valueOf(2000), form.getOpeningDateYear());
 		assertEquals("name", form.getTitle());
-		assertEquals(Boolean.TRUE, form.getStateAid());
+		assertEquals(FundingRules.STATE_AID, form.getFundingRule());
 		assertEquals(FundingType.GRANT, form.getFundingType());
 	}
 
@@ -94,14 +95,14 @@ public class InitialDetailsFormPopulatorTest {
 		CompetitionResource competition = newCompetitionResource()
 				.withCompetitionType(4L)
 				.withExecutive(5L)
-				.withInnovationAreas(asSet(6L, 7L))
+				.withInnovationAreas(ImmutableSet.of(6L, 7L))
 				.withLeadTechnologist(7L)
 				.withStartDate(ZonedDateTime.of(2000, 1, 2, 3, 4, 0, 0, ZoneId.systemDefault()))
 				.withCompetitionCode("code")
 				.withPafCode("paf")
 				.withName("name")
 				.withBudgetCode("budgetcode")
-                .withStateAid(Boolean.TRUE)
+                .withFundingRules(FundingRules.STATE_AID)
 				.withId(8L).build();
 
 		List<InnovationAreaResource> innovationAreaCategories = newInnovationAreaResource().withId(-1L, 6L, 7L).withName("None", "Innovation area 1", "Innovation area 2").build(3);

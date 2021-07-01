@@ -99,6 +99,7 @@ public class CompetitionInFlightStatsViewModel {
         this.statThree = keyStatisticsResource.getAssignmentsAccepted();
         this.statFour = keyStatisticsResource.getAssessmentsStarted();
         this.statFive = keyStatisticsResource.getAssessmentsSubmitted();
+        this.statSix = keyStatisticsResource.getSupportersInvited();
         this.canManageFundingNotifications = false;
         this.status = competitionStatus;
         this.canReleaseFeedback = false;

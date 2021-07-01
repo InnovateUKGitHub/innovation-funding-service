@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.nonifs.saver;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -26,7 +27,6 @@ import java.util.Map;
 
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -71,7 +71,7 @@ public class NonIfsDetailsFormSaverTest {
         NonIfsDetailsForm form = createForm();
         CompetitionResource competition = newCompetitionResource().withNonIfs(true).build();
         List<MilestoneResource> allMilestones = newMilestoneResource().build(1);
-        when(competitionSetupMilestoneService.validateMilestoneDates(any())).thenReturn(emptyList());
+        when(competitionSetupMilestoneService.validateMilestoneDates(any(), any())).thenReturn(emptyList());
         when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
         when(milestoneRestService.getAllMilestonesByCompetitionId(competition.getId())).thenReturn(restSuccess(allMilestones));
         when(competitionSetupMilestoneService.updateMilestonesForCompetition(eq(allMilestones), any(), eq(competition.getId()))).thenReturn(serviceSuccess());
@@ -81,7 +81,7 @@ public class NonIfsDetailsFormSaverTest {
         assertThat(result.isSuccess(), equalTo(true));
         assertThat(competition.getName(), equalTo(COMPETITION_NAME));
         assertThat(competition.getNonIfsUrl(), equalTo(COMPETITION_URL));
-        assertThat(competition.getInnovationAreas(), equalTo(asSet(INNOVATION_AREA)));
+        assertThat(competition.getInnovationAreas(), equalTo(ImmutableSet.of(INNOVATION_AREA)));
         assertThat(competition.getInnovationSector(), equalTo(INNOVATION_SECTOR));
         assertThat(competition.getFundingType(), equalTo(GRANT));
 

@@ -1,32 +1,30 @@
 package org.innovateuk.ifs.management.competition.setup.application.populator;
 
 import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.management.competition.setup.application.viewmodel.LandingViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupSectionModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.form.resource.SectionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.innovateuk.ifs.form.resource.QuestionType.LEAD_ONLY;
+import static org.innovateuk.ifs.form.resource.SectionType.APPLICATION_QUESTIONS;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
  * populates the model for the Application Questions landing page of the competition setup section.
@@ -55,10 +53,7 @@ public class LandingModelPopulator implements CompetitionSetupSectionModelPopula
     public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
         List<SectionResource> sections = sectionService.getAllByCompetitionId(competitionResource.getId());
         List<QuestionResource> questionResources = questionRestService.findByCompetition(competitionResource.getId()).getSuccess();
-        List<SectionResource> generalSections = sections.stream()
-                .filter(sectionResource -> sectionResource.getType() == SectionType.GENERAL)
-                .collect(Collectors.toList());
-        List<SectionResource> parentSections = generalSections.stream()
+        List<SectionResource> parentSections = sections.stream()
                 .filter(sectionResource -> sectionResource.getParentSection() == null)
                 .collect(Collectors.toList());
 
@@ -67,15 +62,34 @@ public class LandingModelPopulator implements CompetitionSetupSectionModelPopula
 
         List<QuestionResource> questions = getSortedQuestions(questionResources, parentSections);
         List<QuestionResource> projectDetails = getSortedProjectDetails(questionResources, parentSections);
+        List<QuestionResource> ktpQuestions = getKtpAssessorQuestions(competitionResource, sections, questionResources);
 
-        Boolean allStatusesComplete = checkStatusesComplete(subSectionsStatuses, questionStatuses, questions, projectDetails);
+        Boolean allStatusesComplete = checkStatusesComplete(subSectionsStatuses, questionStatuses, combineLists(questions, ktpQuestions), projectDetails);
 
         return new LandingViewModel(generalViewModel,
                 questions,
                 projectDetails,
                 subSectionsStatuses,
                 questionStatuses,
-                allStatusesComplete);
+                allStatusesComplete,
+                ktpQuestions);
+    }
+
+    private List<QuestionResource> getKtpAssessorQuestions(CompetitionResource competitionResource, List<SectionResource> sections, List<QuestionResource> questionResources) {
+
+        if (competitionResource.isKtp()) {
+            List<Long> questionIds = sections.stream()
+                    .filter(sectionResource -> sectionResource.getType() == SectionType.KTP_ASSESSMENT)
+                    .map(SectionResource::getQuestions)
+                    .flatMap(List::stream)
+                    .collect(toList());
+
+            return questionResources.stream()
+                    .filter(resource -> questionIds.contains(resource.getId()))
+                    .collect(Collectors.toList());
+        }
+
+         return Collections.emptyList();
     }
 
     private Map<CompetitionSetupSubsection, Boolean> convertWithDefaultsIfNotPresent(Map<CompetitionSetupSubsection, Optional<Boolean>> subSectionsStatuses) {
@@ -83,16 +97,16 @@ public class LandingModelPopulator implements CompetitionSetupSectionModelPopula
     }
 
     private List<QuestionResource> getSortedQuestions(List<QuestionResource> questionResources, List<SectionResource> parentSections) {
-        Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> "Application questions".equals(sectionResource.getName())).findFirst();
+        Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> APPLICATION_QUESTIONS == sectionResource.getType()).findFirst();
         return section.isPresent() ? questionResources.stream().filter(questionResource -> section.get().getQuestions().contains(questionResource.getId())).collect(Collectors.toList())
                 : new ArrayList<>();
     }
 
     private List<QuestionResource> getSortedProjectDetails(List<QuestionResource> questionResources, List<SectionResource> parentSections) {
-        Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> "Project details".equals(sectionResource.getName())).findFirst();
+        Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> SectionType.PROJECT_DETAILS == sectionResource.getType()).findFirst();
         return section.isPresent() ? questionResources.stream()
                 .filter(questionResource -> section.get().getQuestions().contains(questionResource.getId()))
-                .filter(questionResource -> questionResource.getType() != LEAD_ONLY)
+                .filter(QuestionResource::requiresSetup)
                 .collect(Collectors.toList())
                 : new ArrayList<>();
     }

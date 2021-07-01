@@ -50,11 +50,11 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
     private SpendProfileProcessRepository spendProfileProcessRepository;
 
     @Mock
-    protected UserRepository userRepositoryMock;
+    protected UserRepository userRepository;
     @Mock
-    protected ProjectRepository projectRepositoryMock;
+    protected ProjectRepository projectRepository;
     @Mock
-    protected OrganisationRepository organisationRepositoryMock;
+    protected OrganisationRepository organisationRepository;
 
     @Test
     public void projectCreated() {
@@ -111,6 +111,15 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
 
                 // current State, destination State and expected Event to be fired
                 SpendProfileState.SUBMITTED, SpendProfileState.REJECTED, SpendProfileEvent.SPEND_PROFILE_REJECTED);
+    }
+
+    @Test
+    public void spendProfileDeleted() {
+
+        callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> spendProfileWorkflowHandler.spendProfileDeleted(project, internalUser)),
+
+                // current State, destination State and expected Event to be fired
+                SpendProfileState.SUBMITTED, SpendProfileState.PENDING, SpendProfileEvent.SPEND_PROFILE_DELETED);
     }
 
     @Test
@@ -261,7 +270,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
             UserResource loggedInUser = newUserResource().build();
             user = newUser().withId(loggedInUser.getId()).build();
             setLoggedInUser(loggedInUser);
-            when(userRepositoryMock.findById(loggedInUser.getId())).thenReturn(Optional.of(user));
+            when(userRepository.findById(loggedInUser.getId())).thenReturn(Optional.of(user));
 
             organisation1 = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
             organisation2 = newOrganisation().withOrganisationType(OrganisationTypeEnum.RTO).build();
@@ -277,9 +286,9 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
                     build();
 
             // set basic repository lookup expectations
-            when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-            when(organisationRepositoryMock.findById(organisation1.getId())).thenReturn(Optional.of(organisation1));
-            when(organisationRepositoryMock.findById(organisation2.getId())).thenReturn(Optional.of(organisation2));
+            when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+            when(organisationRepository.findById(organisation1.getId())).thenReturn(Optional.of(organisation1));
+            when(organisationRepository.findById(organisation2.getId())).thenReturn(Optional.of(organisation2));
             return this;
         }
     }

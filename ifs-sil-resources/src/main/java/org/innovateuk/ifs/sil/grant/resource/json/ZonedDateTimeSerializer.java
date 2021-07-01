@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 
-import static org.innovateuk.ifs.sil.grant.resource.json.GrantConstants.DATE_FORMAT;
+import static org.innovateuk.ifs.sil.common.json.Constants.DATE_FORMAT;
 
 public class ZonedDateTimeSerializer extends JsonSerializer<ZonedDateTime> {
     @Override

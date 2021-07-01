@@ -21,6 +21,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.ProfileRole;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.RoleProfileState;
@@ -76,6 +77,7 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
     @Test
     public void getAssessorCountSummariesByCompetitionId() {
         long competitionId = 1L;
+        long assessmentPeriodId = 1L;
         loginCompAdmin();
 
         Competition competition = competitionRepository.findById(competitionId).get();
@@ -115,7 +117,7 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
 
         ProcessRole processRole = newProcessRole()
                 .with(id(null))
-                .withRole(Role.ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .withApplication(application)
                 .withUser(users.get(0))
                 .build();
@@ -131,7 +133,7 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
 
         assessmentRepository.save(assessment);
 
-        AssessorCountSummaryPageResource counts = controller.getAssessorCountSummariesByCompetitionId(competitionId,"", 0,3).getSuccess();
+        AssessorCountSummaryPageResource counts = controller.getAssessorCountSummariesByCompetitionIdAndAssessmentPeriodId(competitionId, assessmentPeriodId, "", 0,3).getSuccess();
 
         assertEquals(2, counts.getTotalElements());
         assertEquals(0, counts.getNumber());

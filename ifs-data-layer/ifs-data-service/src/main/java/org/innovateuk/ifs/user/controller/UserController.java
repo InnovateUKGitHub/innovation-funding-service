@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -38,7 +39,7 @@ import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
 @RequestMapping("/user")
 public class UserController {
 
-    public static final Sort DEFAULT_USER_SORT = new Sort(
+    public static final Sort DEFAULT_USER_SORT = Sort.by(
             new Sort.Order(Sort.Direction.ASC, "firstName"),
             new Sort.Order(Sort.Direction.ASC, "lastName")
     );
@@ -154,7 +155,7 @@ public class UserController {
     @GetMapping("/find-external-users")
     public RestResult<List<UserOrganisationResource>> findExternalUsers(@RequestParam String searchString,
                                                                         @RequestParam SearchCategory searchCategory) {
-        return userService.findByProcessRolesAndSearchCriteria(Role.externalApplicantRoles(), searchString, searchCategory).toGetResponse();
+        return userService.findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), searchString, searchCategory).toGetResponse();
     }
 
     @GetMapping("/find-by-email/{email}/")
@@ -239,7 +240,8 @@ public class UserController {
     }
 
     @PostMapping("{id}/grant/{role}")
-    public RestResult<Void> grantRole(@PathVariable long id, @PathVariable Role role) {
+    public RestResult<Void> grantRole(@PathVariable long id,
+                                      @PathVariable Role role) {
         return userService.grantRole(new GrantRoleCommand(id, role)).toPostResponse();
     }
 }

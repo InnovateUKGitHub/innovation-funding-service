@@ -18,6 +18,7 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -43,8 +44,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newP
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isSupport;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -69,12 +69,12 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     @Before
     public void setup() {
         User innovationLeadUserOnProject1 = newUser().withRoles(singleton(Role.INNOVATION_LEAD)).build();
-        innovationLeadUserResourceOnProject1 = newUserResource().withId(innovationLeadUserOnProject1.getId()).withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
+        innovationLeadUserResourceOnProject1 = newUserResource().withId(innovationLeadUserOnProject1.getId()).withRoleGlobal(Role.INNOVATION_LEAD).build();
         InnovationLead innovationLead = newInnovationLead().withUser(innovationLeadUserOnProject1).build();
 
 
         User stakeholderUserOnCompetition = newUser().withRoles(singleton(STAKEHOLDER)).build();
-        stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRolesGlobal(singletonList(STAKEHOLDER)).build();
+        stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRoleGlobal(STAKEHOLDER).build();
         Stakeholder stakeholder = newStakeholder().withUser(stakeholderUserOnCompetition).build();
 
         competition = newCompetition().withLeadTechnologist(innovationLeadUserOnProject1).build();
@@ -113,6 +113,17 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
                 assertTrue(rules.supportCanViewCompetitionStatus(newProjectResource().build(), user));
             } else {
                 assertFalse(rules.supportCanViewCompetitionStatus(newProjectResource().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void auditorCanViewCompetitionStatus() {
+        allGlobalRoleUsers.forEach(user -> {
+            if (isAuditor(user)) {
+                assertTrue(rules.auditorCanViewCompetitionStatus(newProjectResource().build(), user));
+            } else {
+                assertFalse(rules.auditorCanViewCompetitionStatus(newProjectResource().build(), user));
             }
         });
     }
@@ -224,7 +235,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
                 new ProjectOrganisationCompositeId(1L, newOrganisation().build().getId());
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
+            if (user.hasAuthority(Authority.PROJECT_FINANCE)) {
                 assertTrue(rules.projectFinanceUserCanViewAnySpendProfileData(projectOrganisationCompositeId, user));
             } else {
                 assertFalse(rules.projectFinanceUserCanViewAnySpendProfileData(projectOrganisationCompositeId, user));
@@ -271,6 +282,20 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
                 assertTrue(rules.supportUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, user));
             } else {
                 assertFalse(rules.supportUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, user));
+            }
+        });
+    }
+
+    @Test
+    public void auditorUsersCanSeeSpendProfileCsv() {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId =
+                new ProjectOrganisationCompositeId(1L, newOrganisation().build().getId());
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (isAuditor(user)) {
+                assertTrue(rules.auditorUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, user));
+            } else {
+                assertFalse(rules.auditorUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, user));
             }
         });
     }

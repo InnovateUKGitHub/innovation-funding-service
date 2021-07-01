@@ -42,16 +42,14 @@ public class SendNotificationsModelPopulator {
         long onHoldCount = getApplicationCountByFundingDecision(filteredApplications, FundingDecision.ON_HOLD);
 
         if (form.getMessage() == null) {
-            tryToPrePopulateMessage(competitionId, successfulCount, unsuccessfulCount, onHoldCount, form);
+            tryToPrePopulateMessage(competitionResource, successfulCount, unsuccessfulCount, onHoldCount, form);
         }
 
         return new SendNotificationsViewModel(filteredApplications,
                                               successfulCount,
                                               unsuccessfulCount,
                                               onHoldCount,
-                                              competitionId,
-                                              competitionResource.getName(),
-                                              competitionResource.isH2020(),
+                                              competitionResource,
                                               Boolean.TRUE.equals(competitionAssessmentConfigResource.getIncludeAverageAssessorScoreInNotifications()));
     }
 
@@ -62,11 +60,13 @@ public class SendNotificationsModelPopulator {
                 .count();
     }
 
-    private void tryToPrePopulateMessage(long competitionId, long successfulCount, long unsuccessfulCount, long onHoldCount, NotificationEmailsForm form) {
-        if (onlySuccessfulEmails(successfulCount, unsuccessfulCount, onHoldCount)) {
-            form.setMessage(applicationNotificationTemplateRestService.getSuccessfulNotificationTemplate(competitionId).getSuccess().getMessageBody());
-        } else if (onlyUnsuccessfulEmails(successfulCount, unsuccessfulCount, onHoldCount)) {
-            form.setMessage(applicationNotificationTemplateRestService.getUnsuccessfulNotificationTemplate(competitionId).getSuccess().getMessageBody());
+    private void tryToPrePopulateMessage(CompetitionResource competition, long successfulCount, long unsuccessfulCount, long onHoldCount, NotificationEmailsForm form) {
+        if (!competition.isAlwaysOpen()) {
+            if (onlySuccessfulEmails(successfulCount, unsuccessfulCount, onHoldCount)) {
+                form.setMessage(applicationNotificationTemplateRestService.getSuccessfulNotificationTemplate(competition.getId()).getSuccess().getMessageBody());
+            } else if (onlyUnsuccessfulEmails(successfulCount, unsuccessfulCount, onHoldCount)) {
+                form.setMessage(applicationNotificationTemplateRestService.getUnsuccessfulNotificationTemplate(competition.getId()).getSuccess().getMessageBody());
+            }
         }
     }
 

@@ -11,6 +11,8 @@ public class PublicContentItemResourceDocs {
             fieldWithPath("content").description("List of public content items found on this page"),
             fieldWithPath("number").description("The number of the current page"),
             fieldWithPath("size").description("The size of the current page"),
+            fieldWithPath("lastPage").description("Is this the last page."),
+            fieldWithPath("lastPageFull").description("Is the last page full."),
     };
 
     public static final FieldDescriptor[] publicContentItemResourceFields = {
@@ -23,6 +25,7 @@ public class PublicContentItemResourceDocs {
             fieldWithPath("nonIfs").description("Boolean that indicates if this is a non IFS competition"),
             fieldWithPath("fundingType").description("Funding type of the competition"),
             fieldWithPath("setupComplete").description("Boolean that indicates if this competition has completed setup"),
-            fieldWithPath("competitionType").description("Type of the competition")
+            fieldWithPath("competitionType").description("Type of the competition"),
+            fieldWithPath("alwaysOpen").description("Is the competition always open type")
     };
 }

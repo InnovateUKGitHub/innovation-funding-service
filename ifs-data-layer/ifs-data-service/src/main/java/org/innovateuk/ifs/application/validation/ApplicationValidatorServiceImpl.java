@@ -6,11 +6,11 @@ import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.validator.ApplicationDetailsMarkAsCompleteValidator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -38,7 +38,6 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.fromBindingResult;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.MathFunctions.percentage;
 
 /**
  * Class to validate several objects
@@ -78,6 +77,9 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
 
     @Autowired
     private ApplicationFinanceHandler applicationFinanceHandler;
+
+    @Autowired
+    private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Override
     public List<BindingResult> validateFormInputResponse(Long applicationId, Long formInputId) {
@@ -198,5 +200,25 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
                 simpleFindFirst(applicationFinances, af -> af.getOrganisation().getId().equals(organisation.getId()));
 
         return applicationFinance.map(af -> af.getFinanceFileEntry() == null).orElse(true);
+    }
+
+    @Override
+    public ValidationMessages validateFECCertificateUpload(Application application, Long markedAsCompleteById) {
+        return getProcessRole(markedAsCompleteById).andOnSuccessReturn(role -> {
+            OrganisationResource organisation = organisationService.findById(role.getOrganisationId()).getSuccess();
+            if (isFECCertificateNotUploaded(application.getId(), organisation.getId())) {
+                return new ValidationMessages(fieldError("fecCertificateFileUpload", null, "validation.application.fec.upload.required"));
+            }
+            return noErrors();
+        }).getSuccess();
+    }
+
+    private boolean isFECCertificateNotUploaded(long applicationId, long organisationId) {
+        Optional<ApplicationFinance> applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
+
+        if (applicationFinance.isPresent() && applicationFinance.get().getFecModelEnabled()) {
+            return applicationFinance.map(af -> af.getFecFileEntry() == null).orElse(true);
+        }
+        return false;
     }
 }

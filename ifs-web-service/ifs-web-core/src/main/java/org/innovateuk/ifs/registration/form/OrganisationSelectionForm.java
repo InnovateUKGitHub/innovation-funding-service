@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 
 public class OrganisationSelectionForm {
 
-    @NotNull(message = "{validation.standard.organisation.lead.invalid}")
+    @NotNull(message = "{validation.standard.organisation.required}")
     private Long selectedOrganisationId;
 
     public Long getSelectedOrganisationId() {

@@ -1,0 +1,21 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+
+The assessment period for the competition ${competitionNumber}:
+${competitionName} is now complete and your application has moved to the
+next stage.
+
+You can review the project in the project setup section of the Innovation
+Funding Service, while we continue to review your application. We will contact
+you if we have any queries or require more information.
+
+Your knowledge transfer adviser (KTA) will provide application feedback
+after the funding decision has been made.
+
+${dashboardUrl}
+
+Yours sincerely
+
+<@layout.senderPlainText/>
+</@layout.defaultPlainText>

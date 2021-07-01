@@ -125,8 +125,7 @@ public class OnHoldControllerTest extends BaseControllerMockMVCTest<OnHoldContro
 
         mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/on-hold-status", competitionId, projectId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/manage-status", competitionId, projectId)))
-                .andExpect(flash().attribute("resumedFromOnHold", true));
+                .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/manage-status?resumedFromOnHold=true", competitionId, projectId)));
 
         verify(projectStateRestService).resumeProject(projectId);
     }
@@ -144,8 +143,7 @@ public class OnHoldControllerTest extends BaseControllerMockMVCTest<OnHoldContro
 
         mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/on-hold-status", competitionId, projectId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/details", competitionId, projectId)))
-                .andExpect(flash().attribute("resumedFromOnHold", true));
+                .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/details?resumedFromOnHold=true", competitionId, projectId)));
 
         verify(projectStateRestService).resumeProject(projectId);
     }

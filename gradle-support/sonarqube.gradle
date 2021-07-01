@@ -3,7 +3,9 @@ apply plugin: org.sonarqube.gradle.SonarQubePlugin
 buildscript {
 
     repositories {
-        jcenter()
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://plugins.gradle.org/m2/"}
+        mavenCentral()
     }
 
     dependencies {
@@ -30,6 +32,9 @@ sonarqube {
                 "**/FinanceReviewerServiceImpl.java," +
                 "**/ApplicationFinanceServiceImpl.java," +
                 "**/ReviewInviteServiceImpl.java,"
+        property "sonar.coverage.exclusions",
+                "**/*ViewModel.java," +
+                "**/*Resource.java,"
         property "sonar.java.source", "1.8"
         property "sonar.java.target", "1.8"
     }

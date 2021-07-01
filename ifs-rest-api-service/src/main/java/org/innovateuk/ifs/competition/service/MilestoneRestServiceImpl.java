@@ -47,14 +47,8 @@ public class MilestoneRestServiceImpl extends BaseRestService implements Milesto
     }
 
     @Override
-    public RestResult<MilestoneResource> create(MilestoneType type, Long competitionId) {
-        return postWithRestResult(milestonesRestURL + "/" + competitionId + "?type=" + type, MilestoneResource.class);
-    }
-
-    @Override
-    public RestResult<Void> resetMilestone(MilestoneResource milestone) {
-        milestone.setDate(null);
-        return putWithRestResult(milestonesRestURL + "/", milestone, Void.class);
+    public RestResult<MilestoneResource> create(MilestoneResource milestone) {
+        return postWithRestResult(milestonesRestURL, milestone, MilestoneResource.class);
     }
 
     @Override
@@ -62,4 +56,5 @@ public class MilestoneRestServiceImpl extends BaseRestService implements Milesto
         return putWithRestResult(milestonesRestURL + "/competition/" + competitionId +
                 "/completion-stage?completionStage=" + completionStage.name(), Void.class);
     }
+
 }

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.assessor.form;
 
+import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 
@@ -11,13 +12,13 @@ import java.math.BigDecimal;
 /**
  * Form for the assessors competition setup section.
  */
+@FieldRequiredIf(required = "assessorPay", argument = "ktpCompetition", predicate = false, message = "{validation.assessorsform.assessorPay.required}")
 public class AssessorsForm extends CompetitionSetupForm {
 
     @NotNull(message = "{validation.assessorsform.assessorCount.required}")
     private Integer assessorCount;
 
     @Min(value=0, message = "{validation.assessorsform.assessorPay.min}")
-    @NotNull(message = "{validation.assessorsform.assessorPay.required}")
     @Digits(integer = 8, fraction = 0, message = "{validation.assessorsform.assessorPay.max.amount.invalid}")
     private BigDecimal assessorPay;
 
@@ -32,6 +33,8 @@ public class AssessorsForm extends CompetitionSetupForm {
 
     @NotNull(message = "{validation.assessorsform.assessorFinanceView.required}")
     private AssessorFinanceView assessorFinanceView;
+
+    private boolean ktpCompetition;
 
     public Integer getAssessorCount() {
         return assessorCount;
@@ -79,5 +82,13 @@ public class AssessorsForm extends CompetitionSetupForm {
 
     public void setAssessorFinanceView(AssessorFinanceView assessorFinanceView) {
         this.assessorFinanceView = assessorFinanceView;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
+    }
+
+    public void setKtpCompetition(boolean ktpCompetition) {
+        this.ktpCompetition = ktpCompetition;
     }
 }

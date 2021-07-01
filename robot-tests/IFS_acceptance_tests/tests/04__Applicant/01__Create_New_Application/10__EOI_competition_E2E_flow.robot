@@ -17,6 +17,14 @@ Documentation     Suite description
 ...
 ...               IFS-7718 EDI question - application form
 ...
+...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
+...               IFS-7723 Improvement to company search results
+...
+...               IFS-7724 Input organisation details manually
+...
+...               IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  Applicant  Assessor
@@ -27,22 +35,36 @@ Resource          ../../../resources/common/Assessor_Commons.robot
 
 # This suite covers End to End flow of EOI type competition i.e comp creation, applicaiotn submission , assessmnet submission, release feedback
 *** Variables ***
-${comp_name}         EOI comp
-${EOI_application}   EOI Application
-${EOI_comp_title}    Expression of Interest: Assistive technologies for caregivers
-${EOI_comp_ID}       ${competition_ids['${EOI_comp_title}']}
-${EOI_application1}      Expression of Interest: Assistive technologies for caregivers - Application 1
-${EOI_application_id}    ${application_ids["${EOI_application1}"]}
-&{EOI_assessor}          email=eoi-assessor-user1@example.com    password=${short_password}
+${comp_name}                EOI comp
+${EOI_application}          EOI Application
+${EOI_comp_title}           Expression of Interest: Assistive technologies for caregivers
+${EOI_comp_ID}              ${competition_ids['${EOI_comp_title}']}
+${EOI_application1}         Expression of Interest: Assistive technologies for caregivers - Application 1
+${EOI_application_id}       ${application_ids["${EOI_application1}"]}
+&{EOI_assessor}             email=eoi-assessor-user1@example.com    password=${short_password}
+${business_type}            Partnership
+${organisation_name}        Amazing Test Company
+${organisation_number}      1234554321
+${sic_code}                 09876
+${executive_officer}        Snoop Dogg
+${address_line_1}           123
+${address_line_2}           Amazing Test Street
+${address_line_3}           Serene
+${address_town}             London
+${address_county}           Middlesex
+${address_postcode}         NW11 8AJ
+${applicant_first_name}     Sherlock
+${applicant_last_name}      Holmes
+${applicant_email}          sherlock@holmes.com
 
 *** Test Cases ***
 Comp Admin Creates EOI type competition
-    [Documentation]  IFS-2192
+    [Documentation]  IFS-2192  IFS-8779  IFS-8847
     Given Logging in and Error Checking               &{Comp_admin1_credentials}
-    Then the competition admin creates competition    ${business_type_id}  ${comp_name}  EOI  ${compType_EOI}  2  GRANT  RELEASE_FEEDBACK  no  1  true  collaborative
+    Then the competition admin creates competition    ${business_type_id}  ${comp_name}  EOI  ${compType_EOI}  SUBSIDY_CONTROL  GRANT  RELEASE_FEEDBACK  no  1  true  collaborative  No
 
 Applicant applies to newly created EOI competition
-    [Documentation]  IFS-2192  IFS-2196  IFS-4046 IFS-4080
+    [Documentation]  IFS-2192  IFS-2196  IFS-4046 IFS-4080  IFS-7723  IFS-7724
     [Setup]  get competition id and set open date to yesterday  ${comp_name}
     Given Log in as a different user            &{assessor_bob_credentials}
     Then logged in user applies to competition  ${comp_name}  1
@@ -69,7 +91,7 @@ Invite a registered assessor
     And the user clicks the button/link                       link = Invite
     And the user clicks the button/link                       link = Review and send invites
     And the user enters text to a text field                  id = message    This is custom text
-    And the user clicks the button/link                       jQuery = .govuk-button:contains("Send invite")
+    And the user clicks the button/link                       jQuery = .govuk-button:contains("Send invitation")
 
 Allocated assessor accepts invite to assess the competition
     [Documentation]  IFS-2376
@@ -177,8 +199,13 @@ logged in user applies to competition
     the user select the competition and starts application     ${competition}
     the user selects the radio button                          organisationTypeId  ${applicationType}
     the user clicks the button/link                            jQuery = button:contains("Save and continue")
-    the user clicks the Not on companies house link            org2
+    the user searches for organisation                         Not exist
+    the user clicks link to find out what to do
+    the user clicks link to enter its details manually
+    the user manually adds company details                     ${organisation_name}  ${organisation_number}  ${business_type}  ${sic_code}  ${executive_officer}
+    the user enters address manually                           ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}
     the user clicks the button/link                            jQuery = button:contains("Save and continue")
+    the user confirms and saves company details                Business  ${business_type}  ${organisation_name}  ${organisation_number}  ${sic_code}  ${executive_officer}  ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}  false
     the user selects the checkbox                              agree
     the user clicks the button/link                            css = .govuk-button[type="submit"]    #Continue
 

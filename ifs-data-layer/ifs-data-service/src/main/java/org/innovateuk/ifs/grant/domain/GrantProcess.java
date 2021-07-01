@@ -48,8 +48,16 @@ public class GrantProcess {
         return sentRequested;
     }
 
+    public void setSentRequested(ZonedDateTime sentRequested) {
+        this.sentRequested = sentRequested;
+    }
+
     public ZonedDateTime getSentSucceeded() {
         return sentSucceeded;
+    }
+
+    public void setSentSucceeded(ZonedDateTime sentSucceeded) {
+        this.sentSucceeded = sentSucceeded;
     }
 
     public boolean isPending() {
@@ -68,8 +76,16 @@ public class GrantProcess {
         return message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public ZonedDateTime getLastProcessed() {
         return lastProcessed;
+    }
+
+    public void setLastProcessed(ZonedDateTime lastProcessed) {
+        this.lastProcessed = lastProcessed;
     }
 
     public GrantProcess requestSend(ZonedDateTime now) {

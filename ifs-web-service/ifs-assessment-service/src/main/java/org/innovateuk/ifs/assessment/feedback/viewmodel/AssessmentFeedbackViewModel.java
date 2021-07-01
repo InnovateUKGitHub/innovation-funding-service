@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -30,7 +31,9 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
     private final String questionShortName;
     private final String questionName;
     private final Integer maximumScore;
+    private final boolean multipleStatuses;
     private final String applicantResponse;
+    private final List<ApplicantResponseViewModel> applicantResponses;
     private final List<FormInputResource> assessmentFormInputs;
     private final boolean scoreFormInputExists;
     private final boolean scopeFormInputExists;
@@ -38,6 +41,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
     private final FileDetailsViewModel templateDocumentDetails;
     private final String templateDocumentTitle;
     private final List<ResearchCategoryResource> researchCategories;
+    private final FundingType fundingType;
 
     private AssessmentFeedbackViewModel(long assessmentId,
                                         long daysLeft,
@@ -49,14 +53,17 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                                         String questionShortName,
                                         String questionName,
                                         Integer maximumScore,
+                                        boolean multipleStatuses,
                                         String applicantResponse,
+                                        List<ApplicantResponseViewModel> applicantResponses,
                                         List<FormInputResource> assessmentFormInputs,
                                         boolean scoreFormInputExists,
                                         boolean scopeFormInputExists,
                                         List<FileDetailsViewModel> appendixDetails,
                                         FileDetailsViewModel templateDocumentDetails,
                                         String templateDocumentTitle,
-                                        List<ResearchCategoryResource> researchCategories) {
+                                        List<ResearchCategoryResource> researchCategories,
+                                        FundingType fundingType) {
         this.assessmentId = assessmentId;
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
@@ -67,7 +74,9 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
         this.questionShortName = questionShortName;
         this.questionName = questionName;
         this.maximumScore = maximumScore;
+        this.multipleStatuses = multipleStatuses;
         this.applicantResponse = applicantResponse;
+        this.applicantResponses = applicantResponses;
         this.assessmentFormInputs = assessmentFormInputs;
         this.scoreFormInputExists = scoreFormInputExists;
         this.scopeFormInputExists = scopeFormInputExists;
@@ -75,9 +84,15 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
         this.templateDocumentDetails = templateDocumentDetails;
         this.templateDocumentTitle = templateDocumentTitle;
         this.researchCategories = researchCategories;
+        this.fundingType = fundingType;
     }
 
-    public AssessmentFeedbackViewModel(AssessmentResource assessment, CompetitionResource competition, QuestionResource question, String applicantResponse,
+    public AssessmentFeedbackViewModel(AssessmentResource assessment,
+                                       CompetitionResource competition,
+                                       QuestionResource question,
+                                       boolean multipleStatuses,
+                                       String applicantResponse,
+                                       List<ApplicantResponseViewModel> applicantResponses,
                                        List<FormInputResource> assessmentFormInputs,
                                        boolean scoreFormInputExists,
                                        boolean scopeFormInputExists,
@@ -95,14 +110,17 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                 question.getShortName(),
                 question.getName(),
                 question.getAssessorMaximumScore(),
+                multipleStatuses,
                 applicantResponse,
+                applicantResponses,
                 assessmentFormInputs,
                 scoreFormInputExists,
                 scopeFormInputExists,
                 appendixDetails,
                 templateDocumentDetails,
                 templateDocumentTitle,
-                researchCategories);
+                researchCategories,
+                competition.getFundingType());
     }
 
     public long getAssessmentId() {
@@ -145,8 +163,20 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
         return maximumScore;
     }
 
+    public boolean isMultipleStatuses() {
+        return multipleStatuses;
+    }
+
+    public boolean hasResponse() {
+        return applicantResponse != null || (applicantResponses != null && !applicantResponses.isEmpty());
+    }
+
     public String getApplicantResponse() {
         return applicantResponse;
+    }
+
+    public List<ApplicantResponseViewModel> getApplicantResponses() {
+        return applicantResponses;
     }
 
     public List<FormInputResource> getAssessmentFormInputs() {
@@ -190,6 +220,10 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
         return templateDocumentDetails != null;
     }
 
+    public boolean isKtp() {
+        return fundingType == FundingType.KTP;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -217,6 +251,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                 .append(templateDocumentDetails, that.templateDocumentDetails)
                 .append(templateDocumentTitle, that.templateDocumentTitle)
                 .append(researchCategories, that.researchCategories)
+                .append(fundingType, that.fundingType)
                 .isEquals();
     }
 
@@ -241,6 +276,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                 .append(templateDocumentDetails)
                 .append(templateDocumentTitle)
                 .append(researchCategories)
+                .append(fundingType)
                 .toHashCode();
     }
 
@@ -265,6 +301,31 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                 .append("templateDocumentDetails", templateDocumentDetails)
                 .append("templateDocumentTitle", templateDocumentTitle)
                 .append("researchCategories", researchCategories)
+                .append("fundingType", fundingType)
                 .toString();
+    }
+
+    public static class ApplicantResponseViewModel {
+        private String orgName;
+        private boolean lead;
+        private String answer;
+
+        public ApplicantResponseViewModel(String orgName, boolean lead, String answer) {
+            this.orgName = orgName;
+            this.lead = lead;
+            this.answer = answer;
+        }
+
+        public String getOrgName() {
+            return orgName;
+        }
+
+        public boolean isLead() {
+            return lead;
+        }
+
+        public String getAnswer() {
+            return answer;
+        }
     }
 }

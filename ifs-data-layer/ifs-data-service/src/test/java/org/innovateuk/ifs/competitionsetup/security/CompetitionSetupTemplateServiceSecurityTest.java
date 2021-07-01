@@ -32,13 +32,13 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void allServiceFunctionsShouldBeAuthorizedForCompAdmin() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(COMP_ADMIN).build());
         classUnderTest.initializeCompetitionByCompetitionTemplate(null, null);
     }
 
     @Test
     public void allServiceFunctionsShouldBeAuthorizedForProjectFinance() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(PROJECT_FINANCE).build());
         classUnderTest.initializeCompetitionByCompetitionTemplate(null, null);
     }
 

@@ -23,12 +23,12 @@ import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
  */
 public interface SpendProfileService {
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'external_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'external_finance')")
     @SecuredBySpring(value = "GENERATE_SPEND_PROFILE", securedType = ProjectResource.class, description = "A member of the internal Finance Team can generate a Spend Profile for any Project" )
     @Activity(projectId = "projectId", type = ActivityType.SPEND_PROFILE_GENERATED)
     ServiceResult<Void> generateSpendProfile(Long projectId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "GENERATE_SPEND_PROFILE", securedType = ProjectResource.class, description = "A member of the internal Finance Team can approve or reject a Spend Profile for any Project" )
     @Activity(projectId = "projectId", dynamicType = "approveOrRejectActivityType")
     ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType);
@@ -55,6 +55,11 @@ public interface SpendProfileService {
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'EDIT_SPEND_PROFILE')")
     ServiceResult<Void> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table);
+
+    @PreAuthorize("hasAnyAuthority('system_maintainer', 'project_finance')")
+    @SecuredBySpring(value = "DELETE_SPEND_PROFILE", securedType = ProjectResource.class, description = "A member of the internal Finance Team can delete a Spend Profile for any Project" )
+    @Activity(projectId = "projectId", type = ActivityType.SPEND_PROFILE_DELETED)
+    ServiceResult<Void> deleteSpendProfile(Long projectId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'MARK_SPEND_PROFILE_COMPLETE')")
     ServiceResult<Void> markSpendProfileComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId);

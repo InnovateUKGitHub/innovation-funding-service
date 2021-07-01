@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static java.util.Collections.emptyList;
-import static java.util.Optional.empty;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -48,9 +47,10 @@ public class GrantAgreementReadOnlyPopulatorTest {
         FileEntryResource file = newFileEntryResource().withName("file.name").build();
         when(euGrantTransferRestService.findGrantAgreement(application.getId())).thenReturn(restSuccess(file));
 
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(),
+                emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
 
-        GrantAgreementReadOnlyViewModel viewModel = populator.populate(competition, question, data, defaultSettings());
+        GrantAgreementReadOnlyViewModel viewModel = populator.populate(question, data, defaultSettings());
 
         assertEquals("file.name", viewModel.getFilename());
 

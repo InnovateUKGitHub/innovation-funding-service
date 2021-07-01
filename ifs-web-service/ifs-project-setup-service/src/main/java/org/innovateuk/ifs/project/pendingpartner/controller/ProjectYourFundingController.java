@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@SuppressWarnings("unchecked")
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/your-funding")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = SetupStatusController.class)
@@ -53,7 +54,7 @@ public class ProjectYourFundingController {
 
     @GetMapping
     @SecuredBySpring(value = "VIEW_YOUR_FUNDING_SECTION", description = "Internal users can access the sections in the 'Your project finances'")
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder')")
     public String viewYourFunding(@ModelAttribute("form") YourFundingPercentageForm bindingForm,
                                   Model model,
                                   @PathVariable long projectId,
@@ -63,7 +64,7 @@ public class ProjectYourFundingController {
         if (viewModel.isFundingSectionLocked()) {
             return VIEW;
         }
-        AbstractYourFundingForm form = formPopulator.populateForm(projectId, organisationId);
+        AbstractYourFundingForm<?, ?> form = formPopulator.populateForm(projectId, organisationId);
         model.addAttribute("form", form);
         return VIEW;
     }
@@ -144,7 +145,7 @@ public class ProjectYourFundingController {
         return redirectToViewPage(projectId, organisationId);
     }
 
-    @PostMapping(params = {"add_cost", "grantClaimPercentage"})
+    @PostMapping(params = {"add_row", "grantClaimPercentage"})
     public String addFundingRowFormPostPercentage(Model model,
                                         @PathVariable long projectId,
                                         @PathVariable long organisationId,
@@ -153,7 +154,7 @@ public class ProjectYourFundingController {
         saver.addOtherFundingRow(form);
         return viewYourFunding(model, projectId, organisationId);
     }
-    @PostMapping(params = {"add_cost", "amount"})
+    @PostMapping(params = {"add_row", "amount"})
     public String addFundingRowFormPostAmount(Model model,
                                         @PathVariable long projectId,
                                         @PathVariable long organisationId,
@@ -163,23 +164,23 @@ public class ProjectYourFundingController {
         return viewYourFunding(model, projectId, organisationId);
     }
 
-    @PostMapping(params = {"remove_cost", "grantClaimPercentage"})
+    @PostMapping(params = {"remove_row", "grantClaimPercentage"})
     public String removeFundingRowFormPostPercentage(Model model,
                                            @PathVariable long projectId,
                                            @PathVariable long organisationId,
                                            @ModelAttribute("form") YourFundingPercentageForm form,
-                                           @RequestParam("remove_cost") String costId) {
+                                           @RequestParam("remove_row") String costId) {
 
         saver.removeOtherFundingRowForm(form, costId);
         return viewYourFunding(model, projectId, organisationId);
     }
 
-    @PostMapping(params = {"remove_cost", "amount"})
+    @PostMapping(params = {"remove_row", "amount"})
     public String removeFundingRowFormPostAmount(Model model,
                                            @PathVariable long projectId,
                                            @PathVariable long organisationId,
                                            @ModelAttribute("form") YourFundingAmountForm form,
-                                           @RequestParam("remove_cost") String costId) {
+                                           @RequestParam("remove_row") String costId) {
 
         saver.removeOtherFundingRowForm(form, costId);
         return viewYourFunding(model, projectId, organisationId);
@@ -199,7 +200,7 @@ public class ProjectYourFundingController {
         YourFundingPercentageForm form = new YourFundingPercentageForm();
         form.setOtherFundingRows(new LinkedHashMap<>());
         saver.addOtherFundingRow(form);
-        Map.Entry<String, OtherFundingRowForm> row = form.getOtherFundingRows().entrySet().iterator().next();
+        Map.Entry<String, OtherFundingRowForm> row = (Map.Entry<String, OtherFundingRowForm>) form.getOtherFundingRows().entrySet().iterator().next();
         model.addAttribute("form", form);
         model.addAttribute("id", row.getKey());
         model.addAttribute("row", row.getValue());

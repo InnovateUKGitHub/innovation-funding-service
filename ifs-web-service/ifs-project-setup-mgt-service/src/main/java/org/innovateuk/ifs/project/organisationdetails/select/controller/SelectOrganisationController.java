@@ -34,7 +34,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/organisation")
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
 @SecuredBySpring(value = "Controller", description = "Project finance, competition admin, support, innovation lead and " +
     "stakeholder users can select an organisation to view details",
     securedType = OrganisationDetailsWithGrowthTableController.class)

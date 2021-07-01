@@ -2,8 +2,6 @@ package org.innovateuk.ifs.authentication.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.authentication.resource.UpdateEmailResource;
-import org.innovateuk.ifs.authentication.resource.UpdateUserResource;
 import org.innovateuk.ifs.authentication.resource.*;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
@@ -119,6 +117,8 @@ public class RestIdentityProviderService implements IdentityProviderService, App
                     return Error.fieldError(PASSWORD_FIELD_KEY, code.getReasonPhrase(), identityProviderError.getKey());
                 case EMAIL_MUST_BE_VALID:
                     return Error.fieldError(EMAIL_FIELD_KEY, code.getReasonPhrase(), identityProviderError.getKey());
+                default:
+                    return new Error(identityProviderError.getKey(), code);
             }
         }
 

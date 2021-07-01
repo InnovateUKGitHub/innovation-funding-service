@@ -4,6 +4,8 @@ import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
@@ -116,7 +119,7 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
     @Test
     public void postHandle_applicationRole() {
         final long expectedApplicationId = 321L;
-        final List<Role> expectedRoles = singletonList(Role.COLLABORATOR);
+        final List<ProcessRoleType> expectedRoles = singletonList(ProcessRoleType.LEADAPPLICANT);
         httpServletRequest.setAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE, singletonMap("applicationId", Long.toString(expectedApplicationId)));
 
         when(googleAnalyticsDataLayerRestServiceMock.getCompetitionNameForApplication(expectedApplicationId)).thenReturn(RestResult.restSuccess(toJson(expectedCompName)));
@@ -126,7 +129,7 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
 
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
         expectedDataLayer.setCompetitionName(expectedCompName);
-        expectedDataLayer.setUserRoles(expectedRoles);
+        expectedDataLayer.setUserRoles(expectedRoles.stream().map(Enum::name).collect(Collectors.toList()));
         expectedDataLayer.setApplicationId(expectedApplicationId);
 
         assertEquals(expectedDataLayer, mav.getModel().get(ANALYTICS_DATA_LAYER_NAME));
@@ -163,7 +166,7 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
     public void postHandle_projectRoles() {
         final long expectedProjectId = 123L;
         final long expectedApplicationId = 456L;
-        final List<Role> expectedRoles = asList(Role.PARTNER, Role.PROJECT_MANAGER);
+        final List<ProjectParticipantRole> expectedRoles = asList(ProjectParticipantRole.PROJECT_PARTNER, ProjectParticipantRole.PROJECT_MANAGER);
         httpServletRequest.setAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE, singletonMap("projectId", Long.toString(expectedProjectId)));
 
 
@@ -175,7 +178,7 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
 
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
         expectedDataLayer.setCompetitionName(expectedCompName);
-        expectedDataLayer.setUserRoles(expectedRoles);
+        expectedDataLayer.setUserRoles(expectedRoles.stream().map(Enum::name).collect(Collectors.toList()));
         expectedDataLayer.setApplicationId(expectedApplicationId);
 
         assertEquals(expectedDataLayer, mav.getModel().get(ANALYTICS_DATA_LAYER_NAME));
@@ -228,7 +231,7 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
         googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequest, httpServletResponseMock, null, mav);
 
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
-        expectedDataLayer.setUserRoles(singletonList(Role.COMP_ADMIN));
+        expectedDataLayer.setUserRoles(singletonList(Role.COMP_ADMIN.name()));
 
         assertEquals(expectedDataLayer, mav.getModel().get(ANALYTICS_DATA_LAYER_NAME));
     }
@@ -241,7 +244,7 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
         googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequest, httpServletResponseMock, null, mav);
 
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
-        expectedDataLayer.setUserRoles(asList(Role.COMP_ADMIN, Role.IFS_ADMINISTRATOR));
+        expectedDataLayer.setUserRoles(asList(Role.COMP_ADMIN.name(), Role.IFS_ADMINISTRATOR.name()));
 
         assertEquals(expectedDataLayer, mav.getModel().get(ANALYTICS_DATA_LAYER_NAME));
     }

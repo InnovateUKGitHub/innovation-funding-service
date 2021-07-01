@@ -37,15 +37,21 @@ public class GrantOfferLetterControllerSecurityTest extends BaseProjectSetupCont
                 permissionRules -> permissionRules.partnerCanAccessGrantOfferLetterSection(eq(projectCompositeId ), isA(UserResource.class)));
         assertSecured(() -> classUnderTest.downloadAdditionalContractFile(projectCompositeId .id()),
                 permissionRules -> permissionRules.partnerCanAccessGrantOfferLetterSection(eq(projectCompositeId ), isA(UserResource.class)));
+        assertSecured(() -> classUnderTest.downloadSignedAdditionalContractFile(projectCompositeId .id()),
+                permissionRules -> permissionRules.partnerCanAccessGrantOfferLetterSection(eq(projectCompositeId ), isA(UserResource.class)));
         assertSecured(() -> classUnderTest.downloadGeneratedGrantOfferLetterFile(projectCompositeId .id()),
                 permissionRules -> permissionRules.partnerCanAccessGrantOfferLetterSection(eq(projectCompositeId ), isA(UserResource.class)));
         assertSecured(() -> classUnderTest.submit(projectCompositeId .id(), null, null, null, null, null),
                 permissionRules -> permissionRules.partnerCanAccessGrantOfferLetterSection(eq(projectCompositeId ), isA(UserResource.class)));
         assertSecured(() -> classUnderTest.uploadSignedGrantOfferLetterFile(projectCompositeId .id(), null, null, null, null, null),
                 permissionRules -> permissionRules.partnerCanAccessGrantOfferLetterSection(eq(projectCompositeId ), isA(UserResource.class)));
+        assertSecured(() -> classUnderTest.uploadSignedAdditionalContractFile(projectCompositeId .id(), null, null, null, null, null),
+                permissionRules -> permissionRules.partnerCanAccessGrantOfferLetterSection(eq(projectCompositeId ), isA(UserResource.class)));
         assertSecured(() -> classUnderTest.downloadGrantOfferLetterFile(projectCompositeId .id()),
                 permissionRules -> permissionRules.leadPartnerAccessToSignedGrantOfferLetter(eq(projectCompositeId ), isA(UserResource.class)));
         assertSecured(() -> classUnderTest.removeSignedGrantOfferLetterFile(projectCompositeId .id(), null, null, null, null, null),
+                permissionRules -> permissionRules.leadPartnerAccessToSignedGrantOfferLetter(eq(projectCompositeId ), isA(UserResource.class)));
+        assertSecured(() -> classUnderTest.removeSignedAdditionalContractFile(projectCompositeId .id(), null, null, null, null, null),
                 permissionRules -> permissionRules.leadPartnerAccessToSignedGrantOfferLetter(eq(projectCompositeId ), isA(UserResource.class)));
     }
 }

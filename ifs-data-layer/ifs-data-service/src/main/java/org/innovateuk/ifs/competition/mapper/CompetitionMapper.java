@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.mapper;
 
+import org.innovateuk.ifs.assessment.period.mapper.AssessmentPeriodMapper;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.mapper.InnovationSectorMapper;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
@@ -15,6 +16,7 @@ import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.form.mapper.SectionMapper;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.project.core.domain.ProjectStages;
+import org.innovateuk.ifs.project.grantofferletter.template.mapper.GolTemplateMapper;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.mapstruct.*;
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
                 InnovationSectorMapper.class,
                 ResearchCategoryMapper.class,
                 MilestoneMapper.class,
+                AssessmentPeriodMapper.class,
                 CompetitionTypeMapper.class,
                 SectionMapper.class,
                 CompetitionFunderMapper.class,
@@ -38,7 +41,8 @@ import java.util.stream.Collectors;
                 GrantClaimMaximumMapper.class,
                 CompetitionDocumentMapper.class,
                 FileTypeMapper.class,
-                FileEntryMapper.class
+                FileEntryMapper.class,
+                GolTemplateMapper.class
         })
 public abstract class CompetitionMapper extends BaseMapper<Competition, CompetitionResource, Long> {
 
@@ -50,6 +54,7 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
             @Mapping(source = "executive.name", target = "executiveName"),
             @Mapping(source = "createdBy.name", target = "createdBy"),
             @Mapping(source = "modifiedBy.name", target = "modifiedBy"),
+            @Mapping(target = "assessorFinanceView", ignore = true)
     })
     @Override
     public abstract CompetitionResource mapToResource(Competition domain);
@@ -57,10 +62,15 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
     @Mappings({
             @Mapping(target = "sections", ignore = true),
             @Mapping(target = "questions", ignore = true),
-            @Mapping(target = "template", ignore = true),
             @Mapping(target = "assessmentPanelDate", ignore = true),
             @Mapping(target = "panelDate", ignore = true),
-            @Mapping(target = "projectStages", ignore = true)
+            @Mapping(target = "projectStages", ignore = true),
+            @Mapping(target = "competitionApplicationConfig", ignore = true),
+            @Mapping(target = "competitionAssessmentConfig", ignore = true),
+            @Mapping(target = "competitionOrganisationConfig", ignore = true),
+            @Mapping(target = "projectSetupStarted", ignore = true),
+            @Mapping(target = "useDocusignForGrantOfferLetter", ignore = true),
+            @Mapping(target = "competitionFinanceRowTypes", ignore = true)
     })
     public abstract Competition mapToDomain(CompetitionResource domain);
 

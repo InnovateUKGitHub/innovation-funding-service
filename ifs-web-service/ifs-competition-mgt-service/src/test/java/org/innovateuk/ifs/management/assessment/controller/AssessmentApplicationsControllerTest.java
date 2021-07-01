@@ -4,6 +4,9 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
+import org.innovateuk.ifs.assessment.service.AssessmentPeriodService;
+import org.innovateuk.ifs.competition.builder.AssessmentPeriodResourceBuilder;
+import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.application.list.populator.ManageApplicationsModelPopulator;
@@ -18,6 +21,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationCountSummaryResourceBuilder.newApplicationCountSummaryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodResourceBuilder.newAssessmentPeriodResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.junit.Assert.assertEquals;
@@ -34,6 +38,9 @@ public class AssessmentApplicationsControllerTest extends BaseControllerMockMVCT
     @Mock
     private CompetitionRestService competitionRestService;
 
+    @Mock
+    private AssessmentPeriodService assessmentPeriodService;
+
     @InjectMocks
     @Spy
     private ManageApplicationsModelPopulator manageApplicationsPopulator;
@@ -45,6 +52,7 @@ public class AssessmentApplicationsControllerTest extends BaseControllerMockMVCT
 
     @Test
     public void manageApplications() throws Exception {
+        AssessmentPeriodResource assessmentPeriodResource = newAssessmentPeriodResource().build();
         CompetitionResource competitionResource = newCompetitionResource()
                 .withName("name")
                 .withCompetitionStatus(IN_ASSESSMENT)
@@ -60,9 +68,9 @@ public class AssessmentApplicationsControllerTest extends BaseControllerMockMVCT
         ApplicationCountSummaryPageResource expectedPageResource = new ApplicationCountSummaryPageResource(41, 3, summaryResources, 1, 20);
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionId(competitionResource.getId(), 1,20,"filter")).thenReturn(restSuccess(expectedPageResource));
+        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndAssessmentPeriodId(competitionResource.getId(), assessmentPeriodResource.getId(), 1,20,"filter")).thenReturn(restSuccess(expectedPageResource));
 
-        ManageApplicationsViewModel model = (ManageApplicationsViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/applications?page=1&filterSearch=filter", competitionResource.getId()))
+        ManageApplicationsViewModel model = (ManageApplicationsViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/applications/period?assessmentPeriodId={assessmentPeriodId}&page=1&filterSearch=filter", competitionResource.getId(), assessmentPeriodResource.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/manage-applications"))
                 .andExpect(model().attributeExists("model"))
@@ -89,11 +97,12 @@ public class AssessmentApplicationsControllerTest extends BaseControllerMockMVCT
         assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
         assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
         assertEquals("41 to 41", actualPagination.getPageNames().get(2).getTitle());
-        assertEquals("?filterSearch=filter&page=2", actualPagination.getPageNames().get(2).getPath());
+        assertEquals("?assessmentPeriodId=1&filterSearch=filter&page=2", actualPagination.getPageNames().get(2).getPath());
     }
 
     @Test
     public void manageApplications_assessorManagementOrigin() throws Exception {
+        AssessmentPeriodResource assessmentPeriod = newAssessmentPeriodResource().build();
         CompetitionResource competitionResource = newCompetitionResource()
                 .withName("name")
                 .withCompetitionStatus(IN_ASSESSMENT)
@@ -109,9 +118,10 @@ public class AssessmentApplicationsControllerTest extends BaseControllerMockMVCT
         ApplicationCountSummaryPageResource expectedPageResource = new ApplicationCountSummaryPageResource(41, 3, summaryResources, 1, 20);
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionId(competitionResource.getId(), 0,20,"")).thenReturn(restSuccess(expectedPageResource));
+        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndAssessmentPeriodId(competitionResource.getId(), assessmentPeriod.getId(), 0,20,"")).thenReturn(restSuccess(expectedPageResource));
+        when(assessmentPeriodService.assessmentPeriodName(assessmentPeriod.getId(), competitionResource.getId())).thenReturn("period 1");
 
-        mockMvc.perform(get("/assessment/competition/{competitionId}/applications", competitionResource.getId()))
+        mockMvc.perform(get("/assessment/competition/{competitionId}/applications/period?assessmentPeriodId={assessmentPeriodId}", competitionResource.getId(), assessmentPeriod.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/manage-applications"));
     }

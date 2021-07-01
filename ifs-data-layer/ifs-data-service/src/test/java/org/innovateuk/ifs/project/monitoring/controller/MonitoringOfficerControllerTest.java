@@ -37,6 +37,33 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         verify(projectMonitoringOfficerServiceMock).findAll();
     }
 
+    @Test
+    public void findAllKtp() throws Exception {
+        List<SimpleUserResource> expected = newSimpleUserResource().build(1);
+
+        when(projectMonitoringOfficerServiceMock.findAllKtp()).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(get("/monitoring-officer/find-all-ktp"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expected)));
+
+        verify(projectMonitoringOfficerServiceMock).findAllKtp();
+    }
+
+
+    @Test
+    public void findAllNonKtp() throws Exception {
+        List<SimpleUserResource> expected = newSimpleUserResource().build(1);
+
+        when(projectMonitoringOfficerServiceMock.findAllNonKtp()).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(get("/monitoring-officer/find-all-non-ktp"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expected)));
+
+        verify(projectMonitoringOfficerServiceMock).findAllNonKtp();
+    }
+
 
     @Test
     public void getProjectMonitoringOfficer() throws Exception {
@@ -102,6 +129,16 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         verify(projectMonitoringOfficerServiceMock, only()).isMonitoringOfficer(userId);
     }
 
+    @Test
+    public void sendDocumentReviewNotification() throws Exception {
+        long userId = 11;
+        long projectId = 13;
+        when(projectMonitoringOfficerServiceMock.sendDocumentReviewNotification(projectId, userId)).thenReturn(serviceSuccess());
+        mockMvc.perform(MockMvcRequestBuilders.post("/monitoring-officer/{projectId}/notify/{userId}", projectId, userId))
+                .andExpect(status().is2xxSuccessful());
+
+        verify(projectMonitoringOfficerServiceMock, only()).sendDocumentReviewNotification(projectId, userId);
+    }
 
     @Override
     protected MonitoringOfficerController supplyControllerUnderTest() {

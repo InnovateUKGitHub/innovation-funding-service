@@ -1,6 +1,6 @@
 -- Useful query to regenerate the data in user_data.csv after a change in the database.
 
-select concat_ws(',', u.email, 'Passw0rd', a.id, c.id, application_details_question.id, project_summary_question.id, public_description_question.id, project_exploitation_question.id, economic_benefit_question.id, funding_question.id, adding_value_question.id, your_finance_section.id, finance_overview_section.id, project_summary_form_input.id, public_description_form_input.id, project_exploitation_form_input.id, economic_benefit_form_input.id, funding_form_input.id, adding_value_form_input.id, travel_subsistence_row.id, travel_subsistence_question.id, other_funding_row.id, other_funding_question.id)
+select concat_ws(',', u.email, 'Passw0rd1357', a.id, c.id, application_details_question.id, project_summary_question.id, public_description_question.id, project_exploitation_question.id, economic_benefit_question.id, funding_question.id, adding_value_question.id, your_finance_section.id, finance_overview_section.id, project_summary_form_input.id, public_description_form_input.id, project_exploitation_form_input.id, economic_benefit_form_input.id, funding_form_input.id, adding_value_form_input.id, travel_subsistence_row.id, travel_subsistence_question.id, other_funding_row.id, other_funding_question.id)
             from user u
             join process_role pr
               on pr.user_id = u.id

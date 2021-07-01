@@ -1,15 +1,22 @@
 package org.innovateuk.ifs.organisation.controller;
 
+import org.innovateuk.ifs.api.RenameOrganisationV1Api;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.service.OrganisationMatchingService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationInitialCreationService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
+
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_COMPANY_NAME_TOO_LONG;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -18,13 +25,30 @@ import java.util.Set;
  */
 @RestController
 @RequestMapping("/organisation")
-public class OrganisationController {
+public class OrganisationController implements RenameOrganisationV1Api {
 
     @Autowired
     private OrganisationService organisationService;
 
     @Autowired
     private OrganisationInitialCreationService organisationCreationService;
+
+    @Autowired
+    private OrganisationMatchingService organisationMatchingService;
+
+    @Autowired
+    private OrganisationMapper organisationMapper;
+
+    @Override
+    public RestResult<List<OrganisationResource>> findOrganisationsByCompaniesHouseNumber(
+            @PathVariable final String companiesHouseNumber) {
+        return organisationService.findOrganisationsByCompaniesHouseId(companiesHouseNumber).toGetResponse();
+    }
+
+    @Override
+    public RestResult<List<OrganisationResource>> findOrganisationsByName(@PathVariable final String name) {
+        return organisationService.findOrganisationsByName(name).toGetResponse();
+    }
 
     @GetMapping("/find-by-application-id/{applicationId}")
     public RestResult<Set<OrganisationResource>> findByApplicationId(@PathVariable("applicationId") final Long applicationId) {
@@ -68,8 +92,20 @@ public class OrganisationController {
         return organisationService.update(organisationResource).toPutWithBodyResponse();
     }
 
-    @PostMapping("/update-name-and-registration/{organisationId}")
-    public RestResult<OrganisationResource> updateNameAndRegistration(@PathVariable("organisationId") Long organisationId, @RequestParam(value = "name") String name, @RequestParam(value = "registration") String registration) {
-        return organisationService.updateOrganisationNameAndRegistration(organisationId, name, registration).toPostCreateResponse();
+    @PutMapping("/sync-companies-house-details")
+    public RestResult<OrganisationResource> updateCompaniesHouseDetails(@RequestBody OrganisationResource organisationResource) {
+        return organisationService.syncCompaniesHouseDetails(organisationResource).toPutWithBodyResponse();
     }
+
+    @PostMapping("/update-name-and-registration/{organisationId}")
+    public RestResult<OrganisationResource> updateNameAndRegistration(
+                @PathVariable Long organisationId, @RequestParam String name, @RequestParam String registration) {
+        return organisationService.updateOrganisationNameAndRegistration(organisationId, name, registration).toPostWithBodyResponse();
+    }
+
+    @Override
+    public RestResult<OrganisationResource> updateOrganisationName(Long organisationId, String name) {
+        return organisationService.updateOrganisationName(organisationId, name).toPostCreateResponse();
+    }
+
 }

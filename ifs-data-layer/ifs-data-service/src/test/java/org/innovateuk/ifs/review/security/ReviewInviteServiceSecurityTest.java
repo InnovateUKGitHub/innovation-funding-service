@@ -126,9 +126,9 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
     @Test
     public void getAllInvitesByUser() throws Exception {
         UserResource assessorUserResource = newUserResource()
-                .withRolesGlobal(singletonList(
-                        Role.ASSESSOR
-                ))
+                .withRoleGlobal(
+                    Role.ASSESSOR
+                )
                 .build();
 
         when(classUnderTestMock.getAllInvitesByUser(1L))
@@ -148,9 +148,8 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
     @Test
     public void acceptInvite() {
         UserResource assessorUserResource = newUserResource()
-                .withRolesGlobal(singletonList(
+                .withRoleGlobal(
                         Role.ASSESSOR
-                        )
                 ).build();
         ReviewParticipantResource reviewParticipantResource = newReviewParticipantResource().build();
 
@@ -184,9 +183,8 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
     @Test
     public void acceptInvite_notSameUser() {
         UserResource assessorUserResource = newUserResource()
-                .withRolesGlobal(singletonList(
+                .withRoleGlobal(
                         Role.ASSESSOR
-                        )
                 ).build();
         ReviewParticipantResource reviewParticipantResource = newReviewParticipantResource().build();
         when(reviewParticipantLookupStrategy.getAssessmentPanelParticipantResource("hash"))
@@ -210,9 +208,8 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
     @Test
     public void acceptInvite_hashNotExists() {
         UserResource assessorUserResource = newUserResource()
-                .withRolesGlobal(singletonList(
+                .withRoleGlobal(
                         Role.ASSESSOR
-                        )
                 ).build();
 
         when(reviewParticipantLookupStrategy.getAssessmentPanelParticipantResource("hash not exists")).thenReturn(null);

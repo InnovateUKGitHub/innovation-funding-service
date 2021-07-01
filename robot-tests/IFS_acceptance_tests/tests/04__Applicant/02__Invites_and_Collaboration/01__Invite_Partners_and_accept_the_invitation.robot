@@ -28,6 +28,11 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               IFS-951  Display 'Organisation type' against user
 ...
 ...               IFS-1841 Basic view of all 'external' IFS users
+...
+...               IFS-8095 Content improvement for KTA journey
+...
+...               IFS-7723 Improvement to company search results
+...
 #create new competition to test the new application team view.
 Suite Setup       Custom Suite Setup
 Suite Teardown
@@ -39,7 +44,7 @@ Resource          ../../../resources/common/Applicant_Commons.robot
 ${application_name}    Invite robot test application
 ${newLeadApplicant}    kevin@worth.systems
 ${newCollaborator}     jerry@worth.systems
-${organisation}        org2
+${organisation}        ITV PLC
 
 *** Test Cases ***
 Application team page
@@ -85,12 +90,12 @@ Lead organisation already used email
     Then The user should see a field and summary error        This email is already in use.
 
 Lead Adds/Removes partner organisation
-    [Documentation]    INFUND-1039 INFUND-7973 INFUND-7979 INFUND-8590
+    [Documentation]    INFUND-1039 INFUND-7973 INFUND-7979 INFUND-8590 IFS-8095
     [Tags]  HappyPath
     Given the user clicks the button/link              link = Add a partner organisation
     And the user adds a partner organisation           Fannie May  Collaborator 2  ewan+10@hiveit.co.uk
     And the user clicks the button/link                jQuery = button:contains("Invite partner organisation")
-    When the user clicks the button/link               jQuery = td:contains("ewan") ~ td a:contains("Remove organisation")
+    When the user clicks the button/link               jQuery = td:contains("ewan") ~ td a:contains("Remove")
     Then the user clicks the button/link               jQuery = tr:contains("ewan") .warning-modal button:contains("Remove organisation")
     And the user should not see the element            jQuery = td:contains("Fannie May")
     And the user should see the element                jQuery = h1:contains("Application team")
@@ -122,7 +127,7 @@ Cannot mark as complete with pending invites
     [Documentation]  IFS-3088
     [Tags]  HappyPath
     Given the user clicks the button/link                 id = application-question-complete
-    Then The user should see a field and summary error    You cannot mark as complete until Adrian Booth has either accepted the invitation or is removed
+    Then The user should see a field and summary error    You cannot mark this page as complete until this invitation has either been accepted or removed.
 
 Partner is still marked as pending after accepting invitation but not completing
     [Documentation]  IFS-6589
@@ -132,7 +137,7 @@ Partner is still marked as pending after accepting invitation but not completing
     And the user clicks the button/link     link = Sign in
     And Logging in and Error Checking       &{lead_applicant_credentials}
     Then the user still sees pending user
-    [Teardown]  the user clicks the button/link     jQuery = td:contains("Adrian") ~ td button:contains("Resend invite")
+    [Teardown]  the user clicks the button/link     jQuery = td:contains("Adrian") ~ td button:contains("Resend invitation")
 
 The Lead's inputs should not be visible in other application invites
     [Documentation]    INFUND-901
@@ -194,8 +199,8 @@ Partner can see the Application team
     And The user should not see the element  link = Update and add contributors from ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
 
 Partner can invite others to his own organisation
-    [Documentation]    INFUND-2335  INFUND-7977
-    Given the user clicks the button/link      jQuery = button:contains("Add person to NOMENSA LTD")
+    [Documentation]    INFUND-2335  INFUND-7977  IFS-7723
+    Given the user clicks the button/link      jQuery = button:contains("Add person to")button:contains("FIRSTGROUP PLC")
     When the user invites a person to the same organisation  Mark  mark21@innovateuk.com
     Then The user should see the element       jQuery = td:contains("Mark (pending for")
 
@@ -221,7 +226,7 @@ Lead applicant invites a non registered user in the same organisation
 Lead is able to resend invitation
     [Documentation]  IFS-5960
     [Tags]
-    Given the user clicks the button/link    jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td button:contains("Resend invite")
+    Given the user clicks the button/link    jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td button:contains("Resend invitation")
     Then the user should see the element     jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td:contains("${test_mailbox_one}+inviteorg2@gmail.com")
     [Teardown]    Logout as user
 
@@ -243,10 +248,10 @@ Lead should not see pending status or resend invite for accepted invite
     [Teardown]  logout as user
 
 The guest user applies to a competition and creates account
-    [Documentation]  IFS-2440
+    [Documentation]  IFS-2440  IFS-7723
     [Tags]
     # Business organisation type - Competition:Aerospace technology investment sector
-    Given the user applies to competition and enters organisation type link  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}   radio-1   org2
+    Given the user applies to competition and enters organisation type link  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}   radio-1   ${organisation}
     Then the user creates an account and signs in
 
 New Lead Applicant invites new user as collaborator on his application
@@ -259,7 +264,7 @@ New Lead Applicant invites new user as collaborator on his application
 
 *** Keywords ***
 The lead applicant should have the correct org status
-    the user should see the element  jQuery = h2:contains("org2")
+    the user should see the element  jQuery = h2:contains("${organisation}")
     the user should see the element  jQuery = td:contains("Type")+td:contains("Business")
     the user should see the element  jQuery = td:contains("Steve Smith") ~ td:contains("${lead_applicant}") ~ td:contains("Lead")
 
@@ -277,7 +282,7 @@ the user can see the updated company name throughout the application
     Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link   link = ${application_name}
     When the user clicks the button/link  link = Application team
-    Then the user should see the element  jQuery = h2:contains("NOMENSA LTD")
+    Then the user should see the element  jQuery = h2:contains("FIRSTGROUP PLC")
     And the user should see the element   jQuery = td:contains("Type")+td:contains("Business")
 
 the lead applicant cannot be removed
@@ -314,7 +319,7 @@ the user accepts invitation
     the user clicks the button/link                       jQuery = .govuk-button:contains("Yes, accept invitation")
     the user selects the radio button                     organisationTypeId    1
     the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
-    the user selects his organisation in Companies House  Nomensa  NOMENSA LTD
+    the user selects his organisation in Companies House  FIRSTGROUP  FIRSTGROUP PLC
 
 the user still sees pending user
     the user clicks the application tile if displayed

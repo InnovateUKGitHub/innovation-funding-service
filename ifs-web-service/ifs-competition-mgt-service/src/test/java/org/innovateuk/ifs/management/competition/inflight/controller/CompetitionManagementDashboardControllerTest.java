@@ -11,7 +11,6 @@ import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultIte
 import org.innovateuk.ifs.competition.resource.search.UpcomingCompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestService;
-import org.innovateuk.ifs.management.competition.inflight.controller.CompetitionManagementDashboardController;
 import org.innovateuk.ifs.management.dashboard.service.CompetitionDashboardSearchService;
 import org.innovateuk.ifs.management.dashboard.viewmodel.*;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
@@ -77,7 +76,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         counts = new CompetitionCountResource();
         competitions = new HashMap<>();
         CompetitionSearchResultItem openItem = newLiveCompetitionSearchResultItem().withInnovationAreaNames(new HashSet<>(asList(INNOVATION_AREA_NAME_ONE, INNOVATION_AREA_NAME_TWO))).build();
-        competitions.put(CompetitionStatus.OPEN, asList(openItem));
+        competitions.put(CompetitionStatus.OPEN, singletonList(openItem));
         when(competitionDashboardSearchService.getCompetitionCounts()).thenReturn(counts);
     }
 
@@ -90,7 +89,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     @Test
     public void liveDashboard() throws Exception {
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
 
         when(competitionDashboardSearchService.getLiveCompetitions()).thenReturn(competitions);
 
@@ -100,7 +99,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
                 .andReturn();
 
         Object model = result.getModelAndView().getModelMap().get("model");
-        assertTrue(model.getClass().equals(LiveDashboardViewModel.class));
+        assertEquals(model.getClass(), LiveDashboardViewModel.class);
 
         LiveDashboardViewModel viewModel = (LiveDashboardViewModel) model;
         assertEquals(competitions, viewModel.getCompetitions());
@@ -111,7 +110,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     @Test
     public void stakeholderLiveDashboard() throws Exception {
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.STAKEHOLDER)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.STAKEHOLDER).build());
 
         when(competitionDashboardSearchService.getLiveCompetitions()).thenReturn(competitions);
 
@@ -121,7 +120,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
                 .andReturn();
 
         Object model = result.getModelAndView().getModelMap().get("model");
-        assertTrue(model.getClass().equals(LiveDashboardViewModel.class));
+        assertEquals(model.getClass(), LiveDashboardViewModel.class);
 
         LiveDashboardViewModel viewModel = (LiveDashboardViewModel) model;
         assertEquals(competitions, viewModel.getCompetitions());
@@ -138,7 +137,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     public void projectSetupDashboardWithNonProjectFinanceUser() throws Exception {
         int page = 1;
         Long countBankDetails = 0L;
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
 
         List<UpcomingCompetitionSearchResultItem> competitions = newUpcomingCompetitionSearchResultItem()
                 .withCompetitionStatus(OPEN)
@@ -154,7 +153,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
                 .andReturn();
 
         Object model = result.getModelAndView().getModelMap().get("model");
-        assertTrue(model.getClass().equals(ProjectSetupDashboardViewModel.class));
+        assertEquals(model.getClass(), ProjectSetupDashboardViewModel.class);
 
         ProjectSetupDashboardViewModel viewModel = (ProjectSetupDashboardViewModel) model;
         assertEquals(searchResult, viewModel.getResult());
@@ -169,7 +168,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     public void projectSetupDashboardWithProjectFinanceUser() throws Exception {
         int page = 1;
         Long countBankDetails = 8L;
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.PROJECT_FINANCE).build());
 
         List<UpcomingCompetitionSearchResultItem> competitions = newUpcomingCompetitionSearchResultItem()
                 .withCompetitionStatus(PROJECT_SETUP)
@@ -187,7 +186,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
                 .andReturn();
 
         Object model = result.getModelAndView().getModelMap().get("model");
-        assertTrue(model.getClass().equals(ProjectSetupDashboardViewModel.class));
+        assertEquals(model.getClass(), ProjectSetupDashboardViewModel.class);
 
         ProjectSetupDashboardViewModel viewModel = (ProjectSetupDashboardViewModel) model;
 
@@ -210,7 +209,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
                 .andReturn();
 
         Object model = result.getModelAndView().getModelMap().get("model");
-        assertTrue(model.getClass().equals(UpcomingDashboardViewModel.class));
+        assertEquals(model.getClass(), UpcomingDashboardViewModel.class);
 
         UpcomingDashboardViewModel viewModel = (UpcomingDashboardViewModel) model;
         assertEquals(competitions, viewModel.getCompetitions());
@@ -239,7 +238,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
                 .andReturn();
 
         Object model = result.getModelAndView().getModelMap().get("model");
-        assertTrue(model.getClass().equals(NonIfsDashboardViewModel.class));
+        assertEquals(model.getClass(), NonIfsDashboardViewModel.class);
 
         NonIfsDashboardViewModel viewModel = (NonIfsDashboardViewModel) model;
         assertEquals(searchResult, viewModel.getResult());
@@ -414,7 +413,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     @Test
     public void liveDashBoardSupportView() throws Exception {
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.SUPPORT).build());
 
         when(competitionDashboardSearchService.getLiveCompetitions()).thenReturn(competitions);
 
@@ -424,7 +423,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
                 .andReturn();
 
         Object model = result.getModelAndView().getModelMap().get("model");
-        assertTrue(model.getClass().equals(LiveDashboardViewModel.class));
+        assertEquals(model.getClass(), LiveDashboardViewModel.class);
 
         LiveDashboardViewModel viewModel = (LiveDashboardViewModel) model;
         assertEquals(competitions, viewModel.getCompetitions());
@@ -439,7 +438,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     @Test
     public void liveDashBoardSupportViewInnovationLead() throws Exception {
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.INNOVATION_LEAD).build());
 
         when(competitionDashboardSearchService.getLiveCompetitions()).thenReturn(competitions);
 
@@ -449,7 +448,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
                 .andReturn();
 
         Object model = result.getModelAndView().getModelMap().get("model");
-        assertTrue(model.getClass().equals(LiveDashboardViewModel.class));
+        assertEquals(model.getClass(), LiveDashboardViewModel.class);
 
         LiveDashboardViewModel viewModel = (LiveDashboardViewModel) model;
         assertEquals(competitions, viewModel.getCompetitions());

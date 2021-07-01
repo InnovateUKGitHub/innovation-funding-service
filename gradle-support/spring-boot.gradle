@@ -1,34 +1,19 @@
 apply from: rootProject.file("gradle-support/java.gradle")
 
+apply from: rootProject.file("gradle-support/bom.gradle")
+
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.springframework.boot'
 
-jacocoTestReport{
-    additionalSourceDirs.from = files(sourceSets.main.allJava.srcDirs)
-    reports {
-        html.enabled true
-        xml.enabled false
-        csv.enabled false
-        html.destination file("build/reports/jacoco/html")
-    }
-    executionData.from = files('build/jacoco/test.exec')
-}
-
 dependencies {
-    if (project.hasProperty("cloud") && project.cloud == "development") {
-        compile "org.springframework.boot:spring-boot-devtools"
-    }
-
-    if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
-        compile "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.5"
-    }
+    // Developer tools are automatically disabled when running a fully packaged application. If your application is
+    // launched using java -jar or if it’s started using a special classloader, then it is considered a
+    // “production application”. Flagging the dependency as optional in Maven or using compileOnly in Gradle
+    // is a best practice that prevents devtools from being transitively applied to other modules using your project.
+    compileOnly "org.springframework.boot:spring-boot-devtools"
 
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-web"
-    compile('org.springframework.cloud:spring-cloud-starter-netflix-hystrix')
-    compile "org.springframework.cloud:spring-cloud-starter-sleuth"
-    compile "org.springframework.cloud:spring-cloud-sleuth-zipkin"
-    compile "org.apache.tomcat.embed:tomcat-embed-core:8.5.47"
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
 }
@@ -50,10 +35,12 @@ bootJar {
     mainClassName = 'org.innovateuk.ifs.Application'
 }
 
-ext.springCloudVersion = 'Finchley.RELEASE'
+ext.springCloudVersion = '2020.0.1'
 
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
+
+test.finalizedBy jacocoTestReport

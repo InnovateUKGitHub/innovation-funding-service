@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.correspondenceaddress.controller;
 
 import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.AddressLookupBaseController;
@@ -34,6 +36,9 @@ public class ProjectUKCorrespondenceAddressController extends AddressLookupBaseC
 
     @Autowired
     private ProjectDetailsService projectDetailsService;
+
+    @Autowired
+    private CompetitionRestService competitionRestService;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @GetMapping("/{projectId}/details/project-address/UK")
@@ -102,7 +107,8 @@ public class ProjectUKCorrespondenceAddressController extends AddressLookupBaseC
     }
 
     private ProjectDetailsAddressViewModel loadDataIntoModel(final ProjectResource project) {
-        return new ProjectDetailsAddressViewModel(project);
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+        return new ProjectDetailsAddressViewModel(project, competition.isKtp());
     }
 
     private String redirectToProjectDetails(long projectId) {

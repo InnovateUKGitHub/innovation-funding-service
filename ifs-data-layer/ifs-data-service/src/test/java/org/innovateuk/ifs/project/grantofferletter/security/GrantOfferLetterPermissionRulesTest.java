@@ -14,6 +14,7 @@ import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -59,7 +60,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     @Before
     public void setup() {
         User innovationLeadUserOnProject1 = newUser().withRoles(singleton(Role.INNOVATION_LEAD)).build();
-        innovationLeadUserResourceOnProject1 = newUserResource().withId(innovationLeadUserOnProject1.getId()).withRolesGlobal(singletonList(innovationLeadRole)).build();
+        innovationLeadUserResourceOnProject1 = newUserResource().withId(innovationLeadUserOnProject1.getId()).withRoleGlobal(innovationLeadRole).build();
         InnovationLead innovationLead = newInnovationLead().withUser(innovationLeadUserOnProject1).build();
 
         User stakeholderUserOnCompetition = newUser().withRoles(singleton(STAKEHOLDER)).build();
@@ -180,6 +181,17 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
         setUpUserAsCompAdmin(project, user);
 
         assertTrue(rules.internalUsersCanDownloadGrantOfferLetter(project, user));
+    }
+
+    @Test
+    public void auditorsCanDownloadGrantOfferLetterDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserAsAuditor(project, user);
+
+        assertTrue(rules.auditorUsersCanDownloadGrantOfferLetter(project, user));
     }
 
     @Test
@@ -366,7 +378,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
         ProjectResource project = newProjectResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser()) || user.equals(compAdminUser())) {
+            if (user.hasAuthority(Authority.COMP_ADMIN)) {
                 assertTrue(rules.internalAdminUserCanViewSendGrantOfferLetterStatus(project, user));
             } else {
                 assertFalse(rules.internalAdminUserCanViewSendGrantOfferLetterStatus(project, user));
@@ -409,6 +421,20 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
                 assertTrue(rules.supportUserCanViewSendGrantOfferLetterStatus(project, user));
             } else {
                 assertFalse(rules.supportUserCanViewSendGrantOfferLetterStatus(project, user));
+            }
+        });
+    }
+
+    @Test
+    public void auditorUserCanViewSendGrantOfferLetterStatus() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(auditorUser())) {
+                assertTrue(rules.auditorUserCanViewSendGrantOfferLetterStatus(project, user));
+            } else {
+                assertFalse(rules.auditorUserCanViewSendGrantOfferLetterStatus(project, user));
             }
         });
     }
@@ -485,6 +511,20 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
                 assertTrue(rules.supportUsersCanViewGrantOfferLetter(project, user));
             } else {
                 assertFalse(rules.supportUsersCanViewGrantOfferLetter(project, user));
+            }
+        });
+    }
+
+    @Test
+    public void auditorUsersCanViewGrantOfferLetter() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(auditorUser())) {
+                assertTrue(rules.auditorUsersCanViewGrantOfferLetter(project, user));
+            } else {
+                assertFalse(rules.auditorUsersCanViewGrantOfferLetter(project, user));
             }
         });
     }

@@ -2,25 +2,18 @@ package org.innovateuk.ifs.competition.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 public class CompetitionType {
-
-    private static final String SECTOR = "Sector";
-    private static final String EXPRESSION_OF_INTEREST = "Expression of interest";
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private Boolean active;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="templateCompetitionId", referencedColumnName="id")
-    private Competition template;
 
     @OneToMany(mappedBy="competitionType", fetch = FetchType.LAZY)
     private List<Competition> competitions;
@@ -57,16 +50,8 @@ public class CompetitionType {
         this.active = active;
     }
 
-    public Competition getTemplate() { return template; }
-
-    public void setTemplate(Competition template) { this.template = template; }
-
-    public boolean isSector() {
-        return this.name.equals(SECTOR);
-    }
-
-    public boolean isExpressionOfInterest() {
-        return this.name.equals(EXPRESSION_OF_INTEREST);
+    public CompetitionTypeEnum getCompetitionTypeEnum() {
+        return CompetitionTypeEnum.fromText(getName());
     }
 
     @Override
@@ -81,7 +66,6 @@ public class CompetitionType {
                 .append(id, that.id)
                 .append(name, that.name)
                 .append(active, that.active)
-                .append(template, that.template)
                 .append(competitions, that.competitions)
                 .isEquals();
     }
@@ -92,7 +76,6 @@ public class CompetitionType {
                 .append(id)
                 .append(name)
                 .append(active)
-                .append(template)
                 .append(competitions)
                 .toHashCode();
     }

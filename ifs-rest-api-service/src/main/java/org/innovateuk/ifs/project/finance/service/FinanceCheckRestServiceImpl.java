@@ -2,7 +2,9 @@ package org.innovateuk.ifs.project.finance.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.project.finance.resource.*;
+import org.innovateuk.ifs.string.resource.StringResource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -45,5 +47,94 @@ public class FinanceCheckRestServiceImpl extends BaseRestService implements Fina
     public RestResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) {
         String url = FinanceCheckURIs.BASE_URL + "/" + projectId + FinanceCheckURIs.ORGANISATION_PATH + "/" + organisationId + FinanceCheckURIs.PATH + "/eligibility";
         return getWithRestResult(url, FinanceCheckEligibilityResource.class);
+    }
+
+    @Override
+    public RestResult<EligibilityResource> getEligibility(Long projectId, Long organisationId) {
+        return getWithRestResult(FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/eligibility", EligibilityResource.class);
+    }
+
+    @Override
+    public RestResult<Void> saveEligibility(Long projectId, Long organisationId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
+        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/eligibility/" + eligibility.name() + "/" + eligibilityRagStatus.name();
+
+        return postWithRestResult(postUrl, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> resetEligibility(Long projectId, Long organisationId, String resetReason) {
+        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/eligibility/reset";
+
+        StringResource resource = new StringResource(resetReason);
+
+        return postWithRestResult(postUrl, resource, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> resetViability(Long projectId, Long organisationId, String resetReason) {
+        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/viability/reset";
+
+        StringResource resource = new StringResource(resetReason);
+
+        return postWithRestResult(postUrl, resource, Void.class);
+    }
+
+    @Override
+    public RestResult<ViabilityResource> getViability(Long projectId, Long organisationId) {
+        return getWithRestResult(FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/viability", ViabilityResource.class);
+    }
+
+    @Override
+    public RestResult<Void> saveViability(Long projectId, Long organisationId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus) {
+        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/viability/" + viability.name() + "/" + viabilityRagStatus.name();
+
+        return postWithRestResult(postUrl, Void.class);
+    }
+
+    @Override
+    public RestResult<FundingRulesResource> getFundingRules(Long projectId, Long organisationId) {
+        return getWithRestResult(FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/funding-rules", FundingRulesResource.class);
+    }
+
+    @Override
+    public RestResult<Void> saveFundingRules(Long projectId, Long organisationId, FundingRules fundingRules) {
+        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/funding-rules/" + fundingRules.name();
+
+        return postWithRestResult(postUrl, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> approveFundingRules(Long projectId, Long organisationId) {
+        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/funding-rules/approve";
+
+        return postWithRestResult(postUrl, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> approvePaymentMilestoneState(Long projectId, Long organisationId) {
+        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/milestones/approve";
+
+        return postWithRestResult(postUrl, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> resetPaymentMilestoneState(Long projectId, Long organisationId, String retractionReason) {
+        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/milestones/reset";
+        StringResource content = new StringResource(retractionReason);
+
+        return postWithRestResult(postUrl, content, Void.class);
+    }
+
+    @Override
+    public RestResult<PaymentMilestoneResource> getPaymentMilestoneState(Long projectId, Long organisationId) {
+        return getWithRestResult(FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/milestones/state", PaymentMilestoneResource.class);
     }
 }

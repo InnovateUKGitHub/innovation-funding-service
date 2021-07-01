@@ -126,7 +126,7 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
     @Test
     public void getAllInvitesByUser() throws Exception {
         UserResource assessorUserResource = newUserResource()
-                .withRolesGlobal(singletonList(Role.ASSESSOR))
+                .withRoleGlobal(Role.ASSESSOR)
                 .build();
 
         when(classUnderTestMock.getAllInvitesByUser(1L))

@@ -8,11 +8,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource.
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource.TextAreaValidationGroup;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
-import org.innovateuk.ifs.management.competition.setup.application.form.AbstractQuestionForm;
+import org.innovateuk.ifs.management.competition.setup.application.form.*;
 import org.innovateuk.ifs.management.competition.setup.application.form.AbstractQuestionForm.TypeOfQuestion;
-import org.innovateuk.ifs.management.competition.setup.application.form.GuidanceRowForm;
-import org.innovateuk.ifs.management.competition.setup.application.form.ProjectForm;
-import org.innovateuk.ifs.management.competition.setup.application.form.QuestionForm;
 import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,22 +37,28 @@ public class CompetitionSetupApplicationQuestionValidator {
     private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
 
     public void validate(QuestionForm form, BindingResult bindingResult, long questionId, CompetitionResource competitionResource) {
-        validateRadioButtons(form, bindingResult, competitionResource);
         if (!competitionResource.isKtp()) {
-            validateAssessmentGuidanceRows(form, bindingResult);
+            validateRadioButtons(form, bindingResult, competitionResource);
+            validateFileUploaded(form, bindingResult, questionId);
+            validateTypeOfQuestion(form, bindingResult);
+            validateAppendix(form, bindingResult);
         }
-        validateFileUploaded(form, bindingResult, questionId);
-        validateTypeOfQuestion(form, bindingResult);
-        validateAppendix(form, bindingResult);
+        validateAssessmentGuidanceRows(form, bindingResult);
     }
 
-    public void validate(ProjectForm form, BindingResult bindingResult) {
+    public void validateKtpAssessmentQuestion(KtpAssessmentForm form, BindingResult bindingResult) {
+        validateAssessmentGuidanceRows(form, bindingResult);
+    }
+
+    public void validate(ProjectForm form, BindingResult bindingResult, long questionId) {
         validateScopeGuidanceRows(form, bindingResult);
         validateTypeOfQuestion(form, bindingResult);
+        validateAppendix(form, bindingResult);
+        validateFileUploaded(form, bindingResult, questionId);
     }
 
 
-    private void validateAssessmentGuidanceRows(QuestionForm applicationQuestionForm, BindingResult bindingResult) {
+    private void validateAssessmentGuidanceRows(AbstractQuestionForm applicationQuestionForm, BindingResult bindingResult) {
         if (Boolean.TRUE.equals(applicationQuestionForm.getQuestion().getWrittenFeedback())) {
             ValidationUtils.invokeValidator(validator, applicationQuestionForm, bindingResult, GuidanceRowForm.GuidanceRowViewGroup.class);
         }
@@ -67,7 +70,7 @@ public class CompetitionSetupApplicationQuestionValidator {
         }
     }
 
-    private void validateAppendix(QuestionForm competitionSetupForm, BindingResult bindingResult) {
+    private void validateAppendix(AbstractQuestionForm competitionSetupForm, BindingResult bindingResult) {
         if (competitionSetupForm.getNumberOfUploads() != null && competitionSetupForm.getNumberOfUploads() > 0) {
             if (isNullOrEmpty(competitionSetupForm.getQuestion().getAppendixGuidance())) {
                 bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.appendixGuidance", "This field cannot be left blank."));
@@ -95,7 +98,7 @@ public class CompetitionSetupApplicationQuestionValidator {
         }
     }
 
-    private void validateFileUploaded(QuestionForm questionForm, BindingResult bindingResult, long questionId) {
+    private void validateFileUploaded(AbstractQuestionForm questionForm, BindingResult bindingResult, long questionId) {
         if (TRUE.equals(questionForm.getQuestion().getTemplateDocument())) {
             CompetitionSetupQuestionResource question = questionSetupCompetitionRestService.getByQuestionId(questionId).getSuccess();
             if (question.getTemplateFilename() == null) {

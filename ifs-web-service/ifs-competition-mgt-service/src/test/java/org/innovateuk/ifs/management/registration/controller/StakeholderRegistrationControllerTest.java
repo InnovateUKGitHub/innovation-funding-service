@@ -49,7 +49,7 @@ public class StakeholderRegistrationControllerTest extends BaseControllerMockMVC
         StakeholderInviteResource inviteResource = newStakeholderInviteResource()
                 .withStatus(InviteStatus.OPENED)
                 .build();
-        RegistrationViewModel viewModel =  RegistrationViewModelBuilder.aRegistrationViewModel().withPhoneRequired(false).withTermsRequired(false).withInvitee(true).build();
+        RegistrationViewModel viewModel =  RegistrationViewModelBuilder.aRegistrationViewModel().withPhoneRequired(false).withTermsRequired(false).withInvitee(true).withShowBackLink(false).build();
 
         when(competitionSetupStakeholderRestServiceMock.getStakeholderInvite("hash")).thenReturn(RestResult.restSuccess(inviteResource));
         mockMvc.perform(get(URL_PREFIX + "/hash/register"))
@@ -61,7 +61,7 @@ public class StakeholderRegistrationControllerTest extends BaseControllerMockMVC
     @Test
     public void submitYourDetails() throws Exception {
         setLoggedInUser(null);
-        RegistrationForm registrationForm = new RegistrationForm("Tyler", "Newall", "Passw0rd");
+        RegistrationForm registrationForm = new RegistrationForm("Tyler", "Newall", "Passw0rd1357");
         registrationForm.setEmail("tyler.newall@gmail.com");
 
         StakeholderInviteResource inviteResource = newStakeholderInviteResource()

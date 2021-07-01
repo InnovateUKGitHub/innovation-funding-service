@@ -6,12 +6,11 @@ import org.innovateuk.ifs.application.forms.academiccosts.populator.ApplicationA
 import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCostViewModelPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.saver.AcademicCostSaver;
 import org.innovateuk.ifs.application.forms.academiccosts.viewmodel.AcademicCostViewModel;
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.YourProjectCostsCompleter;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -56,14 +55,11 @@ public class AcademicCostsControllerTest extends BaseControllerMockMVCTest<Acade
     private SectionStatusRestService sectionStatusRestService;
 
     @Mock
-    private UserRestService userRestService;
-
-    @Mock
-    private YourProjectCostsCompleter completeSectionAction;
+    private ProcessRoleRestService processRoleRestService;
 
     @Test
     public void viewAcademicCosts() throws Exception {
-        AcademicCostViewModel viewModel = mockViewModel();
+        AcademicCostViewModel viewModel = mockViewModel(APPLICATION_ID);
 
         mockMvc.perform(get(APPLICATION_BASE_URL + "{applicationId}/form/academic-costs/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID))
@@ -87,7 +83,7 @@ public class AcademicCostsControllerTest extends BaseControllerMockMVCTest<Acade
 
     @Test
     public void edit() throws Exception {
-        when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
+        when(processRoleRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
                 .thenReturn(restSuccess(newProcessRoleResource().withId(PROCESS_ROLE_ID).build()));
         when(sectionStatusRestService.markAsInComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID)).thenReturn(restSuccess());
 
@@ -106,9 +102,9 @@ public class AcademicCostsControllerTest extends BaseControllerMockMVCTest<Acade
     public void complete() throws Exception {
         ProcessRoleResource processRole = newProcessRoleResource().withId(PROCESS_ROLE_ID).build();
         when(saver.save(any(AcademicCostForm.class), eq(APPLICATION_ID), eq(ORGANISATION_ID))).thenReturn(serviceSuccess());
-        when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
+        when(processRoleRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
                 .thenReturn(restSuccess(processRole));
-        when(completeSectionAction.markAsComplete(SECTION_ID, APPLICATION_ID, processRole)).thenReturn(new ValidationMessages());
+        when(sectionStatusRestService.markAsComplete(SECTION_ID, APPLICATION_ID, processRole.getId())).thenReturn(restSuccess(new ValidationMessages()));
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/academic-costs/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
@@ -118,12 +114,12 @@ public class AcademicCostsControllerTest extends BaseControllerMockMVCTest<Acade
                 .andExpect(redirectedUrl(String.format("/application/%s/form/%s", APPLICATION_ID, SectionType.FINANCE)));
 
         verify(saver).save(any(AcademicCostForm.class), eq(APPLICATION_ID), eq(ORGANISATION_ID));
-        verify(completeSectionAction).markAsComplete(SECTION_ID, APPLICATION_ID, processRole);
+        verify(sectionStatusRestService).markAsComplete(SECTION_ID, APPLICATION_ID, processRole.getId());
     }
 
     @Test
     public void complete_error() throws Exception {
-        AcademicCostViewModel viewModel = mockViewModel();
+        AcademicCostViewModel viewModel = mockViewModel(APPLICATION_ID);
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/academic-costs/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
@@ -152,9 +148,9 @@ public class AcademicCostsControllerTest extends BaseControllerMockMVCTest<Acade
 
     }
 
-    private AcademicCostViewModel mockViewModel() {
+    private AcademicCostViewModel mockViewModel(long applicationId) {
         AcademicCostViewModel viewModel = mock(AcademicCostViewModel.class);
-        when(viewModelPopulator.populate(ORGANISATION_ID, APPLICATION_ID, SECTION_ID, true)).thenReturn(viewModel);
+        when(viewModelPopulator.populate(ORGANISATION_ID, applicationId, SECTION_ID, getLoggedInUser())).thenReturn(viewModel);
         return viewModel;
     }
 }

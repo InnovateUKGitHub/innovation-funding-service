@@ -47,6 +47,12 @@ the user sees that the radio button is selected
     #Error checking
     the user should not see an error in the page
 
+the user sees that the radio button is not selected
+    [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
+    Wait Until Element Is Not Visible Without Screenshots    css=[name="${RADIO_BUTTON}"][value="${SELECTION}"]:checked ~ label, [id="${SELECTION}"]:checked ~ label
+    #Error checking
+    the user should not see an error in the page
+
 #Focus
 The user enters text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}

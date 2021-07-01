@@ -23,7 +23,7 @@ public class StakeholderServiceImplTest extends BaseServiceUnitTest<StakeholderS
 
     @Test
     public void createStakeholder() {
-        RegistrationForm registrationForm = new RegistrationForm("Billy", "Ocean", "Passw0rd");
+        RegistrationForm registrationForm = new RegistrationForm("Billy", "Ocean", "Passw0rd1357");
         StakeholderRegistrationResource stakeholderRegistrationResource =
                 newStakeholderRegistrationResource()
                         .withFirstName(registrationForm.getFirstName())

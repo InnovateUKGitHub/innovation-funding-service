@@ -3,8 +3,8 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.contro
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
+import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationFormPopulator;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -18,10 +18,9 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -56,7 +55,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
     private YourProjectLocationFormPopulator formPopulator;
     private ApplicationFinanceRestService applicationFinanceRestService;
     private SectionService sectionService;
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
     private OrganisationRestService organisationRestService;
 
     public YourProjectLocationController() {
@@ -68,20 +67,20 @@ public class YourProjectLocationController extends AsyncAdaptor {
             YourProjectLocationFormPopulator formPopulator,
             ApplicationFinanceRestService applicationFinanceRestService,
             SectionService sectionService,
-            UserRestService userRestService,
+            ProcessRoleRestService processRoleRestService,
             OrganisationRestService organisationRestService) {
 
         this.commonViewModelPopulator = commonViewModelPopulator;
         this.formPopulator = formPopulator;
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.sectionService = sectionService;
-        this.userRestService = userRestService;
+        this.processRoleRestService = processRoleRestService;
         this.organisationRestService = organisationRestService;
     }
 
     @GetMapping
     @AsyncMethod
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
     @SecuredBySpring(value = "VIEW_PROJECT_LOCATION", description = "Applicants, stakeholders, internal users and kta can view the Your project location page")
     public String viewPage(
             @PathVariable("applicationId") long applicationId,
@@ -91,7 +90,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
             Model model) {
 
         Future<CommonYourProjectFinancesViewModel> commonViewModelRequest = async(() ->
-                getViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser() || loggedInUser.hasRole(Role.EXTERNAL_FINANCE) || loggedInUser.hasRole(Role.KNOWLEDGE_TRANSFER_ADVISER)));
+                getViewModel(applicationId, sectionId, organisationId, loggedInUser));
 
         Future<YourProjectLocationForm> formRequest = async(() ->
                 formPopulator.populate(applicationId, organisationId));
@@ -142,7 +141,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
         formatLocationInForm(form);
 
         Supplier<String> failureHandler = () -> {
-            CommonYourProjectFinancesViewModel viewModel = getViewModel(applicationId, sectionId, organisationId, false);
+            CommonYourProjectFinancesViewModel viewModel = getViewModel(applicationId, sectionId, organisationId, loggedInUser);
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
             return VIEW_PAGE;
@@ -152,7 +151,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
 
             updateLocation(applicationId, organisationId, form);
 
-            ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
+            ProcessRoleResource processRole = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
             ValidationMessages validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
             validationHandler.addAnyErrors(validationMessages);
 
@@ -173,7 +172,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
             @PathVariable("sectionId") long sectionId,
             UserResource loggedInUser) {
 
-        ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
+        ProcessRoleResource processRole = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
         sectionService.markAsInComplete(sectionId, applicationId, processRole.getId());
         return redirectToViewPage(applicationId, organisationId, sectionId);
     }
@@ -233,8 +232,8 @@ public class YourProjectLocationController extends AsyncAdaptor {
         }
     }
 
-    private CommonYourProjectFinancesViewModel getViewModel(long applicationId, long sectionId, long organisationId, boolean internalUser) {
-        return commonViewModelPopulator.populate(organisationId, applicationId, sectionId, internalUser);
+    private CommonYourProjectFinancesViewModel getViewModel(long applicationId, long sectionId, long organisationId, UserResource user) {
+        return commonViewModelPopulator.populate(organisationId, applicationId, sectionId, user);
     }
 
     private String redirectToViewPage(long applicationId, long organisationId, long sectionId) {

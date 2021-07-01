@@ -2,15 +2,10 @@ import org.ajoberstar.grgit.*
 
 apply from: "gradle-support/versions.gradle"
 apply from: "gradle-support/sonarqube.gradle"
-apply from: "gradle-support/release.gradle"
 apply from: "gradle-support/certificates.gradle"
 apply from: "gradle-support/taurus.gradle"
-apply from: "gradle-support/gradle-versions.gradle"
-apply from: "gradle-support/dependency-check.gradle"
-
-if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
-    apply from: "gradle-support/zipkin.gradle"
-}
+apply from: "gradle-support/pull-all-base-images.gradle"
+apply from: "gradle-support/stage-base-images.gradle"
 
 ext.ifsFinanceTotalsEnabled = project.properties['ifs.finance.totals.enabled'] ?: true
 
@@ -44,14 +39,14 @@ apply from: "gradle-support/openshift-support.gradle"
 buildscript {
 
     ext {
-        springBootVersion = '2.0.9.RELEASE'
+        springBootVersion = '2.4.1'
     }
 
     repositories {
         maven { url "http://dl.bintray.com/robfletcher/gradle-plugins" }
-        maven { url "http://repo.spring.io/milestone" }
+        maven { url "https://repo.spring.io/milestone" }
         maven { url "https://plugins.gradle.org/m2/" }
-
+        mavenCentral()
     }
 
     dependencies {
@@ -59,43 +54,25 @@ buildscript {
         classpath "io.spring.gradle:dependency-management-plugin:1.0.7.RELEASE"
         classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
 
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
         classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
 
         classpath 'org.ajoberstar.grgit:grgit-core:4.0.2'
+        classpath "com.github.node-gradle:gradle-node-plugin:1.5.3"
+
     }
 
-}
-
-
-dependencyUpdates.resolutionStrategy = {
-    componentSelection { rules ->
-        rules.all { ComponentSelection selection ->
-            // filters out any version numbers ending in rejected. e.g 1.0.0-rc.
-            boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm', 'pr1', 'Beta'].any { qualifier ->
-                selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
-            }
-            if (rejected) {
-                selection.reject('Release candidate')
-            }
-        }
-    }
 }
 
 
 apply plugin: "com.github.hierynomus.license"
 
-
-wrapper {
-    gradleVersion = '5.5'
-}
-
-ext.zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false
+def nexusRepository = project.hasProperty('nexusRepository') ? project.property('nexusRepository').toString() : ""
 
 apply plugin: 'maven-publish'
 
 def osFileMap = [
         [name:'cache-config', type: 'config-maps'],
+        [name:'feature-toggle-config', type: 'config-maps'],
         [name:'data-service-config', type: 'config-maps'],
         [name:'db-config', type: 'config-maps'],
         [name:'docusign-config', type: 'config-maps'],
@@ -108,6 +85,7 @@ def osFileMap = [
         [name:'shibboleth-config', type: 'config-maps'],
         [name:'survey-db-config', type: 'config-maps'],
         [name:'web-config', type: 'config-maps'],
+        [name:'spring-config', type: 'config-maps'],
 
         [name:'67-db-anonymised-data', type: 'db-anonymised-data'],
 
@@ -120,6 +98,12 @@ def osFileMap = [
         [name:'10-gluster-svc', type: 'gluster'],
         [name:'11-gluster-endpoints', type: 'gluster'],
         [name:'12-file-upload-claim', type: 'gluster'],
+
+        [name:'12-ifs-demo-file-upload-claim', type: 'gluster'],
+        [name:'12-ifs-perf-file-upload-claim', type: 'gluster'],
+        [name:'12-ifs-prod-file-upload-claim', type: 'gluster'],
+        [name:'12-ifs-sysint-file-upload-claim', type: 'gluster'],
+        [name:'12-ifs-uat-file-upload-claim', type: 'gluster'],
 
         [name:'4-application-service', type: 'ifs-services'],
         [name:'5-front-door-service', type: 'ifs-services'],
@@ -135,7 +119,6 @@ def osFileMap = [
 
         [name:'3-finance-totals-mysql', type: 'mysql'],
         [name:'3-mysql', type: 'mysql'],
-        [name:'3-zipkin-mysql', type: 'mysql'],
         [name:'survey-mysql', type: 'mysql'],
 
         [name:'91-mysql-client', type: 'mysql-client'],
@@ -179,10 +162,15 @@ publishing {
     repositories {
         maven {
             credentials {
-                username project.findProperty("nexus_username")
-                password project.findProperty("nexus_password")
+                username project.findProperty("nexusUsername")
+                password project.findProperty("nexusPassword")
             }
-            url "https://devops.innovateuk.org/binaries/repository/ifs-config/"
+
+            if (nexusRepository.equals("snapshots")) {
+                url "https://devops.innovateuk.org/binaries/repository/ifs-config-snapshots/"
+            } else {
+                url "https://devops.innovateuk.org/binaries/repository/ifs-config-releases/"
+            }
         }
     }
 }

@@ -25,8 +25,10 @@ import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHan
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
-import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -70,25 +72,31 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
     private List<PartnerOrganisation> partnerOrganisations;
 
     @Mock
-    private ProjectRepository projectRepositoryMock;
+    private User user;
 
     @Mock
-    private CompetitionDocumentConfigRepository competitionDocumentConfigRepositoryMock;
+    private UserResource userResource;
 
     @Mock
-    private ProjectWorkflowHandler projectWorkflowHandlerMock;
+    private ProjectRepository projectRepository;
 
     @Mock
-    private ProjectDocumentRepository projectDocumentRepositoryMock;
+    private CompetitionDocumentConfigRepository competitionDocumentConfigRepository;
 
     @Mock
-    private GrantOfferLetterService grantOfferLetterServiceMock;
+    private ProjectWorkflowHandler projectWorkflowHandler;
 
     @Mock
-    private PartnerOrganisationRepository partnerOrganisationRepositoryMock;
+    private ProjectDocumentRepository projectDocumentRepository;
+
+    @Mock
+    private PartnerOrganisationRepository partnerOrganisationRepository;
 
     @Mock
     private ActivityLogService activityLogService;
+
+    @Mock
+    private UserRepository userRepository;
 
     @Before
     public void setUp() {
@@ -131,17 +139,21 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         project.setProjectDocuments(singletonList(projectDocument));
         project.setApplication(application);
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
-        when(competitionDocumentConfigRepositoryMock.findById(documentConfigId)).thenReturn(Optional.of(configuredCompetitionDocument));
-        when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);
-        when(competitionDocumentConfigRepositoryMock.findByCompetitionId(competition.getId())).thenReturn(competitionDocuments);
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(projectWorkflowHandler.getState(project)).thenReturn(ProjectState.SETUP);
+        when(competitionDocumentConfigRepository.findById(documentConfigId)).thenReturn(Optional.of(configuredCompetitionDocument));
+        when(partnerOrganisationRepository.findByProjectId(projectId)).thenReturn(partnerOrganisations);
+        when(competitionDocumentConfigRepository.findByCompetitionId(competition.getId())).thenReturn(competitionDocuments);
+
+        when(userResource.getId()).thenReturn(3L);
+        when(userRepository.findById(3L)).thenReturn(Optional.of(user));
+        setLoggedInUser(userResource);
     }
 
     @Test
     public void getValidMediaTypesForDocumentWhenConfiguredProjectDocumentNotPresent() {
 
-        when(competitionDocumentConfigRepositoryMock.findById(documentConfigId)).thenReturn(Optional.empty());
+        when(competitionDocumentConfigRepository.findById(documentConfigId)).thenReturn(Optional.empty());
         ServiceResult<List<String>> result = service.getValidMediaTypesForDocument(documentConfigId);
 
         assertTrue(result.isFailure());
@@ -164,13 +176,13 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
         FileEntryResource fileEntryResource = FileEntryResourceBuilder.newFileEntryResource().build();
         Supplier<InputStream> inputStreamSupplier = () -> null;
-        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.LIVE);
+        when(projectWorkflowHandler.getState(project)).thenReturn(ProjectState.LIVE);
         ServiceResult<FileEntryResource> result = service.createDocumentFileEntry(projectId, documentConfigId, fileEntryResource, inputStreamSupplier);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
         verify(fileServiceMock, never()).createFile(any(), any());
-        verify(projectDocumentRepositoryMock, never()).save(any(ProjectDocument.class));
+        verify(projectDocumentRepository, never()).save(any(ProjectDocument.class));
     }
 
     @Test
@@ -188,9 +200,9 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
         assertTrue(result.isSuccess());
 
-        verify(projectDocumentRepositoryMock).save(any(ProjectDocument.class));
+        verify(projectDocumentRepository).save(any(ProjectDocument.class));
         ArgumentCaptor<ProjectDocument> captor = ArgumentCaptor.forClass(ProjectDocument.class);
-        verify(projectDocumentRepositoryMock).save(captor.capture());
+        verify(projectDocumentRepository).save(captor.capture());
         ProjectDocument savedProjectDocument = captor.getValue();
 
         assertEquals(project, savedProjectDocument.getProject());
@@ -233,12 +245,12 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
     @Test
     public void deleteDocumentWhenProjectNotInSetup() {
 
-        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.LIVE);
+        when(projectWorkflowHandler.getState(project)).thenReturn(ProjectState.LIVE);
         ServiceResult<Void> result = service.deleteDocument(projectId, documentConfigId);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
-        verify(projectDocumentRepositoryMock, never()).delete(any(ProjectDocument.class));
+        verify(projectDocumentRepository, never()).delete(any(ProjectDocument.class));
         verify(fileServiceMock, never()).deleteFileIgnoreNotFound(fileEntryId);
     }
 
@@ -250,7 +262,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_DELETED));
-        verify(projectDocumentRepositoryMock, never()).delete(any(ProjectDocument.class));
+        verify(projectDocumentRepository, never()).delete(any(ProjectDocument.class));
         verify(fileServiceMock, never()).deleteFileIgnoreNotFound(fileEntryId);
     }
 
@@ -262,7 +274,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_DELETED));
-        verify(projectDocumentRepositoryMock, never()).delete(any(ProjectDocument.class));
+        verify(projectDocumentRepository, never()).delete(any(ProjectDocument.class));
         verify(fileServiceMock, never()).deleteFileIgnoreNotFound(fileEntryId);
     }
 
@@ -272,19 +284,19 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         ServiceResult<Void> result = service.deleteDocument(projectId, documentConfigId);
 
         assertTrue(result.isSuccess());
-        verify(projectDocumentRepositoryMock).delete(projectDocument);
+        verify(projectDocumentRepository).delete(projectDocument);
         verify(fileServiceMock).deleteFileIgnoreNotFound(fileEntryId);
     }
 
     @Test
     public void submitDocumentWhenProjectNotInSetup() {
 
-        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.LIVE);
+        when(projectWorkflowHandler.getState(project)).thenReturn(ProjectState.LIVE);
         ServiceResult<Void> result = service.submitDocument(projectId, documentConfigId);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
-        verify(projectDocumentRepositoryMock, never()).save(any(ProjectDocument.class));
+        verify(projectDocumentRepository, never()).save(any(ProjectDocument.class));
     }
 
     @Test
@@ -295,7 +307,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DOCUMENT_NOT_YET_UPLOADED));
-        verify(projectDocumentRepositoryMock, never()).save(any(ProjectDocument.class));
+        verify(projectDocumentRepository, never()).save(any(ProjectDocument.class));
     }
 
     @Test
@@ -305,7 +317,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
         assertTrue(result.isSuccess());
         assertEquals(SUBMITTED, projectDocument.getStatus());
-        verify(projectDocumentRepositoryMock).save(projectDocument);
+        verify(projectDocumentRepository).save(projectDocument);
         verify(activityLogService).recordDocumentActivityByProjectId(projectId, ActivityType.DOCUMENT_UPLOADED, documentConfigId);
     }
 
@@ -317,7 +329,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DOCUMENT_INVALID_DECISION));
-        verify(projectDocumentRepositoryMock, never()).save(any(ProjectDocument.class));
+        verify(projectDocumentRepository, never()).save(any(ProjectDocument.class));
     }
 
     @Test
@@ -328,7 +340,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DOCUMENT_INVALID_DECISION));
-        verify(projectDocumentRepositoryMock, never()).save(any(ProjectDocument.class));
+        verify(projectDocumentRepository, never()).save(any(ProjectDocument.class));
     }
 
     @Test
@@ -339,20 +351,20 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DOCUMENT_INVALID_DECISION));
-        verify(projectDocumentRepositoryMock, never()).save(any(ProjectDocument.class));
+        verify(projectDocumentRepository, never()).save(any(ProjectDocument.class));
     }
 
 
     @Test
     public void documentDecisionWhenProjectNotInSetup() {
 
-        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.LIVE);
+        when(projectWorkflowHandler.getState(project)).thenReturn(ProjectState.LIVE);
         ProjectDocumentDecision documentDecision = new ProjectDocumentDecision(false, "Missing details");
         ServiceResult<Void> result = service.documentDecision(projectId, documentConfigId, documentDecision);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
-        verify(projectDocumentRepositoryMock, never()).save(any(ProjectDocument.class));
+        verify(projectDocumentRepository, never()).save(any(ProjectDocument.class));
     }
 
     @Test
@@ -364,11 +376,15 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_ACCEPTED_OR_REJECTED));
-        verify(projectDocumentRepositoryMock, never()).save(any(ProjectDocument.class));
+        verify(projectDocumentRepository, never()).save(any(ProjectDocument.class));
     }
 
     @Test
     public void documentDecisionWhenRejected() {
+
+        when(userResource.getId()).thenReturn(3L);
+        when(userRepository.findById(3L)).thenReturn(Optional.of(user));
+        setLoggedInUser(userResource);
 
         String rejectionReason = "Missing details";
         projectDocument.setStatus(SUBMITTED);
@@ -379,7 +395,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         assertTrue(result.isSuccess());
         assertEquals(REJECTED, projectDocument.getStatus());
         assertEquals(rejectionReason, projectDocument.getStatusComments());
-        verify(projectDocumentRepositoryMock).save(projectDocument);
+        verify(projectDocumentRepository).save(projectDocument);
     }
 
     @Test
@@ -394,14 +410,28 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         assertTrue(result.isSuccess());
         assertEquals(APPROVED, projectDocument.getStatus());
         assertNull(projectDocument.getStatusComments());
-        verify(projectDocumentRepositoryMock).save(projectDocument);
+        verify(projectDocumentRepository).save(projectDocument);
         verify(activityLogService).recordDocumentActivityByProjectId(projectId, ActivityType.DOCUMENT_APPROVED, documentConfigId);
     }
 
+    @Test
+    public void documentDecisionRejectedWhenAlreadyApproved() {
+
+        String rejectionReason = "Rejected because needs work.";
+        projectDocument.setStatus(APPROVED);
+        ProjectDocumentDecision documentDecision = new ProjectDocumentDecision(false, rejectionReason);
+
+        ServiceResult<Void> result = service.documentDecision(projectId, documentConfigId, documentDecision);
+
+        assertTrue(result.isSuccess());
+        assertEquals(REJECTED, projectDocument.getStatus());
+        assertNotNull(projectDocument.getStatusComments());
+        verify(projectDocumentRepository).save(projectDocument);
+        verify(activityLogService).recordDocumentActivityByProjectId(projectId, ActivityType.DOCUMENT_REJECTED, documentConfigId);
+    }
 
     @Override
     protected DocumentsService supplyServiceUnderTest() {
-        return  new DocumentsServiceImpl();
+        return new DocumentsServiceImpl();
     }
 }
-

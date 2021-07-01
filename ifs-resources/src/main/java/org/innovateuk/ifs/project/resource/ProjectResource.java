@@ -12,8 +12,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.innovateuk.ifs.project.resource.ProjectState.COMPLETED_STATES;
-
 public class ProjectResource {
     private static final int MAX_DURATION_IN_MONTHS_DIGITS = 2;
 
@@ -43,20 +41,22 @@ public class ProjectResource {
     private boolean spendProfileGenerated;
     private boolean useDocusignForGrantOfferLetter;
 
-    @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
+    @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message = "{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
 
     @JsonIgnore
-    public boolean isOfferSubmitted(){
+    public boolean isOfferSubmitted() {
         return offerSubmittedDate != null;
     }
 
     @JsonIgnore
-    public boolean isWithdrawn() { return projectState.equals(ProjectState.WITHDRAWN); }
+    public boolean isWithdrawn() {
+        return projectState.equals(ProjectState.WITHDRAWN);
+    }
 
     @JsonIgnore
     public boolean isCompleted() {
-        return COMPLETED_STATES.contains(projectState);
+        return projectState.isComplete();
     }
 
     public Long getId() {

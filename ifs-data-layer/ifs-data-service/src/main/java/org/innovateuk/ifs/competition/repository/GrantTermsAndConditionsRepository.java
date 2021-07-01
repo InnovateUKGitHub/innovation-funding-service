@@ -15,9 +15,10 @@ public interface GrantTermsAndConditionsRepository extends CrudRepository<GrantT
     String DEFAULT_TEMPLATE_NAME = "default-terms-and-conditions";
 
     String FIND_LATEST_VERSION = "SELECT t1 " +
-            "FROM TermsAndConditions t1 " +
-            "WHERE type='GRANT' AND version=(SELECT MAX(t2.version) FROM TermsAndConditions t2 WHERE " +
-            "t1.name=t2.name)";
+            "FROM GrantTermsAndConditions t1 " +
+            "WHERE version=(SELECT MAX(t2.version) FROM GrantTermsAndConditions t2 WHERE " +
+            "t1.name=t2.name)" +
+            "ORDER BY t1.name";
 
     GrantTermsAndConditions findOneByTemplate(String templateName);
 

@@ -17,6 +17,7 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
@@ -63,13 +64,16 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentResourceBuilder.newProjectDocumentResource;
 import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.sections.SectionStatus.*;
+import static org.innovateuk.ifs.sections.SectionStatus.INCOMPLETE;
+import static org.innovateuk.ifs.sections.SectionStatus.MO_ACTION_REQUIRED;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -120,7 +124,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                     .build(2);
 
     private CompetitionResource competition = newCompetitionResource()
-            .withLocationPerPartner(false)
             .withProjectDocument(projectDocumentConfig)
             .withProjectSetupStages(new ArrayList<>(EnumSet.allOf(ProjectSetupStage.class)))
             .build();
@@ -138,7 +141,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     private RestResult<BankDetailsResource> bankDetailsFoundResult = restSuccess(bankDetailsResource);
     private RestResult<BankDetailsResource> bankDetailsNotFoundResult = restFailure(notFoundError(BankDetailsResource.class, 123L));
 
-    private MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
+    private MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().withId(88L).build();
     private RestResult<MonitoringOfficerResource> monitoringOfficerFoundResult = restSuccess(monitoringOfficer);
     private RestResult<MonitoringOfficerResource> monitoringOfficerNotFoundResult = restFailure(HttpStatus.NOT_FOUND);
 
@@ -146,7 +149,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
             .withFirstName("James")
             .withLastName("Watts")
             .withEmail("james.watts@email.co.uk")
-            .withRolesGlobal(singletonList(Role.APPLICANT))
+            .withRoleGlobal(Role.APPLICANT)
             .withUID("2aerg234-aegaeb-23aer").build();
 
     @Before
@@ -206,7 +209,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         ProjectUserResource partnerUser = newProjectUserResource()
                 .withUser(loggedInUser.getId())
                 .withOrganisation(organisationResource.getId())
-                .withRole(PARTNER)
+                .withRole(PROJECT_PARTNER)
                 .build();
 
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(partnerUser));
@@ -234,6 +237,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .withProjectSetupCompleteStatus(NOT_REQUIRED)
+                        .withPartnerProjectLocationStatus(COMPLETE)
                         .build(1))
                 .withProjectState(LIVE)
                 .build();
@@ -332,21 +336,21 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(Arrays.asList(newProjectUserResource()
                         .withUser(loggedInUser.getId())
                         .withOrganisation(organisationResource.getId())
-                        .withRole(FINANCE_CONTACT).build(),
+                        .withRole(PROJECT_FINANCE_CONTACT).build(),
                 newProjectUserResource()
                         .withUser(loggedInUser.getId())
                         .withOrganisation(organisationResource.getId())
-                        .withRole(PARTNER).build()));
+                        .withRole(PROJECT_PARTNER).build()));
 
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of((newProjectUserResource()
                 .withUser(loggedInUser.getId())
                 .withOrganisation(organisationResource.getId())
-                .withRole(FINANCE_CONTACT).build())));
+                .withRole(PROJECT_FINANCE_CONTACT).build())));
 
         ProjectUserResource partnerUser = newProjectUserResource()
                 .withUser(loggedInUser.getId() + 1000L)
                 .withOrganisation(organisationResource.getId())
-                .withRole(PARTNER).build();
+                .withRole(PROJECT_PARTNER).build();
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(partnerUser));
 
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
@@ -373,9 +377,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
     public void viewProjectSetupStatusAsLeadWhenPDSubmittedFCNotYetSubmittedAndPLRequiredAndNotYetSubmitted() {
-
-        competition.setLocationPerPartner(true);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
@@ -404,9 +405,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
     public void viewProjectSetupStatusAsLeadWhenPDSubmittedFCSubmittedAndPLRequiredAndNotYetSubmitted() {
-
-        competition.setLocationPerPartner(true);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
@@ -438,9 +436,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
     public void viewProjectSetupStatusAsLeadWhenPDSubmittedFCNotSubmittedAndPLRequiredAndSubmitted() {
-
-        competition.setLocationPerPartner(true);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
@@ -472,9 +467,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
     public void viewProjectSetupStatusAsLeadWhenPDSubmittedFCSubmittedAndPLRequiredAndSubmitted() {
-
-        competition.setLocationPerPartner(true);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
@@ -506,9 +498,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
     public void viewProjectSetupStatusAsNonLeadWhenPDSubmittedFCNotYetSubmittedAndPLRequiredAndNotYetSubmitted() {
-
-        competition.setLocationPerPartner(true);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(999L)
@@ -539,9 +528,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
     public void viewProjectSetupStatusAsNonLeadWhenPDSubmittedFCSubmittedAndPLRequiredAndNotYetSubmitted() {
-
-        competition.setLocationPerPartner(true);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(999L)
@@ -574,9 +560,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
     public void viewProjectSetupStatusAsNonLeadWhenPDSubmittedFCNotSubmittedAndPLRequiredAndSubmitted() {
-
-        competition.setLocationPerPartner(true);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(999L)
@@ -611,9 +594,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
     public void viewProjectSetupStatusAsNonLeadWhenPDSubmittedFCSubmittedAndPLRequiredAndSubmitted() {
-
-        competition.setLocationPerPartner(true);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(999L)
@@ -647,9 +627,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
     public void viewProjectSetupStatusAsNonLeadWhenPDSubmittedAndOnlyNonLeadFCSubmittedAndPLRequiredAndSubmitted() {
-
-        competition.setLocationPerPartner(true);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(999L)
@@ -713,9 +690,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     // PD = Project Details, PL = Project Location
     @Test
     public void viewProjectSetupStatusAsLeadWhenPLRequiredAndAwaitingPDActionFromOtherPartners() {
-
-        competition.setLocationPerPartner(true);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withProjectDetailsStatus(COMPLETE)
@@ -886,16 +860,16 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(Arrays.asList(newProjectUserResource()
                         .withUser(loggedInUser.getId())
                         .withOrganisation(organisationResource.getId())
-                        .withRole(FINANCE_CONTACT).build(),
+                        .withRole(PROJECT_FINANCE_CONTACT).build(),
                 newProjectUserResource()
                         .withUser(loggedInUser.getId())
                         .withOrganisation(organisationResource.getId())
-                        .withRole(PARTNER).build()));
+                        .withRole(PROJECT_PARTNER).build()));
 
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of((newProjectUserResource()
                 .withUser(loggedInUser.getId() + 1000L)
                 .withOrganisation(organisationResource.getId())
-                .withRole(FINANCE_CONTACT).build())));
+                .withRole(PROJECT_FINANCE_CONTACT).build())));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
         when(statusService.getProjectTeamStatus(eq(project.getId()), any(Optional.class))).thenReturn(teamStatus);
 
@@ -1275,7 +1249,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         List<ProjectUserResource> projectUsers = newProjectUserResource()
                 .withUser(loggedInUser.getId(), loggedInUser.getId())
                 .withOrganisation(organisationResource.getId(), organisationResource.getId())
-                .withRole(PARTNER, PROJECT_MANAGER)
+                .withRole(PROJECT_PARTNER, PROJECT_MANAGER)
                 .build(2);
 
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
@@ -1416,6 +1390,60 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     }
 
     @Test
+    public void viewMODocumentsStatusWhenNonSubmitted() {
+
+        SetupStatusViewModel viewModel = performDocumentsForMOViewTest(DocumentStatus.UNSET, DocumentStatus.UNSET);
+
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
+        assertStageStatus(viewModel, DOCUMENTS, INCOMPLETE);
+    }
+
+    @Test
+    public void viewMODocumentsStatusWhenOneSubmitted() {
+
+        SetupStatusViewModel viewModel = performDocumentsForMOViewTest(DocumentStatus.SUBMITTED, DocumentStatus.UNSET);
+
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
+        assertStageStatus(viewModel, DOCUMENTS, MO_ACTION_REQUIRED);
+    }
+
+    @Test
+    public void viewMODocumentsStatusWhenAllSubmitted() {
+
+        SetupStatusViewModel viewModel = performDocumentsForMOViewTest(DocumentStatus.SUBMITTED, DocumentStatus.SUBMITTED);
+
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
+        assertStageStatus(viewModel, DOCUMENTS, MO_ACTION_REQUIRED);
+    }
+
+    @Test
+    public void viewMODocumentsStatusWhenOneRejected() {
+
+        SetupStatusViewModel viewModel = performDocumentsForMOViewTest(DocumentStatus.REJECTED, DocumentStatus.SUBMITTED);
+
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
+        assertStageStatus(viewModel, DOCUMENTS, MO_ACTION_REQUIRED);
+    }
+
+    @Test
+    public void viewMODocumentsStatusWhenOneRejectedOneApproved() {
+
+        SetupStatusViewModel viewModel = performDocumentsForMOViewTest(DocumentStatus.REJECTED, DocumentStatus.APPROVED);
+
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
+        assertStageStatus(viewModel, DOCUMENTS, INCOMPLETE);
+    }
+
+    @Test
+    public void viewMODocumentsStatusWhenAllApproved() {
+
+        SetupStatusViewModel viewModel = performDocumentsForMOViewTest(DocumentStatus.APPROVED, DocumentStatus.APPROVED);
+
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
+        assertStageStatus(viewModel, DOCUMENTS, TICK);
+    }
+
+    @Test
     public void viewProjectSetupStatusWhenAnyDocumentRejected() {
 
         SetupStatusViewModel viewModel = performDocumentsTest(DocumentStatus.REJECTED, DocumentStatus.SUBMITTED);
@@ -1473,6 +1501,51 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         return viewModel;
     }
 
+    private SetupStatusViewModel performDocumentsForMOViewTest(DocumentStatus document1Status, DocumentStatus document2Status) {
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
+                        .withOrganisationId(organisationResource.getId())
+                        .withProjectDetailsStatus(COMPLETE)
+                        .withFinanceContactStatus(NOT_STARTED)
+                        .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
+                        .withIsLeadPartner(true)
+                        .build())
+                .withPartnerStatuses(newProjectPartnerStatusResource()
+                        .withFinanceContactStatus(NOT_STARTED)
+                        .build(1))
+                .withProjectState(LIVE)
+                .withProjectManagerAssigned(true)
+                .build();
+
+        List<ProjectDocumentResource> projectDocumentResources = newProjectDocumentResource()
+                .withStatus(document1Status, document2Status)
+                .withCompetitionDocument(projectDocumentConfig.get(0), projectDocumentConfig.get(1))
+                .build(2);
+
+        project = newProjectResource()
+                .withProjectState(LIVE)
+                .withApplication(application)
+                .withCompetition(competition.getId())
+                .withProjectDocuments(projectDocumentResources)
+                .withMonitoringOfficerUser(monitoringOfficer.getId())
+                .withProjectUsers(singletonList(newProjectUserResource().withRole(ProjectParticipantRole.MONITORING_OFFICER).build().getId()))
+                .build();
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(monitoringOfficerService.isMonitoringOfficerOnProject(project.getId(), monitoringOfficer.getId())).thenReturn(restSuccess(true));
+        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competition));
+        when(projectRestService.getOrganisationByProjectAndUser(project.getId(), monitoringOfficer.getId())).thenReturn(restSuccess(newOrganisationResource().build()));
+        when(statusService.getProjectTeamStatus(eq(project.getId()), any(Optional.class))).thenReturn(teamStatus);
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(organisationResource);
+
+        when(monitoringOfficerService.findMonitoringOfficerForProject(project.getId())).thenReturn(restSuccess(monitoringOfficer));
+        setupCompetitionPostAwardServiceExpectations(project, PostAwardService.CONNECT);
+
+        UserResource loggedInMO = newUserResource().withId(monitoringOfficer.getId()).withRoleGlobal(MONITORING_OFFICER).build();
+
+        return performPopulateView(project.getId(), loggedInMO);
+    }
 
     @Test
     public void viewProjectSetupStatusCollaborationAgreementNotNeeded() {
@@ -1543,7 +1616,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().
                 withUser(loggedInUser.getId())
                 .withOrganisation(organisationResource.getId())
-                .withRole(PARTNER).build(1));
+                .withRole(PROJECT_PARTNER).build(1));
 
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(pmUser));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResult);

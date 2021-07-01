@@ -55,7 +55,7 @@ public class UserBuilderTest {
         UserStatus expectedStatus = ACTIVE;
         String expectedUid = "Uid";
         String expectedEmail = "test@test.com";
-        Set<Role> expectedRoles = new HashSet<>(asList(Role.LEADAPPLICANT, Role.PARTNER));
+        Set<Role> expectedRoles = new HashSet<>(asList(Role.APPLICANT, Role.ASSESSOR));
         Long expectedProfileId = 1L;
         List<Affiliation> expectedAffiliations = newAffiliation().withAffiliationType(EMPLOYER, FAMILY_FINANCIAL)
                 .build(2);
@@ -106,8 +106,8 @@ public class UserBuilderTest {
         UserStatus[] expectedStatuss = {ACTIVE, INACTIVE};
         String[] expectedUids = {"Uid1", "Uid2"};
         String[] expectedEmails = {"email1@test.com", "email2@test.com"};
-        List<Set<Role>> expectedRoles = asList(new HashSet<>(asList(Role.LEADAPPLICANT, Role.PARTNER)), new HashSet<>
-                (asList(Role.COLLABORATOR, Role.COMP_ADMIN)));
+        List<Set<Role>> expectedRoles = asList(new HashSet<>(asList(Role.APPLICANT, Role.ASSESSOR)), new HashSet<>
+                (asList(Role.INNOVATION_LEAD, Role.COMP_ADMIN)));
         Long[] expectedProfileIds = {1L, 2L};
         List<Affiliation>[] expectedAffiliations = new List[]{
                 newAffiliation().withAffiliationType(EMPLOYER, FAMILY_FINANCIAL).build(2),

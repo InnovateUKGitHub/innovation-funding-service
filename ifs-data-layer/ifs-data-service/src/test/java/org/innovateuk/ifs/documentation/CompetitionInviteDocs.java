@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.invite.builder.*;
 import org.innovateuk.ifs.invite.resource.CompetitionRejectionResource;
 import org.springframework.restdocs.payload.FieldDescriptor;
@@ -28,6 +29,7 @@ public class CompetitionInviteDocs {
             fieldWithPath("id").description("Id of the competition invite"),
             fieldWithPath("competitionId").description("Id of the competition"),
             fieldWithPath("competitionName").description("Name of the competition").optional(),
+            fieldWithPath("competitionFundingType").description("Grant").optional(),
             fieldWithPath("email").description("Email of the competition invitee").optional(),
             fieldWithPath("hash").description("Hash id of the competition invite").optional(),
             fieldWithPath("status").description("Status of the competition invite").optional(),
@@ -35,7 +37,8 @@ public class CompetitionInviteDocs {
             fieldWithPath("deadlineDate").description("Date of assessor deadline").optional(),
             fieldWithPath("briefingDate").description("Date of assessor briefing").optional(),
             fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess").optional(),
-            fieldWithPath("innovationArea").description("Innovation area of the invitee").optional()
+            fieldWithPath("innovationArea").description("Innovation area of the invitee").optional(),
+            fieldWithPath("competitionAlwaysOpen").description("Always open state of competition")
     };
 
     public static final FieldDescriptor[] competitionRejectionFields = {
@@ -83,6 +86,7 @@ public class CompetitionInviteDocs {
     public static final CompetitionInviteResourceBuilder competitionInviteResourceBuilder = newCompetitionInviteResource()
             .withIds(1L)
             .withCompetitionName("Connected digital additive manufacturing")
+            .withCompetitionFundingType(FundingType.GRANT)
             .withHash("0519d73a-f062-4784-ae86-7a933a7de4c3")
             .withEmail("paul.plum@gmail.com")
             .withStatus(CREATED)

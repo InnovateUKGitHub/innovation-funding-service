@@ -1,5 +1,6 @@
 package org.innovateuk.ifs;
 
+import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
 import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -13,6 +14,7 @@ import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerReposit
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.mockito.InjectMocks;
@@ -28,8 +30,9 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.user.resource.Role.AUDITOR;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.mockito.Mockito.when;
 
@@ -61,6 +64,9 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
 
     @Mock
     protected ExternalFinanceRepository externalFinanceRepository;
+
+    @Mock
+    protected SupporterAssignmentRepository supporterAssignmentRepository;
 
     protected void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
 
@@ -114,6 +120,11 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
         user.setRoles(projectFinanceUser);
     }
 
+    protected void setUpUserAsAuditor(ProjectResource project, UserResource user) {
+        List<Role> auditorRoleResource = singletonList(AUDITOR);
+        user.setRoles(auditorRoleResource);
+    }
+
     protected void setUpUserNotAsProjectFinanceUser(ProjectResource project, UserResource user) {
         List<Role> projectFinanceUser = emptyList();
         user.setRoles(projectFinanceUser);
@@ -154,6 +165,16 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
         setupLeadPartnerExpectations(project, user, false);
     }
 
+    protected void setupSupporterAssignmentExpectations(Long applicationId, Long userId, boolean userIsSupporter) {
+        when(supporterAssignmentRepository.existsByParticipantIdAndTargetId(userId, applicationId))
+                .thenReturn(userIsSupporter);
+    }
+
+    protected void setupSupporterAssignmentCompetitionExpectations(Long competitionId, Long userId, boolean userIsSupporter) {
+        when(supporterAssignmentRepository.existsByParticipantIdAndCompetitionId(userId, competitionId))
+                .thenReturn(userIsSupporter);
+    }
+
     private void setupLeadPartnerExpectations(ProjectResource project, UserResource user, boolean userIsLeadPartner) {
 
         org.innovateuk.ifs.application.domain.Application originalApplication = newApplication().build();
@@ -163,14 +184,12 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
 
         // find the lead organisation
         when(projectRepository.findById(project.getId())).thenReturn(Optional.of(projectEntity));
-        when(processRoleRepository.findOneByApplicationIdAndRole(projectEntity.getApplication().getId(), Role.LEADAPPLICANT)).thenReturn(leadApplicantProcessRole);
+        when(processRoleRepository.findOneByApplicationIdAndRole(projectEntity.getApplication().getId(), ProcessRoleType.LEADAPPLICANT)).thenReturn(leadApplicantProcessRole);
 
         // see if the user is a partner on the lead organisation
         when(organisationRepository.findById(leadOrganisation.getId())).thenReturn(Optional.of(leadOrganisation));
         when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(
                 project.getId(), user.getId(), leadOrganisation.getId(), PROJECT_PARTNER)).thenReturn(userIsLeadPartner ? newProjectUser().build() : null);
     }
-
     protected abstract T supplyPermissionRulesUnderTest();
-
 }

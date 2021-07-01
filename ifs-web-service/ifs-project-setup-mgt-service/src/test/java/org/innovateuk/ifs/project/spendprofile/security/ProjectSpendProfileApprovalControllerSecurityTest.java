@@ -37,16 +37,22 @@ public class ProjectSpendProfileApprovalControllerSecurityTest extends BaseProje
 
     @Test
     public void viewSpendProfileApproval() {
-        assertSecured(() -> classUnderTest.viewSpendProfileApproval(projectCompositeId.id(), null));
+        assertSecured(() -> classUnderTest.viewSpendProfileApproval(projectCompositeId.id(), null, null));
     }
 
     @Test
     public void saveSpendProfileApproval() {
-        assertSecured(() -> classUnderTest.saveSpendProfileApproval(projectCompositeId.id(), null, null, null, null, null));
+        assertSecured(() -> classUnderTest.saveSpendProfileApproval(projectCompositeId.id(), null, null, null, null, null, null));
     }
 
     @Override
     protected Consumer<SetupSectionsPermissionRules> getVerification() {
-        return permissionRules -> permissionRules.internalCanAccessSpendProfileSection(eq(projectCompositeId), isA(UserResource.class));
+        return permissionRules -> {
+            permissionRules.internalCanAccessSpendProfileSection(eq(projectCompositeId), isA(UserResource.class));
+            permissionRules.competitionFinanceUsersCanAccessSpendProfileSection(eq(projectCompositeId), isA(UserResource.class));
+            permissionRules.supportCanAccessSpendProfileSection(eq(projectCompositeId), isA(UserResource.class));
+            permissionRules.innovationLeadCanAccessSpendProfileSection(eq(projectCompositeId), isA(UserResource.class));
+            permissionRules.stakeholderCanAccessSpendProfileSection(eq(projectCompositeId), isA(UserResource.class));
+        };
     }
 }

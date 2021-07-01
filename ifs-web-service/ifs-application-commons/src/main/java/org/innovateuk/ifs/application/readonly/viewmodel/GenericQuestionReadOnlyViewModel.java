@@ -2,15 +2,22 @@ package org.innovateuk.ifs.application.readonly.viewmodel;
 
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 
 public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel {
 
     private final String displayName;
     private final String question;
+    private final boolean multipleStatuses;
     private final String answer;
+    private final List<GenericQuestionAnswerRowReadOnlyViewModel> answers;
+    private final boolean statusDetailPresent;
     private final List<GenericQuestionFileViewModel> appendices;
     private final GenericQuestionFileViewModel templateFile;
     private final String templateDocumentTitle;
@@ -22,11 +29,29 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     private final int totalScope;
     private final boolean hasScope;
 
-    public GenericQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource questionResource, String displayName, String question, String answer, List<GenericQuestionFileViewModel> appendices, GenericQuestionFileViewModel templateFile, String templateDocumentTitle, List<String> feedback, List<BigDecimal> scores, int inScope, int totalScope, boolean hasScope) {
+    public GenericQuestionReadOnlyViewModel(ApplicationReadOnlyData data,
+                                            QuestionResource questionResource,
+                                            String displayName,
+                                            String question,
+                                            boolean multipleStatuses,
+                                            String answer,
+                                            List<GenericQuestionAnswerRowReadOnlyViewModel> answers,
+                                            boolean statusDetailPresent,
+                                            List<GenericQuestionFileViewModel> appendices,
+                                            GenericQuestionFileViewModel templateFile,
+                                            String templateDocumentTitle,
+                                            List<String> feedback,
+                                            List<BigDecimal> scores,
+                                            int inScope,
+                                            int totalScope,
+                                            boolean hasScope) {
         super(data, questionResource);
         this.displayName = displayName;
         this.question = question;
+        this.multipleStatuses = multipleStatuses;
         this.answer = answer;
+        this.answers = answers;
+        this.statusDetailPresent = statusDetailPresent;
         this.appendices = appendices;
         this.templateFile = templateFile;
         this.templateDocumentTitle = templateDocumentTitle;
@@ -51,8 +76,28 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         return question;
     }
 
+    public boolean isMultipleStatuses() {
+        return multipleStatuses;
+    }
+
     public String getAnswer() {
         return answer;
+    }
+
+    public List<GenericQuestionAnswerRowReadOnlyViewModel> getAnswers() {
+        return answers;
+    }
+
+    public boolean hasAnswerNotMarkedAsComplete() {
+        return answers.stream().anyMatch(a -> !a.isMarkedAsComplete());
+    }
+
+    public List<GenericQuestionAnswerRowReadOnlyViewModel> getNonMarkedAsCompletePartners() {
+        return answers.stream().filter(a -> !a.isMarkedAsComplete()).collect(Collectors.toList());
+    }
+
+    public boolean isStatusDetailPresent() {
+        return statusDetailPresent;
     }
 
     public List<GenericQuestionFileViewModel> getAppendices() {
@@ -121,4 +166,8 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
 
         return average;
     };
+
+    public boolean isKtpAssessmentQuestion() {
+        return questionResource != null && questionResource.getQuestionSetupType() == QuestionSetupType.KTP_ASSESSMENT;
+    }
 }

@@ -14,6 +14,7 @@ import org.innovateuk.ifs.application.summary.viewmodel.InterviewFeedbackViewMod
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
@@ -27,6 +28,7 @@ import org.innovateuk.ifs.management.application.view.viewmodel.ManagementApplic
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,7 @@ import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySetting
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEMPLATE_DOCUMENT;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 
 @Component
@@ -90,6 +93,9 @@ public class ManagementApplicationPopulator {
     @Autowired
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
+    @Autowired
+    private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
+
 
     public ManagementApplicationViewModel populate(long applicationId,
                                                    UserResource user) {
@@ -105,12 +111,12 @@ public class ManagementApplicationPopulator {
         }
 
         final InterviewFeedbackViewModel interviewFeedbackViewModel;
-        if (interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess()) {
-            interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(application.getId(), application.getCompetitionName(), user, application.getCompetitionStatus().isFeedbackReleased());
+        if (settings.isIncludeAllAssessorFeedback() && interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess()) {
+            interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(application.getId(), application.getCompetitionName(), user, application.isFeedbackReleased());
         } else {
             interviewFeedbackViewModel = null;
         }
-
+        
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationSummaryViewModelPopulator.populate(application, competition, user, settings);
         ApplicationOverviewIneligibilityViewModel ineligibilityViewModel = applicationOverviewIneligibilityModelPopulator.populateModel(application);
 
@@ -126,7 +132,7 @@ public class ManagementApplicationPopulator {
                 applicationReadOnlyViewModel,
                 getAppendices(applicationId),
                 canMarkAsIneligible(application, user),
-                user.hasAnyRoles(Role.PROJECT_FINANCE, Role.COMP_ADMIN),
+                user.hasAuthority(Authority.COMP_ADMIN),
                 support,
                 projectId,
                 user.hasRole(Role.EXTERNAL_FINANCE),
@@ -136,11 +142,12 @@ public class ManagementApplicationPopulator {
     }
 
     private boolean userCanViewFeedback(UserResource user, CompetitionResource competition, Long applicationId) {
-        return user.hasRole(Role.PROJECT_FINANCE) && (competition.isProcurement() || (competition.isHasInterviewStage() && interviewAssigned(applicationId)) );
+        return (user.hasAuthority(Authority.PROJECT_FINANCE) && competition.isProcurement())
+                || interviewAssigned(applicationId, user);
     }
 
-    private boolean interviewAssigned(Long applicationId) {
-        return interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
+    private boolean interviewAssigned(Long applicationId, UserResource loggedInUser) {
+        return loggedInUser.hasAuthority(Authority.COMP_ADMIN) && interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
     }
 
     private boolean isProjectWithdrawn(Long applicationId) {
@@ -171,6 +178,6 @@ public class ManagementApplicationPopulator {
 
     private boolean canMarkAsIneligible(ApplicationResource application, UserResource user) {
         return application.getApplicationState() == SUBMITTED
-                && user.hasAnyRoles(Role.PROJECT_FINANCE, Role.COMP_ADMIN, Role.INNOVATION_LEAD);
+                && user.hasAnyRoles(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, Role.INNOVATION_LEAD);
     }
 }

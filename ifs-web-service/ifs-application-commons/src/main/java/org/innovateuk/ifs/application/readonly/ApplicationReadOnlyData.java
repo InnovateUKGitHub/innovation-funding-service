@@ -12,6 +12,7 @@ import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
@@ -31,28 +32,34 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
     private final CompetitionResource competition;
     private final ApplicationResource application;
     private final UserResource user;
-    private final Optional<ProcessRoleResource> applicantProcessRole;
+    private final List<ProcessRoleResource> applicationProcessRoles;
+    private final Optional<ProcessRoleResource> usersProcessRole;
 
     private final Map<Long, QuestionResource> questionIdToQuestion;
     private final Multimap<Long, FormInputResource> questionIdToApplicationFormInputs;
     private final Map<Long, FormInputResource> formInputIdToAssessorFormInput;
-    private final Map<Long, FormInputResponseResource> formInputIdToFormInputResponses;
+    private final Map<Long, List<FormInputResponseResource>> formInputIdToFormInputResponses;
     /* only included if ApplicationReadOnlySettings for isIncludeStatuses is set. */
     private final Multimap<Long, QuestionStatusResource> questionToQuestionStatus;
     /* only included if ApplicationReadOnlySettings.includeAssessment is set. */
     private final Map<Long, ApplicationAssessmentResource> assessmentToApplicationAssessment;
-
+    /* only included if ApplicationReadOnlySettings.includeAllSupporterFeedback is set. */
+    private final Map<Long, SupporterAssignmentResource> feedbackToApplicationSupport;
 
     public ApplicationReadOnlyData(ApplicationResource application, CompetitionResource competition,
-                                   UserResource user, Optional<ProcessRoleResource> applicantProcessRole,
+                                   UserResource user, List<ProcessRoleResource> processRoles,
                                    List<QuestionResource> questions, List<FormInputResource> formInputs,
                                    List<FormInputResponseResource> formInputResponses,
                                    List<QuestionStatusResource> questionStatuses,
-                                   List<ApplicationAssessmentResource> assessments) {
+                                   List<ApplicationAssessmentResource> assessments,
+                                   List<SupporterAssignmentResource> assignments) {
         this.application = application;
         this.competition = competition;
         this.user = user;
-        this.applicantProcessRole = applicantProcessRole;
+        this.applicationProcessRoles = processRoles;
+        this.usersProcessRole = processRoles.stream().
+                filter(pr -> pr.getUser().equals(user.getId()))
+                .findAny();
 
         this.questionIdToQuestion = questions.stream()
                 .collect(toMap(QuestionResource::getId, Function.identity()));
@@ -63,10 +70,12 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
                 .filter(input -> ASSESSMENT.equals(input.getScope()))
                 .collect(toMap(FormInputResource::getId, Function.identity()));
         this.formInputIdToFormInputResponses = formInputResponses.stream()
-                .collect(toMap(FormInputResponseResource::getFormInput, Function.identity(), (m1, m2) -> m1));
+                .collect(Collectors.groupingBy(FormInputResponseResource::getFormInput));
         this.questionToQuestionStatus = Multimaps.index(questionStatuses, QuestionStatusResource::getQuestion);
         this.assessmentToApplicationAssessment = assessments.stream()
                 .collect(toMap(ApplicationAssessmentResource::getAssessmentId, Function.identity()));
+        this.feedbackToApplicationSupport = assignments.stream()
+                .collect(toMap(SupporterAssignmentResource::getAssignmentId, Function.identity()));
     }
 
     public BigDecimal getApplicationScore() {
@@ -112,7 +121,7 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
         return questionIdToApplicationFormInputs;
     }
 
-    public Map<Long, FormInputResponseResource> getFormInputIdToFormInputResponses() {
+    public Map<Long, List<FormInputResponseResource>> getFormInputIdToFormInputResponses() {
         return formInputIdToFormInputResponses;
     }
 
@@ -124,12 +133,20 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
         return questionToQuestionStatus;
     }
 
-    public Optional<ProcessRoleResource> getApplicantProcessRole() {
-        return applicantProcessRole;
+    public List<ProcessRoleResource> getApplicationProcessRoles() {
+        return applicationProcessRoles;
+    }
+
+    public Optional<ProcessRoleResource> getUsersProcessRole() {
+        return usersProcessRole;
     }
 
     public Map<Long, ApplicationAssessmentResource> getAssessmentToApplicationAssessment() {
         return assessmentToApplicationAssessment;
+    }
+
+    public Map<Long, SupporterAssignmentResource> getFeedbackToApplicationSupport() {
+        return feedbackToApplicationSupport;
     }
 
     @Override
@@ -144,12 +161,14 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
                 .append(competition, that.competition)
                 .append(application, that.application)
                 .append(user, that.user)
-                .append(applicantProcessRole, that.applicantProcessRole)
+                .append(applicationProcessRoles, that.applicationProcessRoles)
+                .append(usersProcessRole, that.usersProcessRole)
                 .append(questionIdToQuestion, that.questionIdToQuestion)
                 .append(questionIdToApplicationFormInputs, that.questionIdToApplicationFormInputs)
                 .append(formInputIdToFormInputResponses, that.formInputIdToFormInputResponses)
                 .append(questionToQuestionStatus, that.questionToQuestionStatus)
                 .append(assessmentToApplicationAssessment, that.assessmentToApplicationAssessment)
+                .append(feedbackToApplicationSupport, that.feedbackToApplicationSupport)
                 .isEquals();
     }
 
@@ -159,12 +178,14 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
                 .append(competition)
                 .append(application)
                 .append(user)
-                .append(applicantProcessRole)
+                .append(applicationProcessRoles)
+                .append(usersProcessRole)
                 .append(questionIdToQuestion)
                 .append(questionIdToApplicationFormInputs)
                 .append(formInputIdToFormInputResponses)
                 .append(questionToQuestionStatus)
                 .append(assessmentToApplicationAssessment)
+                .append(feedbackToApplicationSupport)
                 .toHashCode();
     }
 }

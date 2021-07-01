@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -19,13 +19,14 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
     private final boolean complete;
     private final boolean displayActions;
     private final boolean lead;
+    private final boolean ktpCompetition;
 
     public AbstractQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question) {
         this.competitionName = data.getCompetition().getName();
         this.name = question.getShortName();
         this.applicationId = data.getApplication().getId();
         this.questionId = question.getId();
-        this.lead = data.getApplicantProcessRole().map(role -> Role.LEADAPPLICANT == role.getRole()).orElse(false);
+        this.lead = data.getUsersProcessRole().map(role -> ProcessRoleType.LEADAPPLICANT == role.getRole()).orElse(false);
         Optional<QuestionStatusResource> completeStatus = data.getQuestionToQuestionStatus()
                 .get(question.getId())
                 .stream()
@@ -38,13 +39,14 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
                 .filter(status -> status.getAssignee() != null)
                 .findFirst();
         boolean assignedToUser = assignedStatus
-                .map(isAssignedToProcessRole(data.getApplicantProcessRole()))
+                .map(isAssignedToProcessRole(data.getUsersProcessRole()))
                 .orElse(false);
         this.displayActions = lead || assignedToUser;
+        this.ktpCompetition = data.getCompetition().isKtp();
     }
 
     private Function<QuestionStatusResource, Boolean> isAssignedToProcessRole(Optional<ProcessRoleResource> processRole) {
-        return status ->  processRole.isPresent() && status.getAssignee().equals(processRole.get().getId());
+        return status -> processRole.isPresent() && status.getAssignee().equals(processRole.get().getId());
     }
 
     @Override
@@ -88,6 +90,10 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
     @Override
     public boolean isLead() {
         return lead;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
     }
 
 }

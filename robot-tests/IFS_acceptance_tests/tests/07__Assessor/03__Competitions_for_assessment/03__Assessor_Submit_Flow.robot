@@ -110,7 +110,7 @@ Summary:Assessor should be able to re-edit before submit
 Summary:Funding Decision Validations
     [Documentation]    INFUND-1485  INFUND-4217  INFUND-5228
     When The user clicks the button/link                  jQuery = .govuk-button:contains("Save assessment")
-    And the user should see a field and summary error     Please indicate your decision.
+    And the user should see a field and summary error     You must select an option.
     And The user enters text to a text field              id = feedback    ${EMPTY}
     And The user enters text to a text field              id = comment    ${EMPTY}
     Then the user selects the radio button                fundingConfirmation    false
@@ -122,7 +122,7 @@ Summary:Word count check(Your feedback)
     [Setup]    browser validations have been disabled
     Given the user enters multiple strings into a text field     id = feedback  t  5001
     When the user clicks the button/link                         jQuery = .govuk-button:contains("Save assessment")
-    Then the user should see a field and summary error           This field cannot contain more than 5,000 characters.
+    Then the user should see a field and summary error           This field cannot contain more than 5000 characters.
     And the user enter text more than maximum word count limit   feedback
     And the user enter correct word count                        feedback
 

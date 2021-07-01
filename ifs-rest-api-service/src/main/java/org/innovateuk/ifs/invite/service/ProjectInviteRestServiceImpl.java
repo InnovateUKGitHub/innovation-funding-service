@@ -15,7 +15,6 @@ import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.GET_INVI
 import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.GET_PROJECT_INVITE_LIST;
 import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.GET_USER_BY_HASH_MAPPING;
 import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.PROJECT_INVITE_BASE_URL;
-import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.PROJECT_INVITE_SAVE;
 
 /**
  * A typical RestService to use as a client API on the web-service side for the data-service functionality .

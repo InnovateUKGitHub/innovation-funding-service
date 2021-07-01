@@ -25,7 +25,7 @@ items:
           imagePullSecrets:
             - name: imagePullSecretsName
           containers:
-            - image: innovateuk/finance-data-service:${financeDataServiceVersion}
+            - image: innovateuk/finance-data-service:${nexusVersion}
               name: finance-data-service
               livenessProbe:
                 httpGet:
@@ -97,6 +97,11 @@ items:
                     configMapKeyRef:
                       name: data-service-config
                       key: IFS_FINANCE-TOTALS_AUTHSECRETKEY
+                - name: SPRING_PROFILES_ACTIVE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: spring-config
+                      key: SPRING_PROFILES_ACTIVE
                 - name: JAVA_OPTS
                   value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
                 - name: NEW_RELIC_APP_NAME

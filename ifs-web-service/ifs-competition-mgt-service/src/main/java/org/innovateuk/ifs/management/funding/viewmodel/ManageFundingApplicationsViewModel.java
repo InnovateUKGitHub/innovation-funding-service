@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.funding.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.management.funding.form.FundingDecisionFilterForm;
 import org.innovateuk.ifs.management.funding.form.FundingDecisionSelectionForm;
@@ -59,4 +60,13 @@ public class ManageFundingApplicationsViewModel {
     public boolean isSelectionLimitWarning() {
         return selectionLimitWarning;
     }
+
+    public boolean isAnythingChangeable() {
+        if (results != null) {
+            return results.getContent().stream().anyMatch(ApplicationSummaryResource::applicationFundingDecisionIsChangeable);
+        } else {
+            return false;
+        }
+    }
+
 }

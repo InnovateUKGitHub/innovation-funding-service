@@ -12,7 +12,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,7 +99,7 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
         User savedUser = userRepository.save(user);
 
         // Applications ID is leveraging flyway test data ideally this will not be the case when services split
-        ProcessRole processRole = new ProcessRole(savedUser, 1L, Role.APPLICANT, savedOrganisation.getId());
+        ProcessRole processRole = new ProcessRole(savedUser, 1L, ProcessRoleType.COLLABORATOR, savedOrganisation.getId());
         processRoleRepository.save(processRole);
 
         List<OrganisationResource> results = controller.getOrganisations(savedUser.getId(), false).getSuccess();
@@ -122,7 +122,7 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
         User savedUser = userRepository.save(user);
 
         // Applications ID is leveraging flyway test data ideally this will not be the case when services split
-        ProcessRole processRole = new ProcessRole(savedUser, 1L, Role.APPLICANT, savedOrganisation.getId());
+        ProcessRole processRole = new ProcessRole(savedUser, 1L, ProcessRoleType.COLLABORATOR, savedOrganisation.getId());
         processRoleRepository.save(processRole);
 
         List<OrganisationResource> results = controller.getOrganisations(savedUser.getId(), true).getSuccess();
@@ -145,7 +145,7 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
         User savedUser = userRepository.save(user);
 
         // Applications ID is leveraging flyway test data ideally this will not be the case when services split
-        ProcessRole processRole = new ProcessRole(savedUser, 1L, Role.APPLICANT, savedOrganisation.getId());
+        ProcessRole processRole = new ProcessRole(savedUser, 1L, ProcessRoleType.COLLABORATOR, savedOrganisation.getId());
         processRoleRepository.save(processRole);
 
         List<OrganisationResource> results = controller.getOrganisations(savedUser.getId(), true).getSuccess();
@@ -166,7 +166,7 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
         User savedUser = userRepository.save(user);
 
         // Applications ID is leveraging flyway test data ideally this will not be the case when services split
-        ProcessRole processRole = new ProcessRole(savedUser, 1L, Role.APPLICANT, savedOrganisation.getId());
+        ProcessRole processRole = new ProcessRole(savedUser, 1L, ProcessRoleType.COLLABORATOR, savedOrganisation.getId());
         processRoleRepository.save(processRole);
 
         List<OrganisationResource> results = controller.getOrganisations(savedUser.getId(), false).getSuccess();

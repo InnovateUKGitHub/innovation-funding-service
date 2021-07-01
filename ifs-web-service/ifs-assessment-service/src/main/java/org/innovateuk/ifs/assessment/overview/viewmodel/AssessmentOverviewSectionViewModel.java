@@ -2,8 +2,12 @@ package org.innovateuk.ifs.assessment.overview.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Holder of model attributes for sections displayed within the Assessment Overview view.
@@ -55,6 +59,37 @@ public class AssessmentOverviewSectionViewModel {
         return termsAndConditions;
     }
 
+    public boolean hasAnyScoredQuestions() {
+        return questions.stream().anyMatch(AssessmentOverviewQuestionViewModel::isScoreRequired);
+    }
+
+    public Integer getScore() {
+        return questions.stream()
+                .map(AssessmentOverviewQuestionViewModel::getScoreResponse)
+                .filter(Objects::nonNull)
+                .map(Integer::valueOf)
+                .reduce(0, Integer::sum);
+    }
+
+    public Integer getMaximumScore() {
+        return questions.stream()
+                .filter(AssessmentOverviewQuestionViewModel::isScoreRequired)
+                .map(AssessmentOverviewQuestionViewModel::getMaximumScore)
+                .filter(Objects::nonNull)
+                .reduce(0, Integer::sum);
+    }
+
+    public Integer getScorePercentage() {
+        if (!getMaximumScore().equals(0)) {
+            return BigDecimal.valueOf(getScore())
+                    .divide(BigDecimal.valueOf(getMaximumScore()), 4, RoundingMode.HALF_UP)
+                    .multiply(BigDecimal.valueOf(100))
+                    .setScale(0, RoundingMode.HALF_UP)
+                    .intValue();
+        }
+        return 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -83,5 +118,17 @@ public class AssessmentOverviewSectionViewModel {
                 .append(finance)
                 .append(termsAndConditions)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("name", name)
+                .append("guidance", guidance)
+                .append("questions", questions)
+                .append("finance", finance)
+                .append("termsAndConditions", termsAndConditions)
+                .toString();
     }
 }

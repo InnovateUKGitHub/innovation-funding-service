@@ -33,6 +33,10 @@ The user should not see an error in the page
     Page Should Not Contain    ${404_error_message}
     Page Should Not Contain    ${403_error_message}
 
+The user should not see internal server and forbidden errors
+    Page Should Not Contain    ${500_error_message}
+    Page Should Not Contain    ${403_error_message}
+
 The user navigates to the page and gets a custom error message
     [Arguments]    ${TARGET_URL}    ${CUSTOM_ERROR_MESSAGE}
     Go To    ${TARGET_URL}

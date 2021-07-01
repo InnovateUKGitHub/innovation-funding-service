@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite to be an assessor',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite assessor to competition',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body class="govuk-template__body competition-management competition-overview">
@@ -13,7 +13,7 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to invite assessor',linkUrl=@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite to be an assessor',subTitle=${model.competitionName},size='govuk-heading-xl'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessor to competition',subTitle=${model.competitionName},size='govuk-heading-xl'" />
 
                 <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
                     <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
@@ -55,7 +55,7 @@
                     </div>
 
                     <p class="govuk-hint govuk-!-margin-top-6">
-                        Yours sincerely,
+                        Yours sincerely
                     </p>
 
                     <p class="govuk-hint govuk-!-margin-top-6">
@@ -65,7 +65,7 @@
                     </p>
 
                     <div class="govuk-body govuk-!-margin-top-6">
-                        <button type="submit" class="govuk-button">Send invite</button>
+                        <button type="submit" class="govuk-button">Send invitation</button>
                         <a th:href="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}"
                            class="button-clear">Cancel</a>
                     </div>

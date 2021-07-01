@@ -37,4 +37,19 @@ public class CompetitionParticipantRestImplTest extends BaseRestServiceUnitTest<
         List<CompetitionParticipantResource> actual = service.getAssessorParticipants(1L).getSuccess();
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void getParticipantsWithAssessmentPeriod() {
+        List<CompetitionParticipantResource> expected = Arrays.asList(1,2).stream().map(i -> {
+            CompetitionParticipantResource cpr = new CompetitionParticipantResource();
+            cpr.setUserId(1L);
+            cpr.setRole(ASSESSOR);
+            cpr.setCompetitionId(i == 0 ? 2L : 3L);
+            return cpr;
+        }).collect(Collectors.toList());
+
+        setupGetWithRestResultExpectations(String.format("%s/with-assessment-period/user/%s", restUrl, 1L), competitionParticipantResourceListType(), expected, OK);
+        List<CompetitionParticipantResource> actual = service.getAssessorParticipantsWithAssessmentPeriod(1L).getSuccess();
+        assertEquals(expected, actual);
+    }
 }

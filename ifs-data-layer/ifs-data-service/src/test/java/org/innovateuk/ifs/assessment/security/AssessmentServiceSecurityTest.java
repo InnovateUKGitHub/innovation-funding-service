@@ -136,7 +136,8 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
                 COMP_ADMIN,
                 PROJECT_FINANCE,
                 INNOVATION_LEAD,
-                STAKEHOLDER
+                STAKEHOLDER,
+                AUDITOR
         );
     }
 
@@ -184,7 +185,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
                 () -> {
                     verify(applicationLookupStrategy).getApplicationResource(applicationId);
                     verify(applicationPermissionRules)
-                            .usersConnectedToTheApplicationCanView(isA(ApplicationResource.class), isA(UserResource.class));
+                            .canViewApplication(isA(ApplicationResource.class), isA(UserResource.class));
                 }
         );
     }
@@ -205,11 +206,20 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
     @Test
     public void withdrawAssessment() {
-        Long assessmentId = 1L;
+        long assessmentId = 1L;
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.withdrawAssessment(assessmentId),
                 COMP_ADMIN,
                 PROJECT_FINANCE
+        );
+    }
+
+    @Test
+    public void unsubmitAssessment() {
+        long assessmentId = 1L;
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.unsubmitAssessment(assessmentId),
+                SUPER_ADMIN_USER
         );
     }
 

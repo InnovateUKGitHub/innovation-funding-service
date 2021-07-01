@@ -5,7 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
@@ -36,7 +36,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     public ServiceResult<List<MilestoneResource>> createMilestonesForIFSCompetition(Long competitionId) {
         List<MilestoneResource> newMilestones = new ArrayList<>();
         Stream.of(MilestoneType.presetValues()).filter(milestoneType -> !milestoneType.isOnlyNonIfs()).forEach(type ->
-            newMilestones.add(milestoneRestService.create(type, competitionId).getSuccess())
+            newMilestones.add(milestoneRestService.create(new MilestoneResource(type, competitionId)).getSuccess())
         );
         return serviceSuccess(newMilestones);
     }
@@ -48,24 +48,28 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
         milestones.forEach(milestoneResource -> {
             GenericMilestoneRowForm milestoneWithUpdate = milestoneEntries.getOrDefault(milestoneResource.getType().name(), null);
 
-            if(milestoneWithUpdate != null) {
+            if (milestoneWithUpdate != null) {
                 ZonedDateTime temp = milestoneWithUpdate.getMilestoneAsZonedDateTime();
                 if (temp != null) {
                     milestoneResource.setDate(temp);
                     updatedMilestones.add(milestoneResource);
                 } else {
+                    milestoneResource.setDate(null);
                     milestoneRestService
-                            .resetMilestone(milestoneResource)
+                            .updateMilestone(milestoneResource)
                             .getSuccess();
                 }
             }
         });
-
-        return milestoneRestService.updateMilestones(updatedMilestones).toServiceResult();
+        if (!updatedMilestones.isEmpty()) {
+            return milestoneRestService.updateMilestones(updatedMilestones).toServiceResult();
+        } else {
+            return serviceSuccess();
+        }
     }
 
     @Override
-    public List<Error> validateMilestoneDates(Map<String, GenericMilestoneRowForm> milestonesFormEntries) {
+    public List<Error> validateMilestoneDates(CompetitionResource competition, Map<String, GenericMilestoneRowForm> milestonesFormEntries) {
         List<Error> errors =  new ArrayList<>();
         milestonesFormEntries.values().forEach(milestone -> {
 
@@ -73,14 +77,21 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
             Integer month = milestone.getMonth();
             Integer year = milestone.getYear();
             String fieldName = "milestone-" + milestone.getMilestoneNameType().toUpperCase();
-            String fieldValidationError = milestone.getMilestoneType().getMilestoneDescription();
+            String fieldValidationError = competition.isAlwaysOpen() ?
+                    milestone.getMilestoneType().getAlwaysOpenDescription() :
+                    milestone.getMilestoneType().getMilestoneDescription();
+
             if(!validTimeOfMiddayMilestone(milestone)) {
                 errors.add(fieldError(fieldName, "", "error.milestone.invalid", fieldValidationError));
             }
 
-            boolean dateFieldsIncludeNull = (day == null || month == null || year == null);
-            if((dateFieldsIncludeNull || !isMilestoneDateValid(day, month, year))) {
-                errors.add(fieldError(fieldName, "", "error.milestone.invalid", fieldValidationError));
+            boolean allDateFieldNull = day == null && month == null && year == null;
+            boolean anyDateFieldNull = day == null || month == null || year == null;
+            boolean allNullAllowed = competition.isAlwaysOpen() && MilestoneType.SUBMISSION_DATE == milestone.getMilestoneType();
+            if (!(allDateFieldNull && allNullAllowed)) {
+                if (anyDateFieldNull || !isMilestoneDateValid(day, month, year)) {
+                    errors.add(fieldError(fieldName, "", "error.milestone.invalid", fieldValidationError));
+                }
             }
         });
         return errors;

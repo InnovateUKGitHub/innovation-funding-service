@@ -33,6 +33,7 @@ import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +41,6 @@ import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -61,7 +61,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.ne
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -141,7 +141,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
 
         leadApplicantProcessRole = newProcessRole().
                 withOrganisationId(organisation.getId()).
-                withRole(Role.LEADAPPLICANT).
+                withRole(ProcessRoleType.LEADAPPLICANT).
                 withUser(user).
                 build();
 
@@ -352,7 +352,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         User loggedInUser = newUser().build();
         setLoggedInUser(newUserResource()
                                 .withId(loggedInUser.getId())
-                                .withRolesGlobal(singletonList(Role.PARTNER))
+                                .withRoleGlobal(Role.APPLICANT)
                                 .build());
 
         User userToRemove = newUser().build();
@@ -385,7 +385,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         User loggedInUser = newUser().build();
         setLoggedInUser(newUserResource()
                                 .withId(loggedInUser.getId())
-                                .withRolesGlobal(Collections.singletonList(Role.PARTNER))
+                                .withRoleGlobal(Role.APPLICANT)
                                 .build());
 
         User userToRemove = newUser().build();
@@ -415,7 +415,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         User loggedInUser = newUser().build();
         setLoggedInUser(newUserResource()
                                 .withId(loggedInUser.getId())
-                                .withRolesGlobal(Collections.singletonList(Role.PARTNER))
+                                .withRoleGlobal(Role.APPLICANT)
                                 .build());
 
         User userToRemove = newUser().build();

@@ -1,22 +1,19 @@
 package org.innovateuk.ifs.project.queries.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import java.time.ZonedDateTime;
-import java.util.*;
-import java.util.function.Supplier;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.FundingRules;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddResponseForm;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesFormConstraints;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesViewModel;
@@ -28,11 +25,13 @@ import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,6 +41,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.time.ZonedDateTime;
+import java.util.*;
+import java.util.function.Supplier;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
@@ -72,22 +78,27 @@ public class FinanceChecksQueriesController {
     @Autowired
     private PartnerOrganisationRestService partnerOrganisationRestService;
     @Autowired
-    private EncryptedCookieService cookieUtil;
+    private CompetitionRestService competitionRestService;
     @Autowired
-    private ProjectFinanceService projectFinanceService;
+    private EncryptedCookieService cookieUtil;
     @Autowired
     private FinanceCheckService financeCheckService;
     @Autowired
     private ThreadViewModelPopulator threadViewModelPopulator;
+    @Autowired
+    private ProjectFinanceRestService projectFinanceRestService;
+    @Value("${ifs.subsidy.control.northern.ireland.enabled}")
+    private boolean northernIrelandSubsidyControlToggle;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @GetMapping
     public String showPage(@P("projectId")@PathVariable Long projectId,
                            @PathVariable Long organisationId,
                            @RequestParam(value = "query_section", required = false) String querySection,
+                           UserResource loggedInUser,
                            Model model) {
         partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId);
-        FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, null, querySection, null);
+        FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, null, querySection, null, loggedInUser);
         model.addAttribute("model", viewModel);
         return QUERIES_VIEW;
     }
@@ -126,13 +137,13 @@ public class FinanceChecksQueriesController {
                                   HttpServletRequest request) {
         partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
-        populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments, model);
+        populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments, model, loggedInUser);
         model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId, queryId).orElse(new FinanceChecksQueriesAddResponseForm()));
         return QUERIES_VIEW;
     }
 
-    private void populateQueriesViewModel(Long projectId, Long organisationId, Long queryId, String querySection, List<Long> attachments, Model model) {
-        FinanceChecksQueriesViewModel financeChecksQueriesViewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments);
+    private void populateQueriesViewModel(Long projectId, Long organisationId, Long queryId, String querySection, List<Long> attachments, Model model, UserResource loggedInUser) {
+        FinanceChecksQueriesViewModel financeChecksQueriesViewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments, loggedInUser);
         validateQueryId(financeChecksQueriesViewModel, queryId);
         model.addAttribute("model", financeChecksQueriesViewModel);
     }
@@ -158,14 +169,14 @@ public class FinanceChecksQueriesController {
                                HttpServletResponse response) {
         Supplier<String> failureView = () -> {
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
-            FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments);
+            FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments, loggedInUser);
             model.addAttribute("model", viewModel);
             model.addAttribute(FORM_ATTR, form);
             return QUERIES_VIEW;
         };
 
         Supplier<String> saveFailureView = () -> {
-            FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, null, querySection, null);
+            FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, null, querySection, null, loggedInUser);
             model.addAttribute("model", viewModel);
             model.addAttribute("nonFormErrors", validationHandler.getAllErrors());
             model.addAttribute(FORM_ATTR, null);
@@ -211,11 +222,12 @@ public class FinanceChecksQueriesController {
                                             @SuppressWarnings("unused") BindingResult bindingResult,
                                             ValidationHandler validationHandler,
                                             HttpServletRequest request,
-                                            HttpServletResponse response) {
+                                            HttpServletResponse response,
+                                            UserResource loggedInUser) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         Supplier<String> onSuccess = () -> redirectTo(rootView(projectId, organisationId, queryId, querySection));
         Supplier<String> onError = () -> {
-            FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments);
+            FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments, loggedInUser);
             model.addAttribute("model", viewModel);
             model.addAttribute("nonFormErrors", validationHandler.getAllErrors());
             model.addAttribute("form", form);
@@ -232,7 +244,7 @@ public class FinanceChecksQueriesController {
                 saveFormToCookie(response, projectId, organisationId, queryId, form);
             });
 
-            model.addAttribute("model", populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments));
+            model.addAttribute("model", populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments, loggedInUser));
             return result;
         });
     }
@@ -293,7 +305,7 @@ public class FinanceChecksQueriesController {
 
     private List<ThreadViewModel> loadQueryModel(Long projectId, Long organisationId) {
 
-        ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
+        ProjectFinanceResource projectFinance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
 
         ServiceResult<List<QueryResource>> queriesResult = financeCheckService.getQueries(projectFinance.getId());
 
@@ -306,8 +318,9 @@ public class FinanceChecksQueriesController {
         }
     }
 
-    private FinanceChecksQueriesViewModel populateQueriesViewModel(Long projectId, Long organisationId, Long queryId, String querySection, List<Long> attachments) {
+    private FinanceChecksQueriesViewModel populateQueriesViewModel(Long projectId, Long organisationId, Long queryId, String querySection, List<Long> attachments, UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean leadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
@@ -332,7 +345,10 @@ public class FinanceChecksQueriesController {
                 FinanceChecksQueriesFormConstraints.MAX_QUERY_CHARACTERS,
                 queryId,
                 project.getApplication(),
-                project.getProjectState().isActive()
+                project.getProjectState().isActive(),
+                competition.isProcurementMilestones(),
+                northernIrelandSubsidyControlToggle && (FundingRules.SUBSIDY_CONTROL == competition.getFundingRules()),
+                loggedInUser.hasAuthority(Authority.AUDITOR)
         );
     }
 

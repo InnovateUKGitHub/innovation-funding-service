@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.commons.security;
 
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +32,7 @@ public class SecuritySetter {
         basicSecurityUser.setLastName("smith");
         basicSecurityUser.setEmail("steve.smith@empire.com");
         basicSecurityUser.setUid("6b50cb4f-7222-33a5-99c5-8c068cd0b03c");
+        basicSecurityUser.getRoles().add(Role.APPLICANT);
         return basicSecurityUser;
     }
 }

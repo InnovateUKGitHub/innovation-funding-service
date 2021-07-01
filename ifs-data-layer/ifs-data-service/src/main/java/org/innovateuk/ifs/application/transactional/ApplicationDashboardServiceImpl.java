@@ -3,6 +3,9 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.applicant.resource.dashboard.*;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -12,7 +15,7 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +47,8 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     private QuestionStatusService questionStatusService;
     @Autowired
     private ApplicationRepository applicationRepository;
+    @Autowired
+    private AssessmentService assessmentService;
 
     @Override
     public ServiceResult<ApplicantDashboardResource> getApplicantDashboard(long userId) {
@@ -181,6 +186,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                 .withAssignedToInterview(invitedToInterview)
                 .withStartDate(application.getStartDate())
                 .withShowReopenLink(showReopenLinkVisible(application, userId))
+                .withAlwaysOpen(application.getCompetition().isAlwaysOpen())
                 .build();
     }
 
@@ -197,7 +203,8 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     }
 
     private boolean showReopenLinkVisible(Application application, long userId) {
-        return application.getLeadApplicant().getId().equals(userId) &&
+        return !application.getCompetition().isAlwaysOpen() &&
+                application.getLeadApplicant().getId().equals(userId) &&
                 CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus()) &&
                 application.getFundingDecision() == null &&
                 application.isSubmitted();
@@ -235,6 +242,6 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     }
 
     private boolean isLead(Optional<ProcessRole> processRole) {
-        return processRole.map(ProcessRole::getRole).map(Role::isLeadApplicant).orElse(false);
+        return processRole.map(ProcessRole::getRole).map(ProcessRoleType::isLeadApplicant).orElse(false);
     }
 }

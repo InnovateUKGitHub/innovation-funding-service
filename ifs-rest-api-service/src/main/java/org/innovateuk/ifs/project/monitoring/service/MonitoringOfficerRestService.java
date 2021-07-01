@@ -18,6 +18,10 @@ public interface MonitoringOfficerRestService {
 
     RestResult<List<SimpleUserResource>> findAll();
 
+    RestResult<List<SimpleUserResource>> findAllKtp();
+
+    RestResult<List<SimpleUserResource>> findAllNonKtp();
+
     RestResult<List<ProjectResource>> getProjectsForMonitoringOfficer(long userId);
 
     RestResult<MonitoringOfficerResource> findMonitoringOfficerForProject(long projectId);
@@ -25,4 +29,6 @@ public interface MonitoringOfficerRestService {
     RestResult<Boolean> isMonitoringOfficerOnProject(long projectId, long userId);
 
     RestResult<Boolean> isMonitoringOfficer(long userId);
+
+    RestResult<Void> sendDocumentReviewNotification(long projectId, long userId);
 }

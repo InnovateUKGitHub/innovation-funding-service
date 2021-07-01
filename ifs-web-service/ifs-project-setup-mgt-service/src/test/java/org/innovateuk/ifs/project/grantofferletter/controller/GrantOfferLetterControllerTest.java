@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.builder.FileEntryResourceBuilder;
@@ -14,13 +15,16 @@ import org.innovateuk.ifs.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterLetterForm;
 import org.innovateuk.ifs.project.grantofferletter.populator.GrantOfferLetterTemplatePopulator;
+import org.innovateuk.ifs.project.grantofferletter.populator.KtpGrantOfferLetterTemplatePopulator;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
+import org.innovateuk.ifs.project.grantofferletter.template.resource.GolTemplateResource;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.util.MultipartFileAssertionUtil;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.core.io.ByteArrayResource;
@@ -29,6 +33,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,6 +81,10 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
     @Mock
     private GrantOfferLetterTemplatePopulator populator;
+
+    @Mock
+    private KtpGrantOfferLetterTemplatePopulator ktpGrantOfferLetterTemplatePopulator;
+
     @Test
     public void testView() throws Exception {
         Long competitionId = 1L;
@@ -117,6 +126,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         assertFalse(golViewModel.getAdditionalContractFileContentAvailable());
         assertFalse(golViewModel.getGrantOfferLetterFileContentAvailable());
         assertFalse(golViewModel.getSignedGrantOfferLetterRejected());
+        assertFalse(golViewModel.isProcurement());
         assertTrue(golViewModel.isProjectIsActive());
 
         GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
@@ -271,7 +281,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
     @Test
     public void uploadGrantOfferLetterFile() throws Exception {
 
-        Long projectId = 123L;
+        long projectId = 123L;
 
         FileEntryResource createdFileDetails = newFileEntryResource().withName("1").withMediaType("application/pdf").withFilesizeBytes(11).build();
 
@@ -350,6 +360,20 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                 andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send"));
 
         verify(grantOfferLetterService).removeGrantOfferLetter(projectId);
+    }
+
+    @Test
+    public void resetGrantOfferLetter() throws Exception {
+        Long projectId = 123L;
+
+        when(grantOfferLetterService.resetGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/reset"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(String.format("/project/%d/grant-offer-letter/send", projectId)))
+                .andReturn();
+
+        verify(grantOfferLetterService).resetGrantOfferLetter(projectId);
     }
 
     @Test
@@ -453,7 +477,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                 andReturn();
 
         GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
-        assertEquals(uploadedFile, form.getAnnex());
+        MultipartFileAssertionUtil.assertMultipartFile(uploadedFile, form.getAnnex());
     }
 
     @Test
@@ -497,7 +521,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                 andReturn();
 
         GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
-        assertEquals(uploadedFile, form.getAnnex());
+        MultipartFileAssertionUtil.assertMultipartFile(uploadedFile, form.getAnnex());
         assertEquals(Boolean.FALSE, ((GrantOfferLetterModel)result.getModelAndView().getModel().get("model")).getAdditionalContractFileContentAvailable());
     }
 
@@ -649,6 +673,20 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
     @Test
     public void viewGrantOfferLetterTemplate() throws Exception {
         long projectId = 123L;
+        GolTemplateResource golTemplateResource = new GolTemplateResource();
+        golTemplateResource.setName(GolTemplateResource.DEFAULT_GOL_TEMPLATE);
+        golTemplateResource.setTemplate("gol-template");
+
+        CompetitionResource competition = newCompetitionResource()
+                .withGolTemplate(golTemplateResource)
+                .build();
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        ProjectResource projectResource = newProjectResource()
+                .withCompetition(competition.getId())
+                .build();
+
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+
         ProjectFinanceResource projectFinance = newProjectFinanceResource().build();
         AcademicFinanceTableModel academicTable = new AcademicFinanceTableModel(false,
                                                                                 asMap("orgName", projectFinance),
@@ -665,7 +703,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                                                                              BigDecimal.ONE,
                                                                              BigDecimal.ZERO);
 
-        when(populator.populate(projectId))
+        when(populator.populate(projectResource, competition))
                 .thenReturn(new GrantOfferLetterTemplateViewModel(123L,
                                                                   "firstName",
                                                                   "lastName",
@@ -674,7 +712,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                                                                   "projectName",
                                                                   "leadOrgName",
                                                                   newNoteResource().build(1),
-                                                                  "templateName",
+                                                                  Collections.singletonMap("state aid", "templateName"),
                                                                   industrialTable,
                                                                   academicTable,
                                                                   summaryTable,
@@ -683,7 +721,36 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/gol-template"));
 
-        verify(populator).populate(projectId);
+        verify(populator).populate(projectResource, competition);
+    }
+
+
+    @Test
+    public void viewGrantOfferLetterTemplate_KTP() throws Exception {
+        long projectId = 123L;
+
+        GolTemplateResource golTemplateResource = new GolTemplateResource();
+        golTemplateResource.setName(FundingType.KTP.getGolType());
+        golTemplateResource.setTemplate("gol-template");
+
+        CompetitionResource competition = newCompetitionResource()
+                .withGolTemplate(golTemplateResource)
+                .build();
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        ProjectResource projectResource = newProjectResource()
+                .withCompetition(competition.getId())
+                .build();
+
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+
+        KtpGrantOfferLetterTemplateViewModel viewModel = mock(KtpGrantOfferLetterTemplateViewModel.class);
+
+        when(ktpGrantOfferLetterTemplatePopulator.populate(projectResource)).thenReturn(viewModel);
+
+        mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/template"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/gol-template"))
+                .andExpect(model().attribute("model", viewModel));
     }
 
     private ServiceResult<GrantOfferLetterStateResource> golState(GrantOfferLetterState state) {

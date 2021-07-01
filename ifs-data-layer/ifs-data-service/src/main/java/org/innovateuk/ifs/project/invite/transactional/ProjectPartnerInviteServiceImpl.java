@@ -4,6 +4,7 @@ import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
@@ -15,13 +16,15 @@ import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.ProjectPartnerChangeService;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.FundingRulesWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.PaymentMilestoneWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.invite.domain.ProjectPartnerInvite;
 import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
@@ -42,7 +45,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
@@ -94,6 +96,9 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
 
     @Autowired
+    private FundingRulesWorkflowHandler fundingRulesWorkflowHandler;
+
+    @Autowired
     private PendingPartnerProgressRepository pendingPartnerProgressRepository;
 
     @Autowired
@@ -101,6 +106,9 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
 
     @Autowired
     private OrganisationAddressRepository organisationAddressRepository;
+
+    @Autowired
+    private PaymentMilestoneWorkflowHandler paymentMilestoneWorkflowHandler;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -143,7 +151,7 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
             notificationArguments.put("projectName", projectPartnerInvite.getTarget().getName());
             notificationArguments.put("leadOrganisationName", leadOrganisation.getOrganisation().getName());
 
-            Notification notification = new Notification(from, singletonList(to), Notifications.INVITE_PROJECT_PARTNER_ORGANISATION, notificationArguments);
+            Notification notification = new Notification(from, to, Notifications.INVITE_PROJECT_PARTNER_ORGANISATION, notificationArguments);
 
             return notificationService.sendNotificationWithFlush(notification, EMAIL)
                     .andOnSuccessReturn(() -> projectPartnerInvite);
@@ -221,13 +229,25 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
                                             organisation.getId());
 
 
-
                                     eligibilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
                                     viabilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
+                                    if (project.getApplication().getCompetition().isSubsidyControl()) {
+                                        fundingRulesWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
+                                    }
 
-                                    if (project.getApplication().getCompetition().applicantNotRequiredForViabilityChecks(organisation.getOrganisationTypeEnum())) {
+                                    Competition competition = project.getApplication().getCompetition();
+
+                                    if (competition.isProcurementMilestones()) {
+                                        paymentMilestoneWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
+                                    }
+
+                                    if (competition.applicantNotRequiredForViabilityChecks(organisation.getOrganisationTypeEnum())) {
                                         viabilityWorkflowHandler.viabilityNotApplicable(partnerOrganisation, null);
                                     }
+                                    if (competition.applicantNotRequiredForEligibilityChecks(organisation.getOrganisationTypeEnum())) {
+                                        eligibilityWorkflowHandler.notRequestingFunding(partnerOrganisation, null);
+                                    }
+
                                     invite.open();
 
                                     activityLogService.recordActivityByProjectIdAndOrganisationIdAndAuthorId(project.getId(), organisationId, invite.getSentBy().getId(), ActivityType.ORGANISATION_ADDED);

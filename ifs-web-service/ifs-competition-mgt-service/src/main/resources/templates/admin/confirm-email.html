@@ -35,6 +35,12 @@
                     <dd th:text="${model.user.email}">email@email.com</dd>
                     <dt>New email address</dt>
                     <dd th:text="${model.email}">email@email.com</dd>
+                    <th:block th:if="${model.changingOrgName}">
+                        <dt>Old organisation name</dt>
+                        <dd th:text="${model.userProfileResource.simpleOrganisation}">email@email.com</dd>
+                        <dt>New organisation name</dt>
+                        <dd th:text="${model.organisation}">email@email.com</dd>
+                    </th:block>
                     <dt>Role profile</dt>
                     <dd th:text="${model.user.roleDisplayNames}">Applicant</dd>
                     <dt>Status</dt>

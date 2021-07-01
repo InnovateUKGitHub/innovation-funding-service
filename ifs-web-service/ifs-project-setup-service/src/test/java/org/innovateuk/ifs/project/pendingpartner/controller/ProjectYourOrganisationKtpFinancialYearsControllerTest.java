@@ -5,7 +5,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsFormSaver;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.ApplicationYourOrganisationViewModel;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.finance.resource.KtpYearResource;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesKtpYearsResource;
@@ -115,7 +115,7 @@ public class ProjectYourOrganisationKtpFinancialYearsControllerTest extends Base
             .andExpect(view().name(VIEW_WITH_GROWTH_TABLE_PAGE))
             .andReturn();
 
-        Future<YourOrganisationViewModel> viewModelRequest = (Future<YourOrganisationViewModel>) result.getModelAndView().getModel().get("model");
+        Future<ApplicationYourOrganisationViewModel> viewModelRequest = (Future<ApplicationYourOrganisationViewModel>) result.getModelAndView().getModel().get("model");
         assertEquals(viewModelRequest.get(), yourOrganisationViewModel);
 
         Future<YourOrganisationKtpFinancialYearsForm> formRequest = (Future<YourOrganisationKtpFinancialYearsForm>) result.getModelAndView().getModel().get("form");
@@ -158,7 +158,7 @@ public class ProjectYourOrganisationKtpFinancialYearsControllerTest extends Base
             .andExpect(view().name(VIEW_WITH_GROWTH_TABLE_PAGE))
             .andReturn();
 
-        YourOrganisationViewModel viewModelRequest = (YourOrganisationViewModel) result.getModelAndView().getModel().get("model");
+        ApplicationYourOrganisationViewModel viewModelRequest = (ApplicationYourOrganisationViewModel) result.getModelAndView().getModel().get("model");
         assertEquals(viewModelRequest, yourOrganisationViewModel);
 
         YourOrganisationKtpFinancialYearsForm formRequest = (YourOrganisationKtpFinancialYearsForm) result.getModelAndView().getModel().get("form");

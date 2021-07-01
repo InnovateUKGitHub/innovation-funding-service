@@ -71,6 +71,13 @@ public abstract class BaseBuilder<T, S> implements Builder<T, S> {
         });
     }
 
+    public S withArray(BiConsumer<Long, T> amendFunction, long[] values) {
+        return with((i, t) -> {
+            long nextValue = values != null && values.length > 0 ? values[Math.min(values.length - 1, i)] : null;
+            amendFunction.accept(nextValue, t);
+        });
+    }
+
 
     public <R> S withArraySetFieldByReflection(String fieldName, R[] values) {
         return withArray((value, t) -> ReflectionTestUtils.setField(t, fieldName, value), values);
@@ -125,12 +132,14 @@ public abstract class BaseBuilder<T, S> implements Builder<T, S> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T[] buildArray(int numberToBuild, Class<T> clazz) {
         build(numberToBuild);
         return build(numberToBuild).toArray((T[]) Array.newInstance(clazz, numberToBuild));
     }
 
-    protected <T> T newInstance(Class<T> clazz) {
+    @SuppressWarnings("unchecked")
+    protected T newInstance(Class<T> clazz) {
         try {
             Optional<? extends Constructor<?>> ctor =
                     stream(clazz.getDeclaredConstructors()).filter(c -> c.getParameters().length == 0).findFirst();

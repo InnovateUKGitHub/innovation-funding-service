@@ -12,7 +12,7 @@ import org.innovateuk.ifs.navigation.PageHistory;
 import org.innovateuk.ifs.navigation.PageHistoryService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -51,7 +51,7 @@ public class AssignQuestionControllerTest extends BaseControllerMockMVCTest<Assi
     }
 
     @Mock
-    private UserRestService userRestServiceMock;
+    private ProcessRoleRestService processRoleRestServiceMock;
 
     @Mock
     private QuestionService questionServiceMock;
@@ -99,7 +99,7 @@ public class AssignQuestionControllerTest extends BaseControllerMockMVCTest<Assi
         setLoggedInUser(user);
         long assigneeId = 123L;
         String redirect = "/blah/blah";
-        when(userRestServiceMock.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(processRole));
+        when(processRoleRestServiceMock.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(processRole));
         when(questionServiceMock.assign(question.getId(), application.getId(), assigneeId, processRole.getId())).thenReturn(serviceSuccess());
         when(pageHistoryService.getPreviousPage(any())).thenReturn(Optional.of(new PageHistory(redirect)));
 
@@ -108,7 +108,7 @@ public class AssignQuestionControllerTest extends BaseControllerMockMVCTest<Assi
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(redirect));
 
-        verify(userRestServiceMock).findProcessRole(user.getId(), application.getId());
+        verify(processRoleRestServiceMock).findProcessRole(user.getId(), application.getId());
         verify(questionServiceMock).assign(question.getId(), application.getId(), assigneeId, processRole.getId());
         verify(cookieFlashMessageFilterMock).setFlashMessage(isA(HttpServletResponse.class), eq("assignedQuestion"));
     }

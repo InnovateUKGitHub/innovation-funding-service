@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
@@ -65,5 +66,15 @@ public class PartnerOrganisationPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "REMOVE_PARTNER_ORGANISATION", description = "Internal users can remove partner organisations for any project")
     public boolean internalUsersCanRemovePartnerOrganisations(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
         return isInternalAdmin(user);
+    }
+
+    @PermissionRule(value = "READ", description = "Auditors can see partner organisations on projects in all competitions")
+    public boolean auditorsCanViewProjects(PartnerOrganisationResource partnerOrganisation, final UserResource user) {
+        return user.hasAuthority(Authority.AUDITOR);
+    }
+
+    @PermissionRule(value = "READ_PENDING_PARTNER_PROGRESS", description = "Auditors can read partner progress in project setup for all competitions")
+    public boolean auditorsCanReadPendingPartnerProgress(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
+        return user.hasAuthority(Authority.AUDITOR);
     }
 }

@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.forms.questions.team.form;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 /**

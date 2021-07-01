@@ -5,8 +5,9 @@ import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static org.innovateuk.ifs.security.SecurityRuleUtil.checkHasAnyProcessRole;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.*;
 
 /**
  * Base class to contain useful shorthand methods for the Permission rule subclasses
@@ -20,7 +21,11 @@ public abstract class RootPermissionRules {
     protected UserRepository userRepository;
 
     protected boolean isMemberOfProjectTeam(long applicationId, UserResource user) {
-        return isLeadApplicant(applicationId, user) || isCollaborator(applicationId, user);
+        return checkHasAnyProcessRole(user, applicationId, processRoleRepository, LEADAPPLICANT, COLLABORATOR);
+    }
+
+    protected boolean isMemberOfProjectTeamForOrganisation(long applicationId, long organisationId, final UserResource user) {
+        return checkHasAnyProcessRole(user, applicationId, organisationId, processRoleRepository, LEADAPPLICANT, COLLABORATOR);
     }
 
     protected boolean isCollaborator(long applicationId, UserResource user) {
@@ -45,5 +50,9 @@ public abstract class RootPermissionRules {
 
     protected boolean isKta(long applicationId, UserResource user) {
         return checkProcessRole(user, applicationId, KNOWLEDGE_TRANSFER_ADVISER, processRoleRepository);
+    }
+
+    protected boolean hasProcessRole(long applicationId, UserResource user) {
+        return checkHasAnyProcessRole(user, applicationId, processRoleRepository);
     }
 }

@@ -33,10 +33,18 @@ IFS.core.finance = (function () {
           jQuery('[data-calculation-fields]:not([data-calculation-binded],[data-inactive-overhead-total])').each(function () {
             var element = jQuery(this)
             var fields = element.attr('data-calculation-fields')
+            var triggers = element.attr('data-calculation-triggers')
 
             jQuery(document).on('change updateFinances', fields, function () {
               IFS.core.finance.doMath(element, fields.split(','))
             })
+
+            if (triggers) {
+              // Listen for changes to listed trigger fields as well.
+              jQuery(document).on('change updateFinances', triggers, function () {
+                IFS.core.finance.doMath(element, fields.split(','))
+              })
+            }
             // we only want to bind a field once
             element.attr('data-calculation-binded', '')
           })
@@ -145,7 +153,13 @@ IFS.core.finance = (function () {
       return total
     },
     formatDecimalPercentage: function (total) {
-      total = total.toFixed(2)
+      if (parseFloat(total.toFixed(2)) === parseFloat(total.toFixed(0))) {
+        total = total.toFixed(0)
+      } else if (parseFloat(total.toFixed(2)) === parseFloat(total.toFixed(1))) {
+        total = total.toFixed(1)
+      } else {
+        total = total.toFixed(2)
+      }
       return total + '%'
     }
   }

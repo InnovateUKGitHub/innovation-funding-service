@@ -22,18 +22,18 @@ public class IdentitiesEndpoint_Creating_Test extends MockedIdentitiesEndpoint {
 
         final String uuid = "31a05805-c748-492d-a862-c047102516be";
         final String email = "email@email.com";
-        final String password = "P@55word";
+        final String password = "P@55word1357";
 
         setupSuccessfullyCreatedIdentity(uuid, password, email);
 
         mockMvc.perform(MockMvcRequestBuilders
 
             .post("/identities")
-            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .contentType(MediaType.APPLICATION_JSON)
             .content(convertToJson(new NewIdentity(email, password))))
 
             .andExpect(status().isCreated())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.uuid", is(equalTo(uuid))))
             .andExpect(jsonPath("$.email", is(equalTo(email))))
             .andExpect(header().string(HttpHeaders.LOCATION, is(equalTo("/identities/" + uuid))));

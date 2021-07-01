@@ -4,18 +4,22 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.controller.FileDownloadControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.financechecks.form.FinanceCheckSummaryForm;
 import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceCheckSummaryViewModel;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.spendprofile.SpendProfileService;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -54,7 +58,10 @@ public class FinanceCheckController {
     private FinanceCheckService financeCheckService;
 
     @Autowired
-    private ProjectFinanceService projectFinanceService;
+    private ProjectFinanceRestService projectFinanceRestService;
+
+    @Autowired
+    private CompetitionRestService competitionRestService;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
@@ -105,11 +112,18 @@ public class FinanceCheckController {
         FinanceCheckSummaryResource financeCheckSummaryResource = financeCheckService.getFinanceCheckSummary(projectId).getSuccess();
         ProjectResource project = projectService.getById(projectId);
 
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+        boolean hasSpendProfileStage = competitionResource.getProjectSetupStages()
+                .contains(ProjectSetupStage.SPEND_PROFILE);
+
         model.addAttribute("model", new ProjectFinanceCheckSummaryViewModel(financeCheckSummaryResource,
                 project.getProjectState().isActive(),
                 project.isCollaborativeProject(),
                 hasOrganisationSizeChanged(projectId),
-                userResource.hasRole(EXTERNAL_FINANCE)));
+                userResource.hasRole(EXTERNAL_FINANCE),
+                hasSpendProfileStage,
+                competitionResource.isSubsidyControl(),
+                userResource.hasAuthority(Authority.AUDITOR)));
         return "project/financecheck/summary";
     }
 
@@ -118,6 +132,6 @@ public class FinanceCheckController {
     }
 
     private boolean hasOrganisationSizeChanged(long projectId) {
-        return projectFinanceService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).getSuccess();
+        return projectFinanceRestService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).getSuccess();
     }
 }

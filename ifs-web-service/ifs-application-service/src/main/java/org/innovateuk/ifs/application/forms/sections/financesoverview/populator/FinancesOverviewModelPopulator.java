@@ -68,17 +68,22 @@ public class FinancesOverviewModelPopulator {
                 researchParticipationPercentage,
                 competition.getMaxResearchRatio(),
                 competition.getFundingType(),
-                getHint(application),
+                getHint(competition, application),
                 question.map(QuestionResource::getDescription).orElse(null),
                 applicationFinanceSummaryViewModelPopulator.populate(applicationId, user),
                 applicationFundingBreakdownViewModelPopulator.populate(applicationId, user)
         );
     }
 
-    private String getHint(ApplicationResource application) {
-        return application.isCollaborativeProject() ?
-                messageSource.getMessage("ifs.section.financesOverview.collaborative.description", null,
-                        Locale.getDefault()) :
-                messageSource.getMessage("ifs.section.financesOverview.description", null, Locale.getDefault());
+    private String getHint(CompetitionResource competition, ApplicationResource application) {
+
+        String message = "ifs.section.financesOverview.description";
+
+        if (competition.isKtp()) {
+            message = "ifs.section.financesOverview.ktp.description";
+        } else if (application.isCollaborativeProject()) {
+            message = "ifs.section.financesOverview.collaborative.description";
+        }
+        return messageSource.getMessage(message, null, Locale.getDefault());
     }
 }

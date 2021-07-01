@@ -8,6 +8,7 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
+import org.innovateuk.ifs.application.finance.populator.ApplicationProcurementMilestoneSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
@@ -17,25 +18,31 @@ import org.innovateuk.ifs.application.forms.academiccosts.viewmodel.AcademicCost
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator.YourProjectCostsViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
+import org.innovateuk.ifs.application.readonly.populator.TermsAndConditionsReadOnlyPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.overview.form.AssessmentOverviewForm;
-import org.innovateuk.ifs.assessment.overview.populator.*;
+import org.innovateuk.ifs.assessment.overview.populator.ApplicationYourProjectCostsFormPopulator;
+import org.innovateuk.ifs.assessment.overview.populator.AssessmentDetailedFinancesModelPopulator;
+import org.innovateuk.ifs.assessment.overview.populator.AssessmentFinancesSummaryModelPopulator;
+import org.innovateuk.ifs.assessment.overview.populator.AssessmentOverviewModelPopulator;
 import org.innovateuk.ifs.assessment.overview.viewmodel.*;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -59,11 +66,13 @@ import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.innovateuk.ifs.applicant.builder.ApplicantFormInputResourceBuilder.newApplicantFormInputResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
@@ -74,8 +83,8 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
@@ -85,8 +94,7 @@ import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -104,6 +112,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
     private QuestionResource questionBusinessOpportunity;
     private QuestionResource questionPotentialMarket;
     private FormInputResource potentialMarketFileEntryFormInput;
+    private QuestionResource termsAndConditionsQuestion;
     private CompetitionResource competition;
     private AssessmentResource assessment;
 
@@ -134,9 +143,8 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
     @InjectMocks
     private AssessmentDetailedFinancesModelPopulator assessmentDetailedFinancesModelPopulator;
 
-    @Spy
-    @InjectMocks
-    private AssessmentTermsAndConditionsModelPopulator assessmentTermsAndConditionsModelPopulator;
+    @Mock
+    private TermsAndConditionsReadOnlyPopulator termsAndConditionsReadOnlyPopulator;
 
     @Mock
     private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
@@ -155,6 +163,9 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
     @Mock
     private ApplicationAcademicCostFormPopulator applicationAcademicCostFormPopulator;
+
+    @Mock
+    private ApplicationProcurementMilestoneSummaryViewModelPopulator applicationProcurementMilestoneSummaryViewModelPopulator;
 
     @Override
     protected AssessmentOverviewController supplyControllerUnderTest() {
@@ -195,19 +206,26 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 .withAssessorMaximumScore(15)
                 .build();
 
-        List<QuestionResource> questions = asList(questionApplicationDetails, questionScope, questionBusinessOpportunity, questionPotentialMarket);
+        termsAndConditionsQuestion  = newQuestionResource()
+                .withQuestionSetupType(QuestionSetupType.TERMS_AND_CONDITIONS)
+                .build();
+
+        List<QuestionResource> questions = asList(questionApplicationDetails, questionScope, questionBusinessOpportunity, questionPotentialMarket, termsAndConditionsQuestion);
 
         @SuppressWarnings("unchecked") List<Long>[] questionIds = new List[] { asList(questionApplicationDetails.getId(), questionScope.getId()),
                 asList(questionBusinessOpportunity.getId(), questionPotentialMarket.getId()),
-                emptyList() };
+                emptyList(),
+                asList(termsAndConditionsQuestion.getId())};
 
         sections = newSectionResource()
-                .withName("Project details", "Application questions", "Finances")
+                .withName("Project details", "Application questions", "Finances", "Terms and conditions")
                 .withQuestions(questionIds)
+                .withType(SectionType.PROJECT_DETAILS, SectionType.APPLICATION_QUESTIONS, SectionType.FINANCES, SectionType.TERMS_AND_CONDITIONS)
                 .withAssessorGuidanceDescription("These do not need scoring.",
                         "Each question should be given a score.",
-                        "Each partner is required to submit their own finances.")
-                .build(3);
+                        "Each partner is required to submit their own finances.",
+                        "")
+                .build(4);
 
         potentialMarketFileEntryFormInput = newFormInputResource()
                 .build();
@@ -276,67 +294,95 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
     @Test
     public void getOverview() throws Exception {
+        AssessmentOverviewSectionViewModel expectedProjectDetailsSectionViewModel =new AssessmentOverviewSectionViewModel(sections.get(0).getId(),
+                "Project details",
+                "These do not need scoring.",
+                asList(
+                        new AssessmentOverviewQuestionViewModel(
+                                questionApplicationDetails.getId(),
+                                questionApplicationDetails.getShortName(),
+                                questionApplicationDetails.getQuestionNumber(),
+                                questionApplicationDetails.getAssessorMaximumScore(),
+                                false,
+                                false,
+                                null,
+                                null,
+                                false),
+                        new AssessmentOverviewQuestionViewModel(
+                                questionScope.getId(),
+                                questionScope.getShortName(),
+                                questionScope.getQuestionNumber(),
+                                questionScope.getAssessorMaximumScore(),
+                                true,
+                                false,
+                                TRUE,
+                                null,
+                                false)
+                ),
+                false,
+                false
+        );
+        AssessmentOverviewSectionViewModel expectedApplicationQuestionsSectionViewModel = new AssessmentOverviewSectionViewModel(sections.get(1).getId(),
+                "Application questions",
+                "Each question should be given a score.",
+                asList(
+                        new AssessmentOverviewQuestionViewModel(
+                                questionBusinessOpportunity.getId(),
+                                questionBusinessOpportunity.getShortName(),
+                                questionBusinessOpportunity.getQuestionNumber(),
+                                questionBusinessOpportunity.getAssessorMaximumScore(),
+                                true,
+                                true,
+                                null,
+                                "7",
+                                true),
+                        new AssessmentOverviewQuestionViewModel(
+                                questionPotentialMarket.getId(),
+                                questionPotentialMarket.getShortName(),
+                                questionPotentialMarket.getQuestionNumber(),
+                                questionPotentialMarket.getAssessorMaximumScore(),
+                                true,
+                                false,
+                                null,
+                                null,
+                                true)
+                ),
+                false,
+                false
+        );
+
+        AssessmentOverviewSectionViewModel expectedFinancesSectionViewModel = new AssessmentOverviewSectionViewModel((sections.get(2).getId()),
+                "Finances",
+                "Each partner is required to submit their own finances.",
+                emptyList(),
+                true,
+                false
+        );
+
+        AssessmentOverviewSectionViewModel termsAndConditionsOverview = new AssessmentOverviewSectionViewModel((sections.get(3).getId()),
+                "Terms and conditions",
+                "",
+                asList( new AssessmentOverviewQuestionViewModel(
+                        termsAndConditionsQuestion.getId(),
+                        termsAndConditionsQuestion.getShortName(),
+                        termsAndConditionsQuestion.getQuestionNumber(),
+                        termsAndConditionsQuestion.getAssessorMaximumScore(),
+                        false,
+                        false,
+                        null,
+                        null,
+                        false)
+                ),
+                false,
+                true
+        );
 
         List<AssessmentOverviewSectionViewModel> expectedSections = asList(
-                new AssessmentOverviewSectionViewModel(sections.get(0).getId(),
-                        "Project details",
-                        "These do not need scoring.",
-                        asList(
-                                new AssessmentOverviewQuestionViewModel(
-                                        questionApplicationDetails.getId(),
-                                        questionApplicationDetails.getShortName(),
-                                        questionApplicationDetails.getQuestionNumber(),
-                                        questionApplicationDetails.getAssessorMaximumScore(),
-                                        false,
-                                        false,
-                                        null,
-                                        null),
-                                new AssessmentOverviewQuestionViewModel(
-                                        questionScope.getId(),
-                                        questionScope.getShortName(),
-                                        questionScope.getQuestionNumber(),
-                                        questionScope.getAssessorMaximumScore(),
-                                        true,
-                                        false,
-                                        TRUE,
-                                        null)
-                        ),
-                        false,
-                        false
-                ),
-                new AssessmentOverviewSectionViewModel(sections.get(1).getId(),
-                        "Application questions",
-                        "Each question should be given a score.",
-                        asList(
-                                new AssessmentOverviewQuestionViewModel(
-                                        questionBusinessOpportunity.getId(),
-                                        questionBusinessOpportunity.getShortName(),
-                                        questionBusinessOpportunity.getQuestionNumber(),
-                                        questionBusinessOpportunity.getAssessorMaximumScore(),
-                                        true,
-                                        true,
-                                        null,
-                                        "7"),
-                                new AssessmentOverviewQuestionViewModel(
-                                        questionPotentialMarket.getId(),
-                                        questionPotentialMarket.getShortName(),
-                                        questionPotentialMarket.getQuestionNumber(),
-                                        questionPotentialMarket.getAssessorMaximumScore(),
-                                        true,
-                                        false,
-                                        null,
-                                        null)
-                        ),
-                        false,
-                        false
-                ),
-                new AssessmentOverviewSectionViewModel((sections.get(2).getId()),
-                        "Finances",
-                        "Each partner is required to submit their own finances.",
-                        emptyList(),
-                        true,
-                        false
-                )
+                expectedProjectDetailsSectionViewModel,
+                expectedApplicationQuestionsSectionViewModel,
+                expectedFinancesSectionViewModel,
+                termsAndConditionsOverview
+
         );
 
         List<AssessmentOverviewAppendixViewModel> expectedAppendices = singletonList(
@@ -358,14 +404,24 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 3L,
                 expectedSections,
                 expectedAppendices,
-                null
+                "Award terms and conditions",
+                emptyList(),
+                false
         );
+
+        ApplicationResource application = newApplicationResource().build();
+        when(applicationRestService.getApplicationById(assessment.getApplication())).thenReturn(restSuccess(application));
+        when(termsAndConditionsReadOnlyPopulator.getPartners(application, competition, termsAndConditionsQuestion)).thenReturn(emptyList());
 
         mockMvc.perform(get("/" + assessment.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("assessment/application-overview"));
+
+        assertThat(expectedApplicationQuestionsSectionViewModel.getMaximumScore(), equalTo(25));
+        assertThat(expectedApplicationQuestionsSectionViewModel.getScore(), equalTo(7));
+        assertThat(expectedApplicationQuestionsSectionViewModel.getScorePercentage(), equalTo(28));
 
         InOrder inOrder = inOrder(assessmentService, competitionRestService, sectionRestService, questionRestService,
                 formInputRestService, assessorFormInputResponseRestService, formInputResponseRestService);
@@ -381,7 +437,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
     @Test
     public void getFinancesSummary() throws Exception {
-        setupCompetition();
+        setupCompetition(GRANT, AssessorFinanceView.OVERVIEW);
         setupApplicationWithRoles();
 
         ZonedDateTime now = ZonedDateTime.now();
@@ -390,6 +446,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 .withAssessorAcceptsDate(now.minusDays(2))
                 .withAssessorDeadlineDate(now.plusDays(4))
                 .withFundingType(GRANT)
+                .withProcurementMilestones(false)
                 .build();
 
         competitionResource.setFinanceRowTypes(asList(FinanceRowType.values()));
@@ -407,13 +464,15 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
-        when(userRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(asList(assessorRole)));
+        when(processRoleRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(asList(assessorRole)));
         when(organisationService.getApplicationLeadOrganisation(asList(assessorRole))).thenReturn(Optional.ofNullable(newOrganisationResource().build()));
 
         ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel = mock(ApplicationFinanceSummaryViewModel.class);
         when(applicationFinanceSummaryViewModelPopulator.populate(applicationResource.getId(), getLoggedInUser())).thenReturn(applicationFinanceSummaryViewModel);
         ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = mock(ApplicationFundingBreakdownViewModel.class);
         when(applicationFundingBreakdownViewModelPopulator.populate(applicationResource.getId(), getLoggedInUser())).thenReturn(applicationFundingBreakdownViewModel);
+        when(applicationRestService.getApplicationById(assessment.getApplication())).thenReturn(RestResult.restSuccess(applicationResource));
+
         AssessmentFinancesSummaryViewModel expectedViewModel = new AssessmentFinancesSummaryViewModel(
                 assessmentResource.getId(),
                 applicationResource.getId(),
@@ -422,7 +481,9 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 50,
                 GRANT,
                 applicationFinanceSummaryViewModel,
-                applicationFundingBreakdownViewModel);
+                applicationFundingBreakdownViewModel,
+                null,
+                false);
 
         mockMvc.perform(get("/{assessmentId}/finances", assessmentResource.getId()))
                 .andExpect(status().isOk())
@@ -432,7 +493,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
     @Test
     public void getDetailedFinancesBusiness() throws Exception {
-        setupCompetition();
+        setupCompetition(GRANT, AssessorFinanceView.OVERVIEW);
         setupApplicationWithRoles();
         ApplicationResource applicationResource = applications.get(0);
         AssessmentResource assessmentResource = setUpAssessmentResource(applicationResource.getId());
@@ -464,11 +525,62 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(assessmentRestService.getByUserAndApplication(getLoggedInUser().getId(), applicationResource.getId())).thenReturn(restSuccess(singletonList(assessmentResource)));
-        when(userRestService.findProcessRole(assessmentResource.getApplication())).thenReturn(restSuccess(application1ProcessRoles));
+        when(processRoleRestService.findProcessRole(assessmentResource.getApplication())).thenReturn(restSuccess(application1ProcessRoles));
         when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(Arrays.asList(sectionResources.get(7)));
         when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
         YourProjectCostsViewModel viewModel = mock(YourProjectCostsViewModel.class);
-        when(yourProjectCostsViewModelPopulator.populate(applicationResource.getId(), sectionResources.get(7).getId(), organisations.get(0).getId(), true)).thenReturn(viewModel);
+        when(yourProjectCostsViewModelPopulator.populate(applicationResource.getId(), sectionResources.get(7).getId(), organisations.get(0).getId(), getLoggedInUser())).thenReturn(viewModel);
+        when(yourProjectCostsFormPopulator.populateForm(applicationResource.getId(), organisations.get(0).getId())).thenReturn(new YourProjectCostsForm());
+        when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(applicationResource));
+
+        MvcResult result = mockMvc.perform(get("/application/{applicationId}/detailed-finances/organisation/{organisationId}", applicationResource.getId(), organisation.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("costsViewModel", viewModel))
+                .andExpect(model().attribute("form", instanceOf(YourProjectCostsForm.class)))
+                .andExpect(view().name("assessment/application-detailed-finances"))
+                .andReturn();
+
+    }
+
+    @Test
+    public void getAllFinancesKtp() throws Exception {
+        setupCompetition(KTP, AssessorFinanceView.ALL);
+        setupApplicationWithRoles();
+        ApplicationResource applicationResource = applications.get(0);
+        AssessmentResource assessmentResource = setUpAssessmentResource(applicationResource.getId());
+
+        SortedSet<OrganisationResource> orgSet = setupOrganisations();
+        OrganisationResource organisation = orgSet.first();
+
+        ApplicantResource applicant = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(organisations.get(0)).build();
+        QuestionResource costQuestion = newQuestionResource().withType(QuestionType.COST).build();
+        ApplicantSectionResource costSection = newApplicantSectionResource()
+                .withApplicantQuestions(newApplicantQuestionResource().withQuestion(costQuestion).build(1))
+                .build();
+
+        ApplicantSectionResource section = newApplicantSectionResource()
+                .withApplication(applicationResource)
+                .withCompetition(competitionResource)
+                .withCurrentApplicant(applicant)
+                .withApplicants(asList(applicant))
+                .withSection(newSectionResource()
+                        .withType(SectionType.FINANCE).build())
+                .withApplicantQuestions(
+                        newApplicantQuestionResource()
+                                .withQuestion(newQuestionResource()
+                                        .withType(QuestionType.GENERAL).build())
+                                .build(1))
+                .withApplicantChildrenSections(asList(costSection))
+                .withCurrentUser(loggedInUser)
+                .build();
+
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
+        when(assessmentRestService.getByUserAndApplication(getLoggedInUser().getId(), applicationResource.getId())).thenReturn(restSuccess(singletonList(assessmentResource)));
+        when(processRoleRestService.findProcessRole(assessmentResource.getApplication())).thenReturn(restSuccess(application1ProcessRoles));
+        when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(Arrays.asList(sectionResources.get(7)));
+        when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
+        YourProjectCostsViewModel viewModel = mock(YourProjectCostsViewModel.class);
+        when(yourProjectCostsViewModelPopulator.populate(applicationResource.getId(), sectionResources.get(7).getId(), organisations.get(0).getId(), getLoggedInUser())).thenReturn(viewModel);
         when(yourProjectCostsFormPopulator.populateForm(applicationResource.getId(), organisations.get(0).getId())).thenReturn(new YourProjectCostsForm());
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(applicationResource));
 
@@ -483,7 +595,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
     @Test
     public void getDetailedFinancesAcademic() throws Exception {
-        setupCompetition();
+        setupCompetition(GRANT, AssessorFinanceView.OVERVIEW);
         setupApplicationWithRoles();
         ApplicationResource applicationResource = applications.get(0);
         AssessmentResource assessmentResource = setUpAssessmentResource(applicationResource.getId());
@@ -525,11 +637,11 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(assessmentRestService.getByUserAndApplication(getLoggedInUser().getId(), applicationResource.getId())).thenReturn(restSuccess(singletonList(assessmentResource)));
-        when(userRestService.findProcessRole(assessmentResource.getApplication())).thenReturn(restSuccess(application1ProcessRoles));
+        when(processRoleRestService.findProcessRole(assessmentResource.getApplication())).thenReturn(restSuccess(application1ProcessRoles));
         when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(Arrays.asList(sectionResources.get(7)));
         when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
         AcademicCostViewModel viewModel = mock(AcademicCostViewModel.class);
-        when(academicCostViewModelPopulator.populate(organisations.get(0).getId(), applicationResource.getId(), sectionResources.get(7).getId(), false)).thenReturn(viewModel);
+        when(academicCostViewModelPopulator.populate(organisations.get(0).getId(), applicationResource.getId(), sectionResources.get(7).getId(), getLoggedInUser())).thenReturn(viewModel);
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(applicationResource));
         when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisations.get(1)));
 
@@ -576,6 +688,10 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
         when(assessmentService.getRejectableById(assessment.getId())).thenReturn(assessment);
 
+        ApplicationResource application = newApplicationResource().build();
+        when(applicationRestService.getApplicationById(assessment.getApplication())).thenReturn(restSuccess(application));
+        when(termsAndConditionsReadOnlyPopulator.getPartners(application, competition, termsAndConditionsQuestion)).thenReturn(emptyList());
+
         AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
         expectedForm.setRejectComment(comment);
 
@@ -616,6 +732,10 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         String comment = RandomStringUtils.random(5001);
 
         when(assessmentService.getRejectableById(assessment.getId())).thenReturn(assessment);
+
+        ApplicationResource application = newApplicationResource().build();
+        when(applicationRestService.getApplicationById(assessment.getApplication())).thenReturn(restSuccess(application));
+        when(termsAndConditionsReadOnlyPopulator.getPartners(application, competition, termsAndConditionsQuestion)).thenReturn(emptyList());
 
         AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
         expectedForm.setRejectReason(reason);
@@ -660,6 +780,10 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
         when(assessmentService.getRejectableById(assessment.getId())).thenReturn(assessment);
 
+        ApplicationResource application = newApplicationResource().build();
+        when(applicationRestService.getApplicationById(assessment.getApplication())).thenReturn(restSuccess(application));
+        when(termsAndConditionsReadOnlyPopulator.getPartners(application, competition, termsAndConditionsQuestion)).thenReturn(emptyList());
+
         AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
         expectedForm.setRejectReason(reason);
         expectedForm.setRejectComment(comment);
@@ -703,6 +827,10 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
         when(assessmentService.getRejectableById(assessment.getId())).thenReturn(assessment);
         when(assessmentService.rejectInvitation(assessment.getId(), reason, comment)).thenReturn(serviceFailure(ASSESSMENT_REJECTION_FAILED));
+
+        ApplicationResource application = newApplicationResource().build();
+        when(applicationRestService.getApplicationById(assessment.getApplication())).thenReturn(restSuccess(application));
+        when(termsAndConditionsReadOnlyPopulator.getPartners(application, competition, termsAndConditionsQuestion)).thenReturn(emptyList());
 
         AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
         expectedForm.setRejectReason(reason);
@@ -755,7 +883,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, assessorRole.getId(), fileEntryId);
 
 
-        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(asList(assessorRole)));
+        when(processRoleRestService.findProcessRole(applicationId)).thenReturn(restSuccess(asList(assessorRole)));
         when(formInputResponseRestService.getFile(formInputId,
                 applicationId,
                 assessorRole.getId(),
@@ -775,51 +903,9 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 .andExpect(header().string("Content-Type", "text/hello"))
                 .andExpect(header().longValue("Content-Length", "The returned file data".length()));
 
-        verify(userRestService).findProcessRole(applicationId);
+        verify(processRoleRestService).findProcessRole(applicationId);
         verify(formInputResponseRestService).getFile(formInputId, applicationId, assessorRole.getId(), fileEntryId);
         verify(formInputResponseRestService).getFileDetails(formInputId, applicationId, assessorRole.getId(), fileEntryId);
-    }
-
-    @Test
-    public void getTermsAndConditions() throws Exception {
-        setupCompetition();
-        setupApplicationWithRoles();
-
-        GrantTermsAndConditionsResource grantTermsAndConditions = newGrantTermsAndConditionsResource()
-                .withTemplate("terms-and-conditions-template")
-                .build();
-
-        competition.setTermsAndConditions(grantTermsAndConditions);
-
-        ApplicationResource applicationResource = applications.get(0);
-
-        AssessmentResource assessmentResource = newAssessmentResource()
-                .withApplication(applicationResource.getId())
-                .withApplicationName("Application name")
-                .withCompetition(competitionResource.getId())
-                .withCollaborativeProject(true)
-                .build();
-
-        AssessmentTermsAndConditionsViewModel expectedViewModel =
-                new AssessmentTermsAndConditionsViewModel(
-                        assessmentResource.getId(),
-                        grantTermsAndConditions.getTemplate(),
-                        3,
-                        50,
-                        competitionId);
-
-        when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
-        when(competitionRestService.getCompetitionById(assessmentResource.getCompetition())).thenReturn(restSuccess(competition));
-
-        mockMvc.perform(get("/{assessmentId}/terms-and-conditions", assessmentResource.getId()))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("assessment/application-terms-and-conditions"));
-
-        InOrder inOrder = inOrder(assessmentService, competitionRestService);
-        inOrder.verify(assessmentService).getById(assessmentResource.getId());
-        inOrder.verify(competitionRestService).getCompetitionById(assessmentResource.getCompetition());
-        inOrder.verifyNoMoreInteractions();
     }
 
 

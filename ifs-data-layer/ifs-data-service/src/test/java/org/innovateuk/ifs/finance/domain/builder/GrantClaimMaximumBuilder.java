@@ -3,6 +3,7 @@ package org.innovateuk.ifs.finance.domain.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
@@ -38,18 +39,22 @@ public class GrantClaimMaximumBuilder extends BaseBuilder<GrantClaimMaximum, Gra
     }
 
     public GrantClaimMaximumBuilder withCompetitions(List<Competition>... competitions) {
-        return withArraySetFieldByReflection("competitions", competitions);
+        return withArray((value, max) -> max.setCompetitions(value), competitions);
     }
 
     public GrantClaimMaximumBuilder withResearchCategory(ResearchCategory... researchCategory) {
-        return withArraySetFieldByReflection("researchCategory", researchCategory);
+        return withArray((value, max) -> max.setResearchCategory(value), researchCategory);
     }
 
     public GrantClaimMaximumBuilder withSize(OrganisationSize... size) {
-        return withArraySetFieldByReflection("size", size);
+        return withArray((value, max) -> max.setOrganisationSize(value), size);
     }
 
     public GrantClaimMaximumBuilder withMaximum(Integer... maximum) {
-        return withArraySetFieldByReflection("maximum", maximum);
+        return withArray((value, max) -> max.setMaximum(value), maximum);
+    }
+
+    public GrantClaimMaximumBuilder withFundingRules(FundingRules... rules) {
+        return withArray((value, max) -> max.setFundingRules(value), rules);
     }
 }

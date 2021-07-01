@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.validation;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.NotSecured;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -35,4 +34,7 @@ public interface ApplicationValidatorService {
 
     @NotSecured(value = "This service is used to validate existing data", mustBeSecuredByOtherServices = false)
     Boolean isFinanceOverviewComplete(Application application);
+
+    @NotSecured(value = "This service is used to validate existing data", mustBeSecuredByOtherServices = false)
+    ValidationMessages validateFECCertificateUpload(Application application, Long markedAsCompleteById);
 }

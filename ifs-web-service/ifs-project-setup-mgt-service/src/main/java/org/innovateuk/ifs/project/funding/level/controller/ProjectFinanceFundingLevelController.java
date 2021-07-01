@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.funding.level.controller;
 
+import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.IndirectCostsUtil;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -7,7 +8,10 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
+import org.innovateuk.ifs.finance.resource.cost.IndirectCost;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -23,7 +27,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -76,8 +79,7 @@ public class ProjectFinanceFundingLevelController {
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     @PathVariable long projectId,
-                                    Model model,
-                                    RedirectAttributes redirectAttributes) {
+                                    Model model) {
         List<ProjectFinanceResource> finances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
         Supplier<String> failureView = () -> viewFunding(projectId, finances, model);
 
@@ -90,10 +92,9 @@ public class ProjectFinanceFundingLevelController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saveFundingLevels(finances, form));
-            return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                redirectAttributes.addFlashAttribute("showFundingLevelMessage", true);
-                return format("redirect:/project/%d/finance-check-overview", projectId);
-            });
+            return validationHandler.failNowOrSucceedWith(failureView, () ->
+                format("redirect:/project/%d/finance-check-overview?showFundingLevelMessage=true", projectId)
+            );
         });
     }
 
@@ -120,8 +121,31 @@ public class ProjectFinanceFundingLevelController {
             GrantClaimPercentage grantClaim = (GrantClaimPercentage) finance.getGrantClaim();
             grantClaim.setPercentage(fundingLevel);
             messages.addAll(financeRowRestService.update(grantClaim).getSuccess());
+
+            boolean isKtpWithNonFecModel = finance.getFecModelEnabled() != null &&
+                    !finance.getFecModelEnabled() &&
+                    competitionRestService.getCompetitionById(
+                            projectRestService.getProjectById(finance.getProject()).getSuccess()
+                                    .getCompetition()).getSuccess().isKtp();
+
+            if (isKtpWithNonFecModel) {
+                IndirectCost indirectCost = recalculateIndirectCostsFollowingGrantClaimUpdate(finance);
+                messages.addAll(financeRowRestService.update(indirectCost).getSuccess());
+            }
         });
         return messages;
+    }
+
+    private IndirectCost recalculateIndirectCostsFollowingGrantClaimUpdate(ProjectFinanceResource finance) {
+        DefaultCostCategory defaultCostCategory2 = (DefaultCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.INDIRECT_COSTS);
+        IndirectCost indirectCost = (IndirectCost) defaultCostCategory2.getCosts().stream()
+                .filter(costRowItem -> costRowItem.getCostType() == FinanceRowType.INDIRECT_COSTS)
+                .findFirst()
+                .orElseGet(() -> financeRowRestService.create(new IndirectCost(finance.getId())).getSuccess());
+
+        BigDecimal cost = IndirectCostsUtil.calculateIndirectCost(finance);
+        indirectCost.setCost(cost.toBigIntegerExact());
+        return indirectCost;
     }
 
     private void validateMaximumFundingLevels(BindingResult bindingResult, List<ProjectFinanceResource> finances, ProjectFinanceFundingLevelForm form) {

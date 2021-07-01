@@ -30,8 +30,7 @@ import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStake
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
-import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -46,6 +45,7 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     private UserResource innovationLeadUserResourceOnProject1;
     private UserResource stakeholderUserResourceOnCompetition;
     private UserResource competitionFinanceUserResourceOnCompetition;
+    private UserResource auditorUser;
     private Competition competition;
 
     @Mock
@@ -57,15 +57,18 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     @Before
     public void setup() {
         User innovationLeadUserOnProject1 = newUser().withRoles(singleton(Role.INNOVATION_LEAD)).build();
-        innovationLeadUserResourceOnProject1 = newUserResource().withId(innovationLeadUserOnProject1.getId()).withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
+        innovationLeadUserResourceOnProject1 = newUserResource().withId(innovationLeadUserOnProject1.getId()).withRoleGlobal(Role.INNOVATION_LEAD).build();
         InnovationLead innovationLead = newInnovationLead().withUser(innovationLeadUserOnProject1).build();
 
         User stakeholderUserOnCompetition = newUser().withRoles(singleton(STAKEHOLDER)).build();
-        stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRolesGlobal(singletonList(STAKEHOLDER)).build();
+        stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRoleGlobal(STAKEHOLDER).build();
         Stakeholder stakeholder = newStakeholder().withUser(stakeholderUserOnCompetition).build();
 
         User competitionFinanceUserOnCompetition = newUser().withRoles(singleton(EXTERNAL_FINANCE)).build();
         competitionFinanceUserResourceOnCompetition = newUserResource().withId(competitionFinanceUserOnCompetition.getId()).withRoleGlobal(EXTERNAL_FINANCE).build();
+
+        User auditor = newUser().withRoles(singleton(AUDITOR)).build();
+        auditorUser = newUserResource().withId(auditor.getId()).withRoleGlobal(AUDITOR).build();
 
         competition = newCompetition().withLeadTechnologist(innovationLeadUserOnProject1).build();
         competitionResource = newCompetitionResource().withId(competition.getId()).build();
@@ -223,5 +226,20 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
 
         assertTrue(rules.assignedCompetitionFinanceUsersCanViewProjectStatus(projectResource1, competitionFinanceUserResourceOnCompetition));
         assertFalse(rules.assignedCompetitionFinanceUsersCanViewProjectStatus(projectResource1, competitionFinanceUser()));
+    }
+
+    @Test
+    public void auditorCanViewProjectStatus() {
+        assertTrue(rules.assignedAuditorCanViewProjectStatus(projectResource1, auditorUser));
+    }
+
+    @Test
+    public void auditorCanViewCompetitionStatus() {
+        assertTrue(rules.assignedAuditorCanViewCompetitionStatus(competitionResource, auditorUser));
+    }
+
+    @Test
+    public void auditorCanViewTeamStatus() {
+        assertTrue(rules.auditorCanViewTeamStatus(projectResource1, auditorUser));
     }
 }

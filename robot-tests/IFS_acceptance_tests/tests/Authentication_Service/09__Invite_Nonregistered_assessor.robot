@@ -94,7 +94,7 @@ the user should not see the error messages after entering valid values
     the user should not see the validation error in the create assessor form     ${enter_a_phone_number_between_8_and_20_digits}
     the user enters text to a text field                                         id = password    ${correct_password}
     the user should not see the validation error in the create assessor form     Please enter your password.
-    the user should not see the validation error in the create assessor form     Password must be at least 8 characters.
+    the user should not see the validation error in the create assessor form     Password must be at least 12 characters.
 
 the comp admin logs in and navigate to invite tab
     [Arguments]  ${competition_name}

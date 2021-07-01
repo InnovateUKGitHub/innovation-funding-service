@@ -15,10 +15,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
+import javax.validation.Validator;
+
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.RoleInviteResourceBuilder.newRoleInviteResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -35,6 +36,9 @@ public class ExternalUserRegistrationControllerTest extends BaseControllerMockMV
 
     @Mock
     private UserRestService userRestService;
+
+    @Mock
+    private Validator validator;
 
     @Override
     protected ExternalUserRegistrationController supplyControllerUnderTest() {
@@ -62,6 +66,7 @@ public class ExternalUserRegistrationControllerTest extends BaseControllerMockMV
         assertTrue(viewModel.isPhoneRequired());
         assertTrue(viewModel.isTermsRequired());
         assertTrue(viewModel.isAddressRequired());
+        assertFalse(viewModel.isShowBackLink());
     }
 
     @Test
@@ -76,7 +81,7 @@ public class ExternalUserRegistrationControllerTest extends BaseControllerMockMV
         registrationForm.setEmail("blah@gmail.com");
         registrationForm.setFirstName("Bob");
         registrationForm.setLastName("Person");
-        registrationForm.setPassword("password");
+        registrationForm.setPassword("password1357");
         registrationForm.setPhoneNumber("123123123123");
         registrationForm.setTermsAndConditions("1");
         when(userRestService.createUser(refEq(registrationForm.constructUserCreationResource()

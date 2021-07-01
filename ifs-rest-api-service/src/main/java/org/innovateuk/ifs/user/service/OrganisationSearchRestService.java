@@ -6,11 +6,11 @@ import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import java.util.List;
 
 public interface OrganisationSearchRestService {
-    RestResult<List<OrganisationSearchResult>> searchOrganisation(Long organisationTypeId, String organisationSearchText);
+    RestResult<List<OrganisationSearchResult>> searchOrganisation(Long organisationTypeId, String organisationSearchText, int indexPos);
 
     RestResult<OrganisationSearchResult> getOrganisation(Long organisationTypeId, String searchOrganisationId);
 
-    RestResult<List<OrganisationSearchResult>> searchOrganisation(Enum<?> organisationType, String organisationSearchText);
+    RestResult<List<OrganisationSearchResult>> searchOrganisation(Enum<?> organisationType, String organisationSearchText, int indexPos);
 
     RestResult<OrganisationSearchResult> getOrganisation(Enum<?> organisationType, String searchOrganisationId);
 }

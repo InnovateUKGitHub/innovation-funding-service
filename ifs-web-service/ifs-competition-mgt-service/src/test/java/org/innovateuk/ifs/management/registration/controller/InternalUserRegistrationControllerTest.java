@@ -45,7 +45,7 @@ public class InternalUserRegistrationControllerTest  extends BaseControllerMockM
         setLoggedInUser(null);
 
         when(inviteUserRestServiceMock.getInvite("hash")).thenReturn(restSuccess(newRoleInviteResource().build()));
-        RegistrationViewModel viewModel = aRegistrationViewModel().withPhoneRequired(false).withTermsRequired(false).withInvitee(true).build();
+        RegistrationViewModel viewModel = aRegistrationViewModel().withPhoneRequired(false).withTermsRequired(false).withInvitee(true).withShowBackLink(false).build();
         mockMvc.perform(get(URL_PREFIX + "/hash/register"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("registration/register"))
@@ -58,7 +58,7 @@ public class InternalUserRegistrationControllerTest  extends BaseControllerMockM
         RegistrationForm registrationForm = new RegistrationForm();
         registrationForm.setFirstName("Arden");
         registrationForm.setLastName("Pimenta");
-        registrationForm.setPassword("Passw0rd");
+        registrationForm.setPassword("Passw0rd1357");
         registrationForm.setEmail("arden.piment@innovateuk.test");
 
         when(internalUserServiceMock.createInternalUser(eq("hash"), refEq(registrationForm))).thenReturn(serviceSuccess());

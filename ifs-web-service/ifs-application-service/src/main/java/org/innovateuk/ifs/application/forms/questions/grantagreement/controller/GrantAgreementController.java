@@ -10,7 +10,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.granttransfer.service.EuGrantTransferRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,13 +39,13 @@ public class GrantAgreementController {
 
     private QuestionStatusRestService questionStatusRestService;
 
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
-    public GrantAgreementController(GrantAgreementViewModelPopulator grantAgreementViewModelPopulator, EuGrantTransferRestService euGrantTransferRestService, QuestionStatusRestService questionStatusRestService, UserRestService userRestService) {
+    public GrantAgreementController(GrantAgreementViewModelPopulator grantAgreementViewModelPopulator, EuGrantTransferRestService euGrantTransferRestService, QuestionStatusRestService questionStatusRestService, ProcessRoleRestService processRoleRestService) {
         this.grantAgreementViewModelPopulator = grantAgreementViewModelPopulator;
         this.euGrantTransferRestService = euGrantTransferRestService;
         this.questionStatusRestService = questionStatusRestService;
-        this.userRestService = userRestService;
+        this.processRoleRestService = processRoleRestService;
     }
 
     @GetMapping
@@ -75,7 +75,7 @@ public class GrantAgreementController {
             bindingResult.rejectValue("grantAgreement", "validation.field.must.not.be.blank");
             return viewGrantAgreement(form, bindingResult, model, applicationId, questionId, user);
         }
-        ProcessRoleResource role = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+        ProcessRoleResource role = processRoleRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         questionStatusRestService.markAsComplete(questionId, applicationId, role.getId()).getSuccess();
         return String.format("redirect:/application/%d/form/question/%d/grant-agreement", applicationId, questionId);
     }
@@ -87,7 +87,7 @@ public class GrantAgreementController {
                                  @PathVariable long applicationId,
                                  @PathVariable long questionId,
                                  UserResource user) {
-        ProcessRoleResource role = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+        ProcessRoleResource role = processRoleRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         questionStatusRestService.markAsInComplete(questionId, applicationId, role.getId()).getSuccess();
         return viewGrantAgreement(form, bindingResult, model, applicationId, questionId, user);
     }

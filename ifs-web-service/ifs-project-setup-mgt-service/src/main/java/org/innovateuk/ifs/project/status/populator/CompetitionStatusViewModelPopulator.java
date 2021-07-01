@@ -10,13 +10,12 @@ import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusPageResource;
 import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-
-import static org.innovateuk.ifs.user.resource.Role.*;
 
 /**
  * This class represents a populated CompetitionStatusViewModel.
@@ -46,7 +45,7 @@ public class CompetitionStatusViewModelPopulator {
     public CompetitionStatusViewModel populate(UserResource user, Long competitionId, String applicationSearchString, int page) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        final boolean hasProjectFinanceRole = user.hasRole(PROJECT_FINANCE);
+        final boolean hasProjectFinanceRole = user.hasAuthority(Authority.PROJECT_FINANCE);
         long openQueryCount = hasProjectFinanceRole ? competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccess() : 0L;
         long pendingSpendProfilesCount = hasProjectFinanceRole ? competitionPostSubmissionRestService.countPendingSpendProfiles(competitionId).getSuccess() : 0;
         ProjectStatusPageResource projectStatusResources = statusRestService.getCompetitionStatus(competitionId, StringUtils.trim(applicationSearchString), page).getSuccess();
@@ -60,8 +59,8 @@ public class CompetitionStatusViewModelPopulator {
                 applicationSearchString,
                 internalProjectSetupRows,
                 new PaginationViewModel(projectStatusResources),
-                user.hasRole(EXTERNAL_FINANCE),
-                user.hasRole(IFS_ADMINISTRATOR));
+                user.hasAuthority(Authority.EXTERNAL_FINANCE),
+                user.hasAuthority(Authority.IFS_ADMINISTRATOR));
     }
 
 }

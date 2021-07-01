@@ -12,7 +12,7 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Back to view user details',linkUrl=@{/admin/user/{userId}/active(userId=${model.userId})},dynamicBackLink=${true}"/>
+              th:with="linkTitle='Back to invite a new external role',linkUrl=@{/admin/user/{userId}/select(userId=${model.userId})},dynamicBackLink=${true}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -25,7 +25,7 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Add a new external role profile',size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${(model.role == T(org.innovateuk.ifs.user.resource.Role).SUPPORTER) ? 'Confirm role profile' : 'Add a new external role profile'},size='govuk-heading-xl'" />
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               method="POST"
@@ -52,8 +52,26 @@
 
             <dl class="govuk-list">
                 <dt>Role profile</dt>
-                <dd>Knowledge transfer adviser</dd>
+                <dd th:text="${model.role.displayName}">Role</dd>
+                <input type="hidden" th:value="${model.role}" th:field="*{role}"/>
             </dl>
+
+            <div th:if="${model.role == T(org.innovateuk.ifs.user.resource.Role).SUPPORTER}" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisation}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="organisation">
+                    Organisation
+                </label>
+                <th:block th:if="${#fields.hasErrors('organisation')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('organisation')}" th:text="${err}"></span>
+                </th:block>
+                <input id="organisation"
+                       class="govuk-input govuk-!-width-one-third"
+                       type="text"
+                       th:errorclass="govuk-input--error"
+                       th:field="*{organisation}"
+                       maxlength="256"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.invite.organisation.required}" />
+            </div>
 
             <p class="govuk-body govuk-!-margin-top-6">
                 <button class="govuk-button" type="submit">Confirm role profile</button>

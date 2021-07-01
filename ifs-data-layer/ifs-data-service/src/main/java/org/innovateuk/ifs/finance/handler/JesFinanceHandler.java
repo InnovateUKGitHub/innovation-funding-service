@@ -3,6 +3,7 @@ package org.innovateuk.ifs.finance.handler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.finance.domain.Finance;
 import org.innovateuk.ifs.finance.handler.item.*;
 import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -15,8 +16,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_FUNDING;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 
 @Component
 public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implements OrganisationTypeFinanceHandler {
@@ -36,11 +36,11 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
 
     @Override
     protected boolean initialiseCostTypeSupported(FinanceRowType costType) {
-        return asList(FINANCE, OTHER_FUNDING).contains(costType);
+        return asList(FINANCE, GRANT_CLAIM_AMOUNT, OTHER_FUNDING).contains(costType);
     }
 
     @Override
-    protected Map<FinanceRowType, FinanceRowCostCategory> createCostCategories(Competition competition) {
+    protected Map<FinanceRowType, FinanceRowCostCategory> createCostCategories(Competition competition, Finance finance) {
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = new EnumMap<>(FinanceRowType.class);
 
         for (FinanceRowType costType : competition.getFinanceRowTypes()) {
@@ -69,7 +69,7 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
 
     @Override
     public FinanceRowHandler getCostHandler(FinanceRowType costType) {
-        FinanceRowHandler handler = null;
+        FinanceRowHandler handler;
         switch (costType) {
             case LABOUR:
             case CAPITAL_USAGE:
@@ -90,6 +90,8 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
             case GRANT_CLAIM_AMOUNT:
                 handler = grantClaimAmountHandler;
                 break;
+            default:
+                handler = null;
         }
         if (handler != null) {
             return handler;

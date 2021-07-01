@@ -19,6 +19,8 @@ public class UpcomingCompetitionViewModel {
     private ZonedDateTime assessmentPeriodDateTo;
     private ZonedDateTime assessorBriefingDate;
     private BigDecimal assessorPay;
+    private boolean ktpCompetition;
+    private boolean alwaysOpenCompetition;
 
     public UpcomingCompetitionViewModel(CompetitionResource competitionResource, CompetitionAssessmentConfigResource competitionAssessmentConfigResource) {
         this.competitionId = competitionResource.getId();
@@ -27,6 +29,8 @@ public class UpcomingCompetitionViewModel {
         this.assessmentPeriodDateTo = competitionResource.getAssessorDeadlineDate();
         this.assessorPay = competitionAssessmentConfigResource.getAssessorPay();
         this.assessorBriefingDate = competitionResource.getAssessorBriefingDate();
+        this.ktpCompetition = competitionResource.isKtp();
+        this.alwaysOpenCompetition = competitionResource.isAlwaysOpen();
     }
 
     public long getCompetitionId() {
@@ -71,6 +75,14 @@ public class UpcomingCompetitionViewModel {
 
     public void setAssessorPay(BigDecimal assessorPay) {
         this.assessorPay = assessorPay;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
+    }
+
+    public boolean isAlwaysOpenCompetition() {
+        return alwaysOpenCompetition;
     }
 
     @Override

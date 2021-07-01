@@ -36,8 +36,6 @@ import static org.mockito.Mockito.*;
 public class EligibilityWorkflowHandlerIntegrationTest extends
         BaseWorkflowHandlerIntegrationTest<EligibilityWorkflowHandler, EligibilityProcessRepository, TestableTransitionWorkflowAction> {
 
-
-
     @Autowired
     private EligibilityWorkflowHandler eligibilityWorkflowHandler;
     @Autowired
@@ -104,7 +102,7 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
     public void EligibilityReset() {
 
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> eligibilityWorkflowHandler.eligibilityReset(partnerOrganisation,
-            internalUser)),
+            internalUser, null)),
 
             // current State, destination State and expected Event to be fired
             EligibilityState.APPROVED, EligibilityState.REVIEW, EligibilityEvent.ELIGIBILITY_RESET, true);

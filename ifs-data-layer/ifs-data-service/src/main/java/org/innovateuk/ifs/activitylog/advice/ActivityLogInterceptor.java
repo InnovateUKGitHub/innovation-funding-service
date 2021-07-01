@@ -2,7 +2,7 @@ package org.innovateuk.ifs.activitylog.advice;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
@@ -19,6 +19,7 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
+@SuppressWarnings("unchecked")
 @Component
 public class ActivityLogInterceptor implements MethodInterceptor {
 

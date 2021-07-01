@@ -5,7 +5,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
@@ -23,7 +22,6 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-@EnableAutoConfiguration
 @ActiveProfiles("integration-test")
 public class AlertRepositoryIntegrationTest {
 
@@ -32,7 +30,7 @@ public class AlertRepositoryIntegrationTest {
 
     @Test
     @Rollback
-    public void findAllVisible() throws Exception {
+    public void findAllVisible() {
         // save new alerts with date ranges that should make them visible now
         ZonedDateTime now = now();
         ZonedDateTime oneSecondAgo = now.minusSeconds(1);
@@ -55,7 +53,7 @@ public class AlertRepositoryIntegrationTest {
 
     @Test
     @Rollback
-    public void findAllVisibleByType() throws Exception {
+    public void findAllVisibleByType() {
         // save new alerts with date ranges that should make them visible now
         ZonedDateTime now = now();
         ZonedDateTime oneSecondAgo = now.minusSeconds(1);
@@ -73,11 +71,7 @@ public class AlertRepositoryIntegrationTest {
 
         assertEquals(2, found.size());
 
-        assertFalse(found.stream()
-                .filter(a -> !MAINTENANCE.equals(a.getType()))
-                .findAny()
-                .isPresent()
-        );
+        assertFalse(found.stream().anyMatch(a -> !MAINTENANCE.equals(a.getType())));
 
         assertEquals(expected1, found.get(0));
         assertEquals(expected2, found.get(1));
@@ -85,7 +79,7 @@ public class AlertRepositoryIntegrationTest {
 
     @Test
     @Rollback
-    public void save() throws Exception {
+    public void save() {
         Alert alertResource = new Alert("Sample message for save", MAINTENANCE, LocalDateTime.parse("2016-05-06T21:00:00.00").atZone(ZoneId.systemDefault()), LocalDateTime.parse("2016-05-06T21:05:00.00").atZone(ZoneId.systemDefault()));
         Alert saved = repository.save(alertResource);
 
@@ -95,7 +89,7 @@ public class AlertRepositoryIntegrationTest {
 
     @Test
     @Rollback
-    public void delete() throws Exception {
+    public void delete() {
         // save a new alert
         Alert alertResource = new Alert("Sample message for delete", MAINTENANCE, LocalDateTime.parse("2016-05-06T21:00:00.00").atZone(ZoneId.systemDefault()), LocalDateTime.parse("2016-05-06T21:05:00.00").atZone(ZoneId.systemDefault()));
         Alert saved = repository.save(alertResource);
@@ -114,14 +108,11 @@ public class AlertRepositoryIntegrationTest {
 
     @Test
     @Rollback
-    public void deleteByType() throws Exception {
+    public void deleteByType() {
         repository.deleteByType(MAINTENANCE);
 
         List<Alert> alerts = repository.findAll();
-        assertFalse(alerts.stream()
-                .filter(a -> MAINTENANCE.equals(a.getType()))
-                .findAny()
-                .isPresent()
+        assertFalse(alerts.stream().anyMatch(a -> MAINTENANCE.equals(a.getType()))
         );
     }
 

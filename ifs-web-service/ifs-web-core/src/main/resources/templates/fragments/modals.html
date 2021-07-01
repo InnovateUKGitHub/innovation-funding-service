@@ -409,6 +409,31 @@
     </div>
 </th:block>
 
+<!-- Super admin user - Confirmation on resetting grant offer letter -->
+<div th:fragment="modal-reset-grant-offer-letter">
+    <div class="modal-reset-grant-offer-letter" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+
+        <form th:action="'#'" method="post" novalidate="novalidate">
+            <th:block th:insert="fragments/modals :: modal-reset-grant-offer-letter-content" />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+            <div>
+                <button class="govuk-button"
+                        type="submit"
+                        th:text="${model.procurement} ? 'Reset contract' : 'Reset grant offer letter'">Reset grant offer letter
+                </button>
+                <button type="button" class="js-close button-clear">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Super admin user - reset grant offer letter confirmation content for modal and non-js page ======= -->
+<div th:fragment="modal-reset-grant-offer-letter-content">
+    <h2 class="govuk-heading-m govuk-!-margin-0">Are you sure you want to reset the <th:block th:text="${model.procurement} ? 'contract' : 'grant offer letter'">grant offer letter</th:block> for this project?</h2>
+    <p class="govuk-body">The uploaded finalised <th:block th:text="${model.procurement} ? 'contract' : 'grant offer letter'">grant offer letter</th:block> will be removed and the <th:block th:text="${model.procurement} ? 'contract' : 'grant offer letter'">grant offer letter</th:block> section will be reset.</p>
+</div>
+
 <!-- Confirmation of accepting signed grant offer letter -->
 <th:block th:fragment="modal-accept-signed-gol">
     <div class="modal-accept-signed-gol" role="dialog" aria-hidden="true">
@@ -462,7 +487,6 @@
     </div>
 </th:block>
 
-
 <!-- Confirmation of removing document in project setup-->
 <th:block th:fragment="modal-confirm-document-remove">
     <div class="modal-confirm-document-remove" role="dialog" aria-hidden="true">
@@ -476,8 +500,6 @@
     </div>
 </th:block>
 
-
-
 <!-- Confirmation of eligibility-->
 <th:block th:fragment="modal-confirm-eligibility (model)">
     <div class="modal-confirm-eligibility" role="dialog" aria-hidden="true">
@@ -488,6 +510,20 @@
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div>
             <button class="govuk-button" name="confirm-eligibility">Approve eligible costs</button>
+            <button class="button-clear js-close" type="button">Cancel</button>
+        </div>
+    </div>
+</th:block>
+
+<!-- Confirmation of payment milestone -->
+<th:block th:fragment="modal-confirm-payment-milestone (model)">
+    <div class="modal-confirm-payment-milestone" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="govuk-heading-m">Approve payment milestones</h2>
+        <p class="govuk-body">I confirm these payment milestones are eligible and i have agreed any changes with the organisation.</p>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <div>
+            <button class="govuk-button" name="approve">Approve payment milestones</button>
             <button class="button-clear js-close" type="button">Cancel</button>
         </div>
     </div>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Companies House search results '"/>
+</head>
+<body class="govuk-template__body create-application-search-organisations">
+
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to enter your organisation\'s details',linkUrl='/organisation/create/find-organisation'"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+            <th:block th:insert="fragments/layout :: page-title"
+                      th:with="pageTitle='Companies House search results',subTitle=${subtitle},size='govuk-heading-xl'"/>
+            <p class="govuk-body">If your organisation is not displayed in the search results, please check your
+                organisation name or company registration number and search again.</p>
+           <form th:action="@{/organisation/create/find-organisation}" id="find-organisation-form" th:object="${organisationForm}" novalidate="novalidate" method="POST">
+               <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-third">
+                    <div style="margin-top: 0">&nbsp;</div>
+                </div>
+                <div class="govuk-grid-column-two-thirds alignright">
+                     <div class="form-search" style="margin-top: 0">
+                        <input class="govuk-input search-query"
+                                       th:field="*{organisationSearchName}"
+                                       type="text"
+                                       required="required"
+                                       value="${organisationForm.organisationSearchName}"
+                                       placeholder="Search for organisation name or company registration number"/>
+                        <input type="submit" class="btn" id="org-search" name="search-organisation">
+
+                     </div>
+                </div>
+            </div>
+               <p class="govuk-body govuk-!-margin-0 govuk-!-font-size-19">
+                       <span th:text="${organisationForm.totalSearchResults}" class="govuk-!-font-size-48 govuk-!-font-weight-bold"></span>
+                        <span class="govuk-!-font-weight-bold">Companies</span> matching the search
+                        <span class="govuk-!-font-weight-bold" th:text="${organisationForm.organisationSearchName}"></span></p>
+
+               <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-1 govuk-!-margin-bottom-0">
+               <ul id="org-results" class="govuk-list govuk-!-margin-top-1 govuk-!-margin-bottom-0">
+                    <li class="type-company" th:each="(organisation, iteration : ${organisationForm.organisationSearchResults})">
+                       <h3 class="govuk-!-font-size-19 govuk-!-margin-top-1 govuk-!-margin-bottom-0 govuk-!-font-weight-regular">
+                          <th:block th:if="${organisation.OrganisationValidToDisplay}">
+                           <a th:href="${'/organisation/create/selected-organisation/'+ organisation.organisationSearchId}"
+                                    title="View organisation"
+                                    th:text="${organisation.name}"
+                                     class="govuk-link">
+                           </a>
+                           </th:block>
+                           <th:block th:unless="${organisation.OrganisationValidToDisplay}">
+                             <div class="govuk-grid-row govuk-!-margin-top-1 govuk-!-margin-bottom-1">
+                                 <div class="govuk-grid-column-one-third govuk-!-margin-bottom-1">
+                                     <span style="white-space: nowrap">
+                                        <p class="govuk-body meta crumbtrail govuk-!-margin-bottom-0" th:text="${organisation.name}"></p>
+                                     </span>
+                                 </div>
+                             </div>
+                           </th:block>
+                       </h3>
+                           <th:block th:unless="${organisationForm.research}">
+                               <p th:classappend = "${organisation.OrganisationValidToDisplay} ? 'govuk-body meta crumbtrail govuk-!-margin-top-1 govuk-!-margin-bottom-1'
+                                                  : 'govuk-hint meta crumbtrail govuk-!-margin-top-1 govuk-!-margin-bottom-1'"
+                                   th:text="${organisation.extraAttributes.description}"></p>
+                               <p class="govuk-body" th:text="${organisation.OrganisationAddressSnippet}"></p>
+                           </th:block>
+                      <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-1"/>
+                      </li>
+                </ul>
+           </form>
+                <div class="govuk-!-margin-top-4  govuk-!-margin-bottom-1">
+                    <th:block th:insert="fragments/elements :: pagination(pagination=${pagination})"/>
+                </div>
+                <div class="govuk-!-margin-top-4  govuk-!-margin-bottom-9">
+                     <th:block th:if="${currentPage == 40}">
+                          <p class="govuk-body govuk-!-font-weight-bold"> This is the last page of search results and we have shown you the closest 400 matches.
+                                                                  Change your search terms if you cannot find the company you are looking for.</p>
+                     </th:block>
+               </div>
+
+                <th:block>
+                    <h3 class="govuk-heading-m govuk-!-margin-top-9 govuk-!-margin-bottom-0">My organisation is not registered on Companies House</h3>
+                    <p class="govuk-body govuk-!-margin-top-0"><a th:href="@{/organisation/create/organisation-type/not-registered-on-companies-house}">Find out what to do </a> if your organisation has not yet been registered or does not need to be registered on
+                        Companies House.</p>
+                </th:block>
+           <th:block th:insert="fragments/layout :: main-content-end"/>
+        </main>
+   </div>
+
+   <th:block th:insert="fragments/layout :: footer"/>
+   <th:block th:insert="fragments/layout :: body-end"/>
+   <th:block th:insert="fragments/service-layout :: body-end"/>
+   </body>
+   </html>

@@ -223,7 +223,7 @@ Lead applicant should be able to remove the partner organisation
     [Setup]  log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the user clicks the button/link  link = Assign test
     And the user clicks the button/link    link = Application team
-    And the user clicks the button/link                jQuery = td:contains("Dennis") ~ td a:contains("Remove organisation")
+    And the user clicks the button/link                jQuery = td:contains("Dennis") ~ td a:contains("Remove")
     Then The user clicks the button/link               jQuery = tr:contains("Dennis") .warning-modal button:contains("Remove organisation")
     Then the user should see the element   jQuery = h1:contains("Application team")
     And the user should not see the element  jQuery = td:contains("Dennis Bergkamp")
