@@ -30,7 +30,6 @@ patchesStrategicMerge:
   - data-layer/data-service/data-service-config.yml
   - data-layer/finance-data-service/finance-data-service-config.yml
   - data-layer/survey-data-service/survey-data-service-config.yml
-  - data-layer/survey-data-service/survey-data-service-deployment.yml
   - auth/idp/shibboleth-config.yml
   - auth/idp/idp-config.yml
   - auth/ldap/ldap-config.yml
