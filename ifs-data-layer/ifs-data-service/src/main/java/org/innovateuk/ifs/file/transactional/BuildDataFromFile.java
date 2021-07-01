@@ -198,7 +198,7 @@ public class BuildDataFromFile {
         Organisation organisation = organisationRepository.findOneByName(applicantDummyOrganisation);
         applications.forEach(a -> {
             ApplicationResource application = applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(a.getName(), createdCompetitions.get(a.getCompetition()).getId(), user.getId(), organisation.getId()).getSuccess();
-
+            application.setName(a.getName());
             List<Milestone> milestones = milestoneRepository.findAllByCompetitionId(application.getCompetition());
             Application appE = applicationRepository.findById(application.getId()).get();
             appE.getCompetition().getMilestones().addAll(milestones);
