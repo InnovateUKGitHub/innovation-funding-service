@@ -10,8 +10,6 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +33,6 @@ public class ApplicationController {
     private static final String DEFAULT_SORT_BY = "id";
 
     private static final String PREVIOUS_APP_DEFAULT_FILTER = "ALL";
-
-    private static final Logger LOG = LoggerFactory.getLogger(ApplicationController.class);
 
     @Autowired
     private IneligibleOutcomeMapper ineligibleOutcomeMapper;
@@ -149,7 +145,6 @@ public class ApplicationController {
 
         return applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId, organisationId)
                 .andOnSuccessReturn(application -> {
-                    LOG.info(String.format("%s-%s-%s",userId,competitionId,application.getId()));
                     crmService.syncCrmContact(userId,competitionId,application.getId());
                     return application;
                 })

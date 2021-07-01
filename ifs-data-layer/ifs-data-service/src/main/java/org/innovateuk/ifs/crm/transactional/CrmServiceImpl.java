@@ -36,7 +36,6 @@ import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 @Service
 public class CrmServiceImpl implements CrmService {
 
-
     private static final Log LOG = LogFactory.getLog(CrmServiceImpl.class);
     @Autowired
     private BaseUserService userService;
@@ -97,8 +96,6 @@ public class CrmServiceImpl implements CrmService {
     }
 
     private void syncExternalUser(UserResource user, String fundingType, Long applicationId) {
-
-
         if (!user.isInternalUser()) {
             organisationService.getAllByUserId(user.getId()).andOnSuccessReturn(organisations -> {
                 ServiceResult<Void> result = serviceSuccess();
@@ -139,18 +136,17 @@ public class CrmServiceImpl implements CrmService {
         return silCrmEndpoint.updateContact(silContact);
     }
 
-    private SilContact externalUserToSilContact(UserResource user, OrganisationResource organisation, String displayName, Long applicationId) {
+    private SilContact externalUserToSilContact(UserResource user, OrganisationResource organisation, String fundingType, Long applicationId) {
 
-        SilContact silContact = setSilContactDetails(user, displayName, applicationId);
-
-        SilOrganisation silOrganisation = setSilOrganisation(organisation.getName(), organisation.getCompaniesHouseNumber(), String.valueOf(organisation.getId()));
+        SilContact silContact = setSilContactDetails(user, fundingType, applicationId);
+        SilOrganisation silOrganisation = setSilOrganisation(organisation.getName(), organisation.getCompaniesHouseNumber(),
+                String.valueOf(organisation.getId()));
 
         if (newOrganisationSearchEnabled) {
             silOrganisation.setRegisteredAddress(getRegisteredAddress(organisation));
         }
 
         silContact.setOrganisation(silOrganisation);
-
         return silContact;
     }
 
@@ -196,7 +192,7 @@ public class CrmServiceImpl implements CrmService {
         return silAddress;
     }
 
-    private SilContact setSilContactDetails(UserResource user, String displayName, Long applicationId) {
+    private SilContact setSilContactDetails(UserResource user, String fundingType, Long applicationId) {
 
         SilContact silContact = new SilContact();
         silContact.setEmail(user.getEmail());
@@ -204,7 +200,7 @@ public class CrmServiceImpl implements CrmService {
         silContact.setLastName(user.getLastName());
         silContact.setTitle(Optional.ofNullable(user.getTitle()).map(Title::getDisplayName).orElse(null));
         silContact.setSrcSysContactId(String.valueOf(user.getId()));
-        silContact.setExperienceType(displayName);
+        silContact.setExperienceType(fundingType);
         silContact.setIfsAppID(String.valueOf(applicationId));
         silContact.setIfsUuid(user.getUid());
         return silContact;
@@ -213,9 +209,7 @@ public class CrmServiceImpl implements CrmService {
     private SilContact monitoringOfficerToSilContact(UserResource user) {
 
         SilContact silContact = setSilContactDetails(user, null, null);
-
         SilOrganisation moSilOrganisation = setSilOrganisation("IFS MO Company", "", "IFSMO01");
-
         silContact.setOrganisation(moSilOrganisation);
 
         return silContact;

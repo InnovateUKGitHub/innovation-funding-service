@@ -1,5 +1,4 @@
 package org.innovateuk.ifs.sil.crm.resource;
-
 import lombok.*;
 
 @Getter

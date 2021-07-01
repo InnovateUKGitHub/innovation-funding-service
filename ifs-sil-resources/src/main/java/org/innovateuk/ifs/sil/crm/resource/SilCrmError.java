@@ -1,8 +1,5 @@
 package org.innovateuk.ifs.sil.crm.resource;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
