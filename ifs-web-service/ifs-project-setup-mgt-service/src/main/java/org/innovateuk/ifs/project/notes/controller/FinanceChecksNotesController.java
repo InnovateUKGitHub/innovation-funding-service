@@ -20,6 +20,7 @@ import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
@@ -80,9 +81,10 @@ public class FinanceChecksNotesController {
     @GetMapping
     public String showPage(@P("projectId")@PathVariable Long projectId,
                            @PathVariable Long organisationId,
+                           UserResource loggedInUser,
                            Model model) {
         partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId);
-        FinanceChecksNotesViewModel viewModel = populateNoteViewModel(projectId, organisationId, null, null);
+        FinanceChecksNotesViewModel viewModel = populateNoteViewModel(projectId, organisationId, null, null, loggedInUser);
         model.addAttribute("model", viewModel);
         return NOTES_VIEW;
     }
@@ -114,13 +116,13 @@ public class FinanceChecksNotesController {
         partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId);
         saveOriginCookie(response, projectId, organisationId, noteId, loggedInUser.getId());
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, noteId);
-        populateNoteViewModel(projectId, organisationId, noteId, model, attachments);
+        populateNoteViewModel(projectId, organisationId, noteId, model, attachments, loggedInUser);
         model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId, noteId).orElse(new FinanceChecksNotesAddCommentForm()));
         return NOTES_VIEW;
     }
 
-    private void populateNoteViewModel(Long projectId, Long organisationId, Long noteId, Model model, List<Long> attachments) {
-        FinanceChecksNotesViewModel financeChecksNotesViewModel = populateNoteViewModel(projectId, organisationId, noteId, attachments);
+    private void populateNoteViewModel(Long projectId, Long organisationId, Long noteId, Model model, List<Long> attachments, UserResource loggedInUser) {
+        FinanceChecksNotesViewModel financeChecksNotesViewModel = populateNoteViewModel(projectId, organisationId, noteId, attachments, loggedInUser);
         validateNoteId(financeChecksNotesViewModel, noteId);
         model.addAttribute("model", financeChecksNotesViewModel);
     }
@@ -146,14 +148,14 @@ public class FinanceChecksNotesController {
         if (postParametersMatchOrigin(request, projectId, organisationId, noteId, loggedInUser.getId())) {
             Supplier<String> failureView = () -> {
                 List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, noteId);
-                FinanceChecksNotesViewModel viewModel = populateNoteViewModel(projectId, organisationId, noteId, attachments);
+                FinanceChecksNotesViewModel viewModel = populateNoteViewModel(projectId, organisationId, noteId, attachments, loggedInUser);
                 model.addAttribute("model", viewModel);
                 model.addAttribute(FORM_ATTR, form);
                 return NOTES_VIEW;
             };
 
             Supplier<String> saveFailureView = () -> {
-                FinanceChecksNotesViewModel viewModel = populateNoteViewModel(projectId, organisationId, null, null);
+                FinanceChecksNotesViewModel viewModel = populateNoteViewModel(projectId, organisationId, null, null, loggedInUser);
                 model.addAttribute("model", viewModel);
                 model.addAttribute("nonFormErrors", validationHandler.getAllErrors());
                 model.addAttribute(FORM_ATTR, null);
@@ -200,7 +202,7 @@ public class FinanceChecksNotesController {
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, noteId);
             Supplier<String> onSuccess = () -> redirectTo(formView(projectId, organisationId, noteId));
             Supplier<String> onError = () -> {
-                model.addAttribute("model", populateNoteViewModel(projectId, organisationId, noteId, attachments));
+                model.addAttribute("model", populateNoteViewModel(projectId, organisationId, noteId, attachments, loggedInUser));
                 model.addAttribute("nonFormErrors", validationHandler.getAllErrors());
                 model.addAttribute("form", form);
                 return NOTES_VIEW;
@@ -215,7 +217,7 @@ public class FinanceChecksNotesController {
                     saveFormToCookie(response, projectId, organisationId, noteId, form);
                 });
 
-                FinanceChecksNotesViewModel viewModel = populateNoteViewModel(projectId, organisationId, noteId, attachments);
+                FinanceChecksNotesViewModel viewModel = populateNoteViewModel(projectId, organisationId, noteId, attachments, loggedInUser);
                 model.addAttribute("model", viewModel);
                 return result;
             });
@@ -299,7 +301,7 @@ public class FinanceChecksNotesController {
         }
     }
 
-    private FinanceChecksNotesViewModel populateNoteViewModel(Long projectId, Long organisationId, Long noteId, List<Long> attachments) {
+    private FinanceChecksNotesViewModel populateNoteViewModel(Long projectId, Long organisationId, Long noteId, List<Long> attachments, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
 
@@ -325,7 +327,8 @@ public class FinanceChecksNotesController {
                 FinanceChecksNotesFormConstraints.MAX_NOTE_CHARACTERS,
                 noteId,
                 project.getApplication(),
-                project.getProjectState().isActive()
+                project.getProjectState().isActive(),
+                loggedInUser.hasAuthority(Authority.AUDITOR)
         );
     }
 

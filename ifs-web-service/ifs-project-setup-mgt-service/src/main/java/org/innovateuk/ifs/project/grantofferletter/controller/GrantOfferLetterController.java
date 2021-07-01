@@ -308,7 +308,8 @@ public class GrantOfferLetterController {
                 project.getGrantOfferLetterRejectionReason(),
                 project.getProjectState(),
                 project.isUseDocusignForGrantOfferLetter(),
-                loggedInUser.hasAuthority(Authority.SUPER_ADMIN_USER));
+                loggedInUser.hasAuthority(Authority.SUPER_ADMIN_USER),
+                loggedInUser.hasAuthority(Authority.AUDITOR));
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
