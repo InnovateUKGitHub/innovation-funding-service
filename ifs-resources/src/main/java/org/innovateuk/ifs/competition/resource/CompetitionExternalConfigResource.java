@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.resource;
 public class CompetitionExternalConfigResource {
 
     private Long id;
+
     private String externalCompetitionId;
 
     public CompetitionExternalConfigResource() {

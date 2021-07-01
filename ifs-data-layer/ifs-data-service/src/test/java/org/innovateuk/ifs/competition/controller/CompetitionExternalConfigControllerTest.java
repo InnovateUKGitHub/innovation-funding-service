@@ -20,7 +20,6 @@ public class CompetitionExternalConfigControllerTest extends BaseControllerMockM
     @Mock
     private CompetitionExternalConfigService competitionExternalConfigService;
 
-
     @Override
     protected CompetitionExternalConfigController supplyControllerUnderTest() {
         return new CompetitionExternalConfigController();

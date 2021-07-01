@@ -208,7 +208,6 @@ public class BuildDataFromFile {
             applicationInnovationAreaService.setNoInnovationAreaApplies(application.getId()).getSuccess();
             application.setStartDate(LocalDate.now().plusDays(5));
             application.setDurationInMonths(2L);
-
             applicationService.saveApplicationDetails(application.getId(), application).getSuccess();
             setApplicationExternalConfig(application);
             setExternalApplicationData(appToExternalAppMap.get(a.getName()), application);
