@@ -24,6 +24,14 @@ public class CompetitionExternalConfig {
         this.externalCompetitionId = externalCompetitionId;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Competition getCompetition() {
         return competition;
     }
