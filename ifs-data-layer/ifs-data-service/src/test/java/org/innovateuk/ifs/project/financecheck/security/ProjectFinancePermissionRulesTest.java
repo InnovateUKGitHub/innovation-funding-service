@@ -462,7 +462,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void projectFinancelUsersCanResetFinanceChecks() {
+    public void projectFinanceUsersCanResetFinanceChecks() {
         ProjectCompositeId projectId = ProjectCompositeId.id(1L);
 
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
@@ -626,6 +626,20 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
                 assertFalse(rules.auditorUserCanViewMilestoneCheck(projectOrganisationCompositeId, user));
             }
         });
+    }
+
+    @Test
+    public void userCanViewTheirOwnMilestoneStatus() {
+        UserResource user = newUserResource().build();
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId =
+                new ProjectOrganisationCompositeId(project.getId(), newOrganisation().build().getId());
+
+        setupUserAsPartner(project, user);
+        assertTrue(rules.userCanViewTheirOwnMilestoneStatus(projectOrganisationCompositeId, user));
+
+        setupUserNotAsPartner(project, user);
+        assertFalse(rules.userCanViewTheirOwnMilestoneStatus(projectOrganisationCompositeId, user));
     }
 
     @Test
