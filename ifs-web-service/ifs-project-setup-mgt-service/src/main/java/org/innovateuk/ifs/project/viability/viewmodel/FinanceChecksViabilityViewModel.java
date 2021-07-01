@@ -46,6 +46,7 @@ public class FinanceChecksViabilityViewModel {
     private final boolean hasGrantClaimPercentage;
     private final boolean ktpCompetition;
     private final boolean resetableGolState;
+    private final boolean auditor;
 
     public FinanceChecksViabilityViewModel(ProjectResource project,
                                            CompetitionResource competition,
@@ -69,7 +70,8 @@ public class FinanceChecksViabilityViewModel {
                                            Long organisationId,
                                            String organisationSizeDescription,
                                            List<ProjectFinanceResource> projectFinances,
-                                           boolean resetableGolState) {
+                                           boolean resetableGolState,
+                                           boolean auditor) {
 
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
@@ -100,6 +102,7 @@ public class FinanceChecksViabilityViewModel {
         this.hasGrantClaimPercentage = competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE);
         this.ktpCompetition = competition.isKtp();
         this.resetableGolState = resetableGolState;
+        this.auditor = auditor;
     }
 
     public String getOrganisationName() {
@@ -151,7 +154,7 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public boolean isReadOnly() {
-        return viabilityState == ViabilityState.APPROVED || !projectIsActive;
+        return isAuditor() || viabilityState == ViabilityState.APPROVED || !projectIsActive;
     }
 
     public boolean isShowApprovalMessage() {
@@ -175,7 +178,7 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public boolean isCanReset() {
-        return approved && projectIsActive && resetableGolState;
+        return approved && projectIsActive && resetableGolState && !isAuditor();
     }
 
     public LocalDate getApprovalDate() {
@@ -183,11 +186,11 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public boolean isShowSaveAndContinueButton() {
-        return !isApproved() && projectIsActive;
+        return !isApproved() && projectIsActive && !isReadOnly();
     }
 
     public boolean isShowBackToFinanceCheckButton() {
-        return isApproved() || !projectIsActive;
+        return isApproved() || !projectIsActive || isReadOnly();
     }
 
     private boolean isApproved() {
@@ -240,6 +243,10 @@ public class FinanceChecksViabilityViewModel {
 
     public boolean isHasGrantClaimPercentage() {
         return hasGrantClaimPercentage;
+    }
+
+    public boolean isAuditor() {
+        return auditor;
     }
 
     private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {

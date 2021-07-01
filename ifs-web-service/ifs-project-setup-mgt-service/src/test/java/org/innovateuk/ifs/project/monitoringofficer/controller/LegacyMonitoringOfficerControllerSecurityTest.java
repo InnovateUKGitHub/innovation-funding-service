@@ -41,6 +41,11 @@ public class LegacyMonitoringOfficerControllerSecurityTest extends BaseProjectSe
 
     @Override
     protected Consumer<SetupSectionsPermissionRules> getVerification() {
-        return permissionRules -> permissionRules.internalCanAccessMonitoringOfficerSection(eq(projectCompositeId), isA(UserResource.class));
+        return permissionRules -> {
+            permissionRules.internalCanAccessMonitoringOfficerSection(eq(projectCompositeId), isA(UserResource.class));
+            permissionRules.supportCanAccessMonitoringOfficerSection(eq(projectCompositeId), isA(UserResource.class));
+            permissionRules.innovationLeadUserCanAccessMonitoringOfficerSection(eq(projectCompositeId), isA(UserResource.class));
+            permissionRules.stakeholderCanAccessMonitoringOfficerSection(eq(projectCompositeId), isA(UserResource.class));
+        };
     }
 }
