@@ -94,7 +94,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                         userRestService.grantRole(loggedInUser.getId(), Role.APPLICANT).getSuccess();
                     }
                     // Success
-                    inviteRestService.acceptInvite(invite.getHash(), loggedInUser.getId()).getSuccess();
+                    inviteRestService.acceptInvite(invite.getHash(), loggedInUser.getId(),invite.getCompetitionId(),invite.getLeadOrganisationId(),invite.getApplication()).getSuccess();
                     clearDownInviteFlowCookies(response);
                     return "redirect:/application/" + invite.getApplication();
                 }
