@@ -41,6 +41,8 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...
 ...               IFS-8958  SBRI Milestones - Application overview / summary
 ...
+...               IFS-9774 Investigate if its possible to fix AT's failure due to IDP upgrade
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -232,14 +234,16 @@ Mo is able to view application feedback on a competition which as been through a
     Then the user should see the element    jQuery = h1:contains("Application overview")
 
 MO is able to download the appendix file
-    [Documentation]  IFS-7230
+    [Documentation]  IFS-7230  IFS-9774
     Given log in as a different user                            &{monitoring_officer_one_credentials}
     And the user clicks the project setup tile if displayed
     And the user clicks the button/link                         link = ${PS_LP_Application_Title}
     When the user clicks the button/link                        link = view application feedback
     And the user clicks the button/link                         jQuery = button:contains("Technical approach")
-    Then the user downloads the file                            ${monitoring_officer_one_credentials["email"]}    ${server}/application/${PS_LP_Application_No}/form/question/442/forminput/1266/file/298/download   ${DOWNLOAD_FOLDER}/super-effy---super-efficient-forecasting-of-freight-yields-technical-approach.pdf
-    [Teardown]    remove the file from the operating system     super-effy---super-efficient-forecasting-of-freight-yields-technical-approach.pdf
+    And the user clicks the button/link                         link = super-effy---super-efficient-forecasting-of-freight-yields-technical-approach.pdf (opens in a new window)
+    And Select Window                                           NEW
+    Then the user should not see internal server and forbidden errors
+    And the user closes the last opened tab
 
 Assign MO role to existing IFS user
     [Documentation]  IFS-5104
@@ -294,7 +298,7 @@ The user is able to see Project details section
 The user is able to see Documents section
     the user clicks the button/link   link = Documents
     the user should see the element   jQuery = h1:contains("Documents")
-    the user clicks the button/link   jQuery = a:contains("Set up your project")
+    the user clicks the button/link   jQuery = a:contains("Back to monitor project")
 
 The user is able to see Monitoring officer section
     the user clicks the button/link   jQuery = a:contains("Monitoring Officer")
