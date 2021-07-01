@@ -38,9 +38,13 @@ Live competition calculations
 
 Project setup Competitions and Calculations
     [Documentation]    INFUND-3831, INFUND-3003, INFUND-2610 INFUND-5176
-    Given the user clicks the button/link       jQuery = a:contains(Project setup)
-    Then the user should see competitions in project set up
-    And The Project set up dashboard calculations should be correct   css = li.govuk-grid-row  Project setup   //section[1]/ul/li
+    Given the user clicks the button/link        jQuery = a:contains(Project setup)
+    When The user enters text to a text field    id = searchQuery    ${IN_ASSESSMENT_COMPETITION_NAME}
+    And The user clicks the button/link          css = #searchsubmit
+    Then The Project set up dashboard calculations should be correct   css = li.govuk-grid-row  Project setup   //section[1]/ul/li
+
+#    Then the user should see competitions in project set up
+#    And The Project set up dashboard calculations should be correct   css = li.govuk-grid-row  Project setup   //section[1]/ul/li
 
 PS projects title and lead
     [Documentation]    INFUND-2610, IFS-1881
@@ -112,16 +116,6 @@ Non IFS competitions do not appear in search results
     Then the result should be correct            0 competitions with the term ${NON_IFS_COMPETITION_NAME}
 
 *** Keywords ***
-The user should see competitions in project set up
-    # We have used the JQuery selector for the link because the title will change according to the competitions number
-    the user should see the element        jQuery = .govuk-heading-m:contains("Project setup ")
-    ${status}   ${value} =   Run Keyword And Ignore Error Without Screenshots  page should contain   Project setup loan comp
-    Run Keyword If  '${status}' == 'FAIL'     the user clicks the button/link      jQuery = button:contains("Next")
-    the user should see the element        link = Project setup loan comp
-    the user should see the element        jQuery =.govuk-body:contains("5 projects")
-    the user should not see the element    link = ${READY_TO_OPEN_COMPETITION_NAME}
-    # this step verifies that the ready to open competitions are not visible in other tabs
-
 The Project set up dashboard calculations should be correct
     [Arguments]    ${comp_List_Locator}   ${TEXT}   ${Section_Xpath}
     ${pagination} =   Run Keyword And Ignore Error Without Screenshots  the user clicks the button/link  name = page

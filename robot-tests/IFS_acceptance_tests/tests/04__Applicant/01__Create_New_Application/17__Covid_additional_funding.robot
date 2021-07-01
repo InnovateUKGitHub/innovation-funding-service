@@ -66,7 +66,7 @@ Submit application
 
 Non lead cannot reopen competition
     [Documentation]  IFS-7440
-    Given log in as a different user           collaborator@example.com  ${correct_password}
+    Given log in as a different user           &{collaborator_credentials}
     When the user should see the element       link = ${COVIDapplicationTitle1}
     Then the user should not see the element   jQuery = li:contains("${COVIDapplicationTitle1}") a:contains("Reopen")
 
@@ -77,11 +77,12 @@ Lead can reopen application
    When the user can reopen application                        ${COVIDapplicationTitle1}
    Then the user reads his email                               collaborator@example.com     	 An Innovation Funding Service funding application has been reopened   The application was reopened by
    And the user reads his email                                steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
-
-Lead can make changes and resubmit
-    [Documentation]  IFS-7440  IFS-7552
     When the user uploads an appendix             ${project_team_question}  ${5mb_pdf}
     Then the user can submit the application
+#Lead can make changes and resubmit
+#    [Documentation]  IFS-7440  IFS-7552
+#    When the user uploads an appendix             ${project_team_question}  ${5mb_pdf}
+#    Then the user can submit the application
 
 Internal user cannot invite to assesment
     [Documentation]  IFS-7441
