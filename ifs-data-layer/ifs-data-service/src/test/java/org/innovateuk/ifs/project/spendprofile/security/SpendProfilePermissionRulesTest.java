@@ -44,8 +44,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newP
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isSupport;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -114,6 +113,17 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
                 assertTrue(rules.supportCanViewCompetitionStatus(newProjectResource().build(), user));
             } else {
                 assertFalse(rules.supportCanViewCompetitionStatus(newProjectResource().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void auditorCanViewCompetitionStatus() {
+        allGlobalRoleUsers.forEach(user -> {
+            if (isAuditor(user)) {
+                assertTrue(rules.auditorCanViewCompetitionStatus(newProjectResource().build(), user));
+            } else {
+                assertFalse(rules.auditorCanViewCompetitionStatus(newProjectResource().build(), user));
             }
         });
     }
@@ -272,6 +282,20 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
                 assertTrue(rules.supportUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, user));
             } else {
                 assertFalse(rules.supportUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, user));
+            }
+        });
+    }
+
+    @Test
+    public void auditorUsersCanSeeSpendProfileCsv() {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId =
+                new ProjectOrganisationCompositeId(1L, newOrganisation().build().getId());
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (isAuditor(user)) {
+                assertTrue(rules.auditorUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, user));
+            } else {
+                assertFalse(rules.auditorUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, user));
             }
         });
     }

@@ -75,6 +75,10 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return getUserWithRole(SYSTEM_MAINTAINER);
     }
 
+    protected UserResource auditorUser() {
+        return getUserWithRole(AUDITOR);
+    }
+
     protected UserResource anonymousUser() {
         return (UserResource) ReflectionTestUtils.getField(new DefaultPermissionMethodHandler(new PermissionedObjectClassToPermissionsToPermissionsMethods()), "ANONYMOUS_USER");
     }

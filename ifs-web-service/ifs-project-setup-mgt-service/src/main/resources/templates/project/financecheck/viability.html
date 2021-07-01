@@ -117,81 +117,81 @@
               <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).VIABILITY.name()})}" class="govuk-button govuk-button--secondary govuk-!-margin-right-4">Queries</a>
               <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.projectId},organisationId=${model.organisationId})}" class="govuk-button govuk-button--secondary">Notes</a>
           </div>
-          <details th:if="${model.canReset}" class="govuk-details" data-module="govuk-details">
-              <summary class="govuk-details__summary">
-                    <span class="govuk-details__summary-text">
-                      Reset viability check
-                    </span>
-              </summary>
-              <div class="govuk-details__text">
-                  <p class="govuk-body">Reset viability check for <th:block th:text="${model.organisationName}">org name</th:block>. You can only do this if finance checks haven't been approved.</p>
-                  <div class="govuk-form-group govuk-!-margin-top-6">
-                      <label class="govuk-label govuk-!-font-weight-bold"
-                             for="retractionReason">Reason for retracting approval</label>
-                      <div class="textarea-wrapped">
-                          <div class="govuk-form-group"
-                               th:classappend="${#fields.hasErrors('retractionReason')} ? 'govuk-form-group--error'">
-                              <th:block th:if="${#fields.hasErrors('retractionReason')}">
-                                  <span class="govuk-error-message" th:each="err : ${#fields.errors('retractionReason')}" th:text="${err}"></span>
-                              </th:block>
-                          <textarea id="retractionReason"
-                                  rows="8"
-                                  class="govuk-textarea"
-                                  th:field="*{retractionReason}"
-                                  th:errorclass="govuk-textarea--error">
-                          </textarea>
+            <details th:if="${model.canReset}" class="govuk-details" data-module="govuk-details">
+                  <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                          Reset viability check
+                        </span>
+                  </summary>
+                  <div class="govuk-details__text">
+                      <p class="govuk-body">Reset viability check for <th:block th:text="${model.organisationName}">org name</th:block>. You can only do this if finance checks haven't been approved.</p>
+                      <div class="govuk-form-group govuk-!-margin-top-6">
+                          <label class="govuk-label govuk-!-font-weight-bold"
+                                 for="retractionReason">Reason for retracting approval</label>
+                          <div class="textarea-wrapped">
+                              <div class="govuk-form-group"
+                                   th:classappend="${#fields.hasErrors('retractionReason')} ? 'govuk-form-group--error'">
+                                  <th:block th:if="${#fields.hasErrors('retractionReason')}">
+                                      <span class="govuk-error-message" th:each="err : ${#fields.errors('retractionReason')}" th:text="${err}"></span>
+                                  </th:block>
+                              <textarea id="retractionReason"
+                                      rows="8"
+                                      class="govuk-textarea"
+                                      th:field="*{retractionReason}"
+                                      th:errorclass="govuk-textarea--error">
+                              </textarea>
+                              </div>
                           </div>
                       </div>
+                      <button class="govuk-button" name="reset-viability">Reset viability check</button>
                   </div>
-                  <button class="govuk-button" name="reset-viability">Reset viability check</button>
-              </div>
-          </details>
-          <th:block th:unless="${model.isReadOnly()}">
-              <h2 class="govuk-heading-m govuk-!-margin-top-6">Approve viability</h2>
-              <p class="govuk-body">Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>
-              <p class="govuk-body" th:if="${model.collaborativeProject}">Make sure the partner has reviewed and understood any changes made to their finances before approval.</p>
-              <p class="govuk-body" th:unless="${model.collaborativeProject}">Make sure the applicant has reviewed and understood any changes made to their finances before approval.</p>
-              <div class="govuk-form-group">
-                  <div class="govuk-checkboxes">
-                      <div class="govuk-checkboxes__item" data-target="add-rag-rating">
-                          <input  id="project-viable"
-                                  class="govuk-checkboxes__input"
-                                  type="checkbox"
-                                  th:field="*{confirmViabilityChecked}"
-                                  data-switches-button-status="#confirm-button" />
-                          <label for="project-viable"
-                                 class="govuk-label govuk-checkboxes__label">
-                              <th:block th:text="${model.organisationName}" /> is viable for this project
-                          </label>
+              </details>
+              <th:block th:unless="${model.isReadOnly()}">
+                  <h2 class="govuk-heading-m govuk-!-margin-top-6">Approve viability</h2>
+                  <p class="govuk-body">Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>
+                  <p class="govuk-body" th:if="${model.collaborativeProject}">Make sure the partner has reviewed and understood any changes made to their finances before approval.</p>
+                  <p class="govuk-body" th:unless="${model.collaborativeProject}">Make sure the applicant has reviewed and understood any changes made to their finances before approval.</p>
+                  <div class="govuk-form-group">
+                      <div class="govuk-checkboxes">
+                          <div class="govuk-checkboxes__item" data-target="add-rag-rating">
+                              <input  id="project-viable"
+                                      class="govuk-checkboxes__input"
+                                      type="checkbox"
+                                      th:field="*{confirmViabilityChecked}"
+                                      data-switches-button-status="#confirm-button" />
+                              <label for="project-viable"
+                                     class="govuk-label govuk-checkboxes__label">
+                                  <th:block th:text="${model.organisationName}" /> is viable for this project
+                              </label>
+                          </div>
                       </div>
+
+                  </div>
+                  <div class="govuk-form-group" id="add-rag-rating">
+                    <label for="rag-rating"
+                           class="govuk-label">Please enter the RAG rating for this viability review</label>
+                    <select th:field="*{ragStatus}"
+                            id="rag-rating"
+                            class="govuk-select"
+                            data-switches-button-status="#confirm-button">
+                      <option value="UNSET" th:selected="${form.ragStatus == null}">--</option>
+                      <option value="GREEN">Green</option>
+                      <option value="AMBER">Amber</option>
+                      <option value="RED">Red</option>
+                    </select>
                   </div>
 
-              </div>
-              <div class="govuk-form-group" id="add-rag-rating">
-                <label for="rag-rating"
-                       class="govuk-label">Please enter the RAG rating for this viability review</label>
-                <select th:field="*{ragStatus}"
-                        id="rag-rating"
-                        class="govuk-select"
-                        data-switches-button-status="#confirm-button">
-                  <option value="UNSET" th:selected="${form.ragStatus == null}">--</option>
-                  <option value="GREEN">Green</option>
-                  <option value="AMBER">Amber</option>
-                  <option value="RED">Red</option>
-                </select>
-              </div>
+                  <button th:if="${!model.viabilityReadyToConfirm}"
+                          disabled="disabled"
+                          class="govuk-button">Confirm viability</button>
+                  <button th:unless="${!model.viabilityReadyToConfirm}"
+                          type="button"
+                          data-js-modal="modal-confirm-viability"
+                          class="govuk-button"
+                          id="confirm-button">Confirm viability</button>
 
-              <button th:if="${!model.viabilityReadyToConfirm}"
-                      disabled="disabled"
-                      class="govuk-button">Confirm viability</button>
-              <button th:unless="${!model.viabilityReadyToConfirm}"
-                      type="button"
-                      data-js-modal="modal-confirm-viability"
-                      class="govuk-button"
-                      id="confirm-button">Confirm viability</button>
-
-              <th:block th:insert="fragments/modals :: modal-confirm-viability (${model})" />
-          </th:block>
+                  <th:block th:insert="fragments/modals :: modal-confirm-viability (${model})" />
+              </th:block>
           <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
           <button th:if="${model.showSaveAndContinueButton}" class="govuk-button govuk-button--secondary" name="save-and-continue">Save and return to finance checks</button>
           <a th:if="${model.showBackToFinanceCheckButton}" class="govuk-button govuk-button--secondary" th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">Return to finance checks</a>

@@ -37,8 +37,8 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     }
 
     @Test
-    public void getFinanceCheckSummary(){
-        assertRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L), PROJECT_FINANCE, IFS_ADMINISTRATOR, SUPER_ADMIN_USER, SYSTEM_MAINTAINER, EXTERNAL_FINANCE);
+    public void getFinanceCheckSummary() {
+        assertRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L), PROJECT_FINANCE, IFS_ADMINISTRATOR, SUPER_ADMIN_USER, SYSTEM_MAINTAINER, EXTERNAL_FINANCE, AUDITOR);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     }
 
     @Test
-    public void getFinanceCheckEligibilityDetails(){
+    public void getFinanceCheckEligibilityDetails() {
         when(classUnderTestMock.getFinanceCheckEligibilityDetails(1L, 2L))
                 .thenReturn(serviceSuccess(newFinanceCheckEligibilityResource().build()));
 
@@ -84,6 +84,8 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
                             .projectFinanceUserCanViewViability(projectOrganisationCompositeId, getLoggedInUser());
                     verify(projectFinancePermissionRules)
                             .competitionFinanceUserCanViewViability(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules)
+                            .auditorUserCanViewViability(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
@@ -120,6 +122,8 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
                             .projectPartnersCanViewEligibility(projectOrganisationCompositeId, getLoggedInUser());
                     verify(projectFinancePermissionRules)
                             .competitionFinanceUserCanViewEligibility(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules)
+                            .auditorUserCanViewEligibility(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
@@ -201,6 +205,8 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
                             .projectFinanceUserCanViewCreditReport(ProjectCompositeId.id(1L), getLoggedInUser());
                     verify(projectFinancePermissionRules)
                             .competitionFinanceUserCanViewCreditReport(ProjectCompositeId.id(1L), getLoggedInUser());
+                    verify(projectFinancePermissionRules)
+                            .auditorUserCanViewCreditReport(ProjectCompositeId.id(1L), getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
