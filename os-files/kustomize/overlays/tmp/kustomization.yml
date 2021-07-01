@@ -1,6 +1,0 @@
-commonAnnotations:
-  deployedWith: kustomize
-  environment: tmp
-
-resources:
-  - data-service-deployment.yml

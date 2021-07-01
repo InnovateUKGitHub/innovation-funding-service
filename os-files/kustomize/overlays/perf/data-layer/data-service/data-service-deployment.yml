@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: spring-boot-service-container
-          image: innovateuk/data-service
+          image: data-service
           imagePullPolicy: IfNotPresent
           resources:
             limits:

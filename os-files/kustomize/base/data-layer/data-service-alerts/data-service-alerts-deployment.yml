@@ -17,7 +17,7 @@ spec:
         app: data-service-alerts
     spec:
       containers:
-      - image: innovateuk/data-service-alerts
+      - image: data-service-alerts
         name: spring-boot-service-container
         imagePullPolicy: IfNotPresent
         env:

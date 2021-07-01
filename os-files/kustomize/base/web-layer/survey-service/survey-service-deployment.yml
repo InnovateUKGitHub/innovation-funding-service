@@ -21,7 +21,7 @@ spec:
         app: survey-svc
     spec:
       containers:
-        - image: innovateuk/survey-service
+        - image: survey-service
           name: spring-boot-service-container
           imagePullPolicy: IfNotPresent
           env:

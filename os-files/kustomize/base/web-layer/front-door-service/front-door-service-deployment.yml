@@ -21,7 +21,7 @@ spec:
         app: front-door-svc
     spec:
       containers:
-        - image: innovateuk/front-door-service
+        - image: front-door-service
           name: spring-boot-service-container
           imagePullPolicy: IfNotPresent
           env:

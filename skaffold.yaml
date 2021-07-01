@@ -106,24 +106,6 @@ build:
 #    paths:
 #      - os-files/kustomize/overlays/local
 profiles:
-  - name: tmp
-    build:
-      tagPolicy:
-        gitCommit:
-          ignoreChanges: true
-      artifacts:
-        - image: data-service
-          context: .
-          jib:
-            type: gradle
-            project: ifs-data-layer:ifs-data-service
-            args:
-              - "-DskipTests"
-    deploy:
-      kubeContext: tmp
-      kustomize:
-        paths:
-          - os-files/kustomize/overlays/tmp
   - name: at
     build:
       tagPolicy:
