@@ -58,6 +58,13 @@ public class MonitoringOfficerController {
         return monitoringOfficerService.getMonitoringOfficerProjects(userId).toGetResponse();
     }
 
+    @GetMapping("{userId}/filter-projects")
+    public RestResult<List<ProjectResource>> filterMonitoringOfficerProjects(@PathVariable final long userId,
+                                                                             @RequestParam(value = "projectInSetup", required = false, defaultValue = "false") boolean projectInSetup,
+                                                                             @RequestParam(value = "previousProject", required = false, defaultValue = "false") boolean previousProject) {
+        return monitoringOfficerService.filterMonitoringOfficerProjects(userId, projectInSetup, previousProject).toGetResponse();
+    }
+
     @GetMapping("/project/{projectId}")
     public RestResult<MonitoringOfficerResource> findMonitoringOfficerForProject(@PathVariable final long projectId) {
         return monitoringOfficerService.findMonitoringOfficerForProject(projectId).toGetResponse();
