@@ -28,37 +28,26 @@ resources:
 ###############################################################################
   - auth/idp/idp.yml
   - auth/idp/idp-deployment.yml
-  - auth/idp/idp-keys-secrets.yml
-  - auth/idp/idp-config.yml
-  - auth/idp/shibboleth-config.yml
   - auth/ldap/ldap.yml
   - auth/ldap/ldap-deployment.yml
-  - auth/ldap/ldap-config.yml
-  - auth/ldap/ldap-keys-secrets.yml
   - auth/sp/sp.yml
   - auth/sp/sp-deployment.yml
-  - auth/sp/sp-keys-secrets.yml
-  - auth/sp/sp-secrets.yml
 ###############################################################################
 
 ################################################################################
 ################ Data Services #################################################
 ################################################################################
-  - data-layer/db-config.yml
   # data service
   - data-layer/data-service/data-service.yml
-  - data-layer/data-service/data-service-config.yml
   - data-layer/data-service/data-service-deployment.yml
   # data service alerts
 #  - data-layer/data-service-alerts/data-service-alerts.yml
 #  - data-layer/data-service-alerts/data-service-alerts-deployment.yml
   # finance data service
   - data-layer/finance-data-service/finance-data-service.yml
-  - data-layer/finance-data-service/finance-data-service-config.yml
   - data-layer/finance-data-service/finance-data-service-deployment.yml
   # survey data service
   - data-layer/survey-data-service/survey-data-service.yml
-  - data-layer/survey-data-service/survey-data-service-config.yml
   - data-layer/survey-data-service/survey-data-service-deployment.yml
 ##################################################################################
 #
@@ -90,14 +79,6 @@ resources:
 #  - web-layer/survey-service/survey-service.yml
 #  - web-layer/survey-service/survey-service-deployment.yml
 ##################################################################################
-##################################################################################
 
-  # config-maps
-  - cache-config.yml
-  - feature-toggle-config.yml
-  - new-relic-config.yml
-  - web-config.yml
-  - docusign-config.yml
-  - flyway-config.yml
 
 
