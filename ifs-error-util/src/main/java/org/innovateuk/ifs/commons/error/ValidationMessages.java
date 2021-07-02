@@ -2,6 +2,7 @@ package org.innovateuk.ifs.commons.error;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.validation.BindingResult;
@@ -261,6 +262,15 @@ public class ValidationMessages implements ErrorHolder, Serializable {
 
     public static void reject(Errors errors, String errorKey, Object... arguments) {
         errors.reject(errorKey, arguments, errorKey);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("objectName", objectName)
+                .append("objectId", objectId)
+                .append("errors", errors)
+                .toString();
     }
 
     @Override
