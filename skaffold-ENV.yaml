@@ -1,4 +1,4 @@
-apiVersion: skaffold/v2beta10
+apiVersion: skaffold/v2beta11
 kind: Config
 metadata:
   name: innovation-funding-service
@@ -106,8 +106,109 @@ build:
 #    paths:
 #      - os-files/kustomize/overlays/local
 profiles:
+  - name: at
+    build:
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
+      artifacts:
+        - image: robot-framework
+          context: robot-tests
+        - image: data-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-data-layer:ifs-data-service
+            args:
+              - "-DskipTests"
+        - image: finance-data-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-data-layer:ifs-finance-data-service
+            args:
+              - "-DskipTests"
+        - image: survey-data-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-data-layer:ifs-survey-data-service
+            args:
+              - "-DskipTests"
+        - image: data-service-alerts
+          context: .
+          jib:
+            type: gradle
+            project: ifs-data-layer:data-service-alerts
+            args:
+              - "-DskipTests"
+        - image: survey-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-survey-service
+            args:
+              - "-DskipTests"
+        - image: project-setup-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-project-setup-service
+            args:
+              - "-DskipTests"
+        - image: project-setup-mgt-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-project-setup-mgt-service
+            args:
+              - "-DskipTests"
+        - image: front-door-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-front-door-service
+            args:
+              - "-DskipTests"
+        - image: competition-mgt-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-competition-mgt-service
+            args:
+              - "-DskipTests"
+        - image: assessment-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-assessment-service
+            args:
+              - "-DskipTests"
+        - image: application-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-application-service
+            args:
+              - "-DskipTests"
+        - image: registration-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-registration-service
+            args:
+              - "-DskipTests"
+    deploy:
+      kubeContext: at
+      kustomize:
+        paths:
+          - os-files/kustomize/overlays/at
+
   - name: sysint
     build:
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
       artifacts:
         - image: data-service
           context: .
@@ -201,6 +302,9 @@ profiles:
 
   - name: uat
     build:
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
       artifacts:
         - image: data-service
           context: .
@@ -294,6 +398,9 @@ profiles:
 
   - name: demo
     build:
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
       artifacts:
         - image: data-service
           context: .
@@ -385,9 +492,12 @@ profiles:
         paths:
           - os-files/kustomize/overlays/demo
 
-
   - name: perf
     build:
+      tagPolicy:
+        gitCommit:
+          
+          ignoreChanges: true
       artifacts:
         - image: data-service
           context: .
@@ -479,9 +589,11 @@ profiles:
         paths:
           - os-files/kustomize/overlays/perf
 
-
   - name: prod
     build:
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
       artifacts:
         - image: data-service
           context: .

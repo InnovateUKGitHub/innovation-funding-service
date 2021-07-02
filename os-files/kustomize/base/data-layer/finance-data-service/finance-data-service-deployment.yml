@@ -17,7 +17,7 @@ spec:
         app: finance-data-service
     spec:
       containers:
-      - image: innovateuk/finance-data-service
+      - image: finance-data-service
         name: spring-boot-service-container
         imagePullPolicy: IfNotPresent
         env:

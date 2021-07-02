@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: robot-framework
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: robot-service
+  template:
+    metadata:
+      labels:
+        run: robot-service
+    spec:
+      imagePullSecrets:
+        - name: imagePullSecretsName
+      containers:
+        - image: robot-framework
+          name: robot-framework
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 2000M
+            requests:
+              cpu: 100m
+              memory: 400M

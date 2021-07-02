@@ -1,0 +1,23 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: web-config
+data:
+#  TODO
+  SPRING_APPLICATION_JSON: '{"logout":{"url": "https://ifs-at-9870.apps.org-env-0.org.innovateuk.ukri.org/Logout/" }}'
+  IFS_WEB_GOOGLEANALYTICS_TRACKINGID: ""
+  IFS_WEB_SYSTEM_USER_UID: "c0d02979-e66e-11e7-ac43-0242ac120002"
+  IFS_WEB_REST_CONNECTIONS_MAX_TOTAL: "1000"
+  IFS_WEB_REST_CONNECTIONS_MAX_PER_ROUTE: "1000"
+  IFS_WEB_AJP_CONNECTIONS_MAX_TOTAL: "700"
+  IFS_WEB_AJP_CONNECTIONS_ACCEPT_COUNT: "700"
+  IFS_WEB_AJP_CONNECTIONS_MAX_THREADS: "300"
+  #  TODO
+  IFS_LIVE_PROJECTS_LANDING_PAGE_URL: "https://ifs-at-9870.apps.org-env-0.org.innovateuk.ukri.org/live-projects-landing-page"
+  #  TODO
+  IFS_EARLY_METRICS_URL: "https://ifs-at-9870.apps.org-env-0.org.innovateuk.ukri.org/early-metrics"
+  #  TODO
+  IFS_WEB_BASEURL: "https://ifs-at-9870.apps.org-env-0.org.innovateuk.ukri.org"
+  IFS_SHOW_COVID_QUESTIONNAIRE_LINKS: 'true'
+  IFS_WEB_VIRTUALASSISTANT_BOTSECRET: '9pgg24ZBXT4.F6mWxf_wGBXr1QUx9VCvCaUMOFv3sUviDfYqYIDNtWI'
+  IFS_WEB_VIRTUALASSISTANT_BOTID: 'ukridev-qnamaker-bot'

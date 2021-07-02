@@ -21,7 +21,7 @@ spec:
         app: project-setup-svc
     spec:
       containers:
-        - image: innovateuk/project-setup-service
+        - image: project-setup-service
           name: spring-boot-service-container
           imagePullPolicy: IfNotPresent
           env:
