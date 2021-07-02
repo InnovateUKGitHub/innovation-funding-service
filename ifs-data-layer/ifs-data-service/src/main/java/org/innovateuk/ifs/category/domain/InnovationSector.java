@@ -9,6 +9,7 @@ import java.util.List;
 @Entity
 @DiscriminatorValue("INNOVATION_SECTOR")
 public class InnovationSector extends ParentCategory<InnovationArea> {
+    public static final long NONE = 66;
 
     @OneToMany(mappedBy = "sector", cascade = CascadeType.ALL)
     @OrderBy("priority ASC")
