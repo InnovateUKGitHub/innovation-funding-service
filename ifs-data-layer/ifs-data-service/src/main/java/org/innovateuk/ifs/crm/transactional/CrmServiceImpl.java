@@ -89,8 +89,6 @@ public class CrmServiceImpl implements CrmService {
 
         return userService.getUserById(userId).andOnSuccess(user -> {
             syncExternalUser(user, fundingType.getDisplayName(), applicationId);
-            syncMonitoringOfficer(user);
-
             return serviceSuccess();
         });
     }
