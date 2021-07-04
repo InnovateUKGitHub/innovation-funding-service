@@ -7,10 +7,14 @@ import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.SimpleUserResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
 import static java.lang.String.format;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.simpleUserListType;
 
@@ -72,5 +76,30 @@ public class MonitoringOfficerRestServiceImpl extends BaseRestService implements
     @Override
     public RestResult<Void> sendDocumentReviewNotification(long projectId, long userId) {
         return postWithRestResult(format("%s/%d/%s/%d", PROJECT_MONITORING_OFFICER_REST_URL, projectId, "notify", userId));
+    }
+
+    @Override
+    public RestResult<List<ProjectResource>> filterProjectsForMonitoringOfficer(long monitoringOfficerId, boolean projectInSetup, boolean previousProject) {
+        String uriWithParams = buildUri(String.format("%s/{monitoringOfficerId}/filter-projects", PROJECT_MONITORING_OFFICER_REST_URL),
+                projectInSetup, previousProject, monitoringOfficerId);
+        return getWithRestResult(uriWithParams, projectResourceListType());
+    }
+
+    protected String buildUri(String url, boolean projectInSetup, boolean previousProject, Object... uriParameters) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+        if(projectInSetup) {
+            params.put("projectInSetup", singletonList("true"));
+        }
+
+        if(previousProject) {
+            params.put("previousProject", singletonList("true"));
+        }
+
+        return UriComponentsBuilder
+                .fromPath(url)
+                .queryParams(params)
+                .buildAndExpand(uriParameters)
+                .toUriString();
     }
 }
