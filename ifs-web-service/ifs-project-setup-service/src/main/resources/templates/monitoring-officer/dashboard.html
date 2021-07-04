@@ -55,7 +55,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="govuk-form-group govuk-!-margin-top-7">
+                            <div class="govuk-form-group govuk-!-margin-top-7"
+                                th:if="${model.monitoringOfficerSummaryView.isMOJourneyUpdateEnabled}">
                                 <h2 class="govuk-heading-s govuk-!-margin-bottom-2">
                                     Documents status
                                 </h2>
@@ -139,7 +140,7 @@
                                             </th:block>
                                         </div>
 
-                                        <div th:if="${projectView.documentSectionViewModel.hasDocumentSection}"
+                                        <div th:if="${model.isMOJourneyUpdateEnabled and projectView.documentSectionViewModel.hasDocumentSection}"
                                              class="task govuk-!-margin-bottom-0">
                                             <ul>
                                                 <li>
