@@ -28,6 +28,10 @@ Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/Assessor_Commons.robot
 
+*** Variables ***
+${assessor_as_a_service_url}        management/admin/upload-files
+
+
 *** Test Cases ***
 Summary:All the sections are present
     [Documentation]    INFUND-4648
@@ -168,6 +172,22 @@ Progress of the applications in Dashboard
     When The user navigates to the page            ${ASSESSOR_DASHBOARD_URL}
     Then the progress of the applications should be correct    ${EXPECTED_TOTAL_ACCEPTED}    ${EXPECTED_TOTAL_PENDING}
     And the user should see the element             jQuery = h3:contains("Sustainable living models for the future") ~ div:contains("${EXPECTED_TOTAL_PENDING} applications awaiting acceptance | ${EXPECTED_TOTAL_ACCEPTED} applications to assess")
+
+Assessment as a service - file upload
+    [Documentation]   IFS-9961  IFS-9962
+    Given Log in as a different user            &{system_maintenance_user}
+    And the user navigates to the page          ${server}/${assessor_as_a_service_url}
+    When the user uploads the file              css = .inputfile  ${assessment-as-service}
+    Then The user should not see an error in the page
+
+Assessment as a service - assign assessors
+    [Documentation]   IFS-9961  IFS-9962
+    Given Log in as a different user            &{ifs_admin_user_credentials}
+    And The user navigates to the page          ${server}/management/competition/133
+
+Assessment as a service - assessors assess the assessment as a service application
+
+
 
 *** Keywords ***
 the word count should be correct
