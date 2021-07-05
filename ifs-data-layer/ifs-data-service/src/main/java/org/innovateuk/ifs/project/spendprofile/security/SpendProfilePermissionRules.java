@@ -30,6 +30,11 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
         return isSupport(user);
     }
 
+    @PermissionRule(value = "VIEW_SPEND_PROFILE_STATUS", description = "Auditor users can get the approved status of a Spend Profile for any Project")
+    public boolean auditorCanViewCompetitionStatus(ProjectResource project, UserResource user){
+        return hasAuditorAuthority(user);
+    }
+
     @PermissionRule(value = "VIEW_SPEND_PROFILE_STATUS", description = "Innovation lead users can get the approved status of a Spend Profile for any Project")
     public boolean assignedInnovationLeadCanViewSPStatus(ProjectResource project, UserResource user){
         Application application = applicationRepository.findById(project.getApplication()).get();
@@ -89,6 +94,13 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
             description = "Support users can view Spend Profile data of any applicant")
     public boolean supportUsersCanSeeSpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
         return isSupport(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_SPEND_PROFILE_CSV",
+            description = "Auditor users can view Spend Profile data of any applicant")
+    public boolean auditorUsersCanSeeSpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return hasAuditorAuthority(user);
     }
 
     @PermissionRule(
