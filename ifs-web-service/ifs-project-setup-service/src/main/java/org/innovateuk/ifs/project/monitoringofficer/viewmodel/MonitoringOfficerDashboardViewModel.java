@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.monitoringofficer.viewmodel;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import java.util.List;
 
 /**
@@ -11,14 +9,14 @@ public class MonitoringOfficerDashboardViewModel {
 
     private final List<ProjectDashboardRowViewModel> projects;
     private final MonitoringOfficerSummaryViewModel monitoringOfficerSummaryView;
-
-    @Value("${ifs.monitoringofficer.journey.update.enabled}")
-    private boolean isMOJourneyUpdateEnabled;
+    private final boolean isMOJourneyUpdateEnabled;
 
     public MonitoringOfficerDashboardViewModel(List<ProjectDashboardRowViewModel> projects,
-                                               MonitoringOfficerSummaryViewModel monitoringOfficerSummaryView) {
+                                               MonitoringOfficerSummaryViewModel monitoringOfficerSummaryView,
+                                               boolean isMOJourneyUpdateEnabled) {
         this.projects = projects;
         this.monitoringOfficerSummaryView = monitoringOfficerSummaryView;
+        this.isMOJourneyUpdateEnabled = isMOJourneyUpdateEnabled;
     }
 
     public List<ProjectDashboardRowViewModel> getProjects() {

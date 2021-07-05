@@ -121,11 +121,6 @@ public class SetupSectionStatus {
         boolean allDocumentsAreSubmitted = actualNumberOfDocuments == expectedNumberOfDocuments;
         boolean allDocumentsAreApproved = allDocumentsAreSubmitted && projectDocuments.stream()
                 .allMatch(projectDocumentResource -> DocumentStatus.APPROVED.equals(projectDocumentResource.getStatus()));
-//        boolean allDocumentsAreUnset = projectDocuments.stream().allMatch(projectDocumentResource -> DocumentStatus.UNSET.equals(projectDocumentResource.getStatus()));
-//        boolean allDocumentsAreRejected = projectDocuments.stream().allMatch(projectDocumentResource -> DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus())
-//                || DocumentStatus.REJECTED_DUE_TO_TEAM_CHANGE.equals(projectDocumentResource.getStatus()));
-//        boolean hasRejectedAndApprovedDocuments = projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.APPROVED.equals(projectDocumentResource.getStatus())) &&
-//                projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus()));
         boolean hasDocumentForApproval = projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.SUBMITTED.equals(projectDocumentResource.getStatus()));
         boolean hasAnyDocumentUploadedOrRejected = projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.UPLOADED.equals(projectDocumentResource.getStatus())
                 || DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus())

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerS
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -18,16 +19,22 @@ public class MonitoringOfficerSummaryViewModelPopulator {
     @Autowired
     private ProjectFilterPopulator projectFilterPopulator;
 
+    @Value("${ifs.monitoringofficer.journey.update.enabled}")
+    private boolean isMOJourneyUpdateEnabled;
+
     public MonitoringOfficerSummaryViewModelPopulator() {
     }
 
     public MonitoringOfficerSummaryViewModel populate(UserResource user) {
         List<ProjectResource> projects = monitoringOfficerRestService.getProjectsForMonitoringOfficer(user.getId()).getSuccess();
-        return new MonitoringOfficerSummaryViewModel(getInSetupProjectCount(projects), getPreviousProjectCount(projects), getDocumentsCompleteCount(projects), getDocumentsInCompleteCount(projects), getDocumentsAwaitingReviewCount(projects));
+        return isMOJourneyUpdateEnabled ?
+                new MonitoringOfficerSummaryViewModel(getInSetupProjectCount(projects), getPreviousProjectCount(projects), getDocumentsCompleteCount(projects), getDocumentsInCompleteCount(projects), getDocumentsAwaitingReviewCount(projects)) :
+                new MonitoringOfficerSummaryViewModel(getInSetupProjectCount(projects), getPreviousProjectCount(projects));
     }
 
     public MonitoringOfficerSummaryViewModel populate(List<ProjectResource> projects) {
-        return new MonitoringOfficerSummaryViewModel(getInSetupProjectCount(projects), getPreviousProjectCount(projects), getDocumentsCompleteCount(projects), getDocumentsInCompleteCount(projects), getDocumentsAwaitingReviewCount(projects));
+        return isMOJourneyUpdateEnabled ? new MonitoringOfficerSummaryViewModel(getInSetupProjectCount(projects), getPreviousProjectCount(projects), getDocumentsCompleteCount(projects), getDocumentsInCompleteCount(projects), getDocumentsAwaitingReviewCount(projects)) :
+                new MonitoringOfficerSummaryViewModel(getInSetupProjectCount(projects), getPreviousProjectCount(projects));
     }
 
     public int getInSetupProjectCount(List<ProjectResource> projects) {

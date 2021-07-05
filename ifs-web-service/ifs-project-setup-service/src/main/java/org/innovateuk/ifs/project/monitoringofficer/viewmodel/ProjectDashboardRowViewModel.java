@@ -15,7 +15,16 @@ public class ProjectDashboardRowViewModel {
     private final long projectId;
     private final String projectTitle;
     private final ProjectState projectState;
-    private final MonitoringOfficerDashboardDocumentSectionViewModel  documentSectionViewModel;
+    private MonitoringOfficerDashboardDocumentSectionViewModel  documentSectionViewModel;
+
+    // when toggle is off
+    public ProjectDashboardRowViewModel(ProjectResource project) {
+        this.applicationNumber = project.getApplication();
+        this.competitionTitle = project.getCompetitionName();
+        this.projectId = project.getId();
+        this.projectTitle = project.getName();
+        this.projectState = project.getProjectState();
+    }
 
     public ProjectDashboardRowViewModel(ProjectResource project, MonitoringOfficerDashboardDocumentSectionViewModel  documentSectionViewModel) {
         this.applicationNumber = project.getApplication();

@@ -55,7 +55,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="govuk-form-group govuk-!-margin-top-7">
+                            <div th:if="${model.isMOJourneyUpdateEnabled}"
+                                 class="govuk-form-group govuk-!-margin-top-7">
                                 <h2 class="govuk-heading-s govuk-!-margin-bottom-2">
                                     Documents status
                                 </h2>
@@ -67,7 +68,7 @@
                                                value="documentsComplete"
                                                th:field="${form.documentsComplete}"
                                         />
-                                        <label class="govuk-label govuk-checkboxes__label">
+                                        <label for="documentsComplete" class="govuk-label govuk-checkboxes__label">
                                             <span th:text="'Complete (' + ${model.monitoringOfficerSummaryView.documentsCompleteCount} + ')'">Complete (7)</span>
                                         </label>
                                     </div>
@@ -78,7 +79,7 @@
                                                value="documentsInComplete"
                                                th:field="${form.documentsIncomplete}"
                                         />
-                                        <label class="govuk-label govuk-checkboxes__label">
+                                        <label for="documentsInComplete" class="govuk-label govuk-checkboxes__label">
                                             <span th:text="'Incomplete (' + ${model.monitoringOfficerSummaryView.documentsIncompleteCount} + ')'">Incomplete (5)</span>
                                         </label>
                                     </div>
@@ -89,7 +90,7 @@
                                                value="documentsAwaitingReview"
                                                th:field="${form.documentsAwaitingReview}"
                                         />
-                                        <label class="govuk-label govuk-checkboxes__label">
+                                        <label for="documentsAwaitingReview" class="govuk-label govuk-checkboxes__label">
                                             <span th:text="'Awaiting review (' + ${model.monitoringOfficerSummaryView.documentsAwaitingReviewCount} + ')'">Awaiting review (7)</span>
                                         </label>
                                     </div>
@@ -139,7 +140,7 @@
                                             </th:block>
                                         </div>
 
-                                        <div th:if="${projectView.documentSectionViewModel.hasDocumentSection}"
+                                        <div th:if="${model.isMOJourneyUpdateEnabled and projectView.documentSectionViewModel.hasDocumentSection}"
                                              class="task govuk-!-margin-bottom-0">
                                             <ul>
                                                 <li>
