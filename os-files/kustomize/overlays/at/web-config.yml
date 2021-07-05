@@ -13,11 +13,11 @@ data:
   IFS_WEB_AJP_CONNECTIONS_ACCEPT_COUNT: "700"
   IFS_WEB_AJP_CONNECTIONS_MAX_THREADS: "300"
   #  TODO
-  IFS_LIVE_PROJECTS_LANDING_PAGE_URL: "https://ifs-at-9870.apps.org-env-0.org.innovateuk.ukri.org/live-projects-landing-page"
+  IFS_LIVE_PROJECTS_LANDING_PAGE_URL: project.properties['openshiftEnv']+".apps."+project.properties['ifs.openshiftDomain']+"/live-projects-landing-page"
   #  TODO
-  IFS_EARLY_METRICS_URL: "https://ifs-at-9870.apps.org-env-0.org.innovateuk.ukri.org/early-metrics"
+  IFS_EARLY_METRICS_URL: project.properties['openshiftEnv']+".apps."+project.properties['ifs.openshiftDomain']+"/early-metrics"
   #  TODO
-  IFS_WEB_BASEURL: "https://ifs-at-9870.apps.org-env-0.org.innovateuk.ukri.org"
+  IFS_WEB_BASEURL: project.properties['openshiftEnv']+".apps."+project.properties['ifs.openshiftDomain']
   IFS_SHOW_COVID_QUESTIONNAIRE_LINKS: 'true'
   IFS_WEB_VIRTUALASSISTANT_BOTSECRET: '9pgg24ZBXT4.F6mWxf_wGBXr1QUx9VCvCaUMOFv3sUviDfYqYIDNtWI'
   IFS_WEB_VIRTUALASSISTANT_BOTID: 'ukridev-qnamaker-bot'
