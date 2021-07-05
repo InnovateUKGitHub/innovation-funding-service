@@ -18,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,10 +93,7 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
         MonitoringOfficerSummaryViewModel monitoringOfficerSummaryViewModel = Mockito.mock(MonitoringOfficerSummaryViewModel.class);
 
         when(monitoringOfficerRestService.getProjectsForMonitoringOfficer(user.getId())).thenReturn(restSuccess(singletonList(project)));
-        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(monitoringOfficerSummaryViewModelPopulator.populate(anyList())).thenReturn(monitoringOfficerSummaryViewModel);
-        when(setupSectionStatus.documentsSectionStatus(false, project, competition, true)).thenReturn(EMPTY);
-        when(projectFilterPopulator.hasDocumentSection(project)).thenReturn(false);
 
         MonitoringOfficerDashboardViewModel viewModel = populator.populate(user);
         assertEquals(1, viewModel.getProjects().size());
@@ -112,6 +110,7 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
 
     @Test
     public void populateApplyFilterAndSorting() {
+        ReflectionTestUtils.setField(populator, "isMOJourneyUpdateEnabled", true);
         ProjectResource projectResourceInSetup = newProjectResource()
                 .withId(88L)
                 .withCompetition(competition.getId())
@@ -149,11 +148,9 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
         when(monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(), true, true))
                 .thenReturn(restSuccess(projectResourceList));
 
-        when(competitionRestService.getCompetitionById(projectResourceList.get(0).getCompetition())).thenReturn(restSuccess(competition));
         when(competitionRestService.getCompetitionForProject(projectResourceList.get(0).getId())).thenReturn(restSuccess(competition));
         when(setupSectionStatus.documentsSectionStatus(false, projectResourceList.get(0), competition, true)).thenReturn(MO_ACTION_REQUIRED);
 
-        when(competitionRestService.getCompetitionById(projectResourceList.get(1).getCompetition())).thenReturn(restSuccess(competition));
         when(competitionRestService.getCompetitionForProject(projectResourceList.get(1).getId())).thenReturn(restSuccess(competition));
         when(setupSectionStatus.documentsSectionStatus(false, projectResourceList.get(1), competition, true)).thenReturn(TICK);
 
@@ -168,6 +165,7 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
         when(monitoringOfficerSummaryViewModelPopulator.populate(user)).thenReturn(monitoringOfficerSummaryViewModel);
 
         MonitoringOfficerDashboardViewModel viewModel = populator.populate(user, true, true, true, false, true);
+
         assertEquals(2, viewModel.getProjects().size());
 
         assertEquals((long) projectResourceInSetup.getId(), viewModel.getProjects().get(0).getProjectId());
