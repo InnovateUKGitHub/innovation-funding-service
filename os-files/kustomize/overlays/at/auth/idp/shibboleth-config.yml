@@ -8,9 +8,9 @@ data:
   SHIBBOLETH_API_KEYS: "1234567890"
   SHIBBOLETH_LDAP_PORT: "8389"
 # TODO
-  SP_DOMAIN: project.properties['openshiftEnv']+".apps."+project.properties['openshiftDomain']
+  SP_DOMAIN: "ifs-at-9870.apps.org-env-0.org.innovateuk.ukri.org"
 # TODO
-  IDP_DOMAIN: "auth-"+project.properties['openshiftEnv']+".apps."+project.properties['openshiftDomain']
+  IDP_DOMAIN: "auth-ifs-at-9870.apps.org-env-0.org.innovateuk.ukri.org"
   MPM_STARTSERVERS: "2"
   MPM_MINSPARETHREADS: "25"
   MPM_MAXSPARETHREADS: "75"
