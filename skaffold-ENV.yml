@@ -617,7 +617,7 @@ profiles:
         useDockerCLI: true
         useBuildkit: false
         tryImportMissing: true
-        push: false
+        push: true
       tagPolicy:
         gitCommit:
           ignoreChanges: true
