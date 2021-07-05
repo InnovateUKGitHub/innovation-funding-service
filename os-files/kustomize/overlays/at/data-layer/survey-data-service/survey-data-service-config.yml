@@ -6,6 +6,6 @@ data:
   SURVEY_DB_NAME: "ifs_survey"
   SURVEY_DB_USER: "root"
   SURVEY_DB_PASS: "password"
-  SURVEY_DB_HOST: "ifs-survey-database"
+  SURVEY_DB_HOST: "ifs-database"
   SURVEY_DB_PORT: "3306"
-  SURVEY_DB_URL: "jdbc:mysql://ifs-survey-database:3306/ifs_survey"
+  SURVEY_DB_URL: "jdbc:mysql://ifs-database:3306/ifs_survey"
