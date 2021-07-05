@@ -210,7 +210,7 @@ profiles:
         gitCommit:
           ignoreChanges: true
       artifacts:
-        - image: db-reset
+        - image: dbreset
           context: ifs-data-layer/ifs-data-service/src/main/resources
           docker:
             dockerfile: Dockerfile-dbreset
@@ -310,7 +310,7 @@ profiles:
         gitCommit:
           ignoreChanges: true
       artifacts:
-        - image: db-reset
+        - image: dbreset
           context: ifs-data-layer/ifs-data-service/src/main/resources
           docker:
             dockerfile: Dockerfile-dbreset
@@ -506,7 +506,7 @@ profiles:
         gitCommit:
           ignoreChanges: true
       artifacts:
-        - image: db-reset
+        - image: dbreset
           context: ifs-data-layer/ifs-data-service/src/main/resources
           docker:
             dockerfile: Dockerfile-dbreset
