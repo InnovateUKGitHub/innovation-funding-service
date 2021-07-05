@@ -121,27 +121,36 @@ public class SetupSectionStatus {
         boolean allDocumentsAreSubmitted = actualNumberOfDocuments == expectedNumberOfDocuments;
         boolean allDocumentsAreApproved = allDocumentsAreSubmitted && projectDocuments.stream()
                 .allMatch(projectDocumentResource -> DocumentStatus.APPROVED.equals(projectDocumentResource.getStatus()));
-        boolean allDocumentsAreUnset = projectDocuments.stream().allMatch(projectDocumentResource -> DocumentStatus.UNSET.equals(projectDocumentResource.getStatus()));
-        boolean allDocumentsAreRejected = projectDocuments.stream().allMatch(projectDocumentResource -> DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus())
-                        || DocumentStatus.REJECTED_DUE_TO_TEAM_CHANGE.equals(projectDocumentResource.getStatus()));
-        boolean hasRejectedAndApprovedDocuments = allDocumentsAreSubmitted && projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.APPROVED.equals(projectDocumentResource.getStatus())) &&
-                projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus()));
+//        boolean allDocumentsAreUnset = projectDocuments.stream().allMatch(projectDocumentResource -> DocumentStatus.UNSET.equals(projectDocumentResource.getStatus()));
+//        boolean allDocumentsAreRejected = projectDocuments.stream().allMatch(projectDocumentResource -> DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus())
+//                || DocumentStatus.REJECTED_DUE_TO_TEAM_CHANGE.equals(projectDocumentResource.getStatus()));
+//        boolean hasRejectedAndApprovedDocuments = projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.APPROVED.equals(projectDocumentResource.getStatus())) &&
+//                projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus()));
         boolean hasDocumentForApproval = projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.SUBMITTED.equals(projectDocumentResource.getStatus()));
+        boolean hasAnyDocumentUploadedOrRejected = projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.UPLOADED.equals(projectDocumentResource.getStatus())
+                || DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus())
+                || DocumentStatus.REJECTED_DUE_TO_TEAM_CHANGE.equals(projectDocumentResource.getStatus()));
 
         if (allDocumentsAreApproved) {
             return TICK;
         }
-        if (allDocumentsAreUnset || allDocumentsAreRejected || hasRejectedAndApprovedDocuments) {
-            return isProjectManager ? FLAG : isProjectMO ? INCOMPLETE : EMPTY;
-        }
-        if (!allDocumentsAreSubmitted) {
-            return isProjectManager ? FLAG : isProjectMO ? hasDocumentForApproval ? MO_ACTION_REQUIRED : INCOMPLETE : EMPTY;
-        }
 
-        return isProjectMO ? MO_ACTION_REQUIRED : HOURGLASS;
+        if (isProjectMO) {
+            if (hasDocumentForApproval) {
+                return MO_ACTION_REQUIRED;
+            }
+            else {
+                return INCOMPLETE;
+            }
+        }
+            if (!allDocumentsAreSubmitted || hasAnyDocumentUploadedOrRejected) {
+                return isProjectManager ? FLAG : EMPTY;
+            }
+
+            return HOURGLASS;
     }
 
-    public SectionStatus grantOfferLetterSectionStatus(final ProjectActivityStates grantOfferLetterState,
+            public SectionStatus grantOfferLetterSectionStatus(final ProjectActivityStates grantOfferLetterState,
                                                        final boolean isLeadPartner) {
         if (grantOfferLetterState == null || NOT_REQUIRED.equals(grantOfferLetterState)) {
             return EMPTY;

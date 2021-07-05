@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.monitoringofficer.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.documents.populator.DocumentsPopulator;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerDashboardDocumentSectionViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerDashboardViewModel;
@@ -26,27 +27,30 @@ public class MonitoringOfficerDashboardViewModelPopulator {
 
     private final MonitoringOfficerRestService monitoringOfficerRestService;
     private final MonitoringOfficerSummaryViewModelPopulator monitoringOfficerSummaryViewModelPopulator;
-    private final SetupSectionStatus sectionStatus;
+    private final SetupSectionStatus setupSectionStatus;
     private final CompetitionRestService competitionRestService;
     private final ProjectFilterPopulator projectFilterPopulator;
+    private final DocumentsPopulator documentsPopulator;
 
     public MonitoringOfficerDashboardViewModelPopulator(MonitoringOfficerRestService monitoringOfficerRestService,
                                                         MonitoringOfficerSummaryViewModelPopulator monitoringOfficerSummaryViewModelPopulator,
-                                                        SetupSectionStatus sectionStatus,
+                                                        SetupSectionStatus setupSectionStatus,
                                                         CompetitionRestService competitionRestService,
-                                                        ProjectFilterPopulator projectFilterPopulator) {
+                                                        ProjectFilterPopulator projectFilterPopulator,
+                                                        DocumentsPopulator documentsPopulator) {
         this.monitoringOfficerRestService = monitoringOfficerRestService;
         this.monitoringOfficerSummaryViewModelPopulator = monitoringOfficerSummaryViewModelPopulator;
-        this.sectionStatus = sectionStatus;
+        this.setupSectionStatus = setupSectionStatus;
         this.competitionRestService = competitionRestService;
         this.projectFilterPopulator = projectFilterPopulator;
+        this.documentsPopulator = documentsPopulator;
     }
 
     public MonitoringOfficerDashboardViewModel populate(UserResource user) {
         List<ProjectResource> projects = monitoringOfficerRestService.getProjectsForMonitoringOfficer(user.getId()).getSuccess();
         MonitoringOfficerSummaryViewModel monitoringOfficerSummaryViewModel = monitoringOfficerSummaryViewModelPopulator.populate(projects);
 
-        return new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projects), monitoringOfficerSummaryViewModel);
+        return new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projects, user), monitoringOfficerSummaryViewModel);
     }
 
     public MonitoringOfficerDashboardViewModel populate(UserResource user,
@@ -60,21 +64,28 @@ public class MonitoringOfficerDashboardViewModelPopulator {
         List<ProjectResource> projectsFilteredByDocuments = projectsFilteredByDocuments(projectsFilteredByState, documentsComplete, documentsIncomplete, documentsAwaitingReview);
         MonitoringOfficerSummaryViewModel monitoringOfficerSummaryViewModel = monitoringOfficerSummaryViewModelPopulator.populate(user);
 
-        return new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projectsFilteredByDocuments), monitoringOfficerSummaryViewModel);
+        return new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projectsFilteredByDocuments, user), monitoringOfficerSummaryViewModel);
     }
 
     private String documentSectionStatusMOView(ProjectResource project, CompetitionResource competition) {
-        return sectionStatus.documentsSectionStatus(false, project, competition, true).getStatus();
+        return setupSectionStatus.documentsSectionStatus(false, project, competition, true).getStatus();
+//
+//        if (documentsPopulator.populateAllDocuments(project.getId(), user.getId()).getDocuments().stream().anyMatch(documentStatus -> DocumentStatus.SUBMITTED.equals(documentStatus.getStatus()))) {
+//            return MO_ACTION_REQUIRED.getStatus();
+//        } else if (documentsPopulator.populateAllDocuments(project.getId(), user.getId()).getDocuments().stream().allMatch(documentStatus -> DocumentStatus.APPROVED.equals(documentStatus.getStatus()))) {
+//            return TICK.getStatus();
+//        } else {
+//            return INCOMPLETE.getStatus();
+//        }
     }
 
-    private List<ProjectDashboardRowViewModel> buildProjectDashboardRows(List<ProjectResource> projects) {
+    private List<ProjectDashboardRowViewModel> buildProjectDashboardRows(List<ProjectResource> projects, UserResource user) {
         List<ProjectResource> sortedProjects = sortProjects(projects);
 
         return sortedProjects.stream()
                 .map(project ->
                         new ProjectDashboardRowViewModel(project,
-                                new MonitoringOfficerDashboardDocumentSectionViewModel(documentSectionStatusMOView(project,
-                                        competitionRestService.getCompetitionById(project.getCompetition()).getSuccess()),
+                                new MonitoringOfficerDashboardDocumentSectionViewModel(documentSectionStatusMOView(project, competitionRestService.getCompetitionForProject(project.getId()).getSuccess()),
                                         projectFilterPopulator.hasDocumentSection(project),
                                         project.getId(),
                                         hasDocumentAwaitingReview(project))))
@@ -111,6 +122,6 @@ public class MonitoringOfficerDashboardViewModelPopulator {
     }
 
     private boolean hasDocumentAwaitingReview(ProjectResource project) {
-        return projectFilterPopulator.hasDocumentSection(project) && sectionStatus.documentsSectionStatus(false, project, competitionRestService.getCompetitionForProject(project.getId()).getSuccess(), true).equals(MO_ACTION_REQUIRED);
+        return projectFilterPopulator.hasDocumentSection(project) && setupSectionStatus.documentsSectionStatus(false, project, competitionRestService.getCompetitionForProject(project.getId()).getSuccess(), true).equals(MO_ACTION_REQUIRED);
     }
 }

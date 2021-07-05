@@ -40,6 +40,7 @@ public class ProjectResource {
     private List<ProjectDocumentResource> projectDocuments = new ArrayList<>();
     private boolean spendProfileGenerated;
     private boolean useDocusignForGrantOfferLetter;
+    private String documentStatus;
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message = "{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
@@ -265,6 +266,14 @@ public class ProjectResource {
 
     public void setUseDocusignForGrantOfferLetter(boolean useDocusignForGrantOfferLetter) {
         this.useDocusignForGrantOfferLetter = useDocusignForGrantOfferLetter;
+    }
+
+    public String getDocumentStatus() {
+        return documentStatus;
+    }
+
+    public void setDocumentStatus(String documentStatus) {
+        this.documentStatus = documentStatus;
     }
 
     @Override
