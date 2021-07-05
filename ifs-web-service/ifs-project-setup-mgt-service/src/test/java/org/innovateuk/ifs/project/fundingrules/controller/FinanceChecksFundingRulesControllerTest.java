@@ -2,25 +2,17 @@ package org.innovateuk.ifs.project.fundingrules.controller;
 
 import org.innovateuk.ifs.AbstractAsyncWaitMockMVCTest;
 import org.innovateuk.ifs.competition.resource.FundingRules;
-import org.innovateuk.ifs.finance.builder.FundingRulesResourceBuilder;
-import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
-import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.fundingrules.populator.FinanceChecksFundingRulesViewModelPopulator;
 import org.innovateuk.ifs.project.fundingrules.viewmodel.FinanceChecksFundingRulesViewModel;
-import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.FundingRulesResourceBuilder.newFundingRulesResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -43,8 +35,8 @@ public class FinanceChecksFundingRulesControllerTest extends AbstractAsyncWaitMo
 
         FinanceChecksFundingRulesViewModel financeChecksFundingRulesViewModel = new FinanceChecksFundingRulesViewModel(
                 newProjectResource().build(), null, newOrganisationResource().build(),
-                false, newFundingRulesResource().build(), null, false);
-        when(financeChecksFundingRulesViewModelPopulator.populateFundingRulesViewModel(projectId, organisationId, false)).thenReturn(financeChecksFundingRulesViewModel);
+                false, newFundingRulesResource().build(), null, false, false);
+        when(financeChecksFundingRulesViewModelPopulator.populateFundingRulesViewModel(projectId, organisationId, false, false)).thenReturn(financeChecksFundingRulesViewModel);
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/funding-rules",
                 projectId, organisationId)).
@@ -79,8 +71,8 @@ public class FinanceChecksFundingRulesControllerTest extends AbstractAsyncWaitMo
 
         FinanceChecksFundingRulesViewModel financeChecksFundingRulesViewModel = new FinanceChecksFundingRulesViewModel(
                 newProjectResource().build(), null, newOrganisationResource().build(),
-                false, newFundingRulesResource().build(), null, false);
-        when(financeChecksFundingRulesViewModelPopulator.populateFundingRulesViewModel(projectId, organisationId, false)).thenReturn(financeChecksFundingRulesViewModel);
+                false, newFundingRulesResource().build(), null, false, false);
+        when(financeChecksFundingRulesViewModelPopulator.populateFundingRulesViewModel(projectId, organisationId, false, false)).thenReturn(financeChecksFundingRulesViewModel);
 
         MvcResult result = mockMvc.perform(post("/project/{projectId}/finance-check/organisation/{organisationId}/funding-rules",
                 projectId, organisationId).param("confirmFundingRules", "false")).
@@ -99,8 +91,8 @@ public class FinanceChecksFundingRulesControllerTest extends AbstractAsyncWaitMo
 
         FinanceChecksFundingRulesViewModel financeChecksFundingRulesViewModel = new FinanceChecksFundingRulesViewModel(
                 newProjectResource().build(), null, newOrganisationResource().build(),
-                false, newFundingRulesResource().build(), null, false);
-        when(financeChecksFundingRulesViewModelPopulator.populateFundingRulesViewModel(projectId, organisationId, true)).thenReturn(financeChecksFundingRulesViewModel);
+                false, newFundingRulesResource().build(), null, false, false);
+        when(financeChecksFundingRulesViewModelPopulator.populateFundingRulesViewModel(projectId, organisationId, true, false)).thenReturn(financeChecksFundingRulesViewModel);
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/funding-rules/edit",
                 projectId, organisationId)).
@@ -138,14 +130,32 @@ public class FinanceChecksFundingRulesControllerTest extends AbstractAsyncWaitMo
 
         FinanceChecksFundingRulesViewModel financeChecksFundingRulesViewModel = new FinanceChecksFundingRulesViewModel(
                 newProjectResource().build(), null, newOrganisationResource().build(),
-                false, newFundingRulesResource().build(), null, false);
-        when(financeChecksFundingRulesViewModelPopulator.populateFundingRulesViewModel(projectId, organisationId, true)).thenReturn(financeChecksFundingRulesViewModel);
+                false, newFundingRulesResource().build(), null, false, false);
+        when(financeChecksFundingRulesViewModelPopulator.populateFundingRulesViewModel(projectId, organisationId, true, false)).thenReturn(financeChecksFundingRulesViewModel);
 
         MvcResult result = mockMvc.perform(post("/project/{projectId}/finance-check/organisation/{organisationId}/funding-rules/edit",
                 projectId, organisationId).param("overrideFundingRules", "false")).
                 andExpect(status().isOk()).
                 andExpect(model().attributeExists("model")).
                 andExpect(model().attributeHasFieldErrorCode("form", "overrideFundingRules", "AssertTrue")).
+                andExpect(view().name("project/financecheck/fundingrules")).
+                andReturn();
+    }
+
+    @Test
+    public void testViewFundingRulesForAuditor() throws Exception {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+
+        FinanceChecksFundingRulesViewModel financeChecksFundingRulesViewModel = new FinanceChecksFundingRulesViewModel(
+                newProjectResource().build(), null, newOrganisationResource().build(),
+                false, newFundingRulesResource().build(), null, false, true);
+        when(financeChecksFundingRulesViewModelPopulator.populateFundingRulesViewModel(projectId, organisationId, false, true)).thenReturn(financeChecksFundingRulesViewModel);
+
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/funding-rules",
+                projectId, organisationId)).
+                andExpect(status().isOk()).
                 andExpect(view().name("project/financecheck/fundingrules")).
                 andReturn();
     }

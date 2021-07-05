@@ -582,6 +582,20 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         assertTrue(rules.stakeholderUserCanSeeProjectFinancesForOrganisations(projectFinanceResource, user));
     }
 
+    @Test
+    public void auditorCanViewFundingRules() {
+
+        long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasAuthority(Authority.AUDITOR)) {
+                assertTrue(rules.auditorCanViewFundingRules(projectOrganisationCompositeId, user));
+            }
+        });
+    }
+
     @Override
     protected ProjectFinancePermissionRules supplyPermissionRulesUnderTest() {
         return new ProjectFinancePermissionRules();
