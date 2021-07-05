@@ -48,6 +48,7 @@ public class DocumentsServiceSecurityTest extends BaseServiceSecurityTest<Docume
             verify(documentPermissionRules).internalUserCanDownloadDocument(project, getLoggedInUser());
             verify(documentPermissionRules).monitoringOfficerCanDownloadDocument(project, getLoggedInUser());
             verify(documentPermissionRules).stakeholderCanDownloadDocument(project, getLoggedInUser());
+            verify(documentPermissionRules).auditorCanDownloadDocument(project, getLoggedInUser());
             verifyNoMoreInteractions(documentPermissionRules);
         });
     }
@@ -64,6 +65,7 @@ public class DocumentsServiceSecurityTest extends BaseServiceSecurityTest<Docume
             verify(documentPermissionRules).internalUserCanDownloadDocument(project, getLoggedInUser());
             verify(documentPermissionRules).monitoringOfficerCanDownloadDocument(project, getLoggedInUser());
             verify(documentPermissionRules).stakeholderCanDownloadDocument(project, getLoggedInUser());
+            verify(documentPermissionRules).auditorCanDownloadDocument(project, getLoggedInUser());
             verifyNoMoreInteractions(documentPermissionRules);
         });
     }

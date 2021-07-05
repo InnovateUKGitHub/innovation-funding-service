@@ -76,10 +76,10 @@
                                         <input id="documentsIncomplete"
                                                class="govuk-checkboxes__input"
                                                type="checkbox"
-                                               value="documentsInComplete"
+                                               value="documentsIncomplete"
                                                th:field="${form.documentsIncomplete}"
                                         />
-                                        <label for="documentsInComplete" class="govuk-label govuk-checkboxes__label">
+                                        <label for="documentsIncomplete" class="govuk-label govuk-checkboxes__label">
                                             <span th:text="'Incomplete (' + ${model.monitoringOfficerSummaryView.documentsIncompleteCount} + ')'">Incomplete (5)</span>
                                         </label>
                                     </div>
@@ -106,10 +106,9 @@
                         <h2 class="govuk-heading-s govuk-!-margin-0" th:text="${model.projectCount == 1 ? '1 project' : model.projectCount + ' projects' }">37 projects</h2>
                         <th:block th:if="${model.emptyResults}">
                             <div class="govuk-!-margin-bottom-6">
-                                <h2 class="govuk-heading-l">Please try:</h2>
+                                <h2 class="govuk-heading-l">No results found</h2>
                                 <ul class="govuk-list govuk-list--bullet">
-                                    <li>searching again using different keywords</li>
-                                    <li>removing your filters</li>
+                                    <li>please check your search criteria and try again</li>
                                 </ul>
                             </div>
                         </th:block>

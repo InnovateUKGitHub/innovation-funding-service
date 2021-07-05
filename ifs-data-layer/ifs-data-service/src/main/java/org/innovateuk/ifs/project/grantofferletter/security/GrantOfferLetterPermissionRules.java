@@ -38,6 +38,13 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "DOWNLOAD_GRANT_OFFER",
+            description = "Auditor users can download grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
+    public boolean auditorUsersCanDownloadGrantOfferLetter(ProjectResource project, UserResource user) {
+        return hasAuditorAuthority(user);
+    }
+
+    @PermissionRule(
+            value = "DOWNLOAD_GRANT_OFFER",
             description = "Innovation lead users can download grant offer documents (Unsigned grant offer, signed grant offer, Additional contract), of projects from competition assigned to them")
     public boolean innovationLeadUsersCanDownloadGrantOfferLetter(ProjectResource project, UserResource user) {
         Application application = applicationRepository.findById(project.getApplication()).get();
@@ -72,6 +79,13 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
             description = "Support users can view grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
     public boolean supportUsersCanViewGrantOfferLetter(ProjectResource project, UserResource user) {
         return isSupport(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_GRANT_OFFER",
+            description = "Auditor users can view grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
+    public boolean auditorUsersCanViewGrantOfferLetter(ProjectResource project, UserResource user) {
+        return hasAuditorAuthority(user);
     }
 
     @PermissionRule(
@@ -172,6 +186,13 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
             description = "Support users can view the send status of Grant Offer Letter for a project")
     public boolean supportUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
         return isSupport(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
+            description = "Auditor users can view the send status of Grant Offer Letter for a project")
+    public boolean auditorUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
+        return hasAuditorAuthority(user);
     }
 
     @PermissionRule(

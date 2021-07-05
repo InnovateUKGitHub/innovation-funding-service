@@ -36,7 +36,8 @@ Monitoring officer can filter both in-setup and previous projects
 Monitoring officer can view no results text when none of the projects been assigned to him
     [Documentation]  IFS-9576
     Given log in as a different user         &{emptyMonitoringOfficerDashboard}
-    Then the user should see the element     jQuery = li:contains("searching again using different keywords")
+    Then the user should see the element     jQuery = li:contains("please check your search criteria and try again")
+    And the user should see the element      jQuery = h2:contains("No results found")
     And page should contain element          jQuery = h2:contains("0 projects")
 
 Monitoring officer can filter projects based on complete document status

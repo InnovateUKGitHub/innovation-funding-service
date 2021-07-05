@@ -14,8 +14,8 @@
            proxyName="${idp.domain}"
            proxyPort="${idp.port}"
            scheme="https" secure="true" SSLEnabled="true"
-           SSLCertificateFile="/etc/tomcat8/certs/server.crt"
-           SSLCertificateKeyFile="/etc/tomcat8/certs/server.key"
+           SSLCertificateFile="/etc/tomcat9/certs/server.crt"
+           SSLCertificateKeyFile="/etc/tomcat9/certs/server.key"
            certificateVerification="optionalNoCA" SSLProtocol="all"
     />
 
