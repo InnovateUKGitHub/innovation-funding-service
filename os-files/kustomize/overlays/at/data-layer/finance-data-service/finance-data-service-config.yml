@@ -3,7 +3,7 @@ apiVersion: v1
 metadata:
   name: finance-data-service-config
 data:
-  FINANCE_DB_URL: "'jdbc:mysql://ifs-finance-database:3306/ifs_finance'"
+  FINANCE_DB_URL: "jdbc:mysql://ifs-finance-database:3306/ifs_finance"
   FINANCE_DB_NAME: "ifs_finance"
   FINANCE_DB_USER: "root"
   FINANCE_DB_PASS: "password"

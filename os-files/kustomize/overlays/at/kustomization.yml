@@ -11,6 +11,11 @@ patches:
     kind: Deployment
     annotationSelector: "waitForDb=waitForDb"
 
+- path: patches/pull-secrets-patch.yml
+  target:
+    kind: Deployment
+    annotationSelector: "pullSecrets=pullSecrets"
+
 resources:
   - spring-config.yml
   - data-layer/databases/ifs-database.yml

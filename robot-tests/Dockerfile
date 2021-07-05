@@ -1,5 +1,5 @@
 # This dockerfile builds the zap stable release
-FROM ubuntu:20.04
+FROM docker-ifs.devops.innovateuk.org/releases/ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 # ARG WEBSWING_TOKEN=""
