@@ -16,3 +16,11 @@ spec:
     name: shib
     weight: 100
   wildcardPolicy: None
+status:
+  ingress:
+    - conditions:
+        - status: 'True'
+          type: Admitted
+      host: ifs-at-9870.apps.org-env-0.org.innovateuk.ukri.org
+      routerName: router
+      wildcardPolicy: None
