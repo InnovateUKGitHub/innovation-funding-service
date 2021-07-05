@@ -11,3 +11,6 @@ update user set uid = '3036e2d4-dbe1-4d0b-80a2-da841dd1f4dd' where email = 'prom
 update user set uid = 'ec94e97b-e78e-417a-bf92-34b5d46d45ee' where email = 'ashnachhabra@outlook.com';
 update user set uid = '88d183d5-edd9-4c81-9fb0-3ed27745e6ff' where email = 'amanda@amcm-associates.com';
 update user set uid = '88d183d5-edd9-4c81-9fb0-3ed27745e7gg' where email = 'liz.littlewood@lemconsultant.com';
+
+-- IFS-9941
+update user set uid = '99d183d5-edd9-4c81-9fb0-3ed27745e8e9' where email = 'Bill.Mccoy@gmail.com';
