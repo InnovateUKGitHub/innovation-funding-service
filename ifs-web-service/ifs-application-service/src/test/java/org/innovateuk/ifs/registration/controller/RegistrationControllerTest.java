@@ -98,7 +98,6 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     private Cookie inviteHashCookie;
     private Cookie usedInviteHashCookie;
     private Cookie organisationCookie;
-    private Cookie applicationCookie;
 
     @Override
     protected RegistrationController supplyControllerUnderTest() {
@@ -119,12 +118,10 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         inviteHashCookie = new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(INVITE_HASH));
         usedInviteHashCookie = new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(ACCEPTED_INVITE_HASH));
         organisationCookie = new Cookie("organisationId", encryptor.encrypt("1"));
-        applicationCookie = new Cookie("applicationId", encryptor.encrypt("1"));
 
         when(registrationCookieService.getOrganisationIdCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(1L));
         when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(INVITE_HASH));
         when(registrationCookieService.getCompetitionIdCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(1L));
-        when(registrationCookieService.getApplicationIdCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(1L));
 
         logoutCurrentUser();
     }
@@ -467,18 +464,17 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 .withRole(Role.APPLICANT)
                 .withOrganisationId(1L)
                 .withCompetitionId(1L)
-                //.withApplicationId(1L)
                 .withAgreedTerms(true)
                 .build();
 
         when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restSuccess(organisation));
         when(userRestService.createUser(refEq(userResource))).thenReturn(restSuccess(newUserResource().build()));
         when(userService.findUserByEmail(eq("invited@email.com"))).thenReturn(Optional.empty());
-        when(inviteRestService.acceptInvite(eq(INVITE_HASH), anyLong(), anyLong(), anyLong(), anyLong())).thenReturn(restSuccess());
+        when(inviteRestService.acceptInvite(eq(INVITE_HASH), anyLong(), anyLong())).thenReturn(restSuccess());
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .cookie(inviteHashCookie, organisationCookie,applicationCookie)
+                .cookie(inviteHashCookie, organisationCookie)
                 .param("password", userResource.getPassword())
                 .param("firstName", userResource.getFirstName())
                 .param("lastName", userResource.getLastName())
