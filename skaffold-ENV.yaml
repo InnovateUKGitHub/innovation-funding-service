@@ -210,6 +210,10 @@ profiles:
         gitCommit:
           ignoreChanges: true
       artifacts:
+        - image: db-reset
+          context: ifs-data-layer/ifs-data-service/src/main/resources
+          docker:
+            dockerfile: Dockerfile-dbreset
         - image: data-service
           context: .
           jib:
