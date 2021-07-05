@@ -1,0 +1,24 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: mail
+  namespace: ifs-at-9870
+spec:
+  host: mail-ifs-at-9870.apps.org-env-0.org.innovateuk.ukri.org
+  port:
+    targetPort: 4443-tcp
+  tls:
+    termination: passthrough
+  to:
+    kind: Service
+    name: mail
+    weight: 100
+  wildcardPolicy: None
+status:
+  ingress:
+    - conditions:
+        - status: 'True'
+          type: Admitted
+      host: mail-ifs-at-9870.apps.org-env-0.org.innovateuk.ukri.org
+      routerName: router
+      wildcardPolicy: None
