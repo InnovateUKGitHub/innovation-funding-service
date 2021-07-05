@@ -3,11 +3,11 @@
 # update configuration at runtime for configuration files without native environment variable support
 
 # apache/tomcat "front" certificates
-cat /var/certs/idp_proxy_key.pem | tee /etc/apache2/certs/idp_proxy_key.pem > /etc/tomcat8/certs/server.key && \
-cat /var/certs/idp_proxy_certificate.pem | tee /etc/apache2/certs/idp_proxy_certificate.pem > /etc/tomcat8/certs/server.crt && \
+cat /var/certs/idp_proxy_key.pem | tee /etc/apache2/certs/idp_proxy_key.pem > /etc/tomcat9/certs/server.key && \
+cat /var/certs/idp_proxy_certificate.pem | tee /etc/apache2/certs/idp_proxy_certificate.pem > /etc/tomcat9/certs/server.crt && \
 cat /var/certs/idp_proxy_cacertificate.pem > /etc/apache2/certs/idp_proxy_cacertificate.pem && \
-cat /etc/tomcat8/certs/server.crt >> /etc/apache2/certs/proxy.pem && printf '\n' >> /etc/apache2/certs/proxy.pem && \
-cat /etc/tomcat8/certs/server.key >> /etc/apache2/certs/proxy.pem
+cat /etc/tomcat9/certs/server.crt >> /etc/apache2/certs/proxy.pem && printf '\n' >> /etc/apache2/certs/proxy.pem && \
+cat /etc/tomcat9/certs/server.key >> /etc/apache2/certs/proxy.pem
 
 # idp certificates
 cat /var/certs/idp-signing.crt > /etc/shibboleth/idp-signing.crt && \
@@ -20,7 +20,7 @@ cat /var/certs/idp-encryption.key > /opt/shibboleth-idp/credentials/idp-encrypti
 cat /var/certs/idp-encryption.crt > /opt/shibboleth-idp/credentials/idp-encryption.crt
 
 cat /var/certs/ldap-encryption.crt > /opt/shibboleth-idp/credentials/ldap-encryption.crt && \
-$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /opt/shibboleth-idp/credentials/ldap-encryption.crt -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass "$JAVA_KEYSTORE_PASSWORD"
+$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /opt/shibboleth-idp/credentials/ldap-encryption.crt -keystore $JAVA_HOME/lib/security/cacerts -storepass "$JAVA_KEYSTORE_PASSWORD"
 
 . idp-extras.sh
 

@@ -18,6 +18,7 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
 	List<Question> findAllById(long [] id);
 	Question findFirstById(Long questionId);
     List<Question> findByCompetitionId(Long competitionId);
+    Question findByCompetitionIdAndName(long competitionId, String name);
     Question findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(Long competitionId, Long sectionId, Integer priority);
     Question findFirstByCompetitionIdAndSectionIdAndPriorityLessThanOrderByPriorityDesc(Long competitionId, Long sectionId, Integer priority);
     Question findFirstByCompetitionIdAndSectionIdOrderByPriorityAsc(Long competitionId, Long sectionId);

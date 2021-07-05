@@ -11,6 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -31,6 +32,16 @@ public class MonitoringOfficerDashboardControllerTest extends BaseControllerMock
         when(populator.populate(loggedInUser)).thenReturn(model);
 
         mockMvc.perform(get("/monitoring-officer/dashboard"))
+                .andExpect(view().name("monitoring-officer/dashboard"))
+                .andExpect(model().attribute("model", model));
+    }
+
+    @Test
+    public void filterDashboard() throws Exception {
+        MonitoringOfficerDashboardViewModel model = mock(MonitoringOfficerDashboardViewModel.class);
+        when(populator.populate(loggedInUser, false, false)).thenReturn(model);
+
+        mockMvc.perform(post("/monitoring-officer/dashboard"))
                 .andExpect(view().name("monitoring-officer/dashboard"))
                 .andExpect(model().attribute("model", model));
     }
