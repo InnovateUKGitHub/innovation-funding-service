@@ -2,3 +2,6 @@ apply plugin: 'com.google.cloud.tools.jib'
 
 jib.to.auth.username = project.hasProperty("nexus_username") ? project.property("nexus_username") : ""
 jib.to.auth.password = project.hasProperty("nexus_password") ? project.property("nexus_password") : ""
+
+//jib.from.image="adoptopenjdk:8-jre@sha256:263082c9d7c0beb2cc33bcb7e1915d56fb18791066b85664dde6662ff4758888"
+jib.from.image="docker-ifs.devops.innovateuk.org/releases/openjdk:latest"

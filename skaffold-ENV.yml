@@ -2,112 +2,14 @@ apiVersion: skaffold/v2beta11
 kind: Config
 metadata:
   name: innovation-funding-service
-build:
-  artifacts:
-    - image: data-service
-      context: .
-      jib:
-        type: gradle
-        project: ifs-data-layer:ifs-data-service
-        args:
-          - "-DskipTests"
-    - image: finance-data-service
-      context: .
-      jib:
-        type: gradle
-        project: ifs-data-layer:ifs-finance-data-service
-        args:
-          - "-DskipTests"
-    - image: survey-data-service
-      context: .
-      jib:
-        type: gradle
-        project: ifs-data-layer:ifs-survey-data-service
-        args:
-          - "-DskipTests"
-    - image: data-service-alerts
-      context: .
-      jib:
-        type: gradle
-        project: ifs-data-layer:data-service-alerts
-        args:
-          - "-DskipTests"
-    - image: survey-service
-      context: .
-      jib:
-        type: gradle
-        project: ifs-web-service:ifs-survey-service
-        args:
-          - "-DskipTests"
-    - image: project-setup-service
-      context: .
-      jib:
-        type: gradle
-        project: ifs-web-service:ifs-project-setup-service
-        args:
-          - "-DskipTests"
-    - image: project-setup-mgt-service
-      context: .
-      jib:
-        type: gradle
-        project: ifs-web-service:ifs-project-setup-mgt-service
-        args:
-          - "-DskipTests"
-    - image: front-door-service
-      context: .
-      jib:
-        type: gradle
-        project: ifs-web-service:ifs-front-door-service
-        args:
-          - "-DskipTests"
-    - image: competition-mgt-service
-      context: .
-      jib:
-        type: gradle
-        project: ifs-web-service:ifs-competition-mgt-service
-        args:
-          - "-DskipTests"
-    - image: assessment-service
-      context: .
-      jib:
-        type: gradle
-        project: ifs-web-service:ifs-assessment-service
-        args:
-          - "-DskipTests"
-    - image: application-service
-      context: .
-      jib:
-        type: gradle
-        project: ifs-web-service:ifs-application-service
-        args:
-          - "-DskipTests"
-    - image: registration-service
-      context: .
-      jib:
-        type: gradle
-        project: ifs-registration-service
-        args:
-          - "-DskipTests"
-    - image: sil-stub
-      context: .
-      jib:
-        type: gradle
-        project: ifs-sil-stub
-        args:
-          - "-DskipTests"
-  local:
-    useDockerCLI: true
-    useBuildkit: false
-    tryImportMissing: true
-    push: true
-#deploy:
-#  statusCheckDeadlineSeconds: 600
-#  kustomize:
-#    paths:
-#      - os-files/kustomize/overlays/local
 profiles:
   - name: at
     build:
+      local:
+        useDockerCLI: true
+        useBuildkit: false
+        tryImportMissing: true
+        push: true
       tagPolicy:
         gitCommit:
           ignoreChanges: true
@@ -206,6 +108,11 @@ profiles:
 
   - name: sysint
     build:
+      local:
+        useDockerCLI: true
+        useBuildkit: false
+        tryImportMissing: true
+        push: true
       tagPolicy:
         gitCommit:
           ignoreChanges: true
@@ -306,6 +213,11 @@ profiles:
 
   - name: uat
     build:
+      local:
+        useDockerCLI: true
+        useBuildkit: false
+        tryImportMissing: true
+        push: true
       tagPolicy:
         gitCommit:
           ignoreChanges: true
@@ -406,6 +318,11 @@ profiles:
 
   - name: demo
     build:
+      local:
+        useDockerCLI: true
+        useBuildkit: false
+        tryImportMissing: true
+        push: true
       tagPolicy:
         gitCommit:
           ignoreChanges: true
@@ -502,6 +419,12 @@ profiles:
 
   - name: perf
     build:
+      local:
+        useDockerCLI: true
+        useBuildkit: false
+        tryImportMissing: true
+        push: true
+        concurrency: 12
       tagPolicy:
         gitCommit:
           ignoreChanges: true
@@ -602,6 +525,11 @@ profiles:
 
   - name: prod
     build:
+      local:
+        useDockerCLI: true
+        useBuildkit: false
+        tryImportMissing: true
+        push: true
       tagPolicy:
         gitCommit:
           ignoreChanges: true
