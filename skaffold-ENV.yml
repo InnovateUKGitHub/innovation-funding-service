@@ -117,10 +117,6 @@ profiles:
         gitCommit:
           ignoreChanges: true
       artifacts:
-        - image: dbreset
-          context: ifs-data-layer/ifs-data-service/src/main/resources
-          docker:
-            dockerfile: Dockerfile-dbreset
         - image: data-service
           context: .
           jib:
@@ -222,10 +218,6 @@ profiles:
         gitCommit:
           ignoreChanges: true
       artifacts:
-        - image: dbreset
-          context: ifs-data-layer/ifs-data-service/src/main/resources
-          docker:
-            dockerfile: Dockerfile-dbreset
         - image: data-service
           context: .
           jib:
@@ -429,10 +421,6 @@ profiles:
         gitCommit:
           ignoreChanges: true
       artifacts:
-        - image: dbreset
-          context: ifs-data-layer/ifs-data-service/src/main/resources
-          docker:
-            dockerfile: Dockerfile-dbreset
         - image: data-service
           context: .
           jib:
@@ -623,3 +611,18 @@ profiles:
       kustomize:
         paths:
           - os-files/kustomize/overlays/prod
+  - name: db-reset
+    build:
+      local:
+        useDockerCLI: true
+        useBuildkit: false
+        tryImportMissing: true
+        push: false
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
+      artifacts:
+        - image: dbreset
+          context: ifs-data-layer/ifs-data-service/src/main/resources
+          docker:
+            dockerfile: Dockerfile-dbreset
