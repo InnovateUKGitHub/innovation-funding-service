@@ -1,5 +1,4 @@
 FROM boxfuse/flyway:5.2.4
-MAINTAINER Lukasz Guminski <lukasz.guminski@container-solutions.com>
 VOLUME /tmp
 RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
 RUN sed -i '/jessie-updates/d' /etc/apt/sources.list
