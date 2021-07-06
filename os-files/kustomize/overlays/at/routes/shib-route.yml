@@ -4,8 +4,8 @@ metadata:
   annotations:
     haproxy.router.openshift.io/balance: roundrobin
   name: shib
-  namespace: ifs-at-9790
 spec:
+  # TODO
   host: ifs-at-9790.apps.org-env-0.org.innovateuk.ukri.org
   port:
     targetPort: 443-tcp
@@ -21,6 +21,7 @@ status:
     - conditions:
         - status: 'True'
           type: Admitted
+          # TODO
       host: ifs-at-9870.apps.org-env-0.org.innovateuk.ukri.org
       routerName: router
       wildcardPolicy: None
