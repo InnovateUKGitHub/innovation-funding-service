@@ -79,12 +79,23 @@ public class ApplicationInviteController {
     public RestResult<Void> acceptInvite(@PathVariable("hash") String hash, @PathVariable("userId") long userId, @PathVariable("organisationId") long organisationId) {
         return acceptApplicationInviteService.acceptInvite(hash, userId, Optional.of(organisationId))
                 .andOnSuccessReturn(result -> {
-                    ApplicationInviteResource application =  applicationInviteService.getInviteByHash(hash).getSuccess();
-                    crmService.syncCrmContact(userId, application.getCompetitionId(), application.getApplication());
+                    crmService.syncCrmContact(userId);
                     return result;
                 })
                 .toPutResponse();
     }
+
+    @PutMapping("/accept-invite/{hash}/{userId}/{competitionId}/{organisationId}/{applicationId}")
+    public RestResult<Void> acceptInvite(@PathVariable("hash") String hash, @PathVariable("userId") long userId, @PathVariable("competitionId") long competitionId,
+                                         @PathVariable("organisationId") long organisationId, @PathVariable("applicationId") long applicationId) {
+        return acceptApplicationInviteService.acceptInvite(hash, userId, Optional.of(organisationId))
+                .andOnSuccessReturn(result -> {
+                    crmService.syncCrmContact(userId, competitionId, applicationId);
+                    return result;
+                })
+                .toPutResponse();
+    }
+
 
     @DeleteMapping("/remove-invite/{inviteId}")
     public RestResult<Void> removeApplicationInvite(@PathVariable("inviteId") long applicationInviteResourceId) {

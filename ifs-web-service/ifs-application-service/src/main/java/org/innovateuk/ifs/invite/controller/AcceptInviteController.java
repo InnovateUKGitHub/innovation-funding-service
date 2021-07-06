@@ -76,6 +76,10 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
                             }
                             // Success
                             registrationCookieService.saveToInviteHashCookie(hash, response);// Add the hash to a cookie for later flow lookup.
+                            registrationCookieService.saveToApplicationIdIdCookie(invite.getApplication()
+                                    , response);
+                            registrationCookieService.saveToCompetitionIdCookie(invite.getCompetitionId()
+                                    , response);
                             AcceptRejectApplicationInviteViewModel acceptRejectApplicationInviteViewModel = acceptRejectApplicationInviteModelPopulator.populateModel(invite, inviteOrganisation);
                             model.addAttribute("model", acceptRejectApplicationInviteViewModel);
                             CompetitionOrganisationConfigResource organisationConfigResource = organisationConfigRestService.findByCompetitionId(acceptRejectApplicationInviteViewModel.getCompetitionId()).getSuccess();
@@ -107,6 +111,12 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
                                     inviteOrganisation.getOrganisation()).getSuccess();
                     registrationCookieService.saveToOrganisationIdCookie(inviteOrganisation.getOrganisation()
                             , response);
+                    registrationCookieService.saveToApplicationIdIdCookie(invite.getApplication()
+                            , response);
+                    registrationCookieService.saveToCompetitionIdCookie(invite.getCompetitionId()
+                            , response);
+
+
                     ConfirmOrganisationInviteOrganisationViewModel viewModel =
                             confirmOrganisationInviteModelPopulator.populate(invite, organisation,
                                     RegistrationController.BASE_URL);
