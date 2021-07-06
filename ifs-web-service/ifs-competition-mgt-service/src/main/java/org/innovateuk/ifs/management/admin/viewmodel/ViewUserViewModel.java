@@ -7,6 +7,7 @@ import org.innovateuk.ifs.user.resource.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.innovateuk.ifs.user.resource.Role.SUPPORTER;
 import static org.innovateuk.ifs.user.resource.Role.externalRolesToInvite;
@@ -20,12 +21,14 @@ public class ViewUserViewModel {
     private final UserResource loggedInUser;
     private final List<RoleProfileStatusResource> roleProfiles;
     private final boolean externalRoleLinkEnabled;
+    private Set<Role> roles;
 
-    public ViewUserViewModel(UserResource user, UserResource loggedInUser, List<RoleProfileStatusResource> roleProfiles, boolean externalRoleLinkEnabled) {
+    public ViewUserViewModel(UserResource user, UserResource loggedInUser, List<RoleProfileStatusResource> roleProfiles, boolean externalRoleLinkEnabled, Set<Role> roles) {
         this.user = user;
         this.loggedInUser = loggedInUser;
         this.roleProfiles = roleProfiles;
         this.externalRoleLinkEnabled = externalRoleLinkEnabled;
+        this.roles = roles;
     }
 
     public UserResource getUser() {
@@ -64,6 +67,14 @@ public class ViewUserViewModel {
 
     public boolean isInternal() {
         return user.isInternalUser();
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     public String roleDisplay(Role role) {
