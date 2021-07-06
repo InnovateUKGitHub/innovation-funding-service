@@ -43,4 +43,5 @@ resources:
   - storage/gluster.yml
   - storage/gluster-ep.yml
   - storage/persistent-volume-claim.yml
+  - db-config.yml
 
