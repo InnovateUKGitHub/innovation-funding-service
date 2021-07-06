@@ -7,7 +7,7 @@ items:
       name: dbreset
     spec:
       imagePullSecrets:
-        - name: imagePullSecretsName
+        - name: regcred
       containers:
         - name: dbreset
           image: dbreset
