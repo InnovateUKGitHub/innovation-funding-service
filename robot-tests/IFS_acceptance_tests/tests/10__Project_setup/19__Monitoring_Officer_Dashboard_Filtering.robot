@@ -84,12 +84,18 @@ Custom suite teardown
 
 Check correct number of in-setup projects filtered
     [Arguments]  ${filterName}
-    ${elementCountOnPage} =    Get Element Count    jQuery = div strong.status-msg
+    ${elementCountOnPage} =    Get Element Count    jQuery = .status:contains("Monitor project")
+    page should contain element     jQuery = .govuk-checkboxes__label:contains("${filterName} (${elementCountOnPage})")
+    page should contain element     jQuery = h2:contains("${elementCountOnPage} project")
+
+Check correct number of previous projects filtered
+    [Arguments]  ${filterName}
+    ${elementCountOnPage} =    Get Element Count    jQuery = .status:contains("Live project")
     page should contain element     jQuery = .govuk-checkboxes__label:contains("${filterName} (${elementCountOnPage})")
     page should contain element     jQuery = h2:contains("${elementCountOnPage} project")
 
 Check correct total number of projects displaying
-    ${totalCountOnPage} =    Get Element Count    jQuery = div strong.status-msg
+    ${totalCountOnPage} =    Get Element Count    jQuery = li .task h3
     page should contain element     jQuery = h2:contains("${totalCountOnPage} project")
 
 Requesting application id
