@@ -40,5 +40,7 @@ resources:
   - web-config.yml
   - docusign-config.yml
   - flyway-config.yml
-  - persistent-volume-claim.yml
+  - storage/gluster.yml
+  - storage/gluster-ep.yml
+  - storage/persistent-volume-claim.yml
 
