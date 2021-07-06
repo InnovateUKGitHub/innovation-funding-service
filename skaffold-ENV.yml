@@ -416,7 +416,6 @@ profiles:
         useBuildkit: false
         tryImportMissing: true
         push: true
-        concurrency: 12
       tagPolicy:
         gitCommit:
           ignoreChanges: true

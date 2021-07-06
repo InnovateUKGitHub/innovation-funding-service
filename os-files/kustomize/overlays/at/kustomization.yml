@@ -26,6 +26,8 @@ resources:
   - robot/chrome.yml
   - robot/chrome-deployment.yml
   - robot/robot-framework-deployment.yml
+  - routes/idp-route.yml
+  - routes/shib-route.yml
 
 patchesStrategicMerge:
   - cache-config.yml
