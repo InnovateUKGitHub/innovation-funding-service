@@ -7,8 +7,8 @@ data:
   SHIBBOLETH_LDAP_USER: "cn=admin,dc=nodomain"
   SHIBBOLETH_API_KEYS: "1234567890"
   SHIBBOLETH_LDAP_PORT: "8389"
-  SP_DOMAIN: project.properties['openshiftEnv']+".apps."+project.properties['ifs.openshiftDomain']
-  IDP_DOMAIN: "auth-"+project.properties['openshiftEnv']+".apps."+project.properties['ifs.openshiftDomain']
+  SP_DOMAIN: "openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org"
+  IDP_DOMAIN: "auth-openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org"
   MPM_STARTSERVERS: "2"
   MPM_MINSPARETHREADS: "25"
   MPM_MAXSPARETHREADS: "75"
