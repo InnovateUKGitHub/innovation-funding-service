@@ -1,0 +1,26 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    haproxy.router.openshift.io/balance: source
+  name: idp
+  namespace: ifs-at-9870
+spec:
+  host: auth-ifs-at-9870.apps.org-env-0.org.innovateuk.ukri.org
+  port:
+    targetPort: 443-tcp
+  tls:
+    termination: passthrough
+  to:
+    kind: Service
+    name: idp
+    weight: 100
+  wildcardPolicy: None
+status:
+  ingress:
+    - conditions:
+        - status: 'True'
+          type: Admitted
+      host: ifs-at-9870.apps.org-env-0.org.innovateuk.ukri.org
+      routerName: router
+      wildcardPolicy: None
