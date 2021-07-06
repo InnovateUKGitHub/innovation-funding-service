@@ -22,6 +22,6 @@ status:
         - status: 'True'
           type: Admitted
           # TODO
-      host: ifs-at-9870.apps.org-env-0.org.innovateuk.ukri.org
+      host: openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org
       routerName: router
       wildcardPolicy: None
