@@ -610,3 +610,22 @@ profiles:
       kustomize:
         paths:
           - os-files/kustomize/overlays/prod
+  - name: db-reset
+    build:
+      local:
+        useDockerCLI: true
+        useBuildkit: false
+        tryImportMissing: true
+        push: true
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
+      artifacts:
+        - image: dbreset
+          context: ifs-data-layer/ifs-data-service/src/main/resources
+          docker:
+            dockerfile: Dockerfile-dbreset
+    deploy:
+      kustomize:
+        paths:
+          - os-files/kustomize/overlays/db-reset

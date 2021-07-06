@@ -1,20 +1,20 @@
 commonAnnotations:
   deployedWith: kustomize
-  environment: local
+  environment: at
 
 bases:
   - ../../base
 
 patches:
-- path: data-layer/patches/waitdb-init-container.yml
-  target:
-    kind: Deployment
-    annotationSelector: "waitForDb=waitForDb"
+  - path: data-layer/patches/waitdb-init-container.yml
+    target:
+      kind: Deployment
+      annotationSelector: "waitForDb=waitForDb"
 
-- path: patches/pull-secrets-patch.yml
-  target:
-    kind: Deployment
-    annotationSelector: "pullSecrets=pullSecrets"
+  - path: patches/pull-secrets-patch.yml
+    target:
+      kind: Deployment
+      annotationSelector: "pullSecrets=pullSecrets"
 
 resources:
   - spring-config.yml
