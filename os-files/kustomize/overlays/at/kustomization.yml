@@ -34,7 +34,11 @@ resources:
   - cache-provider/cache-config.yml
   - auth/idp/shibboleth-config.yml
   - auth/idp/idp-config.yml
+  - auth/idp/idp-keys-secrets.yml
   - auth/ldap/ldap-config.yml
+  - auth/ldap/ldap-keys-secrets.yml
+  - auth/sp/sp-keys-secrets.yml
+  - auth/sp/sp-secrets.yml
   - feature-toggle-config.yml
   - new-relic-config.yml
   - web-config.yml
