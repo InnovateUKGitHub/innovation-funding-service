@@ -195,19 +195,33 @@ public class UserController {
     @GetMapping("/" + URL_VERIFY_EMAIL + "/{hash}")
     public RestResult<Void> verifyEmail(@PathVariable String hash) {
         final ServiceResult<Token> result = tokenService.getEmailToken(hash);
+        final Long[] resultId = {null, null};
+        Long applicationId = null;
+
+
         LOG.debug(String.format("UserController verifyHash: %s", hash));
         return result.handleSuccessOrFailure(
                 failure -> restFailure(failure.getErrors()),
                 token -> {
                     registrationService.activateApplicantAndSendDiversitySurvey(token.getClassPk()).andOnSuccessReturnVoid(v -> {
-                       ApplicationResource applicationResource  = tokenService.handleExtraAttributes(token).getSuccess();
-                        Long competitionId = applicationResource.getCompetition();
-                        Long applicationId = applicationResource.getId();
+                        ServiceResult<ApplicationResource> applicationResourceServiceResult = tokenService.handleExtraAttributes(token);
+
+                        ////
+                        applicationResourceServiceResult.handleSuccessOrFailure(
+                                failure -> restFailure(failure.getErrors()),
+                                applicationResource -> {
+                                    crmService.syncCrmContact(token.getClassPk(), applicationResource.getCompetition(), applicationResource.getId());
+                                    return applicationResource;
+                                });
                         tokenService.removeToken(token);
-                        crmService.syncCrmContact(token.getClassPk(),competitionId,applicationId);
+                        crmService.syncCrmContact(token.getClassPk());
                     });
                     return restSuccess();
                 });
+
+        ////
+
+
     }
 
     @PutMapping("/" + URL_RESEND_EMAIL_VERIFICATION_NOTIFICATION + "/{emailAddress}/")
