@@ -25,7 +25,7 @@ Monitoring officer can filter previous projects only
     Given the user unselects the checkbox                       projectInSetup
     When the user selects the checkbox                          previousProject
     And the user clicks the button/link                         id = update-documents-results-button
-    Then Check correct number of in-setup projects filtered     Previous
+    Then Check correct number of previous projects filtered     Previous
 
 Monitoring officer can filter both in-setup and previous projects
     [Documentation]  IFS-9576
@@ -42,7 +42,7 @@ Monitoring officer can view no results text when none of the projects been assig
 
 Monitoring officer can filter projects based on complete document status
     [Documentation]  IFS-9941
-    Given assign monitroing officer to the projects
+    Given assign monitoring officer to the projects
     And the user uploads documents to the project
     And log in as a different user                       &{monitoringOfficerDashboard}
     When the user selects the checkbox                   documentsComplete
@@ -102,7 +102,7 @@ Requesting application id
     [Arguments]  ${applicationName}
     get application id by name and set as suite variable     ${applicationName}
 
-Assign monitroing officer to the projects
+Assign monitoring officer to the projects
     log in as a different user                 &{ifs_admin_user_credentials}
     the user navigates to the page             ${server}/project-setup-management/monitoring-officer/view-all
     Search for MO                              Bill   Bill Mccoy
