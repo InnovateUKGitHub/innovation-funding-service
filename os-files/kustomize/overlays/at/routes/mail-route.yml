@@ -3,7 +3,6 @@ kind: Route
 metadata:
   name: mail
 spec:
-  # TODO
   host: mail-openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org
   port:
     targetPort: 4443-tcp
@@ -19,7 +18,6 @@ status:
     - conditions:
         - status: 'True'
           type: Admitted
-          # TODO
       host: mail-openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org
       routerName: router
       wildcardPolicy: None
