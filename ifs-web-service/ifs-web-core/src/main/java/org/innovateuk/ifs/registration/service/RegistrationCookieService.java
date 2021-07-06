@@ -27,6 +27,7 @@ public class RegistrationCookieService {
     public static final String INVITE_HASH = "invite_hash";
     public static final String PROJECT_INVITE_HASH = "project_invite_hash";
     public static final String COMPETITION_ID = "competitionId";
+    public static final String APPLICATION_ID = "applicationId";
 
     @Autowired
     private EncryptedCookieService cookieUtil;
@@ -65,7 +66,9 @@ public class RegistrationCookieService {
     public void saveToCompetitionIdCookie(Long id, HttpServletResponse response) {
         cookieUtil.saveToCookie(response, COMPETITION_ID, String.valueOf(id));
     }
-
+    public void saveToApplicationIdIdCookie(Long id, HttpServletResponse response) {
+        cookieUtil.saveToCookie(response, APPLICATION_ID, String.valueOf(id));
+    }
     public void saveToInviteHashCookie(String hash, HttpServletResponse response) {
         cookieUtil.saveToCookie(response, INVITE_HASH, hash);
     }
@@ -101,6 +104,11 @@ public class RegistrationCookieService {
     public Optional<Long> getOrganisationIdCookieValue(HttpServletRequest request) {
         return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, ORGANISATION_ID), Long.class));
     }
+
+    public Optional<Long> getApplicationIdCookieValue(HttpServletRequest request) {
+        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, APPLICATION_ID), Long.class));
+    }
+
 
     public Optional<Long> getCompetitionIdCookieValue(HttpServletRequest request) {
         return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, COMPETITION_ID), Long.class));
