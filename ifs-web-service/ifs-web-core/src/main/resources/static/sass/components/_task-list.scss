@@ -163,6 +163,7 @@
     .task-status-incomplete-no-action {
       @extend .task-status;
       right: 0;
+
       span {
         color: $govuk-text-colour;
         font-weight: bold;

@@ -9,11 +9,14 @@ public class MonitoringOfficerDashboardViewModel {
 
     private final List<ProjectDashboardRowViewModel> projects;
     private final MonitoringOfficerSummaryViewModel monitoringOfficerSummaryView;
+    private final boolean isMOJourneyUpdateEnabled;
 
     public MonitoringOfficerDashboardViewModel(List<ProjectDashboardRowViewModel> projects,
-                                               MonitoringOfficerSummaryViewModel monitoringOfficerSummaryView) {
+                                               MonitoringOfficerSummaryViewModel monitoringOfficerSummaryView,
+                                               boolean isMOJourneyUpdateEnabled) {
         this.projects = projects;
         this.monitoringOfficerSummaryView = monitoringOfficerSummaryView;
+        this.isMOJourneyUpdateEnabled = isMOJourneyUpdateEnabled;
     }
 
     public List<ProjectDashboardRowViewModel> getProjects() {
@@ -30,5 +33,9 @@ public class MonitoringOfficerDashboardViewModel {
 
     public boolean isEmptyResults() {
         return projects.size() == 0;
+    }
+
+    public boolean isMOJourneyUpdateEnabled() {
+        return isMOJourneyUpdateEnabled;
     }
 }

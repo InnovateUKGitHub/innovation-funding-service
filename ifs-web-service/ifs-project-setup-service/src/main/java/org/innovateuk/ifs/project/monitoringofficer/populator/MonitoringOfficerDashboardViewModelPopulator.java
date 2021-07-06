@@ -1,50 +1,88 @@
 package org.innovateuk.ifs.project.monitoringofficer.populator;
 
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerDashboardDocumentSectionViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerDashboardViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerSummaryViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.ProjectDashboardRowViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.status.populator.SetupSectionStatus;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.sections.SectionStatus.MO_ACTION_REQUIRED;
 
 @Component
 public class MonitoringOfficerDashboardViewModelPopulator {
 
     private final MonitoringOfficerRestService monitoringOfficerRestService;
     private final MonitoringOfficerSummaryViewModelPopulator monitoringOfficerSummaryViewModelPopulator;
+    private final SetupSectionStatus setupSectionStatus;
+    private final CompetitionRestService competitionRestService;
+    private final ProjectFilterPopulator projectFilterPopulator;
+
+    @Value("${ifs.monitoringofficer.journey.update.enabled}")
+    private boolean isMOJourneyUpdateEnabled;
 
     public MonitoringOfficerDashboardViewModelPopulator(MonitoringOfficerRestService monitoringOfficerRestService,
-                                                        MonitoringOfficerSummaryViewModelPopulator monitoringOfficerSummaryViewModelPopulator) {
+                                                        MonitoringOfficerSummaryViewModelPopulator monitoringOfficerSummaryViewModelPopulator,
+                                                        SetupSectionStatus setupSectionStatus,
+                                                        CompetitionRestService competitionRestService,
+                                                        ProjectFilterPopulator projectFilterPopulator) {
         this.monitoringOfficerRestService = monitoringOfficerRestService;
         this.monitoringOfficerSummaryViewModelPopulator = monitoringOfficerSummaryViewModelPopulator;
+        this.setupSectionStatus = setupSectionStatus;
+        this.competitionRestService = competitionRestService;
+        this.projectFilterPopulator = projectFilterPopulator;
     }
 
     public MonitoringOfficerDashboardViewModel populate(UserResource user) {
         List<ProjectResource> projects = monitoringOfficerRestService.getProjectsForMonitoringOfficer(user.getId()).getSuccess();
         MonitoringOfficerSummaryViewModel monitoringOfficerSummaryViewModel = monitoringOfficerSummaryViewModelPopulator.populate(projects);
 
-        return new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projects), monitoringOfficerSummaryViewModel);
+        return new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projects, user), monitoringOfficerSummaryViewModel, isMOJourneyUpdateEnabled);
     }
 
-    public MonitoringOfficerDashboardViewModel populate(UserResource user, boolean projectInSetup, boolean previousProject) {
-        List<ProjectResource> projects = monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(),
+    public MonitoringOfficerDashboardViewModel populate(UserResource user,
+                                                        boolean projectInSetup,
+                                                        boolean previousProject,
+                                                        boolean documentsComplete,
+                                                        boolean documentsIncomplete,
+                                                        boolean documentsAwaitingReview) {
+        List<ProjectResource> projectsFilteredByState = monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(),
                 projectInSetup, previousProject).getSuccess();
+        List<ProjectResource> projectsFilteredByDocuments = projectsFilteredByDocuments(projectsFilteredByState, documentsComplete, documentsIncomplete, documentsAwaitingReview);
         MonitoringOfficerSummaryViewModel monitoringOfficerSummaryViewModel = monitoringOfficerSummaryViewModelPopulator.populate(user);
 
-        return new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projects), monitoringOfficerSummaryViewModel);
+        return new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projectsFilteredByDocuments, user), monitoringOfficerSummaryViewModel, isMOJourneyUpdateEnabled);
     }
 
-    private List<ProjectDashboardRowViewModel> buildProjectDashboardRows(List<ProjectResource> projects) {
+    private String documentSectionStatusMOView(ProjectResource project, CompetitionResource competition) {
+        return setupSectionStatus.documentsSectionStatus(false, project, competition, true).getStatus();
+    }
+
+    private List<ProjectDashboardRowViewModel> buildProjectDashboardRows(List<ProjectResource> projects, UserResource user) {
         List<ProjectResource> sortedProjects = sortProjects(projects);
 
         return sortedProjects.stream()
-                .map(project -> new ProjectDashboardRowViewModel(project))
+                .map(project ->
+                        isMOJourneyUpdateEnabled ?
+                        new ProjectDashboardRowViewModel(project,
+                                new MonitoringOfficerDashboardDocumentSectionViewModel(documentSectionStatusMOView(project, competitionRestService.getCompetitionForProject(project.getId()).getSuccess()),
+                                        projectFilterPopulator.hasDocumentSection(project),
+                                        project.getId(),
+                                        hasDocumentAwaitingReview(project))) :
+                        new ProjectDashboardRowViewModel(project))
                 .collect(toList());
     }
 
@@ -52,5 +90,32 @@ public class MonitoringOfficerDashboardViewModelPopulator {
         return projects.stream()
                 .sorted(Comparator.comparing(projectResource -> projectResource.getProjectState().getMoDisplayOrder()))
                 .collect(toList());
+    }
+
+    private List<ProjectResource> projectsFilteredByDocuments(List<ProjectResource> projects, boolean documentsComplete, boolean documentsIncomplete, boolean documentsAwaitingReview) {
+
+        List<ProjectResource> projectsWithDocumentsComplete = projectFilterPopulator.getProjectsWithDocumentsComplete(projects);
+        List<ProjectResource> projectsWithDocumentsInComplete = projectFilterPopulator.getProjectsWithDocumentsInComplete(projects);
+        List<ProjectResource> projectsWithDocumentsAwaitingReview = projectFilterPopulator.getProjectsWithDocumentsAwaitingReview(projects);
+
+        if (documentsComplete && documentsIncomplete && documentsAwaitingReview) {
+            return Stream.of(projectsWithDocumentsComplete, projectsWithDocumentsInComplete, projectsWithDocumentsAwaitingReview).flatMap(Collection::stream).distinct().collect(Collectors.toList());
+        } else if (documentsComplete && documentsIncomplete) {
+            return Stream.of(projectsWithDocumentsComplete, projectsWithDocumentsInComplete).flatMap(Collection::stream).distinct().collect(Collectors.toList());
+        } else if (documentsAwaitingReview && documentsComplete) {
+            return Stream.of(projectsWithDocumentsComplete, projectsWithDocumentsAwaitingReview).flatMap(Collection::stream).distinct().collect(Collectors.toList());
+        } else if (documentsIncomplete && documentsAwaitingReview) {
+            return Stream.of(projectsWithDocumentsInComplete, projectsWithDocumentsAwaitingReview).flatMap(Collection::stream).distinct().collect(Collectors.toList());
+        } else if (documentsComplete) {
+            return projectsWithDocumentsComplete;
+        } else if (documentsIncomplete) {
+            return projectsWithDocumentsInComplete;
+        } else if (documentsAwaitingReview) {
+            return projectsWithDocumentsAwaitingReview;
+        } else return projects;
+    }
+
+    private boolean hasDocumentAwaitingReview(ProjectResource project) {
+        return projectFilterPopulator.hasDocumentSection(project) && setupSectionStatus.documentsSectionStatus(false, project, competitionRestService.getCompetitionForProject(project.getId()).getSuccess(), true).equals(MO_ACTION_REQUIRED);
     }
 }
