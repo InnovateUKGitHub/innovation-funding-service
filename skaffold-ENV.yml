@@ -626,3 +626,7 @@ profiles:
           context: ifs-data-layer/ifs-data-service/src/main/resources
           docker:
             dockerfile: Dockerfile-dbreset
+    deploy:
+      kustomize:
+        paths:
+          - os-files/kustomize/overlays/db-reset
