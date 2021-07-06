@@ -116,7 +116,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
 
         when(applicationInviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId))).thenReturn(serviceFailure(badRequestError("no invites")));
 
-        mockMvc.perform(post("/invite/create-application-invites/" + applicationId, "json")
+        mockMvc.perform(post("/invite/create-application-invites/"+applicationId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
                 .andExpect(status().isBadRequest());
@@ -159,17 +159,13 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
         String hash = "abcdef";
         long userId = 1L;
         long organisationId = 2L;
-        Long compId = 1L;
-        Long appId = 1L;
 
-        ApplicationInviteResource inviteResource = newApplicationInviteResource().withApplication(appId).withCompetitionId(compId).build();
-        when(applicationInviteService.getInviteByHash(anyString())).thenReturn(serviceSuccess(inviteResource));
         when(acceptApplicationInviteService.acceptInvite(hash, userId, Optional.of(organisationId))).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/invite/accept-invite/{hash}/{userId}/{organisationId}", hash, userId, organisationId))
                 .andExpect(status().isOk());
 
         verify(acceptApplicationInviteService).acceptInvite(hash, userId, Optional.of(organisationId));
-        verify(crmService).syncCrmContact(userId, compId, appId);
+        verify(crmService).syncCrmContact(userId);
     }
 }
