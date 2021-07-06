@@ -21,22 +21,17 @@ resources:
   - data-layer/databases/ifs-database.yml
   - data-layer/databases/ifs-database-deployment.yml
   - data-layer/databases/mysql-configmap.yml
-  - cache-provider/cache-provider-service.yml
-  - cache-provider/cache-provider-service-deployment.yml
+  - data-layer/data-service/data-service-config.yml
+  - data-layer/finance-data-service/finance-data-service-config.yml
+  - data-layer/survey-data-service/survey-data-service-config.yml
   - robot/chrome.yml
   - robot/chrome-deployment.yml
   - robot/robot-framework-deployment.yml
   - routes/idp-route.yml
   - routes/shib-route.yml
-
-patchesStrategicMerge:
-  - cache-config.yml
-  - db-config.yml
   - cache-provider/cache-provider-service.yml
   - cache-provider/cache-provider-service-deployment.yml
-  - data-layer/data-service/data-service-config.yml
-  - data-layer/finance-data-service/finance-data-service-config.yml
-  - data-layer/survey-data-service/survey-data-service-config.yml
+  - cache-provider/cache-config.yml
   - auth/idp/shibboleth-config.yml
   - auth/idp/idp-config.yml
   - auth/ldap/ldap-config.yml
