@@ -13,13 +13,13 @@ spec:
       args:
         - |
           cat > /flyway/flyway.conf <<EOF
-          flyway.url=jdbc:mysql://\${DB_HOST}:\${DB_PORT}
-          flyway.schemas=\$DB_NAME
+          flyway.url=jdbc:mysql://$DB_HOST:$DB_PORT
+          flyway.schemas=$DB_NAME
           flyway.locations=filesystem:/flyway/sql/db/migration,filesystem:/flyway/sql/db/reference,filesystem:/flyway/sql/db/setup,filesystem:/flyway/sql/db/webtest
-          flyway.placeholders.ifs.system.user.uuid=\$SYSTEM_USER_UUID
-          flyway.user=\$DB_USER
-          flyway.password=\$DB_PASS
-          flyway.table=\$FLYWAY_TABLE
+          flyway.placeholders.ifs.system.user.uuid=$SYSTEM_USER_UUID
+          flyway.user=$DB_USER
+          flyway.password=$DB_PASS
+          flyway.table=$FLYWAY_TABLE
           EOF
           . /clean-migrate-db-sync-ldap.sh
       env:
