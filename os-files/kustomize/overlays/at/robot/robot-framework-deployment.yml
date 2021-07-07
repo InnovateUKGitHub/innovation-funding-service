@@ -15,15 +15,15 @@ spec:
         run: robot-service
     spec:
       containers:
-        - env:
+        - image: robot-framework
+          name: robot-framework
+          imagePullPolicy: IfNotPresent
+          env:
             - name: BASE_URL
               valueFrom:
                 configMapKeyRef:
                   key: SP_DOMAIN
                   name: shibboleth-config
-        - image: robot-framework
-          name: robot-framework
-          imagePullPolicy: IfNotPresent
           resources:
             limits:
               cpu: 2000m
