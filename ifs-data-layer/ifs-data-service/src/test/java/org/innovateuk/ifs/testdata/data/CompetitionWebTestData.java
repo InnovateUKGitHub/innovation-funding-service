@@ -148,7 +148,9 @@ public class CompetitionWebTestData {
         return asList(
                 grantCompetition()
                         .withName("Sustainable living models for the future"),
+                grantCompetition()
                         .withName("Val is awesome"),
+                grantCompetition()
                         .withName("Val is awesome 2"),
                 grantCompetition()
                         .withName("Assessments of load capabilities"),
