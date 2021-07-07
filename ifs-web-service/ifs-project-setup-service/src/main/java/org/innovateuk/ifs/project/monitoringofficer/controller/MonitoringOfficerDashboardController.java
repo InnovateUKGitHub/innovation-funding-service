@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/monitoring-officer/dashboard")
 @Controller
@@ -44,8 +41,7 @@ public class MonitoringOfficerDashboardController {
     public String filterDashboard(Model model,
                                   UserResource user,
                                   @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerDashboardForm form) {
-        model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user,
-                form.isProjectInSetup(), form.isPreviousProject()));
+        model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user, form.isProjectInSetup(), form.isPreviousProject(), form.isDocumentsComplete(), form.isDocumentsIncomplete(), form.isDocumentsAwaitingReview()));
         return "monitoring-officer/dashboard";
     }
 }
