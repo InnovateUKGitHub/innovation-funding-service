@@ -22,16 +22,22 @@ Documentation     INFUND-550 As an assessor I want the ‘Assessment summary’ 
 ...               INFUND-3743 As an Assessor I want to see all the assessments that I have already submitted in this competition so that I can see what I have done already.
 ...
 ...               INFUND-3719 As an Assessor and I have accepted applications to assess within a competition, I can see progress on my dashboard so I can keep track of my work
-Suite Setup       The user logs-in in new browser  &{assessor2_credentials}
-Suite Teardown    the user closes the browser
+...
+...               IFS-9961 Assessment As A Service - Introduce client's application ID
+...
+...               IFS-9962 Assessment As A Service - Introduce client's competition ID
+...
+
+Suite Setup       Custom Suite Setup
+Suite Teardown    Custom suite teardown
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
 ${assessor_as_a_service_url}            management/admin/upload-files
-${AssessorAsAServiceComp}               Rolling stock future developments - assessor as a service
-${AssessorAsAServiceCompId}             ${competition_ids['${AssessorAsAServiceComp}']}
+${AssessorAsAServiceComp}               Rolling stock future developments - Assessor as a Service
+#${AssessorAsAServiceCompId}             ${competition_ids["${AssessorAsAServiceComp}"]}
 ${AssessorAsAServiceApplicationTitle}   High-speed rail and its effects on soil compaction
 
 
@@ -185,14 +191,26 @@ Assessment as a service - file upload
 
 Assessment as a service - assign and complete assessments
     [Documentation]   IFS-9961  IFS-9962
-    Given Log in as a different user            &{ifs_admin_user_credentials}
-    And The user navigates to the page          ${server}/management/competition/133
+    Given Request Competition IDs of this Project
+    And Log in as a different user                      &{ifs_admin_user_credentials}
+    And The user navigates to the page                  ${server}/management/competition/${AssessorAsAServiceCompId}
     When invite assessor the the assesment
-    And the assessor submits the feedback
-    Then The user should not see internal server and forbidden errors
+    Then the user should see the element                jQuery = li:contains("${AssessorAsAServiceApplicationTitle}") strong:contains("Recommended")
 
 
 *** Keywords ***
+Custom Suite Setup
+    The user logs-in in new browser     &{assessor2_credentials}
+     Connect to database  @{database}
+
+Custom suite teardown
+    Disconnect from database
+    the user closes the browser
+
+Request Competition IDs of this Project
+    ${AssessorAsAServiceCompId} =  Get Comp Id From Comp Title   ${AssessorAsAServiceComp}
+    Set suite variable      ${AssessorAsAServiceCompId}
+
 the word count should be correct
     [Arguments]    ${wordCount}
     the user should see the element     jQuery = span:contains("${wordCount}")
@@ -268,9 +286,9 @@ the user submits the assessment
     the user clicks the button/link            jQuery = button:contains("Yes I want to submit the assessments")
 
 invite assessor the the assesment
-    update milestone to yesterday                      ${AssessorAsAServiceCompId}   SUBMISSION_DATE
-    the user clicks the button/link                    link = Dashboard
-    the user clicks the button/link                    link = ${AssessorAsAServiceComp}
+#    update milestone to yesterday                      ${AssessorAsAServiceCompId}   SUBMISSION_DATE
+#    the user clicks the button/link                    link = Dashboard
+#    the user clicks the button/link                    link = ${AssessorAsAServiceComp}
     the user clicks the button/link                    link = Invite assessors to assess the competition
     the user enters text to a text field               id = assessorNameFilter   Paul Plum
     the user clicks the button/link                    jQuery = .govuk-button:contains("Filter")
@@ -292,16 +310,16 @@ invite assessor the the assesment
     the user clicks the button/link                    jQuery = a:contains("Allocate applications")
     the user clicks the button/link                    jQuery = tr:contains("${AssessorAsAServiceApplicationTitle}") a:contains("Assign")
     the user adds an assessor to application           jQuery = tr:contains("Paul Plum") :checkbox
-    the user navigates to the page                     ${server}/management/competition/${AssessorAsAServiceComp}
+    the user navigates to the page                     ${server}/management/competition/${AssessorAsAServiceCompId}
     the user clicks the button/link                    jQuery = button:contains("Notify assessors")
     Log in as a different user                         &{assessor_credentials}
     The user clicks the button/link                    link = ${AssessorAsAServiceComp}
-    the user clicks the button/link                    jQuery = li:contains("${COVIDdeminimusapplicationTitle1}") a:contains("Accept or reject")
+    the user clicks the button/link                    jQuery = li:contains("${AssessorAsAServiceApplicationTitle}") a:contains("Accept or reject")
     the user selects the radio button                  assessmentAccept  true
     the user clicks the button/link                    jQuery = .govuk-button:contains("Confirm")
     the user should be redirected to the correct page  ${server}/assessment/assessor/dashboard/competition/${AssessorAsAServiceCompId}
     the user clicks the button/link                    link = ${AssessorAsAServiceApplicationTitle}
-    the assessor submits the feedback
+    the assessor submits the feedback for the application
 
 the assessor submits the feedback
     the assessor adds score and feedback for every question    11
@@ -314,12 +332,40 @@ the assessor submits the feedback
     the user clicks the button/link               jQuery = button:contains("Yes I want to submit the assessments")
     the user should see the element               jQuery = li:contains("${AssessorAsAServiceApplicationTitle}") strong:contains("Recommended")
 
+the assessor submits the feedback for the application
+    the assessor adds score and feedback for every assessor question    10
+    the user clicks the button/link               link = Review and complete your assessment
+    the user selects the radio button             fundingConfirmation  true
+    the user enters text to a text field          id = feedback    Assessor as a service application assessed
+    the user clicks the button/link               jQuery = .govuk-button:contains("Save assessment")
+#    the user clicks the button/link               jQuery = li:contains("${AssessorAsAServiceApplicationTitle}") label[for^="assessmentIds"]
+    the user selects the checkbox                 id = assessmentIds1
+    the user clicks the button/link               jQuery = .govuk-button:contains("Submit assessments")
+    the user clicks the button/link               jQuery = button:contains("Yes I want to submit the assessments")
+
 the assessor adds score and feedback for every question
     [Arguments]   ${no_of_questions}
     The user clicks the button/link                       link = Scope
     The user selects the index from the drop-down menu    1    css = .research-category
     The user clicks the button/link                       jQuery = label:contains("Yes")
     The user enters text to a text field                  css = .editor    Testing scope feedback text
+    Wait for autosave
+    mouse out  css = .editor
+    Wait Until Page Contains Without Screenshots          Saved!
+    :FOR  ${INDEX}  IN RANGE  1  ${no_of_questions}
+      \    the user clicks the button/link    css = .next
+      \    The user selects the option from the drop-down menu    10    css = .assessor-question-score
+      \    The user enters text to a text field    css = .editor    Testing feedback text
+      \    Wait for autosave
+      \    mouse out  css = .editor
+      \    Wait Until Page Contains Without Screenshots    Saved!
+    The user clicks the button with resubmission              jquery = button:contains("Save and return to assessment overview")
+
+the assessor adds score and feedback for every assessor question
+    [Arguments]   ${no_of_questions}
+    The user clicks the button/link                       link = 1. What is the business opportunity that your project addresses?
+    The user selects the index from the drop-down menu    7    jQuery = select:nth-of-type(1)
+    The user enters text to a text field                  css = .editor    Feedback Text!
     Wait for autosave
     mouse out  css = .editor
     Wait Until Page Contains Without Screenshots          Saved!
