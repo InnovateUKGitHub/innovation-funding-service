@@ -15,6 +15,12 @@ spec:
         run: robot-service
     spec:
       containers:
+        - env:
+            - name: BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: SP_DOMAIN
+                  name: shibboleth-config
         - image: robot-framework
           name: robot-framework
           imagePullPolicy: IfNotPresent

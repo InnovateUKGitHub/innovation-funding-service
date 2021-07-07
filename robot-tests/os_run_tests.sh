@@ -167,7 +167,7 @@ cd ${scriptDir}
 
 ./openshift/fileForEachDBEntry.sh
 
-webBase="<<SHIB-ADDRESS>>"
+webBase=$BASE_URL
 
 uploadFileDir="${scriptDir}/upload_files"
 
