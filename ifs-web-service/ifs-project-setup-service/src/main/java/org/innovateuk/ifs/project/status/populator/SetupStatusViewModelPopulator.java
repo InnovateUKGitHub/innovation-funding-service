@@ -210,9 +210,9 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
         return new SetupStatusStageViewModel(stage, stage.getShortName(),
                 "We will review your financial information.",
-                format("/project/%d/finance-check", project.getId()),
+                monitoringOfficer ? format("/project/%d/finance-check/read-only", project.getId()) : format("/project/%d/finance-check", project.getId()),
                 financeChecksStatus,
-                monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : financeChecksAccess,
+                financeChecksAccess,
                 pendingQueries ? "pending-query" : null
         );
     }

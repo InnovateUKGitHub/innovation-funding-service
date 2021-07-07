@@ -126,6 +126,11 @@ public class SetupSectionsPermissionRules {
         return !isMonitoringOfficerOnProject(projectCompositeId.id(), user.getId()) &&  doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessFinanceChecksSection);
     }
 
+    @PermissionRule(value = "ACCESS_FINANCE_CHECKS_SECTION_READ_ONLY", description = "A monitoring officer can access the finance details in read only mode")
+    public boolean monitoringOfficerCanAccessFinanceChecksReadOnlySection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return isMonitoringOfficerOnProject(projectCompositeId.id(), user.getId());
+    }
+
     @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "A partner can access the Spend Profile " +
             "section when their Companies House details are complete or not required, the Project Details have been submitted, " +
             "and the Organisation's Bank Details have been approved or queried")
