@@ -6,11 +6,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      run: chrome
+      app: chrome
   template:
     metadata:
       labels:
-        run: chrome
+        app: chrome
     spec:
       volumes:
         - name: dshm
