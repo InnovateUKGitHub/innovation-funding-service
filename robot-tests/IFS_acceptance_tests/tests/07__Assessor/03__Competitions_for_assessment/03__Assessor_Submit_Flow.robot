@@ -200,7 +200,7 @@ Assessment as a service - assign and complete assessments
 *** Keywords ***
 Custom Suite Setup
     The user logs-in in new browser     &{assessor2_credentials}
-     Connect to database  @{database}
+    Connect to database                 @{database}
 
 Custom suite teardown
     Disconnect from database
@@ -351,6 +351,8 @@ the assessor adds score and feedback for every question
     Wait for autosave
     mouse out  css = .editor
     Wait Until Page Contains Without Screenshots          Saved!
+    the user clicks the button/link                       jQuery = button:contains("Save and return to assessment overview")
+    The user clicks the button/link                       link = Scope
     :FOR  ${INDEX}  IN RANGE  1  ${no_of_questions}
       \    the user clicks the button/link    css = .next
       \    The user selects the option from the drop-down menu    10    css = .assessor-question-score

@@ -1,10 +1,6 @@
 package org.innovateuk.ifs.project.monitoringofficer.viewmodel;
 
-import org.innovateuk.ifs.project.resource.ProjectState;
-
 import java.util.List;
-
-import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 
 /**
  * Monitoring officer dashboard view model
@@ -12,20 +8,34 @@ import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 public class MonitoringOfficerDashboardViewModel {
 
     private final List<ProjectDashboardRowViewModel> projects;
+    private final MonitoringOfficerSummaryViewModel monitoringOfficerSummaryView;
+    private final boolean isMOJourneyUpdateEnabled;
 
-    public MonitoringOfficerDashboardViewModel(List<ProjectDashboardRowViewModel> projects) {
+    public MonitoringOfficerDashboardViewModel(List<ProjectDashboardRowViewModel> projects,
+                                               MonitoringOfficerSummaryViewModel monitoringOfficerSummaryView,
+                                               boolean isMOJourneyUpdateEnabled) {
         this.projects = projects;
+        this.monitoringOfficerSummaryView = monitoringOfficerSummaryView;
+        this.isMOJourneyUpdateEnabled = isMOJourneyUpdateEnabled;
     }
 
     public List<ProjectDashboardRowViewModel> getProjects() {
         return projects;
     }
 
-    public boolean hasAnyInSetup() {
-        return projects.stream().map(ProjectDashboardRowViewModel::getProjectState).anyMatch(negate(ProjectState::isComplete));
+    public MonitoringOfficerSummaryViewModel getMonitoringOfficerSummaryView() {
+        return monitoringOfficerSummaryView;
     }
 
-    public boolean hasAnyInPrevious() {
-        return projects.stream().map(ProjectDashboardRowViewModel::getProjectState).anyMatch(ProjectState::isComplete);
+    public int projectCount() {
+        return projects.size();
+    }
+
+    public boolean isEmptyResults() {
+        return projects.size() == 0;
+    }
+
+    public boolean isMOJourneyUpdateEnabled() {
+        return isMOJourneyUpdateEnabled;
     }
 }
