@@ -197,7 +197,6 @@ Assessment as a service - assign and complete assessments
     When invite assessor the the assesment
     Then the user should see the element                jQuery = li:contains("${AssessorAsAServiceApplicationTitle}") strong:contains("Recommended")
 
-
 *** Keywords ***
 Custom Suite Setup
     The user logs-in in new browser     &{assessor2_credentials}
