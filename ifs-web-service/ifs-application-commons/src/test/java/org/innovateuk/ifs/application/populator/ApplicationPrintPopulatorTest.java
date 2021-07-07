@@ -154,6 +154,45 @@ public class ApplicationPrintPopulatorTest {
     }
 
     @Test
+    public void printAuditor() {
+        Model model = mock(Model.class);
+        UserResource stakeholder = UserResourceBuilder.newUserResource()
+                .withRoleGlobal(Role.AUDITOR)
+                .build();
+
+        long applicationId = 1L;
+        ApplicationReadOnlyViewModel viewModel = mock(ApplicationReadOnlyViewModel.class);
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.GRANT)
+                .withCompetitionStatus(CompetitionStatus.PREVIOUS)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withId(applicationId)
+                .withCompetition(competition.getId())
+                .withFeedbackReleased(ZonedDateTime.now())
+                .withApplicationState(ApplicationState.SUBMITTED)
+                .build();
+
+        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(interviewAssignmentRestService.isAssignedToInterview(applicationId)).thenReturn(restSuccess(false));
+        when(applicationReadOnlyViewModelPopulator.populate(eq(applicationId), eq(stakeholder), any(ApplicationReadOnlySettings.class)))
+                .thenReturn(viewModel);
+        when(processRoleRestService.findProcessRole(applicationId)).thenReturn(restSuccess(Collections.emptyList()));
+
+        applicationPrintPopulator.print(applicationId, model, stakeholder);
+
+        verify(model).addAttribute("model", viewModel);
+        verify(applicationReadOnlyViewModelPopulator).populate(eq(applicationId), eq(stakeholder), settingsArgumentCaptor.capture());
+
+        ApplicationReadOnlySettings settings = settingsArgumentCaptor.getValue();
+        assertNotNull(settings);
+        assertTrue(settings.isIncludeAllAssessorFeedback());
+        assertFalse(settings.isIncludeAllSupporterFeedback());
+    }
+
+    @Test
     public void printKta() {
         Model model = mock(Model.class);
         UserResource user = UserResourceBuilder.newUserResource()
