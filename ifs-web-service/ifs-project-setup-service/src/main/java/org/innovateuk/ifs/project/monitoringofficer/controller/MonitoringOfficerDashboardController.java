@@ -33,8 +33,11 @@ public class MonitoringOfficerDashboardController {
                                 UserResource user,
                                 @ModelAttribute(name = FORM_ATTR_NAME, binding = false) MonitoringOfficerDashboardForm form) {
         form.setProjectInSetup(true);
-        model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user, form.isProjectInSetup(), form.isPreviousProject(), form.isDocumentsComplete(), form.isDocumentsIncomplete(), form.isDocumentsAwaitingReview()));
+
         model.addAttribute(FORM_ATTR_NAME, form);
+        model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user, form.isProjectInSetup(),
+                form.isPreviousProject(), form.isDocumentsComplete(), form.isDocumentsIncomplete(), form.isDocumentsAwaitingReview()));
+
         return "monitoring-officer/dashboard";
     }
 
@@ -42,7 +45,9 @@ public class MonitoringOfficerDashboardController {
     public String filterDashboard(Model model,
                                   UserResource user,
                                   @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerDashboardForm form) {
-        model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user, form.isProjectInSetup(), form.isPreviousProject(), form.isDocumentsComplete(), form.isDocumentsIncomplete(), form.isDocumentsAwaitingReview()));
+        model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user, form.isProjectInSetup(),
+                form.isPreviousProject(), form.isDocumentsComplete(), form.isDocumentsIncomplete(), form.isDocumentsAwaitingReview()));
+
         return "monitoring-officer/dashboard";
     }
 }
