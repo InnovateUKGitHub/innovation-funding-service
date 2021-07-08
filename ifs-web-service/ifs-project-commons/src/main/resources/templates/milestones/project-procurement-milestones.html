@@ -18,7 +18,7 @@
     <th:block th:insert="fragments/layout :: phase-banner"/>
 
     <th:block th:if="${model.externalUser}" th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Back to finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}"/>
+              th:with="linkTitle='Back to finance checks',linkClass='link-back',linkUrl=@{${model.externalUserLinkUrl}}"/>
     <th:block th:unless="${model.externalUser}" th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Return to finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}"/>
 
@@ -195,7 +195,7 @@
         </th:block>
         <th:block th:if="${model.externalUser}">
             <a class="govuk-button govuk-button--secondary"
-               th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">
+               th:href="@{${model.externalUserLinkUrl}}">
                 Return to finance checks</a>
         </th:block>
         <th:block th:insert="fragments/layout :: main-content-end"/>

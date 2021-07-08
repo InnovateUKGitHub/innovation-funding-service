@@ -29,13 +29,15 @@
             <tbody class="govuk-table__body">
                 <tr th:each="row : ${model.projectOrganisationRows}" class="govuk-table__row">
                     <td class="govuk-table__cell govuk-!-font-weight-bold">
-                        <th:block th:text="${row.name}"></th:block>
+                        <th:block th:text="${row.organisationName}"></th:block>
                         <th:block th:if="${row.lead}">(Lead)</th:block>
                     </td>
                     <td class="govuk-table__cell">
+                        <a class="govuk-link" th:if="${model.paymentMilestonesLink}"
+                           th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId}, organisationId=${row.organisationId})}">
+                            Payment milestones</a>
                     </td>
-                    <td class="govuk-table__cell">
-                    </td>
+                    <td class="govuk-table__cell"></td>
                 </tr>
             </tbody>
         </table>

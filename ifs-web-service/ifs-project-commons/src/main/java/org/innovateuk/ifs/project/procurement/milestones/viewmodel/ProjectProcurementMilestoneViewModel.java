@@ -20,11 +20,12 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
     private final boolean externalUser;
     private final boolean resettableGolState;
     private final boolean showChangesLink;
+    private final String externalUserLinkUrl;
 
     public ProjectProcurementMilestoneViewModel(ProjectResource project, ProjectFinanceResource finance, String financesUrl,
                                                 boolean readOnly, PaymentMilestoneResource paymentMilestoneResource,
                                                 boolean eligibilityAndViabilityApproved, boolean externalUser,
-                                                boolean resettableGolState, boolean showChangesLink) {
+                                                boolean resettableGolState, boolean showChangesLink, String externalUserLinkUrl) {
         super(project.getDurationInMonths(), finance);
         this.applicationId = project.getApplication();
         this.organisationId = finance.getOrganisation();
@@ -38,6 +39,7 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
         this.externalUser = externalUser;
         this.resettableGolState = resettableGolState;
         this.showChangesLink = showChangesLink;
+        this.externalUserLinkUrl = externalUserLinkUrl;
     }
 
     public long getApplicationId() {
@@ -74,6 +76,10 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
 
     public boolean isExternalUser() {
         return externalUser;
+    }
+
+    public String getExternalUserLinkUrl() {
+        return externalUserLinkUrl;
     }
 
     @Override

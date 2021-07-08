@@ -6,13 +6,13 @@ public class ProjectFinanceChecksReadOnlyViewModel {
 
     private final Long projectId;
     private final String projectName;
-    private final long applicationId;
+    private final boolean paymentMilestonesLink;
     private final List<ProjectOrganisationRowViewModel> projectOrganisationRows;
 
-    public ProjectFinanceChecksReadOnlyViewModel(Long projectId, String projectName, long applicationId, List<ProjectOrganisationRowViewModel> projectOrganisationRows) {
+    public ProjectFinanceChecksReadOnlyViewModel(Long projectId, String projectName, boolean paymentMilestonesLink, List<ProjectOrganisationRowViewModel> projectOrganisationRows) {
         this.projectId = projectId;
         this.projectName = projectName;
-        this.applicationId = applicationId;
+        this.paymentMilestonesLink = paymentMilestonesLink;
         this.projectOrganisationRows = projectOrganisationRows;
     }
 
@@ -24,8 +24,8 @@ public class ProjectFinanceChecksReadOnlyViewModel {
         return projectName;
     }
 
-    public long getApplicationId() {
-        return applicationId;
+    public boolean isPaymentMilestonesLink() {
+        return paymentMilestonesLink;
     }
 
     public List<ProjectOrganisationRowViewModel> getProjectOrganisationRows() {
