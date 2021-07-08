@@ -138,7 +138,7 @@ Eligibility criteria link navigates to competition eligibility page
 
 *** Keywords ***
 Custom Suite Setup
-    the user logs-in in new browser  	david.wellington@load.example.com  Passw0rd
+    the user logs-in in new browser  	david.wellington@load.example.com  ${short_password}
 
 The user marks their organisation as
     [Arguments]    ${org_size}

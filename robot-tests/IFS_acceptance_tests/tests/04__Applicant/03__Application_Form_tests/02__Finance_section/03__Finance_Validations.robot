@@ -252,10 +252,10 @@ Funding level server side
 
 *** Keywords ***
 Custom Suite Setup
-    the user logs-in in new browser       	malcom.jones@load.example.com  Passw0rd
-    the user clicks the button/link       link = New algorithms to improve machine efficiency
-    the user selects Research category    Feasibility studies
-    the user fills in the organisation information  New algorithms to improve machine efficiency  ${SMALL_ORGANISATION_SIZE}
+    the user logs-in in new browser       	           malcom.jones@load.example.com  ${short_password}
+    the user clicks the button/link                    link = New algorithms to improve machine efficiency
+    the user selects Research category                 Feasibility studies
+    the user fills in the organisation information     New algorithms to improve machine efficiency  ${SMALL_ORGANISATION_SIZE}
 
 the user enters invalid inputs in the other funding fields
     [Arguments]    ${SOURCE}    ${DATE}

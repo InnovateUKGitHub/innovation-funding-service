@@ -139,8 +139,8 @@ Applicant chooses Calculate overheads option
 
 *** Keywords ***
 Custom Suite Setup
-    the user logs-in in new browser  	karen.smith@load.example.com  Passw0rd
-    the user navigates to Your-finances page  Liquid lenses in mobile phone cameras
+    the user logs-in in new browser  	         karen.smith@load.example.com  ${short_password}
+    the user navigates to Your-finances page     Liquid lenses in mobile phone cameras
 
 the user adds three material rows
     the user expands the section          Materials

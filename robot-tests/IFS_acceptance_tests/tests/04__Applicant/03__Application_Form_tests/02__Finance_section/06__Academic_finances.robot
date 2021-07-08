@@ -164,10 +164,11 @@ the finance table should be correct
     Element Should Contain                           jQuery = .project-cost-breakdown tr:contains("EGGS") td:nth-of-type(8)  10,895
 
 Lead applicant marks the finances as complete
-    Log in as a different user                            &{lead_applicant_credentials}
+    #Log in as a different user                            &{lead_applicant_credentials}
+    Logging in and Error Checking                         &{lead_applicant_credentials}
     the user clicks the application tile if displayed
     the user clicks the button/link                       link = Evolution of the global phosphorus cycle
-    then the user selects research category               Feasibility studies
+    the user selects research category                    Feasibility studies
     the user navigates to Your-finances page              Evolution of the global phosphorus cycle
     the user marks the finances as complete               Evolution of the global phosphorus cycle  labour costs  n/a  no
 

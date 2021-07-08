@@ -110,7 +110,7 @@ Other costs
 Custom Suite Setup
     Set predefined date variables
     Connect to database  @{database}
-    the user logs-in in new browser  	sarah.james@load.example.com  Passw0rd
+    the user logs-in in new browser  	sarah.james@load.example.com   ${short_password}
     the user clicks the button/link     link = Removing mechanical storage from server farms
 
 the Applicant fills in the Labour costs for two rows
