@@ -116,6 +116,9 @@ public class Application implements ProcessActivity {
     @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
     private ProjectToBeCreated projectToBeCreated;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "applicationExternalConfigId", referencedColumnName = "id")
+    private ApplicationExternalConfig applicationExternalConfig;
 
     public Application() {
     }
@@ -542,5 +545,13 @@ public class Application implements ProcessActivity {
 
     public void setAssessments(List<Assessment> assessments) {
         this.assessments = assessments;
+    }
+
+    public ApplicationExternalConfig getApplicationExternalConfig() {
+        return applicationExternalConfig;
+    }
+
+    public void setApplicationExternalConfig(ApplicationExternalConfig applicationExternalConfig) {
+        this.applicationExternalConfig = applicationExternalConfig;
     }
 }
