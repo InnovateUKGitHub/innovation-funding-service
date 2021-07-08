@@ -100,6 +100,10 @@ public class ProjectUser extends ProjectParticipant implements InvitedParticipan
         return partnerOrganisation;
     }
 
+    public boolean isMonitoringOfficer() {
+        return getRole().isMonitoringOfficer();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
