@@ -3,6 +3,8 @@ Documentation     IFS-8549 KTP - Notification: unsuccessful and successful
 ...
 ...               IFS-8974 New project team members get ISE when trying to access application team page
 ...
+...               IFS-9576 MO documents: 'Project setup' list - task management and filtering
+...
 Suite Setup       Custom Suite Setup
 Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Applicant_Commons.robot
@@ -70,10 +72,10 @@ The partner checks the status of the application
     And the user is able to view the application overview page
 
 The KTA checks the status of the application
-    [Documentation]  IFS-8549
+    [Documentation]  IFS-8549  IFS-9576
     Given Log in as a different user                              &{ktp_KTA_Credentials}
     When the user clicks the button/link                          jQuery = h2:contains("Project setup")
-    Then the user should see the element                          jQuery = h2:contains("Previous") ~ ul li:contains("${KTP_application}"):contains("Unsuccessful")
+    Then the user should see the element                          jQuery = .task:contains("${KTP_application}") + .status:contains("Unsuccessful")
     And the project user is unable to make any changes
     And the user is able to view the application overview page
 

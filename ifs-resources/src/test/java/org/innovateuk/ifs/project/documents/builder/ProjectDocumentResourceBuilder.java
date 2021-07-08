@@ -54,5 +54,9 @@ public class ProjectDocumentResourceBuilder extends BaseBuilder<ProjectDocumentR
     public ProjectDocumentResourceBuilder withStatusModifiedDate(ZonedDateTime... dates){
         return withArray((date, projectDocumentResource) -> projectDocumentResource.setModifiedDate(date), dates);
     }
+
+    public ProjectDocumentResourceBuilder withProject(Long... projects) {
+        return withArray((project, projectDocumentResource) -> projectDocumentResource.setProject(project), projects);
+    }
 }
 

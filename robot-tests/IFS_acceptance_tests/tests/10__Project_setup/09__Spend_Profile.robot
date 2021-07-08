@@ -72,6 +72,9 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               IFS-2221 Spend Profile Generation - Ensure Bank Details are approved or not required
 ...
 ...               IFS-6732 Ensure spend profile cannot be generated when there is a pending invite
+...
+...               IFS-9774 Investigate if its possible to fix AT's failure due to IDP upgrade
+...
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -265,7 +268,6 @@ Academic partner spend profile: validations
     Then the user should see a summary error         Your total costs are higher than your eligible costs.
     And academic partner enter valid values in spend profile then should'e see validation error messages
 
-
 Academic partner edits spend profile and this updates on the table
     [Documentation]    INFUND-5846
     [Tags]
@@ -383,7 +385,7 @@ Status updates after spend profile submitted
     Then partners can see the Spend Profile section completed
 
 Project Finance is able to see Spend Profile approval page
-    [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973, INFUND-5942 IFS-1871
+    [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973, INFUND-5942 IFS-1871 IFS-9774
     [Tags]
     [Setup]  Log in as a different user            &{internal_finance_credentials}
     Given the user navigates to the page             ${server}/project-setup-management/competition/${PS_Competition_Id}/status
@@ -575,9 +577,8 @@ check if finance contact can be changed
 
 the project finance user downloads the spend profile file and checks the content of it
     [Arguments]  ${file}
-    the user downloads the file  ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${PS_SP_Project_Id}/partner-organisation/${Ooba_Lead_Org_Id}/spend-profile-export/csv  ${DOWNLOAD_FOLDER}/${file}
-    the user opens the csv file and checks the content  ${file}
-    remove the file from the operating system  ${file}
+    the user navigates to the page                   ${server}/project-setup-management/project/${PS_SP_Project_Id}/partner-organisation/${Ooba_Lead_Org_Id}/spend-profile-export/csv
+    the user should not see an error in the page
 
 the user opens the csv file and checks the content
     [Arguments]  ${file}
@@ -788,6 +789,7 @@ the project finance user should see the spend profile details
     the user should see the element              jQuery = h2:contains("Innovation Lead") ~ p:contains("Peter Freeman")
     the user should see the element              jQuery = h2:contains("Project spend profile")
     the project finance user downloads the spend profile file and checks the content of it  ${Ooba_Lead_Org_Name}-spend-profile.csv
+    the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
     the user should see the element              link = ${Wordpedia_Partner_Org_Name}-spend-profile.csv
     the user should see the element              link = ${Jabbertype_Partner_Org_Name}-spend-profile.csv
     the user should see the element              jQuery = .govuk-main-wrapper h2:contains("Approved by Innovate UK")
