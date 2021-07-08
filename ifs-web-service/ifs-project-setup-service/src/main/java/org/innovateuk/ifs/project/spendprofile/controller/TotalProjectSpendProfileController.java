@@ -7,21 +7,16 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
-import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
-import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.spendprofile.SpendProfileSummaryModel;
-import org.innovateuk.ifs.project.spendprofile.SpendProfileTableCalculator;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.spendprofile.form.TotalSpendProfileForm;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.project.spendprofile.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.TotalProjectSpendProfileTableViewModel;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.TotalSpendProfileViewModel;
 import org.innovateuk.ifs.spendprofile.SpendProfileService;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -57,15 +51,6 @@ public class TotalProjectSpendProfileController {
     private SpendProfileTableCalculator spendProfileTableCalculator;
     @Autowired
     private CompetitionRestService competitionRestService;
-
-    @Autowired
-    private MonitoringOfficerRestService monitoringOfficerRestService;
-
-    @Autowired
-    private UserRestService userRestService;
-
-    @Value("${ifs.monitoringofficer.spendprofile.update.enabled}")
-    private boolean isMOSpendProfileUpdateEnabled;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_TOTAL_SPEND_PROFILE_SECTION')")
     @GetMapping
@@ -97,16 +82,6 @@ public class TotalProjectSpendProfileController {
                 () -> spendProfileService.completeSpendProfilesReview(projectId));
 
     }
-    private void sendSpendProfileReviewNotification(long projectId) {
-        Optional<MonitoringOfficerResource> monitoringOfficer  = monitoringOfficerRestService.findMonitoringOfficerForProject(projectId).getOptionalSuccessObject();;
-        if (monitoringOfficer.isPresent()) {
-            Optional<UserResource> moUser= userRestService.findUserByEmail(monitoringOfficer.get().getEmail()).getOptionalSuccessObject();
-            if (moUser.isPresent()) {
-                monitoringOfficerRestService.sendDocumentReviewNotification(projectId, moUser.get().getId());
-            }
-        }
-    }
-
 
     private TotalSpendProfileViewModel buildTotalViewModel(final Long projectId) {
         ProjectResource projectResource = projectService.getById(projectId);

@@ -33,6 +33,4 @@ public interface SpendProfileService {
 
     ServiceResult<Void> completeSpendProfilesReview(Long projectId);
 
-
-
 }

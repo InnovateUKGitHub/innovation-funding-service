@@ -577,7 +577,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         });
     }
 
-    private ServiceResult<Void> sendSpendProfileReviewNotification(Project project) {
+    public ServiceResult<Void> sendSpendProfileReviewNotification(Project project) {
         Optional<MonitoringOfficer> monitoringOfficer = projectUsersHelper.getMOByProjectId(project.getId());
         if (monitoringOfficer.isPresent() && monitoringOfficer.get().getUser() != null) {
             User user = monitoringOfficer.get().getUser();

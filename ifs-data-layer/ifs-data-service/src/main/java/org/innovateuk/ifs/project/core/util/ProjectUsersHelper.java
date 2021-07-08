@@ -9,7 +9,6 @@ import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,9 +37,6 @@ public class ProjectUsersHelper {
 
     @Autowired
     private MonitoringOfficerRepository monitoringOfficerRepository;
-
-    @Autowired
-    private UserRepository userRepository;
 
     public List<Organisation> getPartnerOrganisations(Long projectId) {
         List<ProjectUser> projectUserObjs = getProjectUsersByProjectId(projectId);
@@ -72,7 +68,5 @@ public class ProjectUsersHelper {
 
     public Optional<MonitoringOfficer> getMOByProjectId(long projectId) {
         return monitoringOfficerRepository.findOneByProjectIdAndRole(projectId, ProjectParticipantRole.MONITORING_OFFICER);
-            //    return simpleFindFirst(getProjectUsersByProjectId(projectId), pr -> pr.isMonitoringOfficer());
      }
-
 }
