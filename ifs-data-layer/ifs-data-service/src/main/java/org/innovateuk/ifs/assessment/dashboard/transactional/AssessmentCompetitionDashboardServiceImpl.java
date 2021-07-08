@@ -28,10 +28,12 @@ public class AssessmentCompetitionDashboardServiceImpl implements AssessmentComp
         List<ApplicationAssessmentResource> assessments = applicationAssessmentService.getApplicationAssessmentResource(userId, competitionId).getSuccess();
 
         Competition competition = competitionRepository.findById(competitionId).get();
+        String innovationLead = competition.getLeadTechnologist() == null ? "" : competition.getLeadTechnologist().getName();
+
         AssessorCompetitionDashboardResource assessorCompetitionDashboardResource = new AssessorCompetitionDashboardResource(
                 competitionId,
                 competition.getName(),
-                competition.getLeadTechnologist().getName(),
+                innovationLead,
                 competition.getAssessorAcceptsDate(),
                 competition.getAssessorDeadlineDate(),
                 assessments);

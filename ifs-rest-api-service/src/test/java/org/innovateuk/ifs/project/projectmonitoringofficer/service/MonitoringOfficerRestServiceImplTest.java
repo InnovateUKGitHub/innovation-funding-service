@@ -42,6 +42,19 @@ public class MonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTes
         assertEquals(result.getSuccess(), expected);
     }
 
+    @Test
+    public void filterProjectsForMonitoringOfficer() {
+        long userId = 1L;
+        List<ProjectResource> expected = newProjectResource().build(1);
+        setupGetWithRestResultExpectations("/monitoring-officer/1/filter-projects?projectInSetup=true&previousProject=true",
+                projectResourceListType(), expected, OK);
+
+        RestResult<List<ProjectResource>> result = service.filterProjectsForMonitoringOfficer(userId, true, true);
+
+        assertTrue(result.isSuccess());
+        assertEquals(result.getSuccess(), expected);
+    }
+
     @Override
     protected MonitoringOfficerRestServiceImpl registerRestServiceUnderTest() {
         return new MonitoringOfficerRestServiceImpl();
