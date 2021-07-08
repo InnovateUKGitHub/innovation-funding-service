@@ -9,7 +9,7 @@ Resource          ../../../resources/common/Assessor_Commons.robot
 Resource          ../../../resources/common/Applicant_Commons.robot
 
 *** Variables ***
-${Assessment_Comp__Id}  ${competition_ids['${Assessment_Comp_title}']}
+${Assessment_Comp__Id}   ${competition_ids['${Assessment_Comp_title}']}
 ${Assessor_dashboard}    ${server}/assessment/assessor/dashboard/competition/${Assessment_Comp__Id}
 
 *** Test Cases ***
@@ -163,7 +163,8 @@ Resent email can be read by the invited user
     the user reads his email and clicks the link    ${test_mailbox_one}+AJE2E@gmail.com    Invitation to assess '${Assessment_Comp_title}'    Assessment period:  1
 
 Invited user accept the invitation and navigate to registration form
-    the user should see the element         jQuery = h1:contains("You are invited to assess the competition: ${IN_ASSESSMENT_COMPETITION_NAME}")
+    #the user should see the element         jQuery = h1:contains("You are invited to assess the competition: ${IN_ASSESSMENT_COMPETITION_NAME}")
+    the user should see the element         jQuery = h1:contains("You are invited to assess the competition: ${Assessment_Comp_title}")
     the user selects the radio button       acceptInvitation  true
     the user clicks the button/link         jQuery = button:contains("Confirm")
     the user clicks the button/link         jQuery = .govuk-button:contains("Create account")

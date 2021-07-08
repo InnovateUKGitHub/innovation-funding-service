@@ -42,9 +42,9 @@ ${Nanotechnology}      ${application_ids["Living with Nanotechnology"]}
 *** Test Cases ***
 View the list of the applications
     [Documentation]    INFUND-7042
-    Given comp admin navigate to manage applications
+    Given comp admin navigate to manage applications        ${IN_ASSESSMENT_COMPETITION_NAME}
     Then the application list is correct before changes
-    [Teardown]  the user clicks the button/link  link = Back to manage assessments
+    [Teardown]  the user clicks the button/link             link = Back to manage assessments
 
 View the list of assessors
     [Documentation]  IFS-319
@@ -79,19 +79,19 @@ Assessor can see the Print button and the score Total
 
 Accepting the application changes the Accepted column
     [Documentation]  IFS-321
-    [Setup]  Log in as a different user   maureen.moore@gmail.com  Passw0rd
+    [Setup]  Log in as a different user        maureen.moore@gmail.com  ${short_password}
     Given the user accepts the application
-    And Log in as a different user        &{Comp_admin1_credentials}
-    When the user navigates to the page   ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}/assessors/${Paul_Plum_id}
-    Then the user should see the element  jQuery = td:contains("${Molecular_id}") ~ td:contains("Yes") + td:contains("Yes")
+    And Log in as a different user             &{Comp_admin1_credentials}
+    When the user navigates to the page        ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}/assessors/${Paul_Plum_id}
+    Then the user should see the element       jQuery = td:contains("${Molecular_id}") ~ td:contains("Yes") + td:contains("Yes")
 
 Remove an assigned application (Notified)
     [Documentation]    INFUND-1079
-    Given the user clicks the button/link     jQuery = td:contains("${Molecular_id}") ~ td:contains("Yes") ~ td:contains("Remove")
-    When the user clicks the button/link      jQuery = button:contains("Remove assessor")
-    Then the user should not see the element  jQuery = td:contains("${Molecular_id}") ~ td:contains("Yes") ~ td:contains("Remove")
-    And the user should see the element       jQuery = h2:contains("Previously assigned") ~ div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") ~ td:contains("Reassign")
-    And the user clicks the button/link       jQuery = .pagination-links a:contains("Next")
+    Given the user clicks the button/link        jQuery = td:contains("${Molecular_id}") ~ td:contains("Yes") ~ td:contains("Remove")
+    When the user clicks the button/link         jQuery = button:contains("Remove assessor")
+    Then the user should not see the element     jQuery = td:contains("${Molecular_id}") ~ td:contains("Yes") ~ td:contains("Remove")
+    And the user should see the element          jQuery = h2:contains("Previously assigned") ~ div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") ~ td:contains("Reassign")
+    And the user clicks the button/link          jQuery = .pagination-links a:contains("Next")
 
 Reassign a removed application
     [Documentation]    INFUND-398
@@ -101,12 +101,12 @@ Reassign a removed application
 
 Assign an application to an assessor
     [Documentation]    IFS-811
-    Given the user clicks the button/link             link = Allocate assessors
-    And the user clicks the button/link               jQuery = a:contains("41 to")
-    When the user clicks the button/link              jQuery = td:contains("Shaun Bradley") ~ td a:contains("View progress")
-    Then the user should see the element              jQuery = h2:contains("Assigned (0)") + p:contains("No applications have been assigned to this assessor")
-    When the user adds an application to an assessor  jQuery = tr:contains("${Nanotechnology}") :checkbox
-    Then the user should see the element              jQuery = h2:contains("Assigned (1)") + .table-overflow tr:contains("${Nanotechnology}")
+    Given the user clicks the button/link                link = Allocate assessors
+    And the user clicks the button/link                  jQuery = a:contains("41 to")
+    When the user clicks the button/link                 jQuery = td:contains("Shaun Bradley") ~ td a:contains("View progress")
+    Then the user should see the element                 jQuery = h2:contains("Assigned (0)") + p:contains("No applications have been assigned to this assessor")
+    When the user adds an application to an assessor     jQuery = tr:contains("${Nanotechnology}") :checkbox
+    Then the user should see the element                 jQuery = h2:contains("Assigned (1)") + .table-overflow tr:contains("${Nanotechnology}")
 
 Filter by application number on the assessor page
     [Documentation]    IFS-400
@@ -165,7 +165,7 @@ Notify an assigned user
 
 Assessor should see the assigned application
     [Documentation]    INFUND-7050
-    [Setup]    Log in as a different user  maureen.moore@gmail.com  Passw0rd
+    [Setup]    Log in as a different user  maureen.moore@gmail.com  ${short_password}
     Given The user clicks the button/link   link = ${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should see the element   Link = Living with Cryptocurrencies
 
@@ -178,7 +178,7 @@ Remove and notify an assessor (Notified)
 
 Assessor should not see the removed application
     [Documentation]    INFUND-7232
-    [Setup]    Log in as a different user     maureen.moore@gmail.com  Passw0rd
+    [Setup]    Log in as a different user     maureen.moore@gmail.com  ${short_password}
     When The user clicks the button/link      link = ${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should not see the element  Link = Living with Cryptocurrencies
 
@@ -192,7 +192,7 @@ Reassign and notify an assessor (Notified)
 
 Assessor should see the reassigned application
     [Documentation]    INFUND-7050
-    [Setup]    Log in as a different user   maureen.moore@gmail.com  Passw0rd
+    [Setup]    Log in as a different user   maureen.moore@gmail.com  ${short_password}
     Given The user clicks the button/link   link = ${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should see the element   Link = Living with Cryptocurrencies
 

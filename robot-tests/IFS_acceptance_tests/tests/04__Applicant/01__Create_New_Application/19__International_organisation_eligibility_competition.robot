@@ -235,7 +235,7 @@ Registered UK based lead user invites partner organisation(with registered email
     [Tags]  HappyPath
     Given the user clicks the button/link     link = Application team
     When invite partner organisation          Test Empire  Daniel Tan  ${lead_intl_email_one}
-    Then the user should see the element      jQuery = td:contains("Steve") ~ td:contains("Lead")
+    Then the user should see the element      jQuery = td:contains("steve") ~ td:contains("Lead")
     And the user should see the element       jQuery = td:contains("Daniel Tan (pending for")
 
 Partner organisation(with registered email/user) accepts the invite
@@ -270,7 +270,7 @@ Registered UK based lead user invites partner organisation(with non-registered e
     [Setup]  logout as user
     Given Registered UK based lead user goes to the application team
     When invite partner organisation                                     New Empire  Tim Simpson  ${partner_international_email}
-    Then the user should see the element                                 jQuery = td:contains("Steve") ~ td:contains("Lead")
+    Then the user should see the element                                 jQuery = td:contains("steve") ~ td:contains("Lead")
     And the user should see the element                                  jQuery = td:contains("Tim Simpson (pending for")
 
 Partner organisation(with non-registered email/user) accepts the invite

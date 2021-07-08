@@ -32,7 +32,8 @@ ${openCompetitionRTOCloseDate}   ${getSimpleMilestoneDate(${openCompetitionRTO},
 ${openCompetitionRTOApplication1Name}  Hydrology the dynamics of Earth\'s surface water
 ${openCompetitionRTOApplication1Id}    ${application_ids["${openCompetitionRTOApplication1Name}"]}
 ${newOpenComp}                       Climate change for the masses
-${newOpenCompId}                     ${application_ids["${newOpenComp}"]}
+${newOpenCompId}                     ${competition_ids["${newOpenComp}"]}
+#${newOpenCompId}                     ${application_ids["${newOpenComp}"]}
 
 ${openCompetitionManagementRTO}  ${SERVER}/management/competition/${openCompetitionRTO}
 ${applicationsForRTOComp}        ${SERVER}/management/competition/${openCompetitionRTO}/applications
