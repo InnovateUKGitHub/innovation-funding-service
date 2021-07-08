@@ -18,6 +18,7 @@ patches:
 
 resources:
   - spring-config.yml
+  - performance-config.yml
   - data-layer/databases/ifs-database.yml
   - data-layer/databases/ifs-database-deployment.yml
   - data-layer/databases/mysql-configmap.yml
