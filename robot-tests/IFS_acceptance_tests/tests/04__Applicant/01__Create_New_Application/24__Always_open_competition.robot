@@ -35,6 +35,10 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-9759 No assessment period state
 ...
+...               IFS-9836 Assigend assessment period 1 applications are displaying in assessment period 2 for assessors
+...
+...               IFS-9882 download permission error
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -53,6 +57,7 @@ ${webTestCompName}                 Always open competition
 ${webTestCompID}                   ${competition_ids["${webTestCompName}"]}
 ${applicationName}                 Always open application
 ${webTestAppName}                  Always open application decision pending
+${webTestAppID}                    ${application_ids["${webTestAppName}"]}
 #Delete the above application when the user can assign an assessor to the application
 ${briefingErrormessage}            1. Assessor briefing: Please enter a valid date.
 ${deadlineErrormessage}            2. Assessor accepts: Please enter a valid date.
@@ -173,10 +178,19 @@ Internal user notify the assessors of their assigned applications
     Then the user reads his email and clicks the link        ${assessorEmail}  Applications assigned to you for competition '${webTestCompName}'  We have assigned applications for you to assess for this competition:   1
     And the assessor accepts an invite to an application
 
-Internal user closes assessment period one
-    [Documentation]  IFS-9008
+Internal user can not assign same application in two different assessment periods
+    [Documentation]  IFS-9836
     Given log in as a different user             &{ifs_admin_user_credentials}
     And the user navigates to the page           ${server}/management/assessment/competition/${webTestCompID}
+    When the user clicks the button/link         link = Manage assessors
+    And the user clicks the button twice         jQuery = label:contains("Assessment period 2")
+    And the user clicks the button/link          jQuery = button:contains("Save and continue")
+    And the user clicks the button/link          jQuery = td:contains("Another Person") ~ td a:contains("View progress")
+    Then the user should not see the element     jQuery = td:contains('Always open application decision pending')
+
+Internal user closes assessment period one
+    [Documentation]  IFS-9008
+    Given the user navigates to the page         ${server}/management/assessment/competition/${webTestCompID}
     When the user clicks the button/link         jQuery = button:contains("Close assessment")
     Then the user should not see the element     jQuery = button:contains("Close assessment")
     And the user should see the element          jQuery = button:contains("Notify assessors")
@@ -221,6 +235,16 @@ Supporter can review open ended ktp competition applications
     And the user should see the element       jQuery = dt:contains("Your feedback")+dd:contains("This is the comment from the supporter")
     And the user should see the element       jQuery = dt:contains("Are you interested in supporting this application?")+dd:contains("Yes")
 
+Auditor can view j-ES form for the submitted application
+    [Documentation]  IFS-9882
+    Given Log in as a different user                     &{auditorCredentials}
+    And the user navigates to the page                   ${SERVER}/management/competition/${webTestCompID}/application/${webTestAppID}
+    And the user clicks the button/link                  jQuery = button:contains("Finances summary")
+    And The user should see the element                  jQuery = h2:contains("Funding breakdown")
+    And the user clicks the button/link                  jQuery = div:contains("EGGS") ~ a:contains("View finances")
+    And The user clicks the button/link                  jQuery = a:contains("Your project costs")
+    When the user clicks the button/link                 jQuery = a:contains(".pdf (opens in a new window)")
+    Then the user should not see an error in the page
 
 *** Keywords ***
 Custom suite setup

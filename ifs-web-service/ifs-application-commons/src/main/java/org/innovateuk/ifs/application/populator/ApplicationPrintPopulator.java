@@ -60,7 +60,7 @@ public class ApplicationPrintPopulator {
     }
 
     private boolean nonKtpUserCanViewFeedback(UserResource user, CompetitionResource competition, ApplicationResource application) {
-        return user.hasAnyRoles(Role.APPLICANT, Role.ASSESSOR, Role.MONITORING_OFFICER, Role.STAKEHOLDER)
+        return (user.hasAnyRoles(Role.APPLICANT, Role.ASSESSOR, Role.MONITORING_OFFICER) || user.hasAuthority(Authority.STAKEHOLDER))
                 && !competition.isKtp()
                 && shouldDisplayFeedback(application);
     }

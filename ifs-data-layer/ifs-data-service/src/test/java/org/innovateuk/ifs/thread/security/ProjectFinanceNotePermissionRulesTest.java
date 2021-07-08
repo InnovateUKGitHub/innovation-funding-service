@@ -37,6 +37,8 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
     private NoteResource noteResource;
     private UserResource projectFinanceUserOne;
     private UserResource projectFinanceUserTwo;
+    private UserResource auditorUserOne;
+    private UserResource auditorUserTwo;
     private UserResource intruder;
     private ProjectProcess projectProcessInSetup;
     private ProjectProcess projectProcessInLive;
@@ -54,6 +56,8 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
     public void setUp() throws Exception {
         projectFinanceUserOne = projectFinanceUser();
         projectFinanceUserTwo = newUserResource().withId(1993L).withRoleGlobal(Role.PROJECT_FINANCE).build();
+        auditorUserOne = auditorUser();
+        auditorUserTwo = newUserResource().withId(1993L).withRoleGlobal(Role.AUDITOR).build();
         intruder = getUserWithRole(Role.ASSESSOR);
         noteResource = sampleNote();
 
@@ -126,11 +130,19 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void thatOnlyProjectFinanceUsersViewNotes() {
+    public void thatProjectFinanceUsersViewNotes() {
         when(projectProcessRepository.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
-        assertTrue(rules.onlyProjectFinanceUsersCanViewNotes(noteResource, projectFinanceUserOne));
-        assertTrue(rules.onlyProjectFinanceUsersCanViewNotes(noteResource, projectFinanceUserTwo));
-        assertFalse(rules.onlyProjectFinanceUsersCanViewNotes(noteResource, intruder));
+        assertTrue(rules.projectFinanceUsersCanViewNotes(noteResource, projectFinanceUserOne));
+        assertTrue(rules.projectFinanceUsersCanViewNotes(noteResource, projectFinanceUserTwo));
+        assertFalse(rules.projectFinanceUsersCanViewNotes(noteResource, intruder));
+    }
+
+    @Test
+    public void thatAuditorUsersViewNotes() {
+        when(projectProcessRepository.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
+        assertTrue(rules.auditorUsersCanViewNotes(noteResource, auditorUserOne));
+        assertTrue(rules.auditorUsersCanViewNotes(noteResource, auditorUserTwo));
+        assertFalse(rules.auditorUsersCanViewNotes(noteResource, intruder));
     }
 
     @Test

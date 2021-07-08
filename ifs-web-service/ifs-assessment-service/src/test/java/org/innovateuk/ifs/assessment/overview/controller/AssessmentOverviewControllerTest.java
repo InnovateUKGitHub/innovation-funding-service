@@ -8,6 +8,7 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
+import org.innovateuk.ifs.application.finance.populator.ApplicationProcurementMilestoneSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
@@ -34,6 +35,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -161,6 +163,9 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
     @Mock
     private ApplicationAcademicCostFormPopulator applicationAcademicCostFormPopulator;
+
+    @Mock
+    private ApplicationProcurementMilestoneSummaryViewModelPopulator applicationProcurementMilestoneSummaryViewModelPopulator;
 
     @Override
     protected AssessmentOverviewController supplyControllerUnderTest() {
@@ -441,6 +446,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 .withAssessorAcceptsDate(now.minusDays(2))
                 .withAssessorDeadlineDate(now.plusDays(4))
                 .withFundingType(GRANT)
+                .withProcurementMilestones(false)
                 .build();
 
         competitionResource.setFinanceRowTypes(asList(FinanceRowType.values()));
@@ -465,6 +471,8 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         when(applicationFinanceSummaryViewModelPopulator.populate(applicationResource.getId(), getLoggedInUser())).thenReturn(applicationFinanceSummaryViewModel);
         ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = mock(ApplicationFundingBreakdownViewModel.class);
         when(applicationFundingBreakdownViewModelPopulator.populate(applicationResource.getId(), getLoggedInUser())).thenReturn(applicationFundingBreakdownViewModel);
+        when(applicationRestService.getApplicationById(assessment.getApplication())).thenReturn(RestResult.restSuccess(applicationResource));
+
         AssessmentFinancesSummaryViewModel expectedViewModel = new AssessmentFinancesSummaryViewModel(
                 assessmentResource.getId(),
                 applicationResource.getId(),
@@ -473,7 +481,9 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 50,
                 GRANT,
                 applicationFinanceSummaryViewModel,
-                applicationFundingBreakdownViewModel);
+                applicationFundingBreakdownViewModel,
+                null,
+                false);
 
         mockMvc.perform(get("/{assessmentId}/finances", assessmentResource.getId()))
                 .andExpect(status().isOk())

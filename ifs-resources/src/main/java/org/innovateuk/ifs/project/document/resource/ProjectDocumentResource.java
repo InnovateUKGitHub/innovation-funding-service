@@ -2,6 +2,9 @@ package org.innovateuk.ifs.project.document.resource;
 
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+
+import java.time.ZonedDateTime;
 
 public class ProjectDocumentResource {
 
@@ -16,6 +19,10 @@ public class ProjectDocumentResource {
     private DocumentStatus status;
 
     private String statusComments;
+
+    private UserResource modifiedBy;
+
+    private ZonedDateTime modifiedDate;
 
     public Long getId() {
         return id;
@@ -63,5 +70,21 @@ public class ProjectDocumentResource {
 
     public void setStatusComments(String statusComments) {
         this.statusComments = statusComments;
+    }
+
+    public UserResource getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(UserResource modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    public ZonedDateTime getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(ZonedDateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 }

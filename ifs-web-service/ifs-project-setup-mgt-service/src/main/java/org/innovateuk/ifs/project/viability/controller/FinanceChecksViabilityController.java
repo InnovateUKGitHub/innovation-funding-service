@@ -22,6 +22,7 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStat
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.viability.form.FinanceChecksViabilityForm;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  * financial position on a Project
  */
 @Controller
-@PreAuthorize("hasAnyAuthority('comp_admin', 'external_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'external_finance', 'auditor')")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = FinanceChecksViabilityController.class)
 @RequestMapping("/project/{projectId}/finance-check/organisation/{organisationId}/viability")
 public class FinanceChecksViabilityController {
@@ -245,7 +246,8 @@ public class FinanceChecksViabilityController {
                 organisationId,
                 organisationSizeDescription,
                 projectFinances,
-                resetableGolState);
+                resetableGolState,
+                user.hasAuthority(Authority.AUDITOR));
     }
 
     private String name(String firstName, String lastName) {

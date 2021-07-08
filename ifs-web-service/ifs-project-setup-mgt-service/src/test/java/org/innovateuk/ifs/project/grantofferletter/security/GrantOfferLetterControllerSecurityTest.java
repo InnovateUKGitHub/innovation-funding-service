@@ -93,6 +93,11 @@ public class GrantOfferLetterControllerSecurityTest extends BaseProjectSetupCont
 
     @Override
     protected Consumer<SetupSectionsPermissionRules> getVerification() {
-        return permissionRules -> permissionRules.internalCanAccessGrantOfferLetterSendSection(eq(projectCompositeId), isA(UserResource.class));
+        return permissionRules -> {
+            permissionRules.internalCanAccessGrantOfferLetterSendSection(eq(projectCompositeId), isA(UserResource.class));
+            permissionRules.supportCanAccessGrantOfferLetterSendSection(eq(projectCompositeId), isA(UserResource.class));
+            permissionRules.innovationLeadCanAccessGrantOfferLetterSendSection(eq(projectCompositeId), isA(UserResource.class));
+            permissionRules.stakeholderCanAccessGrantOfferLetterSendSection(eq(projectCompositeId), isA(UserResource.class));
+        };
     }
 }

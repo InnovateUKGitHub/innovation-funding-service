@@ -44,8 +44,8 @@ public class CompetitionInFlightModelPopulator {
     private MilestoneRestService milestoneRestService;
 
     public CompetitionInFlightViewModel populateModel(Long competitionId, UserResource user) {
-        CompetitionResource competititon = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        return populateModel(competititon, user);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        return populateModel(competition, user);
     }
 
     public CompetitionInFlightViewModel populateModel(CompetitionResource competition, UserResource user) {
@@ -61,7 +61,7 @@ public class CompetitionInFlightModelPopulator {
                 simpleMap(milestones, MilestonesRowViewModel::new),
                 changesSinceLastNotify,
                 statsViewModel,
-                user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER),
+                user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) || user.hasAuthority(Authority.STAKEHOLDER),
                 user.hasAuthority(Authority.SUPER_ADMIN_USER));
     }
 }

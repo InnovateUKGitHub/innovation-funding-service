@@ -15,20 +15,22 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  */
 public enum ProjectState implements ProcessState, IdentifiableEnum {
 
-    SETUP(17, State.PENDING),
-    LIVE(18, State.ACCEPTED),
-    WITHDRAWN(48, State.WITHDRAWN),
-    HANDLED_OFFLINE(51, State.HANDLED_OFFLINE),
-    COMPLETED_OFFLINE(52, State.COMPLETED_OFFLINE),
-    ON_HOLD(53, State.ON_HOLD),
-    UNSUCCESSFUL(55 ,State.REJECTED);
+    SETUP(17, State.PENDING, 1),
+    LIVE(18, State.ACCEPTED, 4),
+    WITHDRAWN(48, State.WITHDRAWN, 5),
+    HANDLED_OFFLINE(51, State.HANDLED_OFFLINE, 2),
+    COMPLETED_OFFLINE(52, State.COMPLETED_OFFLINE, 6),
+    ON_HOLD(53, State.ON_HOLD, 3),
+    UNSUCCESSFUL(55 ,State.REJECTED, 7);
 
     private final long id;
     private final State backingState;
+    private final int moDisplayOrder;
 
-    ProjectState(long id, State backingState) {
+    ProjectState(long id, State backingState, int moDisplayOrder) {
         this.id = id;
         this.backingState = backingState;
+        this.moDisplayOrder = moDisplayOrder;
     }
 
     @Override
@@ -39,6 +41,10 @@ public enum ProjectState implements ProcessState, IdentifiableEnum {
     @Override
     public State getBackingState() {
         return backingState;
+    }
+
+    public int getMoDisplayOrder() {
+        return moDisplayOrder;
     }
 
     public static List<State> getBackingStates() {

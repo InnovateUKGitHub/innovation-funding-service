@@ -61,6 +61,7 @@ public class DocumentsControllerSecurityTest extends BaseProjectSetupControllerS
             permissionRules.supportUserCanAccessDocumentsSection(eq(projectCompositeId), isA(UserResource.class));
             permissionRules.innovationLeadCanAccessDocumentsSection(eq(projectCompositeId), isA(UserResource.class));
             permissionRules.stakeholderCanAccessDocumentsSection(eq(projectCompositeId), isA(UserResource.class));
+            permissionRules.monitoringOfficerCanAccessDocumentsSection(eq(projectCompositeId), isA(UserResource.class));
         };
     }
 }

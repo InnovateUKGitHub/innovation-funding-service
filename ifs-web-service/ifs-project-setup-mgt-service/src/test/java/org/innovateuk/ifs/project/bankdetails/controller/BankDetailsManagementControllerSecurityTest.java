@@ -60,6 +60,9 @@ public class BankDetailsManagementControllerSecurityTest extends BaseProjectSetu
 
     @Override
     protected Consumer<SetupSectionsPermissionRules> getVerification() {
-        return permissionRules -> permissionRules.internalCanAccessBankDetailsSection(eq(ProjectCompositeId.id(123L)), isA(UserResource.class));
+        return permissionRules -> {
+            permissionRules.internalCanAccessBankDetailsSection(eq(ProjectCompositeId.id(123L)), isA(UserResource.class));
+            permissionRules.auditorCanAccessBankDetailsSection(eq(ProjectCompositeId.id(123L)), isA(UserResource.class));
+        };
     }
 }

@@ -31,4 +31,8 @@ public interface MonitoringOfficerRestService {
     RestResult<Boolean> isMonitoringOfficer(long userId);
 
     RestResult<Void> sendDocumentReviewNotification(long projectId, long userId);
+
+    RestResult<List<ProjectResource>> filterProjectsForMonitoringOfficer(long projectMonitoringOfficerId,
+                                                                         boolean projectInSetup,
+                                                                         boolean previousProject);
 }

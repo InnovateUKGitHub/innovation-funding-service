@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.dashboard.viewmodel;
 
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
@@ -12,7 +13,7 @@ public class DashboardTabsViewModel {
     }
 
     public boolean live() {
-        return isInternal(userResource) || isStakeholder(userResource);
+        return isInternal(userResource) || userResource.hasAuthority(Authority.STAKEHOLDER);
     }
 
     public boolean upcoming() {
@@ -24,11 +25,11 @@ public class DashboardTabsViewModel {
     }
 
     public boolean projectSetup() {
-        return isInternal(userResource) || isStakeholder(userResource) || isExternalFinanceUser(userResource);
+        return isInternal(userResource) || userResource.hasAuthority(Authority.STAKEHOLDER) || isExternalFinanceUser(userResource);
     }
 
     public boolean previous() {
-        return isInternal(userResource) || isStakeholder(userResource);
+        return isInternal(userResource) || userResource.hasAuthority(Authority.STAKEHOLDER);
     }
 
     public boolean support() {

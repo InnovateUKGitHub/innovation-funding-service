@@ -15,7 +15,9 @@ import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -51,6 +53,9 @@ public class SetupSectionsPermissionRules {
 
     @Autowired
     private OrganisationRestService organisationRestService;
+
+    @Value("${ifs.monitoringofficer.journey.update.enabled}")
+    private boolean isMOJourneyUpdateEnabled;
 
     private SetupSectionPartnerAccessorSupplier accessorSupplier = new SetupSectionPartnerAccessorSupplier();
 
@@ -188,6 +193,11 @@ public class SetupSectionsPermissionRules {
     public boolean userCannotMarkOwnSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
         OrganisationResource organisation = organisationRestService.getByUserAndProjectId(user.getId(), projectOrganisationCompositeId.getProjectId()).getSuccess();
         return !organisation.getId().equals(projectOrganisationCompositeId.getOrganisationId());
+    }
+
+    @PermissionRule(value = "APPROVE_DOCUMENTS", description = "Monitoring Officer can approve or reject documents")
+    public boolean monitoringOfficerCanApproveDocuments(ProjectCompositeId projectCompositeId, UserResource user) {
+        return isMOJourneyUpdateEnabled && SecurityRuleUtil.isMonitoringOfficer(user);
     }
 
     private boolean doSectionCheck(long projectId, UserResource user, BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> sectionCheckFn) {
