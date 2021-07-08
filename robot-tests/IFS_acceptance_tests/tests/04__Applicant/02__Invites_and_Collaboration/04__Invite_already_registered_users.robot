@@ -27,8 +27,9 @@ The user clicks the login link
     [Documentation]    INFUND-1458  IFS-7723
     [Tags]  HappyPath
     When the user clicks the button/link                link = Continue
-    And The guest user inserts user email and password  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
-    And the guest user clicks the log-in button
+    And login to application                            ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
+#    And The guest user inserts user email and password  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
+#    And the guest user clicks the log-in button
     Then the user should see the element                jQuery = dt:contains("ROYAL MAIL PLC")
     When the user clicks the button/link                css = .govuk-button[type="submit"]    #Save and continue
     Then the user should see the element                jQuery = h1:contains("Application overview")

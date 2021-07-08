@@ -72,8 +72,9 @@ Auditor can not be added as a collaborator to an application
     Given log in as a different user                      &{lead_applicant_credentials}
     And existing user starts a new application            ${openCompetitionPerformance_name}  ${EMPIRE_LTD_ID}   Choose the lead organisation
     When the lead invites already registered user         ${auditorCredentials["email"]}  ${openCompetitionPerformance_name}
-    And the guest user inserts user email and password    Amy.Wigley@ukri.org     ${short_password}
-    And the guest user clicks the log-in button
+    And login to application                              Amy.Wigley@ukri.org     ${short_password}
+#    And the guest user inserts user email and password    Amy.Wigley@ukri.org     ${short_password}
+#    And the guest user clicks the log-in button
     Then page should contain                              ${403_error_message}
 
 Auditor can view Project detials in the Project setup

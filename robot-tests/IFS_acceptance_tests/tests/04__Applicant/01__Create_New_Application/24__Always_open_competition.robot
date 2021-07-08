@@ -218,7 +218,8 @@ Comp admin manages the assessors
     Given log in as a different user           &{ifs_admin_user_credentials}
     And the user navigates to the page         ${server}/management/assessment/competition/${webTestCompID}
     And the user clicks the button/link        link = Manage assessors
-    When the user selects the radio button     assessmentPeriodId  99
+    #When the user selects the radio button     assessmentPeriodId  99
+    When the user clicks the button twice      jQuery = label:contains("Assessment period 1")
     And the user clicks the button/link        jQuery = button:contains("Save and continue")
     And the user clicks the button/link        jQuery = td:contains("Another Person") ~ td a:contains("View progress")
     Then the user should see the element       jQuery = h2:contains('Assigned') ~ div td:contains('Always open application decision pending')

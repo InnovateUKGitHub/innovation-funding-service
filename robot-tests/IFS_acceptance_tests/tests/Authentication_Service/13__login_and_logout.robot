@@ -22,16 +22,18 @@ Invalid Login
 
 Valid login with double role as Applicant
     [Documentation]    INFUND-1479
-    Given The guest user inserts user email and password      &{Multiple_user_credentials}
-    And The guest user clicks the log-in button
+    When login to application                                &{Multiple_user_credentials}
+#    Given The guest user inserts user email and password      &{Multiple_user_credentials}
+#    And The guest user clicks the log-in button
     Then the user should see multiple role dashboard view
     And the user goes to applicant dashboard
     [Teardown]    Logout as user
 
 Valid login with Double role as Assessor
     [Documentation]    INFUND-1479
-    Given The guest user inserts user email and password      &{Multiple_user_credentials}
-    When The guest user clicks the log-in button
+    When login to application                                 &{Multiple_user_credentials}
+#    Given The guest user inserts user email and password      &{Multiple_user_credentials}
+#    When The guest user clicks the log-in button
     And the user clicks the button/link                       id = dashboard-link-ASSESSOR
     Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
     And the user should see the element                       jQuery = h1:contains("Assessments")
@@ -39,8 +41,9 @@ Valid login with Double role as Assessor
 
 Valid login with triple role Assessor
     [Documentation]  IFS-4568
-    Given the guest user inserts user email and password      &{triple_user_credentials}
-    And The guest user clicks the log-in button
+    Given login to application                                &{triple_user_credentials}
+#    Given the guest user inserts user email and password      &{triple_user_credentials}
+#    And The guest user clicks the log-in button
     When the user clicks the button/link                      id = dashboard-link-APPLICANT
     Then the user should be redirected to the correct page    ${APPLICANT_DASHBOARD_URL}
     And the user should see the element                       jQuery = h1:contains("Applications")
@@ -48,8 +51,9 @@ Valid login with triple role Assessor
 
 Valid login with triple role Stakeholder
     [Documentation]  IFS-4568
-    Given the guest user inserts user email and password      &{triple_user_credentials}
-    And The guest user clicks the log-in button
+    Given login to application                                &{triple_user_credentials}
+#    Given the guest user inserts user email and password      &{triple_user_credentials}
+#    And The guest user clicks the log-in button
     When the user clicks the button/link                      id = dashboard-link-STAKEHOLDER
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     And the user should see the element                       jQuery = h1:contains("All competitions")
@@ -57,8 +61,9 @@ Valid login with triple role Stakeholder
 
 Valid login with triple role Applicant
     [Documentation]  IFS-4568
-    Given the guest user inserts user email and password      &{triple_user_credentials}
-    And The guest user clicks the log-in button
+    Given login to application                                 &{triple_user_credentials}
+#    Given the guest user inserts user email and password      &{triple_user_credentials}
+#    And The guest user clicks the log-in button
     And the user clicks the button/link                       id = dashboard-link-ASSESSOR
     Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
     And the user should see the element                       jQuery = h1:contains("Assessments")
@@ -168,7 +173,7 @@ the user should see multiple role dashboard view
     the user should not see the element                  id = dashboard-link-STAKEHOLDER
     the user should not see the element                  id = dashboard-link-INNOVATION_LEAD
 
-login to application
-    [Arguments]    ${email}    ${password}
-    The guest user inserts user email and password    ${email}    ${password}
-    The guest user clicks the log-in button
+#login to application
+#    [Arguments]    ${email}    ${password}
+#    The guest user inserts user email and password    ${email}    ${password}
+#    The guest user clicks the log-in button

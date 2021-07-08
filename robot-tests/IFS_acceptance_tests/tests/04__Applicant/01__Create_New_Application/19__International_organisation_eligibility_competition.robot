@@ -213,7 +213,8 @@ Registered users applying for an international competition see only UK based org
     [Tags]  HappyPath
      Given the user clicks the button/link              link = Back to tell us where your organisation is based
      When user selects where is organisation based      isNotInternational
-     Then the user should see the element               jQuery = dt:contains("Empire Ltd")
+     #Then the user should see the element               jQuery = dt:contains("Empire Ltd")
+     Then the user should see the element               jQuery = label:contains("Empire Ltd")
      And the user should see the element                link = Apply with a different organisation
 
 Registered UK based user applies for International Competition

@@ -76,3 +76,9 @@ the user cannot login with their new details
 
 the user logs out if they are logged in
     Run Keyword And Ignore Error Without Screenshots    log out as user
+
+login to application
+    [Arguments]    ${email}    ${password}
+    The guest user inserts user email and password       ${email}    ${password}
+    Wait Until Element Is Visible Without Screenshots    css = button[name="_eventId_proceed"]
+    Click Button                                         css=button[name="_eventId_proceed"]
