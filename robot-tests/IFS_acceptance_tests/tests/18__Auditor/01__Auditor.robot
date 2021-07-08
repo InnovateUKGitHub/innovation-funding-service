@@ -9,6 +9,8 @@ Documentation     IFS-9884 Auditor role: create role
 ...
 ...               IFS-9882 download permission error
 ...
+...               IFS-9986 Auditor bug bash: Auditors should not see 'in progress' applications in the wildcard search
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Administrator  CompAdmin
@@ -27,6 +29,9 @@ ${applicationName1}          Super-EFFY - Super Efficient Forecasting of Freight
 ${projectID1}                ${project_ids['${applicationName1}']}
 ${applicationName2}          London underground - enhancements to existing stock and logistics
 ${projectID2}                ${project_ids['${applicationName2}']}
+${applicationName3}          Climate science the history of Greenland's ice
+${competitionName3}          Predicting market trends programme
+${competitionID3}            ${competition_ids['${competitionName3}']}
 
 *** Test Cases ***
 Auditor can view correct number of competitions in live tab
@@ -130,6 +135,30 @@ Auditor can open and view the fEC model certificate in the project setup
     When the user clicks the button/link                 jQuery = a:contains(".pdf (opens in a new window)")
     Then the user should not see internal server and forbidden errors
 
+Innovation lead cannot see inprogress applications
+    [Documentation]  IFS-9986
+    Given Log in as a different user                                   &{innovation_lead_one}
+    And the user enters text to a text field                           id = searchQuery  ${applicationId3}
+    And the user clicks the button/link                                id = searchsubmit
+    And the user should not see the element                            jQuery = td:contains("${applicationName3}")
+    The user navigates to the page and gets a custom error message     ${server}/management/competition/${competitionID3}/application/${applicationId3}   ${403_error_message}
+    
+Stakeholder lead cannot see inprogress applications
+    [Documentation]  IFS-9986
+    Given Log in as a different user                                   &{stakeholder_user}
+    And the user enters text to a text field                           id = searchQuery  ${applicationId3}
+    And the user clicks the button/link                                id = searchsubmit
+    And the user should not see the element                            jQuery = td:contains("${applicationName3}")
+    The user navigates to the page and gets a custom error message     ${server}/management/competition/${competitionID3}/application/${applicationId3}   ${403_error_message}
+
+Auditor cannot see inprogress applications
+    [Documentation]  IFS-9986
+    Given Log in as a different user                                   &{auditorCredentials}
+    And the user enters text to a text field                           id = searchQuery  ${applicationId3}
+    And the user clicks the button/link                                id = searchsubmit
+    And the user should not see the element                            jQuery = td:contains("${applicationName3}")
+    The user navigates to the page and gets a custom error message     ${server}/management/competition/${competitionID3}/application/${applicationId3}   ${403_error_message}
+
 *** Keywords ***
 Custom suite setup
     Connect to Database  @{database}
@@ -137,6 +166,8 @@ Custom suite setup
     ifs admin gets the counts of competitions in live tab
     ifs admin gets the counts of competitions in project setup tab
     ifs admin gets the counts of competitions in previous tab
+    ${applicationId3} =  get application id by name  ${applicationName3}
+    Set suite variable  ${applicationId3}
 
 Custom suite teardown
     Close browser and delete emails
