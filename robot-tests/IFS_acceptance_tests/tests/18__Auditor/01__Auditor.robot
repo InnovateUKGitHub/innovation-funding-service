@@ -137,27 +137,27 @@ Auditor can open and view the fEC model certificate in the project setup
 
 Innovation lead cannot see inprogress applications
     [Documentation]  IFS-9986
-    Given Log in as a different user                                   &{innovation_lead_one}
-    And the user enters text to a text field                           id = searchQuery  ${applicationId3}
-    And the user clicks the button/link                                id = searchsubmit
-    And the user should not see the element                            jQuery = td:contains("${applicationName3}")
-    The user navigates to the page and gets a custom error message     ${server}/management/competition/${competitionID3}/application/${applicationId3}   ${403_error_message}
+    Given Log in as a different user                                       &{innovation_lead_one}
+    When the user enters text to a text field                              id = searchQuery  ${applicationId3}
+    And the user clicks the button/link                                    id = searchsubmit
+    Then the user should not see the element                               jQuery = td:contains("${applicationName3}")
+    And the user navigates to the page and gets a custom error message     ${server}/management/competition/${competitionID3}/application/${applicationId3}   ${403_error_message}
     
 Stakeholder lead cannot see inprogress applications
     [Documentation]  IFS-9986
-    Given Log in as a different user                                   &{stakeholder_user}
-    And the user enters text to a text field                           id = searchQuery  ${applicationId3}
-    And the user clicks the button/link                                id = searchsubmit
-    And the user should not see the element                            jQuery = td:contains("${applicationName3}")
-    The user navigates to the page and gets a custom error message     ${server}/management/competition/${competitionID3}/application/${applicationId3}   ${403_error_message}
+    Given Log in as a different user                                       &{stakeholder_user}
+    When the user enters text to a text field                              id = searchQuery  ${applicationId3}
+    And the user clicks the button/link                                    id = searchsubmit
+    Then the user should not see the element                               jQuery = td:contains("${applicationName3}")
+    And the user navigates to the page and gets a custom error message     ${server}/management/competition/${competitionID3}/application/${applicationId3}   ${403_error_message}
 
 Auditor cannot see inprogress applications
     [Documentation]  IFS-9986
-    Given Log in as a different user                                   &{auditorCredentials}
-    And the user enters text to a text field                           id = searchQuery  ${applicationId3}
-    And the user clicks the button/link                                id = searchsubmit
-    And the user should not see the element                            jQuery = td:contains("${applicationName3}")
-    The user navigates to the page and gets a custom error message     ${server}/management/competition/${competitionID3}/application/${applicationId3}   ${403_error_message}
+    Given Log in as a different user                                       &{auditorCredentials}
+    When the user enters text to a text field                              id = searchQuery  ${applicationId3}
+    And the user clicks the button/link                                    id = searchsubmit
+    Then the user should not see the element                               jQuery = td:contains("${applicationName3}")
+    And the user navigates to the page and gets a custom error message     ${server}/management/competition/${competitionID3}/application/${applicationId3}   ${403_error_message}
 
 *** Keywords ***
 Custom suite setup
