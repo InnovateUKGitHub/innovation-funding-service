@@ -33,14 +33,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.Validator;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORTER;
+import static org.innovateuk.ifs.user.resource.Role.internalRoles;
 
 /**
  * This controller will handle all requests that are related to management of users by IFS Administrators.
@@ -272,12 +275,15 @@ public class UserManagementController extends AsyncAdaptor {
     }
 
     private ViewUserViewModel populateEditUserViewModel(UserResource user, UserResource loggedInUser, boolean externalRoleLinkEnabled) {
+        Set<Role> roles = internalRoles().stream().filter(r -> !r.isSuperAdminUser()).collect(Collectors.toSet());
+
         return new ViewUserViewModel(user,
                 loggedInUser,
                 roleProfileStatusRestService.findByUserId(user.getId())
                         .getOptionalSuccessObject()
                         .orElse(emptyList()),
-                isExternalRoleLinkEnabled(externalRoleLinkEnabled, user));
+                isExternalRoleLinkEnabled(externalRoleLinkEnabled, user),
+                roles);
     }
 
     private boolean isExternalRoleLinkEnabled(boolean externalRoleLinkEnabled, UserResource userResource) {

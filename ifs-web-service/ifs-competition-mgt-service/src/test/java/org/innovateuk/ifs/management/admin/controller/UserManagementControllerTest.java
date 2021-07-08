@@ -3,14 +3,11 @@ package org.innovateuk.ifs.management.admin.controller;
 import org.innovateuk.ifs.AbstractAsyncWaitMockMVCTest;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
-import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.management.admin.form.EditUserForm;
 import org.innovateuk.ifs.management.admin.viewmodel.AssessorListViewModel;
 import org.innovateuk.ifs.management.admin.viewmodel.ViewUserViewModel;
 import org.innovateuk.ifs.management.registration.service.InternalUserService;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserStatus;
@@ -24,17 +21,16 @@ import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
-import java.util.Collections;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Role.internalRoles;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -46,51 +42,46 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
     private UserPageResource userPageResource;
 
-    private RoleInvitePageResource roleInvitePageResource;
+    @Mock
+    private InternalUserService internalUserService;
 
     @Mock
-    private InternalUserService internalUserServiceMock;
+    private UserRestService userRestService;
 
     @Mock
-    private UserRestService userRestServiceMock;
+    private EncryptedCookieService cookieService;
 
     @Mock
-    private InviteUserRestService inviteUserRestServiceMock;
-
-    @Mock
-    private EncryptedCookieService cookieServiceMock;
-
-    @Mock
-    private RoleProfileStatusRestService roleProfileStatusRestServiceMock;
+    private RoleProfileStatusRestService roleProfileStatusRestService;
 
     @Before
     public void setUpCommonExpectations() {
         userPageResource = new UserPageResource();
 
-        when(roleProfileStatusRestServiceMock.findByUserId(anyLong())).thenReturn(restSuccess(emptyList()));
+        when(roleProfileStatusRestService.findByUserId(anyLong())).thenReturn(restSuccess(emptyList()));
     }
 
     @Test
     public void viewUser() throws Exception {
         ZonedDateTime now = ZonedDateTime.now();
         UserResource user = newUserResource().withCreatedOn(now).withCreatedBy("abc").withModifiedOn(now).withModifiedBy("abc").build();
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(user));
+        when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(user));
 
         mockMvc.perform(get("/admin/user/{userId}/inactive", 1L))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/inactive-user"))
-                .andExpect(model().attribute("model", new ViewUserViewModel(user, getLoggedInUser(), emptyList(), false)));
+                .andExpect(model().attribute("model", new ViewUserViewModel(user, getLoggedInUser(), emptyList(), false, internalRoles())));
     }
 
     @Test
     public void updateUserSuccess() throws Exception {
         ZonedDateTime now = ZonedDateTime.now();
-        when(internalUserServiceMock.editInternalUser(Mockito.any()))
+        when(internalUserService.editInternalUser(Mockito.any()))
                 .thenReturn(serviceSuccess());
         UserResource user = newUserResource().withCreatedOn(now).withCreatedBy("abc").withModifiedOn(now).withModifiedBy("abc")
                 .withEmail("asdf@asdf.com")
                 .build();
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(user));
+        when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(user));
 
         mockMvc.perform(post("/admin/user/{userId}/active", 1L).
                 param("firstName", "First").
@@ -103,12 +94,12 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
     @Test
     public void updateUserSuccess_changeEmail() throws Exception {
         ZonedDateTime now = ZonedDateTime.now();
-        when(internalUserServiceMock.editInternalUser(Mockito.any()))
+        when(internalUserService.editInternalUser(Mockito.any()))
                 .thenReturn(serviceSuccess());
         UserResource user = newUserResource().withCreatedOn(now).withCreatedBy("abc").withModifiedOn(now).withModifiedBy("abc")
                 .withEmail("asdf@asdf.com")
                 .build();
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(user));
+        when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(user));
 
         mockMvc.perform(post("/admin/user/{userId}/active", 1L).
                 param("firstName", "First").
@@ -118,7 +109,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/admin/user/" + 1 + "/active/confirm"));
 
-        verify(cookieServiceMock).saveToCookie(any(), eq("NEW_EMAIL_COOKIE"), any());
+        verify(cookieService).saveToCookie(any(), eq("NEW_EMAIL_COOKIE"), any());
     }
 
     @Test
@@ -132,7 +123,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .withStatus(UserStatus.ACTIVE)
                 .build();
 
-        when(userRestServiceMock.retrieveUserById(1L))
+        when(userRestService.retrieveUserById(1L))
                 .thenReturn(restSuccess(userResource));
 
         EditUserForm expectedForm = new EditUserForm();
@@ -145,55 +136,53 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/active-user"))
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(model().attribute("model", new ViewUserViewModel(userResource, getLoggedInUser(), emptyList(), false)));
+                .andExpect(model().attribute("model", new ViewUserViewModel(userResource, getLoggedInUser(), emptyList(), false, internalRoles())));
     }
 
     @Test
     public void deactivateUserSuccess() throws Exception {
 
         String email = "asdf@asdf.com";
-        Role role = IFS_ADMINISTRATOR;
         UserResource userResource = newUserResource()
                 .withFirstName("first")
                 .withLastName("last")
                 .withEmail(email)
-                .withRoleGlobal(role)
+                .withRoleGlobal(IFS_ADMINISTRATOR)
                 .build();
 
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
-        when(userRestServiceMock.deactivateUser(1L)).thenReturn(restSuccess());
+        when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
+        when(userRestService.deactivateUser(1L)).thenReturn(restSuccess());
         mockMvc.perform(post("/admin/user/{userId}/active", 1L).
                     param("deactivateUser", ""))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/user/1/inactive"));
 
-        verify(userRestServiceMock).deactivateUser(1L);
+        verify(userRestService).deactivateUser(1L);
     }
 
     @Test
     public void deactivateUserDeactivateFails() throws Exception {
 
         String email = "asdf@asdf.com";
-        Role role = IFS_ADMINISTRATOR;
         UserResource userResource = newUserResource()
                 .withFirstName("first")
                 .withLastName("last")
                 .withEmail(email)
-                .withRoleGlobal(role)
+                .withRoleGlobal(IFS_ADMINISTRATOR)
                 .build();
 
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
-        when(userRestServiceMock.deactivateUser(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
+        when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
+        when(userRestService.deactivateUser(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
         mockMvc.perform(post("/admin/user/{userId}/active", 1L).
                     param("deactivateUser", ""))
                 .andExpect(status().isNotFound());
 
-        verify(userRestServiceMock).deactivateUser(1L);
+        verify(userRestService).deactivateUser(1L);
     }
 
     @Test
     public void deactivateUserFindUserFails() throws Exception {
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
+        when(userRestService.retrieveUserById(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
         mockMvc.perform(post("/admin/user/{userId}/active", 1L).
                     param("deactivateUser", ""))
                 .andExpect(status().isForbidden());
@@ -203,58 +192,56 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
     public void reactivateUserSuccess() throws Exception {
 
         String email = "asdf@asdf.com";
-        Role role = IFS_ADMINISTRATOR;
         UserResource userResource = newUserResource()
                 .withFirstName("first")
                 .withLastName("last")
                 .withEmail(email)
-                .withRoleGlobal(role)
+                .withRoleGlobal(IFS_ADMINISTRATOR)
                 .build();
 
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
-        when(userRestServiceMock.reactivateUser(1L)).thenReturn(restSuccess());
+        when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
+        when(userRestService.reactivateUser(1L)).thenReturn(restSuccess());
         mockMvc.perform(post("/admin/user/{userId}/inactive", 1L).
                     param("reactivateUser", ""))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/user/1/active"));
 
-        verify(userRestServiceMock).reactivateUser(1L);
+        verify(userRestService).reactivateUser(1L);
     }
 
     @Test
     public void reactivateUserReactivateFails() throws Exception {
 
         String email = "asdf@asdf.com";
-        Role role = IFS_ADMINISTRATOR;
         UserResource userResource = newUserResource()
                 .withFirstName("first")
                 .withLastName("last")
                 .withEmail(email)
-                .withRoleGlobal(role)
+                .withRoleGlobal(IFS_ADMINISTRATOR)
                 .build();
 
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
-        when(userRestServiceMock.reactivateUser(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
+        when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
+        when(userRestService.reactivateUser(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
         mockMvc.perform(post("/admin/user/{userId}/inactive", 1L).
                     param("reactivateUser", ""))
                 .andExpect(status().isNotFound());
 
-        verify(userRestServiceMock).reactivateUser(1L);
+        verify(userRestService).reactivateUser(1L);
     }
 
     @Test
     public void reactivateUserFindUserFails() throws Exception {
 
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
+        when(userRestService.retrieveUserById(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
         mockMvc.perform(post("/admin/user/{userId}/inactive", 1L).
                     param("reactivateUser", ""))
                 .andExpect(status().isForbidden());
     }
     @Test
     public void viewAvailableAssessors() throws Exception {
-        when(roleProfileStatusRestServiceMock.getAvailableAssessors(null, 0, 5)).thenReturn(restSuccess(userPageResource));
-        when(roleProfileStatusRestServiceMock.getUnavailableAssessors(null, 0, 5)).thenReturn(restSuccess(userPageResource));
-        when(roleProfileStatusRestServiceMock.getDisabledAssessors(null, 0, 5)).thenReturn(restSuccess(userPageResource));
+        when(roleProfileStatusRestService.getAvailableAssessors(null, 0, 5)).thenReturn(restSuccess(userPageResource));
+        when(roleProfileStatusRestService.getUnavailableAssessors(null, 0, 5)).thenReturn(restSuccess(userPageResource));
+        when(roleProfileStatusRestService.getDisabledAssessors(null, 0, 5)).thenReturn(restSuccess(userPageResource));
 
         mockMvc.perform(get("/admin/assessors/available")
                 .param("page", "1")
@@ -281,9 +268,9 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
     @Test
     public void viewUnavailableAssessors() throws Exception {
-        when(roleProfileStatusRestServiceMock.getAvailableAssessors(null, 0, 5)).thenReturn(restSuccess(userPageResource));
-        when(roleProfileStatusRestServiceMock.getUnavailableAssessors(null, 0, 5)).thenReturn(restSuccess(userPageResource));
-        when(roleProfileStatusRestServiceMock.getDisabledAssessors(null, 0, 5)).thenReturn(restSuccess(userPageResource));
+        when(roleProfileStatusRestService.getAvailableAssessors(null, 0, 5)).thenReturn(restSuccess(userPageResource));
+        when(roleProfileStatusRestService.getUnavailableAssessors(null, 0, 5)).thenReturn(restSuccess(userPageResource));
+        when(roleProfileStatusRestService.getDisabledAssessors(null, 0, 5)).thenReturn(restSuccess(userPageResource));
 
         mockMvc.perform(get("/admin/assessors/unavailable")
                 .param("page", "1")
@@ -309,9 +296,9 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
     @Test
     public void viewDisabledAssessors() throws Exception {
-        when(roleProfileStatusRestServiceMock.getAvailableAssessors(null, 0, 5)).thenReturn(restSuccess(userPageResource));
-        when(roleProfileStatusRestServiceMock.getUnavailableAssessors(null, 0, 5)).thenReturn(restSuccess(userPageResource));
-        when(roleProfileStatusRestServiceMock.getDisabledAssessors(null, 0, 5)).thenReturn(restSuccess(userPageResource));
+        when(roleProfileStatusRestService.getAvailableAssessors(null, 0, 5)).thenReturn(restSuccess(userPageResource));
+        when(roleProfileStatusRestService.getUnavailableAssessors(null, 0, 5)).thenReturn(restSuccess(userPageResource));
+        when(roleProfileStatusRestService.getDisabledAssessors(null, 0, 5)).thenReturn(restSuccess(userPageResource));
 
         mockMvc.perform(get("/admin/assessors/disabled")
                 .param("page", "1")

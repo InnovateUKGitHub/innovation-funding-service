@@ -58,4 +58,16 @@
         </div>
     </div>
 </th:block>
+
+<th:block th:fragment="mo-document-status-indicator(status)">
+    <div class="status">
+        <div class="status-msg msg-progress">
+            <th:block th:switch="${status}">
+                <span th:case="complete" class="status-complete">Complete</span>
+                <span th:case="incomplete" class="status-action">Incomplete</span>
+                <span th:case="mo-action-required" class="status-action-required">Awaiting review</span>
+            </th:block>
+        </div>
+    </div>
+</th:block>
 </html>
