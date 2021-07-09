@@ -195,8 +195,6 @@ public class UserController {
     @GetMapping("/" + URL_VERIFY_EMAIL + "/{hash}")
     public RestResult<Void> verifyEmail(@PathVariable String hash) {
         final ServiceResult<Token> result = tokenService.getEmailToken(hash);
-        final Long[] resultId = {null, null};
-        Long applicationId = null;
 
 
         LOG.debug(String.format("UserController verifyHash: %s", hash));
@@ -206,21 +204,15 @@ public class UserController {
                     registrationService.activateApplicantAndSendDiversitySurvey(token.getClassPk()).andOnSuccessReturnVoid(v -> {
                         ServiceResult<ApplicationResource> applicationResourceServiceResult = tokenService.handleExtraAttributes(token);
 
-                        ////
-                        applicationResourceServiceResult.handleSuccessOrFailure(
-                                failure -> restFailure(failure.getErrors()),
-                                applicationResource -> {
-                                    crmService.syncCrmContact(token.getClassPk(), applicationResource.getCompetition(), applicationResource.getId());
-                                    return applicationResource;
-                                });
+                        applicationResourceServiceResult.andOnFailure(
+                                //no Application Resource created, nothing to do
+                                failure -> null
+                        );
                         tokenService.removeToken(token);
                         crmService.syncCrmContact(token.getClassPk());
                     });
                     return restSuccess();
                 });
-
-        ////
-
 
     }
 
