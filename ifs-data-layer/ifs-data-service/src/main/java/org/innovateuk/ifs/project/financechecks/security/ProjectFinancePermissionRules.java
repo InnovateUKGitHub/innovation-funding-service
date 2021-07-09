@@ -143,7 +143,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
     @PermissionRule(
             value = "VIEW_MILESTONE_STATUS",
             description = "Project MO can view Milestone status")
-    public boolean projectMoCanViewMilestoneStatus(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+    public boolean projectMoCanViewMilestoneCheck(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
         return isMonitoringOfficer(projectOrganisationCompositeId.getProjectId(), user.getId());
     }
 
