@@ -145,7 +145,7 @@ User Saves the Assessment as Recommended
 User Saves the Assessment as Not Recommended
     [Documentation]    INFUND-5712  INFUND-3726  INFUND-6040  INFUND-3724
     [Tags]  HappyPath
-    Given The user clicks the button/link                    link = Val is awesome - Application 1
+    Given The user clicks the button/link                    link = Val is awesome - Application 2
     And the assessor adds score and feedback for every question  11  # value 11: is the number of questions to loop through to submit feedback
     And the user clicks the button/link                      jQuery = .govuk-button:contains("Review and complete your assessment")
     When the user selects the radio button                   fundingConfirmation    false
@@ -241,7 +241,8 @@ the user should see correct details after assessment submitted
     the user should not see the element               link = Val is awesome - Application 3
 
 the user submits the assessment
-    the user clicks the button/link            css = .in-progress li:nth-child(3) input[type = "checkbox"] ~ label
+    #the user clicks the button/link            css = .in-progress li:nth-child(3) input[type = "checkbox"] ~ label
+    the user clicks the button/link            css = .in-progress li:nth-child(2) input[type = "checkbox"] ~ label
     the user clicks the button/link            jQuery = button:contains("Submit assessments")
     the user clicks the button/link            jQuery = button:contains("Cancel")
     the user clicks the button/link            jQuery = button:contains("Submit assessments")

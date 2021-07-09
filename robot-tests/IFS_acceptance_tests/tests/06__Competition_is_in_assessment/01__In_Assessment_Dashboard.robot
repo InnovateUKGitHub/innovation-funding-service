@@ -34,6 +34,10 @@ The key statistics counts should be correct
     ${ACCEPTED} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Assignments accepted") .govuk-heading-l
     Should Be Equal As Integers    ${ACCEPTED}    5  # Assignments accepted
     ${STARTED} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Assessments started") .govuk-heading-l
-    Should Be Equal As Integers    ${STARTED}    3  # Assessments started
+    Should Be Equal As Integers    ${STARTED}    2  # Assessments started
+#    ${STARTED} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Assessments started") .govuk-heading-l
+#    Should Be Equal As Integers    ${STARTED}    3  # Assessments started
     ${SUBMITTED} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Assessments submitted") .govuk-heading-l
-    Should Be Equal As Integers    ${SUBMITTED}    0  # Assessments submitted
+    Should Be Equal As Integers    ${SUBMITTED}    1  # Assessments submitted
+#    ${SUBMITTED} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Assessments submitted") .govuk-heading-l
+#    Should Be Equal As Integers    ${SUBMITTED}    0  # Assessments submitted

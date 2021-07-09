@@ -203,7 +203,8 @@ the application list is correct before changes
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(1):contains("${Park_living}")
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(2):contains("Park living")
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(3):contains("The Best Juggling Company")
-    the user should see the element    jQuery = tr:nth-child(1) td:nth-child(4):contains("2")
+    #the user should see the element    jQuery = tr:nth-child(1) td:nth-child(4):contains("2")
+    the user should see the element    jQuery = tr:nth-child(1) td:nth-child(4):contains("1")
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(5):contains("1")
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(6):contains("0")
 
@@ -220,7 +221,8 @@ the previously assigned list is correct
 
 the assessor list is correct before changes
     the user clicks the button/link     link = 21 to 40
-    the user should see the element     jQuery = td:contains("Paul Plum") ~ td:contains("Town Planning, Construction") ~ td:contains("7") ~ td:contains("7") ~ td:contains("3") ~ td:contains("1") ~ td:contains("View progress")
+    #the user should see the element     jQuery = td:contains("Paul Plum") ~ td:contains("Town Planning, Construction") ~ td:contains("7") ~ td:contains("7") ~ td:contains("3") ~ td:contains("1") ~ td:contains("View progress")
+    the user should see the element     jQuery = td:contains("Paul Plum") ~ td:contains("Town Planning, Construction") ~ td:contains("5") ~ td:contains("5") ~ td:contains("2") ~ td:contains("1") ~ td:contains("View progress")
 
 the user accepts the application
     the user clicks the button/link       link = ${IN_ASSESSMENT_COMPETITION_NAME}
@@ -229,7 +231,7 @@ the user accepts the application
     the user clicks the button/link       jQuery = button:contains("Confirm")
 
 the user filter assessors by first or last name
-    the user navigates to the page                         ${server}/management/assessment/competition/11/assessors
+    #the user navigates to the page                         ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}/assessors
     the user enters text to a text field                   id = assessorNameFilter   Je
     the user clicks the button/link                        jQuery = .govuk-button:contains("Filter")
     the user should see the element                        jQuery = td:contains("Jeannie Newton")

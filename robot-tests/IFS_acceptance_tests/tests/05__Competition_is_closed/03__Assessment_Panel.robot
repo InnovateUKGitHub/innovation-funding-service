@@ -252,13 +252,13 @@ Assessor can attend Panel and see applications he has not assessed
 Assessor can attend Panel and see applications that he has assessed
     [Documentation]  IFS-29   IFS-2375   IFS-2549
     [Tags]  HappyPath
-    [Setup]  log in as a different user         ${assessor_raoul_chagny}   ${short_password}
-    Given the user clicks the button/link       link = ${ASSESSMENT_PANEL_COMP_NAME}
-    When the user clicks the button/link        link = ${smart_monitoring_application_name1}
-    And the user expands the section            Business opportunity
-    Then the user should see the element        jQuery = p:contains("This is the applicant response for what is the business opportunity that your project addresses?.")
-    And the user should see the element         jQuery = div:contains("Score") span:contains(7)
-    And assessor should see the competition terms and conditions    Back to application summary
+    [Setup]  log in as a different user                 ${assessor_raoul_chagny}   ${short_password}
+    Given the user clicks the button/link               link = ${ASSESSMENT_PANEL_COMP_NAME}
+    When the user clicks the button/link                link = ${smart_monitoring_application_name1}
+    And the user expands the section                    Business opportunity
+    Then the user should see the element                jQuery = p:contains("This is the applicant response for what is the business opportunity that your project addresses?.")
+    And the user should see the element                 jQuery = div:contains("Score") span:contains(7)
+    And assessor should see the competition tandc's
 
 Assessor cannot see competition on dashboard after funders panel date expiry
     [Documentation]   IFS-1138
@@ -410,3 +410,9 @@ the competition admin should not see invited assessors on find tab
     Then the user should not see the element  jQuery = td:contains("${ethan_taylor}")
     And the user should not see the element   jQuery = td:contains("${raoul_chagny}")
     And the user should not see the element   jquery = tr:contains("${sam_gilbert}")
+
+assessor should see the competition tandc's
+    the user expands the section        Award terms and conditions
+    the user clicks the button/link     jQuery = tr:contains("Empire Ltd") td:contains("Innovate UK")
+    the user should see the element     jQuery = h1:contains("Innovate UK terms and conditions of an Advanced Propulsion Centre competition grant award")
+    the user clicks the button/link     link = Back to application summary
