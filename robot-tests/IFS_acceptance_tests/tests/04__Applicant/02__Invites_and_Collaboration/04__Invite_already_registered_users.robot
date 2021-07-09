@@ -218,7 +218,7 @@ Lead marks finances as complete
     And the user enters the project location
     And the user navigates to Your-finances page         Assign test
     Then the user fills in the organisation information  Assign test  ${SMALL_ORGANISATION_SIZE}
-    And the user fills in the funding information        Assign test
+    And the user fills in the funding information        Assign test  no
     When the user navigates to Your-finances page        Assign test
     Then the user should see all finance subsections complete
 
@@ -314,26 +314,26 @@ the collaborator edits the 'public description' question
     the user reloads the page
 
 the collaborator is able to edit the finances
-    the user fills in the project costs             labour costs  n/a
-    the user navigates to Your-finances page        Assign test
-    the user fills in the organisation information  Assign test  ${SMALL_ORGANISATION_SIZE}
-    the user fills in the funding information       Assign test
+    the user fills in the project costs                labour costs  n/a
+    the user navigates to Your-finances page           Assign test
+    the user fills in the organisation information     Assign test  ${SMALL_ORGANISATION_SIZE}
+    the user fills in the funding information          Assign test  no
 
 the applicant changes the name of the application
-    Given the user clicks the button/link     link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    And the user clicks the button/link       link = Application details
-    And the user enters text to a text field  css = [id="name"]  Assign test
-    And The user clicks the button/link       jQuery = button:contains("Save and return")
+    the user clicks the button/link          link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user clicks the button/link          link = Application details
+    the user enters text to a text field     css = [id="name"]  Assign test
+    The user clicks the button/link          jQuery = button:contains("Save and return")
 
 Steve smith assigns a question to the collaborator
     the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
     the user clicks the button/link   jQuery = a:contains("Public description")
-    When the applicant assigns the question to the collaborator  Jessica Doe
+    the applicant assigns the question to the collaborator  Jessica Doe
 
 Custom suite setup
-      Connect to database  @{database}
-      Set predefined date variables
-      The guest user opens the browser
+    Connect to database  @{database}
+    Set predefined date variables
+    The guest user opens the browser
 
 Custom suite teardown
     The user closes the browser

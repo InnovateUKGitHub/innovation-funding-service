@@ -64,8 +64,11 @@ Summary: Questions should show without score
 Summary:Questions should show as complete
     [Documentation]    INFUND-550
     [Tags]  HappyPath
-    [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/33
-    Given The user clicks the button/link                           link = Val is awesome - Application 3
+    #[Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/33
+    Given the user clicks the button/link                           id = dashboard-navigation-link
+    And the user clicks the assessment tile if displayed
+    And the user clicks the button/link                             link = Val is awesome
+    And The user clicks the button/link                             link = Val is awesome - Application 3
     And the assessor adds score and feedback for every question     11   # 11 is the number of questions to iterate through
     When the user clicks the button/link                            link = Review and complete your assessment
     Then the user should see the text in the element                jQuery = .govuk-accordion__section-heading:contains("Scope")    Complete

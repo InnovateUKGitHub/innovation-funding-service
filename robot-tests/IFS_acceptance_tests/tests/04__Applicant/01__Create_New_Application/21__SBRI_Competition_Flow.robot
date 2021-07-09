@@ -238,9 +238,9 @@ Lead applicant can see SBRI applications in previous section when the competitio
 
 Internal users can see SBRI competition in previous tab
     [Documentation]  IFS-7315
-    Given log in as a different user         &{ifs_admin_user_credentials}
-    When the user clicks the button/link     jQuery = a:contains("Previous")
-    then The user should see the element in the paginated list       link = ${openSBRICompetitionName}
+    Given log in as a different user                               &{ifs_admin_user_credentials}
+    When the user clicks the button/link                           jQuery = a:contains("Previous")
+    then The user should see the element in the paginated list     link = ${openSBRICompetitionName}
 
 Internal users can see SBRI application in previous tab with submitted status
     [Documentation]  IFS-7315
@@ -363,7 +363,7 @@ Internal user can view validation message when payment requested is less than to
     And the user clicks the button/link             jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
     And the user clicks the button/link             id = edit
     #When The user enters text to a text field       id = milestones[1].payment   10000000
-    When The user enters text to a text field       id = milestones[7].payment   10000000
+    When The user enters text to a text field       id = milestones[1].payment   10000000
     And The user clicks the button/link             jQuery = button:contains("Save and return to payment milestone check")
     Then the user should see a summary error        Your payment milestones exceeds 100% of your project costs. You must lower your payment requests or adjust your project costs.
     [Teardown]  The user clicks the button/link     id = cancel
