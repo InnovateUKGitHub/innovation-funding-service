@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - image: docker-ifs.devops.innovateuk.org/releases/cache-provider:5.0.5
-          name: cache-contianer
+          name: cache-container
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 6379
