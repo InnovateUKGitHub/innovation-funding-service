@@ -104,4 +104,4 @@ deploy:
   statusCheckDeadlineSeconds: 600
   kustomize:
     paths:
-      - os-files/kustomize/overlays/local
+      - os-files/kustomize/overlays/docker/local
