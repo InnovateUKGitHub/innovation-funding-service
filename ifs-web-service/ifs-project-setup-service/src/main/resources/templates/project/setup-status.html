@@ -77,7 +77,15 @@
                 </div>
             </th:block>
             <th:block th:if="${model.monitoringOfficer}">
-                <p class="govuk-body govuk-!-margin-bottom-9">You must complete the details for any section you can access and is marked as 'Awaiting review'.</p>
+                <div th:if="${model.isCollaborativeProject()}">
+                    <p class="govuk-body govuk-!-margin-bottom-2">You must complete the details for any section you can access and is marked as 'Awaiting review'.</p>
+                    <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-8"><a
+                            th:href="@{/project/{id}/team-status(id=${model.projectId})}"
+                            class="govuk-link">View the status of partners</a>.</p>
+                </div>
+                <div th:unless="${model.isCollaborativeProject()}">
+                    <p class="govuk-body govuk-!-margin-bottom-9">You must complete the details for any section you can access and is marked as 'Awaiting review'.</p>
+                </div>
             </th:block>
         </th:block>
 
