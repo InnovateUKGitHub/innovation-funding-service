@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -131,7 +132,16 @@ public class CrmServiceImpl implements CrmService {
         LOG.info(format("Updating CRM contact %s and organisation %s %nPayload is:%s ",
                 silContact.getEmail(), silContact.getOrganisation().getName(), silContact));
 
+        stripAttributesNotNeeded(silContact, () -> !FundingType.LOAN.getDisplayName().equals(silContact.getExperienceType()));
         return silCrmEndpoint.updateContact(silContact);
+    }
+
+    private void stripAttributesNotNeeded(SilContact silContact, BooleanSupplier supplier) {
+
+        if (supplier.getAsBoolean()) {
+            silContact.setExperienceType(null);
+            silContact.setIfsAppID(null);
+        }
     }
 
     private SilContact externalUserToSilContact(UserResource user, OrganisationResource organisation, String fundingType, Long applicationId) {
