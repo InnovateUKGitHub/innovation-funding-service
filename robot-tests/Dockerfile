@@ -132,6 +132,7 @@ USER 996:993
 
 HEALTHCHECK --retries=5 --interval=5s CMD zap-cli status
 
+COPY /robot-tests/IFS_acceptance_tests/resources/variables/EMAIL_VARIABLES_TEMPLATE.robot /robot-tests/IFS_acceptance_tests/resources/variables/EMAIL_VARIABLES_SENSITIVE.robot
 
 WORKDIR /robot-tests
 
