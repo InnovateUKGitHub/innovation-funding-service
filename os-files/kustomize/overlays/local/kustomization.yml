@@ -28,9 +28,6 @@ resources:
   - cache-provider/cache-provider-service-deployment.yml
   - cache-config.yml
   - db-config.yml
-  - data-layer/data-service/data-service-config.yml
-  - data-layer/finance-data-service/finance-data-service-config.yml
-  - data-layer/survey-data-service/survey-data-service-config.yml
   - auth/idp/shibboleth-config.yml
   - auth/idp/idp-config.yml
   - auth/ldap/ldap-config.yml
@@ -39,4 +36,6 @@ resources:
   - web-config.yml
   - docusign-config.yml
   - flyway-config.yml
-
+  - data-layer/data-service/data-service-config.yml
+  - data-layer/finance-data-service/finance-data-service-config.yml
+  - data-layer/survey-data-service/survey-data-service-config.yml
