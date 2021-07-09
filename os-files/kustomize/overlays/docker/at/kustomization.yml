@@ -1,0 +1,24 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: at
+
+bases:
+  - ../local
+
+patches:
+
+  - path: patches/pull-secrets-patch.yml
+    target:
+      kind: Deployment
+      annotationSelector: "pullSecrets=pullSecrets"
+
+resources:
+  - robot/chrome.yml
+  - robot/chrome-deployment.yml
+  - robot/robot-framework-deployment.yml
+  - routes/idp-route.yml
+  - routes/shib-route.yml
+  - storage/gluster.yml
+  - storage/gluster-ep.yml
+  - storage/persistent-volume-claim.yml
+
