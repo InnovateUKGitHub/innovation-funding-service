@@ -104,7 +104,7 @@ profiles:
       kubeContext: at
       kustomize:
         paths:
-          - os-files/kustomize/overlays/at
+          - os-files/kustomize/overlays/docker/at
 
   - name: sysint
     build:
