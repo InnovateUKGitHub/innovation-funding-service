@@ -31,12 +31,6 @@ spec:
             requests:
               cpu: 100m
               memory: 400M
-          readinessProbe:
-            exec:
-              command:
-                - cat
-                - /tmp/healthy
-            initialDelaySeconds: 60
           volumeMounts:
           - mountPath: /mnt/ifs_storage
             name: dir-1
