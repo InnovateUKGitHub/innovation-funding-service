@@ -185,7 +185,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                         ))
                 );
 
-        verify(crmService).syncCrmContact(userId,applicationResource.getId(),applicationResource.getCompetition());
+        verify(crmService).syncCrmContact(userId);
     }
 
 
