@@ -156,6 +156,13 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_FUNDING_RULES",
+            description = "Auditors can view Funding Rules status")
+    public boolean auditorCanViewFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return hasAuditorAuthority(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_FUNDING_RULES",
             description = "Users can see their own Funding Rules status")
     public boolean userCanViewTheirOwnFundingRulesStatus(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
         return isPartner(projectOrganisationCompositeId.getProjectId(), user.getId());
