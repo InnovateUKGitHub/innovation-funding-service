@@ -1,6 +1,6 @@
 commonAnnotations:
   deployedWith: kustomize
-  environment: at
+  environment: local
 
 bases:
   - ../../../base
