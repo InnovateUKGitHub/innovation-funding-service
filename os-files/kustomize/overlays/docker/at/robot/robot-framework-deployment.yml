@@ -34,7 +34,8 @@ spec:
           readinessProbe:
             exec:
               command:
-                - readiness-probe
+                - cat
+                - /tmp/healthy
             initialDelaySeconds: 60
           volumeMounts:
           - mountPath: /mnt/ifs_storage
