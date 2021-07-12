@@ -3,10 +3,7 @@ package org.innovateuk.ifs.file.transactional;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
-import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -15,6 +12,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionAssessmentConfigService;
+import org.innovateuk.ifs.competition.transactional.CompetitionExternalConfigService;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.form.domain.Question;
@@ -136,10 +134,16 @@ public class BuildDataFromFileTest extends BaseUnitTestMocksTest {
     @Mock
     private EntityManager entityManagerMock;
 
+    @Mock
+    private CompetitionExternalConfigService competitionExternalConfigServiceMock;
+
+    @Mock
+    private ApplicationExternalConfigService applicationExternalConfigServiceMock;
+
     @Test
     public void buildFromFile() {
 
-        String content = "competition name, application name, question name, response\ntest competition, test application, test question, test response";
+        String content = "competition name, external competition Id, application name, external application id, external applicant name, question name, response\ntest competition, test external competition, test application, test external application id,test external applicant name, test question, test response";
         InputStream inputStream = new ByteArrayInputStream(content.getBytes());
 
         Competition competition = newCompetition().build();
@@ -163,6 +167,8 @@ public class BuildDataFromFileTest extends BaseUnitTestMocksTest {
         when(milestoneServiceMock.updateCompletionStage(anyLong(), eq(CompetitionCompletionStage.RELEASE_FEEDBACK))).thenReturn(serviceSuccess());
         when(sectionRepositoryMock.findByTypeAndCompetitionId(eq(SectionType.APPLICATION_QUESTIONS), anyLong())).thenReturn(Optional.of(newSection().build()));
         when(competitionRepositoryMock.findById(anyLong())).thenReturn(Optional.of(competition));
+        when(competitionExternalConfigServiceMock.update(anyLong(), any(CompetitionExternalConfigResource.class))).thenReturn(serviceSuccess());
+        when(applicationExternalConfigServiceMock.update(anyLong(), any(ApplicationExternalConfigResource.class))).thenReturn(serviceSuccess());
         when(questionPriorityOrderServiceMock.peristAndPrioritiesQuestions(any(Competition.class), anyList(), any(Section.class)))
                 .thenReturn(Collections.singletonList(newQuestion().build()));
         when(competitionAssessmentConfigServiceMock.update(anyLong(), any(CompetitionAssessmentConfigResource.class))).thenReturn(serviceSuccess());
