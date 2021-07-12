@@ -298,7 +298,7 @@ The project finance user is shown a validation message when duration is less tha
     Then the user should see a field and summary error     This cannot be less than the stated payment milestones. You will need to adjust these to change the duration.
 
 The project finance user sets the duration back to a valid value
-   [Documentation]    IFS-8942
+    [Documentation]    IFS-8942
     Given the user enters text to a text field             id = durationInMonths  3
     When the user clicks the button/link                   jQuery = button:contains("Save and return to project finances")
     Then the user should see the element                   jQuery = dd:contains("3 months")
@@ -400,12 +400,14 @@ Contract section is enabled without bank details
 
 Internal user can send the contract
     [Documentation]  IFS-8202  IFS-8199  IFS-8198
-    Given the user navigates to the page           ${server}/project-setup-management/project/${sbriProjectId2}/finance-check
-    And The user clicks the button/link            jQuery = button:contains("Approve finance checks")
-    When internal user generates the contract      ${sbriProjectId2}
-    And the user navigates to the page             ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
-    Then the user should see the element           jQuery = tr:contains("${sbriProjectName2}") td:contains("Pending")
-    And the user reads his email                   ${lead_international_email}     Your contract is available for project ${sbriApplicationId2}     We are pleased to inform you that your contract is now ready for you to sign
+    [Setup]  ifs admin approves exploitation plan     ${sbriProjectId2}
+    Given Log in as a different user                  &{internal_finance_credentials}
+    And the user navigates to the page                ${server}/project-setup-management/project/${sbriProjectId2}/finance-check
+    And The user clicks the button/link               jQuery = button:contains("Approve finance checks")
+    When internal user generates the contract         ${sbriProjectId2}
+    And the user navigates to the page                ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
+    Then the user should see the element              jQuery = tr:contains("${sbriProjectName2}") td:contains("Pending")
+    And the user reads his email                      ${lead_international_email}     Your contract is available for project ${sbriApplicationId2}     We are pleased to inform you that your contract is now ready for you to sign
 
 Check that the VAT value shows on finance table
     [Documentation]  IFS-8321
@@ -620,3 +622,13 @@ the user should see correct inputs in milestones form
     the user should see the element     jQuery = tr:contains("Briefing event") td:contains("${tomorrowMonthWord} ${nextyear}")
     the user should see the element     jQuery = tr:contains("Submission date") td:contains("Midday") ~ td:contains("${tomorrowMonthWord} ${nextyear}")
     the user should see the element     jQuery = button:contains("Edit")
+
+# remove this keyword once web test data issues are resolved for approving mo documents
+ifs admin approves exploitation plan
+    [Arguments]  ${project}
+    log in as a different user                   &{ifs_admin_user_credentials}
+    the user navigates to the page               ${SERVER}/project-setup-management/project/${project}/document/all
+    the user clicks the button/link              link = Exploitation plan
+    internal user approve uploaded documents
+
+

@@ -325,6 +325,7 @@ Partner can review only the external version of Finance Checks eligibility table
     [Documentation]    INFUND-8778, INFUND-8880
     [Tags]
     Given log in as a different user        &{collaborator1_credentials}
+    And the user clicks the application tile if displayed
     When the user clicks the button/link    jQuery = .projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     Then the user clicks the button/link    link = Finance checks
     When the user clicks the button/link    link = your project finances
@@ -879,6 +880,7 @@ Links to other sections in Project setup dependent on project details (applicabl
     [Documentation]    INFUND-4428
     [Tags]
     [Setup]    log in as a different user   &{collaborator1_credentials}
+    Given the user clicks the application tile if displayed
     When the user clicks the button/link    jQuery = .projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     And the user should see the element     css = ul li.complete:nth-child(1)
     And the user should see the element     css = ul li.complete:nth-child(5)
@@ -960,6 +962,7 @@ Non Lead Partner can view finance checks page
     [Documentation]     INFUND-8787
     [Tags]
     Given log in as a different user        &{collaborator1_credentials}
+    And the user clicks the application tile if displayed
     When the user clicks the button/link    jQuery = .projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     Then the user should see the element    jQuery = ul li.complete:nth-of-type(6):contains("We will review your financial information.")
     And the user should see the element     jQuery = ul li.complete:nth-of-type(6):contains("Completed")
@@ -1303,6 +1306,7 @@ the user should see the finance values amended by internal user
 
 check finance checks status on dashboard
     [Arguments]  ${selector}  ${status}
+    the user clicks the application tile if displayed
     the user clicks the button/link     link = ${FUNDERS_PANEL_APPLICATION_1_TITLE}
     the user should see the element     link = Finance checks
     the user should see the element     jQuery = ul li.${selector}:nth-of-type(6):contains("We will review your financial information.")

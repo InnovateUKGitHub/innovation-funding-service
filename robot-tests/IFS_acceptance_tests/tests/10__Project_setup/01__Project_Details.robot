@@ -94,8 +94,9 @@ Status updates correctly for internal user's table
 Non-lead partner can see the project setup page
     [Documentation]    INFUND-2612 INFUND-2621 INFUND-4428 INFUND-5827 INFUND-5805 INFUND-7432
     [Tags]  HappyPath
-    [Setup]  log in as a different user             &{collaborator1_credentials}
-    Given the user should see the grant award terms and conditions
+    [Setup]  log in as a different user                                 &{collaborator1_credentials}
+    Given the user clicks the application tile if displayed
+    When the user should see the grant award terms and conditions
     Then the user should see the project setup stages
     And the user checks for project detail status on team status page   Ludlow
     And Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)

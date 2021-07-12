@@ -7,8 +7,10 @@ Documentation     INFUND-1458 As a existing user with an invitation to collabora
 ...
 ...               IFS-7723 Improvement to company search results
 ...
-Suite Setup       The guest user opens the browser
-Suite Teardown    The user closes the browser
+#Suite Setup       The guest user opens the browser
+#Suite Teardown    The user closes the browser
+Suite Setup       Custom suite setup
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
@@ -331,8 +333,8 @@ Steve smith assigns a question to the collaborator
     the applicant assigns the question to the collaborator  Jessica Doe
 
 Custom suite setup
-    Connect to database  @{database}
     Set predefined date variables
+    Connect to database  @{database}
     The guest user opens the browser
 
 Custom suite teardown

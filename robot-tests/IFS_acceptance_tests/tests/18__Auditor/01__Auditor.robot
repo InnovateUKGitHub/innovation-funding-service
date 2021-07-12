@@ -110,7 +110,10 @@ Auditor can view the bank details with the 'Complete' status for the organisatio
 
 Auditor can open and view the GOL for the organisations
     [Documentation]  IFS-9886    IFS-9882
-    Given the user navigates to the page                ${SERVER}/project-setup-management/project/${projectID1}/grant-offer-letter/send
+    #remove ifs admin approves both documents keyword after mo approving web test fixed
+    [Setup]  ifs admin approves both documents          ${projectID1}
+    Given log in as a different user                    &{auditorCredentials}
+    And the user navigates to the page                  ${SERVER}/project-setup-management/project/${projectID1}/grant-offer-letter/send
     And the user should see the element                 jQuery = h1:contains("Grant offer letter")
     When the user clicks the button/link                jQuery = a:contains(".pdf (opens in a new window)")
     Then the user should not see an error in the page

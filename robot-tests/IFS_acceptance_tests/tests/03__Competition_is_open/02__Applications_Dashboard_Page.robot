@@ -133,13 +133,21 @@ the user cannot see this file but gets a quarantined message
     the user should see the text in the page    ${quarantine_warning}
 
 the finance summary calculations should be correct
-    The user should see the element    jQuery = .finance-summary tr:contains("Empire") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}") ~ td:contains("${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}")
+#    The user should see the element    jQuery = .finance-summary tr:contains("Empire") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}") ~ td:contains("${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}")
+#    The user should see the element    jQuery = .finance-summary tr:contains("HIVE") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}") ~ td:contains("${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}")
+#    The user should see the element    jQuery = .finance-summary tr:contains("Ludlow") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}") ~ td:contains("${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}")
+#    The user should see the element    jQuery = .finance-summary tr:contains("EGGS") td:contains("${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}") ~ td:contains("${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}")
+    The user should see the element    jQuery = .finance-summary tr:contains("Empire") td:contains("61,887") + td:contains("${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("16,098") ~ td:contains("43,321")
     The user should see the element    jQuery = .finance-summary tr:contains("HIVE") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}") ~ td:contains("${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}")
     The user should see the element    jQuery = .finance-summary tr:contains("Ludlow") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}") ~ td:contains("${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}")
-    The user should see the element    jQuery = .finance-summary tr:contains("EGGS") td:contains("${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}") ~ td:contains("${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}")
+    The user should see the element    jQuery = .finance-summary tr:contains("EGGS") td:contains("${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}") + td:contains("100.00%") + td:contains("${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}") ~ td:contains("${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}")
 
 the finance Project cost breakdown calculations should be correct
-    The user should see the element    jQuery = .project-cost-breakdown tr:contains("Empire") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}")
+#    The user should see the element    jQuery = .project-cost-breakdown tr:contains("Empire") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}")
+#    The user should see the element    jQuery = .project-cost-breakdown tr:contains("HIVE") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}")
+#    The user should see the element    jQuery = .project-cost-breakdown tr:contains("Ludlow") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}")
+#    The user should see the element    jQuery = .project-cost-breakdown tr:contains("EGGS") td:contains("${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}")
+    The user should see the element    jQuery = .project-cost-breakdown tr:contains("Empire") td:contains("61,887")
     The user should see the element    jQuery = .project-cost-breakdown tr:contains("HIVE") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}")
     The user should see the element    jQuery = .project-cost-breakdown tr:contains("Ludlow") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}")
     The user should see the element    jQuery = .project-cost-breakdown tr:contains("EGGS") td:contains("${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}")

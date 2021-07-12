@@ -228,14 +228,18 @@ the user should see correct details
     the application should have the correct status      jQuery = .progress-list li:contains("Val is awesome - Application 3")    Assessed
 
 the user should see assessment as not recommended details
-    The user should see the element                      css = li:nth-child(2) .negative
+    #The user should see the element                      css = li:nth-child(2) .negative
+    The user should see the element                      css = li:nth-child(1) .negative
     the user should see the element                      css = li:nth-child(2) input[type = "checkbox"] ~ label
+    the application should have the correct status       css = .progress-list li:nth-child(1)    Assessed
     the application should have the correct status       css = .progress-list li:nth-child(2)    Assessed
-    the application should have the correct status       css = .progress-list li:nth-child(3)    Assessed
+    #the application should have the correct status       css = .progress-list li:nth-child(2)    Assessed
+    #the application should have the correct status       css = .progress-list li:nth-child(3)    Assessed
 
 the user should see correct details after assessment submitted
     the application should have the correct status    css = div.submitted    Submitted assessment
-    the user should see the element                   css = li:nth-child(2) input[type = "checkbox"] ~ label    #This keyword verifies that only one applications has been submitted
+    #the user should see the element                   css = li:nth-child(2) input[type = "checkbox"] ~ label    #This keyword verifies that only one applications has been submitted
+    the user should see the element                   css = li:nth-child(1) input[type = "checkbox"] ~ label    #This keyword verifies that only one applications has been submitted
     the user should see the element                   jQuery = h4:contains("Val is awesome - Application 3")
     the user should see the element                   jQuery = strong:contains("98")
     the user should not see the element               link = Val is awesome - Application 3
