@@ -22,3 +22,6 @@ resources:
   - storage/gluster-ep.yml
   - storage/persistent-volume-claim.yml
 
+patchesStrategicMerge:
+  - auth/idp/shibboleth-config.yml
+
