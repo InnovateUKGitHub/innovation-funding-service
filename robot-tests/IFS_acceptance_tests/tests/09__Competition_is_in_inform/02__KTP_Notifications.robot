@@ -75,6 +75,8 @@ The KTA checks the status of the application
     [Documentation]  IFS-8549  IFS-9576
     Given Log in as a different user                              &{ktp_KTA_Credentials}
     When the user clicks the button/link                          jQuery = h2:contains("Project setup")
+    And the user selects the checkbox                             previousProject
+    And the user clicks the button/link                           id = update-documents-results-button
     Then the user should see the element                          jQuery = .task:contains("${KTP_application}") + .status:contains("Unsuccessful")
     And the project user is unable to make any changes
     And the user is able to view the application overview page
