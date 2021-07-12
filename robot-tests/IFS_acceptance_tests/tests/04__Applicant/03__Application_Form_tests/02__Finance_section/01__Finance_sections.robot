@@ -43,22 +43,19 @@ Organisation name visible in the Finance section
 Guidance in the your project costs
     [Documentation]    INFUND-192
     [Tags]  HappyPath
-    [Setup]  Applicant navigates to the finances of the Robot application
-    Given the user clicks the button/link   link = Your project costs
+#    [Setup]  Applicant navigates to the finances of the Robot application
+    Given the user navigates to Your-finances page      ${applicationName}
+    And the user clicks the button/link     link = Your project costs
     When the user clicks the button/link    jQuery = button:contains("Labour")
     And the user clicks the button/link     css = .govuk-details summary
     Then the user should see the element    css = .govuk-details__text p
-    And the user should see the element     css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
-
-Working days per year should be 232
-    [Documentation]    INFUND-2961
-    Then the working days per year should be 232 by default
+#    And the user should see the element     css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
+    And the working days per year should be 250 by default
 
 User pressing back button should get the correct version of the page
     [Documentation]    INFUND-2695
     [Tags]  HappyPath
-    [Setup]  Applicant navigates to the finances of the Robot application
-    And the user clicks the button/link     link = Your project costs
+#    And the user clicks the button/link     link = Your project costs
     Given The user adds three material rows
     And The user clicks the button/link     link = Your project finances
     And the user clicks the button/link     link = Your project costs
@@ -127,7 +124,7 @@ Applicant chooses Calculate overheads option
     [Setup]  log in as a different user                        &{lead_applicant_credentials}
     # This test also checks read only view of the overheads once section is marked as complete
     Given the user navigates to Your-finances page             ${applicationName}
-    And the user fills in the project costs                    Calculate  185,997
+    And the user fills in the project costs                    Calculate  165,997
     And wait until element is not visible without screenshots  css = .task-list li:nth-of-type(1) .task-status-incomplete
     When the user clicks the button/link                       link = Your project costs
     And the user expands the section                           Overhead costs
@@ -167,10 +164,10 @@ the user removes the materials rows
     Wait Until Element Is Not Visible Without Screenshots    css = table[id=material-costs-table] tbody tr:nth-of-type(2) td:nth-of-type(2) input    10s
     the user clicks the button/link                          jQuery = button:contains("Materials")
 
-the working days per year should be 232 by default
+the working days per year should be 250 by default
     the user should see the element    id = working-days-per-year
     ${Days_value} =   Get Value        id = working-days-per-year
-    Should Be Equal As Strings         ${Days_value}    232
+    Should Be Equal As Strings         ${Days_value}    250
 
 the user navigates to another page
     the user navigates to the page    https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance
