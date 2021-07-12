@@ -54,7 +54,8 @@ public class ProjectProcurementMilestoneViewModelPopulator {
                 userResource.isInternalUser() ? isAllEligibilityAndViabilityApproved(projectId) : false,
                 userResource.isExternalUser(),
                 resettableGolState,
-                showChangesLink);
+                showChangesLink,
+                userResource.isReadOnlyUser());
     }
 
     private boolean isAllEligibilityAndViabilityApproved(long projectId) {

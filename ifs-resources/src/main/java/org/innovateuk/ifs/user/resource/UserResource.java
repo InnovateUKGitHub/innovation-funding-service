@@ -198,6 +198,11 @@ public class UserResource implements Serializable {
         return CollectionUtils.containsAny(externalRoles(), roles);
     }
 
+    @JsonIgnore
+    public boolean isReadOnlyUser() {
+        return CollectionUtils.containsAny(readOnlyRoles(), roles);
+    }
+
     public boolean hasAnyRoles(Role... acceptedRoles) {
         return !disjoint(roles, newHashSet(acceptedRoles));
     }

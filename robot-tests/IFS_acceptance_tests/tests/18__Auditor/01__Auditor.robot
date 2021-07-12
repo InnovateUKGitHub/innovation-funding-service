@@ -9,6 +9,8 @@ Documentation     IFS-9884 Auditor role: create role
 ...
 ...               IFS-9882 download permission error
 ...
+...               IFS-10000 Auditor gets permission error when tries to open payment milestone
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Administrator  CompAdmin
@@ -27,6 +29,8 @@ ${applicationName1}          Super-EFFY - Super Efficient Forecasting of Freight
 ${projectID1}                ${project_ids['${applicationName1}']}
 ${applicationName2}          London underground - enhancements to existing stock and logistics
 ${projectID2}                ${project_ids['${applicationName2}']}
+${sbriApplicationName2}      SBRI application
+${sbriProjectId}             ${project_ids['${sbriApplicationName2}']}
 
 *** Test Cases ***
 Auditor can view correct number of competitions in live tab
@@ -129,6 +133,14 @@ Auditor can open and view the fEC model certificate in the project setup
     And The user clicks the button/link                  jQuery = a:contains("Your fEC model")
     When the user clicks the button/link                 jQuery = a:contains(".pdf (opens in a new window)")
     Then the user should not see internal server and forbidden errors
+
+Auditor can view payment milestones in project setup
+    [Documentation]  IFS-10000
+    Given the user navigates to the page        ${SERVER}/project-setup-management/project/${sbriProjectId}/finance-check
+    When the user clicks the button/link        jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
+    Then the user should see the element        jQuery = h1:contains("Payment milestones")
+    And the user should see the element         jQuery = h3:contains("Payment milestone overview")
+    And the user should not see the element     jQuery = a:contains("Edit payment milestones")
 
 *** Keywords ***
 Custom suite setup
