@@ -28,21 +28,23 @@ import java.io.IOException;
 public class FileUploadController {
 
     private static final String FORM_ATTR_NAME = "form";
-
+    protected static final String TEMPLATE_PATH = "admin";
+    private static final String DISPLAY_UPLOAD_RESULTS = "display-upload-results";
+    private static final String UPLOAD_FILES = "upload-files";
     @Autowired
     private FileUploadRestService fileUploadRestService;
 
     @GetMapping("/upload-files")
-    public String uploadFiles(Model model) {
-        UploadFilesForm form = new UploadFilesForm();
+    public String viewUploadPage(@ModelAttribute("form") UploadFilesForm form, Model model) {
         model.addAttribute(FORM_ATTR_NAME, form);
-
-        return "admin/upload-files";
+        return TEMPLATE_PATH + "/" + UPLOAD_FILES;
     }
 
     @PostMapping(path = "/upload-files", params = {"upload_file"})
     @SecuredBySpring(value = "UPLOAD_FILE", description = "System maintainer can upload files")
-    public String uploadExternalSystemFiles(@ModelAttribute("form") UploadFilesForm form, BindingResult bindingResult) throws IOException {
+    public String uploadExternalSystemFiles(@ModelAttribute("form") UploadFilesForm form,
+                                            BindingResult bindingResult,
+                                            Model model) throws IOException {
         MultipartFile file = form.getFile();
         RestResult<FileEntryResource> result = fileUploadRestService.uploadFile("AssessmentOnly", file.getContentType(),
                 file.getSize(), file.getOriginalFilename(), file.getBytes());
@@ -51,9 +53,10 @@ public class FileUploadController {
                     bindingResult.rejectValue("file", error.getErrorKey(), error.getArguments().toArray(), "")
             );
         } else {
+            form.setUploadSuccess(true);
             form.setFileName(result.getSuccess().getName());
         }
-
-        return "admin/upload-files";
+       return viewUploadPage(form, model);
     }
-}
+
+ }

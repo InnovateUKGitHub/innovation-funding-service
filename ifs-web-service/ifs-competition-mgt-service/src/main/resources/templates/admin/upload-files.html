@@ -18,8 +18,11 @@
         </div>
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment as a Service',size='govuk-heading-l'" />
-
         <p class="govuk-body">Upload files</p>
+        <th:block th:if="${form.isUploadSuccess}">
+            <p class="govuk-body">The external file uploaded successfully in IFS.</p>
+        </th:block>
+        <th:block th:unless="${form.isUploadSuccess}">
             <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{file}')} ? 'govuk-form-group--error'">
                     <th:block th:if="${#fields.hasErrors('file')}">
@@ -43,18 +46,19 @@
                         </details>
                         <div class="govuk-form-group">
                             <th:block th:insert="question-type/types :: fileupload-fragment('edit',
-                                        '',
+                                        ' ',
                                         ${form.fileName},
                                         file,
                                         file,
                                         true,
                                         remove_file,
                                         upload_file)"/>
+                            <p th:if="${form.isUploadSuccess}" class="govuk-body uploaded-file">The external file uploaded successfully in IFS.</p>
                         </div>
                     </div>
                 </div>
             </form>
-
+        </th:block>
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>

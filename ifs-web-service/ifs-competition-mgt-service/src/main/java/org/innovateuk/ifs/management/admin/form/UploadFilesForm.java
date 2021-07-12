@@ -6,6 +6,7 @@ public class UploadFilesForm {
 
     private String fileName;
     private MultipartFile file;
+    private Boolean isUploadSuccess;
 
     public UploadFilesForm() {
         // for spring form binding
@@ -25,5 +26,13 @@ public class UploadFilesForm {
 
     public void setFile(MultipartFile file) {
         this.file = file;
+    }
+
+    public Boolean isUploadSuccess() {
+        return isUploadSuccess;
+    }
+
+    public void setUploadSuccess(Boolean uploadSuccess) {
+        this.isUploadSuccess = uploadSuccess;
     }
 }
