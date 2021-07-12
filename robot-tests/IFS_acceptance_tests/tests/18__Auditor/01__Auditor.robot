@@ -27,6 +27,11 @@ ${applicationName1}          Super-EFFY - Super Efficient Forecasting of Freight
 ${projectID1}                ${project_ids['${applicationName1}']}
 ${applicationName2}          London underground - enhancements to existing stock and logistics
 ${projectID2}                ${project_ids['${applicationName2}']}
+${ktpCompetitionName}        KTP notifications
+${ktpCompetitionId}          ${competition_ids['${ktpCompetitionName}']}
+${ktpApplicationName}        KTP notifications application
+${ktpApplicationId}          ${application_ids['${ktpApplicationName}']}
+
 
 *** Test Cases ***
 Auditor can view correct number of competitions in live tab
@@ -127,7 +132,7 @@ Auditor cannot view the bank details with the 'Review' status for the organisati
 Auditor can open and view the fEC model certificate in the project setup
     [Documentation]  IFS-9882
     Given Log in as a different user                     &{auditorCredentials}
-    And the user navigates to the page                   ${SERVER}/management/competition/${competitionId}/application/${ApplicationID}
+    And the user navigates to the page                   ${SERVER}/management/competition/${ktpCompetitionId}/application/${ktpApplicationId}
     And the user clicks the button/link                  jQuery =button:contains("Finances summary")
     And the user clicks the button/link                  jQuery = div:contains("A base of knowledge") ~ a:contains("View finances")
     And The user clicks the button/link                  jQuery = a:contains("Your fEC model")

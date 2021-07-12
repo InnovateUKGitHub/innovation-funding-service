@@ -614,6 +614,8 @@ The project finance user approves bank details
     the user clicks the button/link           jQuery = .govuk-button:contains("Approve account")
 
 internal user approve uploaded documents
+    ${today} =  get today
+    set suite variable  ${today}
     the user selects the radio button      approved   true
     the user clicks the button/link        id = submit-button
     the user clicks the button/link        id = accept-document
