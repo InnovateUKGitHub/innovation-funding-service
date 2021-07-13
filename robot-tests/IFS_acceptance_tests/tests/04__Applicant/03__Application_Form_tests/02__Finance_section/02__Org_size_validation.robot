@@ -15,20 +15,26 @@ Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../../../resources/common/Applicant_Commons.robot
 
+*** Variables ***
+
+${application_name1}     Robot test application
+
 *** Test Cases ***
 Before org size is selected, your funding link is not available
     [Documentation]    INFUND-6394  IFS-3938
     [Tags]  HappyPath
-    Given applicant navigates to the finances of the robot application
+#   Given applicant navigates to the finances of the robot application
+    Given the user navigates to Your-finances page      ${application_name1}
     When the user clicks the button/link        link = Your funding
     Then the user should see the element        jQuery = li:contains("mark the"):contains("your organisation")
 
 Small org can be selected
     [Documentation]    INFUND-1110, INFUND-6394
     [Tags]  HappyPath
-    Given applicant navigates to the finances of the robot application
-    And the user clicks the button/link         link = Your organisation
-    And the user marks their organisation as    ${SMALL_ORGANISATION_SIZE}
+#   Given applicant navigates to the finances of the robot application
+    Given the user navigates to Your-finances page      ${application_name1}
+    And the user clicks the button/link                 link = Your organisation
+    And the user marks their organisation as            ${SMALL_ORGANISATION_SIZE}
 
 Funding section is now available
     [Documentation]    INFUND-6394
