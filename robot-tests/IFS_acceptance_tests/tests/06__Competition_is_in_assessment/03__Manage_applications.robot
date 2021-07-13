@@ -267,7 +267,12 @@ the user should see details on application progress page
     the user should see the element       jQuery = p:contains("No assessors were previously assigned to this application.")
 
 the user assign application to an assessor
-    the user adds an assessor to application  assessor-row-17
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element   jQuery = tr:contains("Maureen Moore") :checkbox
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link      jQuery = tr:contains("Maureen Moore") :checkbox
+    ...                             ELSE  run keywords   the user clicks the button/link     jQuery = a:contains("Next")
+    ...                             AND                  the user clicks the button/link     jQuery = tr:contains("Maureen Moore") :checkbox
+    #the user adds an assessor to application  assessor-row-17
+    the user clicks the button/link           jQuery = button:contains("Add to application")
     the user should see the element           jQuery = h2:contains("Assigned (1)")
     the assigned list is correct before notification
     the user clicks the button/link           link = Allocate applications
