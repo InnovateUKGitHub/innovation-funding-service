@@ -19,6 +19,7 @@
 # The infamous user password: Passw0rd
 #password="e1NTSEF9cDhicDVjcjJNeWZ1M1M2a0xGK29nKzJkTG9tbFhRVHM="
 
+printf "test password $DB_TEST_PASSWORD"
 
 host=$DB_HOST
 #host=mysql
