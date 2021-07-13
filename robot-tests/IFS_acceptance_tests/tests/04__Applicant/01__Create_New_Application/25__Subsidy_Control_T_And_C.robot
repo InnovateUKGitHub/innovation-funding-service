@@ -270,7 +270,7 @@ Lead applicant completes subsidy control subsidy basis application
 Lead applicant can accept subsidy control terms and conditions based on NI declaration
     [Documentation]  IFS-9223
     When the user clicks the button/link          link = Award terms and conditions
-    Then the user should see the element          jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    Then the user should see the element          jQuery = h1:contains("Terms and conditions of an Innovate UK Grant Award")
     And the user should see the element           jQuery = li:contains("Subsidy Control/ State aid obligations")
     And the user accepts terms and conditions
 

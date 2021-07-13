@@ -220,7 +220,8 @@ the assigned list is correct before notification
 
 the previously assigned list is correct
     the user should see the element    jQuery = .assessors-previous td:contains("Maureen Moore") ~ td:contains("Digital manufacturing")
-    the user should see the element    jQuery = .assessors-previous td:contains("Maureen Moore") ~ td:contains("5") + td:contains("2")
+    the user should see the element    jQuery = .assessors-previous td:contains("Maureen Moore") ~ td:contains("1") + td:contains("1")
+    #the user should see the element    jQuery = .assessors-previous td:contains("Maureen Moore") ~ td:contains("5") + td:contains("2")
 
 the assessor list is correct before changes
     the user clicks the button/link     link = 21 to 40
@@ -280,7 +281,7 @@ the user assign application to an assessor
     the assigned list is correct before notification
     the user clicks the button/link           link = Allocate applications
     #the user should see the element           jQuery = td:contains("Living with Cryptocurrencies") ~ td:nth-child(4):contains("1")
-    the user should see the element           jQuery = td:contains("Living with Cryptocurrencies") ~ td:nth-child(2):contains("0")
+    the user should see the element           jQuery = td:contains("Living with Cryptocurrencies") ~ td:nth-child(1):contains("0")
 
 the comp admin notify an assessor
     the user clicks the button/link    link = Allocate applications
