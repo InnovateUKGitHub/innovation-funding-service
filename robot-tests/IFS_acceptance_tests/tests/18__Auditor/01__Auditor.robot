@@ -37,7 +37,7 @@ ${applicationName3}          Climate science the history of Greenland's ice
 ${competitionName3}          Predicting market trends programme
 ${competitionID3}            ${competition_ids['${competitionName3}']}
 ${applicationName4}          A subsidy control application in project setup
-${projectID3}                ${project_ids['${applicationName4}']}
+${projectID4}                ${project_ids['${applicationName4}']}
 ${sbriApplicationName2}      SBRI application
 ${sbriProjectId}             ${project_ids['${sbriApplicationName2}']}
 
@@ -149,7 +149,6 @@ Innovation lead cannot see inprogress applications
     When the user enters text to a text field                              id = searchQuery  ${applicationId3}
     And the user clicks the button/link                                    id = searchsubmit
     Then the user should not see the element                               jQuery = td:contains("${applicationName3}")
-    And the user navigates to the page and gets a custom error message     ${server}/management/competition/${competitionID3}/application/${applicationId3}   ${403_error_message}
     
 Stakeholder lead cannot see inprogress applications
     [Documentation]  IFS-9986
@@ -165,10 +164,10 @@ Auditor cannot see inprogress applications
     When the user enters text to a text field                              id = searchQuery  ${applicationId3}
     And the user clicks the button/link                                    id = searchsubmit
     Then the user should not see the element                               jQuery = td:contains("${applicationName3}")
-    And the user navigates to the page and gets a custom error message     ${server}/management/competition/${competitionID3}/application/${applicationId3}   ${403_error_message}
+
 Auditor can view funding rules in project setup
     [Documentation]  IFS-10001
-    Given the user navigates to the page        ${SERVER}/project-setup-management/project/${projectID3}/finance-check
+    Given the user navigates to the page        ${SERVER}/project-setup-management/project/${projectID4}/finance-check
     When the user clicks the button/link        jQuery = tr:nth-child(1) td:nth-child(2)
     Then the user should see the element        jQuery = h1:contains("Funding rules check")
     And the user should see the element         jQuery = dt:contains("Funding rules selected") ~ dd:contains("Subsidy control")
