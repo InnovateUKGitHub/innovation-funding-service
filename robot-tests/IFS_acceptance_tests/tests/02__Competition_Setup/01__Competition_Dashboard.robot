@@ -43,7 +43,7 @@ Project setup Competitions and Calculations
     And The user clicks the button/link          css = #searchsubmit
     Then The Project set up dashboard calculations should be correct   css = li.govuk-grid-row  Project setup   //section[1]/ul/li
 
-#    Then the user should see competitions in project set up
+    Then the user should see competitions in project set up
 #    And The Project set up dashboard calculations should be correct   css = li.govuk-grid-row  Project setup   //section[1]/ul/li
 
 PS projects title and lead

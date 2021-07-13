@@ -126,7 +126,6 @@ Status of the submitted application
     Then the user should see the element  jQuery = .in-progress li:contains("${application_rto_name}") .msg-progress:contains("Submitted")
     And the user clicks the button/link   link = ${application_rto_name}
     And the user should see the element   link = View application
-    And the user should see the element   link = Print application
 
 *** Keywords ***
 the applicant clicks Yes in the submit modal

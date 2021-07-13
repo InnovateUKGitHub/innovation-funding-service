@@ -50,7 +50,7 @@ Guidance in the your project costs
     And the user clicks the button/link     css = .govuk-details summary
     Then the user should see the element    css = .govuk-details__text p
 #    And the user should see the element     css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
-    And the working days per year should be 250 by default
+    And the working days per year should be 250 by default #needs to be changed back to 232 as this is what's on the development branch
 
 User pressing back button should get the correct version of the page
     [Documentation]    INFUND-2695

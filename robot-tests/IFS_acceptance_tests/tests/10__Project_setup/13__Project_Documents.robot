@@ -78,19 +78,20 @@ Lead partner cannot upload either document
     And the user goes to documents page     Return to documents  Exploitation plan
     Then the user should see the element    jQuery = p:contains("Awaiting upload by the Project Manager")
 
-PM cannot submit when both documents are not uploaded
-    [Documentation]  INFUND-3012  INFUND-5490
-    [Tags]  HappyPath
-    Given log in as a different user           &{lead_applicant_credentials_bd}
-    And the user navigates to the page         ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
-    When the user clicks the button/link       link = Collaboration agreement
-    Then the user should see the element       jQuery = label:contains("Upload")
-    When the user goes to documents page       Back to document overview  Exploitation plan
-    Then the user should see the element       jQuery = label:contains("Upload")
+#PM cannot submit when both documents are not uploaded
+#    [Documentation]  INFUND-3012  INFUND-5490
+#    [Tags]  HappyPath
+#    Given log in as a different user           &{lead_applicant_credentials_bd}
+#    And the user navigates to the page         ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
+#    When the user clicks the button/link       link = Collaboration agreement
+#    Then the user should see the element       jQuery = label:contains("Upload")
+#    When the user goes to documents page       Back to document overview  Exploitation plan
+#    Then the user should see the element       jQuery = label:contains("Upload")
 
 Large pdfs not allowed for either document
     [Documentation]  INFUND-3011
     [Tags]
+    Given Log in as a different user                    &{lead_applicant_credentials_bd}
     Given the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     And the user clicks the button/link                 link = Collaboration agreement
     When the user uploads to the collaboration agreement/exploitation plan   ${too_large_pdf}
@@ -117,33 +118,37 @@ PM can upload both documents
     [Setup]    log in as a different user     &{lead_applicant_credentials_bd}
     Given PM uploads the project documents    ${Grade_Crossing_Project_Id}
 
-Lead partner can view both documents
+Lead partner can view both documents, but not submit or remove them
     [Documentation]  INFUND-3011  INFUND-2621
     [Tags]  HappyPath
     Given Log in as a different user                lewis.poole@vitruvius.example.com  ${short_password}
     When the user navigates to the page             ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     And the user clicks the button/link             link = Collaboration agreement
-    Then open pdf link                              jQuery = a:contains("${valid_pdf} (opens in a new window)")
+    And the user should not see the element         id = submit-document-button
+    And the user should not see the element         name = deleteDocument
+    And open pdf link                               jQuery = a:contains("${valid_pdf} (opens in a new window)")
     When the user goes to documents page            Back to document overview  Exploitation plan
+    And the user should not see the element         id = submit-document-button
+    And the user should not see the element         name = deleteDocument
     And open pdf link                               jQuery = a:contains("${valid_pdf} (opens in a new window)")
     [Teardown]    the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+#
+#Lead partner does not have the option to submit the documents
+#    [Documentation]  INFUND-3011
+#    [Tags]  HappyPath
+#    [Setup]    the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
+#    When the user should not see an error in the page
+#    And the user clicks the button/link          link = Collaboration agreement
+#    Then the user should not see the element     id = submit-document-button
+#    When the user goes to documents page         Back to document overview  Exploitation plan
+#    Then the user should not see the element     id = submit-document-button
 
-Lead partner does not have the option to submit the documents
-    [Documentation]  INFUND-3011
-    [Tags]  HappyPath
-    [Setup]    the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
-    When the user should not see an error in the page
-    And the user clicks the button/link          link = Collaboration agreement
-    Then the user should not see the element     id = submit-document-button
-    When the user goes to documents page         Back to document overview  Exploitation plan
-    Then the user should not see the element     id = submit-document-button
-
-Lead partner cannot remove either document
-    [Documentation]  INFUND-3011
-    [Tags]  HappyPath
-    Given the user should not see the element     name = deleteDocument      #Exploitation plan remove CTA
-    When the user goes to documents page          Return to documents  Collaboration agreement
-    And the user should not see the element       name = deleteDocument     #Collaboration agreement remove CTA
+#Lead partner cannot remove either document
+#    [Documentation]  INFUND-3011
+#    [Tags]  HappyPath
+#    Given the user should not see the element     name = deleteDocument      #Exploitation plan remove CTA
+#    When the user goes to documents page          Return to documents  Collaboration agreement
+#    And the user should not see the element       name = deleteDocument     #Collaboration agreement remove CTA
 
 Non-lead partner can view both documents
     [Documentation]  INFUND-2621  INFUND-3011  INFUND-3013  INFUND-5806  INFUND-4428
@@ -151,15 +156,17 @@ Non-lead partner can view both documents
     Given log in as a different user        &{collaborator1_credentials_bd}
     When the user navigates to the page     ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user goes to documents page     Documents  Collaboration agreement
-    And open pdf link                       jQuery = a:contains("${valid_pdf} (opens in a new window)")
-    When the user goes to documents page    Return to documents  Exploitation plan
-    Then open pdf link                      jQuery = a:contains("${valid_pdf} (opens in a new window)")
-
-Non-lead partner cannot remove or submit right
-    [Documentation]  INFUND-3013
-    [Tags]
-    Given partners can not remove the documents
     And the user should not see the element       id = submit-document-button
+    And open pdf link                           jQuery = a:contains("${valid_pdf} (opens in a new window)")
+    When the user goes to documents page        Return to documents  Exploitation plan
+    And the user should not see the element       id = submit-document-button
+    Then open pdf link                          jQuery = a:contains("${valid_pdf} (opens in a new window)")
+
+#Non-lead partner cannot remove or submit right
+#    [Documentation]  INFUND-3013
+#    [Tags]
+#    Given partners can not remove the documents
+#    And the user should not see the element       id = submit-document-button
 
 PM can view both documents
     [Documentation]  INFUND-3011  INFUND-2621
@@ -278,8 +285,8 @@ Comp admin cannot approve Exploitation or Collaboration documents
     And the user clicks the button/link           link = Exploitation plan
     And the user cannot approve the document      approved   true
 
-Non-lead partner cannot remove the documents after submission by PM
-    [Documentation]  INFUND-3012
+Non-lead partner can view documents, but not remove after submission by PM
+    [Documentation]  INFUND-3012  INFUND-4428  INFUND-6139
     [Tags]
     [Setup]  log in as a different user         &{collaborator1_credentials_bd}
     Given the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
@@ -287,16 +294,22 @@ Non-lead partner cannot remove the documents after submission by PM
     Then the user should not see the element    name = deleteDocument
     When the user goes to documents page        Return to documents  Exploitation plan
     Then the user should not see the element    name = deleteDocument
-
-Non-lead partner can still view both documents after submitting
-    [Documentation]    INFUND-3012 , INFUND-4428, INFUND-6139
-    [Tags]
     Given open pdf link                         jQuery = a:contains("${valid_pdf} (opens in a new window)")
     When the user goes to documents page        Return to documents  Collaboration agreement
     Then open pdf link                          jQuery = a:contains("${valid_pdf} (opens in a new window)")
     And the user navigates to the page          ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user clicks the button/link         link = View the status of partners
     And the user should see the element         css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
+
+#Non-lead partner can still view both documents after submitting
+#    [Documentation]    INFUND-3012 , INFUND-4428, INFUND-6139
+#    [Tags]
+#    Given open pdf link                         jQuery = a:contains("${valid_pdf} (opens in a new window)")
+#    When the user goes to documents page        Return to documents  Collaboration agreement
+#    Then open pdf link                          jQuery = a:contains("${valid_pdf} (opens in a new window)")
+#    And the user navigates to the page          ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+#    And the user clicks the button/link         link = View the status of partners
+#    And the user should see the element         css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
 
 CompAdmin can see uploaded files
     [Documentation]    INFUND-4621, IFS-1881
