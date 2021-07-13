@@ -213,7 +213,8 @@ the available assessors information is correct
     # TODO Add some skills too IFS-1298
 
 the assigned list is correct before notification
-    the user should see the element  jQuery = .assessors-assigned td:nth-child(1):contains("Maureen Moore") ~ td:contains("Digital manufacturing") ~ td:contains("6") + td:contains("3")
+    #the user should see the element  jQuery = .assessors-assigned td:nth-child(1):contains("Maureen Moore") ~ td:contains("Digital manufacturing") ~ td:contains("6") + td:contains("3")
+    the user should see the element  jQuery = .assessors-assigned td:nth-child(1):contains("Maureen Moore") ~ td:contains("Digital manufacturing") ~ td:contains("2") + td:contains("2")
 
 the previously assigned list is correct
     the user should see the element    jQuery = .assessors-previous td:contains("Maureen Moore") ~ td:contains("Digital manufacturing")
@@ -276,7 +277,8 @@ the user assign application to an assessor
     the user should see the element           jQuery = h2:contains("Assigned (1)")
     the assigned list is correct before notification
     the user clicks the button/link           link = Allocate applications
-    the user should see the element           jQuery = td:contains("Living with Cryptocurrencies") ~ td:nth-child(4):contains("1")
+    #the user should see the element           jQuery = td:contains("Living with Cryptocurrencies") ~ td:nth-child(4):contains("1")
+    the user should see the element           jQuery = td:contains("Living with Cryptocurrencies") ~ td:nth-child(2):contains("0")
 
 the comp admin notify an assessor
     the user clicks the button/link    link = Allocate applications
