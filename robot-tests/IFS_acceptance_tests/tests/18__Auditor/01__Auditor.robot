@@ -125,7 +125,7 @@ Auditor can view the bank details with the 'Complete' status for the organisatio
 Auditor can open and view the GOL for the organisations
     [Documentation]  IFS-9886    IFS-9882
     #remove ifs admin approves both documents keyword after mo approving web test fixed
-    [Setup]  ifs admin approves both documents          ${auditorProjectId}
+    #[Setup]  ifs admin approves both documents          ${auditorProjectId}
     Given log in as a different user                    &{auditorCredentials}
     And the user navigates to the page                  ${SERVER}/project-setup-management/project/${auditorProjectId}/grant-offer-letter/send
     And the user should see the element                 jQuery = h1:contains("Grant offer letter")

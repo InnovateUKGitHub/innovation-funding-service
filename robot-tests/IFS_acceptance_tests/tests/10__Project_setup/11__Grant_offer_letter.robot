@@ -118,7 +118,7 @@ Status updates correctly for internal user's table
 Project Finance can download GOL
     [Documentation]  INFUND-6377  IFS-9774
     [Tags]   HappyPath
-    [Setup]  ifs admin approves both documents            ${Elbow_Grease_Project_Id}         # remove this keyword once mo approve documents fixed
+    #[Setup]  ifs admin approves both documents            ${Elbow_Grease_Project_Id}         # remove this keyword once mo approve documents fixed
     Given log in as a different user                      &{internal_finance_credentials}
     When the user navigates to the page                   ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/grant-offer-letter
     Then the user should not see an error in the page
@@ -504,7 +504,7 @@ Project is automatically sent to ACC if set up for the competition
 IFS Expert user can reset GOL in project setup
     [Documentation]  IFS-9611
     [Setup]  Requesting Project ID of this Project
-    Given ifs admin approves both documents             ${HighSpeedProjectID}           # remove this keyword once mo documents webtest data is fiixed
+    #Given ifs admin approves both documents             ${HighSpeedProjectID}           # remove this keyword once mo documents webtest data is fiixed
     And Log in as a different user                      &{superAdminCredentials}
     When the user navigates to the page                 ${server}/project-setup-management/project/${HighSpeedProjectID}/grant-offer-letter/send
     And the expert user resets the GOL

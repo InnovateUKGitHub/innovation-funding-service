@@ -783,7 +783,7 @@ the project finance user should see the spend profile details
     the user navigates to the page               ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     the user clicks the button/link              link = 2
     the user clicks the button/link              css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action > a  # Review Spend profile
-    ifs admin approves both documents            ${PS_SP_Project_Id}          #remove this keyword when mo document webtest data is fixed
+    #ifs admin approves both documents            ${PS_SP_Project_Id}          #remove this keyword when mo document webtest data is fixed
     Log in as a different user                   &{internal_finance_credentials}
     the user navigates to the page               ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
     the user should not see the element          jQuery = h2:contains("The spend profile has been approved")

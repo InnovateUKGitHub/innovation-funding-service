@@ -45,7 +45,7 @@ ${invalidEmailInvitationLink}               Sorry, you are unable to accept this
 *** Test Cases ***
 IFS Admin can see and use the link to manage invitations to external users when the project is complete and live in IFS-PA(ACC)
     [Documentation]  IFS-7318
-    [Setup]  ifs admin approves both documents                                 ${energySaverProjectId}    #remove this once mo document webtest data is fixed
+    #[Setup]  ifs admin approves both documents                                 ${energySaverProjectId}    #remove this once mo document webtest data is fixed
     Given the grant offer letter is accepted and project is live in IFS-PA
     When the user clicks the button/link                                       link = View only completed projects for this competition
     And the user clicks the button/link                                        jQuery = button:contains("Open all")

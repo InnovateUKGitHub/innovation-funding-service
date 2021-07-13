@@ -145,8 +145,8 @@ Existing Monitoring Officer can sign in and see projects that they are assigned 
     [Tags]  HappyPath
     Given log in as a different user                            &{monitoring_officer_one_credentials}
     And the user clicks the project setup tile if displayed
-    Then the user should see the element                        jQuery = .task:contains("${PS_LP_Application_Title}") + .status:contains("Monitor project")
-
+    #Then the user should see the element                        jQuery = .task:contains("${PS_LP_Application_Title}") + .status:contains("Monitor project")
+    Then the user should see the element                        jQuery = .task:contains("${PS_LP_Application_Title}") + .status:contains("Live project")
 Monitoring officer see the project setup veiw for assigned project
     [Documentation]  IFS-4209  IFS-5859
     Given the user clicks the button/link    link = ${PS_LP_Application_Title}

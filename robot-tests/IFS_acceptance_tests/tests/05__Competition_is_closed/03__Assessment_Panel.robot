@@ -413,6 +413,6 @@ the competition admin should not see invited assessors on find tab
 
 assessor should see the competition tandc's
     the user expands the section        Award terms and conditions
-    the user clicks the button/link     jQuery = tr:contains("Ludlow") td:contains("Advanced Propulsion Centre (APC)")
-    the user should see the element     jQuery = h1:contains("Innovate UK terms and conditions of an Advanced Propulsion Centre competition grant award")
-    the user clicks the button/link     link = Back to application summary
+    the user should see the element     jQuery = tr:contains("Empire Ltd") td:contains("Advanced Propulsion Centre (APC)")
+#    the user should see the element     jQuery = h1:contains("Innovate UK terms and conditions of an Advanced Propulsion Centre competition grant award")
+#    the user clicks the button/link     link = Back to application summary
