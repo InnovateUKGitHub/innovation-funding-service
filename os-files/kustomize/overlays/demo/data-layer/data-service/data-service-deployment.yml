@@ -4,9 +4,10 @@ metadata:
   name: data-service
   annotations:
     monitor: monitor
+    waitForDb: waitForDb
     pullSecrets: pullSecrets
 spec:
-    replicas: 1
+  replicas: 1
   selector:
     matchLabels:
       app: data-service
