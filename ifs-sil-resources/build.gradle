@@ -13,8 +13,6 @@ apply plugin: 'idea'
 dependencies {
     compile 'org.apache.commons:commons-lang3'
     compile "com.fasterxml.jackson.core:jackson-databind"
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
 }
 configurations {
