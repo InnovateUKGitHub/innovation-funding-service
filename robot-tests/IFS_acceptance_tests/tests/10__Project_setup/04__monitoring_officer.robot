@@ -41,13 +41,13 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...
 ...               IFS-8958  SBRI Milestones - Application overview / summary
 ...
-<<<<<<< HEAD
 ...               IFS-9576 MO documents: 'Project setup' list - task management and filtering
-=======
+...
 ...               IFS-9578 MO documents: design changes for other roles (not MO or Project manager)
->>>>>>> development
 ...
 ...               IFS-9774 Investigate if its possible to fix AT's failure due to IDP upgrade
+...
+...               IFS-10047 MO documents: Monitor project page - View status of partners
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -299,6 +299,16 @@ Change MO for the project
     And the user clicks the button/link            jQuery = a:contains("Back to assign monitoring officers")
     Then search for MO                             Orvill  Orville Gibbs
     And the internal user assign project to MO     ${Grade_Crossing_Applicaiton_No}   ${Grade_Crossing_Application_Title}
+
+MO can see the link to the partners for collaborating applications only
+    [Documentation]   IFS-10047
+    Given Log in as a different user            &{monitoring_officer_one_credentials}
+    And the user clicks the button/link         jQuery = a:contains('${Grade_Crossing_Application_Title}')
+    When the user clicks the button/link        jQuery = a:contains('View the status of partners')
+    Then the user should see the element        jQuery = h1:contains('Project team status')
+    And the user clicks the button/link         id = dashboard-navigation-link
+    And the user clicks the button/link         jQuery = a:contains('${sbri_applicaton_name}')
+    And the user should not see the element     jQuery = a:contains('View the status of partners')
 
 *** Keywords ***
 The MO user is able to access all of the links
