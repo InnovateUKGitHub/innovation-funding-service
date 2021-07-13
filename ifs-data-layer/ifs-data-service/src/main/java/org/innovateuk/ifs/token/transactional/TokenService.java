@@ -18,5 +18,5 @@ public interface TokenService {
     void removeToken(Token token);
 
     @PreAuthorize("hasPermission(#token, 'READ')")
-    ServiceResult<ApplicationResource> handleExtraAttributes(Token token);
+    void handleExtraAttributes(Token token);
 }

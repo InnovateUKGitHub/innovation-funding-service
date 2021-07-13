@@ -62,7 +62,7 @@ public class TokenServiceImpl implements TokenService {
      */
     @Override
     @Transactional
-    public ServiceResult<ApplicationResource> handleExtraAttributes(Token token) {
+    public void handleExtraAttributes(Token token) {
         ServiceResult<ApplicationResource> applicationResourceServiceResult = null;
 
         JsonNode extraInfo = token.getExtraInfo();
@@ -74,7 +74,7 @@ public class TokenServiceImpl implements TokenService {
             }
         }
 
-        return applicationResourceServiceResult;
+
     }
 
     private boolean isTokenValid(final Token token) {
