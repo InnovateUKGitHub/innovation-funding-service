@@ -28,8 +28,8 @@
             <dt>Funding rules selected:</dt>
             <dd th:text="${model.fundingRules.displayName}">funding rules</dd>
         </dl>
-
-        <a th:unless="${model.editMode}" th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/funding-rules/edit(projectId=${model.projectId},organisationId=${model.organisationId})}" class="govuk-button govuk-button--secondary govuk-!-margin-right-4">Edit</a>
+      <th:block th:unless="${model.readOnly}">
+       <a th:unless="${model.editMode}" th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/funding-rules/edit(projectId=${model.projectId},organisationId=${model.organisationId})}" class="govuk-button govuk-button--secondary govuk-!-margin-right-4">Edit</a> -->
         <th:block th:if="${model.editMode}">
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data">
 
@@ -55,6 +55,7 @@
                 <button id="save-and-return" name="save-and-return" class="govuk-button">Save and return</button>
             </form>
         </th:block>
+       </th:block>
 
         <div class="message-alert" th:if="${model.showUpdatedMessage and !model.editMode}">
             <p class="govuk-body">The funding rules have changed, this may affect the eligible funding levels. You must review the project to make sure it is still eligible for funding.</p>

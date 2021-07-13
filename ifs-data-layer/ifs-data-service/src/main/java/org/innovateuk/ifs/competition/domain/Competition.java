@@ -198,6 +198,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     private Boolean alwaysOpen;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "competitionExternalConfigId", referencedColumnName = "id")
+    private CompetitionExternalConfig competitionExternalConfig;
+
     public Competition() {
         setupComplete = false;
     }
@@ -1071,5 +1075,13 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     public boolean isHasBusinessAndFinancialInformationQuestion() {
         return isLoan()
                 && questions.stream().anyMatch(question -> LOAN_BUSINESS_AND_FINANCIAL_INFORMATION == question.getQuestionSetupType());
+    }
+
+    public CompetitionExternalConfig getCompetitionExternalConfig() {
+        return competitionExternalConfig;
+    }
+
+    public void setCompetitionExternalConfig(CompetitionExternalConfig competitionExternalConfig) {
+        this.competitionExternalConfig = competitionExternalConfig;
     }
 }

@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.LegacyMonitoringOfficerService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -28,12 +29,12 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
-import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.PENDING;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -45,16 +46,22 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
 
     @Autowired
     private MonitoringOfficerRepository monitoringOfficerRepository;
+
     @Autowired
     private MonitoringOfficerInviteService monitoringOfficerInviteService;
+
     @Autowired
     private ProjectMapper projectMapper;
+
     @Autowired
     private LegacyMonitoringOfficerService legacyMonitoringOfficerService;
+
     @Autowired
     private UserMapper userMapper;
+
     @Autowired
     private ProjectRepository projectRepository;
+
     @Autowired
     private MonitoringOfficerReviewNotificationService monitoringOfficerReviewNotificationService;
 
@@ -139,6 +146,38 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
                 .map(MonitoringOfficer::getProcess)
                 .map(projectMapper::mapToResource)
                 .collect(toList()));
+    }
+
+    @Override
+    public ServiceResult<List<ProjectResource>> filterMonitoringOfficerProjects(long userId, boolean projectInSetup, boolean previousProject) {
+        List<ProjectState> projectStates = applyProjectStatesFilter(projectInSetup, previousProject);
+        List<MonitoringOfficer> monitoringOfficers = monitoringOfficerRepository.filterMonitoringOfficerProjects(userId, projectStates);
+
+        return serviceSuccess(monitoringOfficers.stream()
+                .map(MonitoringOfficer::getProcess)
+                .map(projectMapper::mapToResource)
+                .collect(toList()));
+    }
+
+    private List<ProjectState> applyProjectStatesFilter(boolean projectInSetup, boolean previousProject) {
+        List<ProjectState> projectStates = new ArrayList<>();
+
+        if (!previousProject && !projectInSetup) {
+            projectStates.addAll(Stream.of(ProjectState.values())
+                    .collect(Collectors.toList()));
+        }
+
+        if (previousProject) {
+            projectStates.addAll(ProjectState.COMPLETED_STATES);
+        }
+
+        if (projectInSetup) {
+            projectStates.addAll(Stream.of(ProjectState.values())
+                    .filter(projectState -> !projectState.isComplete())
+                    .collect(Collectors.toList()));
+        }
+
+        return projectStates;
     }
 
     @Override
