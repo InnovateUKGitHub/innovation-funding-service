@@ -11,6 +11,10 @@ Documentation     IFS-9884 Auditor role: create role
 ...
 ...               IFS-9986 Auditor bug bash: Auditors should not see 'in progress' applications in the wildcard search
 ...
+...               IFS-10001 Auditor permission error on funding rules button
+...
+...               IFS-10000 Auditor gets permission error when tries to open payment milestone
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Administrator  CompAdmin
@@ -32,6 +36,10 @@ ${projectID2}                ${project_ids['${applicationName2}']}
 ${applicationName3}          Climate science the history of Greenland's ice
 ${competitionName3}          Predicting market trends programme
 ${competitionID3}            ${competition_ids['${competitionName3}']}
+${applicationName4}          A subsidy control application in project setup
+${projectID3}                ${project_ids['${applicationName4}']}
+${sbriApplicationName2}      SBRI application
+${sbriProjectId}             ${project_ids['${sbriApplicationName2}']}
 
 *** Test Cases ***
 Auditor can view correct number of competitions in live tab
@@ -158,6 +166,21 @@ Auditor cannot see inprogress applications
     And the user clicks the button/link                                    id = searchsubmit
     Then the user should not see the element                               jQuery = td:contains("${applicationName3}")
     And the user navigates to the page and gets a custom error message     ${server}/management/competition/${competitionID3}/application/${applicationId3}   ${403_error_message}
+Auditor can view funding rules in project setup
+    [Documentation]  IFS-10001
+    Given the user navigates to the page        ${SERVER}/project-setup-management/project/${projectID3}/finance-check
+    When the user clicks the button/link        jQuery = tr:nth-child(1) td:nth-child(2)
+    Then the user should see the element        jQuery = h1:contains("Funding rules check")
+    And the user should see the element         jQuery = dt:contains("Funding rules selected") ~ dd:contains("Subsidy control")
+    And the user should not see the element     jQuery = a:contains("Edit")
+
+Auditor can view payment milestones in project setup
+    [Documentation]  IFS-10000
+    Given the user navigates to the page        ${SERVER}/project-setup-management/project/${sbriProjectId}/finance-check
+    When the user clicks the button/link        jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
+    Then the user should see the element        jQuery = h1:contains("Payment milestones")
+    And the user should see the element         jQuery = h3:contains("Payment milestone overview")
+    And the user should not see the element     jQuery = a:contains("Edit payment milestones")
 
 *** Keywords ***
 Custom suite setup

@@ -135,6 +135,13 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_MILESTONE_STATUS",
+            description = "Auditor Users can view Milestone Check")
+    public boolean auditorUserCanViewMilestoneCheck(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return hasAuditorAuthority(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_MILESTONE_STATUS",
             description = "Users can see their own Milestone Check status")
     public boolean userCanViewTheirOwnMilestoneStatus(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
         return isPartner(projectOrganisationCompositeId.getProjectId(), user.getId());
@@ -145,6 +152,13 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
             description = "Project Finance Users can view Funding Rules status")
     public boolean projectFinanceUserCanViewFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
         return hasProjectFinanceAuthority(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_FUNDING_RULES",
+            description = "Auditors can view Funding Rules status")
+    public boolean auditorCanViewFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return hasAuditorAuthority(user);
     }
 
     @PermissionRule(
