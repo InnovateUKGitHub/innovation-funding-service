@@ -29,7 +29,7 @@ spec:
           secret:
             secretName: sp-secrets
       containers:
-        - image: docker-ifs.devops.innovateuk.org/releases/idp-service:2.0.0
+        - image: docker-ifs.devops.innovateuk.org/releases/idp-service:1.1.149
           name: idp
           workingDir: /usr/local/bin
           volumeMounts:

@@ -25,7 +25,7 @@ spec:
             - name: LDAP_PORT
               value: "8389"
           name: ldap
-          image: docker-ifs.devops.innovateuk.org/releases/ldap-service:2.0.0
+          image: docker-ifs.devops.innovateuk.org/releases/ldap-service:1.1.149
           lifecycle:
             postStart:
               exec:

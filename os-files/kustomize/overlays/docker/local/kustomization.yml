@@ -30,9 +30,6 @@ resources:
   - cache-provider/cache-config.yml
   - auth/idp/shibboleth-config.yml
   - auth/ldap/ldap-config.yml
-  - storage/gluster.yml
-  - storage/gluster-ep.yml
-  - storage/persistent-volume-claim.yml
   - feature-toggle-config.yml
   - new-relic-config.yml
   - web-config.yml
@@ -40,3 +37,5 @@ resources:
   - flyway-config.yml
   - db-config.yml
 
+patchesStrategicMerge:
+  - auth/idp/shibboleth-config.yml
