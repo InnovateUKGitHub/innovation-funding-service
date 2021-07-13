@@ -68,4 +68,9 @@ public class SpendProfileServiceImpl implements SpendProfileService {
     public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
         return spendProfileRestService.completeSpendProfilesReview(projectId).toServiceResult();
     }
+
+    @Override
+    public ServiceResult<Void> submitApproveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
+        return spendProfileRestService.submitApproveOrRejectSpendProfile(projectId, approvalType).toServiceResult();
+    }
 }

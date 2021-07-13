@@ -22,7 +22,7 @@ public class SpendProfileController {
     }
 
     @PostMapping("/spend-profile/approval/{approvalType}")
-    public RestResult<Void> approveOrRejectSpendProfile(@PathVariable("projectId") final Long projectId,
+    public RestResult<Void> acceptOrRejectSpendProfile(@PathVariable("projectId") final Long projectId,
                                                         @PathVariable("approvalType") final ApprovalType approvalType) {
         return spendProfileService.approveOrRejectSpendProfile(projectId, approvalType).toPostResponse();
     }
@@ -87,5 +87,11 @@ public class SpendProfileController {
     @DeleteMapping("/spend-profile/reset")
     public RestResult<Void> deleteSpendProfile(@PathVariable("projectId") final Long projectId) {
         return spendProfileService.deleteSpendProfile(projectId).toDeleteResponse();
+    }
+
+    @PostMapping("/spend-profile/submit/{approvalType}")
+    public RestResult<Void> submitapproveOrRejectSpendProfile(@PathVariable("projectId") final Long projectId,
+                                                        @PathVariable("approvalType") final ApprovalType approvalType) {
+        return spendProfileService.submitApproveOrRejectSpendProfile(projectId, approvalType).toPostResponse();
     }
 }

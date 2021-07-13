@@ -66,8 +66,55 @@
                        class="govuk-link">spend-profile.csv</a>
                 </li>
             </ul>
+            <form th:object="${form}"
+                  th:action="@{'/project/' + ${projectId} + '/spend-profile/approval/submit/'}"
+                  id="spend-profile-form"
+                  method="post"
+                  novalidate="novalidate">
 
-            <th:block th:unless="${model.isReadOnly()}">
+            <th:block th:if="${model.isMOSpendProfileUpdateEnabled && !model.isReadOnly()}">
+                <h2 class="govuk-heading-m govuk-!-margin-top-9">Review spend profile</h2>
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend id="radio-review" class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                        </legend>
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input"
+                                       id="radio-spendprofile-approve"
+                                       name="spendProfileApproved"
+                                       type="radio"
+                                       value="true"
+                                       required="required"
+                                       data-switches-button-status="#submit-button"
+                                       data-switches-modal-target="#submit-button">
+                                <label class="govuk-label govuk-radios__label" for="radio-spendprofile-approve">
+                                    Approve
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item" data-target="reject-document-panel">
+                                <input class="govuk-radios__input"
+                                       id="radio-spendprofile-reject"
+                                       name="spendProfileApproved"
+                                       type="radio"
+                                       value="false"
+                                       required="required"
+                                       data-switches-button-status="#submit-button"
+                                       data-switches-modal-target="#submit-button">
+                                <label class="govuk-label govuk-radios__label" for="radio-spendprofile-reject">
+                                    Reject
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                    <button class="govuk-button" type="submit" id="submit-button" data-js-modal=""
+                        data-enable-button-when="one-checked">Submit
+                    </button>
+            </th:block>
+            </form>
+
+            <th:block th:if="${!model.isMOSpendProfileUpdateEnabled && model.isReadOnly()}">
                 <th:block th:if="${model.notApprovedOrRejected and model.projectIsActive and !model.isReadOnly()}">
                     <h2 class="govuk-heading-m">Approved by Innovate UK</h2>
                     <div class="govuk-form-group">
@@ -84,7 +131,6 @@
                                 </label>
                             </div>
                         </div>
-
                     </div>
                     <button data-js-modal="modal-accept-profile" id="accept-profile" class="govuk-button govuk-!-margin-right-4">
                         Approved

@@ -71,4 +71,7 @@ public interface SpendProfileService {
     @Activity(projectId = "projectId", type = ActivityType.SPEND_PROFILE_SENT)
     ServiceResult<Void> completeSpendProfilesReview(@P("projectId")Long projectId);
 
+  @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'APPROVE_REJECT_SPEND_PROFILE')")
+  @Activity(projectId = "projectId", dynamicType = "approveOrRejectActivityType")
+  ServiceResult<Void> submitApproveOrRejectSpendProfile(Long projectId, ApprovalType approvalType);
 }

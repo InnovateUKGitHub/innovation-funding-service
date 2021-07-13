@@ -14,10 +14,10 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.spendprofile.form.ProjectSpendProfileApprovalForm;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileApprovalViewModel;
 import org.innovateuk.ifs.spendprofile.SpendProfileService;
-import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
@@ -28,6 +28,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.function.Supplier;
+
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.user.resource.Authority.*;
 
 /**
  * This Controller handles Spend Profile activity for the Internal Competition team members
@@ -50,6 +53,9 @@ public class ProjectSpendProfileApprovalController {
 
     @Autowired
     private SpendProfileService spendProfileService;
+
+    @Value("${ifs.monitoringofficer.spendprofile.update.enabled}")
+    private Boolean isMOSpendProfileUpdateEnabled;
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
@@ -79,6 +85,23 @@ public class ProjectSpendProfileApprovalController {
         );
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION')")
+    @PostMapping("/approval/submit")
+    public String submitSpendProfileApproval(@P("projectId")@PathVariable Long projectId,
+                                           @ModelAttribute ProjectSpendProfileApprovalForm form,
+                                           Model model,
+                                           UserResource loggedInUser,
+                                           @SuppressWarnings("unused") BindingResult bindingResult,
+                                           ValidationHandler validationHandler) {
+        Supplier<String> failureView = () -> doViewSpendProfileApproval(projectId, model , loggedInUser);
+        ApprovalType approvalType = form.isSpendProfileApproved() ? ApprovalType.APPROVED : ApprovalType.REJECTED;
+        ServiceResult<Void> generateResult = spendProfileService.approveOrRejectSpendProfile(projectId, approvalType);
+
+        return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () ->
+                redirectToCompetitionSummaryPage(projectId)
+        );
+    }
+
     private String doViewSpendProfileApproval(Long projectId, Model model, UserResource loggedInUser) {
         ProjectSpendProfileApprovalViewModel viewModel = populateSpendProfileApprovalViewModel(projectId, loggedInUser);
 
@@ -94,7 +117,7 @@ public class ProjectSpendProfileApprovalController {
         UserResource user = userRestService.retrieveUserById(competition.getLeadTechnologist()).getSuccess();
         String leadTechnologist = competition.getLeadTechnologist() != null ? user.getName() : "";
         ApprovalType approvalType = spendProfileService.getSpendProfileStatusByProjectId(projectId);
-        boolean isAuditor = loggedInUser.hasAuthority(Authority.AUDITOR);
+        boolean isReadOnly = userCannotApproveOrReject(loggedInUser);
 
         List<OrganisationResource> organisationResources = projectService.getPartnerOrganisationsForProject(projectId);
 
@@ -103,11 +126,19 @@ public class ProjectSpendProfileApprovalController {
                                                         approvalType,
                                                         organisationResources,
                                                         project,
-                                                        isAuditor);
+                                                        isMOSpendProfileUpdateEnabled,
+                                                        isReadOnly);
     }
 
     private String redirectToCompetitionSummaryPage(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
         return "redirect:/competition/" + project.getCompetition() + "/status";
     }
+
+    public boolean userCannotApproveOrReject(UserResource loggedInUser) {
+        return isMOSpendProfileUpdateEnabled ?
+                (!loggedInUser.hasAuthority(IFS_ADMINISTRATOR) &&
+                        loggedInUser.hasAnyAuthority(asList(AUDITOR, COMP_ADMIN, PROJECT_FINANCE)))
+                : loggedInUser.hasAuthority(AUDITOR);
+       }
 }
