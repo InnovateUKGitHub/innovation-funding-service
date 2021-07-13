@@ -457,7 +457,7 @@ Invite KTA to assess the competition
     the user navigates to the page                           ${server}/management/competition/${competitionID}/assessors/find
     ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery = span:contains("Non KTP competition all finance overview")
     Run Keyword If   '${status}' == 'PASS'    the user selects the checkbox     jQuery = tr:contains("Addison Shannon") :checkbox
-    ...                              ELSE     the user selects the checkbox     tr:contains("Amy Colin") :checkbox
+    ...                              ELSE     the user selects the checkbox     jQuery = tr:contains("Amy Colin") :checkbox
     the user clicks the button/link                          id = add-selected-assessors-to-invite-list-button
     the user clicks the button/link                          id = review-and-send-assessor-invites-button
     the user clicks the button/link                          jQuery = button:contains("Send invitation")
