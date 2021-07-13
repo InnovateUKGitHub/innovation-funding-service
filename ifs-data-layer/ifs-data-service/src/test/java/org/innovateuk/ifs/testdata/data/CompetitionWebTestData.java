@@ -124,6 +124,7 @@ public class CompetitionWebTestData {
                         .withName("Investor partnership project setup"),
                 grantCompetition()
                         .withName("Connect competition"),
+                grantCompetition()
                         .withName("Auditor competition"),
                 grantCompetition()
                         .withName("Innovation continuity loan competition"),
