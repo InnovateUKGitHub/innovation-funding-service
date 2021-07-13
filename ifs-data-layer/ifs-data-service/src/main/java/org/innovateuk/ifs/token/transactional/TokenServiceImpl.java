@@ -58,19 +58,18 @@ public class TokenServiceImpl implements TokenService {
     /**
      * if there are extra attributes in the token, then maybe we need to create a new application, or add the user to a application.
      *
-     * @return
+     *
      */
     @Override
     @Transactional
     public void handleExtraAttributes(Token token) {
-        ServiceResult<ApplicationResource> applicationResourceServiceResult = null;
 
         JsonNode extraInfo = token.getExtraInfo();
         if (User.class.getName().equals(token.getClassName()) && extraInfo.has("competitionId")) {
             Long competitionId = extraInfo.get("competitionId").asLong();
             Long organisationId = extraInfo.get("organisationId").asLong();
             if (competitionId != null && competitionId != 0L && organisationId != null && organisationId != 0) {
-                applicationResourceServiceResult = applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId("", competitionId, token.getClassPk(), organisationId);
+                applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId("", competitionId, token.getClassPk(), organisationId);
             }
         }
 
