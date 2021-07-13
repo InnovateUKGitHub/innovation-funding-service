@@ -160,7 +160,9 @@ Remove an assigned user (Not notified)
 Notify an assigned user
     [Documentation]    INFUND-7050
     [Setup]  the user clicks the button/link   jQuery = .pagination-links a:contains('2')
-    Given the user adds an assessor to application  assessor-row-17
+    #Given the user adds an assessor to application  assessor-row-17
+    Given the user clicks the button/link      jQuery = tr:contains("Maureen Moore") :checkbox
+    When the user clicks the button/link       jQuery = button:contains("Add to application")
     Then the comp admin notify an assessor
 
 Assessor should see the assigned application
