@@ -327,8 +327,8 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private Map<String, Object> createGlobalArgsForMOSpendProfileReviewEmail(Project project, User user) {
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("monitoringOfficer", user);
-        globalArguments.put("applicationName", project.getName());
-        globalArguments.put("applicationId", project.getId());
+        globalArguments.put("applicationName", project.getApplication().getName());
+        globalArguments.put("applicationId", project.getApplication().getId());
         globalArguments.put("dashboardUrl", webBaseUrl);
         return globalArguments;
 
