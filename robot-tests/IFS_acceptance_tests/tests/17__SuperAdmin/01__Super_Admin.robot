@@ -73,7 +73,7 @@ Super admin can reject an approved document
 Super admin user cannot reject a document once the project is completed
     [Documentation]  IFS-9692
     Given the applicant submits the document
-    #And ifsAdmin user approves uploaded documents
+    And ifsAdmin user approves uploaded documents
     And compAdmin user approves the GOL
     When log in as a different user                   &{superAdminCredentials}
     And the user navigates to the page                ${SERVER}/project-setup-management/project/${projectID}/document/all

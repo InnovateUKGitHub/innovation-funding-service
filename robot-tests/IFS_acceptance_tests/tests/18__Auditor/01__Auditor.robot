@@ -216,7 +216,8 @@ the user sees the read only view of project team
     the user should not see the element   jQuery = button:contains("Add team member")
 
 the user sees read only view of MO
-    the user navigates to the page         ${SERVER}/project-setup-management/project/${projectID}/monitoring-officer
+    #the user navigates to the page         ${SERVER}/project-setup-management/project/${projectID}/monitoring-officer
+    the user navigates to the page         ${SERVER}/project-setup-management/project/${projectID1}/monitoring-officer
     the user should see the element        jQuery = h1:contains("Monitoring officer")
     the user should not see the element    jQuery = a:contains("Change monitoring officer")
 

@@ -150,7 +150,7 @@ Applicant - User should be redirected to grant application service on click revi
      [Setup]  Request a project id of connect service application
      Given the user navigates to the page                          ${server}/dashboard-selection
      When the internal user edits the form with connect option     CONNECT
-     And ifs admin approves both documents                         ${connectServiceProjectID}
+     #And ifs admin approves both documents                         ${connectServiceProjectID}
      And the internal user approve the GOL                         ${connectServiceProjectID}
      And applicant clicks review its progress link                 ${connectServiceProjectID}
 #     Currently __connect system is being redirected to IFS and the work is in progress. Once redirected, please add 'then' statement to check the IFS redirection

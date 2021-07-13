@@ -400,7 +400,7 @@ Contract section is enabled without bank details
 
 Internal user can send the contract
     [Documentation]  IFS-8202  IFS-8199  IFS-8198
-    [Setup]  ifs admin approves exploitation plan     ${sbriProjectId2}
+    #[Setup]  ifs admin approves exploitation plan     ${sbriProjectId2}
     Given Log in as a different user                  &{internal_finance_credentials}
     And the user navigates to the page                ${server}/project-setup-management/project/${sbriProjectId2}/finance-check
     And The user clicks the button/link               jQuery = button:contains("Approve finance checks")

@@ -15,10 +15,15 @@ Documentation     INFUND-4821: As a project finance team member I want to have a
 ...               INFUND-5899 As an internal user I want to be able to use the breadcrumb navigation consistently throughout Project Setup so I can return to the previous page as appropriate
 ...
 ...               IFS-1881 Project Setup internal project dashboard navigation
+...
 Suite Setup       the user logs-in in new browser    &{internal_finance_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/common/PS_Common.robot
+
+*** Variables ***
+${PS_IU_Application_Title}      New materials for lighter stock
+${PS_IU_Application_No}         ${application_ids["${PS_IU_Application_Title}"]}
 
 *** Test Cases ***
 Project Finance has a dashboard and can see projects in PS
