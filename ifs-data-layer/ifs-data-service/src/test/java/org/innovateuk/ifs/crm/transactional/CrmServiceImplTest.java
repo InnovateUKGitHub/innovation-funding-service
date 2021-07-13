@@ -76,7 +76,6 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
 
     private static MemoryAppender memoryAppender;
     private static final String LOGGER_NAME = "org.innovateuk.ifs.crm.transactional";
-    private static final String MSG = "This is a test message!!!";
 
     @Before
     public void setup() {
