@@ -20,16 +20,16 @@ spec:
         deploymentconfig: shib
         app: shib
     spec:
-#      volumes:
-#        - name: sp-keys-volume
-#          secret:
-#            secretName: sp-keys-secrets
+      volumes:
+        - name: sp-keys-volume
+          secret:
+            secretName: sp-keys-secrets
       containers:
-        - image: shib
+        - image: docker-ifs.devops.innovateuk.org/releases/sp-service:2.0.0
           name: shib
-#          volumeMounts:
-#            - name: sp-keys-volume
-#              mountPath: /var/certs
+          volumeMounts:
+            - name: sp-keys-volume
+              mountPath: /var/certs
           livenessProbe:
             httpGet:
               path: /Shibboleth.sso/Metadata
