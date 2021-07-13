@@ -9,6 +9,10 @@ Documentation     IFS-9884 Auditor role: create role
 ...
 ...               IFS-9882 download permission error
 ...
+...               IFS-10001 Auditor permission error on funding rules button
+...
+...               IFS-10000 Auditor gets permission error when tries to open payment milestone
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Administrator  CompAdmin
@@ -33,6 +37,10 @@ ${ktpApplicationName}        KTP notifications application
 ${ktpApplicationId}          ${application_ids['${ktpApplicationName}']}
 ${auditorApplication}        Auditor application
 ${auditorProjectId}          ${project_ids['${auditorApplication}']}
+${applicationName3}          A subsidy control application in project setup
+${projectID3}                ${project_ids['${applicationName3}']}
+${sbriApplicationName2}      SBRI application
+${sbriProjectId}             ${project_ids['${sbriApplicationName2}']}
 
 *** Test Cases ***
 Auditor can view correct number of competitions in live tab
@@ -139,6 +147,22 @@ Auditor can open and view the fEC model certificate in the project setup
     And The user clicks the button/link                  jQuery = a:contains("Your fEC model")
     When the user clicks the button/link                 jQuery = a:contains(".pdf (opens in a new window)")
     Then the user should not see internal server and forbidden errors
+
+Auditor can view funding rules in project setup
+    [Documentation]  IFS-10001
+    Given the user navigates to the page        ${SERVER}/project-setup-management/project/${projectID3}/finance-check
+    When the user clicks the button/link        jQuery = tr:nth-child(1) td:nth-child(2)
+    Then the user should see the element        jQuery = h1:contains("Funding rules check")
+    And the user should see the element         jQuery = dt:contains("Funding rules selected") ~ dd:contains("Subsidy control")
+    And the user should not see the element     jQuery = a:contains("Edit")
+
+Auditor can view payment milestones in project setup
+    [Documentation]  IFS-10000
+    Given the user navigates to the page        ${SERVER}/project-setup-management/project/${sbriProjectId}/finance-check
+    When the user clicks the button/link        jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
+    Then the user should see the element        jQuery = h1:contains("Payment milestones")
+    And the user should see the element         jQuery = h3:contains("Payment milestone overview")
+    And the user should not see the element     jQuery = a:contains("Edit payment milestones")
 
 *** Keywords ***
 Custom suite setup

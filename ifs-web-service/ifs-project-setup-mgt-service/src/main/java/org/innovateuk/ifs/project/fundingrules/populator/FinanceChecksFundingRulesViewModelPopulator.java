@@ -51,7 +51,7 @@ public class FinanceChecksFundingRulesViewModelPopulator {
     @Autowired
     private QuestionnaireResponseLinkRestService questionnaireResponseLinkRestService;
 
-    public FinanceChecksFundingRulesViewModel populateFundingRulesViewModel(Long projectId, Long organisationId, boolean editMode) {
+    public FinanceChecksFundingRulesViewModel populateFundingRulesViewModel(Long projectId, Long organisationId, boolean editMode, boolean isReadOnly) {
 
         ProjectResource project = projectService.getById(projectId);
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
@@ -70,7 +70,7 @@ public class FinanceChecksFundingRulesViewModelPopulator {
                 leadPartnerOrganisation,
                 fundingRulesResource,
                 questionsAndAnswers,
-                editMode);
+                editMode, isReadOnly);
     }
 
     private AnswerTableViewModel questionsAndAnswers(ProjectResource project, Long organisationId) {
