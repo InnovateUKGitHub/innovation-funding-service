@@ -13,6 +13,9 @@ Documentation     IFS-7365 DocuSign Integration
 ...
 ...               IFS-9009  Always open competitions: invite assessors to competitions
 ...
+...               IFS-7552 Provide External Finance user with access to download appendix
+
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
