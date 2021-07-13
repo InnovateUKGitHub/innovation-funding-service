@@ -325,7 +325,7 @@ users upload signed grant offer letter and submit
 Project fiance approves the grant offer letter
     grant offer letter is sent to users
     users upload signed grant offer letter and submit
-    ifs admin approves both documents  ${PS_LP_Application_Project_Id}      #remove this step on mo document webtest data is fxied
+    #ifs admin approves both documents  ${PS_LP_Application_Project_Id}      #remove this step on mo document webtest data is fxied
     log in as a different user         &{internal_finance_credentials}
     the user navigates to the page     ${server}/project-setup-management/project/${PS_LP_Application_Project_Id}/grant-offer-letter/send
     the user selects the radio button  approvalType  acceptGOL

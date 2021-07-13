@@ -785,13 +785,13 @@ the project finance user should see the spend profile details
     the user clicks the button/link              css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action > a  # Review Spend profile
     ifs admin approves both documents            ${PS_SP_Project_Id}          #remove this keyword when mo document webtest data is fixed
     Log in as a different user                   &{internal_finance_credentials}
-    the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
+    the user navigates to the page               ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
     the user should not see the element          jQuery = h2:contains("The spend profile has been approved")
     the user should not see the element          jQuery = h2:contains("The spend profile has been rejected")
     the user should see the element              jQuery = h2:contains("Innovation Lead") ~ p:contains("Peter Freeman")
     the user should see the element              jQuery = h2:contains("Project spend profile")
     the project finance user downloads the spend profile file and checks the content of it  ${Ooba_Lead_Org_Name}-spend-profile.csv
-    the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
+    the user navigates to the page               ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
     the user should see the element              link = ${Wordpedia_Partner_Org_Name}-spend-profile.csv
     the user should see the element              link = ${Jabbertype_Partner_Org_Name}-spend-profile.csv
     the user should see the element              jQuery = .govuk-main-wrapper h2:contains("Approved by Innovate UK")

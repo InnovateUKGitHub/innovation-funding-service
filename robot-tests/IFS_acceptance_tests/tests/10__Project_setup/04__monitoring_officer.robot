@@ -457,7 +457,8 @@ The user logs in and checks for assigned projects
     the user reads his email and clicks the link    ${assessor2_credentials["email"]}   ${PROJECT_SETUP_COMPETITION_NAME}   The project Elbow grease has been assigned to you as the Monitoring Officer  1
     logging in and error checking                   &{assessor2_credentials}
     the user clicks the button/link                 id = dashboard-link-MONITORING_OFFICER
-    the user should see the element                 jQuery = .task:contains("${Elbow_Grease_Title}") + .status:contains("Monitor project")
+    #the user should see the element                 jQuery = .task:contains("${Elbow_Grease_Title}") + .status:contains("Monitor project")
+    the user should see the element                 jQuery = .task:contains("${Elbow_Grease_Title}") + .status:contains("Live project")
 
 The user navigate to assign MO page
     the user navigates to the page         ${server}/management/dashboard/project-setup
