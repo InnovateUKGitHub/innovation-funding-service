@@ -16,11 +16,6 @@
 # $4: db user password (default 'password;)
 # $5: db port (default 3306)
 
-# The infamous user password: Passw0rd
-#password="e1NTSEF9cDhicDVjcjJNeWZ1M1M2a0xGK29nKzJkTG9tbFhRVHM="
-
-printf "test password $DB_TEST_PASSWORD"
-
 host=$DB_HOST
 #host=mysql
 db=$DB_NAME
@@ -62,7 +57,7 @@ addUserToShibboleth() {
   echo "objectClass: person"
   echo "objectClass: top"
   echo "employeeType: active"
-  echo "userPassword:: $DB_TEST_PASSWORD"
+  echo "userPassword:: $IFS_TEST_USER_PASSWORD"
   echo ""
 }
 

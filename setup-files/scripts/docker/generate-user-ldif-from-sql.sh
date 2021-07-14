@@ -18,14 +18,10 @@
 # objectClass: inetOrgPerson
 # objectClass: person
 # objectClass: top
-# userPassword:: e1NTSEF9cDhicDVjcjJNeWZ1M1M2a0xGK29nKzJkTG9tbFhRVHM=
 # structuralObjectClass: inetOrgPerson
 # employeeType: active
 
 domain="dc=nodomain"
-
-# The infamous user password: Passw0rd
-password="e1NTSEF9cDhicDVjcjJNeWZ1M1M2a0xGK29nKzJkTG9tbFhRVHM="
 
 [ $# -ne 1 ] && {
   echo "Was expecting 1 arg: <sql-file>."
@@ -56,7 +52,7 @@ do
   echo "objectClass: inetOrgPerson"
   echo "objectClass: person"
   echo "objectClass: top"
-  echo "userPassword:: $password"
+  echo "userPassword:: $IFS_TEST_USER_PASSWORD"
   echo "structuralObjectClass: inetOrgPerson"
   echo "employeeType: active"
   echo ""
