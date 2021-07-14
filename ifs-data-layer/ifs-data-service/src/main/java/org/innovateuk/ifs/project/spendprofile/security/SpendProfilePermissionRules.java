@@ -127,6 +127,14 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "VIEW_SPEND_PROFILE_CSV",
+            description = "Project mo can view their project Spend Profile data")
+    public boolean projectMoCanViewTheirProjectSpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        Project project = projectRepository.findById(projectOrganisationCompositeId.getProjectId()).get();
+        return userIsMonitoringOfficerInCompetition(project.getApplication().getCompetition().getId(), user.getId());
+    }
+
+    @PermissionRule(
             value = "EDIT_SPEND_PROFILE",
             description = "Partners can edit their own Spend Profile data")
     public boolean partnersCanEditTheirOwnSpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {

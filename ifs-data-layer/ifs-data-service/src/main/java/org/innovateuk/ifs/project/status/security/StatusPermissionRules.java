@@ -109,6 +109,12 @@ public class StatusPermissionRules extends BasePermissionRules {
     public boolean assignedCompetitionFinanceUsersCanViewProjectStatus(ProjectResource project, UserResource user){
         return userIsExternalFinanceInCompetition(project.getCompetition(), user.getId());
     }
+
+    @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Project mo users should be able to view current status of project from competition assigned to them")
+    public boolean assignedMoUsersCanViewProjectStatus(ProjectResource project, UserResource user){
+        return userIsMonitoringOfficerInCompetition(project.getCompetition(), user.getId());
+    }
+
     @PermissionRule(value = "VIEW_PROJECT_SETUP_COMPETITION_STATUS", description = "Auditors should be able to access current status of competitions.")
     public boolean assignedAuditorCanViewCompetitionStatus(CompetitionResource competition, UserResource user){
         return user.hasAuthority(Authority.AUDITOR);

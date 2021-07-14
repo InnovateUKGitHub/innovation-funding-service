@@ -8,16 +8,26 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class OrganisationReviewDetails {
 
+    private Long organisationId;
     private String organisationName;
     private boolean isMarkedComplete;
     private boolean isUserPartOfThisOrganisation;
     private boolean showEditLinkToUser;
 
-    public OrganisationReviewDetails(String organisationName, boolean isMarkedComplete, boolean isUserPartOfThisOrganisation, boolean showEditLinkToUser) {
+    public OrganisationReviewDetails(Long organisationId, String organisationName, boolean isMarkedComplete, boolean isUserPartOfThisOrganisation, boolean showEditLinkToUser) {
+        this.organisationId = organisationId;
         this.organisationName = organisationName;
         this.isMarkedComplete = isMarkedComplete;
         this.isUserPartOfThisOrganisation = isUserPartOfThisOrganisation;
         this.showEditLinkToUser = showEditLinkToUser;
+    }
+
+    public Long getOrganisationId() {
+        return organisationId;
+    }
+
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
     }
 
     public String getOrganisationName() {
@@ -61,6 +71,7 @@ public class OrganisationReviewDetails {
         OrganisationReviewDetails that = (OrganisationReviewDetails) o;
 
         return new EqualsBuilder()
+                .append(organisationId, that.organisationId)
                 .append(organisationName, that.organisationName)
                 .append(isMarkedComplete, that.isMarkedComplete)
                 .append(isUserPartOfThisOrganisation, that.isUserPartOfThisOrganisation)
@@ -71,6 +82,7 @@ public class OrganisationReviewDetails {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(organisationId)
                 .append(organisationName)
                 .append(isMarkedComplete)
                 .append(isUserPartOfThisOrganisation)

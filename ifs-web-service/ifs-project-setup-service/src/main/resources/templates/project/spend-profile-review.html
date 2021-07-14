@@ -15,54 +15,100 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
-        <th:block th:if="${model.submitted and !model.approved}">
-            <div class="success-alert govuk-!-margin-bottom-6">
-                <p class="govuk-body"><strong>All project spend profiles have been sent to Innovate UK.</strong></p>
-            </div>
-        </th:block>
-
-        <th:block th:if="${model.submitted and model.approved}">
-            <div class="success-alert govuk-!-margin-bottom-6">
-                <p class="govuk-body"><strong>All project spend profiles have been accepted by Innovate UK.</strong></p>
-            </div>
-        </th:block>
-
-        <p class="govuk-body" th:unless="${model.isMarkAsComplete()}">
-            This overview shows the spend profile status of each organisation in your project.</p>
-        <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.isMarkAsComplete() and !model.submitted}">
-            <p class="govuk-body" >
-                All spend profiles have been completed. You must now review the spend profile for each organisation.</p>
-        </div>
-
-        <th:block th:if="${model.submitted}">
-            <p class="govuk-body" th:if="${!model.approved}" >All spend profiles have been sent to Innovate UK and the Monitoring Officer assigned to this application.
-               You may view these profiles.</p>
-            <p class="govuk-body" th:if="${model.approved}">All spend profiles have been accepted by Innovate UK and the Monitoring Officer assigned to this application.
-                You may view these profiles.</p>
-        </th:block>
-
-        <ul class="task-list">
-            <li th:unless="${#lists.isEmpty(model.editablePartners)}"
-                th:each="partner : ${model.editablePartners}">
-                <div class="task">
-                    <h3 class="govuk-heading-s">
-                        <a th:if="${partner.value.showEditLinkToUser}"
-                           th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile/review(id=${model.projectId}, organisationId=${partner.key})}"
-                           th:text="${partner.value.organisationName}"
-                           class="govuk-link"/>
-                        <th:block th:unless="${partner.value.showEditLinkToUser}"
-                                  th:text="${partner.value.organisationName}" />
-                        <th:block th:if="${partner.value.organisationName.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
-                    </h3>
+        <th:block th:unless="${model.showMoSpendProfileJourney()}">
+            <th:block th:if="${model.submitted and !model.approved}">
+                <div class="success-alert govuk-!-margin-bottom-6">
+                    <p class="govuk-body"><strong>All project spend profiles have been sent to Innovate UK.</strong></p>
                 </div>
-                <div th:if="${partner.value.markedComplete}" class="task-status-complete">
-                    <span>Complete</span>
+            </th:block>
+
+            <th:block th:if="${model.submitted and model.approved}">
+                <div class="success-alert govuk-!-margin-bottom-6">
+                    <p class="govuk-body"><strong>All project spend profiles have been accepted by Innovate UK.</strong></p>
                 </div>
-                <span th:unless="${partner.value.markedComplete}" class="notification">
+            </th:block>
+
+            <p class="govuk-body" th:unless="${model.isMarkAsComplete()}">
+                This overview shows the spend profile status of each organisation in your project.</p>
+            <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.isMarkAsComplete() and !model.submitted}">
+                <p class="govuk-body" >
+                    All spend profiles have been completed. You must now review the spend profile for each organisation.</p>
+            </div>
+
+            <th:block th:if="${model.submitted}">
+                <p class="govuk-body" th:if="${!model.approved}" >All spend profiles have been sent to Innovate UK and the Monitoring Officer assigned to this application.
+                    You may view these profiles.</p>
+                <p class="govuk-body" th:if="${model.approved}">All spend profiles have been accepted by Innovate UK and the Monitoring Officer assigned to this application.
+                    You may view these profiles.</p>
+            </th:block>
+
+            <ul class="task-list">
+                <li th:unless="${#lists.isEmpty(model.editablePartners)}"
+                    th:each="partner : ${model.editablePartners}">
+                    <div class="task">
+                        <h3 class="govuk-heading-s">
+                            <a th:if="${partner.value.showEditLinkToUser}"
+                               th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile/review(id=${model.projectId}, organisationId=${partner.key})}"
+                               th:text="${partner.value.organisationName}"
+                               class="govuk-link"/>
+                            <th:block th:unless="${partner.value.showEditLinkToUser}"
+                                      th:text="${partner.value.organisationName}" />
+                            <th:block th:if="${partner.value.organisationName.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
+                        </h3>
+                    </div>
+                    <div th:if="${partner.value.markedComplete}" class="task-status-complete">
+                        <span>Complete</span>
+                    </div>
+                    <span th:unless="${partner.value.markedComplete}" class="notification">
                     In progress
                 </span>
-            </li>
-        </ul>
+                </li>
+            </ul>
+        </th:block>
+
+        <th:block th:if="${model.showMoSpendProfileJourney()}">
+            <div class="govuk-!-margin-top-0">
+                <p class="govuk-body">Please review the spend profile submitted by the project manager. You must accept or reject it based on Innovate UK's requirements.</p>
+
+                <table id="table-mo-spend-profile" class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">View details</th>
+                        <th class="govuk-table__header" scope="col">Download file</th>
+                        <th class="govuk-table__header alignright" scope="col">Status</th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="partner : ${model.editablePartners}">
+                        <td class="govuk-table__cell govuk-!-font-weight-bold">
+                            <a th:if="${partner.value.showEditLinkToUser}"
+                               th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile/review(id=${model.projectId}, organisationId=${partner.key})}"
+                               th:text="${partner.value.organisationName}"
+                               class="govuk-link"/>
+                            <th:block th:unless="${partner.value.showEditLinkToUser}"
+                                      th:text="${partner.value.organisationName}" />
+                            <th:block th:if="${partner.value.organisationName.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
+                        </td>
+                        <td class="govuk-table__cell">
+                            <a th:href="'/project-setup-management/project/' + ${model.projectId} + '/partner-organisation/' + ${partner.value.organisationId} + '/spend-profile-export/csv'"
+                               th:text="${partner.value.organisationName} + '-spend-profile.csv'"
+                               class="govuk-link">spend-profile.csv</a>
+                        </td>
+                        <td class="govuk-table__cell alignright">
+                            <div class="status">
+                                <div th:if="${partner.value.markedComplete}" class="task-status-complete">
+                                    <span>Complete</span>
+                                </div>
+                                <div th:unless="${partner.value.markedComplete}" class="notification">
+                                    <span>In progress</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </th:block>
 
         <th:block th:if="${model.markAsComplete and !model.submitted and !model.monitoringOfficer}">
             <a th:href="@{/project/{id}/spend-profile/total(id=${model.projectId})}" class="govuk-button">Review and submit project spend profile</a>

@@ -27,6 +27,7 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
@@ -80,6 +81,9 @@ public class ProjectSpendProfileController {
 
     @Autowired
     private MonitoringOfficerRestService monitoringOfficerRestService;
+
+    @Value("${ifs.monitoringofficer.journey.update.enabled}")
+    private boolean moSpendProfileJourneyUpdateEnabled;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION')")
     @GetMapping
@@ -345,7 +349,8 @@ public class ProjectSpendProfileController {
                 projectResource.getSpendProfileSubmittedDate() != null,
                 editablePartners,
                 isApproved(projectResource.getId()),
-                isMonitoringOfficer);
+                isMonitoringOfficer,
+                moSpendProfileJourneyUpdateEnabled);
     }
 
     private boolean isApproved(final Long projectId) {
@@ -355,7 +360,7 @@ public class ProjectSpendProfileController {
 
     private Map<Long, OrganisationReviewDetails> getOrganisationReviewDetails(final Long projectId, List<OrganisationResource> partnerOrganisations, final UserResource loggedInUser) {
         return partnerOrganisations.stream().collect(Collectors.toMap(OrganisationResource::getId,
-                o -> new OrganisationReviewDetails(o.getName(), spendProfileService.getSpendProfile(projectId, o.getId()).map(SpendProfileResource::isMarkedAsComplete).orElse(false), isUserPartOfThisOrganisation(projectId, o.getId(), loggedInUser), true),
+                o -> new OrganisationReviewDetails(o.getId(), o.getName(), spendProfileService.getSpendProfile(projectId, o.getId()).map(SpendProfileResource::isMarkedAsComplete).orElse(false), isUserPartOfThisOrganisation(projectId, o.getId(), loggedInUser), true),
                 (v1, v2) -> v1, LinkedHashMap::new));
     }
 

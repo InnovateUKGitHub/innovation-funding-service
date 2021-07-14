@@ -22,13 +22,15 @@ public class ProjectSpendProfileProjectSummaryViewModel {
     private boolean submitted;
     private boolean approved;
     private boolean monitoringOfficer;
+    private boolean moSpendProfileJourneyUpdateEnabled;
 
     public ProjectSpendProfileProjectSummaryViewModel(Long projectId, Long applicationId, String projectName,
                                                       List<OrganisationResource> partnerOrganisations,
                                                       OrganisationResource leadOrganisation, boolean submitted,
                                                       Map<Long, OrganisationReviewDetails> editablePartners,
                                                       boolean approved,
-                                                      boolean monitoringOfficer) {
+                                                      boolean monitoringOfficer,
+                                                      boolean moSpendProfileJourneyUpdateEnabled) {
         this.projectId = projectId;
         this.applicationId = applicationId;
         this.projectName = projectName;
@@ -38,6 +40,7 @@ public class ProjectSpendProfileProjectSummaryViewModel {
         this.editablePartners = editablePartners;
         this.approved = approved;
         this.monitoringOfficer = monitoringOfficer;
+        this.moSpendProfileJourneyUpdateEnabled = moSpendProfileJourneyUpdateEnabled;
     }
 
     public Long getProjectId() {
@@ -95,6 +98,10 @@ public class ProjectSpendProfileProjectSummaryViewModel {
 
     public void setMonitoringOfficer(boolean monitoringOfficer) {
         this.monitoringOfficer = monitoringOfficer;
+    }
+
+    public boolean showMoSpendProfileJourney() {
+        return moSpendProfileJourneyUpdateEnabled && monitoringOfficer;
     }
 
     @Override
