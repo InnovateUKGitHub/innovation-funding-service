@@ -28,7 +28,7 @@ public class MonitoringOfficerDashboardControllerTest extends BaseControllerMock
     @Test
     public void viewDashboard() throws Exception {
         MonitoringOfficerDashboardViewModel model = mock(MonitoringOfficerDashboardViewModel.class);
-        when(populator.populate(loggedInUser)).thenReturn(model);
+        when(populator.populate(loggedInUser, true, false, false, false, false)).thenReturn(model);
 
         mockMvc.perform(get("/monitoring-officer/dashboard"))
                 .andExpect(view().name("monitoring-officer/dashboard"))

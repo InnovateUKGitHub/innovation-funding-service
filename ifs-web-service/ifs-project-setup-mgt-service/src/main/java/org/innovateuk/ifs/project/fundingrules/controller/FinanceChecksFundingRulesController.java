@@ -6,10 +6,11 @@ import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
-import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.fundingrules.form.FinanceChecksConfirmFundingRulesForm;
 import org.innovateuk.ifs.project.fundingrules.form.FinanceChecksFundingRulesForm;
 import org.innovateuk.ifs.project.fundingrules.populator.FinanceChecksFundingRulesViewModelPopulator;
+import org.innovateuk.ifs.user.resource.Authority;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -25,7 +26,7 @@ import java.util.function.Supplier;
  * financial position on a Project
  */
 @Controller
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'external_finance')")
+@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'external_finance', 'auditor')")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = FinanceChecksFundingRulesController.class)
 @RequestMapping("/project/{projectId}/finance-check/organisation/{organisationId}/funding-rules")
 public class FinanceChecksFundingRulesController {
@@ -38,9 +39,10 @@ public class FinanceChecksFundingRulesController {
 
     @GetMapping
     public String viewFundingRules(@PathVariable("projectId") Long projectId,
-                                   @PathVariable("organisationId") Long organisationId, Model model) {
+                                   @PathVariable("organisationId") Long organisationId,
+                                   Model model, UserResource loggedInUser) {
 
-        return doViewFundingRules(projectId, organisationId, model, new FinanceChecksConfirmFundingRulesForm(), false);
+        return doViewFundingRules(projectId, organisationId, model, new FinanceChecksConfirmFundingRulesForm(), false, loggedInUser);
     }
 
     @PostMapping
@@ -49,19 +51,21 @@ public class FinanceChecksFundingRulesController {
                                       @Valid @ModelAttribute("form") FinanceChecksConfirmFundingRulesForm form,
                                       @SuppressWarnings("unused") BindingResult bindingResult,
                                       ValidationHandler validationHandler,
-                                      Model model) {
+                                      Model model,
+                                      UserResource loggedInUser) {
 
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/funding-rules";
 
-        return doApproveFundingRules(projectId, organisationId, null, form, validationHandler, model, successView);
+        return doApproveFundingRules(projectId, organisationId, null, form, validationHandler, model, successView, loggedInUser);
     }
 
     @GetMapping("/edit")
     public String editFundingRules(@PathVariable("projectId") Long projectId,
-                                   @PathVariable("organisationId") Long organisationId, Model model) {
+                                   @PathVariable("organisationId") Long organisationId,
+                                   Model model, UserResource loggedInUser) {
 
-        return doViewFundingRules(projectId, organisationId, model, new FinanceChecksFundingRulesForm(), true);
+        return doViewFundingRules(projectId, organisationId, model, new FinanceChecksFundingRulesForm(), true, loggedInUser);
     }
 
     @PostMapping(value = "/edit")
@@ -70,17 +74,17 @@ public class FinanceChecksFundingRulesController {
                                   @Valid @ModelAttribute("form") FinanceChecksFundingRulesForm form,
                                   @SuppressWarnings("unused") BindingResult bindingResult,
                                   ValidationHandler validationHandler,
-                                  Model model) {
+                                  Model model, UserResource loggedInUser) {
 
         Supplier<String> successView = () ->  "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/funding-rules";
 
-        return doSaveFundingRules(projectId, organisationId, null, form, validationHandler, model, successView);
+        return doSaveFundingRules(projectId, organisationId, null, form, validationHandler, model, successView, loggedInUser);
     }
 
     private String doSaveFundingRules(Long projectId, Long organisationId, FinanceChecksConfirmFundingRulesForm confirmForm, FinanceChecksFundingRulesForm form,
-                                      ValidationHandler validationHandler, Model model, Supplier<String> successView) {
+                                      ValidationHandler validationHandler, Model model, Supplier<String> successView, UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> doViewFundingRules(projectId, organisationId, model, form, true);
+        Supplier<String> failureView = () -> doViewFundingRules(projectId, organisationId, model, form, true, loggedInUser);
 
         return validationHandler.
                 failNowOrSucceedWith(failureView, () -> {
@@ -103,8 +107,8 @@ public class FinanceChecksFundingRulesController {
     }
 
     private String doApproveFundingRules(Long projectId, Long organisationId, FinanceChecksFundingRulesForm form,
-                                         FinanceChecksConfirmFundingRulesForm confirmForm, ValidationHandler validationHandler, Model model, Supplier<String> successView) {
-        Supplier<String> failureView = () -> doViewFundingRules(projectId, organisationId, model, confirmForm, false);
+                                         FinanceChecksConfirmFundingRulesForm confirmForm, ValidationHandler validationHandler, Model model, Supplier<String> successView, UserResource loggedInUser) {
+        Supplier<String> failureView = () -> doViewFundingRules(projectId, organisationId, model, confirmForm, false, loggedInUser);
 
         return validationHandler.
                 failNowOrSucceedWith(failureView, () -> {
@@ -117,8 +121,9 @@ public class FinanceChecksFundingRulesController {
                 });
     }
 
-    private String doViewFundingRules(Long projectId, Long organisationId, Model model, BaseBindingResultTarget form, boolean editMode) {
-        model.addAttribute("model", financeChecksFundingRulesViewModelPopulator.populateFundingRulesViewModel(projectId, organisationId, editMode));
+    private String doViewFundingRules(Long projectId, Long organisationId, Model model, BaseBindingResultTarget form, boolean editMode, UserResource loggedInUser) {
+        boolean readOnly = loggedInUser.hasAuthority(Authority.AUDITOR);
+        model.addAttribute("model", financeChecksFundingRulesViewModelPopulator.populateFundingRulesViewModel(projectId, organisationId, editMode, readOnly));
         model.addAttribute("form", form);
 
         return "project/financecheck/fundingrules";

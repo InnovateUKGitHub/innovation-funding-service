@@ -507,6 +507,8 @@ MO navigates to application overview page
 the user navigates to application overview
     [Arguments]  ${applicationName}
     the user navigates to the page                       ${server}/project-setup/monitoring-officer/dashboard
+    the user selects the checkbox                        previousProject
+    the user clicks the button/link                      id = update-documents-results-button
     the user refreshes until element appears on page     link = ${applicationName}
     the user clicks the button/link                      link = ${applicationName}
     the user clicks the button/link                      link = view application overview
