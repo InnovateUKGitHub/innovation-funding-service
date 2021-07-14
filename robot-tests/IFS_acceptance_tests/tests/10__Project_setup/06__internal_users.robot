@@ -15,16 +15,16 @@ Documentation     INFUND-4821: As a project finance team member I want to have a
 ...
 ...               IFS-1881 Project Setup internal project dashboard navigation
 ...
-Suite Setup       Custom suite setup
-Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
 Resource          ../../resources/common/PS_Common.robot
+Suite Setup       Custom suite setup
+Suite Teardown    Custom suite teardown
 
 *** Variables ***
-${projectSetupApplicationName}       New materials for lighter stock
-${projectSetupApplicationNumber}     ${application_ids["${projectSetupApplicationName}"]}
 ${projectSetupCompetitionName}       Rolling stock future developments
 ${projectSetupCompetitionId}         ${competition_ids["${projectSetupCompetitionName}"]}
+${projectSetupApplicationName}       New materials for lighter stock
+${projectSetupApplicationNumber}     ${application_ids["${projectSetupApplicationName}"]}
 
 *** Test Cases ***
 Project Finance has a dashboard and can see projects in PS

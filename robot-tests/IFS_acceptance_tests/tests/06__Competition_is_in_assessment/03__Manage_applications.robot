@@ -280,8 +280,7 @@ the user assign application to an assessor
     the user should see the element           jQuery = h2:contains("Assigned (1)")
     the assigned list is correct before notification
     the user clicks the button/link           link = Allocate applications
-    #the user should see the element           jQuery = td:contains("Living with Cryptocurrencies") ~ td:nth-child(4):contains("1")
-    the user should see the element           jQuery = td:contains("Living with Cryptocurrencies") ~ td:nth-child(1):contains("0")
+    the user should see the element           jQuery = td:contains("Living with Cryptocurrencies") ~ td:nth-child(4):contains("1")
 
 the comp admin notify an assessor
     the user clicks the button/link    link = Allocate applications
