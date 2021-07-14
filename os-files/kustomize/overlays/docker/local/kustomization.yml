@@ -30,8 +30,8 @@ resources:
   - cache-provider/cache-config.yml
   - auth/idp/shibboleth-config.yml
   - auth/ldap/ldap-config.yml
-  - storage/persistent-volume-claim.yml
-  - storage/persistent-volume.yml
+#  - storage/persistent-volume-claim.yml
+#  - storage/persistent-volume.yml
   - feature-toggle-config.yml
   - new-relic-config.yml
   - web-config.yml

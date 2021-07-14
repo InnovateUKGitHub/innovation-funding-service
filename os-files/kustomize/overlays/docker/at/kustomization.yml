@@ -20,9 +20,8 @@ resources:
   - routes/shib-route.yml
   - storage/gluster.yml
   - storage/gluster-ep.yml
-
+  - storage/persistent-volume-claim.yml
 
 patchesStrategicMerge:
-  - storage/persistent-volume-claim.yml
   - auth/idp/shibboleth-config.yml
   - web-config.yml
