@@ -31,4 +31,5 @@ public interface SpendProfileRestService {
     RestResult<Void> markSpendProfileIncomplete(Long projectId, Long organisationId);
 
     RestResult<Void> completeSpendProfilesReview(Long projectId);
+
 }

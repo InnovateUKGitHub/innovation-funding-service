@@ -14,6 +14,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Collections;
 
@@ -50,7 +51,7 @@ public class ProjectSpendProfileApprovalControllerTest extends BaseControllerMoc
         long applicationId = 20L;
         long competitionId = 2319L;
         long userId = 239L;
-
+        ReflectionTestUtils.setField(controller, "isMOSpendProfileUpdateEnabled", false);
         UserResource user = newUserResource().withId(userId).build();
         CompetitionSummaryResource competitionSummary = newCompetitionSummaryResource().withId(competitionId).build();
         CompetitionResource competition = newCompetitionResource().withId(competitionId).withLeadTechnologist(userId).build();
@@ -72,8 +73,34 @@ public class ProjectSpendProfileApprovalControllerTest extends BaseControllerMoc
                 .andExpect(view().name("project/finance/spend-profile/approval"));
     }
 
+    @Test
+    public void viewImprovedSpendProfileApprovalSuccess() throws Exception {
+        long projectId = 123L;
+        long applicationId = 20L;
+        long competitionId = 2319L;
+        long userId = 239L;
+        ReflectionTestUtils.setField(controller, "isMOSpendProfileUpdateEnabled", true);
+        UserResource user = newUserResource().withId(userId).build();
+        CompetitionSummaryResource competitionSummary = newCompetitionSummaryResource().withId(competitionId).build();
+        CompetitionResource competition = newCompetitionResource().withId(competitionId).withLeadTechnologist(userId).build();
+        ProjectResource project = newProjectResource().withId(projectId).withApplication(applicationId).withCompetition(competitionId).withProjectState(SETUP).build();
 
-    @Override
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(applicationSummaryRestService.getCompetitionSummary(competitionId)).thenReturn(restSuccess(competitionSummary));
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(user));
+        when(spendProfileService.getSpendProfileStatusByProjectId(projectId)).thenReturn(ApprovalType.APPROVED);
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.emptyList());
+
+        ProjectSpendProfileApprovalViewModel expectedProjectSpendProfileApprovalViewModel =
+                new ProjectSpendProfileApprovalViewModel(competitionSummary, user.getName(), ApprovalType.APPROVED, Collections.emptyList(), project, true,false);
+
+        mockMvc.perform(get("/project/{projectId}/spend-profile/approval", project.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedProjectSpendProfileApprovalViewModel))
+                .andExpect(view().name("project/finance/spend-profile/approval"));
+    }
+     @Override
     protected ProjectSpendProfileApprovalController supplyControllerUnderTest() {
         return new ProjectSpendProfileApprovalController();
     }

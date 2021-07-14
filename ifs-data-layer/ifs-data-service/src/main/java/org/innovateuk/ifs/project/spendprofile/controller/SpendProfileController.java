@@ -22,7 +22,7 @@ public class SpendProfileController {
     }
 
     @PostMapping("/spend-profile/approval/{approvalType}")
-    public RestResult<Void> acceptOrRejectSpendProfile(@PathVariable("projectId") final Long projectId,
+    public RestResult<Void> approveOrRejectSpendProfile(@PathVariable("projectId") final Long projectId,
                                                         @PathVariable("approvalType") final ApprovalType approvalType) {
         return spendProfileService.approveOrRejectSpendProfile(projectId, approvalType).toPostResponse();
     }

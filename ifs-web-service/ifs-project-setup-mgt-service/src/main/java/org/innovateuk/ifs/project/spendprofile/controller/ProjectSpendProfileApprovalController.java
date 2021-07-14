@@ -135,7 +135,7 @@ public class ProjectSpendProfileApprovalController {
         return "redirect:/competition/" + project.getCompetition() + "/status";
     }
 
-    public boolean userCannotApproveOrReject(UserResource loggedInUser) {
+    private boolean userCannotApproveOrReject(UserResource loggedInUser) {
         return isMOSpendProfileUpdateEnabled ?
                 (!loggedInUser.hasAuthority(IFS_ADMINISTRATOR) &&
                         loggedInUser.hasAnyAuthority(asList(AUDITOR, COMP_ADMIN, PROJECT_FINANCE)))
