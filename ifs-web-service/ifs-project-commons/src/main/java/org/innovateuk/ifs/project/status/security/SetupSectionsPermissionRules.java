@@ -231,6 +231,11 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessFinanceChecksNotesSection, SecurityRuleUtil::hasAuditorAuthority);
     }
 
+    @PermissionRule(value = "APPROVE_REJECT_SPEND_PROFILE", description = "Internal users can approve or reject documents")
+    public boolean canUserApproveOrRejectSpendProfile(ProjectCompositeId projectCompositeId, UserResource user) {
+         return hasIFSAdminAuthority(user);
+    }
+
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<SetupSectionInternalUser, UserResource, SectionAccess> sectionCheckFn, Function<UserResource, Boolean> userCheckFn) {
         ProjectStatusResource projectStatusResource;
 

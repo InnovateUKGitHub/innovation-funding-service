@@ -156,7 +156,7 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "APPROVE_REJECT_SPEND_PROFILE", description = "Internal admin team (comp admin and project finance) users can't approve or reject spend profile")
     public boolean canSpendProfileBeApprovedOrRejected(ProjectResource project, UserResource user){
-       return !(!user.hasAuthority(IFS_ADMINISTRATOR) &&
-               user.hasAnyAuthority(asList(AUDITOR, COMP_ADMIN, PROJECT_FINANCE)));
+       return (user.hasAuthority(IFS_ADMINISTRATOR) &&
+               !user.hasAnyAuthority(asList(AUDITOR, COMP_ADMIN, PROJECT_FINANCE)));
     }
 }

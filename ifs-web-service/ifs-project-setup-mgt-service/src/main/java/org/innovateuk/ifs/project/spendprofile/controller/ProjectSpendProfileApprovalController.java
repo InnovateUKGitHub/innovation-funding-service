@@ -85,7 +85,7 @@ public class ProjectSpendProfileApprovalController {
         );
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'APPROVE_REJECT_SPEND_PROFILE')")
     @PostMapping("/approval/submit")
     public String submitSpendProfileApproval(@P("projectId")@PathVariable Long projectId,
                                            @ModelAttribute ProjectSpendProfileApprovalForm form,

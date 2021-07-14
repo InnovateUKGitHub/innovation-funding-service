@@ -340,7 +340,14 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Override
     @Transactional
     public ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
-        return approveOrReject(projectId, approvalType);
+        Project project = projectRepository.findById(projectId).orElse(null);
+        if (null != project && spendProfileWorkflowHandler.isReadyToApprove(project) &&
+                (APPROVED.equals(approvalType) || REJECTED.equals(approvalType))) {
+            updateApprovalOfSpendProfile(projectId, approvalType);
+            return approveSpendProfile(approvalType, project);
+        } else {
+            return serviceFailure(SPEND_PROFILE_NOT_READY_TO_APPROVE);
+        }
     }
 
     private ServiceResult<Void> approveSpendProfile(ApprovalType approvalType, Project project) {
@@ -551,23 +558,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                 return serviceFailure(SPEND_PROFILES_HAVE_ALREADY_BEEN_SUBMITTED);
             }
         });
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> submitApproveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
-        return approveOrReject(projectId, approvalType);
-    }
-
-    private ServiceResult<Void> approveOrReject(Long projectId, ApprovalType approvalType) {
-        Project project = projectRepository.findById(projectId).orElse(null);
-        if (null != project && spendProfileWorkflowHandler.isReadyToApprove(project) &&
-                (APPROVED.equals(approvalType) || REJECTED.equals(approvalType))) {
-            updateApprovalOfSpendProfile(projectId, approvalType);
-            return approveSpendProfile(approvalType, project);
-        } else {
-            return serviceFailure(SPEND_PROFILE_NOT_READY_TO_APPROVE);
-        }
     }
 
     private ServiceResult<Void> rejectSpendProfileSubmission(Long projectId) {

@@ -66,10 +66,4 @@ public class SpendProfileRestServiceImpl extends BaseRestService implements Spen
     public RestResult<Void> completeSpendProfilesReview(Long projectId) {
         return postWithRestResult(PROJECT_REST_URL + "/" + projectId + "/complete-spend-profiles-review/", Void.class);
     }
-
-    @Override
-    public RestResult<Void> submitApproveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
-    //    return postWithRestResult(PROJECT_REST_URL + "/" + projectId + "/spend-profile/aubmit/" + approvalType, Void.class);
-        return postWithRestResult(PROJECT_REST_URL + "/" + projectId + "/spend-profile/approval/" + approvalType, Void.class);
-    }
 }

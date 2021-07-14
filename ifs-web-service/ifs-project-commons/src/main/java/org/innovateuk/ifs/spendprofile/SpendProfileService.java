@@ -33,6 +33,4 @@ public interface SpendProfileService {
 
     ServiceResult<Void> completeSpendProfilesReview(Long projectId);
 
-    ServiceResult<Void> submitApproveOrRejectSpendProfile(Long projectId, ApprovalType approvalType);
-
 }

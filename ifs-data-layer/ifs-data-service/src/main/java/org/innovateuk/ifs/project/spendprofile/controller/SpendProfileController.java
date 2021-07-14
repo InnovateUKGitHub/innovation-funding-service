@@ -88,10 +88,4 @@ public class SpendProfileController {
     public RestResult<Void> deleteSpendProfile(@PathVariable("projectId") final Long projectId) {
         return spendProfileService.deleteSpendProfile(projectId).toDeleteResponse();
     }
-
-    @PostMapping("/spend-profile/submit/{approvalType}")
-    public RestResult<Void> submitapproveOrRejectSpendProfile(@PathVariable("projectId") final Long projectId,
-                                                        @PathVariable("approvalType") final ApprovalType approvalType) {
-        return spendProfileService.submitApproveOrRejectSpendProfile(projectId, approvalType).toPostResponse();
-    }
 }

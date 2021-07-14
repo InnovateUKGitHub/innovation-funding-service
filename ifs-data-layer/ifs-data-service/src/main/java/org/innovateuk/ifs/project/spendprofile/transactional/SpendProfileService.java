@@ -28,7 +28,7 @@ public interface SpendProfileService {
     @Activity(projectId = "projectId", type = ActivityType.SPEND_PROFILE_GENERATED)
     ServiceResult<Void> generateSpendProfile(Long projectId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator')")
     @SecuredBySpring(value = "GENERATE_SPEND_PROFILE", securedType = ProjectResource.class, description = "A member of the internal Finance Team can approve or reject a Spend Profile for any Project" )
     @Activity(projectId = "projectId", dynamicType = "approveOrRejectActivityType")
     ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType);
@@ -71,7 +71,4 @@ public interface SpendProfileService {
     @Activity(projectId = "projectId", type = ActivityType.SPEND_PROFILE_SENT)
     ServiceResult<Void> completeSpendProfilesReview(@P("projectId")Long projectId);
 
-  @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'APPROVE_REJECT_SPEND_PROFILE')")
-  @Activity(projectId = "projectId", dynamicType = "approveOrRejectActivityType")
-  ServiceResult<Void> submitApproveOrRejectSpendProfile(Long projectId, ApprovalType approvalType);
 }
