@@ -158,6 +158,8 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
                             .projectFinanceUserCanViewFundingRules(projectOrganisationCompositeId, getLoggedInUser());
                     verify(projectFinancePermissionRules)
                             .userCanViewTheirOwnFundingRulesStatus(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules)
+                            .auditorCanViewFundingRules(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
