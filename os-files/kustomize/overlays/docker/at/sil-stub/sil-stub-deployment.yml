@@ -11,8 +11,7 @@ spec:
       app: sil-stub
   strategy:
     type: RollingUpdate
-    rollingParams:
-      timeoutSeconds: 600
+    rollingUpdate:
       maxSurge: 2
       maxUnavailable: 0
   template:
