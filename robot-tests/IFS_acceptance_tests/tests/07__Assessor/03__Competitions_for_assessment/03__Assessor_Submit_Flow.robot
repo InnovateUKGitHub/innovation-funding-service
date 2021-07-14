@@ -36,8 +36,8 @@ Resource          ../../../resources/common/Assessor_Commons.robot
 *** Variables ***
 ${assessor_as_a_service_url}            management/admin/upload-files
 ${AssessorAsAServiceComp}               Rolling stock future developments - Assessor as a Service
-#${AssessorAsAServiceCompId}             ${competition_ids["${AssessorAsAServiceComp}"]}
-${AssessorAsAServiceApplicationTitle}   High-speed rail and its effects on soil compaction
+#${AssessorAsAServiceCompId}            ${competition_ids["${AssessorAsAServiceComp}"]}
+${AssessorAsAServiceApplicationTitle}   High-speed rail and its effects on soil compaction - AAS
 
 
 *** Test Cases ***

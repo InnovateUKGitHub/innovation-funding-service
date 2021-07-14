@@ -1,5 +1,4 @@
 *** Settings ***
-Variables  ../../libs/Initialisation.py
 Resource    ../../resources/defaultResources.robot
 Resource    Applicant_Commons.robot
 
