@@ -3,7 +3,7 @@ kind: Route
 metadata:
   name: mail
 spec:
-  host: mail-openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org
+  host: mail-at-kustomize.apps.org-env-0.org.innovateuk.ukri.org
   port:
     targetPort: 4443-tcp
   tls:
@@ -18,6 +18,6 @@ status:
     - conditions:
         - status: 'True'
           type: Admitted
-      host: mail-openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org
+      host: mail-at-kustomize.apps.org-env-0.org.innovateuk.ukri.org
       routerName: router
       wildcardPolicy: None
