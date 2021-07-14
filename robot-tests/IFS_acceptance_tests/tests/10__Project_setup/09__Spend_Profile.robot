@@ -499,7 +499,8 @@ Status updates correctly for internal user's table after approval
     Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     When The user clicks the button/link    link = 2
     Then the user should see the element    css = #table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.ok        # Completed Spend profile
-    And the user should see the element     css = #table-project-status > tbody > tr:nth-child(3) > td.govuk-table__cell.status.action > a   # GOL
+    #And the user should see the element     css = #table-project-status > tbody > tr:nth-child(3) > td.govuk-table__cell.status.action > a   # GOL
+    And the user should see the element     css =#table-project-status tr:nth-of-type(3) td:nth-of-type(8).status.ok         # GOL
 
 Project Finance still has a link to the spend profile after approval
     [Documentation]    INFUND-6046
