@@ -25,4 +25,4 @@ resources:
 patchesStrategicMerge:
   - storage/persistent-volume-claim.yml
   - auth/idp/shibboleth-config.yml
-
+  - web-config.yml
