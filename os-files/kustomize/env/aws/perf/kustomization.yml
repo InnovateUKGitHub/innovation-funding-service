@@ -3,7 +3,7 @@ commonAnnotations:
   environment: perf
 
 bases:
-  - ../../base
+  - ../aws-base
 
 patchesStrategicMerge:
   - auth/sp/sp-deployment.yml
