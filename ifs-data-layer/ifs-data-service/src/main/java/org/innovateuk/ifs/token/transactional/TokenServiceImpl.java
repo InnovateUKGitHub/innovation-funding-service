@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.token.transactional;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -57,8 +56,6 @@ public class TokenServiceImpl implements TokenService {
 
     /**
      * if there are extra attributes in the token, then maybe we need to create a new application, or add the user to a application.
-     *
-     *
      */
     @Override
     @Transactional
