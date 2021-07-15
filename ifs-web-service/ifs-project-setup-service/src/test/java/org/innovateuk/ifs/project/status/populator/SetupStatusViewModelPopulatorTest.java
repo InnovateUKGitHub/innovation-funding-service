@@ -18,6 +18,7 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
+import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
@@ -156,7 +157,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
     @Before
     public void setupExpectations() {
-
         setupAsyncExpectations(futuresGeneratorMock);
     }
 
@@ -1608,17 +1608,17 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
-                        withProjectDetailsStatus(COMPLETE).
-                        withBankDetailsStatus(COMPLETE).
-                        withFinanceChecksStatus(COMPLETE).
+                        withProjectDetailsStatus(ProjectActivityStates.INCOMPLETE).
+                        withBankDetailsStatus(ProjectActivityStates.INCOMPLETE).
+                        withFinanceChecksStatus(ProjectActivityStates.INCOMPLETE).
                         withSpendProfileStatus(NOT_REQUIRED).
                         withProjectSetupCompleteStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
                         withIsLeadPartner(true).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
-                        withFinanceChecksStatus(COMPLETE).
-                        withBankDetailsStatus(COMPLETE).
+                        withFinanceChecksStatus(ProjectActivityStates.INCOMPLETE).
+                        withBankDetailsStatus(ProjectActivityStates.INCOMPLETE).
                         build(1))
                 .withProjectState(LIVE).
                         build();
@@ -1635,7 +1635,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         assertTrue(stageViewModel.isPresent());
         assertEquals(FINANCE_CHECKS, stageViewModel.get().getStage());
-        assertEquals("/project/8/finance-check/read-only", stageViewModel.get().getUrl());
+        assertEquals(String.format("/project/%d/finance-check/read-only", project.getId()), stageViewModel.get().getUrl());
         assertEquals(ACCESSIBLE, stageViewModel.get().getAccess());
     }
 

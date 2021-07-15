@@ -57,7 +57,8 @@ public class ProjectProcurementMilestoneViewModelPopulator {
                 resettableGolState,
                 showChangesLink,
                 userResource.isReadOnlyUser(),
-                getExternalUserLinkUrl(userResource, projectId));
+                getExternalUserLinkUrl(userResource, projectId),
+                userResource.hasRole(Role.MONITORING_OFFICER));
     }
 
     private boolean isExternalUser(UserResource userResource) {

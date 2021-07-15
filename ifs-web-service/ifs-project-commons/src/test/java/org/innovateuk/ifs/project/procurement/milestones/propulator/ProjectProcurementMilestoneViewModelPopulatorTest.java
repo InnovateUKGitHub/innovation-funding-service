@@ -69,5 +69,6 @@ public class ProjectProcurementMilestoneViewModelPopulatorTest {
         assertTrue(viewModel.isReadOnly());
         assertTrue(viewModel.isExternalUser());
         assertEquals("/project/2/finance-check/read-only", viewModel.getExternalUserLinkUrl());
+        assertTrue(viewModel.isMonitoringOfficer());
     }
 }
