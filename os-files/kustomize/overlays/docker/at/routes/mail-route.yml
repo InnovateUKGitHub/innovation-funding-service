@@ -13,3 +13,10 @@ spec:
     kind: Service
     name: mail
     weight: 100
+status:
+  ingress:
+    - conditions:
+        - status: 'True'
+          type: Admitted
+      host: mail-openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org
+      routerName: router
