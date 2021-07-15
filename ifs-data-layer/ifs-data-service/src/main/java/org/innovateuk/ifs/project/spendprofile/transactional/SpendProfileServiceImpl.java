@@ -43,6 +43,7 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfileNotifications;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfileProcess;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
@@ -494,12 +495,16 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     public ServiceResult<SpendProfileResource> getSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         return getSpendProfileEntity(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId())
                 .andOnSuccessReturn(profile -> {
+                    SpendProfileProcess spendProfileProcess = spendProfileWorkflowHandler.getReviewOutcome(profile.getProject());
 
                     SpendProfileResource resource = new SpendProfileResource();
                     resource.setId(profile.getId());
                     resource.setGeneratedBy(userMapper.mapToResource(profile.getGeneratedBy()));
                     resource.setGeneratedDate(profile.getGeneratedDate());
                     resource.setMarkedAsComplete(profile.isMarkedAsComplete());
+                    resource.setReviewedBy(userMapper.mapToResource(spendProfileProcess.getInternalParticipant()));
+                    resource.setReviewedOn(spendProfileProcess.getLastModified());
+
                     return resource;
                 });
     }

@@ -44,6 +44,7 @@ import java.util.stream.Collectors;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
+import static org.innovateuk.ifs.project.constant.ProjectActivityStates.LEAD_ACTION_REQUIRED;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -82,7 +83,7 @@ public class ProjectSpendProfileController {
     @Autowired
     private MonitoringOfficerRestService monitoringOfficerRestService;
 
-    @Value("${ifs.monitoringofficer.journey.update.enabled}")
+    @Value("${ifs.monitoringofficer.spendprofile.update.enabled}")
     private boolean moSpendProfileJourneyUpdateEnabled;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION')")
@@ -342,26 +343,44 @@ public class ProjectSpendProfileController {
 
         Map<Long, OrganisationReviewDetails> editablePartners = getOrganisationReviewDetails(projectResource.getId(), organisations, loggedInUser);
 
+        ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty());
+
         return new ProjectSpendProfileProjectSummaryViewModel(projectResource.getId(),
                 projectResource.getApplication(), projectResource.getName(),
                 organisations,
                 leadOrganisation,
                 projectResource.getSpendProfileSubmittedDate() != null,
                 editablePartners,
-                isApproved(projectResource.getId()),
+                isApproved(teamStatus),
+                isRejected(teamStatus),
                 isMonitoringOfficer,
                 moSpendProfileJourneyUpdateEnabled);
     }
 
     private boolean isApproved(final Long projectId) {
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
+        return isApproved(teamStatus);
+    }
+
+    private boolean isApproved(ProjectTeamStatusResource teamStatus) {
         return COMPLETE.equals(teamStatus.getLeadPartnerStatus().getSpendProfileStatus());
+    }
+
+    private boolean isRejected(ProjectTeamStatusResource teamStatus) {
+        return LEAD_ACTION_REQUIRED.equals(teamStatus.getLeadPartnerStatus().getSpendProfileStatus());
     }
 
     private Map<Long, OrganisationReviewDetails> getOrganisationReviewDetails(final Long projectId, List<OrganisationResource> partnerOrganisations, final UserResource loggedInUser) {
         return partnerOrganisations.stream().collect(Collectors.toMap(OrganisationResource::getId,
-                o -> new OrganisationReviewDetails(o.getId(), o.getName(), spendProfileService.getSpendProfile(projectId, o.getId()).map(SpendProfileResource::isMarkedAsComplete).orElse(false), isUserPartOfThisOrganisation(projectId, o.getId(), loggedInUser), true),
-                (v1, v2) -> v1, LinkedHashMap::new));
+                o -> { Optional<SpendProfileResource> spendProfileResource =spendProfileService.getSpendProfile(projectId, o.getId());
+                       return  new OrganisationReviewDetails(o.getId(),
+                               o.getName(),
+                               spendProfileResource.map(SpendProfileResource::isMarkedAsComplete).orElse(false),
+                               isUserPartOfThisOrganisation(projectId, o.getId(), loggedInUser),
+                               true,
+                               spendProfileResource.map(SpendProfileResource::getReviewedBy).orElse(null),
+                               spendProfileResource.map(SpendProfileResource::getReviewedOn).orElse(null));
+                       }, (v1, v2) -> v1, LinkedHashMap::new));
     }
 
     private boolean isUserPartOfThisOrganisation(final Long projectId, final Long organisationId, final UserResource loggedInUser) {

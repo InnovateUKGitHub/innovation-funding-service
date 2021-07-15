@@ -159,4 +159,9 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
         return isProjectManager(projectCompositeId.id(), user.getId()) &&
                 isProjectActive(projectCompositeId.id());
     }
+
+    @PermissionRule(value = "READ_SPEND_PROFILE_REVIEW", description = "Project mo can read the project's spend profiles review")
+    public boolean projectMoCanCompleteSpendProfile(ProjectCompositeId projectCompositeId, UserResource user) {
+        return isMonitoringOfficer(projectCompositeId.id(), user.getId());
+    }
 }

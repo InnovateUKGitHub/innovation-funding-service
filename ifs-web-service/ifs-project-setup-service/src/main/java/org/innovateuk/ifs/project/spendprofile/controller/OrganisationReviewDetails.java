@@ -2,6 +2,9 @@ package org.innovateuk.ifs.project.spendprofile.controller;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.user.resource.UserResource;
+
+import java.time.ZonedDateTime;
 
 /**
  * Object holding organisation details
@@ -13,13 +16,18 @@ public class OrganisationReviewDetails {
     private boolean isMarkedComplete;
     private boolean isUserPartOfThisOrganisation;
     private boolean showEditLinkToUser;
+    private UserResource reviewedBy;
+    private ZonedDateTime reviewedOn;
 
-    public OrganisationReviewDetails(Long organisationId, String organisationName, boolean isMarkedComplete, boolean isUserPartOfThisOrganisation, boolean showEditLinkToUser) {
+    public OrganisationReviewDetails(Long organisationId, String organisationName, boolean isMarkedComplete, boolean isUserPartOfThisOrganisation,
+                                     boolean showEditLinkToUser, UserResource reviewedBy, ZonedDateTime reviewedOn) {
         this.organisationId = organisationId;
         this.organisationName = organisationName;
         this.isMarkedComplete = isMarkedComplete;
         this.isUserPartOfThisOrganisation = isUserPartOfThisOrganisation;
         this.showEditLinkToUser = showEditLinkToUser;
+        this.reviewedBy = reviewedBy;
+        this.reviewedOn = reviewedOn;
     }
 
     public Long getOrganisationId() {
@@ -62,6 +70,22 @@ public class OrganisationReviewDetails {
         this.showEditLinkToUser = showEditLinkToUser;
     }
 
+    public UserResource getReviewedBy() {
+        return reviewedBy;
+    }
+
+    public void setReviewedBy(UserResource reviewedBy) {
+        this.reviewedBy = reviewedBy;
+    }
+
+    public ZonedDateTime getReviewedOn() {
+        return reviewedOn;
+    }
+
+    public void setReviewedOn(ZonedDateTime reviewedOn) {
+        this.reviewedOn = reviewedOn;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -76,6 +100,8 @@ public class OrganisationReviewDetails {
                 .append(isMarkedComplete, that.isMarkedComplete)
                 .append(isUserPartOfThisOrganisation, that.isUserPartOfThisOrganisation)
                 .append(showEditLinkToUser, that.showEditLinkToUser)
+                .append(reviewedBy, that.reviewedBy)
+                .append(reviewedOn, that.reviewedOn)
                 .isEquals();
     }
 
@@ -87,6 +113,8 @@ public class OrganisationReviewDetails {
                 .append(isMarkedComplete)
                 .append(isUserPartOfThisOrganisation)
                 .append(showEditLinkToUser)
+                .append(reviewedBy)
+                .append(reviewedOn)
                 .toHashCode();
     }
 }

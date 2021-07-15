@@ -117,6 +117,10 @@ public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendP
         }
     }
 
+    public SpendProfileProcess getReviewOutcome(Project project) {
+        return getCurrentProcess(project);
+    }
+
     @Override
     protected SpendProfileProcess createNewProcess(Project target, ProjectUser participant) {
         return new SpendProfileProcess(participant, target, null);
