@@ -1,5 +1,0 @@
-commonAnnotations:
-  deployedWith: kustomize
-
-resources:
-  - dbreset.yml

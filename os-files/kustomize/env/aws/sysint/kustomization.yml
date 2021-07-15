@@ -5,5 +5,12 @@ commonAnnotations:
 bases:
   - ../aws-base
 
+components:
+  - ../../../patches/health-check-patch
+  - ../../../patches/new-relic-env-vars-patch
+  - ../../../patches/pull-secrets-patch
+  - ../../../patches/spring-profile-patch
+  - ../../../patches/wait-for-db-patch
+
 patchesStrategicMerge:
   - data-layer/data-service/data-service-deployment.yml
