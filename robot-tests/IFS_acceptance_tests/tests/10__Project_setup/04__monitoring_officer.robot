@@ -316,7 +316,7 @@ MO can see the link to the partners for collaborating applications only
 
 MO can view payment milestones
     [Documentation]   IFS-9925
-    Given  Log in as a different user                            &{Comp_admin1_credentials}
+    Given Log in as a different user                             &{Comp_admin1_credentials}
     When internal user assigns MO to application                 ${sbri_application_id}   ${sbri_applicaton_name}  Orvill  Orville Gibbs
     And log in as a different user                               &{monitoring_officer_one_credentials}
     And the user clicks the project setup tile if displayed
