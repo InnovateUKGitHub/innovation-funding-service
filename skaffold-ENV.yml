@@ -104,7 +104,7 @@ profiles:
       kubeContext: at
       kustomize:
         paths:
-          - os-files/kustomize/overlays/docker/at
+          - os-files/kustomize/env/at
 
   - name: sysint
     build:
@@ -205,7 +205,7 @@ profiles:
       kubeContext: sysint
       kustomize:
         paths:
-          - os-files/kustomize/overlays/sysint
+          - os-files/kustomize/env/aws/sysint
 
   - name: uat
     build:
@@ -306,7 +306,7 @@ profiles:
       kubeContext: uat
       kustomize:
         paths:
-          - os-files/kustomize/overlays/uat
+          - os-files/kustomize/env/aws/uat
 
   - name: demo
     build:
@@ -407,7 +407,7 @@ profiles:
       kubeContext: demo
       kustomize:
         paths:
-          - os-files/kustomize/overlays/demo
+          - os-files/kustomize/env/aws/demo
 
   - name: perf
     build:
@@ -508,7 +508,7 @@ profiles:
       kubeContext: perf
       kustomize:
         paths:
-          - os-files/kustomize/overlays/perf
+          - os-files/kustomize/env/aws/perf
 
   - name: prod
     build:
@@ -609,7 +609,7 @@ profiles:
       kubeContext: prod
       kustomize:
         paths:
-          - os-files/kustomize/overlays/prod
+          - os-files/kustomize/env/aws/prod
   - name: db-reset
     build:
       local:
@@ -628,4 +628,4 @@ profiles:
     deploy:
       kustomize:
         paths:
-          - os-files/kustomize/overlays/db-reset
+          - os-files/kustomize/components/db-reset
