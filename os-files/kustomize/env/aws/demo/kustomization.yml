@@ -3,7 +3,7 @@ commonAnnotations:
   environment: demo
 
 bases:
-  - ../../base
+  - ../aws-base
 
 patchesStrategicMerge:
   - data-layer/data-service/data-service-deployment.yml

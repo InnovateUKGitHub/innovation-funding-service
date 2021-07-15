@@ -25,9 +25,7 @@ resources:
   - data-layer/data-service/data-service-config.yml
   - data-layer/finance-data-service/finance-data-service-config.yml
   - data-layer/survey-data-service/survey-data-service-config.yml
-  - cache-provider/cache-provider-service.yml
-  - cache-provider/cache-provider-service-deployment.yml
-  - cache-provider/cache-config.yml
+
   - auth/idp/shibboleth-config.yml
   - auth/ldap/ldap-config.yml
 #  - storage/persistent-volume-claim.yml
