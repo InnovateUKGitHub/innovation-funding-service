@@ -12,3 +12,4 @@ spec:
   to:
     kind: Service
     name: mail
+    weight: 100

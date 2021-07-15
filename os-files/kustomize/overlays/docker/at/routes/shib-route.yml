@@ -13,3 +13,4 @@ spec:
   to:
     kind: Service
     name: shib
+    weight: 100
