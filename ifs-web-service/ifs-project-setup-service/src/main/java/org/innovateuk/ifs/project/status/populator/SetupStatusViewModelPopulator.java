@@ -25,6 +25,7 @@ import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -65,6 +66,9 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
     @Autowired
     private NavigationUtils navigationUtils;
+
+    @Value("${ifs.monitoringofficer.spendprofile.update.enabled}")
+    private boolean isMOSpendProfileUpdateEnabled;
 
     public SetupStatusViewModel populateViewModel(long projectId,
                                                   UserResource loggedInUser) {
@@ -142,6 +146,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(resolve(teamStatusRequest));
         boolean projectComplete = project.getProjectState().isComplete();
         boolean isLeadPartner = isLeadPartner(resolve(teamStatusRequest), resolve(organisationRequest));
+        boolean isProjectMO = isMOSpendProfileUpdateEnabled && monitoringOfficerService.isMonitoringOfficerOnProject(project.getId(), user.getId()).getSuccess();
         ProjectPartnerStatusResource ownOrganisation = resolve(teamStatusRequest).getPartnerStatusForOrganisation(resolve(organisationRequest).getId()).get();
         switch (stage) {
             case PROJECT_DETAILS:
@@ -157,7 +162,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
             case FINANCE_CHECKS:
                 return financeChecksStageViewModel(stage, project, monitoringOfficer, organisationRequest, statusAccessor, ownOrganisation);
             case SPEND_PROFILE:
-                return spendProfileStageViewModel(stage, project, organisationRequest, statusAccessor, ownOrganisation);
+                return spendProfileStageViewModel(stage, project, organisationRequest, statusAccessor, ownOrganisation, isProjectMO);
             case GRANT_OFFER_LETTER:
                 return grantOfferLetterStageViewModel(stage, project, competition, organisationRequest, statusAccessor, isLeadPartner, ownOrganisation);
             case PROJECT_SETUP_COMPLETE:
@@ -191,11 +196,11 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         );
     }
 
-    private SetupStatusStageViewModel spendProfileStageViewModel(ProjectSetupStage stage, ProjectResource project, CompletableFuture<OrganisationResource> organisationRequest, SetupSectionAccessibilityHelper statusAccessor, ProjectPartnerStatusResource ownOrganisation) {
+    private SetupStatusStageViewModel spendProfileStageViewModel(ProjectSetupStage stage, ProjectResource project, CompletableFuture<OrganisationResource> organisationRequest, SetupSectionAccessibilityHelper statusAccessor, ProjectPartnerStatusResource ownOrganisation, boolean isProjectMO) {
         return new SetupStatusStageViewModel(stage, stage.getShortName(),
                 "Once we have approved your project finances you can change your project spend profile.",
                 format("/project/%d/partner-organisation/%d/spend-profile", project.getId(), resolve(organisationRequest).getId()),
-                sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus()),
+                sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus(), isProjectMO),
                 statusAccessor.canAccessSpendProfileSection(resolve(organisationRequest))
         );
     }
