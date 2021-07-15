@@ -88,13 +88,6 @@ build:
         project: ifs-registration-service
         args:
           - "-DskipTests"
-    - image: sil-stub
-      context: .
-      jib:
-        type: gradle
-        project: ifs-sil-stub
-        args:
-          - "-DskipTests"
   local:
     useDockerCLI: true
     useBuildkit: false
@@ -104,4 +97,4 @@ deploy:
   statusCheckDeadlineSeconds: 600
   kustomize:
     paths:
-      - os-files/kustomize/overlays/docker/local/
+      - os-files/kustomize/env/local/dev

@@ -9,15 +9,15 @@ bases:
   - ../env-base
 
 components:
+  - ../../components/robot
+  - ../../components/mail
+  - ../../components/sil-stub
+
   - ../../patches/health-check-patch
   - ../../patches/new-relic-env-vars-patch
   - ../../patches/pull-secrets-patch
   - ../../patches/spring-profile-patch
   - ../../patches/wait-for-db-patch
-
-  - ../../components/robot
-  - ../../components/mail
-  - ../../components/sil-stub
 
 resources:
   - routes/idp-route.yml

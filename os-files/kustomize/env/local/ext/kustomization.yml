@@ -6,13 +6,17 @@ bases:
   - ../../env-base
 
 components:
+
+  - ../../../components/auth
+  - ../../../components/cache-provider
+  - ../../../components/ifs-database
+  - ../../../components/sil-stub
+
   - ../../../patches/health-check-patch
   - ../../../patches/new-relic-env-vars-patch
   - ../../../patches/pull-secrets-patch
   - ../../../patches/spring-profile-patch
   - ../../../patches/wait-for-db-patch
-
-  - ../../../components/ifs-database
 
 resources:
   - auth/idp/idp-config.yml

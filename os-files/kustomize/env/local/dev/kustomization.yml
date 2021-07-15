@@ -6,6 +6,10 @@ bases:
   - ../../env-base
 
 components:
+
+  - ../../../components/data-layer
+  - ../../../components/web-layer
+
   - ../../../patches/health-check-patch
   - ../../../patches/new-relic-env-vars-patch
   - ../../../patches/pull-secrets-patch
