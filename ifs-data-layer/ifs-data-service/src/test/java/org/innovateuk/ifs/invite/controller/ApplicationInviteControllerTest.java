@@ -144,14 +144,16 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
     public void acceptInvite() throws Exception {
         String hash = "abcdef";
         long userId = 1L;
-
+        Long compId = 1L;
+        Long appId = 1L;
         when(acceptApplicationInviteService.acceptInvite(hash, userId, Optional.empty())).thenReturn(serviceSuccess());
-
+        ApplicationInviteResource inviteResource = newApplicationInviteResource().withApplication(appId).withCompetitionId(compId).build();
+        when(applicationInviteService.getInviteByHash(anyString())).thenReturn(serviceSuccess(inviteResource));
         mockMvc.perform(put("/invite/accept-invite/{hash}/{userId}", hash, userId))
                 .andExpect(status().isOk());
 
         verify(acceptApplicationInviteService).acceptInvite(hash, userId, Optional.empty());
-        verify(crmService).syncCrmContact(userId);
+        verify(crmService).syncCrmContact(userId, compId, appId);
     }
 
     @Test
