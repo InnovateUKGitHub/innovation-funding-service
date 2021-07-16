@@ -28,6 +28,10 @@ resources:
   - storage/gluster-ep.yml
   - storage/persistent-volume-claim.yml
 
+  - mysql/finance-totals-mysql-deployment.yml
+  - mysql/finance-totals-mysql-service.yml
+  - mysql/survey-mysql-deployment.yml
+  - mysql/survey-mysql-service.yml
   - auth/idp/shibboleth-config.yml
 
   - web-config.yml
