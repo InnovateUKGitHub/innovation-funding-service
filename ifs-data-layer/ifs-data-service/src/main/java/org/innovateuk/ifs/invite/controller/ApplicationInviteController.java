@@ -70,7 +70,9 @@ public class ApplicationInviteController {
     public RestResult<Void> acceptInvite(@PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
         return acceptApplicationInviteService.acceptInvite(hash, userId, Optional.empty())
                 .andOnSuccessReturn(result -> {
-                    crmService.syncCrmContact(userId);
+                    ServiceResult<ApplicationInviteResource> application = applicationInviteService.getInviteByHash(hash);
+                    ApplicationInviteResource applicationInviteResource = application.getSuccess();
+                    crmService.syncCrmContact(userId, applicationInviteResource.getCompetitionId(), applicationInviteResource.getApplication());
                     return result;
                 })
                 .toPutResponse();
