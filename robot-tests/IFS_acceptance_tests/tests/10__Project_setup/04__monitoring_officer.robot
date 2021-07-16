@@ -532,6 +532,6 @@ Monitoring officer clicks on payment milestones link
 
 Monitoring officer views detailed payment milestones
     the user should see the element     jQuery = h1:contains("Payment milestones")
-    the user should see the element     jQuery = h3:contains("Total payment requested") + h3:contains("100%")+h3:contains("£265,084")
+    the user should see the element     jQuery = h3:contains("Total payment requested") + h3:contains("100%")+h3:contains("£243,484")
     the user should see the element     css = [aria-controls="accordion-finances-content-1"]
-    the user should see the element     jQuery = dt:contains("Total project costs") + dd:contains("£265,084")
+    the user should see the element     jQuery = dt:contains("Total project costs") + dd:contains("£243,484")
