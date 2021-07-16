@@ -225,6 +225,8 @@ Monitoring officer views summary of payment milestones
     [Documentation]  IFS-9904
     Given log in as a different user                            &{monitoring_officer_one_credentials}
     And the user clicks the project setup tile if displayed
+    And the user selects the checkbox                           previousProject
+    And the user clicks the button/link                         id = update-documents-results-button
     And the user clicks the button/link                         link = ${appl_name}
     When the user clicks the button/link                        link = view application feedback
     Then the user should see the element                        jQuery = h3:contains("Payment milestones")
