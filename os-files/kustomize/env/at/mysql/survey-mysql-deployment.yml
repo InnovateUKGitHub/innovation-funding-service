@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: ifs-survey-database
   annotations:
-    monitor: monitor
     pullSecrets: pullSecrets
 spec:
   replicas: 1
@@ -23,8 +22,8 @@ spec:
               value: password
           image: mysql:5.6.51
           name: ifs-survey-database
-          args: ["--character-set-server=utf8", "--collation-server=utf8_bin"]
           imagePullPolicy: IfNotPresent
+          args: ["--character-set-server=utf8", "--collation-server=utf8_bin"]
           ports:
             - containerPort: 3306
           volumeMounts:
