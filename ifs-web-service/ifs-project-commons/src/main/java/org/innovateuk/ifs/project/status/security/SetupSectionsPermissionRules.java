@@ -133,13 +133,6 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessSpendProfileSection, SecurityRuleUtil::hasStakeholderAuthority);
     }
 
-    @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "Project MO can access the Spend Profile" +
-            "the project is not offline or withdrawn, the Project Details have been submitted, the Project team have been completed" +
-            "and the spend profile generated")
-    public boolean projectMoCanAccessSpendProfileSection(ProjectCompositeId projectCompositeId, UserResource user) {
-        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessSpendProfileSection, SecurityRuleUtil::isMonitoringOfficer);
-    }
-
     @PermissionRule(value = "ACCESS_DOCUMENTS_SECTION", description = "Comp admin or project finance users can access the Documents section")
     public boolean internalAdminUserCanAccessDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessDocumentsSection, SecurityRuleUtil::isInternalAdmin);

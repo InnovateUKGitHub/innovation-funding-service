@@ -130,7 +130,23 @@ public class SetupSectionsPermissionRules {
             "section when their Companies House details are complete or not required, the Project Details have been submitted, " +
             "and the Organisation's Bank Details have been approved or queried")
     public boolean partnerCanAccessSpendProfileSection(ProjectCompositeId projectCompositeId, UserResource user) {
-        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessSpendProfileSection);
+        return !isMonitoringOfficerOnProject(projectCompositeId.id(), user.getId())
+                && doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessSpendProfileSection);
+    }
+
+    @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "Project MO can access the Spend Profile" +
+            "the project is not offline or withdrawn, the Project Details have been submitted, the Project team have been completed" +
+            "and the spend profile generated")
+    public boolean projectMoCanAccessSpendProfileSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return isMonitoringOfficerOnProject(projectCompositeId.id(), user.getId())
+                && doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessSpendProfileSection);
+    }
+
+    @PermissionRule(value = "REVIEW_SPEND_PROFILE", description = "Project MO can review the Spend Profile" +
+            "and able to approve or reject spend profile")
+    public boolean projectMoCanReviewSpendProfileSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return isMonitoringOfficerOnProject(projectCompositeId.id(), user.getId())
+                && doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canReviewSpendProfileSection);
     }
 
     @PermissionRule(value = "ACCESS_TOTAL_SPEND_PROFILE_SECTION", description = "Only the project manager can access the Spend Profile " +

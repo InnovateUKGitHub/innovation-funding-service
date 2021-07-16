@@ -13,6 +13,14 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkUrl=@{/project/{id}(id=${model.projectId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <th:block th:unless="${model.showMoSpendProfileJourney()}">
@@ -125,8 +133,7 @@
 
             <th:block th:if="${model.userCanReviewSpendProfile()}">
                 <form th:object="${form}"
-                      th:action="@{'/project/' + ${projectId} + '/spend-profile/approval/APPROVED'}"
-                      id="other-spend-profile-form"
+                      th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
                       method="post"
                       novalidate="novalidate">
                     <h2 class="govuk-heading-m govuk-!-margin-top-9">Review spend profile</h2>
@@ -155,6 +162,7 @@
                                            type="radio"
                                            value="false"
                                            required="required"
+                                           data-switches-button-status="#submit-button"
                                            data-switches-modal-target="#submit-button">
                                     <label class="govuk-label govuk-radios__label" for="radio-review-reject">
                                         Reject

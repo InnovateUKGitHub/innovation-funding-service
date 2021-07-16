@@ -28,8 +28,8 @@ public interface SpendProfileService {
     @Activity(projectId = "projectId", type = ActivityType.SPEND_PROFILE_GENERATED)
     ServiceResult<Void> generateSpendProfile(Long projectId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin')")
-    @SecuredBySpring(value = "GENERATE_SPEND_PROFILE", securedType = ProjectResource.class, description = "A member of the internal Finance Team can approve or reject a Spend Profile for any Project" )
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'monitoring_officer')")
+    @SecuredBySpring(value = "APPROVE_OR_REJECT_SPEND_PROFILE", securedType = ProjectResource.class, description = "A member of the internal Finance Team can approve or reject a Spend Profile for any Project" )
     @Activity(projectId = "projectId", dynamicType = "approveOrRejectActivityType")
     ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType);
 

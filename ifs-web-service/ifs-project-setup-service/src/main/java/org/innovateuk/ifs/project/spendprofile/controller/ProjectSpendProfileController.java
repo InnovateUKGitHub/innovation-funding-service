@@ -8,12 +8,14 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.spendprofile.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.spendprofile.form.SpendProfileForm;
+import org.innovateuk.ifs.project.spendprofile.form.SpendProfileReviewForm;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.project.spendprofile.validation.SpendProfileCostValidator;
@@ -88,7 +90,8 @@ public class ProjectSpendProfileController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION')")
     @GetMapping
-    public String viewSpendProfile(Model model,
+    public String viewSpendProfile(@ModelAttribute(value = "form", binding = false) SpendProfileReviewForm form,
+                                   Model model,
                                    @P("projectId")@PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    UserResource loggedInUser) {
@@ -111,8 +114,31 @@ public class ProjectSpendProfileController {
                                          UserResource loggedInUser) {
 
         model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId, loggedInUser));
+        model.addAttribute(FORM_ATTR_NAME, null);
 
         return BASE_DIR + "/spend-profile";
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'REVIEW_SPEND_PROFILE')")
+    @PostMapping
+    public String submitSpendProfileReview(Model model,
+                                           @ModelAttribute(value = "form") SpendProfileReviewForm form,
+                                           @SuppressWarnings("unused") BindingResult bindingResult,
+                                           ValidationHandler validationHandler,
+                                           @P("projectId")@PathVariable Long projectId,
+                                           @PathVariable("organisationId") final Long organisationId,
+                                           UserResource loggedInUser) {
+        Supplier<String> failureView = () -> viewSpendProfile(form, model , projectId, organisationId, loggedInUser);
+        ApprovalType approvalType = form.isApproved() ? ApprovalType.APPROVED : ApprovalType.REJECTED;
+        ServiceResult<Void> generateResult = spendProfileService.approveOrRejectSpendProfile(projectId, approvalType);
+
+        return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () ->
+                submitSpendProfileReviewSuccessView(projectId)
+        );
+    }
+
+    private String submitSpendProfileReviewSuccessView(Long projectId) {
+        return "redirect:/project/" + projectId;
     }
 
     @PreAuthorize("hasPermission(new org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId(#projectId, #organisationId), 'EDIT_SPEND_PROFILE_SECTION')")
@@ -180,7 +206,6 @@ public class ProjectSpendProfileController {
     private String saveSpendProfileSuccessView(final Long projectId, final Long organisationId, final Long userId) {
         final String urlSuffix = projectService.isUserLeadPartner(projectId, userId) ? "/review" : "";
         return "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile" + urlSuffix;
-
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION') && hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'MARK_SPEND_PROFILE_INCOMPLETE') && hasPermission(#projectOrganisationCompositeId, 'IS_NOT_FROM_OWN_ORGANISATION')")
