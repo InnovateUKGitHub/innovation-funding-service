@@ -47,7 +47,6 @@
                 <span th:case="complete" class="status-complete">Completed</span>
                 <span th:case="require-action" class="status-action-required">To be completed</span>
                 <span th:case="incomplete" class="status-action">Incomplete</span>
-                <span th:case="mo-action-required" class="status-action-required">Awaiting review</span>
                 <span th:case="lead-action-required">Ready to review and submit</span>
                 <span th:case="waiting" class="status-waiting">Awaiting review</span>
                 <span th:case="rejected" class="status-reject">Unsuccessful</span>
@@ -59,13 +58,19 @@
     </div>
 </th:block>
 
-<th:block th:fragment="mo-document-status-indicator(status)">
+<th:block th:fragment="mo-project-setup-status-indicator(status)">
     <div class="status">
         <div class="status-msg msg-progress">
             <th:block th:switch="${status}">
                 <span th:case="complete" class="status-complete">Complete</span>
                 <span th:case="incomplete" class="status-action">Incomplete</span>
                 <span th:case="mo-action-required" class="status-action-required">Awaiting review</span>
+                <span th:case="require-action" class="status-action-required">To be completed</span>
+                <span th:case="waiting" class="status-waiting">Awaiting review</span>
+                <span th:case="rejected" class="status-reject">Unsuccessful</span>
+                <span th:case="awaiting-assignment">Awaiting assignment</span>
+                <span th:case="awaiting-review">Awaiting review</span>
+                <span th:case="pending-query" class="status-warning">Pending query</span>
             </th:block>
         </div>
     </div>
