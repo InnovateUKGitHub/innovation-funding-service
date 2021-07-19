@@ -20,10 +20,10 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment as a Service',size='govuk-heading-l'" />
         <p class="govuk-body">Upload files</p>
         <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
-            <div class="message-alert"
+            <div class="success-alert govuk-!-margin-bottom-6"
                  th:attr="aria-hidden=${model.uploadSuccess == false}"
                  data-js-toggle-on-file-upload="">
-                <p class="govuk-body">The external file uploaded successfully in IFS.</p>
+                <h2 class="govuk-heading-s govuk-!-margin-top-0">The external file uploaded successfully in IFS.</h2>
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{file}')} ? 'govuk-form-group--error'">
                 <th:block th:if="${#fields.hasErrors('file')}">
