@@ -35,19 +35,20 @@ resources:
   - storage/gluster-ep.yml
   - storage/persistent-volume-claim.yml
 
-  - mysql/finance-totals-mysql-deployment.yml
-  - mysql/finance-totals-mysql-service.yml
-  - mysql/survey-mysql-deployment.yml
-  - mysql/survey-mysql-service.yml
+#  - mysql/finance-totals-mysql-deployment.yml
+#  - mysql/finance-totals-mysql-service.yml
+#  - mysql/survey-mysql-deployment.yml
+#  - mysql/survey-mysql-service.yml
 
-  - auth/idp/idp-keys-secrets.yml
-  - auth/ldap/ldap-keys-secrets.yml
-  - auth/sp/sp-keys-secrets.yml
-  - auth/sp/sp-secrets.yml
+  - secrets/idp-keys-secrets.yml
+  - secrets/ldap-keys-secrets.yml
+  - secrets/sp-keys-secrets.yml
+  - secrets/sp-secrets.yml
 
 
 patches:
-  - data-layer/data-service/data-service-config.yml
-  - auth/idp/shibboleth-config.yml
-  - auth/idp/idp-config.yml
-  - auth/ldap/ldap-config.yml
+  - config-maps/data-service-config.yml
+  - config-maps/idp-config.yml
+  - config-maps/ldap-config.yml
+  - config-maps/shibboleth-config.yml
+  - config-maps/web-config.yml
