@@ -14,15 +14,13 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
-import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
-import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.spendprofile.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.spendprofile.SpendProfileSummaryYearModel;
 import org.innovateuk.ifs.project.spendprofile.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.spendprofile.form.SpendProfileForm;
+import org.innovateuk.ifs.project.spendprofile.form.SpendProfileReviewForm;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.project.spendprofile.validation.SpendProfileCostValidator;
@@ -38,6 +36,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.ObjectError;
 
@@ -99,7 +98,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Override
     protected ProjectSpendProfileController supplyControllerUnderTest() {
-        return new ProjectSpendProfileController();
+        ProjectSpendProfileController controller = new ProjectSpendProfileController();
+        ReflectionTestUtils.setField(controller, "moSpendProfileJourneyUpdateEnabled", true);
+        return controller;
     }
 
     @Test
@@ -768,7 +769,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(spendProfileService.getSpendProfile(projectResource.getId(), organisationId)).thenReturn(Optional.of(spendProfileResource));
 
-        ProjectSpendProfileProjectSummaryViewModel expectedViewModel = buildExpectedProjectSpendProfileProjectManagerViewModel(projectResource, partnerOrganisations, partnerOrganisations.get(0).getName(), true, false, true);
+        ProjectSpendProfileProjectSummaryViewModel expectedViewModel = buildExpectedProjectSpendProfileProjectManagerViewModel(projectResource, partnerOrganisations, partnerOrganisations.get(0).getName(), true, false, true, false);
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
                 .andExpect(status().isOk())
@@ -839,7 +840,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(spendProfileService.getSpendProfile(projectResource.getId(), organisationId)).thenReturn(Optional.of(spendProfileResource));
 
-        ProjectSpendProfileProjectSummaryViewModel expectedViewModel = buildExpectedProjectSpendProfileProjectManagerViewModel(projectResource, partnerOrganisations, partnerOrganisations.get(0).getName(), true, false, true);
+        ProjectSpendProfileProjectSummaryViewModel expectedViewModel = buildExpectedProjectSpendProfileProjectManagerViewModel(projectResource,
+                partnerOrganisations, partnerOrganisations.get(0).getName(), true, false,
+                true, true);
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
                 .andExpect(status().isOk())
@@ -848,6 +851,102 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andReturn();
 
         verify(projectService, never()).getLeadPartners(eq(projectResource.getId()));
+    }
+
+    @Test
+    public void monitoringOfficerApprovesSpendProfile() throws Exception {
+        long organisationId = 1L;
+        long projectId = 1L;
+
+        SpendProfileReviewForm spendProfileReviewForm = new SpendProfileReviewForm();
+        spendProfileReviewForm.setApproved(true);
+
+        when(spendProfileService.approveOrRejectSpendProfile(projectId, ApprovalType.APPROVED)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("approved", "true"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name(String.format("redirect:/project/%d", projectId)))
+                .andReturn();
+    }
+
+    @Test
+    public void monitoringOfficerApprovesSpendProfileFailed() throws Exception {
+        long organisationId = 1L;
+        long projectId = 1L;
+        long competitionId = 1L;
+
+        SpendProfileReviewForm spendProfileReviewForm = new SpendProfileReviewForm();
+        spendProfileReviewForm.setApproved(true);
+
+        ProjectResource projectResource = newProjectResource()
+                .withName("projectName1")
+                .withTargetStartDate(LocalDate.of(2018, 3, 1))
+                .withDuration(3L)
+                .withId(projectId)
+                .withCompetition(competitionId)
+                .withMonitoringOfficerUser(loggedInUser.getId())
+                .build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withIncludeJesForm(true)
+                .build();
+
+        List<ProjectUserResource> projectUserResources = newProjectUserResource()
+                .withUser(1L)
+                .withRole(ProjectParticipantRole.PROJECT_PARTNER)
+                .withOrganisation(organisationId)
+                .build(1);
+
+        List<ProjectUserResource> leadUserResources = newProjectUserResource()
+                .withUser(1L)
+                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
+                .withOrganisation(organisationId)
+                .build(1);
+        ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
+
+        List<OrganisationResource> partnerOrganisations = newOrganisationResource()
+                .withId(organisationId)
+                .withName("abc")
+                .build(1);
+
+        PartnerOrganisationResource partnerOrganisationResource = new PartnerOrganisationResource();
+        partnerOrganisationResource.setOrganisation(organisationId);
+        partnerOrganisationResource.setLeadOrganisation(true);
+        partnerOrganisationResource.setOrganisationName(partnerOrganisations.get(0).getName());
+
+        SpendProfileResource spendProfileResource = newSpendProfileResource().build();
+
+        List<Role> roleResources = singletonList(Role.APPLICANT);
+
+        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
+        when(projectService.getLeadOrganisation(organisationId)).thenReturn(partnerOrganisations.get(0));
+        when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUserResources);
+        when(projectService.getPartnerOrganisationsForProject(projectResource.getId())).thenReturn(partnerOrganisations);
+        when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(projectService.getLeadPartners(projectId)).thenReturn(leadUserResources);
+
+        when(monitoringOfficerRestService.isMonitoringOfficerOnProject(projectResource.getId(), loggedInUser.getId())).thenReturn(restSuccess(true));
+
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+
+        when(spendProfileService.getSpendProfile(projectResource.getId(), organisationId)).thenReturn(Optional.of(spendProfileResource));
+
+        when(spendProfileService.approveOrRejectSpendProfile(projectId, ApprovalType.APPROVED))
+                .thenReturn(serviceFailure(new Error("Spend profile approval failed", HttpStatus.INTERNAL_SERVER_ERROR)));
+
+        ProjectSpendProfileProjectSummaryViewModel expectedViewModel = buildExpectedProjectSpendProfileProjectManagerViewModel(projectResource,
+                partnerOrganisations, partnerOrganisations.get(0).getName(), true, false,
+                true, true);
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("approved", "true"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/spend-profile-review"))
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andReturn();
     }
 
     @Test
@@ -929,11 +1028,23 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         return expectedTable;
     }
 
-    private ProjectSpendProfileProjectSummaryViewModel buildExpectedProjectSpendProfileProjectManagerViewModel(ProjectResource projectResource, List<OrganisationResource> partnerOrganisations, String partner, Boolean editable, Boolean markedComplete, Boolean userPartOfThisOrganisation) {
-
+    private ProjectSpendProfileProjectSummaryViewModel buildExpectedProjectSpendProfileProjectManagerViewModel(ProjectResource projectResource,
+                                                                                                               List<OrganisationResource> partnerOrganisations,
+                                                                                                               String partner,
+                                                                                                               Boolean editable,
+                                                                                                               Boolean markedComplete,
+                                                                                                               Boolean userPartOfThisOrganisation,
+                                                                                                               boolean monitoringOfficer) {
         Map<Long, OrganisationReviewDetails> editablePartners = new HashMap<>();
         final OrganisationResource leadOrganisation = partnerOrganisations.get(0);
-        editablePartners.put(1L, new OrganisationReviewDetails(leadOrganisation.getId(), leadOrganisation.getName(), markedComplete, userPartOfThisOrganisation, editable, null, null));
+        editablePartners.put(1L,
+                new OrganisationReviewDetails(leadOrganisation.getId(),
+                        leadOrganisation.getName(),
+                        markedComplete,
+                        userPartOfThisOrganisation,
+                        editable,
+                        null,
+                        null));
 
         return new ProjectSpendProfileProjectSummaryViewModel(projectResource.getId(),
                 projectResource.getApplication(), projectResource.getName(),
@@ -943,7 +1054,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 editablePartners,
                 false,
                 false,
-                false,
+                monitoringOfficer,
                 true);
     }
 
