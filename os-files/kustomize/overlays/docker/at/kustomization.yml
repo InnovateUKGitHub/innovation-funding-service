@@ -18,10 +18,16 @@ resources:
   - robot/robot-framework-deployment.yml
   - routes/idp-route.yml
   - routes/shib-route.yml
+  - routes/mail-route.yml
   - storage/gluster.yml
   - storage/gluster-ep.yml
   - storage/persistent-volume-claim.yml
+  - mail/mail.yml
+  - mail/mail-deployment.yml
+  - mail/mail-config.yml
+  - sil-stub/sil-stub.yml
+  - sil-stub/sil-stub-deployment.yml
 
 patchesStrategicMerge:
   - auth/idp/shibboleth-config.yml
-
+  - web-config.yml

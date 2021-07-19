@@ -1,0 +1,7 @@
+kustomize build overlays/docker/local/ > /dev/null || echo 'xxx error on local'
+kustomize build overlays/docker/at/ > /dev/null || echo 'xxx error on at'
+kustomize build overlays/demo/ > /dev/null || echo 'xxx error on demo'
+kustomize build overlays/perf/ > /dev/null || echo 'xxx error on perf'
+kustomize build overlays/prod/ > /dev/null || echo 'xxx error on prod'
+kustomize build overlays/sysint/ > /dev/null || echo 'xxx error on sysint'
+kustomize build overlays/uat/ > /dev/null || echo 'xxx error on uat'

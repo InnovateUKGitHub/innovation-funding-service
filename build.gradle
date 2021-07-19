@@ -31,8 +31,6 @@ plugins {
 
 apply plugin: 'com.google.cloud.tools.jib'
 
-import org.ajoberstar.grgit.*
-
 apply from: "gradle-support/versions.gradle"
 apply from: "gradle-support/sonarqube.gradle"
 apply from: "gradle-support/certificates.gradle"
