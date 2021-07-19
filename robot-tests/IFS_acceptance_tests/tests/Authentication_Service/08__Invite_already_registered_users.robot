@@ -27,8 +27,6 @@ The inited user logged in and see the application overview
     [Tags]  HappyPath
     Given the user clicks the button/link                  link = Continue
     When login to application                              ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
-#    And The guest user inserts user email and password     ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
-#    When the guest user clicks the log-in button
     Then the user should see the element                   jQuery = dt:contains("ROYAL MAIL PLC")
     And the user clicks the button/link                    css = .govuk-button[type="submit"]    #Save and continue
     And the user should see the element                    jQuery = h1:contains("Application overview")
@@ -77,6 +75,4 @@ The invited user should get a message to contact the helpdesk
     the user reads his email and clicks the link     ${recipient}    ${subject}    ${pattern}   2
     the user clicks the button/link                  link = Continue
     login to application                             ${recipient}  ${correct_password}
-#    The guest user inserts user email and password    ${recipient}  ${correct_password}
-#    the guest user clicks the log-in button
     the user should see the element                  jQuery = h1:contains("Confirm your organisation")

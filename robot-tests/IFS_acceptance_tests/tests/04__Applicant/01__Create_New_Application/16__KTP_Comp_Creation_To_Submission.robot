@@ -173,7 +173,7 @@ The applicants should not see knowledge based organisations when creating a non-
 The applicants should not see knowledge based organisations when joining a non-ktp applications
     [Documentation]  IFS-8035
     Given the user clicks the button/link                    id = save-organisation-button
-    And the lead invites already registered user              ${collaborator1_credentials["email"]}   ${nonKTPCompettitionName}
+    And the lead invites already registered user             ${collaborator1_credentials["email"]}   ${nonKTPCompettitionName}
     When partner login to see your organisation details
     Then the user should not see the element                 jQuery = dt:contains("${ktpOrgName}")
 

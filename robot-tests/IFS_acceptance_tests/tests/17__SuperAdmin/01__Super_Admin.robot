@@ -61,7 +61,6 @@ Super admin can reopen the assessment
 
 Super admin can reject an approved document
     [Documentation]  IFS-9692
-    #[Setup]  ifsAdmin user approves uploaded documents
     Given log in as a different user          &{superAdminCredentials}
     And the user navigates to the page        ${server}/project-setup-management/project/${projectID}/document/all
     And the user should see the element       jQuery = li:nth-child(1) span:contains("Approved")

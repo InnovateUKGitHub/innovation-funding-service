@@ -158,7 +158,6 @@ Applicant adds another payment milestone
     [Documentation]  IFS-8938  IFS-8965
     Given the user clicks the button/link                           jQuery = button:contains("Add another project milestone")
     And the user clicks the button/link                             jQuery = button:contains("Open all")
-    #When applicant fills in payment milestone                       accordion-finances-content  5  Milestone 2  62839   Task Or Activity 2   Deliverable 2   Success Criteria 2
     When the applicant fills in a new payment milestone
     And the user clicks the button/link                             id = mark-all-as-complete
     Then applicant views saved payment milestones                   5  £62,839  Milestone 2  86.27%  £72,839  100%
@@ -350,19 +349,18 @@ Project lead responds to pending queries
     Then the user responds to the query
 
 Internal user can edit payment milestone in project setup
-     [Documentation]  IFS-8941
-     Given log in as a different user                           &{internal_finance_credentials}
-     When the user navigates to the page                        ${server}/project-setup-management/project/${sbriProjectId}/finance-check
-     And the user clicks the button/link                        jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
-     Then the user edits the payment milestone
-     And the user cannot see a validation error in the page
+    [Documentation]  IFS-8941
+    Given log in as a different user                           &{internal_finance_credentials}
+    When the user navigates to the page                        ${server}/project-setup-management/project/${sbriProjectId}/finance-check
+    And the user clicks the button/link                        jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
+    Then the user edits the payment milestone
+    And the user cannot see a validation error in the page
 
 Internal user can view validation message when payment requested is less than total project cost
     [Documentation]  IFS-8941
     Given the user navigates to the page            ${server}/project-setup-management/project/${sbriProjectId}/finance-check
     And the user clicks the button/link             jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
     And the user clicks the button/link             id = edit
-    #When The user enters text to a text field       id = milestones[1].payment   10000000
     When The user enters text to a text field       id = milestones[1].payment   10000000
     And The user clicks the button/link             jQuery = button:contains("Save and return to payment milestone check")
     Then the user should see a summary error        Your payment milestones exceeds 100% of your project costs. You must lower your payment requests or adjust your project costs.
@@ -400,7 +398,6 @@ Contract section is enabled without bank details
 
 Internal user can send the contract
     [Documentation]  IFS-8202  IFS-8199  IFS-8198
-    #[Setup]  ifs admin approves exploitation plan     ${sbriProjectId2}
     Given Log in as a different user                  &{internal_finance_credentials}
     And the user navigates to the page                ${server}/project-setup-management/project/${sbriProjectId2}/finance-check
     And The user clicks the button/link               jQuery = button:contains("Approve finance checks")
@@ -422,10 +419,10 @@ External user of international org should not see bank details
     Then the user should not see the element     jQuery = li:contains("Bank details")
 
 External user can upload the contract
-     [Documentation]  IFS-8199  IFS-8198
-     Given applicant uploads the contract
-     When the internal user approve the contract     ${sbriProjectId2}
-     Then the user reads his email                   ${lead_international_email}     Contract approved for project ${sbriApplicationId2}    We have accepted your signed contract for your project
+    [Documentation]  IFS-8199  IFS-8198
+    Given applicant uploads the contract
+    When the internal user approve the contract     ${sbriProjectId2}
+    Then the user reads his email                   ${lead_international_email}     Contract approved for project ${sbriApplicationId2}    We have accepted your signed contract for your project
 
 *** Keywords ***
 Custom Suite Setup
@@ -622,13 +619,3 @@ the user should see correct inputs in milestones form
     the user should see the element     jQuery = tr:contains("Briefing event") td:contains("${tomorrowMonthWord} ${nextyear}")
     the user should see the element     jQuery = tr:contains("Submission date") td:contains("Midday") ~ td:contains("${tomorrowMonthWord} ${nextyear}")
     the user should see the element     jQuery = button:contains("Edit")
-
-# remove this keyword once web test data issues are resolved for approving mo documents
-ifs admin approves exploitation plan
-    [Arguments]  ${project}
-    log in as a different user                   &{ifs_admin_user_credentials}
-    the user navigates to the page               ${SERVER}/project-setup-management/project/${project}/document/all
-    the user clicks the button/link              link = Exploitation plan
-    internal user approve uploaded documents
-
-

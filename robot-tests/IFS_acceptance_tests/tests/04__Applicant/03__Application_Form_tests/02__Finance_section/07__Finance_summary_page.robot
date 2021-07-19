@@ -268,7 +268,6 @@ IFS Admin views the finance summary
     [Setup]  log in as a different user     &{ifs_admin_user_credentials}
     Given the user navigates to the finances of the application
     When the user clicks the button/link    link = View finances
-    #Then the finance summary table in Your project Finances has correct values for lead    6,260,941,967  21.21%  1,319,945,791  8,000,000  4,932,996,176
     Then the finance summary table in Your project Finances has correct values for lead    72,611  21.21%  0  8,000,000  0
 
 
@@ -423,7 +422,6 @@ The user verifies labour, overhead costs and materials
     the user should see the element  jQuery = dt:contains("Working days per year") ~ dd:contains("230")
     the user should see the element  jQuery = .labour-costs-table td:contains("Role 2") ~ td:contains("400") ~ td:contains("2")
     the user collapses the section   Labour
-    #the user should see the element  jQuery = span:contains("£1,043,488,990") ~ #accordion-finances-heading-2
     the user should see the element  jQuery = span:contains("£10,764") ~ #accordion-finances-heading-2
     the user expands the section     Materials
     the user should see the element  jQuery = #material-costs-table td:contains("test") + td:contains("10") + td:contains("100") + td:contains("£1,000")

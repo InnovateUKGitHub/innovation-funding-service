@@ -710,7 +710,7 @@ Project Finance user can edit and save Partner's no overhead costs option
 Project Finance user can edit and save in Partner's calculate overheads option
     [Documentation]     INFUND-7577
     [Tags]
-    And the user clicks the button/link              jQuery = a:contains("Edit project costs")
+    And the user clicks the button/link         jQuery = a:contains("Edit project costs")
     And the user clicks the button/link         css = [data-target = "overhead-total"] label
     And the user clicks the button/link         css = .govuk-button[name = "save-eligibility"]
     Then the user should see the element        jQuery = span:contains("0%") ~ #accordion-finances-heading-2

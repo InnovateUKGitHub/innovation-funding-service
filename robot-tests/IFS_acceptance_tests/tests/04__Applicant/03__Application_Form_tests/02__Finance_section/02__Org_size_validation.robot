@@ -26,10 +26,10 @@ Before org size is selected, your funding link is not available
 Small org can be selected
     [Documentation]    INFUND-1110, INFUND-6394
     [Tags]  HappyPath
-    Given the user navigates to Your-finances page  Optimising engine output
-    And the user clicks the button/link         link = Your organisation
-    And the user marks their organisation as    ${SMALL_ORGANISATION_SIZE}
-    [Teardown]  the user clicks the button/link  link = Back to application overview
+    Given the user navigates to Your-finances page     Optimising engine output
+    And the user clicks the button/link                link = Your organisation
+    And the user marks their organisation as           ${SMALL_ORGANISATION_SIZE}
+    [Teardown]  the user clicks the button/link        link = Back to application overview
 
 Funding section is now available
     [Documentation]    INFUND-6394

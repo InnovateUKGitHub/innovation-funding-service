@@ -97,7 +97,6 @@ Comp admin can link to the comp page from application overview
 
 Comp admin should be able to view but not edit the finances for every partner
     [Documentation]    INFUND-2443, INFUND-2483
-    #Given the user navigates to the page             ${COMP_MANAGEMENT_APPLICATION_2_OVERVIEW}
     Given the user navigates to the page             ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     When the user clicks the button/link             jQuery = button:contains("Finances summary")
     Then the user should not see the element         link = your project finances
@@ -106,12 +105,10 @@ Comp admin should be able to view but not edit the finances for every partner
     And the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
     When Log in as a different user                  &{collaborator1_credentials}
-    #Then the user navigates to Your-finances page    ${newOpenComp}
     Then the user navigates to Your-finances page    ${OPEN_COMPETITION_APPLICATION_NAME}
     And the applicant edits the Subcontracting costs section
     And the user should see the element              jQuery = h1:contains("Your project finances")
     When Log in as a different user                  &{Comp_admin1_credentials}
-    #And the user navigates to the page               ${COMP_MANAGEMENT_APPLICATION_2_OVERVIEW}
     And the user navigates to the page               ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     Then the user should see the correct finances change
 
@@ -133,20 +130,12 @@ the user cannot see this file but gets a quarantined message
     the user should see the text in the page    ${quarantine_warning}
 
 the finance summary calculations should be correct
-#    The user should see the element    jQuery = .finance-summary tr:contains("Empire") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}") ~ td:contains("${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}")
-#    The user should see the element    jQuery = .finance-summary tr:contains("HIVE") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}") ~ td:contains("${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}")
-#    The user should see the element    jQuery = .finance-summary tr:contains("Ludlow") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}") ~ td:contains("${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}")
-#    The user should see the element    jQuery = .finance-summary tr:contains("EGGS") td:contains("${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}") ~ td:contains("${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}")
     The user should see the element    jQuery = .finance-summary tr:contains("Empire") td:contains("61,887") + td:contains("${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("16,098") ~ td:contains("43,321")
     The user should see the element    jQuery = .finance-summary tr:contains("HIVE") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}") ~ td:contains("${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}")
     The user should see the element    jQuery = .finance-summary tr:contains("Ludlow") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}") ~ td:contains("${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}")
     The user should see the element    jQuery = .finance-summary tr:contains("EGGS") td:contains("${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}") + td:contains("100.00%") + td:contains("${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}") ~ td:contains("${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}")
 
 the finance Project cost breakdown calculations should be correct
-#    The user should see the element    jQuery = .project-cost-breakdown tr:contains("Empire") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}")
-#    The user should see the element    jQuery = .project-cost-breakdown tr:contains("HIVE") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}")
-#    The user should see the element    jQuery = .project-cost-breakdown tr:contains("Ludlow") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}")
-#    The user should see the element    jQuery = .project-cost-breakdown tr:contains("EGGS") td:contains("${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}")
     The user should see the element    jQuery = .project-cost-breakdown tr:contains("Empire") td:contains("61,887")
     The user should see the element    jQuery = .project-cost-breakdown tr:contains("HIVE") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}")
     The user should see the element    jQuery = .project-cost-breakdown tr:contains("Ludlow") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}")
@@ -261,7 +250,6 @@ the user should should see lead and partners details
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Type")+td:contains("Business")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Steve Smith")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("${lead_applicant}")
-    #the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("46439359578")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("+-0123456789")
     the user should see the element    jQuery = #accordion-questions-content-1-1 h2:contains("EGGS")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Type")+td:contains("Research")

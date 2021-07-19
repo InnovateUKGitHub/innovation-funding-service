@@ -49,7 +49,6 @@ Project Finance can visit link to the competition from application overview
 
 Project Finance can see the status of projects in PS
     [Documentation]  INFUND-5300, INFUND-7109
-    #[Setup]  ifs admin approves both documents           ${PS_IU_Application_Project}     # remove this keyword once mo document webtest data is fixed
     Given log in as a different user                     &{internal_finance_credentials}
     When the user navigates to the page                  ${server}/project-setup-management/competition/${projectSetupCompetitionId}/status
     Then the user is able to see project status in PS

@@ -32,12 +32,12 @@ Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
-${Molecular_id}        ${application_ids['Molecular tree breeding']}
-${Cryptocurrencies_id}  ${application_ids['Living with Cryptocurrencies']}
-${Paul_Plum_id}        ${user_ids['maureen.moore@gmail.com']}
-${Intelligent_water}   ${application_ids['Intelligent water system']}
-${Park_living}      ${application_ids["Park living"]}
-${Nanotechnology}      ${application_ids["Living with Nanotechnology"]}
+${Molecular_id}           ${application_ids['Molecular tree breeding']}
+${Cryptocurrencies_id}    ${application_ids['Living with Cryptocurrencies']}
+${Paul_Plum_id}           ${user_ids['maureen.moore@gmail.com']}
+${Intelligent_water}      ${application_ids['Intelligent water system']}
+${Park_living}            ${application_ids["Park living"]}
+${Nanotechnology}         ${application_ids["Living with Nanotechnology"]}
 
 *** Test Cases ***
 View the list of the applications
@@ -160,7 +160,6 @@ Remove an assigned user (Not notified)
 Notify an assigned user
     [Documentation]    INFUND-7050
     [Setup]  the user clicks the button/link   jQuery = .pagination-links a:contains('2')
-    #Given the user adds an assessor to application  assessor-row-17
     Given the user clicks the button/link      jQuery = tr:contains("Maureen Moore") :checkbox
     When the user clicks the button/link       jQuery = button:contains("Add to application")
     Then the comp admin notify an assessor
@@ -205,7 +204,6 @@ the application list is correct before changes
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(1):contains("${Park_living}")
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(2):contains("Park living")
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(3):contains("The Best Juggling Company")
-    #the user should see the element    jQuery = tr:nth-child(1) td:nth-child(4):contains("2")
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(4):contains("1")
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(5):contains("1")
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(6):contains("0")
@@ -215,17 +213,14 @@ the available assessors information is correct
     # TODO Add some skills too IFS-1298
 
 the assigned list is correct before notification
-    #the user should see the element  jQuery = .assessors-assigned td:nth-child(1):contains("Maureen Moore") ~ td:contains("Digital manufacturing") ~ td:contains("6") + td:contains("3")
     the user should see the element  jQuery = .assessors-assigned td:nth-child(1):contains("Maureen Moore") ~ td:contains("Digital manufacturing") ~ td:contains("2") + td:contains("2")
 
 the previously assigned list is correct
     the user should see the element    jQuery = .assessors-previous td:contains("Maureen Moore") ~ td:contains("Digital manufacturing")
     the user should see the element    jQuery = .assessors-previous td:contains("Maureen Moore") ~ td:contains("1") + td:contains("1")
-    #the user should see the element    jQuery = .assessors-previous td:contains("Maureen Moore") ~ td:contains("5") + td:contains("2")
 
 the assessor list is correct before changes
     the user clicks the button/link     link = 21 to 40
-    #the user should see the element     jQuery = td:contains("Paul Plum") ~ td:contains("Town Planning, Construction") ~ td:contains("7") ~ td:contains("7") ~ td:contains("3") ~ td:contains("1") ~ td:contains("View progress")
     the user should see the element     jQuery = td:contains("Paul Plum") ~ td:contains("Town Planning, Construction") ~ td:contains("5") ~ td:contains("5") ~ td:contains("2") ~ td:contains("1") ~ td:contains("View progress")
 
 the user accepts the application
@@ -235,25 +230,19 @@ the user accepts the application
     the user clicks the button/link       jQuery = button:contains("Confirm")
 
 the user filter assessors by first or last name
-    #the user navigates to the page                         ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}/assessors
-    the user enters text to a text field                   id = assessorNameFilter   Je
-    the user clicks the button/link                        jQuery = .govuk-button:contains("Filter")
-    the user should see the element                        jQuery = td:contains("Jeannie Newton")
-    the user should see the element                        jQuery = td:contains("Jesse Stevens")
-    the user should see the element                        jQuery = td:contains("Jenna Diaz")
-    the user should not see the element                    jQuery = td:contains("Alexis Colon")
+    the user enters text to a text field    id = assessorNameFilter   Je
+    the user clicks the button/link         jQuery = .govuk-button:contains("Filter")
+    the user should see the element         jQuery = td:contains("Jeannie Newton")
+    the user should see the element         jQuery = td:contains("Jesse Stevens")
+    the user should see the element         jQuery = td:contains("Jenna Diaz")
+    the user should not see the element     jQuery = td:contains("Alexis Colon")
 
 the user should see details on assessors progress page
     the user should see the element    jQuery = h2:contains("Maureen Moore")
     the user should see the element    jQuery = h4:contains("Innovation area") ~ ul li:contains("Digital manufacturing")
     the user should see the element    jQuery = h4:contains("Type") ~ span:contains("Business")
-    #the user should see the element    jQuery = h4:contains("Type") ~ span:contains("Unknown")
-#    the user should see the element    jQuery = h2:contains("Assigned") + div td:contains("22") + td:contains("Intelligent water system") + td:contains("Mo Juggling Mo Problems Ltd") + td:contains("3")
-#    the user should see the element    jQuery = h2:contains("Assigned") + div td:contains("22") ~ td:contains("Yes") + td:contains("Yes") + td:contains("-")
     the user should see the element    jQuery = h2:contains("Assigned") + div td:contains("96") + td:contains("Intelligent water system") + td:contains("Mo Juggling Mo Problems Ltd") + td:contains("3")
     the user should see the element    jQuery = h2:contains("Assigned") + div td:contains("96") ~ td:contains("Yes") + td:contains("Yes") + td:contains(" ")
-#    the user should see the element    jQuery = h2:contains("Applications") ~ div td:contains("${Cryptocurrencies_id}") + td:contains("Living with Cryptocurrencies") + td:contains("Moveis")
-#    the user should see the element    jQuery = h2:contains("Applications") ~ div td:contains("${Cryptocurrencies_id}") ~ td:contains("0") + td:contains("0") + td:contains("0")
 
 the user filter by application name
     the user enters text to a text field   css = #filterSearch    ${Intelligent_water}
@@ -275,7 +264,6 @@ the user assign application to an assessor
     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link      jQuery = tr:contains("Maureen Moore") :checkbox
     ...                             ELSE  run keywords   the user clicks the button/link     jQuery = a:contains("Next")
     ...                             AND                  the user clicks the button/link     jQuery = tr:contains("Maureen Moore") :checkbox
-    #the user adds an assessor to application  assessor-row-17
     the user clicks the button/link           jQuery = button:contains("Add to application")
     the user should see the element           jQuery = h2:contains("Assigned (1)")
     the assigned list is correct before notification
@@ -316,5 +304,4 @@ Assign application to maureen
     the user clicks the button/link  link = Back to assessor progress
     the user clicks the button/link  jQuery = tr:contains("Molecular tree breeding") label
     the user clicks the button/link  id = assessor-progress-add-to
-    #the user clicks the button/link  jQuery = td:contains("${Molecular_id}") ~ td:contains("Assign")
     the comp admin notify an assessor2

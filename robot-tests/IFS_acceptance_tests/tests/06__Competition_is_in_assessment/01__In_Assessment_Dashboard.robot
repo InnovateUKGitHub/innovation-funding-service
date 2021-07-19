@@ -11,8 +11,8 @@ Resource          ../../resources/common/Assessor_Commons.robot
 *** Test Cases ***
 In Assessment dashboard page
     [Documentation]    INFUND-7363
-    Given The user clicks the button/link             link = Val is awesome 2
-    Then the user should see the competition details  Val is awesome 2  In assessment  Materials and manufacturing  Digital manufacturing  Input and review funding decision  Invite assessors to assess the competition  Programme
+    Given The user clicks the button/link             link = Assessment is awesome 2
+    Then the user should see the competition details  Assessment is awesome 2  In assessment  Materials and manufacturing  Digital manufacturing  Input and review funding decision  Invite assessors to assess the competition  Programme
     And the user should see the element               link = View and update competition details
 
 Milestones for In Assessment competitions
@@ -35,9 +35,5 @@ The key statistics counts should be correct
     Should Be Equal As Integers    ${ACCEPTED}    5  # Assignments accepted
     ${STARTED} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Assessments started") .govuk-heading-l
     Should Be Equal As Integers    ${STARTED}    2  # Assessments started
-#    ${STARTED} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Assessments started") .govuk-heading-l
-#    Should Be Equal As Integers    ${STARTED}    3  # Assessments started
     ${SUBMITTED} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Assessments submitted") .govuk-heading-l
     Should Be Equal As Integers    ${SUBMITTED}    1  # Assessments submitted
-#    ${SUBMITTED} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Assessments submitted") .govuk-heading-l
-#    Should Be Equal As Integers    ${SUBMITTED}    0  # Assessments submitted

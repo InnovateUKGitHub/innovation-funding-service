@@ -81,12 +81,12 @@ Force Tags        Project Setup
 Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
-${project_overview}    ${server}/project-setup/project/${PS_SP_Project_Id}
+${project_overview}                 ${server}/project-setup/project/${PS_SP_Project_Id}
 ${external_spendprofile_summary}    ${server}/project-setup/project/${PS_SP_Project_Id}/partner-organisation/${Ooba_Lead_Org_Id}/spend-profile
-${project_duration}    48
-&{lead_applicant_credentials_sp}  email=${PS_SP_Lead_PM_Email}  password=${short_password}
-&{collaborator1_credentials_sp}   email=${PS_SP_Partner_Email}   password=${short_password}
-&{collaborator2_credentials_sp}   email=${PS_SP_Academic_Partner_Email}  password=${short_password}
+${project_duration}                 48
+&{lead_applicant_credentials_sp}    email=${PS_SP_Lead_PM_Email}  password=${short_password}
+&{collaborator1_credentials_sp}     email=${PS_SP_Partner_Email}   password=${short_password}
+&{collaborator2_credentials_sp}     email=${PS_SP_Academic_Partner_Email}  password=${short_password}
 
 *** Test Cases ***
 Internal user can not generate SP with pending invites
@@ -311,11 +311,11 @@ Partners are not able to see the spend profile summary page
 Project Manager can view combined spend profile
     [Documentation]    INFUND-3767
     [Tags]
-    [Setup]    log in as a different user            &{lead_applicant_credentials_sp}
-    Given the user navigates to the page             ${external_spendprofile_summary}
-    When the user clicks the button/link             jQuery = a:contains("Review and submit project spend profile")
-    Then the user should see the element             jQuery = p:contains("This is the spend profile for your project.")
-    And the user should see the element              jQuery = p:contains("Your submitted spend profile will be used as the base for your project spend over the following financial years.")
+    [Setup]    log in as a different user     &{lead_applicant_credentials_sp}
+    Given the user navigates to the page      ${external_spendprofile_summary}
+    When the user clicks the button/link      jQuery = a:contains("Review and submit project spend profile")
+    Then the user should see the element      jQuery = p:contains("This is the spend profile for your project.")
+    And the user should see the element       jQuery = p:contains("Your submitted spend profile will be used as the base for your project spend over the following financial years.")
 
 Project Manager can choose cancel on the dialogue
     [Documentation]    INFUND-3767
@@ -499,7 +499,6 @@ Status updates correctly for internal user's table after approval
     Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     When The user clicks the button/link    link = 2
     Then the user should see the element    css = #table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.ok        # Completed Spend profile
-    #And the user should see the element     css = #table-project-status > tbody > tr:nth-child(3) > td.govuk-table__cell.status.action > a   # GOL
     And the user should see the element     css =#table-project-status tr:nth-of-type(3) td:nth-of-type(8).status.ok         # GOL
 
 Project Finance still has a link to the spend profile after approval

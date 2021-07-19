@@ -151,9 +151,9 @@ public class CompetitionWebTestData {
                 grantCompetition()
                         .withName("Sustainable living models for the future"),
                 grantCompetition()
-                        .withName("Val is awesome"),
+                        .withName("Assessment is awesome"),
                 grantCompetition()
-                        .withName("Val is awesome 2"),
+                        .withName("Assessment is awesome 2"),
                 grantCompetition()
                         .withName("Assessments of load capabilities"),
                 grantCompetition()

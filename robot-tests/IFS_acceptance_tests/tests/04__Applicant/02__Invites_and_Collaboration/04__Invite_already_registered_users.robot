@@ -7,8 +7,6 @@ Documentation     INFUND-1458 As a existing user with an invitation to collabora
 ...
 ...               IFS-7723 Improvement to company search results
 ...
-#Suite Setup       The guest user opens the browser
-#Suite Teardown    The user closes the browser
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant
@@ -30,8 +28,6 @@ The user clicks the login link
     [Tags]  HappyPath
     When the user clicks the button/link                link = Continue
     And login to application                            ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
-#    And The guest user inserts user email and password  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
-#    And the guest user clicks the log-in button
     Then the user should see the element                jQuery = dt:contains("ROYAL MAIL PLC")
     When the user clicks the button/link                css = .govuk-button[type="submit"]    #Save and continue
     Then the user should see the element                jQuery = h1:contains("Application overview")

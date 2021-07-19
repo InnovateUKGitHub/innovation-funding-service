@@ -107,7 +107,6 @@ Project Setup - Post award service link should not display for any other fund ty
 Emails - Project manager and finance contacts should receive an email notification stating project is live with a link to setup project page
      [Documentation]   IFS-7017
      [Setup]  Request a project id of post award service application
-     #Given ifs admin approves both documents                                          ${postAwardServiceProjectID}     #remove this keyword once mo document approved web test data is fixed
      When the internal user approve the GOL                                           ${postAwardServiceProjectID}
      Then project manager and finance contact should receive an email notification
 
@@ -150,7 +149,6 @@ Applicant - User should be redirected to grant application service on click revi
      [Setup]  Request a project id of connect service application
      Given the user navigates to the page                          ${server}/dashboard-selection
      When the internal user edits the form with connect option     CONNECT
-     #And ifs admin approves both documents                         ${connectServiceProjectID}
      And the internal user approve the GOL                         ${connectServiceProjectID}
      And applicant clicks review its progress link                 ${connectServiceProjectID}
 #     Currently __connect system is being redirected to IFS and the work is in progress. Once redirected, please add 'then' statement to check the IFS redirection

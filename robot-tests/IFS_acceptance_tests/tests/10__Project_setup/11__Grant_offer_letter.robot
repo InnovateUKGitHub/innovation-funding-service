@@ -118,7 +118,6 @@ Status updates correctly for internal user's table
 Project Finance can download GOL
     [Documentation]  INFUND-6377  IFS-9774
     [Tags]   HappyPath
-    #[Setup]  ifs admin approves both documents            ${Elbow_Grease_Project_Id}         # remove this keyword once mo approve documents fixed
     Given log in as a different user                      &{internal_finance_credentials}
     When the user navigates to the page                   ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/grant-offer-letter
     Then the user should not see an error in the page
@@ -147,7 +146,6 @@ Comp Admin cannot upload big or non-pdf grant offer letter
 
 Comp Admin is able to navigate to the Grant Offer letter page
     [Documentation]  IFS-5865
-    #[Setup]  ifs admin approves both documents                   ${PS_LP_Application_Project_Id}         # remove this keyword once mo approve documents fixed
     Given the user navigates to the page                         ${server}/project-setup-management/project/${PS_LP_Application_Project_Id}/grant-offer-letter/send
     When the user clicks the button/link                         jQuery = a:contains("View the grant offer letter page")
     Then the user is able to see the Grant Offer letter page
@@ -504,8 +502,7 @@ Project is automatically sent to ACC if set up for the competition
 IFS Expert user can reset GOL in project setup
     [Documentation]  IFS-9611
     [Setup]  Requesting Project ID of this Project
-    #Given ifs admin approves both documents             ${HighSpeedProjectID}           # remove this keyword once mo documents webtest data is fiixed
-    And Log in as a different user                      &{superAdminCredentials}
+    Given Log in as a different user                    &{superAdminCredentials}
     When the user navigates to the page                 ${server}/project-setup-management/project/${HighSpeedProjectID}/grant-offer-letter/send
     And the expert user resets the GOL
     Then the user should see the element                jQuery = h2:contains("Grant offer letter upload") +* p:contains("No files have been uploaded yet.")

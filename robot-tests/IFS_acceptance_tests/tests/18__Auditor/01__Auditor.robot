@@ -39,8 +39,6 @@ ${ktpApplicationName}        KTP notifications application
 ${ktpApplicationId}          ${application_ids['${ktpApplicationName}']}
 ${auditorApplication}        Auditor application
 ${auditorProjectId}          ${project_ids['${auditorApplication}']}
-#${applicationName3}          A subsidy control application in project setup
-#${projectID3}                ${project_ids['${applicationName3}']}
 ${applicationName3}          Climate science the history of Greenland's ice
 ${competitionName3}          Predicting market trends programme
 ${competitionID3}            ${competition_ids['${competitionName3}']}
@@ -94,8 +92,6 @@ Auditor can not be added as a collaborator to an application
     And existing user starts a new application            ${openCompetitionPerformance_name}  ${EMPIRE_LTD_ID}   Choose the lead organisation
     When the lead invites already registered user         ${auditorCredentials["email"]}  ${openCompetitionPerformance_name}
     And login to application                              Amy.Wigley@ukri.org     ${short_password}
-#    And the guest user inserts user email and password    Amy.Wigley@ukri.org     ${short_password}
-#    And the guest user clicks the log-in button
     Then page should contain                              ${403_error_message}
 
 Auditor can view Project detials in the Project setup
@@ -131,8 +127,6 @@ Auditor can view the bank details with the 'Complete' status for the organisatio
 
 Auditor can open and view the GOL for the organisations
     [Documentation]  IFS-9886    IFS-9882
-    #remove ifs admin approves both documents keyword after mo approving web test fixed
-    #[Setup]  ifs admin approves both documents          ${auditorProjectId}
     Given log in as a different user                    &{auditorCredentials}
     And the user navigates to the page                  ${SERVER}/project-setup-management/project/${auditorProjectId}/grant-offer-letter/send
     And the user should see the element                 jQuery = h1:contains("Grant offer letter")
@@ -247,7 +241,6 @@ the user sees the read only view of project team
     the user should not see the element   jQuery = button:contains("Add team member")
 
 the user sees read only view of MO
-    #the user navigates to the page         ${SERVER}/project-setup-management/project/${projectID}/monitoring-officer
     the user navigates to the page         ${SERVER}/project-setup-management/project/${projectID1}/monitoring-officer
     the user should see the element        jQuery = h1:contains("Monitoring officer")
     the user should not see the element    jQuery = a:contains("Change monitoring officer")

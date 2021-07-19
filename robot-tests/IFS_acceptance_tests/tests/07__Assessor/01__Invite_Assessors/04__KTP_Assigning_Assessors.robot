@@ -77,7 +77,6 @@ Comp admin can see the user who is both applicant and KTA role in the list of as
 
 Invite the KTA to assess the KTP competition
     [Documentation]   IFS-8260
-    #Given the user selects the checkbox       assessor-row-1
     Given the user clicks the button/link     jQuery = tr:contains("Amy Colin") label
     And the user clicks the button/link       id = add-selected-assessors-to-invite-list-button
     When the user clicks the button/link      id = review-and-send-assessor-invites-button

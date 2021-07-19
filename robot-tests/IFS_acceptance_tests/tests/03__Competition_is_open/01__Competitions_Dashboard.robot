@@ -105,7 +105,6 @@ the counts of the open competition should be correct
     ${SUBMITTED_COUNT} =     Get text    jQuery = .govuk-list:contains("Applications submitted") .govuk-grid-column-one-third:nth-child(3) .govuk-heading-l
     Should Be Equal As Integers    ${SUBMITTED_COUNT}    ${Applications submitted}
     ${APPLICATIONS_PER_ASSESSOR} =     Get text    css = ul:nth-child(3) > li:nth-child(3) > div > span
-    #Should Be Equal As Integers    ${APPLICATIONS_PER_ASSESSOR}    3
     Should Be Equal As Integers    ${APPLICATIONS_PER_ASSESSOR}    5
 
 Get the expected values for the Ready to open counts

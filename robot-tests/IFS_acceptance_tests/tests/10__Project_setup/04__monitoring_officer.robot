@@ -149,7 +149,6 @@ Existing Monitoring Officer can sign in and see projects that they are assigned 
     And the user clicks the project setup tile if displayed
     When the user selects the checkbox                          previousProject
     And the user clicks the button/link                         id = update-documents-results-button
-    #Then the user should see the element                        jQuery = .task:contains("${PS_LP_Application_Title}") + .status:contains("Monitor project")
     Then the user should see the element                        jQuery = .task:contains("${PS_LP_Application_Title}") + .status:contains("Live project")
 
 Monitoring officer see the project setup veiw for assigned project
@@ -478,7 +477,6 @@ The user logs in and checks for assigned projects
     the user clicks the button/link                 id = dashboard-link-MONITORING_OFFICER
     the user selects the checkbox                   previousProject
     the user clicks the button/link                 id = update-documents-results-button
-    #the user should see the element                 jQuery = .task:contains("${Elbow_Grease_Title}") + .status:contains("Monitor project")
     the user should see the element                 jQuery = .task:contains("${Elbow_Grease_Title}") + .status:contains("Live project")
 
 The user navigate to assign MO page

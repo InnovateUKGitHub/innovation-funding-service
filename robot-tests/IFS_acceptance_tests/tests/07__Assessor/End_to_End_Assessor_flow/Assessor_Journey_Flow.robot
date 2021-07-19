@@ -163,7 +163,6 @@ Resent email can be read by the invited user
     the user reads his email and clicks the link    ${test_mailbox_one}+AJE2E@gmail.com    Invitation to assess '${Assessment_Comp_title}'    Assessment period:  1
 
 Invited user accept the invitation and navigate to registration form
-    #the user should see the element         jQuery = h1:contains("You are invited to assess the competition: ${IN_ASSESSMENT_COMPETITION_NAME}")
     the user should see the element         jQuery = h1:contains("You are invited to assess the competition: ${Assessment_Comp_title}")
     the user selects the radio button       acceptInvitation  true
     the user clicks the button/link         jQuery = button:contains("Confirm")

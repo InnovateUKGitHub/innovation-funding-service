@@ -25,7 +25,6 @@ Resource          ../../../../resources/common/Applicant_Commons.robot
 
 *** Variables ***
 ${applicationName}  Climate science the history of Greenland's ice
-# ${OPEN_COMPETITION_APPLICATION_2_NAME} == Planetary science Pluto\'s telltale heart
 
 *** Test Cases ***
 Finance sub-sections
@@ -37,8 +36,6 @@ Organisation name visible in the Finance section
     [Documentation]    INFUND-1815  IFS-7723
     [Tags]
     When the user clicks the button/link    link = Your project costs
-#    Then the user should see the element    jQuery = h2:contains("Provide the project costs for 'ITV PLC'")
-#    And the user should see the element     jQuery = label:contains("'ITV PLC' Total project costs")
     Then the user should see the element    jQuery = h2:contains("Provide the project costs for 'Adaptive Optics'")
     And the user should see the element     jQuery = label:contains("'Adaptive Optics' Total project costs")
 
@@ -129,7 +126,6 @@ Applicant chooses Calculate overheads option
     [Setup]  log in as a different user                        &{lead_applicant_credentials}
     # This test also checks read only view of the overheads once section is marked as complete
     Given the user navigates to Your-finances page             ${applicationName}
-    #And the user fills in the project costs                    Calculate  185,997
     And the user fills in the project costs                    Calculate  251,684
     And wait until element is not visible without screenshots  css = .task-list li:nth-of-type(1) .task-status-incomplete
     When the user clicks the button/link                       link = Your project costs

@@ -211,24 +211,17 @@ Registered users applying for an international competition see no international 
 Registered users applying for an international competition see only UK based organisations if they are UK based
     [Documentation]    IFS-7252
     [Tags]  HappyPath
-     Given the user clicks the button/link              link = Back to tell us where your organisation is based
-     When user selects where is organisation based      isNotInternational
-     #Then the user should see the element               jQuery = dt:contains("Empire Ltd")
-     Then the user should see the element               jQuery = label:contains("Empire Ltd")
-     And the user should see the element                link = Apply with a different organisation
+    Given the user clicks the button/link              link = Back to tell us where your organisation is based
+    When user selects where is organisation based      isNotInternational
+    Then the user should see the element               jQuery = label:contains("Empire Ltd")
+    And the user should see the element                link = Apply with a different organisation
 
 Registered UK based user applies for International Competition
     [Documentation]    IFS-7197  IFS-7723
     [Tags]  HappyPath
-    Given the user clicks the button/link                                          link = Apply with a different organisation
-    When the user selects organisation type as business                            radio-1
-# TODO should be implemented on ifs-7224
-#    And the user enters organisation details manually on companies house link      ${ukLeadOrganisationName}
-#   Then the user verifies uk based organisation details
-# TODO Should be removed on completing ifs-7224
-    Then the user search for organisation name on Companies house                   SAGA  ${ukLeadOrganisationName}
-# TODO should be implemented on ifs-7224
-    #And the user clicks the button/link                                           name = save-organisation
+    Given the user clicks the button/link                             link = Apply with a different organisation
+    When the user selects organisation type as business               radio-1
+    Then the user search for organisation name on Companies house     SAGA  ${ukLeadOrganisationName}
 
 Registered UK based lead user invites partner organisation(with registered email/user)
     [Documentation]    IFS-7197

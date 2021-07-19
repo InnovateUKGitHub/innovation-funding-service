@@ -36,7 +36,6 @@ Resource          ../../../resources/common/Assessor_Commons.robot
 *** Variables ***
 ${assessor_as_a_service_url}            management/admin/upload-files
 ${AssessorAsAServiceComp}               Rolling stock future developments - Assessor as a Service
-#${AssessorAsAServiceCompId}            ${competition_ids["${AssessorAsAServiceComp}"]}
 ${AssessorAsAServiceApplicationTitle}   High-speed rail and its effects on soil compaction - AAS
 
 
@@ -44,9 +43,9 @@ ${AssessorAsAServiceApplicationTitle}   High-speed rail and its effects on soil 
 Summary:All the sections are present
     [Documentation]    INFUND-4648
     [Tags]  HappyPath
-    Given The user clicks the button/link                    link = Val is awesome
+    Given The user clicks the button/link                    link = Assessment is awesome
     And the user should see that the element is disabled    id = submit-assessment-button
-    When the user clicks the button/link                     link = Val is awesome - Application 3
+    When the user clicks the button/link                     link = Assessment is awesome - Application 3
     And the user clicks the button/link                     jQuery = .govuk-button:contains("Review and complete your assessment")
     Then the user should see the element                    jQuery = h2:contains("Review assessment")
     And the user should see the element                     jQuery = legend:contains("Do you believe that this application is suitable for funding?")
@@ -76,11 +75,10 @@ Summary: Questions should show without score
 Summary:Questions should show as complete
     [Documentation]    INFUND-550
     [Tags]  HappyPath
-    #[Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/33
     Given the user clicks the button/link                           id = dashboard-navigation-link
     And the user clicks the assessment tile if displayed
-    And the user clicks the button/link                             link = Val is awesome
-    And The user clicks the button/link                             link = Val is awesome - Application 3
+    And the user clicks the button/link                             link = Assessment is awesome
+    And The user clicks the button/link                             link = Assessment is awesome - Application 3
     And the assessor adds score and feedback for every question     11   # 11 is the number of questions to iterate through
     When the user clicks the button/link                            link = Review and complete your assessment
     Then the user should see the text in the element                jQuery = .govuk-accordion__section-heading:contains("Scope")    Complete
@@ -157,7 +155,7 @@ User Saves the Assessment as Recommended
 User Saves the Assessment as Not Recommended
     [Documentation]    INFUND-5712  INFUND-3726  INFUND-6040  INFUND-3724
     [Tags]  HappyPath
-    Given The user clicks the button/link                    link = Val is awesome - Application 2
+    Given The user clicks the button/link                    link = Assessment is awesome - Application 2
     And the assessor adds score and feedback for every question  11  # value 11: is the number of questions to loop through to submit feedback
     And the user clicks the button/link                      jQuery = .govuk-button:contains("Review and complete your assessment")
     When the user selects the radio button                   fundingConfirmation    false
@@ -168,7 +166,7 @@ User Saves the Assessment as Not Recommended
 Submit Assessments
     [Documentation]    INFUND-5739  INFUND-3743  INFUND-6358
     [Tags]  HappyPath
-    Given the user should see the element          jQuery = .in-progress li:contains("Val is awesome - Application 3")
+    Given the user should see the element          jQuery = .in-progress li:contains("Assessment is awesome - Application 3")
     And the user should see that the element is disabled    id = submit-assessment-button
     When the user submits the assessment
     Then the user should see correct details after assessment submitted
@@ -182,7 +180,7 @@ Progress of the applications in Dashboard
     ${EXPECTED_TOTAL_PENDING} =     Get Length     ${PENDING_LIST}
     When The user navigates to the page            ${ASSESSOR_DASHBOARD_URL}
     Then the progress of the applications should be correct    ${EXPECTED_TOTAL_ACCEPTED}    ${EXPECTED_TOTAL_PENDING}
-    And the user should see the element             jQuery = h3:contains("Val is awesome") ~ div:contains("${EXPECTED_TOTAL_ACCEPTED} applications to assess")
+    And the user should see the element             jQuery = h3:contains("Assessment is awesome") ~ div:contains("${EXPECTED_TOTAL_ACCEPTED} applications to assess")
 
 Assessment as a service - file upload
     [Documentation]   IFS-9961  IFS-9962
@@ -201,7 +199,6 @@ Assessment as a service - assign and complete assessments
 
 *** Keywords ***
 Custom Suite Setup
-    #The user logs-in in new browser     &{assessor2_credentials}
     The user logs-in in new browser      apc-assessor-user1@example.com   ${short_password}
     Connect to database                 @{database}
 
@@ -218,7 +215,7 @@ the word count should be correct
     the user should see the element     jQuery = span:contains("${wordCount}")
 
 The user accepts the juggling is word that sound funny application
-    The user clicks the button/link             link = Val is awesome
+    The user clicks the button/link             link = Assessment is awesome
     The user clicks the button/link             jQuery = a:contains("Accept or reject")
     The user should see the element             jQUery = h1:contains("Accept application")
     And the user selects the radio button       assessmentAccept  true
@@ -263,39 +260,31 @@ the user enter text more than maximum word count limit
 the user should see correct details
     the user should not see the element                 jQuery = .govuk-error-message:contains("Please enter your feedback")
     the user should see the element                     jQuery = .status-msg:contains("Assessed")
-    the user should see the element                     jQuery = li:contains("Val is awesome - Application 3") .positive
-    the user should see the element                     jQuery = li:contains("Val is awesome - Application 3") input[type = "checkbox"] ~ label
-    the application should have the correct status      jQuery = .progress-list li:contains("Val is awesome - Application 3")    Assessed
+    the user should see the element                     jQuery = li:contains("Assessment is awesome - Application 3") .positive
+    the user should see the element                     jQuery = li:contains("Assessment is awesome - Application 3") input[type = "checkbox"] ~ label
+    the application should have the correct status      jQuery = .progress-list li:contains("Assessment is awesome - Application 3")    Assessed
 
 the user should see assessment as not recommended details
-    #The user should see the element                      css = li:nth-child(2) .negative
     The user should see the element                      css = li:nth-child(1) .negative
     the user should see the element                      css = li:nth-child(2) input[type = "checkbox"] ~ label
     the application should have the correct status       css = .progress-list li:nth-child(1)    Assessed
     the application should have the correct status       css = .progress-list li:nth-child(2)    Assessed
-    #the application should have the correct status       css = .progress-list li:nth-child(2)    Assessed
-    #the application should have the correct status       css = .progress-list li:nth-child(3)    Assessed
 
 the user should see correct details after assessment submitted
     the application should have the correct status    css = div.submitted    Submitted assessment
-    #the user should see the element                   css = li:nth-child(2) input[type = "checkbox"] ~ label    #This keyword verifies that only one applications has been submitted
     the user should see the element                   css = li:nth-child(1) input[type = "checkbox"] ~ label    #This keyword verifies that only one applications has been submitted
-    the user should see the element                   jQuery = h4:contains("Val is awesome - Application 3")
+    the user should see the element                   jQuery = h4:contains("Assessment is awesome - Application 3")
     the user should see the element                   jQuery = strong:contains("98")
-    the user should not see the element               link = Val is awesome - Application 3
+    the user should not see the element               link = Assessment is awesome - Application 3
 
 the user submits the assessment
-    #the user clicks the button/link            css = .in-progress li:nth-child(3) input[type = "checkbox"] ~ label
-    the user clicks the button/link            css = .in-progress li:nth-child(2) input[type = "checkbox"] ~ label
-    the user clicks the button/link            jQuery = button:contains("Submit assessments")
-    the user clicks the button/link            jQuery = button:contains("Cancel")
-    the user clicks the button/link            jQuery = button:contains("Submit assessments")
-    the user clicks the button/link            jQuery = button:contains("Yes I want to submit the assessments")
+    the user clicks the button/link     css = .in-progress li:nth-child(2) input[type = "checkbox"] ~ label
+    the user clicks the button/link     jQuery = button:contains("Submit assessments")
+    the user clicks the button/link     jQuery = button:contains("Cancel")
+    the user clicks the button/link     jQuery = button:contains("Submit assessments")
+    the user clicks the button/link     jQuery = button:contains("Yes I want to submit the assessments")
 
 invite assessor the the assesment
-#    update milestone to yesterday                      ${AssessorAsAServiceCompId}   SUBMISSION_DATE
-#    the user clicks the button/link                    link = Dashboard
-#    the user clicks the button/link                    link = ${AssessorAsAServiceComp}
     the user clicks the button/link                    link = Invite assessors to assess the competition
     the user enters text to a text field               id = assessorNameFilter   Paul Plum
     the user clicks the button/link                    jQuery = .govuk-button:contains("Filter")
@@ -345,7 +334,6 @@ the assessor submits the feedback for the application
     the user selects the radio button             fundingConfirmation  true
     the user enters text to a text field          id = feedback    Assessor as a service application assessed
     the user clicks the button/link               jQuery = .govuk-button:contains("Save assessment")
-#    the user clicks the button/link               jQuery = li:contains("${AssessorAsAServiceApplicationTitle}") label[for^="assessmentIds"]
     the user selects the checkbox                 id = assessmentIds1
     the user clicks the button/link               jQuery = .govuk-button:contains("Submit assessments")
     the user clicks the button/link               jQuery = button:contains("Yes I want to submit the assessments")
