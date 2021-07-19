@@ -7,7 +7,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.resource.ApplicationConfiguration;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.notifications.resource.*;
@@ -40,12 +39,17 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfileNotifications;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfileProcess;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
+import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
+import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileState;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.project.spendprofile.validator.SpendProfileValidationUtil;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Assert;
 import org.junit.Test;
@@ -64,13 +68,15 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.MATERIALS;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
@@ -134,6 +140,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     private UserRepository userRepository;
     @Mock
     private SystemNotificationSource systemNotificationSource;
+    @Mock
+    private UserMapper userMapper;
     @InjectMocks
     @Spy
     private DefaultSpendProfileFigureDistributer defaultSpendProfileFigureDistributer;
@@ -1036,6 +1044,61 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);
 
         assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void getSpendProfile() {
+        Long leadOrganisationId = 1L;
+        Long monitoringOfficerId = 3L;
+        ZonedDateTime now = ZonedDateTime.now();
+
+        User monitoringOfficer = newUser()
+                .withId(monitoringOfficerId)
+                .withRoles(asSet(Role.MONITORING_OFFICER))
+                .build();
+        UserResource monitoringOfficerResource = newUserResource()
+                .withId(monitoringOfficer.getId())
+                .withRoleGlobal(Role.MONITORING_OFFICER)
+                .build();
+
+        Project project = newProject()
+                .withId(projectId)
+                .withDuration(3L)
+                .withTargetStartDate(LocalDate.of(2018, 3, 1))
+                .withSpendProfileSubmittedDate(ZonedDateTime.now())
+                .build();
+
+        Organisation leadOrganisation = newOrganisation()
+                .withId(leadOrganisationId)
+                .build();
+        SpendProfile spendProfile = newSpendProfile()
+                .withOrganisation(leadOrganisation)
+                .withProject(project)
+                .build();
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, leadOrganisationId)).thenReturn(Optional.of(spendProfile));
+
+        SpendProfileProcess spendProfileProcess = new SpendProfileProcess(monitoringOfficer, project, SpendProfileState.APPROVED);
+        spendProfileProcess.setLastModified(now);
+        when(spendProfileWorkflowHandler.getReviewOutcome(project)).thenReturn(spendProfileProcess);
+
+        when(userMapper.mapToResource(any(User.class))).thenReturn(monitoringOfficerResource);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, leadOrganisationId);
+
+        ServiceResult<SpendProfileResource> result = service.getSpendProfile(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+
+        SpendProfileResource spendProfileResource = result.getSuccess();
+
+        assertNotNull(spendProfileResource.getReviewedBy());
+        assertEquals(monitoringOfficerId, spendProfileResource.getReviewedBy().getId());
+        assertTrue(spendProfileResource.getReviewedBy().getRoles().contains(Role.MONITORING_OFFICER));
+        assertEquals(now, spendProfileResource.getReviewedOn());
+
+        verify(spendProfileRepository).findOneByProjectIdAndOrganisationId(projectId, leadOrganisationId);
+        verify(spendProfileWorkflowHandler).getReviewOutcome(project);
+        verify(userMapper).mapToResource(any(User.class));
     }
 
     private SpendProfile createSpendProfile(Project projectInDB, Map<Long, BigDecimal> eligibleCostsMap, Map<Long, List<BigDecimal>> spendProfileCostsMap) {
