@@ -47,6 +47,8 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...
 ...               IFS-9578 MO documents: design changes for other roles (not MO or Project manager)
 ...
+...               IFS-9965 Enable document link when the MO rejects the document 
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -528,6 +530,13 @@ MO rejects the document
     When the user clicks the button/link          link = Collaboration agreement
     Then MO reject uploaded documents
     And the user should see the element           jQuery = div:contains("Collaboration agreement") ~ div span:contains("Incomplete")
+
+MO can view the document feedback and access the uploaded files
+    [Documentation]   IFS-9965
+    When the user clicks the button/link     link = Collaboration agreement
+    Then the user should see the element     jQuery = a:contains('testing.pdf')
+    And the user should see the element      jQuery = p:contains('Rejected')
+    And the user clicks the button/link      jQuery = a:contains("Return to documents")
 
 MO approves the document
     [Documentation]  IFS-9577
