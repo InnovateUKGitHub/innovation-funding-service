@@ -23,7 +23,7 @@
             <div class="success-alert govuk-!-margin-bottom-6"
                  th:attr="aria-hidden=${model.uploadSuccess == false}"
                  data-js-toggle-on-file-upload="">
-                <h2 class="govuk-heading-s govuk-!-margin-top-0">The external file uploaded successfully in IFS.</h2>
+                <h2 class="govuk-heading-s govuk-!-margin-top-0">Upload successful.</h2>
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{file}')} ? 'govuk-form-group--error'">
                 <th:block th:if="${#fields.hasErrors('file')}">
