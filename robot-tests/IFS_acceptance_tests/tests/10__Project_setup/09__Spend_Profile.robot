@@ -81,12 +81,13 @@ Force Tags        Project Setup
 Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
-${project_overview}    ${server}/project-setup/project/${PS_SP_Project_Id}
+${project_overview}                 ${server}/project-setup/project/${PS_SP_Project_Id}
 ${external_spendprofile_summary}    ${server}/project-setup/project/${PS_SP_Project_Id}/partner-organisation/${Ooba_Lead_Org_Id}/spend-profile
-${project_duration}    48
-&{lead_applicant_credentials_sp}  email=${PS_SP_Lead_PM_Email}  password=${short_password}
-&{collaborator1_credentials_sp}   email=${PS_SP_Partner_Email}   password=${short_password}
-&{collaborator2_credentials_sp}   email=${PS_SP_Academic_Partner_Email}  password=${short_password}
+${project_duration}                 48
+&{lead_applicant_credentials_sp}    email=${PS_SP_Lead_PM_Email}  password=${short_password}
+&{collaborator1_credentials_sp}     email=${PS_SP_Partner_Email}   password=${short_password}
+&{collaborator2_credentials_sp}     email=${PS_SP_Academic_Partner_Email}  password=${short_password}
+${MO_EMAIL}                         Orville.Gibbs@gmail.com
 
 *** Test Cases ***
 Internal user can not generate SP with pending invites
@@ -405,6 +406,14 @@ Comp Admin can download the Spend Profile csv
     And the user should see the element     jQuery = h1:contains("Spend profile")
     Then the comp admin can download the SP CSV files
 
+Change MO for the project
+    [Documentation]    IFS-9675
+    Given Log in as a different user                &{Comp_admin1_credentials}
+    And the user navigates to the page              ${server}/project-setup-management/project/${PS_SP_Project_Id}/monitoring-officer
+    When The user clicks the button/link            jQuery = a:contains("Change monitoring officer")
+    And Search for MO                               Orvill  Orville Gibbs
+    Then The internal user assign project to MO     ${PS_SP_Application_No}  ${PS_SP_Application_Title}
+
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 ,INFUND-5543, INFUND-7119
     [Tags]
@@ -514,6 +523,10 @@ Project finance user cannot access external users' spend profile page
     [Documentation]    INFUND-5911
     [Tags]
     When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_Project_Id}/partner-organisation/${Ooba_Lead_Org_Id}/spend-profile    ${403_error_message}
+
+MO recieves an email to review spend profile
+    [Documentation]    IFS-9675
+    Then the user reads his email           ${MO_EMAIL}    You need to review the spend profile for project ${PS_SP_Application_Title}     The spend profile for this project is ready for you to review:
 
 *** Keywords ***
 Custom suite setup
