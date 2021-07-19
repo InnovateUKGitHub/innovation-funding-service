@@ -131,61 +131,60 @@ Finance summary has total marked as complete
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]
-    Given Log in as a different user                          &{collaborator2_credentials}
-    And the user navigates to Your-finances page              Performance Application 7
-    And The user clicks the button/link                       link = Your project costs
-    And the user clicks the button/link                       jQuery = button:contains("Open all")
-    When the user enters text to a text field                 css = [name$="incurredStaff"]  1000000
-    And The user clicks the button/link                       id = mark-all-as-complete
-    And The user should see the element                       jQuery = h1:contains("Your project finances")
-    And log in as a different user                            &{lead_applicant_credentials}
+    Given Log in as a different user                                   &{collaborator2_credentials}
+    And the user navigates to Your-finances page                       Performance Application 7
+    And The user clicks the button/link                                link = Your project costs
+    And the user clicks the button/link                                jQuery = button:contains("Open all")
+    When the user enters text to a text field                          css = [name$="incurredStaff"]  1000000
+    And The user clicks the button/link                                id = mark-all-as-complete
+    And The user should see the element                                jQuery = h1:contains("Your project finances")
+    And log in as a different user                                     &{lead_applicant_credentials}
     And the user clicks the application tile if displayed
-    And the user navigates to the finance overview of the academic  Performance Application 7
-    Then the user should see the element                      jQuery = .warning-alert h2:contains("The participation levels of this project are not within the required range")
-    And the user navigates to the page                        ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link                       link = Performance Application 7
-    And the user clicks the button/link                       link = Review and submit
-    And the user expands the section                          Finances summary
-    Then the user should see the element                      jQuery = .warning-alert h2:contains("The participation levels of this project are not within the required range")
+    And the user navigates to the finance overview of the academic     Performance Application 7
+    Then the user should see the element                               jQuery = .warning-alert h2:contains("The participation levels of this project are not within the required range")
+    And the user navigates to the page                                 ${APPLICANT_DASHBOARD_URL}
+    And the user clicks the button/link                                link = Performance Application 7
+    And the user clicks the button/link                                link = Review and submit
+    And the user expands the section                                   Finances summary
+    Then the user should see the element                               jQuery = .warning-alert h2:contains("The participation levels of this project are not within the required range")
 
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436
     [Tags]
     When lead enters a valid research participation value
-    And The user clicks the button/link            link = Back to application overview
-    And the user clicks the button/link            link = Finances overview
-    Then the user should not see the element       jQuery = .warning-alert:contains("The participation levels of this project are not within the required range")
-    And the user navigates to the page             ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link            link = Performance Application 7
-    And the user clicks the button/link            link = Review and submit
-    And the user expands the section               Finances summary
-    Then the user should not see the element       jQuery = .warning-alert:contains("The participation levels of this project are not within the required range")
+    And The user clicks the button/link                       link = Back to application overview
+    And the user clicks the button/link                       link = Finances overview
+    Then the user should not see the element                  jQuery = .warning-alert:contains("The participation levels of this project are not within the required range")
+    And the user navigates to the page                        ${APPLICANT_DASHBOARD_URL}
+    And the user clicks the button/link                       link = Performance Application 7
+    And the user clicks the button/link                       link = Review and submit
+    And the user expands the section                          Finances summary
+    Then the user should not see the element                  jQuery = .warning-alert:contains("The participation levels of this project are not within the required range")
 
 Support User can see the read only finance summary
     [Documentation]  IFS-401
     [Tags]  Support  HappyPath
-    [Setup]  log in as a different user       &{support_user_credentials}
+    [Setup]  log in as a different user                                                     &{support_user_credentials}
     Given the user navigates to the finances of the application
-    When the user should see the element      jQuery = .project-cost-breakdown tbody tr:nth-of-type(1) th:contains("View finances")
-    And The user clicks the button/link       link = View finances
-    #Then The finance summary table in Your project Finances has correct values for lead  6,260,941,967  21.21%  1,319,945,791  8,000,000  4,932,996,176
-    Then The finance summary table in Your project Finances has correct values for lead  72,611  21.21%  0  8,000,000  0
+    When the user should see the element                                                    jQuery = .project-cost-breakdown tbody tr:nth-of-type(1) th:contains("View finances")
+    And The user clicks the button/link                                                     link = View finances
+    Then The finance summary table in Your project Finances has correct values for lead     72,611  21.21%  0  8,000,000  0
 
 Support User can see the read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-401
     [Tags]  Support  HappyPath
-    Given the user clicks the button/link  link = Your project costs
+    Given the user clicks the button/link                                            link = Your project costs
     When the user verifies labour, overhead costs and materials
     Then the user verifies captial usage, subcontracting, travel and other costs
 
 Support User can see the read only view of Your organisation
     [Documentation]  IFS-401
     [Tags]  Support
-    When the user clicks the button/link           jQuery = a:contains("Your project finances")
-    Then the user should see the element           css = .your-finances > p  # Please complete your project finances.
-    When the user clicks the button/link           link = Your organisation
-    Then the user should see the element           jQuery = dt:contains("Organisation size") + dd:contains("Micro")
-    And the user should see the element            jQuery = dt:contains("Turnover") + dd:contains("0")
+    When the user clicks the button/link     jQuery = a:contains("Your project finances")
+    Then the user should see the element     css = .your-finances > p  # Please complete your project finances.
+    When the user clicks the button/link     link = Your organisation
+    Then the user should see the element     jQuery = dt:contains("Organisation size") + dd:contains("Micro")
+    And the user should see the element      jQuery = dt:contains("Turnover") + dd:contains("0")
 
 Support User can see the read only view of Your funding
     [Documentation]  IFS-401

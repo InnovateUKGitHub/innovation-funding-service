@@ -239,7 +239,7 @@ Internal users can see SBRI competition in previous tab
     [Documentation]  IFS-7315
     Given log in as a different user                               &{ifs_admin_user_credentials}
     When the user clicks the button/link                           jQuery = a:contains("Previous")
-    then The user should see the element in the paginated list     link = ${openSBRICompetitionName}
+    Then The user should see the element in the paginated list     link = ${openSBRICompetitionName}
 
 Internal users can see SBRI application in previous tab with submitted status
     [Documentation]  IFS-7315

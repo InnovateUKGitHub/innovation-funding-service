@@ -42,12 +42,12 @@ Organisation name visible in the Finance section
 Guidance in the your project costs
     [Documentation]    INFUND-192
     [Tags]  HappyPath
-    [Setup]  the user navigates to Your-finances page  Liquid lenses in mobile phone cameras
-    Given the user clicks the button/link   link = Your project costs
-    When the user clicks the button/link    jQuery = button:contains("Labour")
-    And the user clicks the button/link     css = .govuk-details summary
-    Then the user should see the element    css = .govuk-details__text p
-    And the user should see the element     css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
+    [Setup]  the user navigates to Your-finances page     Liquid lenses in mobile phone cameras
+    Given the user clicks the button/link                 link = Your project costs
+    When the user clicks the button/link                  jQuery = button:contains("Labour")
+    And the user clicks the button/link                   css = .govuk-details summary
+    Then the user should see the element                  css = .govuk-details__text p
+    And the user should see the element                   css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
 
 Working days per year should be 232
     [Documentation]    INFUND-2961
@@ -56,23 +56,23 @@ Working days per year should be 232
 User pressing back button should get the correct version of the page
     [Documentation]    INFUND-2695
     [Tags]  HappyPath
-    [Setup]  the user navigates to Your-finances page  Liquid lenses in mobile phone cameras
-    And the user clicks the button/link     link = Your project costs
+    [Setup]  the user navigates to Your-finances page     Liquid lenses in mobile phone cameras
+    And the user clicks the button/link                   link = Your project costs
     Given The user adds three material rows
-    And The user clicks the button/link     link = Your project finances
-    And the user clicks the button/link     link = Your project costs
-    Then the user should see the element    css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input
+    And The user clicks the button/link                   link = Your project finances
+    And the user clicks the button/link                   link = Your project costs
+    Then the user should see the element                  css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input
     [Teardown]    the user removes the materials rows
 
 Non-academic partner finance section
     [Documentation]    INFUND-7522
     [Tags]  HappyPath
-    [Setup]  Log in as a different user     &{collaborator1_credentials}
-    Given the user navigates to Your-finances page  ${applicationName}
-    And the user should see the element     link = Your project costs
-    And the user should see the element     link = Your organisation
-    When the user clicks the button/link    link = Your funding
-    Then the user should see the element    jQuery = .govuk-list li:contains("the lead applicant must mark the research category page as complete")
+    [Setup]  Log in as a different user                &{collaborator1_credentials}
+    Given the user navigates to Your-finances page     ${applicationName}
+    And the user should see the element                link = Your project costs
+    And the user should see the element                link = Your organisation
+    When the user clicks the button/link               link = Your funding
+    Then the user should see the element               jQuery = .govuk-list li:contains("the lead applicant must mark the research category page as complete")
 
 Academic partner finance section
     [Documentation]    INFUND-7522
@@ -171,7 +171,7 @@ the working days per year should be 232 by default
     Should Be Equal As Strings         ${Days_value}    232
 
 the user navigates to another page
-    the user navigates to the page    https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance
+    the user navigates to the page                      https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance
     Run Keyword And Ignore Error Without Screenshots    Handle Alert
 
 the user should see the funding guidance

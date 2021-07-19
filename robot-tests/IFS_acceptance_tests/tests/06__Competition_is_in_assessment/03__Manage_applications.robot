@@ -166,36 +166,36 @@ Notify an assigned user
 
 Assessor should see the assigned application
     [Documentation]    INFUND-7050
-    [Setup]    Log in as a different user  maureen.moore@gmail.com  ${short_password}
-    Given The user clicks the button/link   link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    Then The user should see the element   Link = Living with Cryptocurrencies
+    [Setup]    Log in as a different user     maureen.moore@gmail.com  ${short_password}
+    Given The user clicks the button/link     link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    Then The user should see the element      link = Living with Cryptocurrencies
 
 Remove and notify an assessor (Notified)
     [Documentation]    INFUND-7232
-    [Setup]    Log in as a different user         &{Comp_admin1_credentials}
-    Given comp admin navigate to manage applications   ${IN_ASSESSMENT_COMPETITION_NAME}
+    [Setup]    Log in as a different user                                   &{Comp_admin1_credentials}
+    Given comp admin navigate to manage applications                        ${IN_ASSESSMENT_COMPETITION_NAME}
     Then the user removes assessor from assigned application and notify
     And the previously assigned list is correct
 
 Assessor should not see the removed application
     [Documentation]    INFUND-7232
-    [Setup]    Log in as a different user     maureen.moore@gmail.com  ${short_password}
-    When The user clicks the button/link      link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    Then The user should not see the element  Link = Living with Cryptocurrencies
+    [Setup]    Log in as a different user        maureen.moore@gmail.com  ${short_password}
+    When The user clicks the button/link         link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    Then The user should not see the element     link = Living with Cryptocurrencies
 
 Reassign and notify an assessor (Notified)
     [Documentation]    INFUND-7048
     [Tags]
-    [Setup]    Log in as a different user          &{Comp_admin1_credentials}
+    [Setup]    Log in as a different user               &{Comp_admin1_credentials}
     Given comp admin navigate to manage applications    ${IN_ASSESSMENT_COMPETITION_NAME}
     When the user resign assessor to an application
     Then the comp admin notify an assessor
 
 Assessor should see the reassigned application
     [Documentation]    INFUND-7050
-    [Setup]    Log in as a different user   maureen.moore@gmail.com  ${short_password}
-    Given The user clicks the button/link   link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    Then The user should see the element   Link = Living with Cryptocurrencies
+    [Setup]    Log in as a different user     maureen.moore@gmail.com  ${short_password}
+    Given The user clicks the button/link     link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    Then The user should see the element      link = Living with Cryptocurrencies
 
 *** Keywords ***
 the application list is correct before changes

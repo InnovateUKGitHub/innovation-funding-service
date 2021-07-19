@@ -51,22 +51,22 @@ Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
-${ASSESSMENT_PANEL_COMP_NAME}     Smart monitoring in high-pressure engineering systems
-${ASSESSMENT_PANEL_COMP_ID}       ${competition_ids['${ASSESSMENT_PANEL_COMP_NAME}']}
-${assessment_panel}     ${server}/management/assessment/panel/competition/${ASSESSMENT_PANEL_COMP_ID}
-${ethan_taylor}       	Ethan Taylor
-${raoul_chagny}       	Raoul de Chagny
-${sam_gilbert}        	Sam Gilbert
-${sammy_klein}        	Sammy Klein
-${assessor_ethan_taylor}       apc-assessor-user2@example.com
-${assessor_raoul_chagny}       apc-assessor-user1@example.com
-${assessor_sam_gilbert}        sam.gilbert@gmail.com
-${assessor_sammy_klein}        sammy.klein@gmail.com
+${ASSESSMENT_PANEL_COMP_NAME}               Smart monitoring in high-pressure engineering systems
+${ASSESSMENT_PANEL_COMP_ID}                 ${competition_ids['${ASSESSMENT_PANEL_COMP_NAME}']}
+${assessment_panel}                         ${server}/management/assessment/panel/competition/${ASSESSMENT_PANEL_COMP_ID}
+${ethan_taylor}       	                    Ethan Taylor
+${raoul_chagny}       	                    Raoul de Chagny
+${sam_gilbert}                              Sam Gilbert
+${sammy_klein}        	                    Sammy Klein
+${assessor_ethan_taylor}                    apc-assessor-user2@example.com
+${assessor_raoul_chagny}                    apc-assessor-user1@example.com
+${assessor_sam_gilbert}                     sam.gilbert@gmail.com
+${assessor_sammy_klein}                     sammy.klein@gmail.com
 ${smart_monitoring_application_name1}       Smart monitoring in high-pressure engineering systems - Application 1
 ${smart_monitoring_application_id1}         ${application_ids["${smart_monitoring_application_name1}"]}
 ${smart_monitoring_application_name2}       Smart monitoring in high-pressure engineering systems - Application 2
 ${smart_monitoring_application_id2}         ${application_ids["${smart_monitoring_application_name2}"]}
-&{assessor_sammy_panel}    email=${assessor_sammy_klein}  password=${short_password}
+&{assessor_sammy_panel}                     email=${assessor_sammy_klein}  password=${short_password}
 
 *** Test Cases ***
 Assement panel link is deactivated if the assessment panel is not set
@@ -205,7 +205,7 @@ Manage Assessment Panel Assign and remove button functionality
     [Documentation]   IFS-2039
     [Tags]
     Given the user clicks the button/link   jQuery = td:contains("${smart_monitoring_application_id1}") ~ td:contains("Assign")
-    Then the user should see the element    jQuery = h2:contains("Assigned applications (1)")
+    And the user should see the element     jQuery = h2:contains("Assigned applications (1)")
     When the user clicks the button/link    jQuery = td:contains("${smart_monitoring_application_id1}") ~ td:contains("Remove")
     Then the user should see the element    jQuery = h2:contains("Assigned applications (0)")
     And the user should see the element     jQuery = td:contains("${smart_monitoring_application_id1}") ~ td:contains("Assign")
@@ -221,15 +221,15 @@ Assign applications to panel
     [Documentation]  IFS-1125
     [Tags]  HappyPath
     Given comp admin assign applications to panel
-    Then the user reads his email            ${assessor_raoul_chagny}  Applications ready for review  You have been allocated applications to review within the competition ${ASSESSMENT_PANEL_COMP_NAME}.
+    Then the user reads his email                     ${assessor_raoul_chagny}  Applications ready for review  You have been allocated applications to review within the competition ${ASSESSMENT_PANEL_COMP_NAME}.
 
 Assign applications to assessor upon accepting invite in panel
     [Documentation]   IFS-2549
     [Tags]  HappyPath
     #When subsequently an assessor is invited, assign application without clicking on 'Confirm action'
     Given comp admin invites an assessor
-    Then Assessor logs in and accepts the invitation  ${assessor_sammy_klein}
-    And the user should see the element               jQuery = h3:contains("${ASSESSMENT_PANEL_COMP_NAME}") ~ div:contains("applications awaiting review")
+    Then Assessor logs in and accepts the invitation     ${assessor_sammy_klein}
+    And the user should see the element                  jQuery = h3:contains("${ASSESSMENT_PANEL_COMP_NAME}") ~ div:contains("applications awaiting review")
 
 Assessors view of competition dashboard and applications in panel status
     [Documentation]  IFS-1138  IFS-388
@@ -406,10 +406,10 @@ the competition admin selects assessors and add them to invite list
     the user should see the element      jQuery = td:contains("${sammy_klein}") + td:contains("${assessor_sammy_klein}")
 
 the competition admin should not see invited assessors on find tab
-    When the user clicks the button/link      link = Find
-    Then the user should not see the element  jQuery = td:contains("${ethan_taylor}")
-    And the user should not see the element   jQuery = td:contains("${raoul_chagny}")
-    And the user should not see the element   jquery = tr:contains("${sam_gilbert}")
+    the user clicks the button/link         link = Find
+    the user should not see the element     jQuery = td:contains("${ethan_taylor}")
+    the user should not see the element     jQuery = td:contains("${raoul_chagny}")
+    the user should not see the element     jquery = tr:contains("${sam_gilbert}")
 
 assessor should see the competition tandc's
     the user expands the section        Award terms and conditions
