@@ -13,6 +13,10 @@ components:
   - ../../components/mail
   - ../../components/sil-stub
   - ../../components/ifs-database
+  - ../../components/cache-provider
+  - ../../components/auth
+  - ../../components/data-layer
+  - ../../components/web-layer
   - ../../patches/health-check-patch
   - ../../patches/new-relic-env-vars-patch
   - ../../patches/pull-secrets-patch
@@ -33,5 +37,11 @@ resources:
   - mysql/survey-mysql-deployment.yml
   - mysql/survey-mysql-service.yml
   - auth/idp/shibboleth-config.yml
+  - auth/idp/idp-config.yml
+  - auth/idp/idp-keys-secrets.yml
+  - auth/ldap/ldap-config.yml
+  - auth/ldap/ldap-keys-secrets.yml
+  - auth/sp/sp-keys-secrets.yml
+  - auth/sp/sp-secrets.yml
 
   - web-config.yml
