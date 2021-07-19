@@ -12,7 +12,7 @@ components:
   - ../../components/robot
   - ../../components/mail
   - ../../components/sil-stub
-
+  - ../../components/ifs-database
   - ../../patches/health-check-patch
   - ../../patches/new-relic-env-vars-patch
   - ../../patches/pull-secrets-patch
