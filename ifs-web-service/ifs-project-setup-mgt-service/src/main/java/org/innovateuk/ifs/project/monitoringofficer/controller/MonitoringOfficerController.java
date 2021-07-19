@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.service.MonitoringOfficerRegistrationRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
+import org.innovateuk.ifs.navigation.ExcludeFromPageHistory;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.form.*;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerAssignRoleViewModelPopulator;
@@ -131,6 +132,7 @@ public class MonitoringOfficerController {
     }
 
     @GetMapping("/create/{emailAddress}")
+    @ExcludeFromPageHistory
     public String create(@PathVariable String emailAddress,
                          Model model) {
         MonitoringOfficerCreateForm form = new MonitoringOfficerCreateForm();
@@ -140,6 +142,7 @@ public class MonitoringOfficerController {
     }
 
     @PostMapping("/create")
+    @ExcludeFromPageHistory
     public String createUser(@Valid @ModelAttribute(FORM) MonitoringOfficerCreateForm form,
                              BindingResult bindingResult,
                              ValidationHandler validationHandler,
