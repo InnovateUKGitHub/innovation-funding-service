@@ -1,0 +1,24 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: local
+
+bases:
+  - ../../stub-base
+
+components:
+
+  - ../../../../components/data-layer
+  - ../../../../components/web-layer
+
+  - ../../../../patches/health-check-patch
+  - ../../../../patches/new-relic-env-vars-patch
+  - ../../../../patches/pull-secrets-patch
+  - ../../../../patches/spring-profile-patch
+  - ../../../../patches/wait-for-db-patch
+
+resources:
+  - config-maps/finance-data-service-config.yml
+  - config-maps/survey-data-service-config.yml
+
+patches:
+  - config-maps/data-service-config.yml

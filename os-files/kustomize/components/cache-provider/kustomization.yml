@@ -3,4 +3,3 @@ kind: Component
 resources:
   - cache-provider-service.yml
   - cache-provider-service-deployment.yml
-  - cache-config.yml

@@ -4,4 +4,3 @@ resources:
   - ifs-database.yml
   - ifs-database-deployment.yml
   - mysql-configmap.yml
-  - db-config.yml

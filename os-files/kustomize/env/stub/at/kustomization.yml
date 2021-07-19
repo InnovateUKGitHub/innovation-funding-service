@@ -1,0 +1,53 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonAnnotations:
+  deployedWith: kustomize
+  environment: at
+
+bases:
+  - ../stub-base
+
+components:
+  - ../../../components/robot
+  - ../../../components/mail
+  - ../../../components/sil-stub
+  - ../../../components/ifs-database
+  - ../../../components/cache-provider
+  - ../../../components/auth
+  - ../../../components/data-layer
+  - ../../../components/web-layer
+
+  - ../../../patches/health-check-patch
+  - ../../../patches/new-relic-env-vars-patch
+  - ../../../patches/pull-secrets-patch
+  - ../../../patches/spring-profile-patch
+  - ../../../patches/wait-for-db-patch
+
+resources:
+  - config-maps/spring-config.yml
+
+  - routes/idp-route.yml
+  - routes/shib-route.yml
+  - routes/mail-route.yml
+
+  - storage/gluster.yml
+  - storage/gluster-ep.yml
+  - storage/persistent-volume-claim.yml
+
+  - mysql/finance-totals-mysql-deployment.yml
+  - mysql/finance-totals-mysql-service.yml
+  - mysql/survey-mysql-deployment.yml
+  - mysql/survey-mysql-service.yml
+
+  - auth/idp/idp-keys-secrets.yml
+  - auth/ldap/ldap-keys-secrets.yml
+  - auth/sp/sp-keys-secrets.yml
+  - auth/sp/sp-secrets.yml
+
+
+patches:
+  - data-layer/data-service/data-service-config.yml
+  - auth/idp/shibboleth-config.yml
+  - auth/idp/idp-config.yml
+  - auth/ldap/ldap-config.yml
