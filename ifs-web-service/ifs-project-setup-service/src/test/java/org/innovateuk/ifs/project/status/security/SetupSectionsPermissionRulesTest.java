@@ -82,6 +82,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     private ProjectResource activeProject = newProjectResource()
             .withProjectState(ProjectState.SETUP)
             .withApplication(application)
+            .withMonitoringOfficerUser(monitoringOfficer.getId())
             .build();
 
     private ProjectResource withdrawnProject = newProjectResource()
@@ -166,7 +167,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     @Test
     public void spendProfileSectionAccess() {
         assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessSpendProfileSection, () -> rules.partnerCanAccessSpendProfileSection(ProjectCompositeId.id(activeProject.getId()), user));
-        verify(projectService).getById(activeProject.getId());
+        verify(projectService, times(2)).getById(activeProject.getId());
     }
 
     @Test
@@ -182,8 +183,14 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
     @Test
     public void spendProfileSectionAccessMonitoringOfficer() {
-        assertMonitoringOfficerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessSpendProfileSection, () -> rules.partnerCanAccessSpendProfileSection(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
-        verify(projectService).getById(activeProject.getId());
+        assertMonitoringOfficerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessSpendProfileSection, () -> rules.projectMoCanAccessSpendProfileSection(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
+        verify(projectService, times(2)).getById(activeProject.getId());
+    }
+
+    @Test
+    public void reviewSpendProfileSectionAccessMonitoringOfficer() {
+        assertMonitoringOfficerSuccessfulAccess(SetupSectionAccessibilityHelper::canReviewSpendProfileSection, () -> rules.projectMoCanReviewSpendProfileSection(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
+        verify(projectService, times(2)).getById(activeProject.getId());
     }
 
     @Test
@@ -277,7 +284,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     @Test
     public void spendProfileSectionAccessUnavailableForWithdrawnProject() {
         assertNonLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessSpendProfileSection(ProjectCompositeId.id(withdrawnProject.getId()), user));
-        verify(projectService).getById(withdrawnProject.getId());
+        verify(projectService, times(2)).getById(withdrawnProject.getId());
     }
 
     @Test

@@ -933,7 +933,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         Map<Long, OrganisationReviewDetails> editablePartners = new HashMap<>();
         final OrganisationResource leadOrganisation = partnerOrganisations.get(0);
-        editablePartners.put(1L, new OrganisationReviewDetails(leadOrganisation.getName(), markedComplete, userPartOfThisOrganisation, editable));
+        editablePartners.put(1L, new OrganisationReviewDetails(leadOrganisation.getId(), leadOrganisation.getName(), markedComplete, userPartOfThisOrganisation, editable, null, null));
 
         return new ProjectSpendProfileProjectSummaryViewModel(projectResource.getId(),
                 projectResource.getApplication(), projectResource.getName(),
@@ -942,7 +942,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 projectResource.getSpendProfileSubmittedDate() != null,
                 editablePartners,
                 false,
-                false);
+                false,
+                false,
+                true);
     }
 
     private ProjectSpendProfileViewModel buildExpectedProjectSpendProfileViewModel(Long organisationId, ProjectResource projectResource,
