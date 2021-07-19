@@ -132,7 +132,9 @@ public class ProjectSpendProfileProjectSummaryViewModel {
     }
 
     public ZonedDateTime spendProfileReviewedOn() {
-        return Optional.ofNullable(leadOrganisationReviewDetails.getReviewedOn()).orElse(null);
+        return Optional.ofNullable(leadOrganisationReviewDetails)
+                .map(organisationReviewDetails -> organisationReviewDetails.getReviewedOn())
+                .orElse(null);
     }
 
     @Override
