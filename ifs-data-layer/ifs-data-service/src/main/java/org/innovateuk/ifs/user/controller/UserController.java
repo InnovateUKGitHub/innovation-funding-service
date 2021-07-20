@@ -119,7 +119,7 @@ public class UserController {
     }
 
     @PostMapping("/internal/create/{inviteHash}")
-    public RestResult<Void> createInternalUser(@PathVariable("inviteHash") String inviteHash, @Valid @RequestBody InternalUserRegistrationResource internalUserRegistrationResource){
+    public RestResult<Void> createInternalUser(@PathVariable("inviteHash") String inviteHash, @Valid @RequestBody InternalUserRegistrationResource internalUserRegistrationResource) {
         return registrationService.createUser(anUserCreationResource()
                 .withFirstName(internalUserRegistrationResource.getFirstName())
                 .withLastName(internalUserRegistrationResource.getLastName())
@@ -131,7 +131,7 @@ public class UserController {
     }
 
     @PostMapping("/internal/edit")
-    public RestResult<Void> editInternalUser(@Valid @RequestBody EditUserResource editUserResource){
+    public RestResult<Void> editInternalUser(@Valid @RequestBody EditUserResource editUserResource) {
 
         UserResource userToEdit = getUserToEdit(editUserResource);
 
@@ -195,17 +195,25 @@ public class UserController {
     @GetMapping("/" + URL_VERIFY_EMAIL + "/{hash}")
     public RestResult<Void> verifyEmail(@PathVariable String hash) {
         final ServiceResult<Token> result = tokenService.getEmailToken(hash);
+
+
         LOG.debug(String.format("UserController verifyHash: %s", hash));
         return result.handleSuccessOrFailure(
                 failure -> restFailure(failure.getErrors()),
                 token -> {
                     registrationService.activateApplicantAndSendDiversitySurvey(token.getClassPk()).andOnSuccessReturnVoid(v -> {
-                        tokenService.handleExtraAttributes(token);
+                        ServiceResult<ApplicationResource> applicationResourceServiceResult = tokenService.handleExtraAttributes(token);
+
+                        applicationResourceServiceResult.andOnFailure(
+                                //no Application Resource created, nothing to do
+                                failure -> null
+                        );
                         tokenService.removeToken(token);
                         crmService.syncCrmContact(token.getClassPk());
                     });
                     return restSuccess();
                 });
+
     }
 
     @PutMapping("/" + URL_RESEND_EMAIL_VERIFICATION_NOTIFICATION + "/{emailAddress}/")
