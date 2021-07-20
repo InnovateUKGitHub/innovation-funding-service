@@ -23,7 +23,7 @@ spec:
       volumes:
         - name: registration-keys-volume
           secret:
-            secretName: registration-keys-secrets
+            secretName: ldap-keys-secrets
       containers:
       - image: docker-ifs.devops.innovateuk.org/releases/registration-service:1.1.149
         name: spring-boot-service-container
