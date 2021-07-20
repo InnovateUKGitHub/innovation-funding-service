@@ -42,6 +42,9 @@ spec:
             timeoutSeconds: 5
             successThreshold: 1
             failureThreshold: 1
+          volumeMounts:
+            - name: registration-keys-volume
+              mountPath: /var/certs
           env:
             - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
               valueFrom:
@@ -115,3 +118,7 @@ spec:
             requests:
               cpu: 100m
               memory: 1G
+      volumes:
+        - name: registration-keys-volume
+          secret:
+            secretName: registration-keys-secrets
