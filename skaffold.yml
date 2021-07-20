@@ -81,13 +81,6 @@ build:
         project: ifs-web-service:ifs-application-service
         args:
           - "-DskipTests"
-    - image: registration-service
-      context: .
-      jib:
-        type: gradle
-        project: ifs-registration-service
-        args:
-          - "-DskipTests"
   local:
     useDockerCLI: true
     useBuildkit: false
