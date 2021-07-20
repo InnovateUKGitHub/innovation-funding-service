@@ -51,4 +51,5 @@ patches:
   - config-maps/idp-config.yml
   - config-maps/ldap-config.yml
   - config-maps/shibboleth-config.yml
+  - config-maps/spring-config.yml
   - config-maps/web-config.yml
