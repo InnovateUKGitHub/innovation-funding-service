@@ -13,7 +13,6 @@ import org.innovateuk.ifs.project.core.builder.ProjectBuilder;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
-import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -67,9 +66,6 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
 
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
-
-    @Mock
-    private MonitoringOfficerRepository monitoringOfficerRepository;
 
     @Before
     public void setup() {
@@ -321,7 +317,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     public void projectMoCanViewTheirProjectSpendProfileCsv() {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectResource1.getId(), newOrganisation().build().getId());
 
-        when(monitoringOfficerRepository.existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), monitoringOfficerUserResourceOnProject1.getId())).thenReturn(true);
+        when(projectMonitoringOfficerRepository.existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), monitoringOfficerUserResourceOnProject1.getId())).thenReturn(true);
 
         assertTrue(rules.projectMoCanViewTheirProjectSpendProfileCsv(projectOrganisationCompositeId, monitoringOfficerUserResourceOnProject1));
         assertFalse(rules.projectMoCanViewTheirProjectSpendProfileCsv(projectOrganisationCompositeId, stakeholderUserResourceOnCompetition));
