@@ -20,6 +20,24 @@ spec:
       - name: spring-boot-service-container
         image: data-service
         imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /monitoring/health
+            port: 8080
+          initialDelaySeconds: 120
+          periodSeconds: 31
+          timeoutSeconds: 25
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /monitoring/health
+            port: 8080
+          initialDelaySeconds: 120
+          periodSeconds: 5
+          timeoutSeconds: 25
+          successThreshold: 1
+          failureThreshold: 3
         env:
         - name: IFS_NEW_ORGANISATION_SEARCH_ENABLED
           valueFrom:

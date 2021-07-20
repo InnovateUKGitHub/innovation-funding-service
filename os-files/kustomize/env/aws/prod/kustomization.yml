@@ -6,7 +6,6 @@ bases:
   - ../aws-base
 
 components:
-  - ../../../patches/health-check-patch
   - ../../../patches/new-relic-env-vars-patch
   - ../../../patches/pull-secrets-patch
   - ../../../patches/spring-profile-patch

@@ -12,7 +12,6 @@ components:
   - ../../../../components/ifs-database
   - ../../../../components/sil-stub
 
-  - ../../../../patches/health-check-patch
   - ../../../../patches/new-relic-env-vars-patch
   - ../../../../patches/pull-secrets-patch
   - ../../../../patches/spring-profile-patch

@@ -24,6 +24,24 @@ spec:
         - image: project-setup-service
           name: spring-boot-service-container
           imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /project-setup/monitoring/health
+              port: 8080
+            initialDelaySeconds: 180
+            periodSeconds: 31
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /project-setup/monitoring/health
+              port: 8080
+            initialDelaySeconds: 180
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1
           env:
             - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
               valueFrom:
