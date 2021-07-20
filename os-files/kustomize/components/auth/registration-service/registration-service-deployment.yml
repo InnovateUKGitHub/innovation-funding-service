@@ -20,9 +20,13 @@ spec:
       labels:
         app: registration-svc
     spec:
+      volumes:
+        - name: registration-keys-volume
+          secret:
+            secretName: registration-keys-secrets
       containers:
       - image: docker-ifs.devops.innovateuk.org/releases/registration-service:1.1.149
-        name: registration-service
+        name: spring-boot-service-container
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -118,7 +122,4 @@ spec:
           requests:
             cpu: 100m
             memory: 1G
-    volumes:
-      - name: registration-keys-volume
-        secret:
-          secretName: registration-keys-secrets
+
