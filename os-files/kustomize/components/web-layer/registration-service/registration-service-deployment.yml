@@ -21,7 +21,7 @@ spec:
         app: registration-svc
     spec:
       containers:
-        - image: project-setup-service
+        - image: registration-service
           name: spring-boot-service-container
           imagePullPolicy: IfNotPresent
           env:
