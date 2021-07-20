@@ -97,4 +97,4 @@ deploy:
   statusCheckDeadlineSeconds: 600
   kustomize:
     paths:
-      - os-files/kustomize/env/local/dev
+      - os-files/kustomize/env/stub/local/dev
