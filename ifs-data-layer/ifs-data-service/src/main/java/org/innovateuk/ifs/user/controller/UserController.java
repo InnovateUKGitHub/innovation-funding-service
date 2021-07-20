@@ -204,12 +204,17 @@ public class UserController {
                     registrationService.activateApplicantAndSendDiversitySurvey(token.getClassPk()).andOnSuccessReturnVoid(v -> {
                         ServiceResult<ApplicationResource> applicationResourceServiceResult = tokenService.handleExtraAttributes(token);
 
+                        applicationResourceServiceResult.andOnSuccessReturnVoid(
+                                applicationResource -> crmService.syncCrmContact(token.getClassPk(), applicationResource.getCompetition(), applicationResource.getId()));
+
                         applicationResourceServiceResult.andOnFailure(
-                                //no Application Resource created, nothing to do
-                                failure -> null
+                                failure -> {
+                                    //no Application Resource created
+                                    crmService.syncCrmContact(token.getClassPk());
+                                }
                         );
                         tokenService.removeToken(token);
-                        crmService.syncCrmContact(token.getClassPk());
+
                     });
                     return restSuccess();
                 });
