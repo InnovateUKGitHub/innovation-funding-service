@@ -18,7 +18,7 @@
     <th:block th:insert="fragments/layout :: phase-banner"/>
 
     <th:block th:if="${model.externalUser}" th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Back to finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}"/>
+              th:with="linkTitle='Back to finance checks',linkClass='link-back',linkUrl=@{${model.externalUserLinkUrl}}"/>
     <th:block th:unless="${model.externalUser}" th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Return to finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}"/>
 
@@ -71,14 +71,16 @@
             <dd th:text="'£' + ${#numbers.formatInteger(model.fundingAmount, 0,'DEFAULT')}"></dd>
         </dl>
 
-        <p th:if="${model.externalUser}" class="govuk-body">These are your project finances. Only your organisation can
-            see this level of detail. Your designated project manager will be the main contact for queries. You will be
-            consulted before any changes are approved. Changes that result from discussions with Innovate UK will be
-            reflected here.</p>
-        <th:block th:unless="${model.externalUser}"><p class="govuk-body">These milestones were initially submitted at
-            the application stage. The organisation will be able to see all saved changes.</p>
-            <p class="govuk-body">All potential changes must be discussed with the organisation. You can do this by
-                raising queries through the Innovation Funding Service.</p>
+        <th:block th:unless="${model.monitoringOfficer}">
+            <p th:if="${model.externalUser}" class="govuk-body">These are your project finances. Only your organisation can
+                see this level of detail. Your designated project manager will be the main contact for queries. You will be
+                consulted before any changes are approved. Changes that result from discussions with Innovate UK will be
+                reflected here.</p>
+            <th:block th:unless="${model.externalUser}"><p class="govuk-body">These milestones were initially submitted at
+                the application stage. The organisation will be able to see all saved changes.</p>
+                <p class="govuk-body">All potential changes must be discussed with the organisation. You can do this by
+                    raising queries through the Innovation Funding Service.</p>
+            </th:block>
         </th:block>
 
         <form th:object="${form}"
@@ -195,7 +197,7 @@
         </th:block>
         <th:block th:if="${model.externalUser}">
             <a class="govuk-button govuk-button--secondary"
-               th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">
+               th:href="@{${model.externalUserLinkUrl}}">
                 Return to finance checks</a>
         </th:block>
         <th:block th:insert="fragments/layout :: main-content-end"/>
