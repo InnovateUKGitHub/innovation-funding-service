@@ -11,3 +11,7 @@ components:
   - ../../../components/auth
   - ../../../components/data-layer
   - ../../../components/web-layer
+
+resources:
+  - config-maps/finance-db-config.yml
+  - config-maps/survey-db-config.yml

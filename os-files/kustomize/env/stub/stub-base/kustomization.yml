@@ -7,14 +7,18 @@ commonAnnotations:
 bases:
   - ../../env-base
 
+resources:
+  # We use only one physical DB for local and at
+  - config-maps/finance-data-service-config.yml
+  - config-maps/survey-data-service-config.yml
+
 patches:
+  - config-maps/data-service-config.yml
   - config-maps/cache-config.yml
   - config-maps/db-config.yml
   - config-maps/docusign-config.yml
   - config-maps/feature-toggle-config.yml
-  - config-maps/finance-db-config.yml
   - config-maps/flyway-config.yml
   - config-maps/new-relic-config.yml
   - config-maps/performance-config.yml
-  - config-maps/survey-db-config.yml
 

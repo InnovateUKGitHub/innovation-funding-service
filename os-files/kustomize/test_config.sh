@@ -10,7 +10,6 @@ kustomize build components/robot > /dev/null || echo 'xxx error on base robot'
 kustomize build components/sil-stub > /dev/null || echo 'xxx error on sil'
 kustomize build components/web-layer > /dev/null || echo 'xxx error on base web'
 
-kustomize build patches/health-check-patch > /dev/null || echo 'xxx error on health-check-patch'
 kustomize build patches/new-relic-env-vars-patch > /dev/null || echo 'xxx error on new-relic-env-vars-patc'
 kustomize build patches/pull-secrets-patch > /dev/null || echo 'xxx error on pull-secrets-patch'
 kustomize build patches/spring-profile-patch > /dev/null || echo 'xxx error on spring-profile-patch'
