@@ -44,7 +44,6 @@ resources:
   - secrets/sp-keys-secrets.yml
   - secrets/sp-secrets.yml
 
-
 patches:
   - config-maps/data-service-config.yml
   - config-maps/idp-config.yml
@@ -52,3 +51,4 @@ patches:
   - config-maps/shibboleth-config.yml
   - config-maps/spring-config.yml
   - config-maps/web-config.yml
+  - auth/registration-service/registration-service-deployment.yml
