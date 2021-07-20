@@ -101,12 +101,12 @@ Reassign a removed application
 
 Assign an application to an assessor
     [Documentation]    IFS-811
-    Given the user clicks the button/link                link = Allocate assessors
-    And the user clicks the button/link                  jQuery = a:contains("41 to")
-    When the user clicks the button/link                 jQuery = td:contains("Shaun Bradley") ~ td a:contains("View progress")
-    Then the user should see the element                 jQuery = h2:contains("Assigned (0)") + p:contains("No applications have been assigned to this assessor")
-    When the user adds an application to an assessor     jQuery = tr:contains("${Nanotechnology}") :checkbox
-    Then the user should see the element                 jQuery = h2:contains("Assigned (1)") + .table-overflow tr:contains("${Nanotechnology}")
+    Given the user clicks the button/link               link = Allocate assessors
+    And the user clicks the button/link                 jQuery = a:contains("41 to")
+    When the user clicks the button/link                jQuery = td:contains("Shaun Bradley") ~ td a:contains("View progress")
+    And the user should see the element                 jQuery = h2:contains("Assigned (0)") + p:contains("No applications have been assigned to this assessor")
+    And the user adds an application to an assessor     jQuery = tr:contains("${Nanotechnology}") :checkbox
+    Then the user should see the element                jQuery = h2:contains("Assigned (1)") + .table-overflow tr:contains("${Nanotechnology}")
 
 Filter by application number on the assessor page
     [Documentation]    IFS-400

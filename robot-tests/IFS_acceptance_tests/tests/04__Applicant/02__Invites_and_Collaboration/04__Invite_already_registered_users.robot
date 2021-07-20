@@ -74,7 +74,7 @@ The question is enabled for the assignee
     [Setup]  log in as a different user                   ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     Given the user navigates to the page                  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                   link = Assign test  #Application Title
-    Then the user should see the browser notification     Stuart ANDERSON has assigned a question to you
+    And the user should see the browser notification      Stuart ANDERSON has assigned a question to you
     And the user should see the element                   jQuery = li:contains("Public description") .task-status-incomplete
     When the user clicks the button/link                  jQuery = .govuk-button:contains("Review")
     And the user expands the section                      Public description
