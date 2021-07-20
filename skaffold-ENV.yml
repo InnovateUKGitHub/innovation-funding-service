@@ -93,13 +93,6 @@ profiles:
             project: ifs-web-service:ifs-application-service
             args:
               - "-DskipTests"
-        - image: registration-service
-          context: .
-          jib:
-            type: gradle
-            project: ifs-registration-service
-            args:
-              - "-DskipTests"
     deploy:
       kubeContext: at
       kustomize:
@@ -192,13 +185,6 @@ profiles:
           jib:
             type: gradle
             project: ifs-web-service:ifs-application-service
-            args:
-              - "-DskipTests"
-        - image: registration-service
-          context: .
-          jib:
-            type: gradle
-            project: ifs-registration-service
             args:
               - "-DskipTests"
     deploy:
@@ -295,13 +281,6 @@ profiles:
             project: ifs-web-service:ifs-application-service
             args:
               - "-DskipTests"
-        - image: registration-service
-          context: .
-          jib:
-            type: gradle
-            project: ifs-registration-service
-            args:
-              - "-DskipTests"
     deploy:
       kubeContext: uat
       kustomize:
@@ -394,13 +373,6 @@ profiles:
           jib:
             type: gradle
             project: ifs-web-service:ifs-application-service
-            args:
-              - "-DskipTests"
-        - image: registration-service
-          context: .
-          jib:
-            type: gradle
-            project: ifs-registration-service
             args:
               - "-DskipTests"
     deploy:
@@ -497,13 +469,6 @@ profiles:
             project: ifs-web-service:ifs-application-service
             args:
               - "-DskipTests"
-        - image: registration-service
-          context: .
-          jib:
-            type: gradle
-            project: ifs-registration-service
-            args:
-              - "-DskipTests"
     deploy:
       kubeContext: perf
       kustomize:
@@ -596,13 +561,6 @@ profiles:
           jib:
             type: gradle
             project: ifs-web-service:ifs-application-service
-            args:
-              - "-DskipTests"
-        - image: registration-service
-          context: .
-          jib:
-            type: gradle
-            project: ifs-registration-service
             args:
               - "-DskipTests"
     deploy:

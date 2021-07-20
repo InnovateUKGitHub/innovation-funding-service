@@ -19,9 +19,6 @@ resources:
   # competition management service
   - competition-mgt-service/competition-mgt-service.yml
   - competition-mgt-service/competition-mgt-service-deployment.yml
-  # registration service
-  - registration-service/registration-service.yml
-  - registration-service/registration-service-deployment.yml
   # survey service
   - survey-service/survey-service.yml
   - survey-service/survey-service-deployment.yml
