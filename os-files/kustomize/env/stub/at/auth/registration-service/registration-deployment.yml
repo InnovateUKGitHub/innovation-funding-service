@@ -9,5 +9,5 @@ spec:
         - name: spring-boot-service-container
           env:
           - name: SHIBBOLETH_LDAP_REQUIREVALIDPPOLICY
-            value: 'false'
+            value: "false"
 
