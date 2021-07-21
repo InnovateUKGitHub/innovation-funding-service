@@ -189,7 +189,7 @@ Assessment as a service - file upload
     And the user navigates to the page                    ${server}/${assessor_as_a_service_url}
     When the user uploads the file                        css = .inputfile  ${assessment-as-service}
     Then the user should not see an error in the page
-    And the user should see the element                   jQuery = p:contains("The external file uploaded successfully in IFS.")
+    And the user should see the element                   jQuery = h2:contains("Upload successful.")
 
 Assessment as a service - assign and complete assessments
     [Documentation]   IFS-9961  IFS-9962
