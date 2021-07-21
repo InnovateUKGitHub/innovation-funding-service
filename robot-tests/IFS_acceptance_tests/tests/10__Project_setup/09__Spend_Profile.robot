@@ -399,12 +399,26 @@ Comp Admin is able to see Spend Profile approval page
     Given the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
     Then the comp admin should see the spend profile details
 #Here????
-Comp admin can see the approve and reject options for the spend profile
+IFS admin can see the approve and reject options for the spend profile
     [Documentation]    IFS-9679
     [Tags]
-    [Setup]  Log in as a different user              &{ifs_admin_user_credentials}
+    [Setup]  Log in as a different user      &{ifs_admin_user_credentials}
     Given the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
-    the user should see the element 
+    Then the user should see the element     radio-spendprofile-approve
+
+Comp admin cannot see the approve and reject options for the spend profile
+    [Documentation]    IFS-9679
+    [Tags]
+    [Setup]  Log in as a different user      &{Comp_admin1_credentials} 
+    Given the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
+    Then the user should see the element     radio-spendprofile-approve
+
+Project Finance can see the approve and reject options for the spend profile
+    [Documentation]    IFS-9679
+    [Tags]
+    [Setup]  Log in as a different user      &{internal_finance_credentials}
+    Given the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
+    Then the user should see the element     radio-spendprofile-approve    
 
 Comp Admin can download the Spend Profile csv
     [Documentation]    INFUND-3973, INFUND-5875
