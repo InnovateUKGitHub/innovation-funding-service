@@ -20,7 +20,8 @@ public enum Funder {
     SMALL_BUSINESS_RESEARCH_INITIATIVE_SBRI("Small Business Research Initiative (SBRI)"),
     SMART_OPEN("Smart Open"),
     OTHER_DELIVERY_PARTNERS("Other delivery partners"),
-    OTHER_STAKEHOLDERS("Other stakeholders");
+    OTHER_STAKEHOLDERS("Other stakeholders"),
+    OFFICE_OF_GAS_AND_ELECTRICITY_MARKETS_OFGEM("Office of Gas and Electricity Markets (Ofgem)");
 
 
     private final String displayName;
