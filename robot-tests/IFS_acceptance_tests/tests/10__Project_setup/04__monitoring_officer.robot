@@ -47,6 +47,10 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...
 ...               IFS-9774 Investigate if its possible to fix AT's failure due to IDP upgrade
 ...
+...               IFS-10047 MO documents: Monitor project page - View status of partners
+...
+...               IFS-9925 MO view of SBRI milestones in project setup
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -298,6 +302,26 @@ Change MO for the project
     Then search for MO                             Orvill  Orville Gibbs
     And the internal user assign project to MO     ${Grade_Crossing_Applicaiton_No}   ${Grade_Crossing_Application_Title}
 
+MO can see the link to the partners for collaborating applications only
+    [Documentation]   IFS-10047
+    Given Log in as a different user            &{monitoring_officer_one_credentials}
+    And the user clicks the project setup tile if displayed
+    And the user clicks the button/link         jQuery = a:contains('${Grade_Crossing_Application_Title}')
+    When the user clicks the button/link        jQuery = a:contains('View the status of partners')
+    Then the user should see the element        jQuery = h1:contains('Project team status')
+    And the user clicks the button/link         id = dashboard-navigation-link
+    And the user clicks the project setup tile if displayed
+    And the user clicks the button/link         jQuery = a:contains('${sbri_applicaton_name}')
+    And the user should not see the element     jQuery = a:contains('View the status of partners')
+
+MO can view payment milestones
+    [Documentation]   IFS-9925
+    Given log in as a different user                               &{monitoring_officer_one_credentials}
+    When the user clicks the project setup tile if displayed
+    And monitoring officer clicks on payment milestones link
+    Then monitoring officer views detailed payment milestones
+
+
 *** Keywords ***
 The MO user is able to access all of the links
     the user is able to see Project details section
@@ -500,3 +524,14 @@ Internal user removes a partner organisation
     the user clicks the button/link         jQuery = h2:contains("SmithZone")~ button:contains("Remove organisation"):first
     the user clicks the button/link         jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
     the user should not see the element     jQuery = h2:contains("SmithZone")
+
+Monitoring officer clicks on payment milestones link
+    the user clicks the button/link     jQuery = a:contains('${sbri_applicaton_name}')
+    the user clicks the button/link     jQuery = a:contains("Finance checks")
+    the user clicks the button/link     jQuery = td:contains("Dreambit") + td:contains("Payment milestones")
+
+Monitoring officer views detailed payment milestones
+    the user should see the element     jQuery = h1:contains("Payment milestones")
+    the user should see the element     jQuery = h3:contains("Total payment requested") + h3:contains("100%")+h3:contains("£243,484")
+    the user should see the element     css = [aria-controls="accordion-finances-content-1"]
+    the user should see the element     jQuery = dt:contains("Total project costs") + dd:contains("£243,484")

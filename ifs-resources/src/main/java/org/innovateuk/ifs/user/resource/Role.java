@@ -88,6 +88,10 @@ public enum Role implements Identifiable {
         return EnumSet.of(APPLICANT, ASSESSOR, KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER);
     }
 
+    public static Set<Role> readOnlyRoles() {
+        return EnumSet.of(AUDITOR);
+    }
+
     public static List<Role> multiDashboardRoles() {
         return newArrayList(APPLICANT, ASSESSOR, STAKEHOLDER, MONITORING_OFFICER, LIVE_PROJECTS_USER, SUPPORTER);
     }
