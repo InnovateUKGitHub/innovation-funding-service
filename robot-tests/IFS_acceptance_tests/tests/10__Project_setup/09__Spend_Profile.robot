@@ -151,7 +151,7 @@ Project Finance should no longer see the project in the Generate Spend Profile t
 
 Change MO for the project
     [Documentation]    IFS-9675
-    And the user navigates to the page              ${server}/project-setup-management/project/${PS_SP_Project_Id}/monitoring-officer
+    Given the user navigates to the page            ${server}/project-setup-management/project/${PS_SP_Project_Id}/monitoring-officer
     When The user clicks the button/link            jQuery = a:contains("Change monitoring officer")
     And Search for MO                               Orvill  Orville Gibbs
     Then The internal user assign project to MO     ${PS_SP_Application_No}  ${PS_SP_Application_Title}
@@ -390,7 +390,7 @@ MO receives an email notification and status updated after spend profile submitt
     When the user clicks the button/link    link = View the status of partners
     And the user should see the element     css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
     Then partners can see the Spend Profile section completed
-    Then the user reads his email           ${monitoring_officer_one_credentials["email"]}    You need to review the spend profile for project ${PS_SP_Application_Title}     The spend profile for this project is ready for you to review:
+    And the user reads his email            ${monitoring_officer_one_credentials["email"]}    You need to review the spend profile for project ${PS_SP_Application_Title}     The spend profile for this project is ready for you to review:
 
 Project Finance is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973, INFUND-5942 IFS-1871 IFS-9774
