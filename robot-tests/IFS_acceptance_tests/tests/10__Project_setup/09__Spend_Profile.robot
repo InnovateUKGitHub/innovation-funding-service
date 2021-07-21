@@ -87,7 +87,6 @@ ${project_duration}                 48
 &{lead_applicant_credentials_sp}    email=${PS_SP_Lead_PM_Email}  password=${short_password}
 &{collaborator1_credentials_sp}     email=${PS_SP_Partner_Email}   password=${short_password}
 &{collaborator2_credentials_sp}     email=${PS_SP_Academic_Partner_Email}  password=${short_password}
-#${MO_EMAIL}                         Orville.Gibbs@gmail.com
 
 *** Test Cases ***
 Internal user can not generate SP with pending invites
