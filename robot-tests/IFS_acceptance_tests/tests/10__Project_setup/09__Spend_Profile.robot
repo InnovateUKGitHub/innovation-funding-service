@@ -152,7 +152,6 @@ Project Finance should no longer see the project in the Generate Spend Profile t
 
 Change MO for the project
     [Documentation]    IFS-9675
-    #Given Log in as a different user                &{Comp_admin1_credentials}
     And the user navigates to the page              ${server}/project-setup-management/project/${PS_SP_Project_Id}/monitoring-officer
     When The user clicks the button/link            jQuery = a:contains("Change monitoring officer")
     And Search for MO                               Orvill  Orville Gibbs
@@ -524,10 +523,6 @@ Project finance user cannot access external users' spend profile page
     [Documentation]    INFUND-5911
     [Tags]
     When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_Project_Id}/partner-organisation/${Ooba_Lead_Org_Id}/spend-profile    ${403_error_message}
-
-#MO recieves an email to review spend profile
-#    [Documentation]    IFS-9675
-#    Then the user reads his email           ${MO_EMAIL}    You need to review the spend profile for project ${PS_SP_Application_Title}     The spend profile for this project is ready for you to review:
 
 *** Keywords ***
 Custom suite setup
