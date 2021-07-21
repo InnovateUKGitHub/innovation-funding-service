@@ -20,16 +20,16 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment as a Service',size='govuk-heading-l'" />
         <p class="govuk-body">Upload files</p>
         <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
-            <div class="success-alert govuk-!-margin-bottom-6"
-                 th:attr="aria-hidden=${model.uploadSuccess == false}"
-                 data-js-toggle-on-file-upload="">
-                <h2 class="govuk-heading-s govuk-!-margin-top-0">Upload successful.</h2>
-            </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{file}')} ? 'govuk-form-group--error'">
                 <th:block th:if="${#fields.hasErrors('file')}">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('file')}" th:text="${err}"></span>
                 </th:block>
-                <div id="upload-csv" class="upload-section ">
+                <div class="success-alert govuk-!-margin-bottom-6"
+                     th:attr="aria-hidden=${model.uploadSuccess == false}"
+                     data-js-toggle-on-file-upload-banner="">
+                    <h2 class="govuk-heading-s govuk-!-margin-top-0">Upload successful.</h2>
+                </div>
+                <div id="upload-csv" class="upload-section">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                         Upload your file
                     </legend>
@@ -47,13 +47,13 @@
                     </details>
                     <div class="govuk-form-group">
                         <th:block th:insert="question-type/types :: fileupload-fragment('edit',
-                                    ' ',
-                                    ${form.fileName},
-                                    file,
-                                    file,
-                                    true,
-                                    remove_file,
-                                    upload_file)"/>
+                                ' ',
+                                ${form.fileName},
+                                file,
+                                file,
+                                true,
+                                remove_file,
+                                upload_file)"/>
                     </div>
                 </div>
             </div>
