@@ -21,12 +21,14 @@ import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -65,6 +67,9 @@ public class UserPermissionRules {
 
     @Autowired
     private ApplicationSecurityHelper applicationSecurityHelper;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private static List<ProcessRoleType> CONSORTIUM_ROLES = asList(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR);
 
@@ -357,6 +362,12 @@ public class UserPermissionRules {
     }
 
     private boolean userIsInCompetitionAssignedToStakeholder(long userToViewId, UserResource stakeholder) {
+        // Innovation lead is part of competition_users
+        Optional<User> userToView = userRepository.findById(userToViewId);
+        if (userToView.isPresent()) {
+            return userToView.get().hasRole(INNOVATION_LEAD);
+        }
+
         List<Application> applicationsWhereThisUserIsInConsortium = getApplicationsRelatedToUserByProcessRoles(userToViewId, consortiumProcessRoleFilter);
         List<Project> projectsThisUserIsAMemberOf =
                 simpleMap(getFilteredProjectUsers(userToViewId, projectUserFilter), ProjectUser::getProject);

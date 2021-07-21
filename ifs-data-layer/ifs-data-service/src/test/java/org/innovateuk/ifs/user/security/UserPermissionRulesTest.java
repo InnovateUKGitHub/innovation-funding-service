@@ -15,6 +15,7 @@ import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -24,6 +25,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -45,7 +47,8 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.Authority.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -57,6 +60,9 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Mock
     private ApplicationRepository applicationRepository;
+
+    @Mock
+    private UserRepository userRepository;
 
     @Test
     public void anyoneCanViewThemselves() {
@@ -90,6 +96,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         Stakeholder stakeholder = newStakeholder().withCompetition(competition).build();
         UserResource stakeholderResource = newUserResource().withRoleGlobal(Role.STAKEHOLDER).build();
         UserResource userResource = newUserResource().withRoleGlobal(Role.APPLICANT).build();
+        User applicant = newUser().withId(userResource.getId()).withRoles(singleton(Role.APPLICANT)).build();
         User user = newUser().withId(userResource.getId()).build();
         List<ProcessRole> processRoles = newProcessRole()
                 .withUser(user)
@@ -99,6 +106,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 .withRole(ProjectParticipantRole.PROJECT_MANAGER)
                 .build(2);
 
+        when(userRepository.findById(userResource.getId())).thenReturn(Optional.of(applicant));
         when(processRoleRepository.findByUserId(userResource.getId())).thenReturn(processRoles);
         when(projectUserRepository.findByUserId(userResource.getId())).thenReturn(projectUsers);
         when(stakeholderRepository.findByStakeholderId(stakeholderResource.getId())).thenReturn(singletonList(stakeholder));
