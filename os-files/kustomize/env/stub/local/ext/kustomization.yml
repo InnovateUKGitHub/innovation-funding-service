@@ -33,4 +33,4 @@ patchesStrategicMerge:
   - config-maps/ldap-config.yml
   - config-maps/shibboleth-config.yml
   - config-maps/web-config.yml
-  - auth/registration-service/registration-service-deployment.yml
+  - auth/registration-service/registration-deployment.yml
