@@ -1029,7 +1029,7 @@ Monitoring officer can view the Finance checks project setup dashboard section
     [Documentation]  IFS-8329
     Given log in as a different user            email=hermen.mermen@ktn-uk.test  password=${short_password}
     When the user navigates to the page         ${server}/project-setup/project/${ProjectID}
-    Then the user should see the element        jQuery = li:contains("Finance checks") span:contains("Completed")
+    Then the user should see the element        jQuery = li:contains("Finance checks") span:contains("Complete")
 
 Monitoring officer sees correct label for T&C's
     [Documentation]  IFS-7894
@@ -1477,9 +1477,9 @@ MO should see read only view of project details
     the user should not see the element         jQThe applicants should not see knowledge baseduery = button:contains("Edit")
 
 the user should see project setup sections
-    the user should see the element     jQuery = li:contains("Project details") span:contains("Completed")
-    the user should see the element     jQuery = li:contains("Project team") span:contains("Completed")
-    the user should see the element     jQuery = li:contains("Monitoring Officer") span:contains("Completed")
+    the user should see the element     jQuery = li:contains("Project details") span:contains("Complete")
+    the user should see the element     jQuery = li:contains("Project team") span:contains("Complete")
+    the user should see the element     jQuery = li:contains("Monitoring Officer") span:contains("Complete")
     the user should see the element     jQuery = li:contains("Bank details") span:contains("To be completed")
     the user should see the element     jQuery = li:contains("Finance checks") span:contains("Awaiting review")
     the user should see the element     jQuery = li:contains("Grant offer letter")

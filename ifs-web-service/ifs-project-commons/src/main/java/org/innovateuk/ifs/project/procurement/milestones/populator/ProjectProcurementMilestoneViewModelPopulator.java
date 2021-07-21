@@ -11,6 +11,7 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStat
 import org.innovateuk.ifs.project.procurement.milestones.viewmodel.ProjectProcurementMilestoneViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -52,10 +53,22 @@ public class ProjectProcurementMilestoneViewModelPopulator {
                 readOnly,
                 paymentMilestoneResource,
                 userResource.isInternalUser() ? isAllEligibilityAndViabilityApproved(projectId) : false,
-                userResource.isExternalUser(),
+                isExternalUser(userResource),
                 resettableGolState,
                 showChangesLink,
-                userResource.isReadOnlyUser());
+                userResource.isReadOnlyUser(),
+                getExternalUserLinkUrl(userResource, projectId),
+                userResource.hasRole(Role.MONITORING_OFFICER));
+    }
+
+    private boolean isExternalUser(UserResource userResource) {
+        return userResource.isExternalUser() || userResource.hasRole(Role.MONITORING_OFFICER);
+    }
+
+    private String getExternalUserLinkUrl(UserResource userResource, long projectId) {
+        return userResource.hasRole(Role.MONITORING_OFFICER)
+                ? String.format("/project/%d/finance-check/read-only", projectId)
+                : String.format("/project/%d/finance-check", projectId);
     }
 
     private boolean isAllEligibilityAndViabilityApproved(long projectId) {

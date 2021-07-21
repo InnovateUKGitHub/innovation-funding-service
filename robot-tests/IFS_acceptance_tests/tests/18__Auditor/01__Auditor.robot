@@ -159,6 +159,7 @@ Innovation lead cannot see inprogress applications
 Stakeholder lead cannot see inprogress applications
     [Documentation]  IFS-9986
     Given Log in as a different user                                       &{stakeholder_user}
+    And the user clicks the delivery partner tile if displayed
     When the user enters text to a text field                              id = searchQuery  ${applicationId3}
     And the user clicks the button/link                                    id = searchsubmit
     Then the user should not see the element                               jQuery = td:contains("${applicationName3}")
