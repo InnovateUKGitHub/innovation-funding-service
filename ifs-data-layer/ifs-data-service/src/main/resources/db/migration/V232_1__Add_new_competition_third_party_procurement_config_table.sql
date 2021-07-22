@@ -2,8 +2,8 @@
 CREATE TABLE competition_third_party_config (
   id bigint(20) NOT NULL AUTO_INCREMENT,
   terms_and_conditions_label varchar(255) NOT NULL,
-  project_cost_guidance_url varchar(255) NOT NULL,
   terms_and_conditions_guidance longtext,
+  project_cost_guidance_url varchar(255) NOT NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
