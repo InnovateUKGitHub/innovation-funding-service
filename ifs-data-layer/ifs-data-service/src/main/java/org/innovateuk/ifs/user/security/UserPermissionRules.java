@@ -28,7 +28,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -257,7 +256,7 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "READ", description = "Stakeholders can view users in competitions they are assigned to")
     public boolean stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(UserResource userToView, UserResource user) {
-        return userIsInCompetitionAssignedToStakeholder(userToView.getId(), user);
+        return userIsInCompetitionAssignedToStakeholder(userToView, user);
     }
 
     @PermissionRule(value = "READ", description = "Auditor users can view everyone")
@@ -361,16 +360,15 @@ public class UserPermissionRules {
         return user.hasAuthority(Authority.COMP_ADMIN);
     }
 
-    private boolean userIsInCompetitionAssignedToStakeholder(long userToViewId, UserResource stakeholder) {
+    private boolean userIsInCompetitionAssignedToStakeholder(UserResource userToView, UserResource stakeholder) {
         // Innovation lead is part of competition_users
-        Optional<User> userToView = userRepository.findById(userToViewId);
-        if (userToView.isPresent()) {
-            return userToView.get().hasRole(INNOVATION_LEAD);
+        if (isInnovationLead(userToView)) {
+            return true;
         }
 
-        List<Application> applicationsWhereThisUserIsInConsortium = getApplicationsRelatedToUserByProcessRoles(userToViewId, consortiumProcessRoleFilter);
+        List<Application> applicationsWhereThisUserIsInConsortium = getApplicationsRelatedToUserByProcessRoles(userToView.getId(), consortiumProcessRoleFilter);
         List<Project> projectsThisUserIsAMemberOf =
-                simpleMap(getFilteredProjectUsers(userToViewId, projectUserFilter), ProjectUser::getProject);
+                simpleMap(getFilteredProjectUsers(userToView.getId(), projectUserFilter), ProjectUser::getProject);
 
         List<Competition> stakeholderCompetitions =
                 simpleMap(stakeholderRepository.findByStakeholderId(stakeholder.getId()), Stakeholder::getProcess);

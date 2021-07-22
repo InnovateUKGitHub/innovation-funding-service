@@ -25,7 +25,6 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -96,9 +95,9 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         Stakeholder stakeholder = newStakeholder().withCompetition(competition).build();
         UserResource stakeholderResource = newUserResource().withRoleGlobal(Role.STAKEHOLDER).build();
         UserResource userResource = newUserResource().withRoleGlobal(Role.APPLICANT).build();
-        User applicant = newUser().withId(userResource.getId()).withRoles(singleton(Role.APPLICANT)).build();
         User user = newUser().withId(userResource.getId()).build();
         List<ProcessRole> processRoles = newProcessRole()
+                .withApplication(application)
                 .withUser(user)
                 .build(2);
         List<ProjectUser> projectUsers = newProjectUser()
@@ -106,7 +105,6 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 .withRole(ProjectParticipantRole.PROJECT_MANAGER)
                 .build(2);
 
-        when(userRepository.findById(userResource.getId())).thenReturn(Optional.of(applicant));
         when(processRoleRepository.findByUserId(userResource.getId())).thenReturn(processRoles);
         when(projectUserRepository.findByUserId(userResource.getId())).thenReturn(projectUsers);
         when(stakeholderRepository.findByStakeholderId(stakeholderResource.getId())).thenReturn(singletonList(stakeholder));
