@@ -160,7 +160,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
             case BANK_DETAILS:
                 return bankDetailsStageViewModel(stage, project, monitoringOfficer, organisationRequest, statusAccessor, projectComplete, ownOrganisation);
             case FINANCE_CHECKS:
-                return financeChecksStageViewModel(stage, project, monitoringOfficer, organisationRequest, statusAccessor, ownOrganisation);
+                return financeChecksStageViewModel(stage, project, competition, monitoringOfficer, organisationRequest, statusAccessor, ownOrganisation);
             case SPEND_PROFILE:
                 return spendProfileStageViewModel(stage, project, organisationRequest, statusAccessor, ownOrganisation, isProjectMO);
             case GRANT_OFFER_LETTER:
@@ -205,7 +205,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         );
     }
 
-    private SetupStatusStageViewModel financeChecksStageViewModel(ProjectSetupStage stage, ProjectResource project, boolean monitoringOfficer, CompletableFuture<OrganisationResource> organisationRequest, SetupSectionAccessibilityHelper statusAccessor, ProjectPartnerStatusResource ownOrganisation) {
+    private SetupStatusStageViewModel financeChecksStageViewModel(ProjectSetupStage stage, ProjectResource project, CompetitionResource competition, boolean monitoringOfficer, CompletableFuture<OrganisationResource> organisationRequest, SetupSectionAccessibilityHelper statusAccessor, ProjectPartnerStatusResource ownOrganisation) {
         SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(resolve(organisationRequest));
         SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(
                 ownOrganisation.getFinanceChecksStatus(),
@@ -215,11 +215,25 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
         return new SetupStatusStageViewModel(stage, stage.getShortName(),
                 "We will review your financial information.",
-                format("/project/%d/finance-check", project.getId()),
+                getFinanceChecksUrl(project, competition, monitoringOfficer),
                 financeChecksStatus,
-                monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : financeChecksAccess,
+                getSectionAccess(competition, monitoringOfficer, financeChecksAccess),
                 pendingQueries ? "pending-query" : null
         );
+    }
+
+    private SectionAccess getSectionAccess(CompetitionResource competition, boolean monitoringOfficer, SectionAccess financeChecksAccess) {
+        return monitoringOfficer ? getMoSectionAccess(competition) : financeChecksAccess;
+    }
+
+    private SectionAccess getMoSectionAccess(CompetitionResource competition) {
+        return competition.isProcurement() ? SectionAccess.ACCESSIBLE : SectionAccess.NOT_ACCESSIBLE;
+    }
+
+    private String getFinanceChecksUrl(ProjectResource project, CompetitionResource competition, boolean monitoringOfficer) {
+        return monitoringOfficer && competition.isProcurement()
+                ? format("/project/%d/finance-check/read-only", project.getId())
+                : format("/project/%d/finance-check", project.getId());
     }
 
     private SetupStatusStageViewModel bankDetailsStageViewModel(ProjectSetupStage stage, ProjectResource project, boolean monitoringOfficer, CompletableFuture<OrganisationResource> organisationRequest, SetupSectionAccessibilityHelper statusAccessor, boolean projectComplete, ProjectPartnerStatusResource ownOrganisation) {
