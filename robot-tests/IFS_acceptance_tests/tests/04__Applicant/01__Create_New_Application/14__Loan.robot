@@ -190,8 +190,9 @@ Applicant checks successful and unsuccessful project status
 
 *** Keywords ***
 Custom suite setup
-    the user logs-in in new browser       &{lead_applicant_credentials}
-    the user clicks the button/link       link = Loan Application
+    the user logs-in in new browser                       &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       link = Loan Application
     Connect to database  @{database}
 
 Custom suite teardown

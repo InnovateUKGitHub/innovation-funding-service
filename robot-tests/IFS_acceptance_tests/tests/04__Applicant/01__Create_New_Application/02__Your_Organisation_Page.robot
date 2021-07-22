@@ -20,7 +20,7 @@ Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-&{WebTestUserCredentials}          email=Test@hampshire.co.uk    password=${short_password}
+&{WebTestUserCredentials}   email=Test@hampshire.co.uk    password=${short_password}
 ${business_type}            Partnership
 ${organisation_name}        Best Test Company
 ${organisation_number}      1234567890

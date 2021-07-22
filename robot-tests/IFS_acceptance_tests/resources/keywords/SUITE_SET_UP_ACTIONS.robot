@@ -193,8 +193,9 @@ The user navigates to the overview page of the Robot test application
     the user navigates to the page       ${server}/application/${id}
 
 The user navigates to the finance overview of the academic
+    [Arguments]  ${appl}
     When the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link    link=Academic robot test application
+    And the user clicks the button/link    link= ${appl}
     And the user clicks the button/link    link=Finances overview
 
 invite a registered user
@@ -228,7 +229,7 @@ the user verifies email
     The user should be redirected to the correct page          ${REGISTRATION_VERIFIED}
     The user clicks the button/link                            jQuery=p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
     The guest user inserts user email and password             ${EMAIL_INVITED}  ${correct_password}
-    The guest user clicks the log-in button
+    The user clicks the button/link                            jQuery = button:contains("Sign in")
 
 the user follows the flow to register their organisation
     [Arguments]   ${org_type_id}
@@ -244,24 +245,24 @@ the user follows the flow to register their organisation
 
 the invited user fills the create account form
     [Arguments]    ${NAME}    ${LAST_NAME}
-    Input Text    id=firstName    ${NAME}
-    Input Text    id=lastName    ${LAST_NAME}
-    Input Text    id=phoneNumber    0612121212
-    Input Password    id=password    ${correct_password}
-    the user selects the checkbox    termsAndConditions
-    the user selects the checkbox    allowMarketing
-    the user clicks the button/link  css=button[type="submit"][name="create-account"]
+    Input Text                          id=firstName    ${NAME}
+    Input Text                          id=lastName    ${LAST_NAME}
+    Input Text                          id=phoneNumber    0612121212
+    Input Password                      id=password    ${correct_password}
+    the user selects the checkbox       termsAndConditions
+    the user selects the checkbox       allowMarketing
+    the user clicks the button/link     css=button[type="submit"][name="create-account"]
 
 the user enters the details and clicks the create account
     [Arguments]   ${first_name}  ${last_name}  ${email}  ${password}
     Wait Until Page Contains Element Without Screenshots    jQuery = a:contains("Terms and conditions")
-    Input Text                     name = firstName  ${first_name}
-    Input Text                     id = lastName  ${last_name}
-    Input Text                     id = phoneNumber  23232323
-    Input Text                     id = email  ${email}
-    Input Password                 id = password  ${password}
-    the user selects the checkbox    termsAndConditions
-    the user selects the checkbox    allowMarketingEmails
+    Input Text                                              name = firstName  ${first_name}
+    Input Text                                              id = lastName  ${last_name}
+    Input Text                                              id = phoneNumber  23232323
+    Input Text                                              id = email  ${email}
+    Input Password                                          id = password  ${password}
+    the user selects the checkbox                           termsAndConditions
+    the user selects the checkbox                           allowMarketingEmails
     Submit Form
 
 the user clicks the forgot psw link
@@ -270,4 +271,3 @@ the user clicks the forgot psw link
 
 Close browser and delete emails
     Close any open browsers
-    Delete the emails from the local test mailbox
