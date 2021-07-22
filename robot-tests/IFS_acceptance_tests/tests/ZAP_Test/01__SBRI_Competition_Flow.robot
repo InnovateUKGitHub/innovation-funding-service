@@ -162,7 +162,6 @@ Applicant adds another payment milestone
     [Documentation]  IFS-8938  IFS-8965
     Given the user clicks the button/link                           jQuery = button:contains("Add another project milestone")
     And the user clicks the button/link                             jQuery = button:contains("Open all")
-    #When applicant fills in payment milestone                       accordion-finances-content  5  Milestone 2  62839   Task Or Activity 2   Deliverable 2   Success Criteria 2
     When the applicant fills in a new payment milestone
     And the user clicks the button/link                             id = mark-all-as-complete
     Then applicant views saved payment milestones                   5  £62,839  Milestone 2  86.27%  £72,839  100%
@@ -354,12 +353,12 @@ Project lead responds to pending queries
     Then the user responds to the query
 
 Internal user can edit payment milestone in project setup
-     [Documentation]  IFS-8941
-     Given log in as a different user                           &{internal_finance_credentials}
-     When the user navigates to the page                        ${server}/project-setup-management/project/${sbriProjectId}/finance-check
-     And the user clicks the button/link                        jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
-     Then the user edits the payment milestone
-     And the user cannot see a validation error in the page
+    [Documentation]  IFS-8941
+    Given log in as a different user                           &{internal_finance_credentials}
+    When the user navigates to the page                        ${server}/project-setup-management/project/${sbriProjectId}/finance-check
+    And the user clicks the button/link                        jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
+    Then the user edits the payment milestone
+    And the user cannot see a validation error in the page
 
 Internal user can view validation message when payment requested is less than total project cost
     [Documentation]  IFS-8941
