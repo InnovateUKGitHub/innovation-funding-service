@@ -69,7 +69,6 @@
           method="post" novalidate="novalidate"
           enctype="multipart/form-data">
         <div th:if="${model.general.editable}" id="section-3-edit">
-
             <div class="govuk-radios">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-visually-hidden">Select the terms and conditions applicants must accept for this competition.</legend>
@@ -85,6 +84,60 @@
                         </label>
                     </div>
                 </fieldset>
+            </div>
+
+            <div id="agreement-title" class="govuk-form-group" th:classappend="${#fields.hasErrors('thirdPartyAgreementTitle')} ? 'govuk-form-group--error'">
+                 <label class="govuk-label govuk-label--s" for="thirdPartyAgreementTitle">
+                        Agreement Title
+                 </label>
+                 <span class="govuk-hint">Third Party can configure the title of the agreement.</span>
+                  <th:block th:if="${#fields.hasErrors('thirdPartyAgreementTitle')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('thirdPartyAgreementTitle')}" th:text="${err}" />
+                   </th:block>
+                    <input class="govuk-input"
+                           id="thirdPartyAgreementTitle"
+                           type="text"
+                           th:errorclass="govuk-input--error"
+                           th:field="${competitionSetupForm.thirdPartyAgreementTitle}"
+                           required="required"
+                           maxlength="255"
+                           th:attr="data-required-errormessage=#{validation.thirdParty.agreementTitle.required}" />
+            </div>
+            <div id="agreement-content" div class="govuk-form-group" th:classappend="${#fields.hasErrors('thirdPartyAgreementContent')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="thirdPartyAgreementContent">
+                    Agreement Content
+                </label>
+                <span class="govuk-hint">Third Party can configure the content of the agreement.</span>
+                <th:block th:if="${#fields.hasErrors('thirdPartyAgreementContent')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('thirdPartyAgreementContent')}" th:text="${err}" />
+                </th:block>
+                <div class="textarea-wrapped">
+                <textarea data-editor="html"
+                          class="govuk-textarea"
+                          id="thirdPartyAgreementContent"
+                          ifs:utext="${competitionSetupForm.thirdPartyAgreementContent}"
+                          th:field="${competitionSetupForm.thirdPartyAgreementContent}"
+                          required="required"
+                          th:attr="data-required-errormessage=#{validation.thirdParty.agreementContent.required}"></textarea>
+                </div>
+            </div>
+
+            <div id="project-cost-guidance-url" class="govuk-form-group" th:classappend="${#fields.hasErrors('projectCostGuidanceURL')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="projectCostGuidanceURL">
+                   Project cost guidance URL
+                </label>
+                <span class="govuk-hint">Third Party can configure the Project Cost guidance URL.</span>
+                <th:block th:if="${#fields.hasErrors('thirdPartyAgreementTitle')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('projectCostGuidanceURL')}" th:text="${err}" />
+                </th:block>
+                <input class="govuk-input"
+                       id="projectCostGuidanceURL"
+                       type="text"
+                       th:errorclass="govuk-input--error"
+                       th:field="${competitionSetupForm.projectCostGuidanceURL}"
+                       required="required"
+                       maxlength="255"
+                       th:attr="data-required-errormessage=#{validation.thirdParty.projectCostGuidanceURL.required}" />
             </div>
 
             <div id="procurement-upload" class="upload-section" th:unless="${model.includeStateAid}">

@@ -14,6 +14,11 @@ public class TermsAndConditionsFormPopulator {
         TermsAndConditionsForm termsAndConditionsForm = new TermsAndConditionsForm();
         if (competitionResource.getTermsAndConditions() != null) {
             termsAndConditionsForm.setTermsAndConditionsId(competitionResource.getTermsAndConditions().getId());
+//            if (competitionResource.getTermsAndConditions().isThirdPartyProcurement()) {
+//                ThirdPartyAgreementConfigurationForm thirdPartyAgreementConfigurationForm = new ThirdPartyAgreementConfigurationForm();
+//                thirdPartyAgreementConfigurationForm.setThirdPartyAgreementTitle("Test");
+//                termsAndConditionsForm.setThirdPartyAgreementConfigurationForm(thirdPartyAgreementConfigurationForm);
+//            }
         }
         return termsAndConditionsForm;
     }

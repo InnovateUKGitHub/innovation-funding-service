@@ -1,4 +1,4 @@
--- IFS-10081 - Procurement (Ofgem)
+-- IFS-10081 - Procurement Third Party (Ofgem)
 SET @system_maintenance_user_id = (
 SELECT id
 FROM user
