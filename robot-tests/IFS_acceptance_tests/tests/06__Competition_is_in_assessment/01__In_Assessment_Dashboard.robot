@@ -11,9 +11,9 @@ Resource          ../../resources/common/Assessor_Commons.robot
 *** Test Cases ***
 In Assessment dashboard page
     [Documentation]    INFUND-7363
-    Given The user clicks the button/link             link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    Then the user should see the competition details  ${IN_ASSESSMENT_COMPETITION_NAME}  In assessment  Materials and manufacturing  Digital manufacturing  Input and review funding decision  Invite assessors to assess the competition
-    And the user should see the element               link = View and update competition details
+    Given The user clicks the button/link                link = Assessment is awesome 2
+    Then the user should see the competition details     Assessment is awesome 2  In assessment  Materials and manufacturing  Digital manufacturing  Input and review funding decision  Invite assessors to assess the competition  Programme
+    And the user should see the element                  link = View and update competition details
 
 Milestones for In Assessment competitions
     [Documentation]    INFUND-7561
@@ -28,12 +28,12 @@ Key statistics of the In Assessment competitions
 *** Keywords ***
 The key statistics counts should be correct
     ${TOTAL_ASSIGNMENT} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Total assignments") .govuk-heading-l
-    Should Be Equal As Integers    ${TOTAL_ASSIGNMENT}    36  # Total assignments
+    Should Be Equal As Integers    ${TOTAL_ASSIGNMENT}    8  # Total assignments
     ${AWAITING} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Assignments awaiting response") .govuk-heading-l
-    Should Be Equal As Integers    ${AWAITING}    7  # Assignments awaiting response
+    Should Be Equal As Integers    ${AWAITING}    0  # Assignments awaiting response
     ${ACCEPTED} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Assignments accepted") .govuk-heading-l
-    Should Be Equal As Integers    ${ACCEPTED}    15  # Assignments accepted
+    Should Be Equal As Integers    ${ACCEPTED}    5  # Assignments accepted
     ${STARTED} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Assessments started") .govuk-heading-l
-    Should Be Equal As Integers    ${STARTED}    3  # Assessments started
+    Should Be Equal As Integers    ${STARTED}    2  # Assessments started
     ${SUBMITTED} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Assessments submitted") .govuk-heading-l
-    Should Be Equal As Integers    ${SUBMITTED}    11  # Assessments submitted
+    Should Be Equal As Integers    ${SUBMITTED}    1  # Assessments submitted
