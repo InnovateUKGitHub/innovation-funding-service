@@ -33,6 +33,12 @@ ${applicationName1}          Super-EFFY - Super Efficient Forecasting of Freight
 ${projectID1}                ${project_ids['${applicationName1}']}
 ${applicationName2}          London underground - enhancements to existing stock and logistics
 ${projectID2}                ${project_ids['${applicationName2}']}
+${ktpCompetitionName}        KTP notifications
+${ktpCompetitionId}          ${competition_ids['${ktpCompetitionName}']}
+${ktpApplicationName}        KTP notifications application
+${ktpApplicationId}          ${application_ids['${ktpApplicationName}']}
+${auditorApplication}        Auditor application
+${auditorProjectId}          ${project_ids['${auditorApplication}']}
 ${applicationName3}          Climate science the history of Greenland's ice
 ${competitionName3}          Predicting market trends programme
 ${competitionID3}            ${competition_ids['${competitionName3}']}
@@ -85,8 +91,7 @@ Auditor can not be added as a collaborator to an application
     Given log in as a different user                      &{lead_applicant_credentials}
     And existing user starts a new application            ${openCompetitionPerformance_name}  ${EMPIRE_LTD_ID}   Choose the lead organisation
     When the lead invites already registered user         ${auditorCredentials["email"]}  ${openCompetitionPerformance_name}
-    And the guest user inserts user email and password    Amy.Wigley@ukri.org     ${short_password}
-    And the guest user clicks the log-in button
+    And login to application                              Amy.Wigley@ukri.org     ${short_password}
     Then page should contain                              ${403_error_message}
 
 Auditor can view Project detials in the Project setup
@@ -122,7 +127,8 @@ Auditor can view the bank details with the 'Complete' status for the organisatio
 
 Auditor can open and view the GOL for the organisations
     [Documentation]  IFS-9886    IFS-9882
-    Given the user navigates to the page                ${SERVER}/project-setup-management/project/${projectID1}/grant-offer-letter/send
+    Given log in as a different user                    &{auditorCredentials}
+    And the user navigates to the page                  ${SERVER}/project-setup-management/project/${auditorProjectId}/grant-offer-letter/send
     And the user should see the element                 jQuery = h1:contains("Grant offer letter")
     When the user clicks the button/link                jQuery = a:contains(".pdf (opens in a new window)")
     Then the user should not see an error in the page
@@ -136,7 +142,7 @@ Auditor cannot view the bank details with the 'Review' status for the organisati
 Auditor can open and view the fEC model certificate in the project setup
     [Documentation]  IFS-9882
     Given Log in as a different user                     &{auditorCredentials}
-    And the user navigates to the page                   ${SERVER}/management/competition/${competitionId}/application/${ApplicationID}
+    And the user navigates to the page                   ${SERVER}/management/competition/${ktpCompetitionId}/application/${ktpApplicationId}
     And the user clicks the button/link                  jQuery =button:contains("Finances summary")
     And the user clicks the button/link                  jQuery = div:contains("A base of knowledge") ~ a:contains("View finances")
     And The user clicks the button/link                  jQuery = a:contains("Your fEC model")
@@ -153,6 +159,7 @@ Innovation lead cannot see inprogress applications
 Stakeholder lead cannot see inprogress applications
     [Documentation]  IFS-9986
     Given Log in as a different user                                       &{stakeholder_user}
+    And the user clicks the delivery partner tile if displayed
     When the user enters text to a text field                              id = searchQuery  ${applicationId3}
     And the user clicks the button/link                                    id = searchsubmit
     Then the user should not see the element                               jQuery = td:contains("${applicationName3}")
@@ -235,7 +242,7 @@ the user sees the read only view of project team
     the user should not see the element   jQuery = button:contains("Add team member")
 
 the user sees read only view of MO
-    the user navigates to the page         ${SERVER}/project-setup-management/project/${projectID}/monitoring-officer
+    the user navigates to the page         ${SERVER}/project-setup-management/project/${projectID1}/monitoring-officer
     the user should see the element        jQuery = h1:contains("Monitoring officer")
     the user should not see the element    jQuery = a:contains("Change monitoring officer")
 

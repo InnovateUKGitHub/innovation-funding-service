@@ -250,14 +250,14 @@ Status updates for industrial user after spend profile submission
 Academic partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-5899
     [Tags]  HappyPath
-    [Setup]    Log in as a different user           &{collaborator2_credentials_sp}
-    Given the user clicks the button/link           link = ${PS_SP_Application_Title}
-    When the user clicks the button/link            link = Spend profile
+    [Setup]    Log in as a different user                   &{collaborator2_credentials_sp}
+    Given the user clicks the button/link                   link = ${PS_SP_Application_Title}
+    When the user clicks the button/link                    link = Spend profile
     Then the user should not see an error in the page
-    And the user should see the element             jQuery = p:contains("We have reviewed and confirmed your project costs.")
-    And the user should see the element             jQuery = h2:contains("${Jabbertype_Partner_Org_Name} - Spend profile")
-    And the user clicks the button/link             link = Set up your project
-    And the user should see the element             jQuery = .message-alert:contains("You must complete your project and bank details within 30 days of our notification to you.")
+    And the user should see the element                     jQuery = p:contains("We have reviewed and confirmed your project costs.")
+    And the user should see the element                     jQuery = h2:contains("${Jabbertype_Partner_Org_Name} - Spend profile")
+    And the user clicks the button/link                     link = Set up your project
+    And the user should see the element                     jQuery = .message-alert:contains("You must complete your project and bank details within 30 days of our notification to you.")
     [Teardown]    the user goes back to the previous page
 
 Academic partner can see correct project start date and duration
@@ -269,8 +269,8 @@ Academic partner can see correct project start date and duration
 Academic partner can see the alternative academic view of the spend profile
     [Documentation]    INFUND-4819
     [Tags]
-    Then the user should see the element     jQuery = th:contains("Je-S category")
-    And the user should see the element      jQuery = th:contains("Exceptions")
+    Then the user should see the element    jQuery = th:contains("Je-S category")
+    And the user should see the element     jQuery = th:contains("Exceptions")
 
 Academic partner spend profile: validations
     [Documentation]    INFUND-5846
@@ -517,7 +517,7 @@ Status updates correctly for internal user's table after approval
     And the user navigates to the page      ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     When The user clicks the button/link    link = 2
     Then the user should see the element    css = #table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.ok        # Completed Spend profile
-    And the user should see the element     css = #table-project-status > tbody > tr:nth-child(3) > td.govuk-table__cell.status.action > a   # GOL
+    And the user should see the element     css =#table-project-status tr:nth-of-type(3) td:nth-of-type(8).status.ok         # GOL
 
 Project Finance still has a link to the spend profile after approval
     [Documentation]    INFUND-6046
@@ -801,13 +801,14 @@ the project finance user should see the spend profile details
     the user navigates to the page               ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     the user clicks the button/link              link = 2
     the user clicks the button/link              css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action > a  # Review Spend profile
-    the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
+    Log in as a different user                   &{internal_finance_credentials}
+    the user navigates to the page               ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
     the user should not see the element          jQuery = h2:contains("The spend profile has been approved")
     the user should not see the element          jQuery = h2:contains("The spend profile has been rejected")
     the user should see the element              jQuery = h2:contains("Innovation Lead") ~ p:contains("Peter Freeman")
     the user should see the element              jQuery = h2:contains("Project spend profile")
     the project finance user downloads the spend profile file and checks the content of it  ${Ooba_Lead_Org_Name}-spend-profile.csv
-    the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
+    the user navigates to the page               ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
     the user should see the element              link = ${Wordpedia_Partner_Org_Name}-spend-profile.csv
     the user should see the element              link = ${Jabbertype_Partner_Org_Name}-spend-profile.csv
     the user should see the element              jQuery = .govuk-main-wrapper h2:contains("Approved by Innovate UK")

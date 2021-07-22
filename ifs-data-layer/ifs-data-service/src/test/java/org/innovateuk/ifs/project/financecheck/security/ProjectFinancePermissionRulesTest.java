@@ -9,6 +9,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.financechecks.security.ProjectFinancePermissionRules;
+import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -38,8 +39,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProj
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.resource.ProjectState.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.AUDITOR;
-import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -52,6 +52,9 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
 
     @Mock
     private ProjectProcessRepository projectProcessRepository;
+
+    @Mock
+    private MonitoringOfficerRepository monitoringOfficerRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -664,6 +667,19 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         UserResource user = newUserResource().withRoleGlobal(AUDITOR).build();
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(project.getId()).build();
         assertTrue(rules.stakeholderUserCanSeeProjectFinancesForOrganisations(projectFinanceResource, user));
+    }
+
+    @Test
+    public void projectMoCanViewMilestoneCheck() {
+        Long organisationId = 1L;
+        UserResource userResource = newUserResource().withRoleGlobal(MONITORING_OFFICER).build();
+        UserResource userResourceNotInProject = newUserResource().withRoleGlobal(MONITORING_OFFICER).build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
+
+        when(monitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), userResource.getId())).thenReturn(true);
+
+        assertTrue(rules.projectMoCanViewMilestoneCheck(projectOrganisationCompositeId, userResource));
+        assertFalse(rules.projectMoCanViewMilestoneCheck(projectOrganisationCompositeId, userResourceNotInProject));
     }
 
     @Test
