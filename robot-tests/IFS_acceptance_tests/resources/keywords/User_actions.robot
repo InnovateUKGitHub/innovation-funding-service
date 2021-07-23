@@ -189,7 +189,7 @@ reload and check if element appears
 
 the user selects option from type ahead
     [Arguments]   ${inputId}  ${searchTerm}  ${optionSelector}
-    input text                          id = ${inputId}  ${searchTerm}
+    Wait Until Keyword Succeeds Without Screenshots    10s    200ms   input text    id = ${inputId}  ${searchTerm}
     the user clicks the button/link     jQuery = ul li:contains("${optionSelector}")
     mouse out                           ${inputId}
 
