@@ -15,4 +15,5 @@ components:
   - ../../../../patches/spring-profile-patch
   - ../../../../patches/wait-for-db-patch
 
-
+patches:
+  - config-maps/web-config.yml
