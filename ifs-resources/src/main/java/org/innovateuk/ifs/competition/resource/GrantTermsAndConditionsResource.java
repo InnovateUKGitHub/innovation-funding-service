@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * Resource representation of GrantTermsAndConditions
  */
 public class GrantTermsAndConditionsResource extends VersionedTemplateResource {
+    private static final String PROCUREMENT = "Procurement";
+    private static final String PROCUREMENT_THIRD_PARTY = "Procurement Third Party";
 
     public GrantTermsAndConditionsResource() {
     }
@@ -16,11 +18,11 @@ public class GrantTermsAndConditionsResource extends VersionedTemplateResource {
 
     @JsonIgnore
     public boolean isProcurement() {
-        return name.equals("Procurement");
+        return name.equals(PROCUREMENT);
     }
 
     @JsonIgnore
     public boolean isThirdPartyProcurement() {
-        return name.equals("Procurement-Third Party");
+        return name.equals(PROCUREMENT_THIRD_PARTY);
     }
 }
