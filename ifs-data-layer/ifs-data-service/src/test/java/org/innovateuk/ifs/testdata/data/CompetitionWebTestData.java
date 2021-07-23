@@ -492,7 +492,8 @@ public class CompetitionWebTestData {
                         "<p class=\"govuk-body\">If you are successful in your application you must sign a final contract with the funding authority which may include additional details agreed between you and the funding authority.</p>" +
                         "<p class=\"govuk-body\">If there is anything you do not understand, please <a href=\"/info/contact\">contact us</a>.</p>" +
                         "<p class=\"govuk-body govuk-!-margin-top-9 user-feedback\"><span class=\"govuk-!-font-weight-bold\">Need help with this service?</span> <a class=\"govuk-link\" href=\"/info/contact\">Contact us</a></p>")
-                .withProjectCostGuidanceUrl("https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/small-business-research-initiative-sbri-project-costs-guidance");
+                .withProjectCostGuidanceUrl("https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/small-business-research-initiative-sbri-project-costs-guidance")
+                .withTermsAndConditions("Procurement Third Party", "third-party-terms-and-conditions", 1);
     }
 
     private static CompetitionLineBuilder thirdPartyCompetition() {
