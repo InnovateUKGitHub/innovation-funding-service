@@ -118,8 +118,8 @@ Status updates correctly for internal user's table
 Project Finance can download GOL
     [Documentation]  INFUND-6377  IFS-9774
     [Tags]   HappyPath
-    [Setup]  log in as a different user                        &{internal_finance_credentials}
-    When the user navigates to the page                        ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/grant-offer-letter
+    Given log in as a different user                      &{internal_finance_credentials}
+    When the user navigates to the page                   ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/grant-offer-letter
     Then the user should not see an error in the page
 
 Non lead should not be able to see GOL until it is sent by IUK
@@ -146,8 +146,8 @@ Comp Admin cannot upload big or non-pdf grant offer letter
 
 Comp Admin is able to navigate to the Grant Offer letter page
     [Documentation]  IFS-5865
-    Given the user navigates to the page         ${server}/project-setup-management/project/${PS_LP_Application_Project_Id}/grant-offer-letter/send
-    When the user clicks the button/link         jQuery = a:contains("View the grant offer letter page")
+    Given the user navigates to the page                         ${server}/project-setup-management/project/${PS_LP_Application_Project_Id}/grant-offer-letter/send
+    When the user clicks the button/link                         jQuery = a:contains("View the grant offer letter page")
     Then the user is able to see the Grant Offer letter page
 
 Validating GOL page error message

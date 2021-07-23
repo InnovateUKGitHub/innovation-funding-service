@@ -97,21 +97,21 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
         RestResult<String> view = inviteRestService.getInviteByHash(hash).andOnSuccess(invite ->
                 inviteRestService.getInviteOrganisationByHash(hash).andOnSuccessReturn(inviteOrganisation -> {
                     if (!SENT.equals(invite.getStatus())) {
-                                return alreadyAcceptedView(response);
-                            }
-                            if (loggedInAsNonInviteUser(invite, loggedInUser)) {
-                                return LOGGED_IN_WITH_ANOTHER_USER_VIEW;
-                            }
-                            OrganisationResource organisation =
-                                    organisationRestService.getOrganisationByIdForAnonymousUserFlow(
+                        return alreadyAcceptedView(response);
+                    }
+                    if (loggedInAsNonInviteUser(invite, loggedInUser)) {
+                        return LOGGED_IN_WITH_ANOTHER_USER_VIEW;
+                    }
+                    OrganisationResource organisation =
+                            organisationRestService.getOrganisationByIdForAnonymousUserFlow(
                                     inviteOrganisation.getOrganisation()).getSuccess();
-                            registrationCookieService.saveToOrganisationIdCookie(inviteOrganisation.getOrganisation()
-                                    , response);
+                    registrationCookieService.saveToOrganisationIdCookie(inviteOrganisation.getOrganisation()
+                            , response);
                     ConfirmOrganisationInviteOrganisationViewModel viewModel =
                             confirmOrganisationInviteModelPopulator.populate(invite, organisation,
-                            RegistrationController.BASE_URL);
+                                    RegistrationController.BASE_URL);
                     model.addAttribute("model", viewModel);
-                            return "registration/confirm-invited-organisation";
+                    return "registration/confirm-invited-organisation";
                 })
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
         return view.getSuccess();
