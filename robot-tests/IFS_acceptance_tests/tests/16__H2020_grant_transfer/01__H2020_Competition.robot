@@ -222,25 +222,27 @@ The user is able to see that the application is now in project setup
     the user should see the element   link = H2020 Grant Transfer
 
 The internal user is able to progress an application to project set up
-    the user clicks the button/link       link = H2020 Grant Transfer
-    the user should see the element       jQuery = h1:contains("Open")
-    the user clicks the button/link       link = Input and review funding decision
-    the user selects the checkbox         app-row-1
-    the user clicks the button/link       jQuery = button:contains("Successful")
-    the user clicks the button/link       link = Competition
-    the user clicks the button/link       jQuery = a:contains("Manage funding notifications")
-    ${id} =  get application id by name   Project name
+    the user clicks the button/link                      link = H2020 Grant Transfer
+    the user should see the element                      jQuery = h1:contains("Open")
+    the user clicks the button/link                      link = Input and review funding decision
+    the user selects the checkbox                        app-row-1
+    the user clicks the button/link                      jQuery = button:contains("Successful")
+    the user clicks the button/link                      link = Competition
+    the user clicks the button/link                      jQuery = a:contains("Manage funding notifications")
+    ${id} =  get application id by name                  Project name
     Set suite variable  ${id}
-    the user selects the checkbox         app-row-${id}
-    the user clicks the button/link       jQuery = button:contains("Write and send email")
-    the user clicks the button/link       css = button[data-js-modal="send-to-all-applicants-modal"]
-    the user clicks the button/link       jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
-    the user refreshes until element appears on page         jQuery = td:contains("Project name") ~ td:contains("Sent")
-    the user clicks the button/link       link = Competition
-    the user clicks the button/link       link = Manage funding notifications
+    the user selects the checkbox                        app-row-${id}
+    the user clicks the button/link                      jQuery = button:contains("Write and send email")
+    the user clicks the button/link                      css = button[data-js-modal="send-to-all-applicants-modal"]
+    the user clicks the button/link                      jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
+    the user navigates to the page                       ${server}/project-setup-management/competition/${HProjectID}}/status/all
+    the user refreshes until element appears on page     jQuery = tr div:contains("${H2020_Project_Name}")
+#    the user refreshes until element appears on page         jQuery = td:contains("Project name") ~ td:contains("Sent")
+    the user clicks the button/link                      link = Competition
+    the user clicks the button/link                      link = Manage funding notifications
 
 The user starts an H2020 applcation
-   the user navigates to the page                  ${server}/competition/${competitionId}/overview
+   the user navigates to the page                   ${server}/competition/${competitionId}/overview
    the user clicks the button/link                  jQuery = a:contains("Start new application")
    check if there is an existing application in progress for this competition
    the user clicks the button/link                  jQuery=.govuk-button:contains("Save and continue")
