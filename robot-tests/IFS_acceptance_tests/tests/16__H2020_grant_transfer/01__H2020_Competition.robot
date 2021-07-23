@@ -218,28 +218,26 @@ Custom Suite Setup
     Connect to database  @{database}
 
 The user is able to see that the application is now in project setup
-    #the user clicks the button/link                     jQuery = a:contains("Project setup")
-    the user navigates to the page                       ${server}/project-setup-management/competition/${competitionId}/status/all
-    the user refreshes until element appears on page     jQuery = tr div:contains("${H2020_Project_Name}")
-    #the user should see the element                      link = H2020 Grant Transfer
+    the user clicks the button/link                     jQuery = a:contains("Project setup")
+    the user should see the element                      link = H2020 Grant Transfer
 
 The internal user is able to progress an application to project set up
-    the user clicks the button/link                      link = H2020 Grant Transfer
-    the user should see the element                      jQuery = h1:contains("Open")
-    the user clicks the button/link                      link = Input and review funding decision
-    the user selects the checkbox                        app-row-1
-    the user clicks the button/link                      jQuery = button:contains("Successful")
-    the user clicks the button/link                      link = Competition
-    the user clicks the button/link                      jQuery = a:contains("Manage funding notifications")
-    ${id} =  get application id by name                  Project name
+    the user clicks the button/link                             link = H2020 Grant Transfer
+    the user should see the element                             jQuery = h1:contains("Open")
+    the user clicks the button/link                             link = Input and review funding decision
+    the user selects the checkbox                               app-row-1
+    the user clicks the button/link                             jQuery = button:contains("Successful")
+    the user clicks the button/link                             link = Competition
+    the user clicks the button/link                             jQuery = a:contains("Manage funding notifications")
+    ${id} =  get application id by name                         Project name
     Set suite variable  ${id}
-    the user selects the checkbox                        app-row-${id}
-    the user clicks the button/link                      jQuery = button:contains("Write and send email")
-    the user clicks the button/link                      css = button[data-js-modal="send-to-all-applicants-modal"]
-    the user clicks the button/link                      jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
-    #the user refreshes until element appears on page     jQuery = td:contains("Project name") ~ td:contains("Sent")
-    the user clicks the button/link                      link = Competition
-    the user clicks the button/link                      link = Manage funding notifications
+    the user selects the checkbox                               app-row-${id}
+    the user clicks the button/link                             jQuery = button:contains("Write and send email")
+    the user clicks the button/link                             css = button[data-js-modal="send-to-all-applicants-modal"]
+    the user clicks the button/link                             jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
+    the user refreshes until h2020 element appears on page      jQuery = td:contains("Project name") ~ td:contains("Sent")
+    the user clicks the button/link                             link = Competition
+    the user clicks the button/link                             link = Manage funding notifications
 
 The user starts an H2020 applcation
    the user navigates to the page                   ${server}/competition/${competitionId}/overview
@@ -556,3 +554,12 @@ the user is able to filter on status
     the user clicks the button/link                      jQuery = button:contains("Filter")
     the user should see the element                      jQuery = td:contains("${id}")
     the user clicks the button/link                      link = Dashboard
+
+the user refreshes until h2020 element appears on page
+    [Arguments]  ${selector}
+    Wait Until Keyword Succeeds Without Screenshots     120s   2s   reload and check if h2020 element appears    ${selector}
+
+reload and check if h2020 element appears
+    [Arguments]  ${selector}
+    the user reloads the page
+    Wait Until Page Contains Element Without Screenshots    ${selector}     3s
