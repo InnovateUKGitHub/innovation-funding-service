@@ -10,6 +10,7 @@ ${yourFundingSubTitle}      Are you requesting funding?
 the user should see all the Your-Finances Sections
     the user should see the element  link = Your project costs
     the user should see the element  link = Your organisation
+    the user should see the element  link = Your project location
     the user should see the element  jQuery = h3:contains("Your funding")
     the user should see the element  jQuery = h2:contains("Finance summary")
 
@@ -273,7 +274,7 @@ the academic fills in the project costs
     The user enters text to a text field  css = [name$="exceptionsStaff"]  123
     The user enters text to a text field  css = [name$="exceptionsOtherCosts"]  7890
     The user enters text to a text field  css = input[name$="tsbReference"]  L33t
-    the user should see the element       jQuery = [data-mirror^="#total"]:contains("£32,698")
+    The user should see the element       jQuery = [data-mirror^="#total"]:contains("£32,698")
     the user uploads the file             css = .inputfile  ${5mb_pdf}
     the user should see the element       jQuery = a:contains(${5mb_pdf} (opens in a new window))
     the user clicks the button/link       css = #mark-all-as-complete[type="submit"]
@@ -389,7 +390,7 @@ the user is able to confirm the invite
     [Arguments]  ${email}  ${password}
     the user clicks the button/link                 jQuery = .govuk-button:contains("Continue")
     The guest user inserts user email and password  ${email}  ${password}
-    The guest user clicks the log-in button
+    the user clicks the button/link                 jQuery = button:contains("Sign in")
     ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    the user should see the element   jQuery = h1:contains("Confirm your organisation")
     Run Keyword If    '${status}' == 'PASS'   the user clicks the button/link   jQuery = .govuk-button:contains("Confirm and accept invitation")
     Run Keyword If    '${status}' == 'FAIL'  Run keywords    the user should see the element   jQuery = h1:contains("Your organisation")
@@ -429,6 +430,8 @@ the applicant edits the "economic benefit" question
 logged in user applies to competition
     [Arguments]  ${competition}  ${applicationType}
     the user select the competition and starts application    ${competition}
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  jQuery = label:contains("Empire Ltd")
+    Run Keyword if  '${status}' == 'PASS'    the user clicks the button twice   jQuery = label:contains("Empire Ltd")
     the user clicks the button/link                           jQuery = button:contains("Save and continue")
 
 the user select the competition and starts application

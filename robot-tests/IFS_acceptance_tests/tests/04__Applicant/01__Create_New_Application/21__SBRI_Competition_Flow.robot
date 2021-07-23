@@ -158,7 +158,6 @@ Applicant adds another payment milestone
     [Documentation]  IFS-8938  IFS-8965
     Given the user clicks the button/link                           jQuery = button:contains("Add another project milestone")
     And the user clicks the button/link                             jQuery = button:contains("Open all")
-    #When applicant fills in payment milestone                       accordion-finances-content  5  Milestone 2  62839   Task Or Activity 2   Deliverable 2   Success Criteria 2
     When the applicant fills in a new payment milestone
     And the user clicks the button/link                             id = mark-all-as-complete
     Then applicant views saved payment milestones                   5  £62,839  Milestone 2  86.27%  £72,839  100%
@@ -238,9 +237,9 @@ Lead applicant can see SBRI applications in previous section when the competitio
 
 Internal users can see SBRI competition in previous tab
     [Documentation]  IFS-7315
-    Given log in as a different user         &{ifs_admin_user_credentials}
-    When the user clicks the button/link     jQuery = a:contains("Previous")
-    then The user should see the element in the paginated list       link = ${openSBRICompetitionName}
+    Given log in as a different user                               &{ifs_admin_user_credentials}
+    When the user clicks the button/link                           jQuery = a:contains("Previous")
+    Then The user should see the element in the paginated list     link = ${openSBRICompetitionName}
 
 Internal users can see SBRI application in previous tab with submitted status
     [Documentation]  IFS-7315
@@ -298,7 +297,7 @@ The project finance user is shown a validation message when duration is less tha
     Then the user should see a field and summary error     This cannot be less than the stated payment milestones. You will need to adjust these to change the duration.
 
 The project finance user sets the duration back to a valid value
-   [Documentation]    IFS-8942
+    [Documentation]    IFS-8942
     Given the user enters text to a text field             id = durationInMonths  3
     When the user clicks the button/link                   jQuery = button:contains("Save and return to project finances")
     Then the user should see the element                   jQuery = dd:contains("3 months")
@@ -350,12 +349,12 @@ Project lead responds to pending queries
     Then the user responds to the query
 
 Internal user can edit payment milestone in project setup
-     [Documentation]  IFS-8941
-     Given log in as a different user                           &{internal_finance_credentials}
-     When the user navigates to the page                        ${server}/project-setup-management/project/${sbriProjectId}/finance-check
-     And the user clicks the button/link                        jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
-     Then the user edits the payment milestone
-     And the user cannot see a validation error in the page
+    [Documentation]  IFS-8941
+    Given log in as a different user                           &{internal_finance_credentials}
+    When the user navigates to the page                        ${server}/project-setup-management/project/${sbriProjectId}/finance-check
+    And the user clicks the button/link                        jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
+    Then the user edits the payment milestone
+    And the user cannot see a validation error in the page
 
 Internal user can view validation message when payment requested is less than total project cost
     [Documentation]  IFS-8941
@@ -399,12 +398,13 @@ Contract section is enabled without bank details
 
 Internal user can send the contract
     [Documentation]  IFS-8202  IFS-8199  IFS-8198
-    Given the user navigates to the page           ${server}/project-setup-management/project/${sbriProjectId2}/finance-check
-    And The user clicks the button/link            jQuery = button:contains("Approve finance checks")
-    When internal user generates the contract      ${sbriProjectId2}
-    And the user navigates to the page             ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
-    Then the user should see the element           jQuery = tr:contains("${sbriProjectName2}") td:contains("Pending")
-    And the user reads his email                   ${lead_international_email}     Your contract is available for project ${sbriApplicationId2}     We are pleased to inform you that your contract is now ready for you to sign
+    Given Log in as a different user                  &{internal_finance_credentials}
+    And the user navigates to the page                ${server}/project-setup-management/project/${sbriProjectId2}/finance-check
+    And The user clicks the button/link               jQuery = button:contains("Approve finance checks")
+    When internal user generates the contract         ${sbriProjectId2}
+    And the user navigates to the page                ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
+    Then the user should see the element              jQuery = tr:contains("${sbriProjectName2}") td:contains("Pending")
+    And the user reads his email                      ${lead_international_email}     Your contract is available for project ${sbriApplicationId2}     We are pleased to inform you that your contract is now ready for you to sign
 
 Check that the VAT value shows on finance table
     [Documentation]  IFS-8321
@@ -419,10 +419,10 @@ External user of international org should not see bank details
     Then the user should not see the element     jQuery = li:contains("Bank details")
 
 External user can upload the contract
-     [Documentation]  IFS-8199  IFS-8198
-     Given applicant uploads the contract
-     When the internal user approve the contract     ${sbriProjectId2}
-     Then the user reads his email                   ${lead_international_email}     Contract approved for project ${sbriApplicationId2}    We have accepted your signed contract for your project
+    [Documentation]  IFS-8199  IFS-8198
+    Given applicant uploads the contract
+    When the internal user approve the contract     ${sbriProjectId2}
+    Then the user reads his email                   ${lead_international_email}     Contract approved for project ${sbriApplicationId2}    We have accepted your signed contract for your project
 
 *** Keywords ***
 Custom Suite Setup

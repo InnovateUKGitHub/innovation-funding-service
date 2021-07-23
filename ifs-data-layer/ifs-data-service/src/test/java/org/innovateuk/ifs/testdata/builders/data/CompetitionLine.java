@@ -43,6 +43,9 @@ public class CompetitionLine {
     private Boolean includeYourOrganisation;
     private FundingRules fundingRules;
     private Boolean alwaysOpen;
+    private String termsAndConditionsLabel;
+    private String termsAndConditionsGuidance;
+    private String projectCostGuidanceUrl;
     private String termsAndConditionsName;
     private String termsAndConditionsTemplate;
     private int termsAndConditionsVersion;
@@ -329,6 +332,30 @@ public class CompetitionLine {
 
     public void setAlwaysOpen(Boolean alwaysOpen) {
         this.alwaysOpen = alwaysOpen;
+    }
+
+    public String getTermsAndConditionsLabel() {
+        return termsAndConditionsLabel;
+    }
+
+    public void setTermsAndConditionsLabel(String termsAndConditionsLabel) {
+        this.termsAndConditionsLabel = termsAndConditionsLabel;
+    }
+
+    public String getTermsAndConditionsGuidance() {
+        return termsAndConditionsGuidance;
+    }
+
+    public void setTermsAndConditionsGuidance(String termsAndConditionsGuidance) {
+        this.termsAndConditionsGuidance = termsAndConditionsGuidance;
+    }
+
+    public String getProjectCostGuidanceUrl() {
+        return projectCostGuidanceUrl;
+    }
+
+    public void setProjectCostGuidanceUrl(String projectCostGuidanceUrl) {
+        this.projectCostGuidanceUrl = projectCostGuidanceUrl;
     }
 
     public String getTermsAndConditionsName() {

@@ -1,5 +1,6 @@
 *** Settings ***
 Library           SauceLabs
+Resource          ../defaultResources.robot
 
 *** Variables ***
 ${REMOTE_URL}     ${EMPTY}
@@ -18,13 +19,13 @@ Log in as a different user
     [Arguments]    ${email}    ${password}
     logout as user
     the guest user inserts user email and password    ${email}    ${password}
-    the guest user clicks the log-in button
+    the user clicks the button/link                   jQuery = button:contains("Sign in")
 
 Logging in and Error Checking
     [Arguments]    ${email}    ${password}
     The guest user inserts user email and password    ${email}    ${password}
-    The guest user clicks the log-in button
-    Wait Until Page Contains Without Screenshots    Dashboard
+    the user clicks the button/link                   jQuery = button:contains("Sign in")
+    Wait Until Page Contains Without Screenshots      Dashboard
     the user should not see an error in the page
 
 The guest user inserts user email and password
@@ -33,10 +34,6 @@ The guest user inserts user email and password
     Wait Until Element Is Visible Without Screenshots    id=password
     Input Text    id=username    ${email}
     Input Password    id=password    ${password}
-
-The guest user clicks the log-in button
-    Wait Until Element Is Visible Without Screenshots    css=button[name="_eventId_proceed"]
-    Click Button    css=button[name="_eventId_proceed"]
 
 The guest user opens the browser
     Register keyword to run on failure    capture page screenshot on failure
@@ -79,3 +76,9 @@ the user cannot login with their new details
 
 the user logs out if they are logged in
     Run Keyword And Ignore Error Without Screenshots    log out as user
+
+login to application
+    [Arguments]    ${email}    ${password}
+    The guest user inserts user email and password       ${email}    ${password}
+    Wait Until Element Is Visible Without Screenshots    css = button[name="_eventId_proceed"]
+    Click Button                                         css=button[name="_eventId_proceed"]

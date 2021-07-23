@@ -12,33 +12,33 @@ Resource          ../../resources/common/Competition_Commons.robot
 Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
-${KTP_application}  	            KTP notifications application
-${ktp_ProjectID}                    ${project_ids["${KTP_application}"]}
-${KTP_applicationId}                ${application_ids["${KTP_application}"]}
-${KTP_competiton}                   KTP notifications
-${KTP_competitonId}                 ${competition_ids["${KTP_competiton}"]}
-${ktp_LeadOrgName}                  A base of knowledge
-${ktp_LeadOrgID}                    ${organisation_ids["${ktp_LeadOrgName}"]}
-${ktp_PartnerOrgName}               Ludlow
-${ktp_PartnerOrgId}                 ${organisation_ids["${ktp_PartnerOrgName}"]}
-${ktp_KTA_email}                    hermen.mermen@ktn-uk.test
-&{ktp_KTA_Credentials}              email=${ktp_KTA_email}    password=${short_password}
-${ktp_Lead_email}                   bob@knowledge.base
-&{ktp_Lead_Credentials}             email=${ktp_Lead_email}    password=${short_password}
-${ktp_Partner_email}                jessica.doe@ludlow.co.uk
-&{ktp_Partner_Credentials}          email=${ktp_Partner_email}    password=${short_password}
-${MemberName}                       Member
-${MemberEmail}                      member_email@gmail.com
-&{MemberCredentials}                email=${MemberEmail}    password=${short_password}
-${ktp_notification_application_id}      ${application_ids["KTP notifications application"]}
+${KTP_application}  	               KTP notifications application
+${ktp_ProjectID}                       ${project_ids["${KTP_application}"]}
+${KTP_applicationId}                   ${application_ids["${KTP_application}"]}
+${KTP_competiton}                      KTP notifications
+${KTP_competitonId}                    ${competition_ids["${KTP_competiton}"]}
+${ktp_LeadOrgName}                     A base of knowledge
+${ktp_LeadOrgID}                       ${organisation_ids["${ktp_LeadOrgName}"]}
+${ktp_PartnerOrgName}                  Ludlow
+${ktp_PartnerOrgId}                    ${organisation_ids["${ktp_PartnerOrgName}"]}
+${ktp_KTA_email}                       hermen.mermen@ktn-uk.test
+&{ktp_KTA_Credentials}                 email=${ktp_KTA_email}    password=${short_password}
+${ktp_Lead_email}                      bob@knowledge.base
+&{ktp_Lead_Credentials}                email=${ktp_Lead_email}    password=${short_password}
+${ktp_Partner_email}                   jessica.doe@ludlow.co.uk
+&{ktp_Partner_Credentials}             email=${ktp_Partner_email}    password=${short_password}
+${MemberName}                          Member
+${MemberEmail}                         member_email@gmail.com
+&{MemberCredentials}                   email=${MemberEmail}    password=${short_password}
+${ktp_notification_application_id}     ${application_ids["KTP notifications application"]}
 
 
 *** Test Cases ***
 Lead invites a new team member to the project
     [Documentation]  IFS-8974
-    Given the user navigates to the page        ${server}/applicant/dashboard
-    And the user should see the element         jQuery = .task:contains("${KTP_application}") ~ .status:contains("Project in setup")
-    When The user clicks the button/link        link = ${KTP_application}
+    Given the user navigates to the page                   ${server}/applicant/dashboard
+    And the user should see the element                    jQuery = .task:contains("${KTP_application}") ~ .status:contains("Project in setup")
+    When The user clicks the button/link                   link = ${KTP_application}
     Then the lead invites a team member to the project
 
 Internal user marks the KTP application as unsuccessful
