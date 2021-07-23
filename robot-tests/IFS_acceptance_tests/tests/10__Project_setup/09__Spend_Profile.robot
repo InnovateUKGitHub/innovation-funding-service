@@ -871,11 +871,6 @@ Industrial/academic partner able to edit SP after receiving rights from lead
     the user clicks the button/link     link = View the status of partners
     the user should see the element     css = #table-project-status tr:nth-of-type(${user_row id}) td.status.ok:nth-of-type(7)
 
-the IFS Admin approves to SP
-    the user should see the element                  jQuery = h2:contains("Innovation Lead") ~ p:contains("Peter Freeman")
-    the user selects the radio button                spendProfileApproved  true
-    the user should not see an error in the page
-
 the user invites a new partner org
     the user logs-in in new browser             &{internal_finance_credentials}
     the user navigates to the page              ${server}/project-setup-management/competition/${PS_Competition_Id}/project/${PS_SP_Project_Id}/team/partner
