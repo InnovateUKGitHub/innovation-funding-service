@@ -7,8 +7,8 @@ bases:
 
 components:
   # Ordering is important in components
-  - ../../../../components/data-layer
-  - ../../../../components/web-layer
+  - ../../../../components/data-layer/data-service
+#  - ../../../../components/web-layer/application-service
 
   - ../../../../patches/new-relic-env-vars-patch
   - ../../../../patches/pull-secrets-patch
@@ -17,4 +17,4 @@ components:
 
 patchesStrategicMerge:
   - config-maps/web-config.yml
-  - config-maps/feature-toggle-config.yml
+#  - config-maps/feature-toggle-config.yml

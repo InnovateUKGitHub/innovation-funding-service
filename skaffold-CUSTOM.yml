@@ -1,0 +1,22 @@
+apiVersion: skaffold/v2beta11
+kind: Config
+metadata:
+  name: innovation-funding-service
+build:
+  artifacts:
+    - image: data-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-data-layer:ifs-data-service
+        args:
+          - "-DskipTests"
+  local:
+    useDockerCLI: false
+    useBuildkit: false
+    tryImportMissing: false
+    push: false
+deploy:
+  kustomize:
+    paths:
+      - os-files/kustomize/env/stub/local/custom
