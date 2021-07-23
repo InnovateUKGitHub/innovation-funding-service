@@ -125,6 +125,8 @@ public class CompetitionWebTestData {
                 grantCompetition()
                         .withName("Connect competition"),
                 grantCompetition()
+                        .withName("Auditor competition"),
+                grantCompetition()
                         .withName("Innovation continuity loan competition"),
                 procurementCompetition()
                         .withName("The Sustainable Innovation Fund: SBRI phase 1"),
@@ -148,6 +150,10 @@ public class CompetitionWebTestData {
         return asList(
                 grantCompetition()
                         .withName("Sustainable living models for the future"),
+                grantCompetition()
+                        .withName("Assessment is awesome"),
+                grantCompetition()
+                        .withName("Assessment is awesome 2"),
                 grantCompetition()
                         .withName("Assessments of load capabilities"),
                 grantCompetition()
