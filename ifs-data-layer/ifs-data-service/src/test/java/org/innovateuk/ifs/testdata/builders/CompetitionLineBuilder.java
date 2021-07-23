@@ -44,15 +44,12 @@ public final class CompetitionLineBuilder {
     private Boolean includeYourOrganisation;
     private FundingRules fundingRules;
     private Boolean alwaysOpen;
-<<<<<<< HEAD
-    private String termsAndConditionsName;
-    private String termsAndConditionsTemplate;
-    private int termsAndConditionsVersion;
-=======
     private String termsAndConditionsLabel;
     private String termsAndConditionsGuidance;
     private String projectCostGuidanceUrl;
->>>>>>> feature/IFS-10104-third-party-procurement-domain-model
+    private String termsAndConditionsName;
+    private String termsAndConditionsTemplate;
+    private int termsAndConditionsVersion;
     private BuilderOrder builderOrder = BuilderOrder.ANYWHERE;
 
     private CompetitionLineBuilder() {
