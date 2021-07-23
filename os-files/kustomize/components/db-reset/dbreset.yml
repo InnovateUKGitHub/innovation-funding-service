@@ -103,4 +103,6 @@ spec:
             configMapKeyRef:
               name: flyway-config
               key: SYSTEM_USER_UUID
+        - name: IFS_TEST_USER_PASSWORD
+          value: "%%IFS_TEST_USER_PASSWORD%%"
   restartPolicy: Never
