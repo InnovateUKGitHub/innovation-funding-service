@@ -249,6 +249,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected QuestionnaireTextOutcomeService questionnaireTextOutcomeService;
     protected ApplicationOrganisationQuestionnaireResponseRepository applicationOrganisationQuestionnaireResponseRepository;
     protected QuestionnaireResponseRepository questionnaireResponseRepository;
+    protected GrantTermsAndConditionsRepository termsAndConditionsRepository;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 

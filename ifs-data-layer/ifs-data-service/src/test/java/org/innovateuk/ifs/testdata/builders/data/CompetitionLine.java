@@ -43,6 +43,9 @@ public class CompetitionLine {
     private Boolean includeYourOrganisation;
     private FundingRules fundingRules;
     private Boolean alwaysOpen;
+    private String termsAndConditionsName;
+    private String termsAndConditionsTemplate;
+    private int termsAndConditionsVersion;
     private boolean priority;
 
     public CompetitionLine() {
@@ -326,5 +329,29 @@ public class CompetitionLine {
 
     public void setAlwaysOpen(Boolean alwaysOpen) {
         this.alwaysOpen = alwaysOpen;
+    }
+
+    public String getTermsAndConditionsName() {
+        return termsAndConditionsName;
+    }
+
+    public void setTermsAndConditionsName(String termsAndConditionsName) {
+        this.termsAndConditionsName = termsAndConditionsName;
+    }
+
+    public String getTermsAndConditionsTemplate() {
+        return termsAndConditionsTemplate;
+    }
+
+    public void setTermsAndConditionsTemplate(String termsAndConditionsTemplate) {
+        this.termsAndConditionsTemplate = termsAndConditionsTemplate;
+    }
+
+    public int getTermsAndConditionsVersion() {
+        return termsAndConditionsVersion;
+    }
+
+    public void setTermsAndConditionsVersion(int termsAndConditionsVersion) {
+        this.termsAndConditionsVersion = termsAndConditionsVersion;
     }
 }

@@ -44,6 +44,9 @@ public final class CompetitionLineBuilder {
     private Boolean includeYourOrganisation;
     private FundingRules fundingRules;
     private Boolean alwaysOpen;
+    private String termsAndConditionsName;
+    private String termsAndConditionsTemplate;
+    private int termsAndConditionsVersion;
     private BuilderOrder builderOrder = BuilderOrder.ANYWHERE;
 
     private CompetitionLineBuilder() {
@@ -233,6 +236,15 @@ public final class CompetitionLineBuilder {
         return this;
     }
 
+    public CompetitionLineBuilder withTermsAndConditions(String termsAndConditionsName,
+                                                         String termsAndConditionsTemplate,
+                                                         int termsAndConditionsVersion) {
+        this.termsAndConditionsName = termsAndConditionsName;
+        this.termsAndConditionsTemplate = termsAndConditionsTemplate;
+        this.termsAndConditionsVersion = termsAndConditionsVersion;
+        return this;
+    }
+
     public CompetitionLine build() {
         CompetitionLine competitionLine = new CompetitionLine();
         competitionLine.setId(id);
@@ -270,6 +282,9 @@ public final class CompetitionLineBuilder {
         competitionLine.setIncludeYourOrganisation(includeYourOrganisation);
         competitionLine.setFundingRules(fundingRules);
         competitionLine.setAlwaysOpen(alwaysOpen);
+        competitionLine.setTermsAndConditionsName(termsAndConditionsName);
+        competitionLine.setTermsAndConditionsTemplate(termsAndConditionsTemplate);
+        competitionLine.setTermsAndConditionsVersion(termsAndConditionsVersion);
         return competitionLine;
     }
 

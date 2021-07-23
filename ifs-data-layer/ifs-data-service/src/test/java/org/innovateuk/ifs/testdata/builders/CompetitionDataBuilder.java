@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
+import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
@@ -500,6 +501,17 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             competitionAssessmentConfigResource.setAssessorFinanceView(line.getAssessorFinanceView());
             competitionAssessmentConfigResource.setIncludeAverageAssessorScoreInNotifications(false);
             competitionAssessmentConfigService.update(data.getCompetition().getId(), competitionAssessmentConfigResource);
+        });
+    }
+
+    public CompetitionDataBuilder withCompetitionTermsAndConditions(CompetitionLine line) {
+        return asCompAdmin(data -> {
+            GrantTermsAndConditions termsAndConditions = new GrantTermsAndConditions();
+            termsAndConditions.setName(line.getTermsAndConditionsName());
+            termsAndConditions.setTemplate(line.getTermsAndConditionsTemplate());
+            termsAndConditions.setVersion(line.getTermsAndConditionsVersion());
+            GrantTermsAndConditions createdTermsAndConditions = termsAndConditionsRepository.save(termsAndConditions);
+            competitionService.updateTermsAndConditionsForCompetition(data.getCompetition().getId(), createdTermsAndConditions.getId());
         });
     }
 
