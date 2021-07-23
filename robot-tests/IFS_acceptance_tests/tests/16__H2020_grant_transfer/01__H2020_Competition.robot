@@ -235,7 +235,7 @@ The internal user is able to progress an application to project set up
     the user clicks the button/link                      jQuery = button:contains("Write and send email")
     the user clicks the button/link                      css = button[data-js-modal="send-to-all-applicants-modal"]
     the user clicks the button/link                      jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
-    the user navigates to the page                       ${server}/project-setup-management/competition/${HProjectID}}/status/all
+    the user navigates to the page                       ${server}/project-setup-management/competition/${HProjectID}/status/all
     the user refreshes until element appears on page     jQuery = tr div:contains("${H2020_Project_Name}")
 #    the user refreshes until element appears on page         jQuery = td:contains("Project name") ~ td:contains("Sent")
     the user clicks the button/link                      link = Competition
