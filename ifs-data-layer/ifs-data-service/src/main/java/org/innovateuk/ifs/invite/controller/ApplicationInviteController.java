@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -66,20 +67,25 @@ public class ApplicationInviteController {
     }
 
     @PutMapping("/accept-invite/{hash}/{userId}")
-    public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
+    public RestResult<Void> acceptInvite(@PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
         return acceptApplicationInviteService.acceptInvite(hash, userId, Optional.empty())
                 .andOnSuccessReturn(result -> {
-                    crmService.syncCrmContact(userId);
+                    ServiceResult<ApplicationInviteResource> application = applicationInviteService.getInviteByHash(hash);
+                    ApplicationInviteResource applicationInviteResource = application.getSuccess();
+                    crmService.syncCrmContact(userId, applicationInviteResource.getCompetitionId(), applicationInviteResource.getApplication());
                     return result;
                 })
                 .toPutResponse();
     }
 
     @PutMapping("/accept-invite/{hash}/{userId}/{organisationId}")
-    public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") long userId, @PathVariable("organisationId") long organisationId) {
+    public RestResult<Void> acceptInvite(@PathVariable("hash") String hash, @PathVariable("userId") long userId, @PathVariable("organisationId") long organisationId) {
         return acceptApplicationInviteService.acceptInvite(hash, userId, Optional.of(organisationId))
                 .andOnSuccessReturn(result -> {
-                    crmService.syncCrmContact(userId);
+                    ServiceResult<ApplicationInviteResource> application = applicationInviteService.getInviteByHash(hash);
+                    ApplicationInviteResource applicationInviteResource = application.getSuccess();
+
+                    crmService.syncCrmContact(userId, applicationInviteResource.getCompetitionId(), applicationInviteResource.getApplication());
                     return result;
                 })
                 .toPutResponse();
