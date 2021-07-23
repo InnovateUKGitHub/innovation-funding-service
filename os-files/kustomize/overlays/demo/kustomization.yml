@@ -1,9 +1,0 @@
-commonAnnotations:
-  deployedWith: kustomize
-  environment: demo
-
-bases:
-  - ../../base
-
-patchesStrategicMerge:
-  - data-layer/data-service/data-service-deployment.yml

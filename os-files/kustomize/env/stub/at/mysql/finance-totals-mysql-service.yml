@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ifs-finance-database
+  labels:
+    app: ifs-finance-database
+spec:
+  ports:
+    - name: 3306-tcp
+      port: 3306
+      targetPort: 3306
+  selector:
+    app: ifs-finance-database

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: new-relic-env-vars-patch
+spec:
+  template:
+    spec:
+      containers:
+        env:
+          - name: NEW_RELIC_LICENSE_KEY
+            valueFrom:
+              configMapKeyRef:
+                name: new-relic-config
+                key: NEW_RELIC_LICENSE_KEY
+          - name: NEW_RELIC_LOG
+            valueFrom:
+              configMapKeyRef:
+                name: new-relic-config
+                key: NEW_RELIC_LOG

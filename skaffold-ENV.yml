@@ -6,7 +6,7 @@ profiles:
   - name: at
     build:
       local:
-        useDockerCLI: true
+        useDockerCLI: false
         useBuildkit: false
         tryImportMissing: true
         push: true
@@ -93,23 +93,16 @@ profiles:
             project: ifs-web-service:ifs-application-service
             args:
               - "-DskipTests"
-        - image: registration-service
-          context: .
-          jib:
-            type: gradle
-            project: ifs-registration-service
-            args:
-              - "-DskipTests"
     deploy:
       kubeContext: at
       kustomize:
         paths:
-          - os-files/kustomize/overlays/docker/at
+          - os-files/kustomize/env/stub/at
 
   - name: sysint
     build:
       local:
-        useDockerCLI: true
+        useDockerCLI: false
         useBuildkit: false
         tryImportMissing: true
         push: true
@@ -192,25 +185,18 @@ profiles:
           jib:
             type: gradle
             project: ifs-web-service:ifs-application-service
-            args:
-              - "-DskipTests"
-        - image: registration-service
-          context: .
-          jib:
-            type: gradle
-            project: ifs-registration-service
             args:
               - "-DskipTests"
     deploy:
       kubeContext: sysint
       kustomize:
         paths:
-          - os-files/kustomize/overlays/sysint
+          - os-files/kustomize/env/aws/sysint
 
   - name: uat
     build:
       local:
-        useDockerCLI: true
+        useDockerCLI: false
         useBuildkit: false
         tryImportMissing: true
         push: true
@@ -293,25 +279,18 @@ profiles:
           jib:
             type: gradle
             project: ifs-web-service:ifs-application-service
-            args:
-              - "-DskipTests"
-        - image: registration-service
-          context: .
-          jib:
-            type: gradle
-            project: ifs-registration-service
             args:
               - "-DskipTests"
     deploy:
       kubeContext: uat
       kustomize:
         paths:
-          - os-files/kustomize/overlays/uat
+          - os-files/kustomize/env/aws/uat
 
   - name: demo
     build:
       local:
-        useDockerCLI: true
+        useDockerCLI: false
         useBuildkit: false
         tryImportMissing: true
         push: true
@@ -394,25 +373,18 @@ profiles:
           jib:
             type: gradle
             project: ifs-web-service:ifs-application-service
-            args:
-              - "-DskipTests"
-        - image: registration-service
-          context: .
-          jib:
-            type: gradle
-            project: ifs-registration-service
             args:
               - "-DskipTests"
     deploy:
       kubeContext: demo
       kustomize:
         paths:
-          - os-files/kustomize/overlays/demo
+          - os-files/kustomize/env/aws/demo
 
   - name: perf
     build:
       local:
-        useDockerCLI: true
+        useDockerCLI: false
         useBuildkit: false
         tryImportMissing: true
         push: true
@@ -495,25 +467,18 @@ profiles:
           jib:
             type: gradle
             project: ifs-web-service:ifs-application-service
-            args:
-              - "-DskipTests"
-        - image: registration-service
-          context: .
-          jib:
-            type: gradle
-            project: ifs-registration-service
             args:
               - "-DskipTests"
     deploy:
       kubeContext: perf
       kustomize:
         paths:
-          - os-files/kustomize/overlays/perf
+          - os-files/kustomize/env/aws/perf
 
   - name: prod
     build:
       local:
-        useDockerCLI: true
+        useDockerCLI: false
         useBuildkit: false
         tryImportMissing: true
         push: true
@@ -598,22 +563,15 @@ profiles:
             project: ifs-web-service:ifs-application-service
             args:
               - "-DskipTests"
-        - image: registration-service
-          context: .
-          jib:
-            type: gradle
-            project: ifs-registration-service
-            args:
-              - "-DskipTests"
     deploy:
       kubeContext: prod
       kustomize:
         paths:
-          - os-files/kustomize/overlays/prod
+          - os-files/kustomize/env/aws/prod
   - name: db-reset
     build:
       local:
-        useDockerCLI: true
+        useDockerCLI: false
         useBuildkit: false
         tryImportMissing: true
         push: true
@@ -628,4 +586,4 @@ profiles:
     deploy:
       kustomize:
         paths:
-          - os-files/kustomize/overlays/db-reset
+          - os-files/kustomize/components/db-reset

@@ -1,0 +1,36 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: local
+
+bases:
+  - ../../stub-base
+
+components:
+
+  - ../../../../components/auth
+  - ../../../../components/cache-provider
+  - ../../../../components/ifs-database
+  - ../../../../components/sil-stub
+
+  - ../../../../patches/new-relic-env-vars-patch
+  - ../../../../patches/pull-secrets-patch
+  - ../../../../patches/spring-profile-patch
+  - ../../../../patches/wait-for-db-patch
+
+resources:
+  - config-maps/spring-config.yml
+
+  - secrets/ldap-keys-secrets.yml
+  - secrets/sp-keys-secrets.yml
+  - secrets/idp-keys-secrets.yml
+  - secrets/sp-secrets.yml
+
+#  - storage/persistent-volume-claim.yml
+#  - storage/persistent-volume.yml
+
+patchesStrategicMerge:
+  - config-maps/idp-config.yml
+  - config-maps/ldap-config.yml
+  - config-maps/shibboleth-config.yml
+  - config-maps/web-config.yml
+  - auth/registration-service/registration-deployment.yml

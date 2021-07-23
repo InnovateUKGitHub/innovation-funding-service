@@ -1,0 +1,18 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: local
+
+bases:
+  - ../../stub-base
+
+components:
+
+  - ../../../../components/data-layer
+  - ../../../../components/web-layer
+
+  - ../../../../patches/new-relic-env-vars-patch
+  - ../../../../patches/pull-secrets-patch
+  - ../../../../patches/spring-profile-patch
+  - ../../../../patches/wait-for-db-patch
+
+

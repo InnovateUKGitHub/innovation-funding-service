@@ -1,0 +1,7 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: performance-config
+data:
+  PERFORMANCE_APPLICANT_USERS: "${PERFORMANCE_APPLICANT_USERS}"
+  PERFORMANCE_h2020_USERS: "${PERFORMANCE_h2020_USERS}"
