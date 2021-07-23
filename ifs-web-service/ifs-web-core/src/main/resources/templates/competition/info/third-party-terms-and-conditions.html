@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${termsAndConditionsLabel}" />
+</head>
+<body class="govuk-template__body grant-terms-conditions">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Award terms and conditions',size='govuk-heading-l'" />
+
+        <th:block th:if="${termsAndConditions.procurementThirdParty}">
+
+            <th:block th:fragment="terms-and-conditions-content">
+                    <p class="govuk-body"><a th:href="@{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.competitionId})}">View full terms and conditions</a></p>
+            </th:block>
+
+            <p th:utext="${termsAndConditionsGuidance}"></p>
+
+        </th:block>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>

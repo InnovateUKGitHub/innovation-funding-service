@@ -114,6 +114,9 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean alwaysOpen;
     private boolean subsidyControl;
     private boolean hasBusinessAndFinancialInformationQuestion;
+    private String termsAndConditionsLabel;
+    private String termsAndConditionsGuidance;
+    private String projectCostGuidanceUrl;
 
     public CompetitionResource() {
     }
@@ -851,6 +854,30 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.subsidyControl = subsidyControl;
     }
 
+    public String getTermsAndConditionsLabel() {
+        return termsAndConditionsLabel;
+    }
+
+    public void setTermsAndConditionsLabel(String termsAndConditionsLabel) {
+        this.termsAndConditionsLabel = termsAndConditionsLabel;
+    }
+
+    public String getTermsAndConditionsGuidance() {
+        return termsAndConditionsGuidance;
+    }
+
+    public void setTermsAndConditionsGuidance(String termsAndConditionsGuidance) {
+        this.termsAndConditionsGuidance = termsAndConditionsGuidance;
+    }
+
+    public String getProjectCostGuidanceUrl() {
+        return projectCostGuidanceUrl;
+    }
+
+    public void setProjectCostGuidanceUrl(String projectCostGuidanceUrl) {
+        this.projectCostGuidanceUrl = projectCostGuidanceUrl;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -925,6 +952,9 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(alwaysOpen, that.alwaysOpen)
                 .append(subsidyControl, that.subsidyControl)
                 .append(assessmentPeriods, that.assessmentPeriods)
+                .append(termsAndConditionsLabel, that.termsAndConditionsLabel)
+                .append(termsAndConditionsGuidance, that.termsAndConditionsGuidance)
+                .append(projectCostGuidanceUrl, that.projectCostGuidanceUrl)
                 .isEquals();
     }
 
@@ -992,6 +1022,9 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(alwaysOpen)
                 .append(subsidyControl)
                 .append(assessmentPeriods)
+                .append(termsAndConditionsLabel)
+                .append(termsAndConditionsGuidance)
+                .append(projectCostGuidanceUrl)
                 .toHashCode();
     }
 
