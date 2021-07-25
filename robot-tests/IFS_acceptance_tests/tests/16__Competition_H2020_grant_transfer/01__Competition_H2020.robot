@@ -557,9 +557,9 @@ the user is able to filter on status
 
 the user refreshes until h2020 element appears on page
     [Arguments]  ${selector}
-    Wait Until Keyword Succeeds Without Screenshots     120s   2s   reload and check if h2020 element appears    ${selector}
+    Wait Until Keyword Succeeds Without Screenshots     30s   2s   reload and check if h2020 element appears    ${selector}
 
 reload and check if h2020 element appears
     [Arguments]  ${selector}
     the user reloads the page
-    Wait Until Page Contains Element Without Screenshots    ${selector}     3s
+    Wait Until Page Contains Element Without Screenshots    ${selector}     1s
