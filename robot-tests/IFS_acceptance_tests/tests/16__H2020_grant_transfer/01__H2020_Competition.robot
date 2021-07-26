@@ -218,8 +218,8 @@ Custom Suite Setup
     Connect to database  @{database}
 
 The user is able to see that the application is now in project setup
-    the user clicks the button/link                     jQuery = a:contains("Project setup")
-    the user should see the element                      link = H2020 Grant Transfer
+    the user clicks the button/link     jQuery = a:contains("Project setup")
+    the user should see the element     link = H2020 Grant Transfer
 
 The internal user is able to progress an application to project set up
     the user clicks the button/link                             link = H2020 Grant Transfer
@@ -557,9 +557,9 @@ the user is able to filter on status
 
 the user refreshes until h2020 element appears on page
     [Arguments]  ${selector}
-    Wait Until Keyword Succeeds Without Screenshots     120s   2s   reload and check if h2020 element appears    ${selector}
+    Wait Until Keyword Succeeds Without Screenshots     120s   1s   reload and check if h2020 element appears    ${selector}
 
 reload and check if h2020 element appears
     [Arguments]  ${selector}
     the user reloads the page
-    Wait Until Page Contains Element Without Screenshots    ${selector}     1s
+    Wait Until Page Contains Element Without Screenshots    ${selector}     30s
