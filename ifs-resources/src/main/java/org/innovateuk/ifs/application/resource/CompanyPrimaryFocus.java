@@ -11,6 +11,7 @@ public enum CompanyPrimaryFocus {
     CHEMICALS("Chemicals"),
     CONSTRUCTION_AND_MATERIALS("Construction and materials"),
     ELECTRONICS_AND_ELECTRICAL_EQUIPMENT("Electronics and electrical equipment"),
+    ENERGY("Energy"),
     FOOD_AND_BEVERAGE("Food and beverage"),
     GENERAL_INDUSTRIAL("General industrial"),
     HEALTHCARE("Healthcare"),
