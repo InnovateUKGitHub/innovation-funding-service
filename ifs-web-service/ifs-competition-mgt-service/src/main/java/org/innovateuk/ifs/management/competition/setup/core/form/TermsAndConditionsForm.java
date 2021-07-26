@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class TermsAndConditionsForm extends CompetitionSetupForm {
@@ -12,6 +13,15 @@ public class TermsAndConditionsForm extends CompetitionSetupForm {
     private Long termsAndConditionsId;
 
     private MultipartFile termsAndConditionsDoc;
+
+    @NotBlank(message="{validation.thirdParty.agreementTitle.required}")
+    private String thirdPartyAgreementTitle;
+
+    @NotBlank(message="{validation.thirdParty.agreementContent.required}")
+    private String thirdPartyAgreementContent;
+
+    @NotBlank(message="{validation.thirdParty.projectCostGuidanceURL.required}")
+    private String projectCostGuidanceURL;
 
     public Long getTermsAndConditionsId() {
         return termsAndConditionsId;
@@ -27,6 +37,30 @@ public class TermsAndConditionsForm extends CompetitionSetupForm {
 
     public void setTermsAndConditionsDoc(MultipartFile termsAndConditionsDoc) {
         this.termsAndConditionsDoc = termsAndConditionsDoc;
+    }
+
+    public String getThirdPartyAgreementTitle() {
+        return thirdPartyAgreementTitle;
+    }
+
+    public void setThirdPartyAgreementTitle(String thirdPartyAgreementTitle) {
+        this.thirdPartyAgreementTitle = thirdPartyAgreementTitle;
+    }
+
+    public String getThirdPartyAgreementContent() {
+        return thirdPartyAgreementContent;
+    }
+
+    public void setThirdPartyAgreementContent(String thirdPartyAgreementContent) {
+        this.thirdPartyAgreementContent = thirdPartyAgreementContent;
+    }
+
+    public String getProjectCostGuidanceURL() {
+        return projectCostGuidanceURL;
+    }
+
+    public void setProjectCostGuidanceURL(String projectCostGuidanceURL) {
+        this.projectCostGuidanceURL = projectCostGuidanceURL;
     }
 
     @Override
