@@ -39,3 +39,4 @@ public class CompetitionThirdPartyConfigResource {
         this.projectCostGuidanceUrl = projectCostGuidanceUrl;
     }
 }
+

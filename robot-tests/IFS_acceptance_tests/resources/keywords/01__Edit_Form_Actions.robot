@@ -86,19 +86,16 @@ The user edits autocomplete field
 
 the user sees the text in the element
     [Arguments]    ${element}    ${text}
-    Wait Until Element Is Visible Without Screenshots    ${element}
     Wait Until Keyword Succeeds Without Screenshots    10    500ms    element should contain    ${element}    ${text}
 
 the user sees the text in the text field
     [Arguments]    ${textfield}    ${text}
-    Wait Until Element Is Visible Without Screenshots    ${textfield}
     Wait Until Keyword Succeeds Without Screenshots    10    200ms    textfield should contain    ${textfield}    ${text}
 
 The user enters multiple strings into a text field
     [Arguments]    ${field}    ${string}    ${multiplicity}
     #Keyword uses custom IfsLibrary keyword "repeat string"
     ${concatenated_string} =    repeat string    ${string}    ${multiplicity}
-    Wait Until Element Is Visible Without Screenshots   ${field}
     Wait Until Keyword Succeeds Without Screenshots     30s    200ms    Input Text    ${field}    ${concatenated_string}
     Set Focus To Element    link=GOV.UK
 
@@ -119,7 +116,6 @@ the user selects the option from the drop-down menu
 
 the user selects the index from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
-    Wait Until Element Is Visible Without Screenshots    ${drop-down}
     Wait Until Element Is Enabled   ${drop-down}
     Select From List By Index    ${drop-down}    ${option}
     mouse out    ${drop-down}
@@ -128,7 +124,6 @@ the user selects the index from the drop-down menu
 
 the user selects the value from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
-    Wait Until Element Is Visible Without Screenshots    ${drop-down}
     Wait Until Element Is Enabled   ${drop-down}
     Select From List By value    ${drop-down}    ${option}
     mouse out    ${drop-down}

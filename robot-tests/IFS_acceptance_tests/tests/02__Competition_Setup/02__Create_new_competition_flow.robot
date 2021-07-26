@@ -746,14 +746,11 @@ Innovation leads can be added to a competition
     Given The user clicks the button/link     link = View and update competition details
     And The user clicks the button/link       link = Innovation leads
     And the user should see the element       jQuery = h1:contains("Manage innovation leads")
-    #And the user should see the element       jQuery=span.lead-count:contains("0")  # Lead count from key statistics
     When the user clicks the button/link      jQuery = td:contains(${peter_freeman}) button:contains("Add")
     Then the user should not see the element  jQuery = td:contains(${peter_freeman})
-    #And the user should not see the element   jQuery=td:contains("Ian Cooper")
     And the user should see the element       jQuery = span.lead-count:contains("1")
     When the user clicks the button/link      jQuery = a:contains("Added to competition")
     Then the user should see the element      jQuery = span.total-count:contains("1")
-    #And the user should not see the element   jQuery=td:contains("Ian Cooper")
     And the user clicks the button/link       jQuery = td:contains(${peter_freeman}) button:contains("Remove")
     And the user should see the element       jQuery = span.lead-count:contains("0")
     And the user should see the element       jQuery = span.total-count:contains("0")
@@ -763,12 +760,12 @@ Innovation leads can be added to a competition
 User deletes the competition
     [Documentation]  IFS-1084
     [Tags]  HappyPath
-    Given the comp admin creates competition
-    And The user clicks the button/link         link = No competition title defined
-    When the user clicks the button/link        link = Delete competition
-    And the user clicks the button/link         css = .delete-modal button[type="submit"]
-    And the user navigates to the page          ${CA_UpcomingComp}
-    Then The user should not see the element    link = No competition title defined
+    Given the user navigates to the page            ${CA_UpcomingComp}
+    And the user clicks the button/link             link = Create competition
+    And Get current url
+    When the user clicks the button/link            link = Delete competition
+    And the user clicks the button/link             css = .delete-modal button[type="submit"]
+    Then the user should see page not found error   ${deletedCompUrl}
 
 User deletes the competition on completing all competition details
     [Documentation]  IFS-8496
@@ -1041,3 +1038,13 @@ the comp admin creates competition with all sections details
     the user clicks the button/link                                                  link = Competition setup
     the user clicks the button/link                                                  link = Documents
     the user clicks the button/link                                                  id = doneButton
+
+Get current url
+    ${deletedCompUrl} =   get location
+    set suite variable  ${deletedCompUrl}
+
+the user should see page not found error
+    [Arguments]  ${compUrl}
+    go to                               ${compUrl}
+    the user should see the element     jQuery = h1:contains("Page not found")
+    the user should see the element     jQUery = span:contains("${compUrl}")

@@ -18,6 +18,7 @@ ${competitionTitle}                         Enhanced energy saving competition
 ${competitionId}                            ${competition_ids["${competitionTitle}"]}
 ${applicationTitle}                         Energy saver- nano tech
 ${applicationNumber}                        ${application_ids["${applicationTitle}"]}
+${energySaverProjectId}                     ${project_ids["${applicationTitle}"]}
 ${liveProjectInIFSPA}                       ${server}/project-setup-management/competition/${competitionId}/status/all
 ${leadApplicant}                            troy.ward@gmail.com
 ${newExternalUserFCEmail}                   external_user_fc@example.com
@@ -92,10 +93,10 @@ IFS Admin is able to invite an existing user as an external project manager to a
     Then ifs admin invites a new external user     Daniel  Tan  ${existingUser}  GRANTS_PROJECT_MANAGER
 
 IFS Admin cancels the invitation to external project manager
-     [Documentation]  IFS-7556
-     When the user clicks the button/link         jQuery = td:contains("${existingUser}") ~ td button:contains("Cancel invitation")
-     Then the user should not see the element     jQuery = td:contains("${existingUser}")
-     [Teardown]  logout as user
+    [Documentation]  IFS-7556
+    When the user clicks the button/link         jQuery = td:contains("${existingUser}") ~ td button:contains("Cancel invitation")
+    Then the user should not see the element     jQuery = td:contains("${existingUser}")
+    [Teardown]  logout as user
 
 The existing user should not be able to access ifs via the email invite link
     [Documentation]  IFS-7556

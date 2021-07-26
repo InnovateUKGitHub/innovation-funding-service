@@ -180,7 +180,7 @@ the internal user navigates to the project setup competition
 
 the user refreshes until element appears on page
     [Arguments]  ${selector}
-    Wait Until Keyword Succeeds Without Screenshots     35s   2s   reload and check if element appears    ${selector}
+    Wait Until Keyword Succeeds Without Screenshots     60s   2s   reload and check if element appears    ${selector}
 
 reload and check if element appears
     [Arguments]  ${selector}
@@ -189,9 +189,10 @@ reload and check if element appears
 
 the user selects option from type ahead
     [Arguments]   ${inputId}  ${searchTerm}  ${optionSelector}
-    input text                          id = ${inputId}  ${searchTerm}
+    input text                      id = ${inputId}  ${searchTerm}
+    #select from list by label       id = ${inputId}-select  ${optionSelector}
     the user clicks the button/link     jQuery = ul li:contains("${optionSelector}")
-    mouse out                           ${inputId}
+    mouse out                       ${inputId}
 
 the user sees element in type ahead
     [Arguments]   ${inputId}  ${searchTerm}  ${optionSelector}

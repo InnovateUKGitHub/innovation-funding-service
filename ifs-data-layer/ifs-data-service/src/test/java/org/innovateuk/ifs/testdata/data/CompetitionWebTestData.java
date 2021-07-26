@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import static java.util.Arrays.asList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.category.domain.InnovationArea.DIGITAL_MANUFACTORING_ID;
+import static org.innovateuk.ifs.category.domain.InnovationArea.NONE;
 import static org.innovateuk.ifs.category.domain.ResearchCategory.*;
 import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.*;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.*;
@@ -125,6 +126,8 @@ public class CompetitionWebTestData {
                 grantCompetition()
                         .withName("Connect competition"),
                 grantCompetition()
+                        .withName("Auditor competition"),
+                grantCompetition()
                         .withName("Innovation continuity loan competition"),
                 procurementCompetition()
                         .withName("The Sustainable Innovation Fund: SBRI phase 1"),
@@ -148,6 +151,10 @@ public class CompetitionWebTestData {
         return asList(
                 grantCompetition()
                         .withName("Sustainable living models for the future"),
+                grantCompetition()
+                        .withName("Assessment is awesome"),
+                grantCompetition()
+                        .withName("Assessment is awesome 2"),
                 grantCompetition()
                         .withName("Assessments of load capabilities"),
                 grantCompetition()
@@ -217,7 +224,9 @@ public class CompetitionWebTestData {
         return asList(
                 grantCompetition()
                         .withName("Photonics for health")
-                        .withLeadTechnologist(PETER_FREEMAN_ID)
+                        .withLeadTechnologist(PETER_FREEMAN_ID),
+                ofGemCompetition()
+                        .withName("OfGem competition")
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.READY_TO_OPEN))
@@ -455,6 +464,43 @@ public class CompetitionWebTestData {
                 .withFundingType(FundingType.PROCUREMENT)
                 .withInnovationSector("None")
                 .withInnovationAreas(asSet(67L))
+                .withIncludeYourOrganisation(false)
+                .withResearchRatio(100);
+    }
+
+    private static CompetitionLineBuilder ofGemCompetition() {
+        return thirdPartyCompetition()
+                .withCompetitionCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK)
+                .withTermsAndConditionsLabel("Strategic Innovation Fund Governance Document")
+                .withTermsAndConditionsGuidance("<h1 class=\"govuk-heading-l\">Award terms and conditions</h1>" +
+                        "<p class=\"govuk-body\"><a href=\"/competition/133/info/terms-and-conditions/full\">View full terms and conditions</a></p>" +
+                        "<h2 class=\"govuk-heading-m\">A summary of the award terms and conditions</h2>" +
+                        "<p class=\"govuk-body\">The full terms and conditions are specific to this procurement competition. They will differ from any you have agreed to before. By submitting an application you are agreeing to the full terms and conditions pending the final contract if you are successful. It is your responsibility to make sure you read these terms.</p>" +
+                        "<p class=\"govuk-body\">They represent an agreement between the funding authority and your organisation and include details about your obligations and the administration of your project. They cover:</p>" +
+                        "<ul class=\"govuk-list govuk-list--bullet\">" +
+                        "<li>intellectual property rights</li>" +
+                        "<li>confidentiality</li>" +
+                        "<li>publicity</li>" +
+                        "<li>accounting and payments</li>" +
+                        "<li>monitoring and reporting</li>" +
+                        "<li>final report and evaluation</li>" +
+                        "<li>termination</li>" +
+                        "<li>warranties and insurance</li>" +
+                        "<li>resolution procedure</li>" +
+                        "</ul>" +
+                        "<p class=\"govuk-body\">This list is not exhaustive.</p>" +
+                        "<p class=\"govuk-body\">If you are successful in your application you must sign a final contract with the funding authority which may include additional details agreed between you and the funding authority.</p>" +
+                        "<p class=\"govuk-body\">If there is anything you do not understand, please <a href=\"/info/contact\">contact us</a>.</p>" +
+                        "<p class=\"govuk-body govuk-!-margin-top-9 user-feedback\"><span class=\"govuk-!-font-weight-bold\">Need help with this service?</span> <a class=\"govuk-link\" href=\"/info/contact\">Contact us</a></p>")
+                .withProjectCostGuidanceUrl("https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/small-business-research-initiative-sbri-project-costs-guidance");
+    }
+
+    private static CompetitionLineBuilder thirdPartyCompetition() {
+        return anIfsCompetition()
+                .withFundingType(FundingType.PROCUREMENT)
+                .withFundingRules(FundingRules.NOT_AID)
+                .withInnovationSector("Infrastructure systems")
+                .withInnovationAreas(asSet(NONE))
                 .withIncludeYourOrganisation(false)
                 .withResearchRatio(100);
     }

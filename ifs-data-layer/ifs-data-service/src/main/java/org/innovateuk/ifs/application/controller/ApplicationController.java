@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.IneligibleOutcomeMapper;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.*;
@@ -17,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+
+
 
 /**
  * ApplicationController exposes Application data and operations through a REST API.
@@ -141,10 +142,11 @@ public class ApplicationController {
             @RequestBody JsonNode jsonObj) {
 
         String name = jsonObj.get("name").textValue();
+
         return applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId, organisationId)
-                .andOnSuccessReturn(result -> {
-                    crmService.syncCrmContact(userId);
-                    return result;
+                .andOnSuccessReturn(application -> {
+                    crmService.syncCrmContact(userId,competitionId,application.getId());
+                    return application;
                 })
                 .toPostCreateResponse();
     }

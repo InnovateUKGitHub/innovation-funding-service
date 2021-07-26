@@ -614,6 +614,8 @@ The project finance user approves bank details
     the user clicks the button/link           jQuery = .govuk-button:contains("Approve account")
 
 internal user approve uploaded documents
+    ${today} =  get today
+    set suite variable  ${today}
     the user selects the radio button      approved   true
     the user clicks the button/link        id = submit-button
     the user clicks the button/link        id = accept-document
@@ -647,7 +649,7 @@ Search for MO
 The internal user assign project to MO
     [Arguments]  ${search_ID}  ${project_name}
     the element should be disabled      jQuery = button:contains("Assign")
-    input text                          id = projectId    ${search_ID}
+    Wait Until Keyword Succeeds Without Screenshots    10s    200ms   input text  id = projectId    ${search_ID}
     the user clicks the button/link     jQuery = ul li:contains("${search_ID} - ${project_name}")
     the user clicks the button/link     jQuery = button:contains("Assign")
 
@@ -888,10 +890,10 @@ the internal user reverts the viability
     the user clicks the button/link          link = Back to finance checks
 
 the user edits the payment milestone
-     the user clicks the button/link                        id = edit
-     the user clicks the button/link                        jQuery = button:contains("Open all")
-     the user enters multiple strings into a text field     id = milestones[1].taskOrActivity    This is an edited text${SPACE}    3
-     the user clicks the button/link                        jQuery = button:contains("Save and return to payment milestone check")
+    the user clicks the button/link                        id = edit
+    the user clicks the button/link                        jQuery = button:contains("Open all")
+    the user enters multiple strings into a text field     id = milestones[1].taskOrActivity    This is an edited text${SPACE}    3
+    the user clicks the button/link                        jQuery = button:contains("Save and return to payment milestone check")
 
 the internal user approves payment milestone
     the user selects the checkbox       approve-milestones

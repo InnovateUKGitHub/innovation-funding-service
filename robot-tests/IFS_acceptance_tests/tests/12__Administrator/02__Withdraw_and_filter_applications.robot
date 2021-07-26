@@ -40,7 +40,7 @@ ${successfulState}                    Successful
 *** Test Cases ***
 The IFS Admin searches for a project and clears all filters after searching for a project
     [Documentation]  IFS-3565
-    [Setup]  The user logs-in in new browser              &{ifs_admin_user_credentials}
+    [Setup]  The user logs-in in new browser                                     &{ifs_admin_user_credentials}
     Given the user navigates to the page                                         ${server}/project-setup-management/competition/${WITHDRAWN_PROJECT_COMPETITION}/status/all
     When the user enters a project to search for and clicks the filter button    ${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}
     Then the user should see the Low-friction wheel coatings project
@@ -53,8 +53,8 @@ Manage project status Validations
 
 IFS Admin is able to Withdraw a project
     [Documentation]  IFS-2945 IFS-3654 IFS-5939
-    And the user selects the checkbox     confirmationWithdrawn
-    When the user clicks the button/link   jQuery = button:contains("Change project status")
+    And the user selects the checkbox        confirmationWithdrawn
+    When the user clicks the button/link     jQuery = button:contains("Change project status")
     Then the project should be withdrawn
 
 Withdrawn project should contain RO links only
@@ -146,8 +146,8 @@ The user should see Manage offline validations
     the user should see a field and summary error     ${empty_field_warning_message}
 
 The user should see Withdraw validations
-    the user selects the radio button   state  WITHDRAWN
-    the user clicks the button/link    jQuery = button:contains("Change project status")
+    the user selects the radio button                 state  WITHDRAWN
+    the user clicks the button/link                   jQuery = button:contains("Change project status")
     the user should see a field and summary error     ${empty_field_warning_message}
 
 The user cancels then withdraws the project
