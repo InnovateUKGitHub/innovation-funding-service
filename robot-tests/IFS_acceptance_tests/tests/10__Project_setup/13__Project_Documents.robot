@@ -164,14 +164,14 @@ Lead partner can view both documents, but not submit or remove them
 Non-lead partner can view both documents
     [Documentation]  INFUND-2621  INFUND-3011  INFUND-3013  INFUND-5806  INFUND-4428
     [Tags]
-    Given log in as a different user        &{collaborator1_credentials_bd}
-    When the user navigates to the page     ${server}/project-setup/project/${Grade_Crossing_Project_Id}
-    And the user goes to documents page     Documents  Collaboration agreement
+    Given log in as a different user              &{collaborator1_credentials_bd}
+    When the user navigates to the page           ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+    And the user goes to documents page           Documents  Collaboration agreement
     And the user should not see the element       id = submit-document-button
-    And open pdf link                           jQuery = a:contains("${valid_pdf} (opens in a new window)")
-    When the user goes to documents page        Return to documents  Exploitation plan
+    And open pdf link                             jQuery = a:contains("${valid_pdf} (opens in a new window)")
+    When the user goes to documents page          Return to documents  Exploitation plan
     And the user should not see the element       id = submit-document-button
-    Then open pdf link                          jQuery = a:contains("${valid_pdf} (opens in a new window)")
+    Then open pdf link                            jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
 #Non-lead partner cannot remove or submit right
 #    [Documentation]  INFUND-3013
@@ -360,7 +360,7 @@ IfsAdmin adds a partner organisation and all partners can see rejected documents
 IfsAdmin rejects both documents
     [Documentation]    INFUND-4620  IFS-9579
     [Tags]  HappyPath
-#    [Setup]  Log in as a different user         &{ifs_admin_user_credentials}
+    [Setup]  Log in as a different user         &{ifs_admin_user_credentials}
     Given the user navigates to the page        ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link        link = Collaboration agreement
     Then ifs admin reject uploaded documents
