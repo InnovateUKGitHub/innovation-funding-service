@@ -413,7 +413,7 @@ The user is able to complete Application details section
     the user enters text to a text field                 id = endDateYear  ${nextyear}
     the user enters text to a text field                 id = grantAgreementNumber            123456
     the user enters text to a text field                 id = participantId                   123456789
-    input text                                           id = actionType    (CSA) Coordination and Support Actions
+    Wait Until Keyword Succeeds Without Screenshots      10s    200ms   input text    id = actionType    (CSA) Coordination and Support Actions
     the user clicks the button/link                      jQuery = ul li:contains("(CSA) Coordination and Support Actions")
     the user enters text to a text field                 id = fundingContribution             123456
     the user clicks the button/link                      jQuery = label:contains("No")
