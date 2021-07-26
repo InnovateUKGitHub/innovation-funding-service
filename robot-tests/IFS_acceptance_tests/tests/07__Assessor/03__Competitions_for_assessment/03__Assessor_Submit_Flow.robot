@@ -27,6 +27,8 @@ Documentation     INFUND-550 As an assessor I want the ‘Assessment summary’ 
 ...
 ...               IFS-9962 Assessment As A Service - Introduce client's competition ID
 ...
+...               IFS-10028 "Upload successful" message should be displayed when uploading the assessment as a service csv file
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        Assessor
@@ -183,11 +185,12 @@ Progress of the applications in Dashboard
     And the user should see the element             jQuery = h3:contains("Assessment is awesome") ~ div:contains("${EXPECTED_TOTAL_ACCEPTED} applications to assess")
 
 Assessment as a service - file upload
-    [Documentation]   IFS-9961  IFS-9962
-    Given Log in as a different user            &{system_maintenance_user}
-    And the user navigates to the page          ${server}/${assessor_as_a_service_url}
-    When the user uploads the file              css = .inputfile  ${assessment-as-service}
-    Then The user should not see an error in the page
+    [Documentation]   IFS-9961  IFS-9962  IFS-10028
+    Given Log in as a different user                      &{system_maintenance_user}
+    And the user navigates to the page                    ${server}/${assessor_as_a_service_url}
+    When the user uploads the file                        css = .inputfile  ${assessment-as-service}
+    Then the user should not see an error in the page
+    And the user should see the element                   jQuery = h2:contains("Upload successful.")
 
 Assessment as a service - assign and complete assessments
     [Documentation]   IFS-9961  IFS-9962
