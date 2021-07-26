@@ -33,7 +33,6 @@ import static org.innovateuk.ifs.commons.rest.RestFailure.error;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.TERMS_AND_CONDITIONS;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 
 @Controller
@@ -120,16 +119,33 @@ public class CompetitionSetupTermsAndConditionsController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
+        if (isThirdPartyProcurement(termsAndConditionsForm.getTermsAndConditionsId())) {
+            termsAndConditionsFormPopulator.populateThirdPartyConfigData(termsAndConditionsForm, competition);
+        }
+
         if (validationHandler.hasErrors()) {
             model.addAttribute(MODEL, termsAndConditionsModelPopulator.populateModel(competition, loggedInUser, false));
             return "competition/setup";
         }
 
-        if (isProcurement(termsAndConditionsForm.getTermsAndConditionsId())) {
+        if (isThirdPartyProcurement(termsAndConditionsForm.getTermsAndConditionsId())) {
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsLabel", "Please enter third party terms and conditions label."));
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsText", "Please enter third party terms and conditions text."));
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "projectCostGuidanceLink", "Please enter project cost guidance link."));
+        }
+
+        if (isUploadRequired(termsAndConditionsForm)) {
             if (competition.getCompetitionTerms() == null) {
-                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "termsAndConditionsDoc", "Upload a terms and conditions document."));
+                if (isProcurement(termsAndConditionsForm.getTermsAndConditionsId())) {
+                    bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "termsAndConditionsDoc", "Upload a terms and conditions document."));
+                }
+
+                if (isThirdPartyProcurement(termsAndConditionsForm.getTermsAndConditionsId()))  {
+                    bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsDoc", "Upload third party terms and conditions document."));
+                }
             }
-        } else {
+        }
+        else {
             competitionSetupRestService.deleteCompetitionTerms(competitionId);
         }
 
@@ -170,7 +186,13 @@ public class CompetitionSetupTermsAndConditionsController {
         Supplier<String> postSaveRedirect = () -> postSaveRedirectForSingleTermsAndConditions(competition);
         Supplier<String> failure = () -> termsAndConditionsSection(validationHandler, competition, loggedInUser, model, saveAction, postSaveRedirect, false);
 
-        MultipartFile file = termsAndConditionsForm.getTermsAndConditionsDoc();
+        MultipartFile file = null;
+        if (competition.isProcurement()) {
+             file = termsAndConditionsForm.getTermsAndConditionsDoc();
+        }
+        if(isThirdPartyProcurement(termsAndConditionsForm.getTermsAndConditionsId())) {
+             file = termsAndConditionsForm.getThirdPartyTermsAndConditionsDoc();
+        }
         RestResult<FileEntryResource> uploadResult = competitionSetupRestService.uploadCompetitionTerms(competitionId, file.getContentType(), file.getSize(),
                 file.getOriginalFilename(), getMultipartFileBytes(file));
 
@@ -179,7 +201,9 @@ public class CompetitionSetupTermsAndConditionsController {
 
         Supplier<String> success = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", + competition.getId());
 
-        return validationHandler.addAnyErrors(error(uploadResult.getErrors()), fileUploadField("termsAndConditionsDoc"), defaultConverters())
+        String uploadFieldString = competition.isProcurement() ? "termsAndConditionsDoc" : "thirdPartytermsAndConditionsDoc";
+
+        return validationHandler.addAnyErrors(error(uploadResult.getErrors()), fileUploadField(uploadFieldString), defaultConverters())
                 .failNowOrSucceedWith(failure, success);
     }
 
@@ -193,7 +217,8 @@ public class CompetitionSetupTermsAndConditionsController {
         Supplier<String> failureAndSuccessView = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", + competition.getId());
 
         RestResult<Void> deleteResult = competitionSetupRestService.deleteCompetitionTerms(competitionId);
-        return validationHandler.addAnyErrors(error(deleteResult.getErrors()), fileUploadField("termsAndConditionsDoc"), defaultConverters())
+        String uploadFieldString = competition.isProcurement() ? "termsAndConditionsDoc" : "thirdPartytermsAndConditionsDoc";
+        return validationHandler.addAnyErrors(error(deleteResult.getErrors()), fileUploadField(uploadFieldString), defaultConverters())
                 .failNowOrSucceedWith(failureAndSuccessView, failureAndSuccessView);
     }
 
@@ -281,6 +306,14 @@ public class CompetitionSetupTermsAndConditionsController {
             return format("redirect:/competition/setup/%d/section/state-aid-terms-and-conditions", competition.getId());
         }
         return format("redirect:/competition/setup/%d/section/%s", competition.getId(), TERMS_AND_CONDITIONS.getPostMarkCompletePath());
+    }
+
+    private boolean isThirdPartyProcurement(long termsAndConditionsId) {
+        return termsAndConditionsRestService.getById(termsAndConditionsId).getSuccess().isThirdPartyProcurement();
+    }
+
+    private boolean isUploadRequired(TermsAndConditionsForm termsAndConditionsForm) {
+        return isProcurement(termsAndConditionsForm.getTermsAndConditionsId()) || isThirdPartyProcurement(termsAndConditionsForm.getTermsAndConditionsId());
     }
 
 }
