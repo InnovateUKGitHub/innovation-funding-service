@@ -50,20 +50,19 @@ ${sbriProjectId}             ${project_ids['${sbriApplicationName2}']}
 *** Test Cases ***
 Auditor can view correct number of competitions in live tab
     [Documentation]  IFS-9884  IFS-9885
-    Given log in as a different user                                    &{auditorCredentials}
+    Given log in as a different user                           &{auditorCredentials}
     Then auditor views correct number of live competitions
-    And the user should not see the element                             jQuery = a:contains("Upcoming")
-    And the user should not see the element                             jQuery = a:contains("Non-IFS")
+    And the user should not see the element                    jQuery = a:contains("Upcoming")
+    And the user should not see the element                    jQuery = a:contains("Non-IFS")
 
-Auditor can view correct number of competitions in project setup tab
+Auditor can view correct number of competitions in project setup and previous tabs
     [Documentation]  IFS-9885
-    When the user clicks the button/link                     jQuery = a:contains(Project setup)
-    Then page should contain element                         jQuery = a:contains("${psTabCompCount}")
-
-Auditor can view correct number of competitions in previous tab
-    [Documentation]  IFS-9885
-    When the user clicks the button/link                    jQuery = a:contains(Previous)
-    Then page should contain element                        jQuery = a:contains("${previousTabCompCount}")
+    Given log in as a different user                                        &{ifs_admin_user_credentials}
+    And ifs admin gets the counts of competitions in project setup tab
+    And ifs admin gets the counts of competitions in previous tab
+    When log in as a different user                                         &{auditorCredentials}
+    Then page should contain element                                        jQuery = a:contains("${psTabCompCount}")
+    And page should contain element                                         jQuery = a:contains("${previousTabCompCount}")
 
 Auditor can search for competition
     [Documentation]  IFS-9885
@@ -193,8 +192,6 @@ Custom suite setup
     Connect to Database  @{database}
     the user logs-in in new browser                                    &{ifs_admin_user_credentials}
     ifs admin gets the counts of competitions in live tab
-    ifs admin gets the counts of competitions in project setup tab
-    ifs admin gets the counts of competitions in previous tab
     ${applicationId3} =  get application id by name  ${applicationName3}
     Set suite variable  ${applicationId3}
 
