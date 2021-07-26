@@ -39,7 +39,7 @@ Resource          ../../../resources/common/Competition_Commons.robot
 ${compWithoutGrowth}         FromCompToNewAppl without GrowthTable
 ${applicationWithoutGrowth}  NewApplFromNewComp without GrowthTable
 ${compWithGrowth}            All-Innov-Areas With GrowthTable    #of Sector Competition type
-#${compWithGrowthId}          ${competition_ids['${compWithGrowth}']}
+${compWithGrowthId}          ${competition_ids['${compWithGrowth}']}
 ${applicationWithGrowth}     All-Innov-Areas Application With GrowthTable
 ${newUsersEmail}             liam@innovate.com
 ${ineligibleMessage}         Your organisation type does not match our eligibility criteria for lead applicants.

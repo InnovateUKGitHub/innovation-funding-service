@@ -87,7 +87,7 @@ Project Finance is able to see the Overheads costs file
     [Tags]  CompAdmin  HappyPath
     [Setup]  log in as a different user    &{internal_finance_credentials}
     Given the competition is now in Project Setup
-    Then the user is able to download the overheads file
+    Then The User Is Able To Download The Overheads File
 
 *** Keywords ***
 Custom Suite Setup
