@@ -206,26 +206,26 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
         QuestionResource q01Resource = setupQuestionResource(1L, "Application details", questionResourceBuilder);
 
-        SectionResource sectionResource1 = sectionResourceBuilder.
-                with(id(1L)).
-                with(name("Application details")).
-                withQuestions(simpleMap(singletonList(q01Resource), QuestionResource::getId)).
-                withPriority(1).
-                withType(SectionType.GENERAL).
-                build();
+        SectionResource sectionResource1 = sectionResourceBuilder
+                .with(id(1L))
+                .with(name("Application details"))
+                .withQuestions(simpleMap(singletonList(q01Resource), QuestionResource::getId))
+                .withPriority(1)
+                .withType(SectionType.GENERAL)
+                .build();
 
         QuestionResource q02Resource = setupQuestionResource(1L, "Research category", questionResourceBuilder);
 
         QuestionResource q10Resource = setupQuestionResource(10L, "How does your project align with the scope of this" +
                 " competition?", questionResourceBuilder);
 
-        SectionResource sectionResource2 = sectionResourceBuilder.
-                with(id(2L)).
-                with(name("Scope (Gateway question)")).
-                withQuestions(simpleMap(singletonList(q10Resource), QuestionResource::getId)).
-                withPriority(2).
-                withType(SectionType.GENERAL).
-                build();
+        SectionResource sectionResource2 = sectionResourceBuilder
+                .with(id(2L))
+                .with(name("Scope (Gateway question)"))
+                .withQuestions(simpleMap(singletonList(q10Resource), QuestionResource::getId))
+                .withPriority(2)
+                .withType(SectionType.GENERAL)
+                .build();
 
         QuestionResource q20Resource = setupQuestionResource(20L, "1. What is the business opportunity that this " +
                 "project addresses?", questionResourceBuilder);
@@ -239,14 +239,14 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         QuestionResource q23Resource = setupQuestionResource(23L, "4. What economic, social and environmental " +
                 "benefits is the project expected to deliver?", questionResourceBuilder);
 
-        SectionResource sectionResource3 = sectionResourceBuilder.
-                with(id(3L)).
-                with(name("Business proposition (Q1 - Q4)")).
-                withQuestions(simpleMap(asList(q20Resource, q21Resource, q22Resource, q23Resource),
-                        QuestionResource::getId)).
-                withPriority(3).
-                withType(SectionType.GENERAL).
-                build();
+        SectionResource sectionResource3 = sectionResourceBuilder
+                .with(id(3L))
+                .with(name("Business proposition (Q1 - Q4)"))
+                .withQuestions(simpleMap(asList(q20Resource, q21Resource, q22Resource, q23Resource),
+                        QuestionResource::getId))
+                .withPriority(3)
+                .withType(SectionType.GENERAL)
+                .build();
 
 
         QuestionResource q30Resource = setupQuestionResource(30L, "5. What technical approach will be adopted and how" +
@@ -262,14 +262,14 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         QuestionResource q33Resource = setupQuestionResource(33L, "8. Does the project team have the right skills and" +
                 " experience and access to facilities to deliver the identified benefits?", questionResourceBuilder);
 
-        SectionResource sectionResource4 = sectionResourceBuilder.
-                with(id(4L)).
-                with(name("Project approach (Q5 - Q8)")).
-                withQuestions(simpleMap(asList(q30Resource, q31Resource, q32Resource, q33Resource),
-                        QuestionResource::getId)).
-                withPriority(4).
-                withType(SectionType.GENERAL).
-                build();
+        SectionResource sectionResource4 = sectionResourceBuilder
+                .with(id(4L))
+                .with(name("Project approach (Q5 - Q8)"))
+                .withQuestions(simpleMap(asList(q30Resource, q31Resource, q32Resource, q33Resource),
+                        QuestionResource::getId))
+                .withPriority(4)
+                .withType(SectionType.GENERAL)
+                .build();
 
         SectionResource sectionResource5 = sectionResourceBuilder.with(id(5L)).with(name("Funding (Q9 - Q10)"))
                 .withPriority(5).withType(SectionType.GENERAL).build();
@@ -290,7 +290,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         SectionResource termsAndConditionsSection = newSectionResource()
                 .withType(TERMS_AND_CONDITIONS).withQuestions(singletonList(termsAndConditionsQuestion.getId())).build();
 
-        sectionResource6.setChildSections(Arrays.asList(sectionResource7.getId()));
+        sectionResource6.setChildSections(singletonList(sectionResource7.getId()));
         sectionResource7.setChildSections(Arrays.asList(sectionResource8.getId(), sectionResource9.getId(),
                 sectionResource10.getId()));
 
@@ -334,9 +334,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
         sectionResource7.setQuestionGroup(true);
 
-        questionResources.forEach((id, question) -> {
-            when(questionRestService.findById(id)).thenReturn(restSuccess(question));
-        });
+        questionResources.forEach((id, question) -> when(questionRestService.findById(id)).thenReturn(restSuccess(question)));
 
         when(questionService.getPreviousQuestionBySection(any())).thenReturn(Optional.empty());
         when(questionService.getNextQuestionBySection(any())).thenReturn(Optional.empty());
@@ -447,13 +445,13 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         application2ProcessRoles = asList(processRole6, processRole10);
         application3ProcessRoles = asList(processRole3, processRole7);
         application4ProcessRoles = asList(processRole4, processRole9);
-        application5ProcessRoles = asList(processRole11);
+        application5ProcessRoles = singletonList(processRole11);
 
         application1Organisations = asList(organisation1, organisation2);
         application2Organisations = asList(organisation1, organisation2);
-        application3Organisations = asList(organisation1);
-        application4Organisations = asList(organisation1);
-        application5Organisations = asList(organisation3);
+        application3Organisations = singletonList(organisation1);
+        application4Organisations = singletonList(organisation1);
+        application5Organisations = singletonList(organisation3);
 
         when(organisationRestService.getOrganisationsByApplicationId(applications.get(0).getId())).thenReturn
                 (restSuccess(application1Organisations));
@@ -588,7 +586,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                     questionStatusResource.setMarkedAsComplete(false);
                 }).build(1);
 
-        when(questionService.findQuestionStatusesByQuestionAndApplicationId(1l, application.getId())).thenReturn
+        when(questionService.findQuestionStatusesByQuestionAndApplicationId(1L, application.getId())).thenReturn
                 (questionStatusResources);
     }
 

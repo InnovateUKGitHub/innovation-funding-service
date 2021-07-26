@@ -34,7 +34,8 @@ Live competition calculations
     And the total calculation in dashboard should be correct     In assessment    //section[3]/ul/li
     And the total calculation in dashboard should be correct     Panel    //section[4]/ul/li
     And the total calculation in dashboard should be correct     Inform    //section[5]/ul/li
-    And the total calculation in dashboard should be correct     Live    //section/ul/li
+    #below step should be enabled once ifs-10051 is completed
+    #And the total calculation in dashboard should be correct     Live    //section/ul/li
 
 Project setup Competitions and Calculations
     [Documentation]    INFUND-3831, INFUND-3003, INFUND-2610 INFUND-5176

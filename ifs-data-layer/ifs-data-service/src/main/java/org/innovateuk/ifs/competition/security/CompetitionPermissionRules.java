@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -121,5 +122,19 @@ public class CompetitionPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ_POST_AWARD_SERVICE", description = "Allowed for users part of project on competition to read post award service during project setup")
     public boolean projectUsersCanReadPostAwardServiceForCompetition(CompetitionResource competition, UserResource user) {
         return projectUserRepository.existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), user.getId());
+    }
+    @PermissionRule(value = "READ", description = "Auditors can view all competitions")
+    public boolean auditorCanViewAllCompetitions(CompetitionResource competition, UserResource user) {
+        return user.hasAuthority(Authority.AUDITOR);
+    }
+
+    @PermissionRule(value = "READ", description = "Auditors can view all competitions")
+    public boolean auditorCanViewAllCompetitions(CompetitionSearchResultItem competition, UserResource user) {
+        return user.hasAuthority(Authority.AUDITOR);
+    }
+
+    @PermissionRule(value = "VIEW_PREVIOUS_APPLICATIONS", description = "Auditors can view all previous competitions")
+    public boolean auditorCanViewPreviousApplications(CompetitionResource competition, UserResource user) {
+        return  user.hasAuthority(Authority.AUDITOR);
     }
 }

@@ -32,6 +32,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.user.resource.Role.AUDITOR;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.mockito.Mockito.when;
 
@@ -119,6 +120,11 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
         user.setRoles(projectFinanceUser);
     }
 
+    protected void setUpUserAsAuditor(ProjectResource project, UserResource user) {
+        List<Role> auditorRoleResource = singletonList(AUDITOR);
+        user.setRoles(auditorRoleResource);
+    }
+
     protected void setUpUserNotAsProjectFinanceUser(ProjectResource project, UserResource user) {
         List<Role> projectFinanceUser = emptyList();
         user.setRoles(projectFinanceUser);
@@ -185,7 +191,5 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
         when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(
                 project.getId(), user.getId(), leadOrganisation.getId(), PROJECT_PARTNER)).thenReturn(userIsLeadPartner ? newProjectUser().build() : null);
     }
-
     protected abstract T supplyPermissionRulesUnderTest();
-
 }

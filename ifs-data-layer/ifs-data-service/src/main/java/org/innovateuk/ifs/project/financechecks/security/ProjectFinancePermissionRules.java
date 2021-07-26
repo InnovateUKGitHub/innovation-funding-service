@@ -8,10 +8,10 @@ import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResour
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.security.BasePermissionRules;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
-import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
@@ -25,6 +25,13 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
             description = "Project Finance Users can view Viability")
     public boolean projectFinanceUserCanViewViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
         return hasProjectFinanceAuthority(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_VIABILITY",
+            description = "Auditor Users can view Viability")
+    public boolean auditorUserCanViewViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return hasAuditorAuthority(user);
     }
 
     @PermissionRule(
@@ -54,6 +61,13 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
             description = "Project Finance Users can view Eligibility")
     public boolean projectFinanceUserCanViewEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
         return hasProjectFinanceAuthority(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_ELIGIBILITY",
+            description = "Auditor Users can view Eligibility")
+    public boolean auditorUserCanViewEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return hasAuditorAuthority(user);
     }
 
     @PermissionRule(
@@ -121,9 +135,23 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_MILESTONE_STATUS",
+            description = "Auditor Users can view Milestone Check")
+    public boolean auditorUserCanViewMilestoneCheck(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return hasAuditorAuthority(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_MILESTONE_STATUS",
             description = "Users can see their own Milestone Check status")
     public boolean userCanViewTheirOwnMilestoneStatus(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
         return isPartner(projectOrganisationCompositeId.getProjectId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_MILESTONE_STATUS",
+            description = "Project MO can view Milestone status")
+    public boolean projectMoCanViewMilestoneCheck(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return isMonitoringOfficer(projectOrganisationCompositeId.getProjectId(), user.getId());
     }
 
     @PermissionRule(
@@ -131,6 +159,13 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
             description = "Project Finance Users can view Funding Rules status")
     public boolean projectFinanceUserCanViewFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
         return hasProjectFinanceAuthority(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_FUNDING_RULES",
+            description = "Auditors can view Funding Rules status")
+    public boolean auditorCanViewFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return hasAuditorAuthority(user);
     }
 
     @PermissionRule(
@@ -191,6 +226,13 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_CREDIT_REPORT",
+            description = "Auditor Users can view the Credit Report flag")
+    public boolean auditorUserCanViewCreditReport(ProjectCompositeId projectCompositeId, UserResource user) {
+        return hasAuditorAuthority(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_CREDIT_REPORT",
             description = "Competition Finance Users can view the Credit Report flag")
     public boolean competitionFinanceUserCanViewCreditReport(ProjectCompositeId projectCompositeId, UserResource user) {
         return userIsExternalFinanceOnCompetitionForProject(projectCompositeId.id(), user.getId());
@@ -222,12 +264,17 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ_PROJECT_FINANCE", description = "A stakeholder user can see project finances for organisations")
     public boolean stakeholderUserCanSeeProjectFinancesForOrganisations(final ProjectFinanceResource projectFinanceResource, final UserResource user) {
-        return user.hasRole(STAKEHOLDER);
+        return user.hasAuthority(Authority.STAKEHOLDER);
     }
 
     @PermissionRule(value = "READ_PROJECT_FINANCE", description = "A Competition finance user can see project finances for organisations")
     public boolean competitionFinanceUserCanSeeProjectFinancesForOrganisations(final ProjectFinanceResource projectFinanceResource, final UserResource user) {
         return user.hasRole(EXTERNAL_FINANCE);
+    }
+
+    @PermissionRule(value = "READ_PROJECT_FINANCE", description = "MO user can see project finances for organisations")
+    public boolean moUserCanSeeProjectFinancesForOrganisations(final ProjectFinanceResource projectFinanceResource, final UserResource user) {
+        return isMonitoringOfficer(projectFinanceResource.getProject(), user.getId());
     }
 
     @PermissionRule(value = "UPDATE_PROJECT_FINANCE", description = "Project partners can update the project finances of their own project")
@@ -260,6 +307,11 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
+    @PermissionRule(value = "READ_ELIGIBILITY", description = "Auditor can see the project finances eligibility of projects")
+    public boolean auditorCanSeeTheProjectFinancesForTheirOrganisation(final FinanceCheckEligibilityResource financeCheckEligibilityResource, final UserResource user) {
+        return hasAuditorAuthority(user);
+    }
+
     @PermissionRule(value = "READ_ELIGIBILITY", description = "Internal users can see the project finances eligibility of their own project")
     public boolean competitionFinanceUsersCanSeeTheProjectFinancesForTheirOrganisation(final FinanceCheckEligibilityResource financeCheckEligibilityResource, final UserResource user) {
         return userIsExternalFinanceOnCompetitionForProject(financeCheckEligibilityResource.getProjectId(), user.getId());
@@ -270,6 +322,11 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
+    @PermissionRule(value = "READ_OVERVIEW", description = "Auditor users can see the project finance overview")
+    public boolean auditorUsersCanSeeTheProjectFinanceOverviewsForAllProjects(final ProjectCompositeId projectCompositeId, final UserResource user) {
+        return hasAuditorAuthority(user);
+    }
+
     @PermissionRule(value = "READ_OVERVIEW", description = "Competition finance users can see the project finance overview")
     public boolean competitionFinanceUsersCanSeeTheProjectFinanceOverviewsForAllProjects(final ProjectCompositeId projectCompositeId, final UserResource user) {
         return userIsExternalFinanceOnCompetitionForProject(projectCompositeId.id(), user.getId());
@@ -278,5 +335,10 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ_OVERVIEW", description = "Project partners can see their project finance overview")
     public boolean partnersCanSeeTheProjectFinanceOverviewsForTheirProject(final ProjectCompositeId projectCompositeId, final UserResource user) {
         return isPartner(projectCompositeId.id(), user.getId());
+    }
+
+    @PermissionRule(value = "READ_OVERVIEW", description = "mo can see their project finance overview")
+    public boolean moCanSeeTheProjectFinanceOverviewsForTheirProject(final ProjectCompositeId projectCompositeId, final UserResource user) {
+        return isMonitoringOfficer(projectCompositeId.id(), user.getId());
     }
 }

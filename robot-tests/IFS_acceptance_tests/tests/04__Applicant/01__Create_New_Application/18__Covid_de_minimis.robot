@@ -157,6 +157,8 @@ Competition goes into previous
 Custom Suite Setup
     The user logs-in in new browser   &{lead_applicant_credentials}
     Set predefined date variables
+    ${today}  get today
+    set suite variable  ${today}
     Connect to database  @{database}
 
 Custom Suite teardown
@@ -270,6 +272,8 @@ External project finance creates account
 
 the user completes the covid deminimus application
     the user clicks the button/link                          jQuery = a:contains("Start new application")
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  jQuery = label:contains("Empire Ltd")
+    Run Keyword if  '${status}' == 'PASS'    the user clicks the button twice   jQuery = label:contains("Empire Ltd")
     the user clicks the button/link                          jQuery = button:contains("Save and continue")
     the user clicks the button/link                          link = Application details
     the user fills in the Application details                ${COVIDdeminimusapplicationTitle1}  ${tomorrowday}  ${month}  ${nextyear}

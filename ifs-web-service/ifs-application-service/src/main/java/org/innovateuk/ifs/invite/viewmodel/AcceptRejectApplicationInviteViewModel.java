@@ -21,6 +21,7 @@ public class AcceptRejectApplicationInviteViewModel implements BaseAnalyticsView
                                                   final String leadApplicantEmail,
                                                   final boolean inviteOrganisationExists,
                                                   final boolean leadOrganisation) {
+        this.applicationId = applicationId;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.leadOrganisationName = leadOrganisationName;

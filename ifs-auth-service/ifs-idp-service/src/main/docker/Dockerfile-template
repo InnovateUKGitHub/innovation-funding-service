@@ -1,11 +1,17 @@
-FROM docker-ifs.devops.innovateuk.org/releases/openjdk
+FROM adoptopenjdk/openjdk11
 EXPOSE 9443
 
-ENV IDPVER="3.3.3"
+ENV IDPVER="4.1.0"
 ENV JAVA_HOME=/opt/java/openjdk
+RUN ls -al $JAVA_HOME/lib/security/cacerts
+
+RUN apt-get update -y
+RUN apt-get install wget
+RUN apt-get install -y libarchive-tools
 
 # packages and stuff \
 COPY idp/build.xml /idp/
+COPY idp/idp.installation.properties /idp/
 RUN apt-get update --fix-missing && \
   echo "noclobber = off" >> wgetrc && \
   echo "dir_prefix = ." >> wgetrc && \
@@ -13,19 +19,21 @@ RUN apt-get update --fix-missing && \
   echo "progress = dot:mega" >> wgetrc && \
   echo "tries = 5" >> wgetrc
 # Open JDK \
-RUN  apt-get -y install ca-certificates java-common openssl unzip curl wget apt-transport-https bsdtar
+ RUN  apt-get -y install ca-certificates java-common openssl unzip curl wget apt-transport-https
+
 # tomcat for IDP. Permission changes here due to https://github.com/docker-library/tomcat/issues/35#issuecomment-238014866 \
-RUN  apt-get -y install tomcat8 libtcnative-1 tomcat8-common libtomcat8-java libecj-java ucf && \
-  rm -Rf /var/lib/tomcat8/webapps/ROOT/ && \
-  chown -R www-data:0 /var/cache/tomcat8 && \
-  chmod -R u=rwX,g=rwX,o= /var/cache/tomcat8
+RUN  apt-get -y install tomcat9 libtcnative-1  libecj-java ucf && \
+  rm -Rf /var/lib/tomcat9/webapps/ROOT/ && \
+  chown -R www-data:0 /var/cache/tomcat9 && \
+  chmod -R u=rwX,g=rwX,o= /var/cache/tomcat9
 # jstl lib for IDP status page \
 RUN  WGETRC=wgetrc wget --continue https://build.shibboleth.net/nexus/service/local/repositories/thirdparty/content/javax/servlet/jstl/1.2/jstl-1.2.jar && \
-  mv jstl-1.2.jar /usr/share/tomcat8/lib/
+  mv jstl-1.2.jar /usr/share/tomcat9/lib/
 # Shibboleth IDP \
-RUN  WGETRC=wgetrc wget --continue -O- http://shibboleth.net/downloads/identity-provider/archive/$IDPVER/shibboleth-identity-provider-$IDPVER.tar.gz | bsdtar -C /root -xf - && \
-  sed "s/3\.3\.1/$IDPVER/" /idp/build.xml > /root/shibboleth-identity-provider-$IDPVER/bin/build.xml && rm -f /idp/build.xml && \
-  (cd /root/shibboleth-identity-provider-$IDPVER/bin; ./install.sh) && rm -rf /root/shibboleth-identity-provider-$IDPVER
+RUN  WGETRC=wgetrc wget --continue -O- https://shibboleth.net/downloads/identity-provider/archive/$IDPVER/shibboleth-identity-provider-$IDPVER.tar.gz | bsdtar -C /root -xf - && \
+  mv /idp/idp.installation.properties /root/shibboleth-identity-provider-$IDPVER/ && \
+  rm -f /idp/build.xml && \
+  (cd /root/shibboleth-identity-provider-$IDPVER/bin; ./install.sh -Didp.src.dir=/root/shibboleth-identity-provider-$IDPVER/  -Didp.property.file=idp.installation.properties) && rm -rf /root/shibboleth-identity-provider-$IDPVER
 # apache. not strictly needed \
 RUN  apt-get -y install grep lsof net-tools ldap-utils apache2 && \
   apt-get autoclean && apt-get remove --purge --auto-remove -y unzip wget && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
@@ -90,20 +98,20 @@ RUN  mkdir /etc/apache2/certs && \
 
   rm -rf /apache
 
-RUN mkdir /etc/tomcat8/certs && \
+RUN mkdir /etc/tomcat9/certs && \
 # see also certificates and substitutions in entrypoint script \
-  mv /idp/server.xml /etc/tomcat8/ && \
-  mv /opt/shibboleth-idp/war/idp.war /var/lib/tomcat8/webapps/ && \
+  mv /idp/server.xml /etc/tomcat9/ && \
+  mv /opt/shibboleth-idp/war/idp.war /var/lib/tomcat9/webapps/ && \
   mkdir /etc/shibboleth && \
   mv /idp/metadata.xml /etc/shibboleth/ && \
   mv /idp/idp.properties /idp/ldap.properties /idp/*.xml /opt/shibboleth-idp/conf/ && \
 
 # run tomcat/idp as its own user
-  mkdir -p /var/run/tomcat8 /tmp/tomcat8-tomcat8-tmp && \
-  chown -R www-data:0 /etc/shibboleth /opt/shibboleth-idp /var/run/tomcat8 /tmp/tomcat8-tomcat8-tmp /usr/local/bin \
-                      /etc/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 "$JAVA_HOME"/jre/lib/security/cacerts && \
-  chmod -R u=rwX,g=rwX,o= /etc/shibboleth /opt/shibboleth-idp /var/run/tomcat8 /tmp/tomcat8-tomcat8-tmp /usr/local/bin \
-                          /etc/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 "$JAVA_HOME"/jre/lib/security/cacerts && \
+  mkdir -p /var/run/tomcat9 /tmp/tomcat9-tomcat9-tmp && \
+  chown -R www-data:0 /etc/shibboleth /opt/shibboleth-idp /var/run/tomcat9 /tmp/tomcat9-tomcat9-tmp /usr/local/bin \
+                      /etc/tomcat9 /var/lib/tomcat9 /usr/share/tomcat9 /var/cache/tomcat9 "$JAVA_HOME"/lib/security/cacerts && \
+  chmod -R u=rwX,g=rwX,o= /etc/shibboleth /opt/shibboleth-idp /var/run/tomcat9 /tmp/tomcat9-tomcat9-tmp /usr/local/bin \
+                          /etc/tomcat9 /var/lib/tomcat9 /usr/share/tomcat9 /var/cache/tomcat9 "$JAVA_HOME"/lib/security/cacerts && \
 
 # Move files required for IDP/SP "extras" process which allows multiple IDP/SPs to be created
   mkdir /etc/shibboleth/extras && \

@@ -3,6 +3,7 @@ Documentation     IFS-6062 Activity Log front-end
 ...
 ...               IFS-9579 MO documents: Change of internal approve/reject authority
 ...
+Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  HappyPath
 Resource          ../../resources/defaultResources.robot
@@ -71,6 +72,10 @@ The admin is able to see existing log entries
     Then The admin is able to see all existing log entries
 
 *** Keywords ***
+Custom suite setup
+    ${today}  get today
+    set suite variable  ${today}
+
 The user approves documents
     the user navigates to the page         ${server}/project-setup-management/project/${PsActivityLogProjectId}/document/all
     the user clicks the button/link        link = Exploitation plan
@@ -86,10 +91,10 @@ The user completes documents
 The user completes project team
     the user clicks the button/link     link = Project team
     the user clicks the button/link     jQuery = a:contains("Project"):contains("manager")
-    the user selects the radio button   projectManager   54
+    the user clicks the button/link     jQuery = label:contains("Jesse Edwards")
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user clicks the button/link     jQuery = a:contains("Your finance contact")
-    the user selects the radio button   financeContact   54
+    the user clicks the button/link     jQuery = label:contains("Jesse Edwards")
     the user clicks the button/link     jQuery = button:contains("Save and continue")
 
 The admin navigates to project activity log

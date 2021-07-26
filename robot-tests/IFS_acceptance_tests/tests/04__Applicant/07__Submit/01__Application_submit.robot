@@ -202,15 +202,15 @@ the user marks every section but one as complete
     the lead applicant fills all the questions and marks as complete(programme)
 
 Your Project costs section is read-only once application is marked as complete
-    the user navigates to Your-finances page  ${application_rto_name}
-    the user clicks the button/link             link = Your project costs
-    the user should not see the element         css = input
-    the user clicks the button/link            jQuery = button:contains("Overhead costs")
-    the user should not see the element        css = input
+    the user navigates to Your-finances page     ${application_rto_name}
+    the user clicks the button/link              link = Your project costs
+    the user should not see the element          css = input
+    the user clicks the button/link              jQuery = button:contains("Overhead costs")
+    the user should not see the element          css = input
 
 the user can submit their application
-    the user should be redirected to the correct page  review-and-submit
+    the user should be redirected to the correct page     review-and-submit
     the applicant clicks Yes in the submit modal
-    the user should be redirected to the correct page  track
-    And the user should see the element                     jQuery = h2:contains("Application submitted")
-    And The user should see the element                     link = Give us feedback
+    the user should be redirected to the correct page     track
+    the user should see the element                       jQuery = h2:contains("Application submitted")
+    The user should see the element                       link = Give us feedback

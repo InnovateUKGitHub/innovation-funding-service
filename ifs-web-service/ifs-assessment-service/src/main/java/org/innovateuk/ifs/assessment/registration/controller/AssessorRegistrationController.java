@@ -154,7 +154,7 @@ public class AssessorRegistrationController {
     }
 
     private String doViewYourDetails(Model model, String inviteHash) {
-        model.addAttribute("model", aRegistrationViewModel().withButtonText("Continue").withAddressRequired(true).withPhoneRequired(true).withInvitee(true).build());
+        model.addAttribute("model", aRegistrationViewModel().withButtonText("Continue").withAddressRequired(true).withPhoneRequired(true).withInvitee(true).withShowBackLink(true).build());
         return "registration/register";
     }
 

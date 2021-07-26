@@ -15,65 +15,159 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="my-applications">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project setup',size='govuk-heading-l'" />
-            <section th:if="${model.hasAnyInSetup()}" class="projects-in-setup">
-                <div class="progress-list">
-                    <h2 class="govuk-heading-m">Projects in setup</h2>
-                    <ul>
-                        <li th:each="projectView : ${model.projects}"
-                            th:unless="${projectView.projectState.complete}">
-                            <div class="task">
-                                <h3 class="govuk-heading-s">
-                                    <a th:href="${projectView.linkUrl}"
-                                       th:text="${projectView.title}"
-                                       class="govuk-link">PROJECT NAME</a>
-                                </h3>
-                                <ul class="application-details">
-                                    <li>Project number: <span th:text="${projectView.applicationNumber}">PROJECT NUMBER</span></li>
-                                    <li>Competition: <span th:text="${projectView.competitionTitle}">COMPETITION NAME</span></li>
+            <form th:object="${form}" method="post" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-third">
+                    <form id="filter-projects" method="GET">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-0">
+                                <h2 class="govuk-fieldset__heading">
+                                    Filter projects
+                                </h2>
+                            </legend>
+                            <hr class="govuk-section-break govuk-section-break--visible" />
+                            <div class="govuk-form-group govuk-!-margin-top-6">
+                                <h2 class="govuk-heading-s govuk-!-margin-bottom-2">
+                                    Filter projects
+                                </h2>
+                                <div class="govuk-checkboxes">
+                                    <div class="govuk-checkboxes__item">
+                                        <input id="projectInSetup"
+                                               class="govuk-checkboxes__input"
+                                               type="checkbox"
+                                               value="projectInSetup"
+                                               th:field="${form.projectInSetup}"
+                                        />
+                                        <label for="projectInSetup" class="govuk-label govuk-checkboxes__label">
+                                            <span th:text="'In setup (' + ${model.monitoringOfficerSummaryView.inSetupProjectCount} + ')'">In setup (18)</span>
+                                        </label>
+                                    </div>
+                                    <div class="govuk-checkboxes__item">
+                                        <input id="previousProject"
+                                               class="govuk-checkboxes__input"
+                                               type="checkbox"
+                                               value="previousProject"
+                                               th:field="${form.previousProject}"
+                                        />
+                                        <label for="previousProject" class="govuk-label govuk-checkboxes__label">
+                                            <span th:text="'Previous (' + ${model.monitoringOfficerSummaryView.previousProjectCount} + ')'">Previous (5)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${model.isMOJourneyUpdateEnabled}"
+                                 class="govuk-form-group govuk-!-margin-top-7">
+                                <h2 class="govuk-heading-s govuk-!-margin-bottom-2">
+                                    Documents status
+                                </h2>
+                                <div class="govuk-checkboxes">
+                                    <div class="govuk-checkboxes__item">
+                                        <input id="documentsComplete"
+                                               class="govuk-checkboxes__input"
+                                               type="checkbox"
+                                               value="documentsComplete"
+                                               th:field="${form.documentsComplete}"
+                                        />
+                                        <label for="documentsComplete" class="govuk-label govuk-checkboxes__label">
+                                            <span th:text="'Complete (' + ${model.monitoringOfficerSummaryView.documentsCompleteCount} + ')'">Complete (7)</span>
+                                        </label>
+                                    </div>
+                                    <div class="govuk-checkboxes__item">
+                                        <input id="documentsIncomplete"
+                                               class="govuk-checkboxes__input"
+                                               type="checkbox"
+                                               value="documentsIncomplete"
+                                               th:field="${form.documentsIncomplete}"
+                                        />
+                                        <label for="documentsIncomplete" class="govuk-label govuk-checkboxes__label">
+                                            <span th:text="'Incomplete (' + ${model.monitoringOfficerSummaryView.documentsIncompleteCount} + ')'">Incomplete (5)</span>
+                                        </label>
+                                    </div>
+                                    <div class="govuk-checkboxes__item">
+                                        <input id="documentsAwaitingReview"
+                                               class="govuk-checkboxes__input"
+                                               type="checkbox"
+                                               value="documentsAwaitingReview"
+                                               th:field="${form.documentsAwaitingReview}"
+                                        />
+                                        <label for="documentsAwaitingReview" class="govuk-label govuk-checkboxes__label">
+                                            <span th:text="'Awaiting review (' + ${model.monitoringOfficerSummaryView.documentsAwaitingReviewCount} + ')'">Awaiting review (7)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="govuk-form-group govuk-!-margin-top-9">
+                                <button class="govuk-button" id="update-documents-results-button">Update results</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                    <div class="govuk-grid-column-two-thirds">
+                        <h2 class="govuk-heading-s govuk-!-margin-0" th:text="${model.projectCount == 1 ? '1 project' : model.projectCount + ' projects' }">37 projects</h2>
+                        <th:block th:if="${model.emptyResults}">
+                            <div class="govuk-!-margin-bottom-6">
+                                <h2 class="govuk-heading-l">No results found</h2>
+                                <ul class="govuk-list govuk-list--bullet">
+                                    <li>please check your search criteria and try again</li>
                                 </ul>
                             </div>
-                            <div class="status">
-                                <strong class="status-msg msg-progress">
-                                    Monitor project
-                                </strong>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </section>
-            <section th:if="${model.hasAnyInPrevious()}" class="projects-in-previous">
-                <div class="progress-list">
-                    <h2 class="govuk-heading-m">Previous</h2>
-                    <ul>
-                        <li th:each="projectView : ${model.projects}"
-                            th:if="${projectView.projectState.complete}">
-                            <div class="task">
-                                <h3 class="govuk-heading-s">
-                                    <a th:href="${projectView.linkUrl}"
-                                       th:text="${projectView.title}"
-                                       class="govuk-link">PROJECT NAME</a>
-                                </h3>
-                                <ul class="application-details">
-                                    <li>Project number: <span th:text="${projectView.applicationNumber}">PROJECT NUMBER</span></li>
-                                    <li>Competition: <span th:text="${projectView.competitionTitle}">COMPETITION NAME</span></li>
+                        </th:block>
+                        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0" />
+                        <th:block th:unless="${model.emptyResults}">
+                            <div class="progress-list progress-list--individual-blocks">
+                                <ul>
+                                    <li th:each="projectView : ${model.projects}">
+                                        <div class="task">
+                                            <h3 class="govuk-heading-s">
+                                                <a th:href="${projectView.linkUrl}" th:text="${projectView.title}" class="govuk-link">PROJECT NAME</a>
+                                            </h3>
+                                            <ul class="application-details">
+                                                <li>Project number: <span th:text="${projectView.applicationNumber}">PROJECT NUMBER</span></li>
+                                                <li>Competition: <span th:text="${projectView.competitionTitle}">COMPETITION NAME</span></li>
+                                            </ul>
+                                        </div>
+                                        <div class="status">
+                                            <th:block th:unless="${projectView.projectState.complete}">
+                                                <strong class="status-msg msg-progress">
+                                                Monitor project
+                                            </strong>
+                                            </th:block>
+                                            <th:block th:if="${projectView.projectState.complete}">
+                                                <p th:if="${projectView.liveOrCompletedOffline}" class="govuk-body status-msg msg-progress">Live project</p>
+                                                <p th:if="${projectView.unsuccessful}" class="govuk-body status-msg msg-progress msg-negative">Unsuccessful</p>
+                                                <p th:if="${projectView.withdrawn}" class="govuk-body status-msg msg-progress">Withdrawn</p>
+                                            </th:block>
+                                        </div>
+
+                                        <div th:if="${model.isMOJourneyUpdateEnabled and projectView.documentSectionViewModel.hasDocumentSection}"
+                                             class="task govuk-!-margin-bottom-0">
+                                            <ul>
+                                                <li>
+                                                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-4 govuk-!-margin-bottom-3"/>
+                                                    <div class="task">
+                                            <span class="govuk-heading-s">
+                                                <a th:if="${projectView.documentSectionViewModel.hasDocumentForReview}"
+                                                   th:href="${projectView.documentSectionViewModel.getDocumentLinkUrl}"
+                                                   class="govuk-link">Documents</a>
+
+                                                <h5 th:unless="${projectView.documentSectionViewModel.hasDocumentForReview}"
+                                                    class="govuk-!-margin-top-0 govuk-!-margin-bottom-0">Documents</h5>
+                                            </span>
+                                                    </div>
+
+                                                    <div th:if="${projectView.documentSectionViewModel.hasDocumentSection}"
+                                                         th:insert="project/fragments :: mo-project-setup-status-indicator(${projectView.documentSectionViewModel.documentSectionStatus})"></div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
                                 </ul>
                             </div>
-                            <div class="status">
-                                <p th:if="${projectView.liveOrCompletedOffline}" class="govuk-body status-msg msg-progress">Live project</p>
-                                <p th:if="${projectView.unsuccessful}" class="govuk-body status-msg msg-progress msg-negative">Unsuccessful</p>
-                                <p th:if="${projectView.withdrawn}" class="govuk-body status-msg msg-progress">Withdrawn</p>
-                            </div>
-                        </li>
-                    </ul>
+                        </th:block>
+                    </div>
                 </div>
-            </section>
-            <section class="terms-and-conditions">
-                <p class="govuk-body"><a href="/info/terms-and-conditions" class="govuk-link">Read the terms and conditions</a></p>
-            </section>
+            </form>
         </div>
-
-
-        <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>
 

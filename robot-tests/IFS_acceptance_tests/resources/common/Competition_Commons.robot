@@ -68,7 +68,7 @@ the user sees the correct read only view of the question
 
 the user fills in the CS Initial details
     [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}  ${fundingRule}  ${fundingType}
-    the user clicks the button/link                         link = Initial details
+    the user clicks the button/link                         jQuery = a:contains("Initial details")
     the user enters text to a text field                    css = #title  ${compTitle}
     the user selects the radio button                       fundingType  ${fundingType}
     the user selects the option from the drop-down menu     ${compType}  id = competitionTypeId
@@ -618,11 +618,6 @@ moving competition to Project Setup
     [Arguments]   ${compID}
     the user navigates to the page   ${server}/management/competition/${compID}
     the user clicks the button/link  css = button[type="submit"][formaction$="release-feedback"]
-
-The project finance user is able to download the Overheads file
-    [Arguments]   ${ProjectID}  ${organisationId}
-    the user downloads the file                   ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${ProjectID}/finance-check/organisation/${organisationId}/project-eligibility  ${DOWNLOAD_FOLDER}/${excel_file}
-    remove the file from the operating system     ${excel_file}
 
 the user set assessor score notification to yes
     the user clicks the button/link         link = View and update competition details

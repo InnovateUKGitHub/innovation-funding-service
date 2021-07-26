@@ -30,7 +30,9 @@ public enum Role implements Identifiable {
     EXTERNAL_FINANCE            (22, "External finance reviewer", Authority.EXTERNAL_FINANCE),
     KNOWLEDGE_TRANSFER_ADVISER  (23, "Knowledge transfer adviser", Authority.KNOWLEDGE_TRANSFER_ADVISER, Authority.ASSESSOR, Authority.MONITORING_OFFICER),
     SUPPORTER                   (24, "Supporter", Authority.SUPPORTER),
-    SUPER_ADMIN_USER            (25, "Super Admin User", Authority.SUPER_ADMIN_USER, Authority.IFS_ADMINISTRATOR, Authority.PROJECT_FINANCE, Authority.COMP_ADMIN);
+    SUPER_ADMIN_USER            (25, "Super Admin User", Authority.SUPER_ADMIN_USER, Authority.IFS_ADMINISTRATOR, Authority.PROJECT_FINANCE, Authority.COMP_ADMIN),
+    AUDITOR                     (26, "Auditor", Authority.AUDITOR, Authority.STAKEHOLDER);
+
 
     final long id;
     final String displayName;
@@ -70,6 +72,10 @@ public enum Role implements Identifiable {
         return this == SUPER_ADMIN_USER;
     }
 
+    public boolean isAuditor() {
+        return this == AUDITOR;
+    }
+
     public static Set<Role> internalRoles() {
         return EnumSet.of(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD, SUPER_ADMIN_USER);
     }
@@ -80,6 +86,10 @@ public enum Role implements Identifiable {
 
     public static Set<Role> externalRoles() {
         return EnumSet.of(APPLICANT, ASSESSOR, KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER);
+    }
+
+    public static Set<Role> readOnlyRoles() {
+        return EnumSet.of(AUDITOR);
     }
 
     public static List<Role> multiDashboardRoles() {

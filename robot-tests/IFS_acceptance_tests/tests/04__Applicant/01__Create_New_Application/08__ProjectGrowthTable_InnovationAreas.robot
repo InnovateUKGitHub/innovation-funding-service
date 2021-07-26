@@ -39,61 +39,60 @@ Resource          ../../../resources/common/Competition_Commons.robot
 ${compWithoutGrowth}         FromCompToNewAppl without GrowthTable
 ${applicationWithoutGrowth}  NewApplFromNewComp without GrowthTable
 ${compWithGrowth}            All-Innov-Areas With GrowthTable    #of Sector Competition type
-#${compWithGrowthId}         ${competition_ids['${compWithGrowth}']}
+#${compWithGrowthId}          ${competition_ids['${compWithGrowth}']}
 ${applicationWithGrowth}     All-Innov-Areas Application With GrowthTable
 ${newUsersEmail}             liam@innovate.com
 ${ineligibleMessage}         Your organisation type does not match our eligibility criteria for lead applicants.
 ${fundingRule}               SUBSIDY_CONTROL
-${compWithoutGrowth}
 
 
 *** Test Cases ***
-#Comp Admin starts a new Competition
-#    [Documentation]    INFUND-6393  IFS-8779  IFS-8791  IFS-8847
-#    [Tags]  HappyPath
-#    [Setup]  the user logs-in in new browser                    &{Comp_admin1_credentials}
-#    # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
-#    # Then continue with the applying to this Competition, in order to see the new Fields applied
-#    Given the user navigates to the page                        ${CA_UpcomingComp}
-#    When the user clicks the button/link                        jQuery = .govuk-button:contains("Create competition")
-#    Then the user fills in the CS Initial details               ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  GRANT
-#    And the user selects temporary framework terms and conditions
-#    And the user fills in the CS Funding Information
-#    And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
-#    And the user fills in the CS funding eligibility            true   ${compType_Programme}  ${fundingRule}
-#    And the user selects the organisational eligibility to no   false
-#    And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}   No
-#    And the user fills in the CS Documents in other projects
-#
-#Comp Admin fills in the Milestone Dates and can see them formatted afterwards
-#    [Documentation]    INFUND-7820
-#    [Tags]
-#    Given the user should see the element               jQuery = div:contains("Milestones") ~ .task-status-complete
-#    When the user clicks the button/link                link = Milestones
-#    And the user clicks the button/link                 jQuery = a:contains("Next")
-#    And the user clicks the button/link                 jQuery = span:contains("Milestones")
-#    Then the user should see the element                jQuery = button:contains("Edit")
-#    And the user should see the dates in full format
-#    Then the user clicks the button/link                link = Back to competition details
-#
-#Comp admin completes ths competition setup
-#    [Documentation]    INFUND-6393  IFS-7700
-#    [Tags]  HappyPath
-#    Given the user should see the element        jQuery = h1:contains("Competition details")
-#    Then the user marks the Application as done  no  Programme  ${compWithoutGrowth}
-#    And the user fills in the CS Assessors       GRANT
-#    When the user clicks the button/link         link = Public content
-#    Then the user fills in the Public content and publishes  NoGrowthTable
-#    And the user clicks the button/link          link = Return to setup overview
-#    And the user should see the element          jQuery = div:contains("Public content") ~ .task-status-complete
-#    When the user clicks the button/link         jQuery = a:contains("Complete")
-#    Then the user clicks the button/link         css = button[type="submit"]
-#    And the user navigates to the page           ${CA_UpcomingComp}
-#    Then the user should see the element         jQuery = h2:contains("Ready to open") ~ ul a:contains("${compWithoutGrowth}")
+Comp Admin starts a new Competition
+    [Documentation]    INFUND-6393  IFS-8779  IFS-8791  IFS-8847
+    [Tags]  HappyPath
+    [Setup]  the user logs-in in new browser                    &{Comp_admin1_credentials}
+    # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
+    # Then continue with the applying to this Competition, in order to see the new Fields applied
+    Given the user navigates to the page                        ${CA_UpcomingComp}
+    When the user clicks the button/link                        jQuery = .govuk-button:contains("Create competition")
+    Then the user fills in the CS Initial details               ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  GRANT
+    And the user selects temporary framework terms and conditions
+    And the user fills in the CS Funding Information
+    And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
+    And the user fills in the CS funding eligibility            true   ${compType_Programme}  ${fundingRule}
+    And the user selects the organisational eligibility to no   false
+    And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}   No
+    And the user fills in the CS Documents in other projects
+
+Comp Admin fills in the Milestone Dates and can see them formatted afterwards
+    [Documentation]    INFUND-7820
+    [Tags]
+    Given the user should see the element               jQuery = div:contains("Milestones") ~ .task-status-complete
+    When the user clicks the button/link                link = Milestones
+    And the user clicks the button/link                 jQuery = a:contains("Next")
+    And the user clicks the button/link                 jQuery = span:contains("Milestones")
+    Then the user should see the element                jQuery = button:contains("Edit")
+    And the user should see the dates in full format
+    Then the user clicks the button/link                link = Back to competition details
+
+Comp admin completes ths competition setup
+    [Documentation]    INFUND-6393  IFS-7700
+    [Tags]  HappyPath
+    Given the user should see the element        jQuery = h1:contains("Competition details")
+    Then the user marks the Application as done  no  Programme  ${compWithoutGrowth}
+    And the user fills in the CS Assessors       GRANT
+    When the user clicks the button/link         link = Public content
+    Then the user fills in the Public content and publishes  NoGrowthTable
+    And the user clicks the button/link          link = Return to setup overview
+    And the user should see the element          jQuery = div:contains("Public content") ~ .task-status-complete
+    When the user clicks the button/link         jQuery = a:contains("Complete")
+    Then the user clicks the button/link         css = button[type="submit"]
+    And the user navigates to the page           ${CA_UpcomingComp}
+    Then the user should see the element         jQuery = h2:contains("Ready to open") ~ ul a:contains("${compWithoutGrowth}")
 
 Create new Application for this Competition
     [Tags]  HappyPath
-#    [Setup]  get competition id and set open date to yesterday  ${compWithoutGrowth}
+    [Setup]  get competition id and set open date to yesterday  ${compWithoutGrowth}
     Given Log in as a different user              &{lead_applicant_credentials}
     Then logged in user applies to competition    ${compWithoutGrowth}  1
 

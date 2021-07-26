@@ -284,6 +284,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withCompetition(competitions.get(0), competitions.get(1))
                 .with(id(null))
                 .withName("app1", "app2")
+                .withApplicationState(SUBMITTED)
                 .build(2);
 
         InnovationLead innovationLead = new InnovationLead(competitions.get(0), user);
@@ -315,6 +316,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withCompetition(competitions.get(0), competitions.get(1))
                 .with(id(null))
                 .withName("app1", "app2")
+                .withApplicationState(SUBMITTED)
                 .build(2);
 
         Stakeholder stakeholder = new Stakeholder(competitions.get(0), user);

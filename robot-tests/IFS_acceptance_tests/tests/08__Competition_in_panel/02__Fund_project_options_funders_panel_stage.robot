@@ -24,15 +24,15 @@ Resource          ../../resources/common/Competition_Commons.robot
 Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
-${assessorScoreComp}         Living models for the future
-${assessorScoreApplication}  Models with Virtual Reality
-${assessorScoreApplicationId}   ${application_ids['${assessorScoreApplication}']}
-${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}
-${application1Subject}    Important message about your application '${FUNDERS_PANEL_APPLICATION_1_TITLE}' for the competition '${FUNDERS_PANEL_COMPETITION_NAME}'
-${application2Subject}    Important message about your application '${FUNDERS_PANEL_APPLICATION_2_TITLE}'
-${onHoldMessage}          We have put your project on hold because our Assessment department is very busy at the moment.
-${unsuccMessage}          We are sorry to annouce that your application has failed the assessment procedure.
-${successMessage}         We are happy to inform you that your application is eligible for funding.
+${assessorScoreComp}                 Living models for the future
+${assessorScoreApplication}          Models with Virtual Reality
+${assessorScoreApplicationId}        ${application_ids['${assessorScoreApplication}']}
+${funders_panel_competition_url}     ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}
+${application1Subject}               Important message about your application '${FUNDERS_PANEL_APPLICATION_1_TITLE}' for the competition '${FUNDERS_PANEL_COMPETITION_NAME}'
+${application2Subject}               Important message about your application '${FUNDERS_PANEL_APPLICATION_2_TITLE}'
+${onHoldMessage}                     We have put your project on hold because our Assessment department is very busy at the moment.
+${unsuccMessage}                     We are sorry to annouce that your application has failed the assessment procedure.
+${successMessage}                    We are happy to inform you that your application is eligible for funding.
 
 *** Test Cases ***
 Funding decision buttons should be disabled

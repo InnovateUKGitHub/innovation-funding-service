@@ -33,6 +33,7 @@ import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryConstraints;
 import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryResponseForm;
 import org.innovateuk.ifs.project.financechecks.populator.FinanceChecksEligibilityProjectCostsFormPopulator;
+import org.innovateuk.ifs.project.financechecks.populator.ProjectFinanceChecksReadOnlyPopulator;
 import org.innovateuk.ifs.project.financechecks.viewmodel.FinanceChecksProjectCostsViewModel;
 import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksViewModel;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -137,6 +138,9 @@ public class ProjectFinanceChecksController {
     @Autowired
     private ProjectAcademicCostFormPopulator projectAcademicCostFormPopulator;
 
+    @Autowired
+    private ProjectFinanceChecksReadOnlyPopulator projectFinanceChecksReadOnlyPopulator;
+
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
     public String viewFinanceChecks(Model model, @PathVariable final long projectId,
@@ -147,6 +151,15 @@ public class ProjectFinanceChecksController {
         model.addAttribute("model", buildFinanceChecksLandingPage(projectComposite, null, null));
 
         return "project/finance-checks";
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_READ_ONLY')")
+    @GetMapping("/read-only")
+    public String viewFinanceChecksReadOnly(Model model, @PathVariable final long projectId, UserResource loggedInUser) {
+
+        model.addAttribute("model", projectFinanceChecksReadOnlyPopulator.populate(projectId));
+
+        return "project/finance-checks-read-only";
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
@@ -509,6 +522,7 @@ public class ProjectFinanceChecksController {
                 false,
                 projectFinances, false,
                 showChangesLink,
+                false,
                 false));
 
         model.addAttribute("eligibilityForm", eligibilityForm);

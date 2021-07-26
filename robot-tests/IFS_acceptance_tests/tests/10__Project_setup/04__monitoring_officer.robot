@@ -41,6 +41,16 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...
 ...               IFS-8958  SBRI Milestones - Application overview / summary
 ...
+...               IFS-9576 MO documents: 'Project setup' list - task management and filtering
+...
+...               IFS-9578 MO documents: design changes for other roles (not MO or Project manager)
+...
+...               IFS-9774 Investigate if its possible to fix AT's failure due to IDP upgrade
+...
+...               IFS-10047 MO documents: Monitor project page - View status of partners
+...
+...               IFS-9925 MO view of SBRI milestones in project setup
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -135,11 +145,13 @@ Links to other sections in Project setup dependent on project details (applicabl
     And the user should not see the element    link = Grant offer letter
 
 Existing Monitoring Officer can sign in and see projects that they are assigned to
-    [Documentation]    IFS-3977  IFS-3978
+    [Documentation]    IFS-3977  IFS-3978  IFS-9576
     [Tags]  HappyPath
     Given log in as a different user                            &{monitoring_officer_one_credentials}
     And the user clicks the project setup tile if displayed
-    Then the user should see the element                        jQuery = .projects-in-setup h2:contains("Projects in setup") ~ ul li a:contains("${PS_LP_Application_Title}")
+    When the user selects the checkbox                          previousProject
+    And the user clicks the button/link                         id = update-documents-results-button
+    Then the user should see the element                        jQuery = .task:contains("${PS_LP_Application_Title}") + .status:contains("Live project")
 
 Monitoring officer see the project setup veiw for assigned project
     [Documentation]  IFS-4209  IFS-5859
@@ -217,8 +229,8 @@ Create account flow: MO
     [Documentation]  IFS-5031
     Given MO enter details and create account
     When the user clicks the button/link      link = Sign into your account
-    Then Logging in and Error Checking         tom@poly.io   ${short_password}
-    And the user should see the element      jQuery = h1:contains("Project setup")
+    Then Logging in and Error Checking        tom@poly.io   ${short_password}
+    And the user should see the element       jQuery = h1:contains("Project setup")
 
 New MO see the project setup view for assigned project
     [Documentation]  IFS-5031
@@ -232,14 +244,18 @@ Mo is able to view application feedback on a competition which as been through a
     Then the user should see the element    jQuery = h1:contains("Application overview")
 
 MO is able to download the appendix file
-    [Documentation]  IFS-7230
+    [Documentation]  IFS-7230  IFS-9774
     Given log in as a different user                            &{monitoring_officer_one_credentials}
     And the user clicks the project setup tile if displayed
+    And the user selects the checkbox                           previousProject
+    And the user clicks the button/link                         id = update-documents-results-button
     And the user clicks the button/link                         link = ${PS_LP_Application_Title}
     When the user clicks the button/link                        link = view application feedback
     And the user clicks the button/link                         jQuery = button:contains("Technical approach")
-    Then the user downloads the file                            ${monitoring_officer_one_credentials["email"]}    ${server}/application/${PS_LP_Application_No}/form/question/442/forminput/1266/file/298/download   ${DOWNLOAD_FOLDER}/super-effy---super-efficient-forecasting-of-freight-yields-technical-approach.pdf
-    [Teardown]    remove the file from the operating system     super-effy---super-efficient-forecasting-of-freight-yields-technical-approach.pdf
+    And the user clicks the button/link                         link = super-effy---super-efficient-forecasting-of-freight-yields-technical-approach.pdf (opens in a new window)
+    And Select Window                                           NEW
+    Then the user should not see internal server and forbidden errors
+    And the user closes the last opened tab
 
 Assign MO role to existing IFS user
     [Documentation]  IFS-5104
@@ -251,7 +267,7 @@ Assign MO role to existing IFS user
     And the user should see the element         jQuery = h1:contains("Felix Wilson") span:contains("Assign projects to Monitoring Officer")
 
 Comp admin assign project existing IFS user MO
-    [Documentation]  IFS-5104  IFS-5070
+    [Documentation]  IFS-5104  IFS-5070  IFS-9576
     Given the internal user assign project to MO   ${Elbow_Grease_Application_No}  ${Elbow_Grease_Title}
     And logout as user
     Then the user logs in and checks for assigned projects
@@ -279,6 +295,37 @@ MO can now view payment milestones in SBRI application
     And the user clicks the button/link                                     link = view application feedback
     Then the payment milestone table is visible in application overview
 
+Change MO for the project
+    [Documentation]   IFS-9578
+    Given Log in as a different user               &{Comp_admin1_credentials}
+    When the user navigates to the page            ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/monitoring-officer
+    And the user clicks the button/link            jQuery = a:contains("Change monitoring officer")
+    And search for MO                              Nilesh  Nilesh Patti
+    And the user clicks the button/link            jQuery = a:contains("Remove")
+    And the user clicks the button/link            jQuery = a:contains("Back to assign monitoring officers")
+    Then search for MO                             Orvill  Orville Gibbs
+    And the internal user assign project to MO     ${Grade_Crossing_Applicaiton_No}   ${Grade_Crossing_Application_Title}
+
+MO can see the link to the partners for collaborating applications only
+    [Documentation]   IFS-10047
+    Given Log in as a different user            &{monitoring_officer_one_credentials}
+    And the user clicks the project setup tile if displayed
+    And the user clicks the button/link         jQuery = a:contains('${Grade_Crossing_Application_Title}')
+    When the user clicks the button/link        jQuery = a:contains('View the status of partners')
+    Then the user should see the element        jQuery = h1:contains('Project team status')
+    And the user clicks the button/link         id = dashboard-navigation-link
+    And the user clicks the project setup tile if displayed
+    And the user clicks the button/link         jQuery = a:contains('${sbri_applicaton_name}')
+    And the user should not see the element     jQuery = a:contains('View the status of partners')
+
+MO can view payment milestones
+    [Documentation]   IFS-9925
+    Given log in as a different user                               &{monitoring_officer_one_credentials}
+    When the user clicks the project setup tile if displayed
+    And monitoring officer clicks on payment milestones link
+    Then monitoring officer views detailed payment milestones
+
+
 *** Keywords ***
 The MO user is able to access all of the links
     the user is able to see Project details section
@@ -294,7 +341,7 @@ The user is able to see Project details section
 The user is able to see Documents section
     the user clicks the button/link   link = Documents
     the user should see the element   jQuery = h1:contains("Documents")
-    the user clicks the button/link   jQuery = a:contains("Set up your project")
+    the user clicks the button/link   jQuery = a:contains("Back to monitor project")
 
 The user is able to see Monitoring officer section
     the user clicks the button/link   jQuery = a:contains("Monitoring Officer")
@@ -360,7 +407,7 @@ The user should see the project set view
     the user should see the element    jQuery = .progress-list .read-only h2:contains("Bank details")
     the user should see the element    jQuery = .progress-list .read-only h2:contains("Finance checks")
     the user should see the element    jQuery = .progress-list h2:contains("Spend profile")
-    the user should see the element    jQuery = .progress-list .read-only h2:contains("Grant offer letter")
+    the user should see the element    jQuery = .progress-list h2:contains("Grant offer letter")
 
 The user enters the details
     the user enters text to a text field    id = firstName  Tom
@@ -438,8 +485,9 @@ The user logs in and checks for assigned projects
     the user reads his email and clicks the link    ${assessor2_credentials["email"]}   ${PROJECT_SETUP_COMPETITION_NAME}   The project Elbow grease has been assigned to you as the Monitoring Officer  1
     logging in and error checking                   &{assessor2_credentials}
     the user clicks the button/link                 id = dashboard-link-MONITORING_OFFICER
-    the user should see the element                 jQuery = h2:contains("Projects in setup") ~ ul li a:contains("${Elbow_Grease_Title}")
-    the user should see the element                 jQuery = .status:contains("Monitor project")
+    the user selects the checkbox                   previousProject
+    the user clicks the button/link                 id = update-documents-results-button
+    the user should see the element                 jQuery = .task:contains("${Elbow_Grease_Title}") + .status:contains("Live project")
 
 The user navigate to assign MO page
     the user navigates to the page         ${server}/management/dashboard/project-setup
@@ -482,3 +530,14 @@ Internal user removes a partner organisation
     the user clicks the button/link         jQuery = h2:contains("SmithZone")~ button:contains("Remove organisation"):first
     the user clicks the button/link         jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
     the user should not see the element     jQuery = h2:contains("SmithZone")
+
+Monitoring officer clicks on payment milestones link
+    the user clicks the button/link     jQuery = a:contains('${sbri_applicaton_name}')
+    the user clicks the button/link     jQuery = a:contains("Finance checks")
+    the user clicks the button/link     jQuery = td:contains("Dreambit") + td:contains("Payment milestones")
+
+Monitoring officer views detailed payment milestones
+    the user should see the element     jQuery = h1:contains("Payment milestones")
+    the user should see the element     jQuery = h3:contains("Total payment requested") + h3:contains("100%")+h3:contains("£243,484")
+    the user should see the element     css = [aria-controls="accordion-finances-content-1"]
+    the user should see the element     jQuery = dt:contains("Total project costs") + dd:contains("£243,484")

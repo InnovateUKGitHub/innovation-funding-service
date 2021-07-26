@@ -234,12 +234,11 @@ Applicant uploads the GOL using Docusign
     the user clicks the button/link                                          jQuery = span:contains("Start")
     the user clicks the button/link                                          css = div.initials-tab-content
     the user adopts initial details if exist
-    the user should see the element                                          css=.page.page-loaded
     The user enters text to a docusign field                                 jQuery = .text-tab:not(.locked):first input  ${date}
-    the user should see the element                                          css=.page.page-loaded
     the user clicks the button/link                                          jQuery = span:contains("Fill In")
     The user enters text to a docusign field                                 jQuery = .text-tab:not(.locked):first ~ .text-tab:not(.locked) input   ${date}
     the user clicks the button/link                                          css = div.signature-tab-content
+    the user adopts signature details if exist
     the user clicks the button/link                                          css = div.documents-finish-button-decoration
     the user should see the element                                          jQuery = h1:contains("Grant offer letter")
 
@@ -615,10 +614,12 @@ The project finance user approves bank details
     the user clicks the button/link           jQuery = .govuk-button:contains("Approve account")
 
 internal user approve uploaded documents
+    ${today} =  get today
+    set suite variable  ${today}
     the user selects the radio button      approved   true
     the user clicks the button/link        id = submit-button
     the user clicks the button/link        id = accept-document
-    the user should see the element        jQuery = p:contains("You have approved this document.")
+    the user should see the element        jQuery = p:contains("You approved this document on ${today}.")
 
 the user enter the Correspondence address
     the user looks for address using postcode
@@ -648,7 +649,7 @@ Search for MO
 The internal user assign project to MO
     [Arguments]  ${search_ID}  ${project_name}
     the element should be disabled      jQuery = button:contains("Assign")
-    input text                          id = projectId    ${search_ID}
+    Wait Until Keyword Succeeds Without Screenshots    10s    200ms   input text  id = projectId    ${search_ID}
     the user clicks the button/link     jQuery = ul li:contains("${search_ID} - ${project_name}")
     the user clicks the button/link     jQuery = button:contains("Assign")
 
@@ -889,10 +890,10 @@ the internal user reverts the viability
     the user clicks the button/link          link = Back to finance checks
 
 the user edits the payment milestone
-     the user clicks the button/link                        id = edit
-     the user clicks the button/link                        jQuery = button:contains("Open all")
-     the user enters multiple strings into a text field     id = milestones[1].taskOrActivity    This is an edited text${SPACE}    3
-     the user clicks the button/link                        jQuery = button:contains("Save and return to payment milestone check")
+    the user clicks the button/link                        id = edit
+    the user clicks the button/link                        jQuery = button:contains("Open all")
+    the user enters multiple strings into a text field     id = milestones[1].taskOrActivity    This is an edited text${SPACE}    3
+    the user clicks the button/link                        jQuery = button:contains("Save and return to payment milestone check")
 
 the internal user approves payment milestone
     the user selects the checkbox       approve-milestones
@@ -925,9 +926,14 @@ the user approves funding rules of lead and partner
     the user approves funding rules     table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Review")
 
 the user accepts electronic record and signature disclosure if exist
-    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element   link = Electronic Record and Signature Disclosure
-    Run Keyword If  '${status}' == 'PASS'    the user selects the checkbox     disclosureAccepted
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   The user should see the element   link = Electronic Record and Signature Disclosure
+    Run Keyword If  '${status}' == 'PASS'  run keywords  the user clicks the button/link     css = label[for="disclosureAccepted"]
+    ...         AND                                      the user clicks the button/link     jQuery = button:contains("Continue")
 
 the user adopts initial details if exist
-    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element   jQuery = button:contains("Adopt and Initial")
-    Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link     jQuery = button:contains("Adopt and Initial")
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   The user should see the element   css = button[data-group-item="initials"]
+    Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link     css = button[data-group-item="initials"]
+
+the user adopts signature details if exist
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   The user should see the element   css = button[data-group-item="signature"]
+    Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link     css = button[data-group-item="signature"]

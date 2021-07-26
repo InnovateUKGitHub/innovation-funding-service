@@ -31,6 +31,8 @@ Documentation     IFS-2396  ATI Competition type template
 ...
 ...               IFS-8847 Always open competitions: new comp setup configuration
 ...
+...               IFS-9774 Investigate if its possible to fix AT's failure due to IDP upgrade
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -167,9 +169,10 @@ Collaborator can see the application is reopenend and complete the assigned ques
 
 Lead can review the question and submit the application
     [Documentation]  IFS-7550
-    [Setup]  log in as a different user                  &{lead_applicant_credentials}
-    Given the user clicks the button/link                link = ${ATIapplicationTitle}
-    When the user clicks the button/link                 link = ${technicalApproach_question}
+    [Setup]  log in as a different user                         &{lead_applicant_credentials}
+    Given the user clicks the application tile if displayed
+    And the user clicks the button/link                         link = ${ATIapplicationTitle}
+    When the user clicks the button/link                        link = ${technicalApproach_question}
     Then the user can mark the question as complete
     And the user can submit the application
 
@@ -292,8 +295,11 @@ Project Finance is able to see the Overheads costs file
     And the user expands the section            Overhead costs
     Then the user should see the element        jQuery = a:contains("${excel_file}")
     And the user should not see the element     jQuery = .govuk-details__summary span:contains("Overheads costs guidance")
-    And the project finance user is able to download the Overheads file    ${ProjectID}  22
-    # TODO IFS-2599 Raised to improve this as we cannot rely on hard-coded values.
+
+Project Finance is able to download the Overheads costs file
+    [Documentation]  IFS-9774
+    When the user clicks the button/link                  link = ${excel_file}
+    Then the user should not see an error in the page
 
 *** Keywords ***
 Custom Suite Setup

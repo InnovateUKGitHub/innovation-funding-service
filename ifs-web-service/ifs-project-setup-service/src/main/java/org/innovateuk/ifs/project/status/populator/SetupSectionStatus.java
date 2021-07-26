@@ -15,6 +15,8 @@ import java.util.List;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.sections.SectionStatus.*;
+import static org.innovateuk.ifs.sections.SectionStatus.INCOMPLETE;
+import static org.innovateuk.ifs.sections.SectionStatus.MO_ACTION_REQUIRED;
 
 /**
  * This is a helper class for determining the status of a given Project Setup section
@@ -101,7 +103,8 @@ public class SetupSectionStatus {
 
     public SectionStatus documentsSectionStatus(final boolean isProjectManager,
                                                 ProjectResource project,
-                                                CompetitionResource competition) {
+                                                CompetitionResource competition,
+                                                final boolean isProjectMO) {
         List<CompetitionDocumentResource> competitionDocuments = competition.getCompetitionDocuments();
         List<ProjectDocumentResource> projectDocuments = project.getProjectDocuments();
 
@@ -115,22 +118,34 @@ public class SetupSectionStatus {
         int actualNumberOfDocuments = projectDocuments.size();
         int expectedNumberOfDocuments = competitionDocuments.size();
 
-        if (actualNumberOfDocuments == expectedNumberOfDocuments && projectDocuments.stream()
-                .allMatch(projectDocumentResource -> DocumentStatus.APPROVED.equals(projectDocumentResource.getStatus()))) {
+        boolean allDocumentsAreSubmitted = actualNumberOfDocuments == expectedNumberOfDocuments;
+        boolean allDocumentsAreApproved = allDocumentsAreSubmitted && projectDocuments.stream()
+                .allMatch(projectDocumentResource -> DocumentStatus.APPROVED.equals(projectDocumentResource.getStatus()));
+        boolean hasDocumentForApproval = projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.SUBMITTED.equals(projectDocumentResource.getStatus()));
+        boolean hasAnyDocumentUploadedOrRejected = projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.UPLOADED.equals(projectDocumentResource.getStatus())
+                || DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus())
+                || DocumentStatus.REJECTED_DUE_TO_TEAM_CHANGE.equals(projectDocumentResource.getStatus()));
+
+        if (allDocumentsAreApproved) {
             return TICK;
         }
 
-        if (actualNumberOfDocuments != expectedNumberOfDocuments || projectDocuments.stream()
-                .anyMatch(projectDocumentResource -> DocumentStatus.UPLOADED.equals(projectDocumentResource.getStatus())
-                        || DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus())
-                        || DocumentStatus.REJECTED_DUE_TO_TEAM_CHANGE.equals(projectDocumentResource.getStatus()))) {
-            return isProjectManager ? FLAG : EMPTY;
+        if (isProjectMO) {
+            if (hasDocumentForApproval) {
+                return MO_ACTION_REQUIRED;
+            }
+            else {
+                return INCOMPLETE;
+            }
         }
+            if (!allDocumentsAreSubmitted || hasAnyDocumentUploadedOrRejected) {
+                return isProjectManager ? FLAG : EMPTY;
+            }
 
-        return HOURGLASS;
+            return HOURGLASS;
     }
 
-    public SectionStatus grantOfferLetterSectionStatus(final ProjectActivityStates grantOfferLetterState,
+            public SectionStatus grantOfferLetterSectionStatus(final ProjectActivityStates grantOfferLetterState,
                                                        final boolean isLeadPartner) {
         if (grantOfferLetterState == null || NOT_REQUIRED.equals(grantOfferLetterState)) {
             return EMPTY;
