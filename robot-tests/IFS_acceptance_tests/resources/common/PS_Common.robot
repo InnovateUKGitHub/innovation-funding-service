@@ -564,9 +564,9 @@ the user approves project costs
     the user clicks the button/link    jQuery = .govuk-button:contains("Approve eligible costs")
     the user clicks the button/link    name = confirm-eligibility
 
-proj finance approves the spend profiles
+IFS admin approves the spend profiles
     [Arguments]  ${project}
-    log in as a different user       &{internal_finance_credentials}
+    log in as a different user       &{ifs_admin_user_credentials}
     the user navigates to the page   ${server}/project-setup-management/project/${project}/spend-profile/approval
     the user selects the checkbox    approvedByLeadTechnologist
     the user clicks the button/link  jQuery = .govuk-button:contains("Approved")
