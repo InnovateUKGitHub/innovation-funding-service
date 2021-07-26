@@ -726,10 +726,10 @@ the user can submit the application
 
 the lead invites already registered user
     [Arguments]   ${partner_email}  ${competition_title}
-    the user fills in the inviting steps                 ${partner_email}
+    the user fills in the inviting steps            ${partner_email}
     Logout as user
-    the user reads his email and clicks the link         ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
-    the user clicks the button/link                      link = Continue
+    the user reads his email and clicks the link    ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
+    the user clicks the button/link                 link = Continue
 
 partner applicant completes the project finances
     [Arguments]   ${application_title}  ${is_KTP}  ${collaboratorEmail}  ${collaboratorPassword}
@@ -880,7 +880,7 @@ applicant views readonly payment milestones subsections
 
 the user completes the application research category
     [Arguments]   ${res_category}
-    the user clicks the button/link                link = Research category
+    the user clicks the button/link                jQuery = a:contains("Research category")
     the user clicks the button twice               jQuery = label:contains("${res_category}")
     the user can mark the question as complete
     the user should see the element                jQuery = li:contains("Research category") > .task-status-complete
