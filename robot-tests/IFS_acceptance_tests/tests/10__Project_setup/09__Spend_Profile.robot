@@ -882,7 +882,7 @@ Industrial/academic partner able to edit SP after receiving rights from lead
 the monitoring officer approves to SP
     the user selects the radio button        approved  true
     the user clicks the button/link          css = #submit-button
-    the user should see the element          jQuery = li:contains("Spend profile") div ~ .status:contains("Completed")
+    the user should see the element          jQuery = li:contains("Spend profile") div ~ .status:contains("Complete")
     the user clicks the button/link          link = Spend profile
     the user should not see an error in the page
     the user clicks the button/link          jQuery = p:contains("You approved this spend profile")
