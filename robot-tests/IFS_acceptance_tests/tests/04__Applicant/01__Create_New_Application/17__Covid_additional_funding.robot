@@ -257,7 +257,7 @@ the project finance approves all steps before finance
     the user navigates to the page               ${server}/project-setup-management/competition/${COVIDcompetitionId}/status/all
     the user clicks the button/link              jQuery = td.action:nth-of-type(4)
     search for MO                                Orvill  Orville Gibbs
-    And the internal user assign project to MO   ${application_id}  ${COVIDapplicationTitle1}
+    the internal user assign project to MO       ${application_id}  ${COVIDapplicationTitle1}
     the user navigates to the page               ${server}/project-setup-management/competition/${COVIDcompetitionId}/status/all
     the user clicks the button/link              jQuery = td.action:nth-of-type(5)
     approve bank account details
