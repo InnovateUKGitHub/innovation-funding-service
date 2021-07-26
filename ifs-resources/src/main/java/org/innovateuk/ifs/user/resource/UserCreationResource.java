@@ -19,8 +19,14 @@ public class UserCreationResource {
 
     private String inviteHash;
 
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
     private Long organisationId;
     private Long competitionId;
+
+    private Long applicationId;
 
     private boolean addLiveProjectUserRole;
 
@@ -119,6 +125,9 @@ public class UserCreationResource {
     public void setCompetitionId(Long competitionId) {
         this.competitionId = competitionId;
     }
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
+    }
 
     public boolean isAddLiveProjectUserRole() {
         return addLiveProjectUserRole;
@@ -159,7 +168,9 @@ public class UserCreationResource {
         private String inviteHash;
         private Long organisationId;
         private Long competitionId;
+        private Long applicationId;
         private boolean addLiveProjectUserRole;
+
 
         private UserCreationResourceBuilder() {
         }
@@ -227,6 +238,11 @@ public class UserCreationResource {
             this.competitionId = competitionId;
             return this;
         }
+        public UserCreationResourceBuilder withApplicationId(Long applicationId) {
+            this.applicationId = applicationId;
+            return this;
+        }
+
 
         public UserCreationResourceBuilder withAddLiveProjectUserRole(boolean addLiveProjectUserRole) {
             this.addLiveProjectUserRole = addLiveProjectUserRole;
@@ -247,6 +263,7 @@ public class UserCreationResource {
             userCreationResource.setInviteHash(inviteHash);
             userCreationResource.setOrganisationId(organisationId);
             userCreationResource.setCompetitionId(competitionId);
+            userCreationResource.setApplicationId(applicationId);
             userCreationResource.setAddLiveProjectUserRole(addLiveProjectUserRole);
             return userCreationResource;
         }
