@@ -23,7 +23,6 @@ public class CompetitionTermsAndConditionsPopulator {
         return new CompetitionTermsViewModel(competitionId,
                 termsAndConditions,
                 competition.getTermsAndConditionsLabel(),
-                competition.getTermsAndConditionsGuidance(),
-                competition.getProjectCostGuidanceUrl());
+                competition.getTermsAndConditionsGuidance());
     }
 }

@@ -16,12 +16,6 @@ public class CompetitionTermsViewModel {
     }
 
     public CompetitionTermsViewModel(long competitionId,
-                                     GrantTermsAndConditionsResource termsAndConditions) {
-        this.competitionId = competitionId;
-        this.termsAndConditions = termsAndConditions;
-    }
-
-    public CompetitionTermsViewModel(long competitionId,
                                      GrantTermsAndConditionsResource termsAndConditions,
                                      String termsAndConditionsLabel,
                                      String termsAndConditionsGuidance) {
@@ -45,6 +39,10 @@ public class CompetitionTermsViewModel {
 
     public String getTermsAndConditionsGuidance() {
         return termsAndConditionsGuidance;
+    }
+
+    public boolean isProcurementThirdParty() {
+        return termsAndConditions.isProcurementThirdParty();
     }
 
     @Override
