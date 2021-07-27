@@ -507,12 +507,14 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public CompetitionDataBuilder withCompetitionTermsAndConditions(CompetitionLine line) {
         CompetitionDataBuilder competitionDataBuilder = asCompAdmin(data -> {
-            GrantTermsAndConditions termsAndConditions = new GrantTermsAndConditions();
-            termsAndConditions.setName(line.getTermsAndConditionsName());
-            termsAndConditions.setTemplate(line.getTermsAndConditionsTemplate());
-            termsAndConditions.setVersion(line.getTermsAndConditionsVersion());
-            GrantTermsAndConditions createdTermsAndConditions = termsAndConditionsRepository.save(termsAndConditions);
-            competitionService.updateTermsAndConditionsForCompetition(data.getCompetition().getId(), createdTermsAndConditions.getId());
+            if (line.getTermsAndConditionsName() != null && line.getTermsAndConditionsTemplate() != null) {
+                GrantTermsAndConditions termsAndConditions = new GrantTermsAndConditions();
+                termsAndConditions.setName(line.getTermsAndConditionsName());
+                termsAndConditions.setTemplate(line.getTermsAndConditionsTemplate());
+                termsAndConditions.setVersion(line.getTermsAndConditionsVersion());
+                GrantTermsAndConditions createdTermsAndConditions = termsAndConditionsRepository.save(termsAndConditions);
+                competitionService.updateTermsAndConditionsForCompetition(data.getCompetition().getId(), createdTermsAndConditions.getId());
+            }
         });
 
         //return competitionDataBuilder.withCompetitionTermsAndConditionsFileUpload();
