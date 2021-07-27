@@ -210,6 +210,7 @@ the user chooses 20% overheads option
     # overheads option : 20% Labour
     the user clicks the button/link    jQuery = button:contains("Overhead costs")
     the user clicks the button/link    css = [data-target="overhead-default-percentage"] label
+    wait for autosave
     the user clicks the button/link    jQuery = button:contains("Overhead costs")
 
 the user fills in Material
