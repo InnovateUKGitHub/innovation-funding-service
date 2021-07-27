@@ -649,7 +649,7 @@ Search for MO
 The internal user assign project to MO
     [Arguments]  ${search_ID}  ${project_name}
     the element should be disabled      jQuery = button:contains("Assign")
-    input text                          id = projectId    ${search_ID}
+    Wait Until Keyword Succeeds Without Screenshots    10s    200ms   input text  id = projectId    ${search_ID}
     the user clicks the button/link     jQuery = ul li:contains("${search_ID} - ${project_name}")
     the user clicks the button/link     jQuery = button:contains("Assign")
 

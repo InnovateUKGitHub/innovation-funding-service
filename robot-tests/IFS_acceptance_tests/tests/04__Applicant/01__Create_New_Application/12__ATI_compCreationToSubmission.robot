@@ -169,9 +169,10 @@ Collaborator can see the application is reopenend and complete the assigned ques
 
 Lead can review the question and submit the application
     [Documentation]  IFS-7550
-    [Setup]  log in as a different user                  &{lead_applicant_credentials}
-    Given the user clicks the button/link                link = ${ATIapplicationTitle}
-    When the user clicks the button/link                 link = ${technicalApproach_question}
+    [Setup]  log in as a different user                         &{lead_applicant_credentials}
+    Given the user clicks the application tile if displayed
+    And the user clicks the button/link                         link = ${ATIapplicationTitle}
+    When the user clicks the button/link                        link = ${technicalApproach_question}
     Then the user can mark the question as complete
     And the user can submit the application
 

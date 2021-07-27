@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.user.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
@@ -25,6 +26,7 @@ import java.util.List;
 import static java.time.ZonedDateTime.now;
 import static org.hamcrest.core.Is.is;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_CANNOT_BE_WITHDRAWN;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -160,12 +162,45 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     }
 
     @Test
-    public void verifyEmail() throws Exception {
+    public void verifyEmailWithExtraAttributes() throws Exception {
         final String hash = "8eda60ad3441ee883cc95417e2abaa036c308dd9eb19468fcc8597fb4cb167c32a7e5daf5e237385";
         final Long userId = 1L;
+        final Long appId = 1L;
+        final Long compId = 1L;
         final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(), null);
         when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
-        when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(1L)).thenReturn(serviceSuccess());
+
+        ApplicationResource applicationResource = new ApplicationResource();
+        applicationResource.setCompetition(compId);
+        applicationResource.setId(appId);
+
+
+        when(tokenServiceMock.handleExtraAttributes(token)).thenReturn(serviceSuccess((applicationResource)));
+        when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(anyLong())).thenReturn(serviceSuccess());
+        mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""))
+                .andDo(document("user/verify-email",
+                        pathParameters(
+                                parameterWithName("hash").description("The hash to validate the legitimacy of the request")
+                        ))
+                );
+
+        verify(crmService).syncCrmContact(userId, appId, compId);
+    }
+
+    @Test
+    public void verifyEmailWithoutExtraAttributes() throws Exception {
+        final String hash = "8eda60ad3441ee883cc95417e2abaa036c308dd9eb19468fcc8597fb4cb167c32a7e5daf5e237385";
+        final Long userId = 1L;
+
+        final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(), null);
+        when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
+
+
+        when(tokenServiceMock.handleExtraAttributes(token)).thenReturn(serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN));
+        when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(anyLong())).thenReturn(serviceSuccess());
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
