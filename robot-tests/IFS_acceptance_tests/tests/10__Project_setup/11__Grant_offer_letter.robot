@@ -97,12 +97,14 @@ Support user cannot access spend profile until it is approved
 GOL not generated before spend profiles have been approved
     [Documentation]    INFUND-6741  IFS-9679
     [Tags]  HappyPath
-    [Setup]    log in as a different user                                 &{Comp_admin1_credentials}
+    [Setup]    log in as a different user                                 &{ifs_admin_user_credentials}
     When the user navigates to the page                                   ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
     Then the user should not see the element                              css = #table-project-status tr:nth-of-type(7) td:nth-of-type(8).status.action
     And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send    ${403_error_message}
     And the user navigates to the page                                    ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/spend-profile/approval
-    [Teardown]    the IFS Admin approves to SP                            ${Elbow_Grease_Project_Id}
+    the user selects the radio button                spendProfileApproved  true
+    the user should not see an error in the page
+    And the user clicks the button/link           jQuery = button.govuk-button:contains("Submit")
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 ,INFUND-5543
