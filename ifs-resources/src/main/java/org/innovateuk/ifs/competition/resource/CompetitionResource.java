@@ -114,6 +114,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean alwaysOpen;
     private boolean subsidyControl;
     private boolean hasBusinessAndFinancialInformationQuestion;
+    private CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource;
 
     public CompetitionResource() {
     }
@@ -849,6 +850,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     public void setSubsidyControl(boolean subsidyControl) {
         this.subsidyControl = subsidyControl;
+    }
+
+    public CompetitionThirdPartyConfigResource getCompetitionThirdPartyConfigResource() {
+        return competitionThirdPartyConfigResource;
+    }
+
+    public void setCompetitionThirdPartyConfigResource(CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource) {
+        this.competitionThirdPartyConfigResource = competitionThirdPartyConfigResource;
     }
 
     @Override

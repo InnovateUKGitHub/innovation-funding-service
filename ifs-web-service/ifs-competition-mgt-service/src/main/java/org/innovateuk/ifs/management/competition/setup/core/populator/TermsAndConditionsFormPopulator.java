@@ -19,6 +19,14 @@ public class TermsAndConditionsFormPopulator {
         TermsAndConditionsForm termsAndConditionsForm = new TermsAndConditionsForm();
         if (competitionResource.getTermsAndConditions() != null) {
             termsAndConditionsForm.setTermsAndConditionsId(competitionResource.getTermsAndConditions().getId());
+            if (isThirdPartyProcurement(termsAndConditionsForm.getTermsAndConditionsId())) {
+                CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = competitionResource.getCompetitionThirdPartyConfigResource();
+                if (competitionThirdPartyConfigResource != null) {
+                    termsAndConditionsForm.setThirdPartyTermsAndConditionsLabel(competitionThirdPartyConfigResource.getTermsAndConditionsLabel());
+                    termsAndConditionsForm.setThirdPartyTermsAndConditionsText(competitionThirdPartyConfigResource.getTermsAndConditionsGuidance());
+                    termsAndConditionsForm.setProjectCostGuidanceLink(competitionThirdPartyConfigResource.getProjectCostGuidanceUrl());
+                }
+            }
         }
         return termsAndConditionsForm;
     }
@@ -36,5 +44,10 @@ public class TermsAndConditionsFormPopulator {
         competitionThirdPartyConfigResource.setTermsAndConditionsLabel(termsAndConditionsForm.getThirdPartyTermsAndConditionsLabel());
         competitionThirdPartyConfigResource.setTermsAndConditionsGuidance(termsAndConditionsForm.getThirdPartyTermsAndConditionsText());
         competitionThirdPartyConfigResource.setProjectCostGuidanceUrl(termsAndConditionsForm.getProjectCostGuidanceLink());
+        competition.setCompetitionThirdPartyConfigResource(competitionThirdPartyConfigResource);
     }
+
+        private boolean isThirdPartyProcurement(long termsAndConditionsId) {
+            return termsAndConditionsRestService.getById(termsAndConditionsId).getSuccess().isThirdPartyProcurement();
+        }
  }
