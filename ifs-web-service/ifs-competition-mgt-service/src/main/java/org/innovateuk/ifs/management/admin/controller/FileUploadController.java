@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileUploadRestService;
 import org.innovateuk.ifs.management.admin.form.UploadFilesForm;
+import org.innovateuk.ifs.management.admin.viewmodel.UploadFilesViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -28,24 +29,37 @@ import java.io.IOException;
 public class FileUploadController {
 
     private static final String FORM_ATTR_NAME = "form";
-
+    private static final String MODEL_ATTR_NAME = "model";
+    protected static final String TEMPLATE_PATH = "admin";
+    private static final String DISPLAY_UPLOAD_RESULTS = "display-upload-results";
+    private static final String UPLOAD_FILES = "upload-files";
     @Autowired
     private FileUploadRestService fileUploadRestService;
 
     @GetMapping("/upload-files")
-    public String uploadFiles(Model model) {
-        UploadFilesForm form = new UploadFilesForm();
-        model.addAttribute(FORM_ATTR_NAME, form);
+    public String viewUploadPage(@ModelAttribute("form") UploadFilesForm form, Model model) {
+        UploadFilesViewModel viewModel = new UploadFilesViewModel(false);
 
-        return "admin/upload-files";
+        return doViewUploadPage(model, form, viewModel);
+    }
+
+    private String doViewUploadPage(Model model, UploadFilesForm form, UploadFilesViewModel viewModel) {
+        model.addAttribute(FORM_ATTR_NAME, form);
+        model.addAttribute(MODEL_ATTR_NAME, viewModel);
+
+        return TEMPLATE_PATH + "/" + UPLOAD_FILES;
     }
 
     @PostMapping(path = "/upload-files", params = {"upload_file"})
     @SecuredBySpring(value = "UPLOAD_FILE", description = "System maintainer can upload files")
-    public String uploadExternalSystemFiles(@ModelAttribute("form") UploadFilesForm form, BindingResult bindingResult) throws IOException {
+    public String uploadExternalSystemFiles(@ModelAttribute("form") UploadFilesForm form,
+                                            BindingResult bindingResult,
+                                            Model model) throws IOException {
         MultipartFile file = form.getFile();
+
         RestResult<FileEntryResource> result = fileUploadRestService.uploadFile("AssessmentOnly", file.getContentType(),
                 file.getSize(), file.getOriginalFilename(), file.getBytes());
+
         if(result.isFailure()) {
             result.getErrors().forEach(error ->
                     bindingResult.rejectValue("file", error.getErrorKey(), error.getArguments().toArray(), "")
@@ -54,6 +68,8 @@ public class FileUploadController {
             form.setFileName(result.getSuccess().getName());
         }
 
-        return "admin/upload-files";
+        UploadFilesViewModel viewModel = new UploadFilesViewModel(true);
+
+        return doViewUploadPage(model, form, viewModel);
     }
-}
+ }
