@@ -11,14 +11,13 @@ Resource          ../../../resources/common/PS_Common.robot
 *** Variables ***
 ${comp_name}    Third party procurement competition
 
-
 *** Test Cases ***
 Comp admin selects third party funder in funding information
     [Documentation]   IFS-10080
     Given comp admin creates procurement competition
     When the user fills in funding information for the third party procurement comp
-    Then the user clicks the button/link                                               jQuery = a:contains("Complete")
-    And the user clicks the button/link                                                jQuery = button:contains('Done')
+    Then the user navigates to the page                                                ${CA_UpcomingComp}
+    And the user should see the element                                                jQuery = h3 a:contains("Third party procurement competition")
 
 *** Keywords ***
 Custom suite setup
@@ -39,5 +38,3 @@ comp admin creates procurement competition
     the user clicks the button/link                           link = Public content
     the user fills in the Public content and publishes        procurement
     the user clicks the button/link                           link = Return to setup overview
-
-

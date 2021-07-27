@@ -139,6 +139,9 @@ the user fills in funding information for the third party procurement comp
     then the user should see the element              jQuery = button:contains("Edit")
     the user clicks the button/link                   link = Back to competition details
     the user should see the element                   jQuery = div:contains("Funding information") ~ .task-status-complete
+    the user clicks the button/link                   jQuery = a:contains("Complete")
+    the user clicks the button/link                   jQuery = button:contains('Done')
+    the user clicks the button/link                   jQuery = a:contains("Competition")
 
 the user fills in the CS Project eligibility
     [Arguments]  ${organisationType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
