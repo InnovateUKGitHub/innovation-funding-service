@@ -128,6 +128,10 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                     .collect(toCollection(LinkedHashSet::new));
         }
 
+        if (section.isTermsAndConditions() && data.getCompetition().getTermsAndConditions().isThirdPartyProcurement()) {
+            section.setName("Agreement");
+        }
+
         String subtitle = subtitle(data.getCompetition(), section);
 
         return new ApplicationOverviewSectionViewModel(section.getId(), section.getName(), subtitle, rows);
