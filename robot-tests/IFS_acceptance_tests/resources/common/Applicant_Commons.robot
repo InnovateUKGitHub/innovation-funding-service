@@ -214,6 +214,8 @@ the user chooses 20% overheads option
 
 the user fills in Material
     the user clicks the button/link       jQuery = button:contains("Materials")
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    page should contain element   jQuery = button:contains("Add another materials cost")
+    Run Keyword If    '${status}' == 'FAIL'   the user clicks the button/link     id = accordion-finances-heading-3
     the user should see the element       css = table[id=material-costs-table] tbody tr:nth-of-type(1) td:nth-of-type(2) input
     the user enters text to a text field  css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     the user enters text to a text field  css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
