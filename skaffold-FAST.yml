@@ -100,7 +100,7 @@ profiles:
         useDockerCLI: false
         useBuildkit: false
         tryImportMissing: true
-        push: false
+        push: true
       tagPolicy:
         gitCommit:
           ignoreChanges: true
@@ -117,7 +117,7 @@ profiles:
         useDockerCLI: false
         useBuildkit: false
         tryImportMissing: true
-        push: false
+        push: true
       tagPolicy:
         gitCommit:
           ignoreChanges: true
@@ -134,7 +134,7 @@ profiles:
         useDockerCLI: false
         useBuildkit: false
         tryImportMissing: true
-        push: false
+        push: true
       tagPolicy:
         gitCommit:
           ignoreChanges: true
@@ -151,7 +151,7 @@ profiles:
         useDockerCLI: false
         useBuildkit: false
         tryImportMissing: true
-        push: false
+        push: true
       tagPolicy:
         gitCommit:
           ignoreChanges: true
@@ -168,7 +168,7 @@ profiles:
         useDockerCLI: false
         useBuildkit: false
         tryImportMissing: true
-        push: false
+        push: true
       tagPolicy:
         gitCommit:
           ignoreChanges: true
@@ -185,7 +185,7 @@ profiles:
         useDockerCLI: false
         useBuildkit: false
         tryImportMissing: true
-        push: false
+        push: true
       tagPolicy:
         gitCommit:
           ignoreChanges: true
@@ -221,7 +221,7 @@ profiles:
         useDockerCLI: false
         useBuildkit: false
         tryImportMissing: true
-        push: false
+        push: true
       tagPolicy:
         gitCommit:
           ignoreChanges: true
