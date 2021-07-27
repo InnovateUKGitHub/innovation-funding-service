@@ -196,6 +196,6 @@ the user selects option from type ahead
 
 #the user sees element in type ahead
 #    [Arguments]   ${inputId}  ${searchTerm}  ${optionSelector}
-#    input text                          id = ${inputId}  ${searchTerm}
+#    the user clicks the button/link     id = ${inputId}
 #    the user should see the element     jQuery = ul li:contains("${optionSelector}")
 #    mouse out                           id = ${inputId}
