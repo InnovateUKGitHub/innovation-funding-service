@@ -37,7 +37,6 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
                 Optional<Token> verifyToken = tokenRepository.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId());
 
                 verifyToken.map(token -> registrationService.activateUser(token.getClassPk()).andOnSuccessReturnVoid(v -> {
-                    tokenService.handleExtraAttributes(token);
                     tokenService.removeToken(token);
                 })).orElseThrow(() -> new RuntimeException("No Invite Token exists for user " + user.getId()));
             });
