@@ -189,13 +189,13 @@ reload and check if element appears
 
 the user selects option from type ahead
     [Arguments]   ${inputId}  ${searchTerm}  ${optionSelector}
-    input text                      id = ${inputId}  ${searchTerm}
-    #select from list by label       id = ${inputId}-select  ${optionSelector}
+    the user clicks the button/link     id = ${inputId}
+    #input text                                           id = ${inputId}  ${searchTerm}
     the user clicks the button/link     jQuery = ul li:contains("${optionSelector}")
-    mouse out                       ${inputId}
+    mouse out                                            ${inputId}
 
-the user sees element in type ahead
-    [Arguments]   ${inputId}  ${searchTerm}  ${optionSelector}
-    input text                          id = ${inputId}  ${searchTerm}
-    the user should see the element     jQuery = ul li:contains("${optionSelector}")
-    mouse out                           ${inputId}
+#the user sees element in type ahead
+#    [Arguments]   ${inputId}  ${searchTerm}  ${optionSelector}
+#    input text                          id = ${inputId}  ${searchTerm}
+#    the user should see the element     jQuery = ul li:contains("${optionSelector}")
+#    mouse out                           id = ${inputId}

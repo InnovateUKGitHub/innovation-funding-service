@@ -45,7 +45,7 @@ def wait_until_keyword_succeeds_without_screenshots(retry, retry_interval, keywo
 
 
 @no_intermediate_screenshots
-def wait_until_element_is_visible_without_screenshots(locator, timeout=10, error=None):
+def wait_until_element_is_visible_without_screenshots(locator, timeout=30, error=None):
     return s2l.wait_until_element_is_visible(locator, timeout, error)
 
 
