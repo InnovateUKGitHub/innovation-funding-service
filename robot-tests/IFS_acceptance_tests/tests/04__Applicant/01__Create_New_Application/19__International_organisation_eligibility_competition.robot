@@ -1225,9 +1225,10 @@ Uk lead completes project setup details and generated GOL
     the user clicks the button/link                                                     css = #generate-spend-profile-modal-button
     Login and submit partners spend profile                                             ${partner_international_email}         ${organistaionNewEmpireID}     ${ukLeadApplicationProjectID}
     lead organisations submit the spend profile                                         ${ukLeadApplicationProjectID}   ${organistaionOrg2}   ${lead_applicant}      ${short_password}
-    the user selects the radio button                spendProfileApproved  true
+    the user navigates to the page                                                      ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
+    the user selects the radio button                                                   spendProfileApproved  true
     the user should not see an error in the page
-    the user clicks the button/link        jQuery = button.govuk-button:contains("Submit")
+    the user clicks the button/link                                                     jQuery = button.govuk-button:contains("Submit")
 
 the user completes project team and can see international organisation addresses
     the user should not see the element     link = Edit
