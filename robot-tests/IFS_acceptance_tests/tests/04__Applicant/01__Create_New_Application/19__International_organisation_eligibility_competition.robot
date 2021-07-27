@@ -1097,7 +1097,9 @@ the user complete all sections of the project setup and generates GOL
     partner submits the spend profile                                   ${ProjectID}   ${organistaionInnovateID}
     external partner organisation submit the spend profile              ${ProjectID}   ${organistaionTestEmpireID}  ${organisationUiveristyOfLiverPoolId}
     lead organisations submit the spend profile                         ${ProjectID}   ${organisationTestEmpireOneID}   ${lead_international_email}     ${short_password}
-    proj finance approves the spend profiles                            ${ProjectID}
+    #proj finance approves the spend profiles                            ${ProjectID}
+    the IFS Admin approves to SP
+    the user clicks the button/link        jQuery = button.govuk-button:contains("Submit")
 
 the user approves funding rules of lead and partner organisations
     the user approves funding rules     table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
@@ -1223,7 +1225,9 @@ Uk lead completes project setup details and generated GOL
     the user clicks the button/link                                                     css = #generate-spend-profile-modal-button
     Login and submit partners spend profile                                             ${partner_international_email}         ${organistaionNewEmpireID}     ${ukLeadApplicationProjectID}
     lead organisations submit the spend profile                                         ${ukLeadApplicationProjectID}   ${organistaionOrg2}   ${lead_applicant}      ${short_password}
-    proj finance approves the spend profiles                                            ${ukLeadApplicationProjectID}
+    #proj finance approves the spend profiles                                            ${ukLeadApplicationProjectID}   #Here
+    the IFS Admin approves to SP
+    the user clicks the button/link        jQuery = button.govuk-button:contains("Submit")
 
 the user completes project team and can see international organisation addresses
     the user should not see the element     link = Edit
