@@ -55,10 +55,7 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
             @Mapping(source = "executive.name", target = "executiveName"),
             @Mapping(source = "createdBy.name", target = "createdBy"),
             @Mapping(source = "modifiedBy.name", target = "modifiedBy"),
-            @Mapping(target = "assessorFinanceView", ignore = true),
-            @Mapping(source = "competitionThirdPartyConfig.termsAndConditionsLabel", target = "termsAndConditionsLabel"),
-            @Mapping(source = "competitionThirdPartyConfig.termsAndConditionsGuidance", target = "termsAndConditionsGuidance"),
-            @Mapping(source = "competitionThirdPartyConfig.projectCostGuidanceUrl", target = "projectCostGuidanceUrl")
+            @Mapping(target = "assessorFinanceView", ignore = true)
     })
     @Override
     public abstract CompetitionResource mapToResource(Competition domain);
@@ -75,8 +72,7 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
             @Mapping(target = "projectSetupStarted", ignore = true),
             @Mapping(target = "useDocusignForGrantOfferLetter", ignore = true),
             @Mapping(target = "competitionFinanceRowTypes", ignore = true),
-            @Mapping(target = "competitionExternalConfig", ignore = true),
-            @Mapping(target = "competitionThirdPartyConfig", ignore = true)
+            @Mapping(target = "competitionExternalConfig", ignore = true)
     })
     public abstract Competition mapToDomain(CompetitionResource domain);
 
