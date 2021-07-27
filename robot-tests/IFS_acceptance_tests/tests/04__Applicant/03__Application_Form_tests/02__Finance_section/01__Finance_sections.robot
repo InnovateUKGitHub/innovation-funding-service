@@ -73,7 +73,7 @@ Non-academic partner finance section
     And the user should see the element     link = Your project costs
     And the user should see the element     link = Your organisation
     When the user clicks the button/link    link = Your funding
-    Then the user should see the element    jQuery = .govuk-list li:contains("the lead applicant must mark the research category page as complete")
+    Then the user should see the element    jQuery = .govuk-list li:contains("you must mark the research category page as complete")
 
 Academic partner finance section
     [Documentation]    INFUND-7522
@@ -92,7 +92,7 @@ Academic partner can upload file for field J-es PDF
     Given the user navigates to Your-finances page  ${applicationName}
     And the user clicks the button/link             link = Your project costs
     # Note the Jes form is already uploaded
-    Then the user should see the element            jQuery = a:contains("jes-form.pdf")
+    Then the user should see the element            jQuery = a:contains(".pdf")
     When The user clicks the button/link            jQuery = button:contains("Remove")
     And the user should see the element             jQuery = label.button-secondary
     And the user uploads the file                   css = .upload-section input  ${5mb_pdf}
