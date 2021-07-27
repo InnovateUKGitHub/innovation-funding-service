@@ -385,6 +385,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         applicationOrganisationQuestionnaireResponseRepository = serviceLocator.getBean(ApplicationOrganisationQuestionnaireResponseRepository.class);
         questionnaireResponseRepository = serviceLocator.getBean(QuestionnaireResponseRepository.class);
         competitionThirdPartyConfigService = serviceLocator.getBean(CompetitionThirdPartyConfigService.class);
+        termsAndConditionsRepository = serviceLocator.getBean(GrantTermsAndConditionsRepository.class);
     }
 
     protected UserResource compAdmin() {
