@@ -119,6 +119,7 @@ the user fills in the CS Funding Information
     ${nextYearInTwoDigits}=                           get next year in two digits
     textfield should contain                          css = input[name="competitionCode"]   ${nextYearInTwoDigits}
     the user clicks the button/link                   jQuery = button:contains("Done")
+    the user should see the element                   jQuery = button:contains("Edit")
     the user clicks the button/link                   link = Back to competition details
     the user should see the element                   jQuery = div:contains("Funding information") ~ .task-status-complete
 
