@@ -15,6 +15,8 @@ Documentation     IFS-1012 As a comp exec I am able to set Research and Public s
 ...
 ...               IFS-8847 Always open competitions: new comp setup configuration
 ...
+...               IFS-9774 Investigate if its possible to fix AT's failure due to IDP upgrade
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -83,11 +85,16 @@ Applicant Applies to Public content leading Competition
     And collaborating is required to submit the application if Research participation is not 100pc  ${openCompetitionPublicSector_name}  ${publicLeadApp}  becky.mason@gmail.com  no
 
 Project Finance is able to see the Overheads costs file
-    [Documentation]  IFS-1724
+    [Documentation]  IFS-1724  IFS-9774
     [Tags]  CompAdmin  HappyPath
-    [Setup]  log in as a different user    &{internal_finance_credentials}
-    Given the competition is now in Project Setup
-    Then The User Is Able To Download The Overheads File
+    Given log in as a different user                      &{internal_finance_credentials}
+    And the competition is now in Project Setup
+    And the user gets the project id
+    When the user navigates to the page                   ${SERVER}/project-setup-management/project/${publicLeadProjectId}/finance-check/
+    And the user clicks the button/link                   jQuery = tr:contains("ROYAL MAIL PLC") td:nth-child(4) a:contains("Review")
+    And the user expands the section                      Overhead costs
+    And the user clicks the button/link                   link = testing.xlsx
+    Then the user should not see an error in the page
 
 *** Keywords ***
 Custom Suite Setup
@@ -164,10 +171,9 @@ the competition is now in Project Setup
     making the application a successful project   ${openCompetitionPublicSector}  ${publicLeadApp}
     moving competition to Project Setup           ${openCompetitionPublicSector}
 
-the user is able to download the overheads file
-    ${projectId} =  get project id by name  ${publicLeadApp}
-    ${organisationId} =  get organisation id by name  Dreambit
-    the project finance user is able to download the overheads file    ${projectId}  ${organisationId}
+the user gets the project id
+    ${publicLeadProjectId} =  get project id by name  ${publicLeadApp}
+    set suite variable  ${publicLeadProjectId}
 
 the internal user can see that the Generic competition has only one Application Question
     the user clicks the button/link                   link = Application
