@@ -17,11 +17,11 @@ public enum Funder {
     INTEGRATED_DELIVERY_PLATFORM_IDP("Integrated Delivery Platform (IDP)"),
     INTERNATIONAL("International"),
     OFFICE_FOR_LIFE_SCIENCES_OLS("Office for Life Sciences (OLS)"),
+    OFFICE_OF_GAS_AND_ELECTRICITY_MARKETS_OFGEM("Office of Gas and Electricity Markets (Ofgem)"),
     SMALL_BUSINESS_RESEARCH_INITIATIVE_SBRI("Small Business Research Initiative (SBRI)"),
     SMART_OPEN("Smart Open"),
     OTHER_DELIVERY_PARTNERS("Other delivery partners"),
-    OTHER_STAKEHOLDERS("Other stakeholders"),
-    OFFICE_OF_GAS_AND_ELECTRICITY_MARKETS_OFGEM("Office of Gas and Electricity Markets (Ofgem)");
+    OTHER_STAKEHOLDERS("Other stakeholders");
 
 
     private final String displayName;
