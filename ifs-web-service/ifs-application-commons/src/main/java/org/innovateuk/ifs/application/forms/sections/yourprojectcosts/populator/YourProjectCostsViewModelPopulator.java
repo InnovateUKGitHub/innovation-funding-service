@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CovidType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -58,6 +59,10 @@ public class YourProjectCostsViewModelPopulator {
 
     @Autowired
     private ApplicantRestService applicantRestService;
+
+    @Autowired
+    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
+
 
     @Value("${ifs.ktp.fec.finance.model.enabled}")
     private boolean fecFinanceModelEnabled;
@@ -204,6 +209,6 @@ public class YourProjectCostsViewModelPopulator {
     }
 
     private String getThirdPartyProjectCostGuidanceLink(CompetitionResource competition) {
-        return competition.getCompetitionThirdPartyConfigResource().getProjectCostGuidanceUrl();
+        return competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess().getProjectCostGuidanceUrl();
     }
 }
