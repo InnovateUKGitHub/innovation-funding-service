@@ -648,11 +648,24 @@ Search for MO
 
 The internal user assign project to MO
     [Arguments]  ${search_ID}  ${project_name}
-    the element should be disabled      jQuery = button:contains("Assign")
-    input text                          id = projectId   ${search_ID} - ${project_name}
-    sleep                               500ms
-    the user clicks the button/link     jQuery = ul li:contains("${search_ID} - ${project_name}")
-    the user clicks the button/link     jQuery = button:contains("Assign")
+    the element should be disabled              jQuery = button:contains("Assign")
+    input text                                  id = projectId   ${search_ID}
+    the user should see project in dropdown     ${search_ID}  ${project_name}
+    the user clicks the button/link             jQuery = ul li:contains("${search_ID} - ${project_name}")
+    the user clicks the button/link             jQuery = button:contains("Assign")
+
+the user should see project in dropdown
+    [Arguments]  ${search_ID}  ${project_name}
+    :FOR    ${i}    IN RANGE  10
+    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots  element should be visible  jQuery = ul li:contains("${search_ID} - ${project_name}")
+    \  Exit For Loop If  '${status}'=='PASS'
+    \  run keyword if  '${status}'=='FAIL'   retry entering the project     ${search_ID}
+    \  ${i} =  Set Variable  ${i + 1}
+
+retry entering the project
+    [Arguments]  ${search_ID}
+    clear element text      id = projectId
+    input text              id = projectId   ${search_ID}
 
 the user completes the project team details
     the user clicks the button/link     link = Project team
