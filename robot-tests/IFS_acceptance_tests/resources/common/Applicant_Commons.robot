@@ -160,7 +160,7 @@ the user has read only view once section is marked complete
 the user fills in Labour
     the user expands the section               Labour
 #   the user should see the element            css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input
-    the user enters text to a text field       jQuery = dt:contains working-days-per-year   230
+    the user enters text to a text field       id = working-days-per-year  230
     the user should see the element            jQuery = input[id$="role"]:text[value = ""]:first
     the user enters text to a text field       jQuery = input[id$="role"]:text[value = ""]:first    anotherrole
     the user enters text to a text field       jQuery = input[id$="gross"][value = ""]:first    120000

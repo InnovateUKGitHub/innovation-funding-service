@@ -65,7 +65,7 @@ Display errors for invalid inputs of the First name
     Then the user should see a field error                ${enter_a_first_name}
     And the user fills in the first name                  A
     And the user should see a field error                 Your first name should have at least 2 characters.
-    And the user fills in the first name                  Aname
+    And the user fills in the first name                  Steve
 
 Display errors for invalid inputs of the Last name
     [Documentation]    INFUND-1042
@@ -76,7 +76,7 @@ Display errors for invalid inputs of the Last name
     Then the user should see a field error                ${enter_a_last_name}
     And the user fills in the last name                   B
     And the user should see a field error                 Your last name should have at least 2 characters.
-    And the user fills in the last name                   Brown
+    And the user fills in the last name                   Smith
 
 Display errors for invalid inputs of the Phone field
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
