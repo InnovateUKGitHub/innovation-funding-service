@@ -1054,7 +1054,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-<<<<<<< HEAD
     public void getSpendProfile() {
         Long leadOrganisationId = 1L;
         Long monitoringOfficerId = 3L;
@@ -1107,7 +1106,9 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         verify(spendProfileRepository).findOneByProjectIdAndOrganisationId(projectId, leadOrganisationId);
         verify(spendProfileWorkflowHandler).getReviewOutcome(project);
         verify(userMapper).mapToResource(any(User.class));
-=======
+    }
+
+    @Test
     public void completeSpendProfilesReviewSuccessAndSendNotificationToMO() {
         ReflectionTestUtils.setField(service, "isMOSpendProfileUpdateEnabled", true);
         Project projectInDb = ProjectBuilder.newProject()
@@ -1134,7 +1135,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);
         assertTrue(result.isSuccess());
         assertThat(projectInDb.getSpendProfileSubmittedDate(), notNullValue());
->>>>>>> development
     }
 
     private SpendProfile createSpendProfile(Project projectInDB, Map<Long, BigDecimal> eligibleCostsMap, Map<Long, List<BigDecimal>> spendProfileCostsMap) {
