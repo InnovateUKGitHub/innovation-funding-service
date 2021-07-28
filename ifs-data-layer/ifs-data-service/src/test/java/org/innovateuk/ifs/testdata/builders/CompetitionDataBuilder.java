@@ -5,6 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
@@ -500,6 +501,16 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             competitionAssessmentConfigResource.setAssessorFinanceView(line.getAssessorFinanceView());
             competitionAssessmentConfigResource.setIncludeAverageAssessorScoreInNotifications(false);
             competitionAssessmentConfigService.update(data.getCompetition().getId(), competitionAssessmentConfigResource);
+        });
+    }
+
+    public CompetitionDataBuilder withThirdPartyConfig(CompetitionLine line) {
+        return asCompAdmin(data -> {
+            CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = new CompetitionThirdPartyConfigResource();
+            competitionThirdPartyConfigResource.setTermsAndConditionsLabel(line.getTermsAndConditionsLabel());
+            competitionThirdPartyConfigResource.setTermsAndConditionsGuidance(line.getTermsAndConditionsGuidance());
+            competitionThirdPartyConfigResource.setProjectCostGuidanceUrl(line.getProjectCostGuidanceUrl());
+            competitionThirdPartyConfigService.update(data.getCompetition().getId(), competitionThirdPartyConfigResource);
         });
     }
 

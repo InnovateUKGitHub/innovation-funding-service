@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.token.transactional;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.token.domain.Token;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -17,5 +18,5 @@ public interface TokenService {
     void removeToken(Token token);
 
     @PreAuthorize("hasPermission(#token, 'READ')")
-    void handleExtraAttributes(Token token);
+    ServiceResult<ApplicationResource> handleExtraAttributes(Token token);
 }

@@ -563,8 +563,6 @@ the user should see list of posted queries
 the user should see the response to query server side validation
     the user clicks the button/link               jQuery = .govuk-button:contains("Post response")
     the user should see a field error             ${empty_field_warning_message}
-#    TODO commmented due to IFS-5804
-#    And the user should see a summary error            ${empty_field_warning_message}
     the user enters text to a text field          css = .editor  this is some response text
     the user uploads the file                     name = attachment  ${valid_pdf}
     the user should see the element               jQuery = a:contains("${valid_pdf}") + button:contains("Remove")

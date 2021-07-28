@@ -68,7 +68,7 @@ the user sees the correct read only view of the question
 
 the user fills in the CS Initial details
     [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}  ${fundingRule}  ${fundingType}
-    the user clicks the button/link                         link = Initial details
+    the user clicks the button/link                         jQuery = a:contains("Initial details")
     the user enters text to a text field                    css = #title  ${compTitle}
     the user selects the radio button                       fundingType  ${fundingType}
     the user selects the option from the drop-down menu     ${compType}  id = competitionTypeId
@@ -81,6 +81,7 @@ the user fills in the CS Initial details
     the user selects option from type ahead                 innovationLeadUserId  i  Ian Cooper
     the user selects option from type ahead                 executiveUserId  r  Robert Johnson
     the user clicks the button/link                         jQuery = button:contains("Done")
+    the user should see the element                         jQuery = button:contains("Edit")
     the user clicks the button/link                         link = Back to competition details
     the user should see the element                         jQuery = div:contains("Initial details") ~ .task-status-complete
 
