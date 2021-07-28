@@ -349,18 +349,6 @@ Validation summary should be visible
     the user should see a summary error  12. Notifications: Please enter a future date that is after the previous milestone.
     the user should see a summary error  13. Release feedback: Please enter a future date that is after the previous milestone.
 
-#the user should see the correct values in the initial details form
-#    the user should see the element                     css = #title[value="Validations Test"]
-#    the user sees that the radio button is selected     fundingType  GRANT
-#    the user should see the element                     jQuery = #competitionTypeId option[selected]:contains("Programme")
-#    the user should see the element                     jQuery = #innovationSectorCategoryId option[selected]:contains("life sciences")
-#    the user should see the element                     jQuery = [name^="innovationAreaCategoryIds"]:contains("Advanced therapies")
-#    the user should see the element                     css = #openingDateDay[value="1"]
-#    the user should see the element                     css = #openingDateMonth[value="12"]
-#    the user should see the element                     css = #openingDateYear[value="${nextYear}"]
-#    the user sees element in type ahead                 innovationLeadUserId  i  Ian Cooper
-#    the user sees element in type ahead                 innovationLeadUserId  j  John Doe
-
 the user should see the correct details in the funding information form
     ${input_value} =    Get Value    id = funders[0].funderBudget
     Should Be Equal As Strings    ${input_value}    20000

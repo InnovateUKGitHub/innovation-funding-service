@@ -642,16 +642,30 @@ the user goes to documents page
 Search for MO
     [Arguments]  ${MO_name}  ${MO_fullname}
     the element should be disabled      jQuery = button:contains("View Monitoring Officer")
-    Wait Until Keyword Succeeds Without Screenshots    10s    200ms   input text    id = userId    ${MO_name}
+    input text                          id = userId    ${MO_name}
     the user clicks the button/link     jQuery = ul li:contains("${MO_fullname}")
     the user clicks the button/link     jQuery = button:contains("View Monitoring Officer")
 
 The internal user assign project to MO
     [Arguments]  ${search_ID}  ${project_name}
-    the element should be disabled      jQuery = button:contains("Assign")
-    Wait Until Keyword Succeeds Without Screenshots    10s    200ms   input text  id = projectId    ${search_ID}
-    the user clicks the button/link     jQuery = ul li:contains("${search_ID} - ${project_name}")
-    the user clicks the button/link     jQuery = button:contains("Assign")
+    the element should be disabled              jQuery = button:contains("Assign")
+    input text                                  id = projectId   ${search_ID}
+    the user should see project in dropdown     ${search_ID}  ${project_name}
+    the user clicks the button/link             jQuery = ul li:contains("${search_ID} - ${project_name}")
+    the user clicks the button/link             jQuery = button:contains("Assign")
+
+the user should see project in dropdown
+    [Arguments]  ${search_ID}  ${project_name}
+    :FOR    ${i}    IN RANGE  10
+    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots  element should be visible  jQuery = ul li:contains("${search_ID} - ${project_name}")
+    \  Exit For Loop If  '${status}'=='PASS'
+    \  run keyword if  '${status}'=='FAIL'   retry entering the project     ${search_ID}
+    \  ${i} =  Set Variable  ${i + 1}
+
+retry entering the project
+    [Arguments]  ${search_ID}
+    clear element text      id = projectId
+    input text              id = projectId   ${search_ID}
 
 the user completes the project team details
     the user clicks the button/link     link = Project team
@@ -791,8 +805,8 @@ the user fills correspondence address for non-uk based organisations
 
 enter the country in the autocomplete field
     [Arguments]         ${country}  ${completeCountryName}
-    input text                          id = country        ${country}
-    the user clicks the button/link     jQuery = ul li:contains("${completeCountryName}")
+    input text                                            id = country        ${country}
+    the user clicks the button/link                       jQuery = ul li:contains("${completeCountryName}")
 
 the user should see project is live with review its progress link
     the user should see the element     jQuery = p:contains("${reviewProgressMessage}")

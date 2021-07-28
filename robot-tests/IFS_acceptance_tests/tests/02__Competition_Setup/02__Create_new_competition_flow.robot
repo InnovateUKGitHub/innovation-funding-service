@@ -174,19 +174,16 @@ Initial Details - User can remove an innovation area
 
 Initial Details - drop down menu is populated with comp admin users
     [Documentation]    INFUND-6905, IFS-6775
-    [Tags]
-    When the user clicks the button/link    jQuery = .govuk-button:contains("Edit")
-    Then the user should see the element    jQuery = ul li:contains("John Doe")
-    #And the user sees element in type ahead        executiveUserId  r  Robert Johnson
-
+    Given the user clicks the button/link    jQuery = .govuk-button:contains("Edit")
+    When the user clicks the button/link     id = executiveUserId
+    Then the user should see the element     jQuery = ul li:contains("John Doe")
 
 Initial details - Comp Type, funding rule and Date should not be editable
     [Documentation]    INFUND-2985, INFUND-3182, INFUND-4892,  IFS-8779
-    [Tags]
-    And the user should not see the element   id = competitionTypeId
-    And the user should not see the element   id = openingDateDay
-    And the user should not see the element   id = fundingRule
-    And the user clicks the button/link       jQuery = button:contains("Done")
+    Then the user should not see the element    id = competitionTypeId
+    And the user should not see the element     id = openingDateDay
+    And the user should not see the element     id = fundingRule
+    And the user clicks the button/link         jQuery = button:contains("Done")
 
 Initial details - should have a green check
     [Documentation]    INFUND-3002
