@@ -612,24 +612,24 @@ Uk based lead applicant moves application to project setup and generates GOL
 IFS Admin approves the Spend profile
     [Documentation]  IFS-9679
     [Tags]  HappyPath
-    When Log in as a different user                                                            &{ifs_admin_user_credentials}
-    the user navigates to the page                                                      ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
-    the user selects the radio button                                                   spendProfileApproved  true
+    When Log in as a different user                  &{ifs_admin_user_credentials}
+    the user navigates to the page                   ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
+    the user selects the radio button                spendProfileApproved  true
     the user should not see an error in the page
-    the user clicks the button/link                                                     jQuery = button.govuk-button:contains("Submit")
+    the user clicks the button/link                  jQuery = button.govuk-button:contains("Submit")
 
 GOL template to be updated with country for correspondents address
     [Documentation]     IFS - 7241  IFS-9579
-    Given Log in as a different user                            &{ukLeadOrganisationCredentials}
+    Given Log in as a different user                                          &{ukLeadOrganisationCredentials}
     the user complete all sections of the project setup and generates GOL
-    When Log in as a different user                                                            &{ifs_admin_user_credentials}
-    the user navigates to the page                                                      ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
-    the user selects the radio button                                                   spendProfileApproved  true
+    When Log in as a different user                                           &{ifs_admin_user_credentials}
+    the user navigates to the page                                            ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
+    the user selects the radio button                                         spendProfileApproved  true
     the user should not see an error in the page
-    the user clicks the button/link                                                     jQuery = button.govuk-button:contains("Submit")
-    Given Log in as a different user                            &{ukLeadOrganisationCredentials}
-    When the user navigates to the page                                            ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/template
-    Then element should contain                                                    xpath = //p[1]     Argentina
+    the user clicks the button/link                                           jQuery = button.govuk-button:contains("Submit")
+    Given Log in as a different user                                          &{ukLeadOrganisationCredentials}
+    When the user navigates to the page                                       ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/template
+    Then element should contain                                               xpath = //p[1]     Argentina
 
 *** Keywords ***
 Custom Suite Setup
