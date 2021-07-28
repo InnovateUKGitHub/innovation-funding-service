@@ -81,6 +81,7 @@ the user fills in the CS Initial details
     the user selects option from type ahead                 innovationLeadUserId  i  Ian Cooper
     the user selects option from type ahead                 executiveUserId  r  Robert Johnson
     the user clicks the button/link                         jQuery = button:contains("Done")
+    the user should see the element                         jQuery = button:contains("Edit")
     the user clicks the button/link                         link = Back to competition details
     the user should see the element                         jQuery = div:contains("Initial details") ~ .task-status-complete
 
