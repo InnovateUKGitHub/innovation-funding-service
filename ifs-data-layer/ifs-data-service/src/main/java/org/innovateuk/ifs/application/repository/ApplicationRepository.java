@@ -65,16 +65,25 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     String SEARCH_BY_ID_LIKE = " SELECT a from Application a " +
             " WHERE str(a.id) LIKE CONCAT('%', :searchString, '%') ";
 
+    String APPLICATION_SEARCH_BY_ID_PRE_SUBMISSION_LIKE = " SELECT a from Application a " +
+            " WHERE str(a.id) LIKE CONCAT('%', :searchString, '%') " +
+            "AND a.applicationProcess.activityState != org.innovateuk.ifs.application.resource.ApplicationState.CREATED " +
+            "AND a.applicationProcess.activityState != org.innovateuk.ifs.application.resource.ApplicationState.OPENED ";
+
     String APPLICATION_SEARCH_BY_USER_ID_AND_INNOVATION_LEAD_ROLE = "SELECT a from Application a " +
             "INNER JOIN InnovationLead cp " +
             "ON cp.competition.id = a.competition.id " +
             "WHERE cp.user.id = :userId " +
+            "AND a.applicationProcess.activityState != org.innovateuk.ifs.application.resource.ApplicationState.CREATED " +
+            "AND a.applicationProcess.activityState != org.innovateuk.ifs.application.resource.ApplicationState.OPENED " +
             "AND str(a.id) LIKE CONCAT('%', :searchString, '%')";
 
     String APPLICATION_SEARCH_BY_USER_ID_AND_STAKEHOLDER_ROLE = "SELECT a from Application a " +
             "INNER JOIN Stakeholder cp " +
             "ON cp.competition.id = a.competition.id " +
             "WHERE cp.user.id = :userId " +
+            "AND a.applicationProcess.activityState != org.innovateuk.ifs.application.resource.ApplicationState.CREATED " +
+            "AND a.applicationProcess.activityState != org.innovateuk.ifs.application.resource.ApplicationState.OPENED " +
             "AND str(a.id) LIKE CONCAT('%', :searchString, '%')";
 
     String FIND_BY_ASSESSMENT = "SELECT app FROM Application app " +
@@ -92,6 +101,9 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     @Query(SEARCH_BY_ID_LIKE)
     Page<Application> searchByIdLike(@Param("searchString") String searchString, Pageable pageable);
+
+    @Query(APPLICATION_SEARCH_BY_ID_PRE_SUBMISSION_LIKE)
+    Page<Application> searchApplicationsByLikeAndExcludePreSubmissionStatuses(@Param("searchString") String searchString, Pageable pageable);
 
     @Query(value = APPLICATION_SEARCH_BY_USER_ID_AND_INNOVATION_LEAD_ROLE)
     Page<Application> searchApplicationsByUserIdAndInnovationLeadRole(@Param("userId") long userId,
@@ -157,7 +169,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                      @Param("funding") FundingDecisionStatus funding,
                                                                      Pageable pageable);
 
-    @Query("SELECT a FROM Application a " +COMP_FUNDING_FILTER)
+    @Query("SELECT a FROM Application a " + COMP_FUNDING_FILTER)
     List<Application> findByCompetitionIdAndFundingDecisionIsNotNull(@Param("compId") long competitionId,
                                                                      @Param("filter") String filter,
                                                                      @Param("sent") Boolean sent,

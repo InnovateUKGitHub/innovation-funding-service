@@ -21,7 +21,7 @@ ${OTHER_FUNDING_DATE}    12-2008
 Labour
     [Documentation]    INFUND-192, INFUND-736, INFUND-1256, INFUND-6390
     [Tags]  HappyPath
-    [Setup]    Applicant navigates to the finances of the Robot application
+    [Setup]    the user navigates to Your-finances page         Removing mechanical storage from server farms
     Given the user clicks the button/link                       link = Your project costs
     When the Applicant fills in the Labour costs for two rows
     And the user expands the section                            Labour
@@ -110,7 +110,8 @@ Other costs
 Custom Suite Setup
     Set predefined date variables
     Connect to database  @{database}
-    log in and create new application if there is not one already with complete application details  Robot test application  ${tomorrowday}  ${month}  ${nextyear}
+    the user logs-in in new browser  	sarah.james@load.example.com   ${short_password}
+    the user clicks the button/link     link = Removing mechanical storage from server farms
 
 the Applicant fills in the Labour costs for two rows
     the user clicks the button/link            jQuery = button:contains("Labour")

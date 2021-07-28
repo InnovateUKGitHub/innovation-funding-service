@@ -6,7 +6,7 @@ Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
-${assessor_myra_id}          ${user_ids['myra.cole@gmail.com']}
+${assessor_myra_id}    ${user_ids['myra.cole@gmail.com']}
 ${comp_id}             ${competition_ids["Sustainable living models for the future"]}
 
 

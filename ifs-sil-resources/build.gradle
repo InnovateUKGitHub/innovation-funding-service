@@ -1,3 +1,6 @@
+plugins {
+    id "io.freefair.lombok" version "6.0.0-m2"
+}
 apply from: rootProject.file("gradle-support/java.gradle")
 apply from: rootProject.file("gradle-support/bom.gradle")
 
@@ -10,7 +13,6 @@ apply plugin: 'idea'
 dependencies {
     compile 'org.apache.commons:commons-lang3'
     compile "com.fasterxml.jackson.core:jackson-databind"
-
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
 }
 configurations {

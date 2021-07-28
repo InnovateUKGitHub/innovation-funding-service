@@ -42,7 +42,7 @@ Applicant Applies to Generic competition and is able to see the Ts&Cs
     Then the user fills in the Application details               Application Ts&Cs  ${tomorrowday}  ${month}  ${nextyear}
     When the user completes subsidy basis as subsidy control
     And the user clicks the button/link                          link = Award terms and conditions
-    Then the user should see the element                         jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    Then the user should see the element                         jQuery = h1:contains("Terms and conditions of an Innovate UK Grant Award")
     And the user should see the element                          jQuery = .message-alert:contains("You must read these terms and conditions and accept them by ticking the box at the end")
 
 *** Keywords ***

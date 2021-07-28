@@ -28,7 +28,9 @@ import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResour
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.financechecks.populator.FinanceChecksEligibilityProjectCostsFormPopulator;
+import org.innovateuk.ifs.project.financechecks.populator.ProjectFinanceChecksReadOnlyPopulator;
 import org.innovateuk.ifs.project.financechecks.viewmodel.FinanceChecksProjectCostsViewModel;
+import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksReadOnlyViewModel;
 import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksViewModel;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -39,6 +41,7 @@ import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
@@ -105,6 +108,9 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
 
     @Mock
     private ProjectFinanceChangesViewModelPopulator projectFinanceChangesViewModelPopulator;
+
+    @Mock
+    private ProjectFinanceChecksReadOnlyPopulator projectFinanceChecksReadOnlyPopulator;
 
     private OrganisationResource industrialOrganisation;
 
@@ -212,6 +218,17 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         assertEquals(model.getOrganisationId(), partnerOrganisation.getId());
         assertEquals(model.getProjectName(), projectName);
         assertFalse(model.isApproved());
+    }
+
+    @Test
+    public void viewFinanceChecksReadOnly() throws Exception {
+
+        ProjectFinanceChecksReadOnlyViewModel projectFinanceChecksReadOnlyViewModel = Mockito.mock(ProjectFinanceChecksReadOnlyViewModel.class);
+        when(projectFinanceChecksReadOnlyPopulator.populate(project.getId())).thenReturn(projectFinanceChecksReadOnlyViewModel);
+
+        mockMvc.perform(get("/project/123/finance-check/read-only"))
+                .andExpect(view().name("project/finance-checks-read-only"))
+                .andReturn();
     }
 
     private QueryResource sampleQuery() {

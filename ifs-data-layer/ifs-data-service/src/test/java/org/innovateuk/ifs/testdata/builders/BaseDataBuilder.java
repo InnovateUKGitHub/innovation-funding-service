@@ -25,10 +25,7 @@ import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.*;
-import org.innovateuk.ifs.competition.transactional.CompetitionApplicationConfigService;
-import org.innovateuk.ifs.competition.transactional.CompetitionAssessmentConfigService;
-import org.innovateuk.ifs.competition.transactional.CompetitionService;
-import org.innovateuk.ifs.competition.transactional.MilestoneService;
+import org.innovateuk.ifs.competition.transactional.*;
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupFinanceService;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
@@ -249,6 +246,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected QuestionnaireTextOutcomeService questionnaireTextOutcomeService;
     protected ApplicationOrganisationQuestionnaireResponseRepository applicationOrganisationQuestionnaireResponseRepository;
     protected QuestionnaireResponseRepository questionnaireResponseRepository;
+    protected CompetitionThirdPartyConfigService competitionThirdPartyConfigService;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -385,6 +383,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         questionnaireTextOutcomeService = serviceLocator.getBean(QuestionnaireTextOutcomeService.class);
         applicationOrganisationQuestionnaireResponseRepository = serviceLocator.getBean(ApplicationOrganisationQuestionnaireResponseRepository.class);
         questionnaireResponseRepository = serviceLocator.getBean(QuestionnaireResponseRepository.class);
+        competitionThirdPartyConfigService = serviceLocator.getBean(CompetitionThirdPartyConfigService.class);
     }
 
     protected UserResource compAdmin() {
