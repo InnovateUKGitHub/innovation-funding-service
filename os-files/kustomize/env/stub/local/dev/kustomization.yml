@@ -15,5 +15,5 @@ components:
   - ../../../../patches/spring-profile-patch
   - ../../../../patches/wait-for-db-patch
 
-patchesStrategicMerge:
+resources:
   - config-maps/web-config.yml

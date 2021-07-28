@@ -12,7 +12,6 @@ resources:
   - config-maps/finance-data-service-config.yml
   - config-maps/survey-data-service-config.yml
 
-patchesStrategicMerge:
   - config-maps/data-service-config.yml
   - config-maps/cache-config.yml
   - config-maps/db-config.yml
