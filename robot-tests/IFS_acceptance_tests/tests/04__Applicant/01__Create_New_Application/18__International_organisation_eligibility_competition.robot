@@ -598,7 +598,7 @@ Partner applicant can upload appendix file
     [Documentation]  IFS-7793
     Given uk lead applicant completes application form
     And lead applicant assigns technical approach section to partner applicant
-    When partner uploads the appendix file
+#    When partner uploads the appendix file
     Then the lead can see multiple appendices uploaded to the technical approach question
 
 Uk based lead applicant moves application to project setup and generates GOL
