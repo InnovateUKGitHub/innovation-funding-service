@@ -609,9 +609,25 @@ Uk based lead applicant moves application to project setup and generates GOL
     Then Uk lead submits international competition application to assesment
     And Uk lead completes project setup details and generated GOL
 
+IFS Admin approves the Spend profile
+    [Documentation]  IFS-9679
+    [Tags]  HappyPath
+    When Log in as a different user                                                            &{ifs_admin_user_credentials}
+    the user navigates to the page                                                      ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
+    the user selects the radio button                                                   spendProfileApproved  true
+    the user should not see an error in the page
+    the user clicks the button/link                                                     jQuery = button.govuk-button:contains("Submit")
+
 GOL template to be updated with country for correspondents address
     [Documentation]     IFS - 7241  IFS-9579
-    Given the user complete all sections of the project setup and generates GOL
+    Given Log in as a different user                            &{ukLeadOrganisationCredentials}
+    the user complete all sections of the project setup and generates GOL
+    When Log in as a different user                                                            &{ifs_admin_user_credentials}
+    the user navigates to the page                                                      ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
+    the user selects the radio button                                                   spendProfileApproved  true
+    the user should not see an error in the page
+    the user clicks the button/link                                                     jQuery = button.govuk-button:contains("Submit")
+    Given Log in as a different user                            &{ukLeadOrganisationCredentials}
     When the user navigates to the page                                            ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/template
     Then element should contain                                                    xpath = //p[1]     Argentina
 
@@ -1098,9 +1114,6 @@ the user complete all sections of the project setup and generates GOL
     partner submits the spend profile                                   ${ProjectID}   ${organistaionInnovateID}
     external partner organisation submit the spend profile              ${ProjectID}   ${organistaionTestEmpireID}  ${organisationUiveristyOfLiverPoolId}
     lead organisations submit the spend profile                         ${ProjectID}   ${organisationTestEmpireOneID}   ${lead_international_email}     ${short_password}
-    the user selects the radio button                spendProfileApproved  true
-    the user should not see an error in the page
-    the user clicks the button/link        jQuery = button.govuk-button:contains("Submit")
 
 the user approves funding rules of lead and partner organisations
     the user approves funding rules     table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
@@ -1226,10 +1239,6 @@ Uk lead completes project setup details and generated GOL
     the user clicks the button/link                                                     css = #generate-spend-profile-modal-button
     Login and submit partners spend profile                                             ${partner_international_email}         ${organistaionNewEmpireID}     ${ukLeadApplicationProjectID}
     lead organisations submit the spend profile                                         ${ukLeadApplicationProjectID}   ${organistaionOrg2}   ${lead_applicant}      ${short_password}
-    the user navigates to the page                                                      ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
-    the user selects the radio button                                                   spendProfileApproved  true
-    the user should not see an error in the page
-    the user clicks the button/link                                                     jQuery = button.govuk-button:contains("Submit")
 
 the user completes project team and can see international organisation addresses
     the user should not see the element     link = Edit
