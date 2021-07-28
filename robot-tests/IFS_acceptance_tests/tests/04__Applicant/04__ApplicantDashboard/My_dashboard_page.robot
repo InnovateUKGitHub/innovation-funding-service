@@ -11,10 +11,12 @@ Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${applicationName}      Delete app invite test
-${knowledgeBaseOrg}     Queen Mary University of London
-${inviteEmail}          test@testing.com
-${compName}             KTP dashboard competition
+${CLOSED_COMPETITION_APPLICATION_NAME}          A new innovative solution
+${CLOSED_COMPETITION_APPLICATION_NAME_NUMBER}   ${application_ids['${CLOSED_COMPETITION_APPLICATION_NAME}']}
+${applicationName}                              Delete app invite test
+${knowledgeBaseOrg}                             Queen Mary University of London
+${inviteEmail}                                  test@testing.com
+${compName}                                     KTP dashboard competition
 
 *** Test Cases ***
 Milestone date for application in progress is visible
