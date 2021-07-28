@@ -60,7 +60,7 @@
                                      class="govuk-link">
                 Terms and conditions</a>
             </p>
-            <th:block th:if="${model.currentTermsAndConditions.thirdPartyProcurement}" -->
+            <th:block th:if="${model.currentTermsAndConditions.thirdPartyProcurement}">
             <p class="govuk-body">This is the Project Costs Guidance link applicants will see in the Projects Costs section.</p>
 
             <p class="govuk-body"><a th:text="|Project Costs Guidance  (opens in a new window)|"
@@ -155,7 +155,7 @@
                        maxlength="255"
                        th:attr="data-required-errormessage=#{validation.thirdParty.termsandconditionsform.projectCostGuidanceLink.required}" />
                 </div>
-                 <!-- ${model.termsAndConditionsDocUploaded} ? ${model.general.competition.competitionTerms?.name} : '', -->
+
                 <div id="procurement-thirdparty-upload" class="upload-section">
                     <th:block th:insert="question-type/types :: fileupload-fragment(edit,
                                 @{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.general.competition.id})},

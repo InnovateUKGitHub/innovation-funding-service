@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
+import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
@@ -65,6 +66,9 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
     @Mock
     private TermsAndConditionsModelPopulator termsAndConditionsModelPopulator;
 
+    @Mock
+    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
+
     @Override
     protected CompetitionSetupTermsAndConditionsController supplyControllerUnderTest() {
         return new CompetitionSetupTermsAndConditionsController();
@@ -103,9 +107,11 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
 
     @Test
     public void uploadTermsAndConditions() throws Exception {
+        GrantTermsAndConditionsResource procurementTerms = newGrantTermsAndConditionsResource().withName("Procurement").build();
         CompetitionResource competitionResource = newCompetitionResource()
-                .withId(COMPETITION_ID)
-                .build();
+              .withTermsAndConditions(procurementTerms)
+              .withId(COMPETITION_ID)
+               .build();
 
         String fileName = "termsAndConditionsDoc";
         String originalFileName = "original filename";
@@ -119,6 +125,7 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
         form.setTermsAndConditionsDoc(file);
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
+        when(termsAndConditionsRestService.getById(any())).thenReturn(restSuccess(procurementTerms));
         when(competitionSetupRestService.uploadCompetitionTerms(COMPETITION_ID, file.getContentType(), file.getSize(),
                 file.getOriginalFilename(), getMultipartFileBytes(file))).thenReturn(restSuccess(fileEntryResource));
         when(competitionRestService.updateTermsAndConditionsForCompetition(
@@ -165,8 +172,9 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
 
         InOrder inOrder = inOrder(competitionSetupService, competitionSetupRestService, competitionRestService, termsAndConditionsRestService);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(termsAndConditionsRestService).getById(nonProcurementTerms.getId());
+        inOrder.verify(termsAndConditionsRestService, times(2)).getById(nonProcurementTerms.getId());
         inOrder.verify(competitionSetupRestService).deleteCompetitionTerms(competition.getId());
+        inOrder.verify(termsAndConditionsRestService, times(1)).getById(nonProcurementTerms.getId());
         inOrder.verify(competitionRestService).updateTermsAndConditionsForCompetition(
                 eq(COMPETITION_ID),
                 eq(nonProcurementTerms.getId()));
@@ -200,8 +208,7 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
 
         InOrder inOrder = inOrder(competitionSetupService, competitionSetupRestService, competitionRestService, termsAndConditionsRestService);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(termsAndConditionsRestService).getById(nonProcurementTerms.getId());
-        inOrder.verify(competitionSetupRestService).deleteCompetitionTerms(competition.getId());
+        inOrder.verify(termsAndConditionsRestService, times(3)).getById(nonProcurementTerms.getId());
         inOrder.verify(competitionRestService).updateTermsAndConditionsForCompetition(
                 eq(COMPETITION_ID),
                 eq(nonProcurementTerms.getId()));
@@ -346,12 +353,15 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
 
     @Test
     public void deleteTermsAndConditions() throws Exception {
+        GrantTermsAndConditionsResource procurementTerms = newGrantTermsAndConditionsResource().withName("Procurement").build();
         CompetitionResource competitionWithTermsDoc = newCompetitionResource()
                 .withId(COMPETITION_ID)
+                .withTermsAndConditions(procurementTerms)
                 .withCompetitionTerms(newFileEntryResource().build())
                 .build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionWithTermsDoc));
+        when(termsAndConditionsRestService.getById(procurementTerms.getId())).thenReturn(restSuccess(procurementTerms));
         when(competitionSetupRestService.deleteCompetitionTerms(COMPETITION_ID)).thenReturn(restSuccess());
 
         mockMvc.perform(multipart(format("%s/%d/section/terms-and-conditions", URL_PREFIX, COMPETITION_ID))

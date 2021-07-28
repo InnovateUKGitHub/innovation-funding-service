@@ -47,7 +47,7 @@ public class TermsAndConditionsFormPopulator {
         competition.setCompetitionThirdPartyConfigResource(competitionThirdPartyConfigResource);
     }
 
-        private boolean isThirdPartyProcurement(long termsAndConditionsId) {
-            return termsAndConditionsRestService.getById(termsAndConditionsId).getSuccess().isThirdPartyProcurement();
-        }
- }
+    private boolean isThirdPartyProcurement(long termsAndConditionsId) {
+        return termsAndConditionsRestService.getById(termsAndConditionsId).getSuccess().isThirdPartyProcurement();
+    }
+}
