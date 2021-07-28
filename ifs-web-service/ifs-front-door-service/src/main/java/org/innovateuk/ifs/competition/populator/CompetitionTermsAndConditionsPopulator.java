@@ -26,9 +26,9 @@ public class CompetitionTermsAndConditionsPopulator {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         GrantTermsAndConditionsResource grantTermsAndConditionsResource = competition.getTermsAndConditions();
-        CompetitionThirdPartyConfigResource thirdPartyConfig = competitionThirdPartyConfigRestService.findOneByCompetitionId(competitionId).getSuccess();
 
         if (grantTermsAndConditionsResource.isProcurementThirdParty()) {
+            CompetitionThirdPartyConfigResource thirdPartyConfig = competitionThirdPartyConfigRestService.findOneByCompetitionId(competitionId).getSuccess();
             competitionTermsViewModel = new CompetitionTermsViewModel(competitionId,
                     grantTermsAndConditionsResource,
                     thirdPartyConfig.getTermsAndConditionsLabel(),
