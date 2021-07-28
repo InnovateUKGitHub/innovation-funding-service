@@ -7,7 +7,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.resource.ApplicationConfiguration;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.notifications.resource.*;
@@ -16,6 +15,7 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.builder.ProjectBuilder;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -34,6 +34,8 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.FundingRulesWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -46,6 +48,7 @@ import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResourc
 import org.innovateuk.ifs.project.spendprofile.validator.SpendProfileValidationUtil;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Assert;
 import org.junit.Test;
@@ -61,6 +64,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
@@ -70,7 +74,8 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.MATERIALS;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
@@ -85,6 +90,7 @@ import static org.innovateuk.ifs.project.finance.resource.TimeUnit.MONTH;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder.newCostCategoryType;
+import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -137,6 +143,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     @InjectMocks
     @Spy
     private DefaultSpendProfileFigureDistributer defaultSpendProfileFigureDistributer;
+    @Mock
+    private MonitoringOfficerRepository monitoringOfficerRepository;
 
     @Test
     public void generateSpendProfile() {
@@ -1036,6 +1044,35 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);
 
         assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void completeSpendProfilesReviewSuccessAndSendNotificationToMO() {
+        ReflectionTestUtils.setField(service, "isMOSpendProfileUpdateEnabled", true);
+        Project projectInDb = ProjectBuilder.newProject()
+                .withId(projectId)
+                .withName("Test Project")
+                .withApplication(newApplication().withCompetition(newCompetition().withIncludeJesForm(true).build()).build())
+                .withDuration(3L)
+                .withTargetStartDate(LocalDate.of(2018, 3, 1))
+                .build();
+
+        User user = newUser().withRoles(singleton(Role.MONITORING_OFFICER)).build();
+        MonitoringOfficer moUser = newMonitoringOfficer().withUser(user).build();
+        projectInDb.setProjectMonitoringOfficer(moUser);
+
+        projectInDb.setSpendProfileSubmittedDate(null);
+        SpendProfile spendProfileInDb = new SpendProfile();
+        spendProfileInDb.setMarkedAsComplete(true);
+        projectInDb.setSpendProfiles(singletonList(spendProfileInDb));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(projectInDb));
+        when(monitoringOfficerRepository.findOneByProjectIdAndRole(projectId, ProjectParticipantRole.MONITORING_OFFICER))
+                .thenReturn(Optional.of(moUser));
+        when(projectUsersHelper.getMOByProjectId(projectId)).thenReturn(Optional.of(moUser));
+        when(spendProfileWorkflowHandler.submit(projectInDb)).thenReturn(true);
+        ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);
+        assertTrue(result.isSuccess());
+        assertThat(projectInDb.getSpendProfileSubmittedDate(), notNullValue());
     }
 
     private SpendProfile createSpendProfile(Project projectInDB, Map<Long, BigDecimal> eligibleCostsMap, Map<Long, List<BigDecimal>> spendProfileCostsMap) {
