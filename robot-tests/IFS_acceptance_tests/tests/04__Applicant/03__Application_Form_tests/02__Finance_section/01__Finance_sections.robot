@@ -73,7 +73,7 @@ Non-academic partner finance section
     And the user should see the element     link = Your project costs
     And the user should see the element     link = Your organisation
     When the user clicks the button/link    link = Your funding
-    Then the user should see the element    jQuery = .govuk-list li:contains("you must mark the research category page as complete")
+    Then the user should see the element    jQuery = .govuk-list li:contains("you must mark the your organisation page as complete")
 
 Academic partner finance section
     [Documentation]    INFUND-7522
