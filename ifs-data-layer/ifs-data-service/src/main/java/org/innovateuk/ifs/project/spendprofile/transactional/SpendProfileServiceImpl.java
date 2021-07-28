@@ -37,6 +37,7 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -147,6 +148,9 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private CompetitionService competitionService;
 
     private static final String SPEND_PROFILE_STATE_ERROR = "Set Spend Profile workflow status to sent failed for project %s";
+
+    @Value("${ifs.monitoringofficer.spendprofile.update.enabled}")
+    private boolean isMOSpendProfileUpdateEnabled;
 
     @Override
     @Transactional
@@ -316,6 +320,16 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         globalArguments.put("dashboardUrl", webBaseUrl);
         globalArguments.put("applicationId", project.getApplication().getId());
         globalArguments.put("competitionName", project.getApplication().getCompetition().getName());
+        return globalArguments;
+
+    }
+
+    private Map<String, Object> createGlobalArgsForMOSpendProfileReviewEmail(Project project, User user) {
+        Map<String, Object> globalArguments = new HashMap<>();
+        globalArguments.put("monitoringOfficer", user);
+        globalArguments.put("applicationName", project.getApplication().getName());
+        globalArguments.put("applicationId", project.getApplication().getId());
+        globalArguments.put("dashboardUrl", webBaseUrl);
         return globalArguments;
 
     }
@@ -553,11 +567,26 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
             if (spendProfileWorkflowHandler.submit(project)) {
                 project.setSpendProfileSubmittedDate(ZonedDateTime.now());
                 updateApprovalOfSpendProfile(projectId, ApprovalType.UNSET);
+                if (isMOSpendProfileUpdateEnabled) {
+                  sendSpendProfileReviewNotification(project);
+                }
                 return serviceSuccess();
             } else {
                 return serviceFailure(SPEND_PROFILES_HAVE_ALREADY_BEEN_SUBMITTED);
             }
         });
+    }
+
+    private ServiceResult<Void> sendSpendProfileReviewNotification(Project project) {
+        Optional<MonitoringOfficer> monitoringOfficer = projectUsersHelper.getMOByProjectId(project.getId());
+        if (monitoringOfficer.isPresent() && monitoringOfficer.get().getUser() != null) {
+            User user = monitoringOfficer.get().getUser();
+            NotificationTarget monitoringOfficerTarget = new UserNotificationTarget(user.getName(), user.getEmail());
+            Map<String, Object> globalArguments = createGlobalArgsForMOSpendProfileReviewEmail(project, user);
+            Notification notification = new Notification(systemNotificationSource, monitoringOfficerTarget, SpendProfileNotifications.MONITORING_OFFICER_SPENDPROFILE_REVIEW_NOTIFICATION, globalArguments);
+            return notificationService.sendNotificationWithFlush(notification, EMAIL);
+        }
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> rejectSpendProfileSubmission(Long projectId) {

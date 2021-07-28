@@ -56,8 +56,9 @@ Materials
     [Tags]  HappyPath
     When the Applicant fills the Materials fields
     Then Totals should be correct                  jQuery = h4:contains("Total materials costs") [data-mirror^="#section-total"]  £2,000  jQuery = [data-mirror^="#section-total-material"]  £2,000
-    And the user clicks the button/link            css = #material-costs-table tbody tr:nth-of-type(1) button
-    And the user reloads page with autosave
+    And the user clicks the button/link            jQuery = #material-costs-table tbody tr:nth-of-type(1) button
+    #And the user reloads page with autosave
+    And wait for autosave
     Then Totals should be correct                  jQuery = h4:contains("Total materials costs") [data-mirror^="#section-total"]    £1,000  jQuery = [data-mirror^="#section-total-material"]  £1,000
     [Teardown]    the user clicks the button/link  jQuery = button:contains("Materials")
 
