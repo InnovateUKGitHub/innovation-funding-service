@@ -24,8 +24,7 @@ Resource          ../../../../resources/defaultResources.robot
 Resource          ../../../../resources/common/Applicant_Commons.robot
 
 *** Variables ***
-${applicationName}  ${OPEN_COMPETITION_APPLICATION_5_NAME}
-# ${OPEN_COMPETITION_APPLICATION_2_NAME} == Planetary science Pluto\'s telltale heart
+${applicationName}  Climate science the history of Greenland's ice
 
 *** Test Cases ***
 Finance sub-sections
@@ -37,18 +36,18 @@ Organisation name visible in the Finance section
     [Documentation]    INFUND-1815  IFS-7723
     [Tags]
     When the user clicks the button/link    link = Your project costs
-    Then the user should see the element    jQuery = h2:contains("Provide the project costs for 'ITV PLC'")
-    And the user should see the element     jQuery = label:contains("'ITV PLC' Total project costs")
+    Then the user should see the element    jQuery = h2:contains("Provide the project costs for 'Adaptive Optics'")
+    And the user should see the element     jQuery = label:contains("'Adaptive Optics' Total project costs")
 
 Guidance in the your project costs
     [Documentation]    INFUND-192
     [Tags]  HappyPath
-    [Setup]  Applicant navigates to the finances of the Robot application
-    Given the user clicks the button/link   link = Your project costs
-    When the user clicks the button/link    jQuery = button:contains("Labour")
-    And the user clicks the button/link     css = .govuk-details summary
-    Then the user should see the element    css = .govuk-details__text p
-    And the user should see the element     css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
+    [Setup]  the user navigates to Your-finances page     Liquid lenses in mobile phone cameras
+    Given the user clicks the button/link                 link = Your project costs
+    When the user clicks the button/link                  jQuery = button:contains("Labour")
+    And the user clicks the button/link                   css = .govuk-details summary
+    Then the user should see the element                  css = .govuk-details__text p
+    And the user should see the element                   css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
 
 Working days per year should be 232
     [Documentation]    INFUND-2961
@@ -57,23 +56,23 @@ Working days per year should be 232
 User pressing back button should get the correct version of the page
     [Documentation]    INFUND-2695
     [Tags]  HappyPath
-    [Setup]  Applicant navigates to the finances of the Robot application
-    And the user clicks the button/link     link = Your project costs
+    [Setup]  the user navigates to Your-finances page     Liquid lenses in mobile phone cameras
+    And the user clicks the button/link                   link = Your project costs
     Given The user adds three material rows
-    And The user clicks the button/link     link = Your project finances
-    And the user clicks the button/link     link = Your project costs
-    Then the user should see the element    css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input
+    And The user clicks the button/link                   link = Your project finances
+    And the user clicks the button/link                   link = Your project costs
+    Then the user should see the element                  css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input
     [Teardown]    the user removes the materials rows
 
 Non-academic partner finance section
     [Documentation]    INFUND-7522
     [Tags]  HappyPath
-    [Setup]  Log in as a different user     &{collaborator1_credentials}
-    Given the user navigates to Your-finances page  ${applicationName}
-    And the user should see the element     link = Your project costs
-    And the user should see the element     link = Your organisation
-    When the user clicks the button/link    link = Your funding
-    Then the user should see the element    jQuery = .govuk-list li:contains("you must mark the your organisation page as complete")
+    [Setup]  Log in as a different user                &{collaborator1_credentials}
+    Given the user navigates to Your-finances page     ${applicationName}
+    And the user should see the element                link = Your project costs
+    And the user should see the element                link = Your organisation
+    When the user clicks the button/link               link = Your funding
+    Then the user should see the element               jQuery = .govuk-list li:contains("the lead applicant must mark the research category page as complete")
 
 Academic partner finance section
     [Documentation]    INFUND-7522
@@ -92,7 +91,7 @@ Academic partner can upload file for field J-es PDF
     Given the user navigates to Your-finances page  ${applicationName}
     And the user clicks the button/link             link = Your project costs
     # Note the Jes form is already uploaded
-    Then the user should see the element            jQuery = a:contains(".pdf")
+    Then the user should see the element            jQuery = a:contains("jes-form.pdf")
     When The user clicks the button/link            jQuery = button:contains("Remove")
     And the user should see the element             jQuery = label.button-secondary
     And the user uploads the file                   css = .upload-section input  ${5mb_pdf}
@@ -127,7 +126,7 @@ Applicant chooses Calculate overheads option
     [Setup]  log in as a different user                        &{lead_applicant_credentials}
     # This test also checks read only view of the overheads once section is marked as complete
     Given the user navigates to Your-finances page             ${applicationName}
-    And the user fills in the project costs                    Calculate  185,997
+    And the user fills in the project costs                    Calculate  251,684
     And wait until element is not visible without screenshots  css = .task-list li:nth-of-type(1) .task-status-incomplete
     When the user clicks the button/link                       link = Your project costs
     And the user expands the section                           Overhead costs
@@ -139,8 +138,8 @@ Applicant chooses Calculate overheads option
 
 *** Keywords ***
 Custom Suite Setup
-    log in and create new application if there is not one already  Robot test application
-    Applicant navigates to the finances of the Robot application
+    the user logs-in in new browser  	         karen.smith@load.example.com  ${short_password}
+    the user navigates to Your-finances page     Liquid lenses in mobile phone cameras
 
 the user adds three material rows
     the user expands the section          Materials
@@ -152,7 +151,6 @@ the user adds three material rows
     the user clicks the button/link       jQuery = button:contains("Add another materials cost")
     the user enters text to a text field  css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input  01
     Set Focus To Element                  link = Please refer to our guide to project costs for further information.
-
 
 the user removes the materials rows
     [Documentation]    INFUND-2965
@@ -173,7 +171,7 @@ the working days per year should be 232 by default
     Should Be Equal As Strings         ${Days_value}    232
 
 the user navigates to another page
-    the user navigates to the page    https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance
+    the user navigates to the page                      https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance
     Run Keyword And Ignore Error Without Screenshots    Handle Alert
 
 the user should see the funding guidance
