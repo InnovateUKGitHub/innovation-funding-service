@@ -46,9 +46,7 @@ public class CompetitionLine {
     private String termsAndConditionsLabel;
     private String termsAndConditionsGuidance;
     private String projectCostGuidanceUrl;
-    private String termsAndConditionsName;
     private String termsAndConditionsTemplate;
-    private int termsAndConditionsVersion;
     private boolean priority;
 
     public CompetitionLine() {
@@ -358,27 +356,11 @@ public class CompetitionLine {
         this.projectCostGuidanceUrl = projectCostGuidanceUrl;
     }
 
-    public String getTermsAndConditionsName() {
-        return termsAndConditionsName;
-    }
-
-    public void setTermsAndConditionsName(String termsAndConditionsName) {
-        this.termsAndConditionsName = termsAndConditionsName;
-    }
-
     public String getTermsAndConditionsTemplate() {
         return termsAndConditionsTemplate;
     }
 
     public void setTermsAndConditionsTemplate(String termsAndConditionsTemplate) {
         this.termsAndConditionsTemplate = termsAndConditionsTemplate;
-    }
-
-    public int getTermsAndConditionsVersion() {
-        return termsAndConditionsVersion;
-    }
-
-    public void setTermsAndConditionsVersion(int termsAndConditionsVersion) {
-        this.termsAndConditionsVersion = termsAndConditionsVersion;
     }
 }

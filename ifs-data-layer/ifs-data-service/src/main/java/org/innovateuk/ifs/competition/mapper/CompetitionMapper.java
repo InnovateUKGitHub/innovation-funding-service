@@ -72,7 +72,8 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
             @Mapping(target = "projectSetupStarted", ignore = true),
             @Mapping(target = "useDocusignForGrantOfferLetter", ignore = true),
             @Mapping(target = "competitionFinanceRowTypes", ignore = true),
-            @Mapping(target = "competitionExternalConfig", ignore = true)
+            @Mapping(target = "competitionExternalConfig", ignore = true),
+            @Mapping(target = "competitionThirdPartyConfig", ignore = true)
     })
     public abstract Competition mapToDomain(CompetitionResource domain);
 

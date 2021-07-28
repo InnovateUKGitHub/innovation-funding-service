@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competition.resource;
 
 public class CompetitionThirdPartyConfigResource {
 
-    private Long id;
     private String termsAndConditionsLabel;
     private String termsAndConditionsGuidance;
     private String projectCostGuidanceUrl;
@@ -14,14 +13,6 @@ public class CompetitionThirdPartyConfigResource {
         this.termsAndConditionsLabel = termsAndConditionsLabel;
         this.termsAndConditionsGuidance = termsAndConditionsGuidance;
         this.projectCostGuidanceUrl = projectCostGuidanceUrl;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getTermsAndConditionsLabel() {

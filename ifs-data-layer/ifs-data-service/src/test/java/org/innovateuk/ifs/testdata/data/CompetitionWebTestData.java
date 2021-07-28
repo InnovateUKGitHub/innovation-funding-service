@@ -493,7 +493,7 @@ public class CompetitionWebTestData {
                         "<p class=\"govuk-body\">If there is anything you do not understand, please <a href=\"/info/contact\">contact us</a>.</p>" +
                         "<p class=\"govuk-body govuk-!-margin-top-9 user-feedback\"><span class=\"govuk-!-font-weight-bold\">Need help with this service?</span> <a class=\"govuk-link\" href=\"/info/contact\">Contact us</a></p>")
                 .withProjectCostGuidanceUrl("https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/small-business-research-initiative-sbri-project-costs-guidance")
-                .withTermsAndConditions("Procurement Third Party", "third-party-terms-and-conditions", 1);
+                .withTermsAndConditionsTemplate("third-party-terms-and-conditions");
     }
 
     private static CompetitionLineBuilder thirdPartyCompetition() {

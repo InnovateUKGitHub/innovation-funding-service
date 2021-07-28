@@ -47,9 +47,7 @@ public final class CompetitionLineBuilder {
     private String termsAndConditionsLabel;
     private String termsAndConditionsGuidance;
     private String projectCostGuidanceUrl;
-    private String termsAndConditionsName;
     private String termsAndConditionsTemplate;
-    private int termsAndConditionsVersion;
     private BuilderOrder builderOrder = BuilderOrder.ANYWHERE;
 
     private CompetitionLineBuilder() {
@@ -239,12 +237,8 @@ public final class CompetitionLineBuilder {
         return this;
     }
 
-    public CompetitionLineBuilder withTermsAndConditions(String termsAndConditionsName,
-                                                         String termsAndConditionsTemplate,
-                                                         int termsAndConditionsVersion) {
-        this.termsAndConditionsName = termsAndConditionsName;
+    public CompetitionLineBuilder withTermsAndConditionsTemplate(String termsAndConditionsTemplate) {
         this.termsAndConditionsTemplate = termsAndConditionsTemplate;
-        this.termsAndConditionsVersion = termsAndConditionsVersion;
         return this;
     }
 
@@ -303,9 +297,7 @@ public final class CompetitionLineBuilder {
         competitionLine.setTermsAndConditionsLabel(termsAndConditionsLabel);
         competitionLine.setTermsAndConditionsGuidance(termsAndConditionsGuidance);
         competitionLine.setProjectCostGuidanceUrl(projectCostGuidanceUrl);
-        competitionLine.setTermsAndConditionsName(termsAndConditionsName);
         competitionLine.setTermsAndConditionsTemplate(termsAndConditionsTemplate);
-        competitionLine.setTermsAndConditionsVersion(termsAndConditionsVersion);
 
         return competitionLine;
     }
