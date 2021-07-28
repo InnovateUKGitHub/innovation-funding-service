@@ -202,6 +202,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "competitionExternalConfigId", referencedColumnName = "id")
     private CompetitionExternalConfig competitionExternalConfig;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "competitionThirdPartyConfigId", referencedColumnName = "id")
+    private CompetitionThirdPartyConfig competitionThirdPartyConfig;
+
     public Competition() {
         setupComplete = false;
     }
@@ -1013,6 +1017,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setCompetitionAssessmentConfig(CompetitionAssessmentConfig competitionAssessmentConfig) {
         this.competitionAssessmentConfig = competitionAssessmentConfig;
+    }
+
+    public CompetitionThirdPartyConfig getCompetitionThirdPartyConfig() {
+        return competitionThirdPartyConfig;
+    }
+
+    public void setCompetitionThirdPartyConfig(CompetitionThirdPartyConfig competitionThirdPartyConfig) {
+        this.competitionThirdPartyConfig = competitionThirdPartyConfig;
     }
 
     public CompetitionTypeEnum getCompetitionTypeEnum() {

@@ -102,6 +102,7 @@ Lead applicant can view their non-FEC project finance overview
 Partner can view the non-FEC project finance overview
     [Documentation]  IFS-9248
     Given log in as a different user                                   &{collaborator1_credentials}
+    And the user clicks the application tile if displayed
     When the user navigates to finance checks
     And the user clicks the button/link                                link = view the project finance overview
     Then the user should view the non-fec project finance overview

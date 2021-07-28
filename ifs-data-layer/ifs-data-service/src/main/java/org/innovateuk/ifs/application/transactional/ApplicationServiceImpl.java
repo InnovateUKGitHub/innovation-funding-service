@@ -39,8 +39,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
-import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.state.ApplicationStateVerificationFunctions.verifyApplicationIsOpen;
@@ -313,6 +312,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 return handleApplicationSearchResultPage(applicationRepository.searchApplicationsByUserIdAndInnovationLeadRole(user.getId(), searchString, pageable));
             } else if (user.hasRole(STAKEHOLDER)) {
                 return handleApplicationSearchResultPage(applicationRepository.searchApplicationsByUserIdAndStakeholderRole(user.getId(), searchString, pageable));
+            } else if (user.hasAuthority(Authority.AUDITOR)) {
+                return handleApplicationSearchResultPage(applicationRepository.searchApplicationsByLikeAndExcludePreSubmissionStatuses(searchString, pageable));
             } else {
                 return handleApplicationSearchResultPage(applicationRepository.searchByIdLike(searchString, pageable));
             }

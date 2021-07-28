@@ -61,7 +61,8 @@ Super admin can reopen the assessment
 
 Super admin can reject an approved document
     [Documentation]  IFS-9692
-    Given the user navigates to the page      ${server}/project-setup-management/project/${projectID}/document/all
+    Given log in as a different user          &{superAdminCredentials}
+    And the user navigates to the page        ${server}/project-setup-management/project/${projectID}/document/all
     And the user should see the element       jQuery = li:nth-child(1) span:contains("Approved")
     When the user rejects the document
     Then the user should see the element      jQuery = p:contains("You have rejected this document.")
@@ -147,3 +148,4 @@ compAdmin user approves the GOL
     the user clicks the button/link      jQuery = button:contains("Submit")
     the user clicks the button/link      jQuery = button[type = "submit"]:contains("Accept signed grant offer letter")
     the user should see the element      jQuery = .success-alert h2:contains("These documents have been approved.")
+
