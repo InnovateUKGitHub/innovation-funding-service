@@ -17,8 +17,10 @@ import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -89,6 +91,9 @@ public class AssessmentOverviewModelPopulator {
     @Autowired
     private ApplicationRestService applicationRestService;
 
+    @Autowired
+    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
+
     @Value("${ifs.subsidy.control.northern.ireland.enabled}")
     private boolean northernIrelandSubsidyControlToggle;
 
@@ -101,6 +106,7 @@ public class AssessmentOverviewModelPopulator {
         List<QuestionResource> assessorViewQuestions = new ArrayList<>(questions);
 
         String termsAndConditionsTerminology = termsAndConditionsTerminology(competition);
+        CompetitionThirdPartyConfigResource thirdPartyConfig = competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
 
         return new AssessmentOverviewViewModel(assessmentId,
                 assessment.getApplication(),
@@ -113,7 +119,8 @@ public class AssessmentOverviewModelPopulator {
                 getAppendices(assessment.getApplication(), assessorViewQuestions),
                 termsAndConditionsTerminology,
                 getTermsAndConditionsRows(questions, application, competition),
-                competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && competition.getOtherFundingRulesTermsAndConditions() != null && northernIrelandSubsidyControlToggle
+                competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && competition.getOtherFundingRulesTermsAndConditions() != null && northernIrelandSubsidyControlToggle,
+                thirdPartyConfig
         );
     }
 
@@ -240,6 +247,9 @@ public class AssessmentOverviewModelPopulator {
         }
         if (FundingType.LOAN == competitionResource.getFundingType()) {
             return TERMS_AND_CONDITIONS_LOAN;
+        }
+        if(competitionResource.getTermsAndConditions().isThirdPartyProcurement()) {
+            return competitionResource.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel(); //"#IFS10084.13"
         }
         return TERMS_AND_CONDITIONS_OTHER;
     }

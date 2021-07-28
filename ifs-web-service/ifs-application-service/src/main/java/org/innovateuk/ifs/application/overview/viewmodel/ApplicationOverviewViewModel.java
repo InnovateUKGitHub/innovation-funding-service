@@ -4,6 +4,7 @@ import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
 import java.time.ZonedDateTime;
@@ -23,14 +24,19 @@ public class ApplicationOverviewViewModel implements BaseAnalyticsViewModel {
     private final Set<ApplicationOverviewSectionViewModel> sections;
     private final Boolean reopened;
     private final ZonedDateTime reopenedDate;
+    private final CompetitionThirdPartyConfigResource thirdPartyConfig;
 
-    public ApplicationOverviewViewModel(ProcessRoleResource processRole, CompetitionResource competition, ApplicationResource application, Set<ApplicationOverviewSectionViewModel> sections, Boolean reopened, ZonedDateTime reopenedDate) {
+    public ApplicationOverviewViewModel(ProcessRoleResource processRole, CompetitionResource competition,
+                                        ApplicationResource application, Set<ApplicationOverviewSectionViewModel> sections,
+                                        Boolean reopened, ZonedDateTime reopenedDate,
+                                        CompetitionThirdPartyConfigResource thirdPartyConfig) {
         this.processRole = processRole;
         this.competition = competition;
         this.application = application;
         this.sections = sections;
         this.reopened = reopened;
         this.reopenedDate = reopenedDate;
+        this.thirdPartyConfig = thirdPartyConfig;
     }
 
     @Override
@@ -58,6 +64,8 @@ public class ApplicationOverviewViewModel implements BaseAnalyticsViewModel {
     public Set<ApplicationOverviewSectionViewModel> getSections() {
         return sections;
     }
+
+    public CompetitionThirdPartyConfigResource getThirdPartyConfig() { return thirdPartyConfig; }
 
     public boolean isLead() {
         return processRole.getRole().isLeadApplicant();

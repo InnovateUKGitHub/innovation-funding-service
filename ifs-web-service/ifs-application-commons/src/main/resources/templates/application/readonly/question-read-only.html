@@ -337,7 +337,7 @@
     </th:block>
 </th:block>
 
-<th:block th:fragment="terms-and-conditions-partner-table (applicationId, questionId, partners, includeFundingRules, displayCompleteStatus)">
+<th:block th:fragment="terms-and-conditions-partner-table (applicationId, questionId, partners, includeFundingRules, displayCompleteStatus, termsAndConditionsTerminology)">
     <!--/*@thymesVar id="applicationId" type="java.lang.Long"*/-->
     <!--/*@thymesVar id="questionId" type="java.lang.Long"*/-->
     <!--/*@thymesVar id="partners" type="java.util.List"*/-->
@@ -349,7 +349,11 @@
             <th scope="col" class="govuk-table__header">Partner</th>
             <th scope="col" class="govuk-table__header"
                 th:if="${includeFundingRules}">Funding rules</th>
-            <th scope="col" class="govuk-table__header">Terms and conditions</th>
+            <th scope="col" class="govuk-table__header">
+                <!-- Terms and conditions -->
+                <th:block th:text="${#strings.capitalize(termsAndConditionsTerminology)}"></th:block>
+                <!-- #IFS10084.7 -->
+            </th>
             <th scope="col" class="govuk-table__header"
                 th:if="${displayCompleteStatus}">Status</th>
         </tr>
@@ -358,7 +362,7 @@
         <tr th:each="partner : ${partners}" class="govuk-table__row">
             <!--/*@thymesVar id="partner" type="org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsRowReadOnlyViewModel"*/-->
             <td class="govuk-table__cell">
-                <th:block  th:text="${partner.partnerName}"></th:block>
+                <th:block th:text="${partner.partnerName}"></th:block>
                 <span class="hint" th:if="${partner.lead}">(Lead)</span>
                 <span th:if="${displayCompleteStatus and !partner.accepted}" class="error-icon-after"></span>
             </td>
@@ -367,7 +371,8 @@
             <td class="govuk-table__cell">
                 <a th:href="@{~/application/{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}(applicationId=${applicationId},questionId=${questionId},organisationId=${partner.partnerId})}"
                    class="govuk-link"
-                   th:text="${partner.getTermsName()}"></a>
+                   th:text="${partner.termsName}"></a>
+                <!-- #IFS10084.8 -->
             </td>
             <td class="govuk-table__cell"
                 th:if="${displayCompleteStatus}">
@@ -393,7 +398,7 @@
                 <p class="govuk-body">This application cannot be submitted until all partners accept our terms and conditions.</p>
             </div>
         </th:block>
-        <th:block th:insert="this :: terms-and-conditions-partner-table (${model.applicationId}, ${model.questionId}, ${model.partners}, ${model.includeFundingRules}, ${model.displayCompleteStatus})" />
+        <th:block th:insert="this :: terms-and-conditions-partner-table (${model.applicationId}, ${model.questionId}, ${model.partners}, ${model.includeFundingRules}, ${model.displayCompleteStatus}, ${model.termsAndConditionsTerminology})" />
     </div>
 </th:block>
 

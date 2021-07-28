@@ -31,8 +31,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsRowReadOnlyViewModel.TermsAndConditionsRowReadOnlyViewModelBuilder.aTermsAndConditionsRowReadOnlyViewModel;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.TERMS_AND_CONDITIONS;
-import static org.innovateuk.ifs.util.TermsAndConditionsUtil.VIEW_TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
-import static org.innovateuk.ifs.util.TermsAndConditionsUtil.VIEW_TERMS_AND_CONDITIONS_OTHER;
+import static org.innovateuk.ifs.util.TermsAndConditionsUtil.*;
 
 @SuppressWarnings("unchecked")
 @Component
@@ -110,9 +109,12 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
 
     private String termsAndConditionsTerminology(CompetitionResource competitionResource) {
         if(FundingType.INVESTOR_PARTNERSHIPS == competitionResource.getFundingType()) {
-            return VIEW_TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
+            return TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
         }
-        return VIEW_TERMS_AND_CONDITIONS_OTHER;
+        if(competitionResource.getTermsAndConditions().isThirdPartyProcurement()) {
+            return competitionResource.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel();   //#10084.14
+        }
+        return TERMS_AND_CONDITIONS_OTHER;
     }
 
     /* Doing this inside the supplier is pretty horrible. But stops us doing a rest request for the finances inside the loop. */

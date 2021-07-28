@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.overview.viewmodel;
 
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.util.TermsAndConditionsUtil;
 import org.junit.Test;
 
@@ -15,7 +16,7 @@ public class ApplicationOverviewViewModelTest {
         CompetitionResourceBuilder.newCompetitionResource().withFundingType(FundingType.INVESTOR_PARTNERSHIPS).build();
         ApplicationOverviewViewModel viewModel = new ApplicationOverviewViewModel(null,
                 CompetitionResourceBuilder.newCompetitionResource().withFundingType(FundingType.INVESTOR_PARTNERSHIPS).build(),
-                null, null, null, null);
+                null, null, null, null, new CompetitionThirdPartyConfigResource());
 
         // when
         String result = viewModel.getTermsAndConditionsTerminology();
@@ -30,7 +31,7 @@ public class ApplicationOverviewViewModelTest {
         CompetitionResourceBuilder.newCompetitionResource().withFundingType(FundingType.GRANT).build();
         ApplicationOverviewViewModel viewModel = new ApplicationOverviewViewModel(null,
                 CompetitionResourceBuilder.newCompetitionResource().withFundingType(FundingType.GRANT).build(),
-                null, null, null, null);
+                null, null, null, null, new CompetitionThirdPartyConfigResource());
 
         // when
         String result = viewModel.getTermsAndConditionsTerminology();

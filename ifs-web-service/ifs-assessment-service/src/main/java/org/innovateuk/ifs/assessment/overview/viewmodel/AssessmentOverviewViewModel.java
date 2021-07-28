@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsRowReadOnlyViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class AssessmentOverviewViewModel {
     private final String termsAndConditionsTerminology;
     private final List<TermsAndConditionsRowReadOnlyViewModel> termsAndConditionsRows;
     private final boolean dualTermsAndConditions;
+    private final CompetitionThirdPartyConfigResource thirdPartyConfig;
 
     public AssessmentOverviewViewModel(long assessmentId,
                                        long applicationId,
@@ -37,7 +39,8 @@ public class AssessmentOverviewViewModel {
                                        List<AssessmentOverviewAppendixViewModel> appendices,
                                        String termsAndConditionsTerminology,
                                        List<TermsAndConditionsRowReadOnlyViewModel> termsAndConditionsRows,
-                                       boolean dualTermsAndConditions) {
+                                       boolean dualTermsAndConditions,
+                                       CompetitionThirdPartyConfigResource thirdPartyConfig) {
         this.assessmentId = assessmentId;
         this.applicationId = applicationId;
         this.applicationName = applicationName;
@@ -50,6 +53,7 @@ public class AssessmentOverviewViewModel {
         this.termsAndConditionsTerminology = termsAndConditionsTerminology;
         this.termsAndConditionsRows = termsAndConditionsRows;
         this.dualTermsAndConditions = dualTermsAndConditions;
+        this.thirdPartyConfig = thirdPartyConfig;
     }
 
     public long getAssessmentId() {
@@ -100,6 +104,8 @@ public class AssessmentOverviewViewModel {
         return dualTermsAndConditions;
     }
 
+    public CompetitionThirdPartyConfigResource getThirdPartyConfig() { return thirdPartyConfig; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -121,6 +127,7 @@ public class AssessmentOverviewViewModel {
                 .append(appendices, that.appendices)
                 .append(termsAndConditionsTerminology, that.termsAndConditionsTerminology)
                 .append(termsAndConditionsRows, that.termsAndConditionsRows)
+                .append(thirdPartyConfig, that.thirdPartyConfig)
                 .isEquals();
     }
 
@@ -139,6 +146,7 @@ public class AssessmentOverviewViewModel {
                 .append(termsAndConditionsTerminology)
                 .append(termsAndConditionsRows)
                 .append(dualTermsAndConditions)
+                .append(thirdPartyConfig)
                 .toHashCode();
     }
 
@@ -157,6 +165,7 @@ public class AssessmentOverviewViewModel {
                 .append("termsAndConditionsTerminology", termsAndConditionsTerminology)
                 .append("termsAndConditionsRows", termsAndConditionsRows)
                 .append("dualTermsAndConditions", dualTermsAndConditions)
+                .append("thirdPartyConfig", thirdPartyConfig)
                 .toString();
     }
 }

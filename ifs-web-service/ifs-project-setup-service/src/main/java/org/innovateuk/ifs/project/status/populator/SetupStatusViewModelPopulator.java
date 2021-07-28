@@ -4,8 +4,10 @@ import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionPostAwardServiceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupPostAwardServiceRestService;
+import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
@@ -64,6 +66,9 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     private CompetitionSetupPostAwardServiceRestService competitionSetupPostAwardServiceRestService;
 
     @Autowired
+    private CompetitionThirdPartyConfigRestService thirdPartyConfigRestService;
+
+    @Autowired
     private NavigationUtils navigationUtils;
 
     public SetupStatusViewModel populateViewModel(long projectId,
@@ -73,6 +78,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         boolean monitoringOfficer = monitoringOfficerService.isMonitoringOfficerOnProject(projectId, loggedInUser.getId()).getSuccess();
 
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+        CompetitionThirdPartyConfigResource thirdPartyConfig = thirdPartyConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
 
         RestResult<OrganisationResource> organisationResult = projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId());
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(project.getId(), Optional.of(loggedInUser.getId()));
@@ -101,7 +107,9 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 isProjectManager,
                 isProjectFinanceContact,
                 competitionPostAwardServiceResource.getSuccess().getPostAwardService(),
-                navigationUtils.getLiveProjectsLandingPageUrl());
+                navigationUtils.getLiveProjectsLandingPageUrl(),
+                competition.getTermsAndConditions().isThirdPartyProcurement(),
+                thirdPartyConfig);
     }
 
     private boolean showBankDetails(RestResult<OrganisationResource> organisationResult, ProjectTeamStatusResource teamStatus) {

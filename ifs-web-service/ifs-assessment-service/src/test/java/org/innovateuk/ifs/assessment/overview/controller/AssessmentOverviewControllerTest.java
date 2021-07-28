@@ -38,6 +38,7 @@ import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestServic
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.*;
@@ -406,7 +407,8 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 expectedAppendices,
                 "Award terms and conditions",
                 emptyList(),
-                false
+                false,
+                new CompetitionThirdPartyConfigResource()
         );
 
         ApplicationResource application = newApplicationResource().build();

@@ -45,7 +45,9 @@
                                 view the Investor Partnerships terms and conditions
                             </th:block>
                             <th:block th:unless="${model.investorPartnershipCompetition}">
-                                view the award terms and conditions
+                                <span th:unless="${model.thirdPartyProcurement}" th:text="${'view the award terms and conditions'}" />
+                                <span th:if="${model.thirdPartyProcurement}" th:text="${'view the ' + #string.toLowerCase(model.thirdPartyConfig.termsAndConditionsLabel)}" />
+                                <!-- #IFS10084.12 -->
                             </th:block>
                         </a>
                     </li>
