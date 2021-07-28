@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionTermsViewModel;
@@ -20,13 +21,22 @@ public class CompetitionTermsAndConditionsPopulator {
     @Autowired
     private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
 
-    public CompetitionTermsViewModel populate( long competitionId) {
+    public CompetitionTermsViewModel populate(long competitionId) {
+        CompetitionTermsViewModel competitionTermsViewModel;
+
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        GrantTermsAndConditionsResource grantTermsAndConditionsResource = competition.getTermsAndConditions();
         CompetitionThirdPartyConfigResource thirdPartyConfig = competitionThirdPartyConfigRestService.findOneByCompetitionId(competitionId).getSuccess();
 
-        return new CompetitionTermsViewModel(competitionId,
-                competition.getTermsAndConditions(),
-                thirdPartyConfig.getTermsAndConditionsLabel(),
-                thirdPartyConfig.getTermsAndConditionsGuidance());
+        if (grantTermsAndConditionsResource.isProcurementThirdParty()) {
+            competitionTermsViewModel = new CompetitionTermsViewModel(competitionId,
+                    grantTermsAndConditionsResource,
+                    thirdPartyConfig.getTermsAndConditionsLabel(),
+                    thirdPartyConfig.getTermsAndConditionsGuidance());
+        } else {
+            competitionTermsViewModel = new CompetitionTermsViewModel(competitionId, grantTermsAndConditionsResource);
+        }
+
+        return competitionTermsViewModel;
     }
 }
