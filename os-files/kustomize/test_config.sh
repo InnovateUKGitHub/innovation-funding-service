@@ -25,6 +25,7 @@ kustomize build env/aws/uat > /dev/null || echo 'xxx error on aws uat'
 
 kustomize build env/stub/stub-base > /dev/null || echo 'xxx error on stub base'
 kustomize build env/stub/at > /dev/null || echo 'xxx error on stub at'
+kustomize build env/stub/custom > /dev/null || echo 'xxx error on custom'
 kustomize build env/stub/local/dev > /dev/null || echo 'xxx error on local dev'
 kustomize build env/stub/local/ext > /dev/null || echo 'xxx error on local ext'
 kustomize build env/stub/local/custom > /dev/null || echo 'xxx error on local custom'
