@@ -343,15 +343,17 @@ the assessor submits the feedback for the application
 
 the assessor adds score and feedback for every question
     [Arguments]   ${no_of_questions}
-    The user clicks the button/link                       link = Scope
-    The user selects the index from the drop-down menu    1    css = .research-category
-    The user clicks the button/link                       jQuery = label:contains("Yes")
-    The user enters text to a text field                  css = .editor    Testing scope feedback text
+    The user clicks the button/link                                     link = Scope
+    The user selects the index from the drop-down menu                  1    css = .research-category
+    The user clicks the button/link                                     jQuery = label:contains("Yes")
+    The user enters text to a text field                                css = .editor    Testing scope feedback text
     Wait for autosave
-    mouse out  css = .editor
-    Wait Until Page Contains Without Screenshots          Saved!
-    the user clicks the button/link                       jQuery = button:contains("Save and return to assessment overview")
-    The user clicks the button/link                       link = Scope
+    mouse out                                                           css = .editor
+    Wait Until Page Contains Without Screenshots                        Saved!
+    the user clicks the button/link                                     jQuery = button:contains("Save and return to assessment overview")
+    ${error} =   Run Keyword and return status without screenshots      page should contain     An unexpected error occurred.
+    Run Keyword If    '${error}' == 'True'                              the user clicks the button/link   jQuery = button:contains("Save and return to assessment overview")
+    The user clicks the button/link                                     link = Scope
     :FOR  ${INDEX}  IN RANGE  1  ${no_of_questions}
       \    the user clicks the button/link    css = .next
       \    The user selects the option from the drop-down menu    10    css = .assessor-question-score
@@ -359,7 +361,9 @@ the assessor adds score and feedback for every question
       \    Wait for autosave
       \    mouse out  css = .editor
       \    Wait Until Page Contains Without Screenshots    Saved!
-    The user clicks the button with resubmission              jquery = button:contains("Save and return to assessment overview")
+    The user clicks the button with resubmission                        jquery = button:contains("Save and return to assessment overview")
+    ${error} =   Run Keyword and return status without screenshots      page should contain     An unexpected error occurred.
+    Run Keyword If    '${error}' == 'True'                              the user clicks the button/link   jQuery = button:contains("Save and return to assessment overview")
 
 the assessor adds score and feedback for every assessor question
     [Arguments]   ${no_of_questions}
@@ -377,3 +381,5 @@ the assessor adds score and feedback for every assessor question
       \    mouse out  css = .editor
       \    Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button with resubmission              jquery = button:contains("Save and return to assessment overview")
+    ${error} =   Run Keyword and return status without screenshots     page should contain     An unexpected error occurred.
+    Run Keyword If    '${error}' == 'True'                             the user clicks the button/link   jQuery = button:contains("Save and return to assessment overview")
