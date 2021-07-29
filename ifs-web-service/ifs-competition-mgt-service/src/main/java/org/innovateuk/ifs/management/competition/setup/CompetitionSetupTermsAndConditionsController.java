@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
@@ -75,9 +74,6 @@ public class CompetitionSetupTermsAndConditionsController {
                                          Model model,
                                          UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource =
-                competitionThirdPartyConfigRestService.findOneByCompetitionId(competitionId).getSuccess();
-        competition.setCompetitionThirdPartyConfigResource(competitionThirdPartyConfigResource);
 
         if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
             return ifsCompetitionSetup(competitionId);
@@ -334,14 +330,23 @@ public class CompetitionSetupTermsAndConditionsController {
     }
 
     private void validateUploadFragment(boolean isThirdPartyProcurement, boolean isProcurement, CompetitionResource competition, BindingResult bindingResult) {
-        if (competition.getCompetitionTerms() == null) {
+       if (competition.getCompetitionTerms() != null)  {
+           if (isProcurement && competition.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel() != null) {
+                competitionSetupRestService.deleteCompetitionThirdPartyConfigData(competition.getId());
+                competition = competitionRestService.getCompetitionById(competition.getId()).getSuccess();
+           }
+           if (isThirdPartyProcurement && competition.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel().isEmpty()) {
+               bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsDoc", "Please upload a terms and conditions document."));
+           }
+       }
+
+       if (competition.getCompetitionTerms() == null) {
             if (isThirdPartyProcurement) {
                 bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsDoc", "Please upload a terms and conditions document."));
             }
             if (isProcurement) {
-                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "termsAndConditionsDoc", "Please upload a terms and conditions document."));
+                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "termsAndConditionsDoc", "Upload a terms and conditions document."));
             }
-
         }
     }
 
