@@ -29,4 +29,19 @@ public class CompetitionFundersFixture {
 
         return returnList;
     }
+
+    public static List<CompetitionFunderResource> getOfgemFunder() {
+        List<CompetitionFunderResource> funders = new ArrayList<>();
+
+        CompetitionFunderResource funderResource = new CompetitionFunderResource();
+        funderResource.setId(1L);
+        funderResource.setFunder(Funder.OFFICE_OF_GAS_AND_ELECTRICITY_MARKETS_OFGEM);
+        funderResource.setFunderBudget(BigInteger.ZERO);
+        funderResource.setCoFunder(false);
+        funderResource.setCompetitionId(1L);
+
+        funders.add(funderResource);
+
+        return funders;
+    }
 }
