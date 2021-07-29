@@ -201,9 +201,3 @@ the user should see option in type ahead field
     \  Exit For Loop If  '${status}'=='PASS'
     \  run keyword if  '${status}'=='FAIL'   the user clicks the button/link    ${locator}
     \  ${i} =  Set Variable  ${i + 1}
-
-#the user sees element in type ahead
-#    [Arguments]   ${inputId}  ${searchTerm}  ${optionSelector}
-#    the user clicks the button/link     id = ${inputId}
-#    the user should see the element     jQuery = ul li:contains("${optionSelector}")
-#    mouse out                           id = ${inputId}
