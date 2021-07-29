@@ -191,9 +191,9 @@ Auditor can view payment milestones in project setup
 Custom suite setup
     Connect to Database  @{database}
     the user logs-in in new browser                                    &{ifs_admin_user_credentials}
-    ifs admin gets the counts of competitions in live tab
     ${applicationId3} =  get application id by name  ${applicationName3}
     Set suite variable  ${applicationId3}
+    ifs admin gets the counts of competitions in live tab
 
 Custom suite teardown
     Close browser and delete emails
