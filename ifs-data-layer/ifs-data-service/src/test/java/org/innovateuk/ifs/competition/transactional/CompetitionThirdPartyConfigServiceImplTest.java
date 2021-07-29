@@ -50,15 +50,16 @@ public class CompetitionThirdPartyConfigServiceImplTest extends BaseServiceUnitT
         long competitionId = 1;
 
         when(competitionThirdPartyConfigRepository.findOneByCompetitionId(competitionId)).thenReturn(Optional.empty());
-
         ServiceResult<CompetitionThirdPartyConfigResource> response = service.findOneByCompetitionId(competitionId);
 
-        assertTrue(response.isFailure());
-        
-        List<Error> errors = response.getErrors();
+        assertTrue(response.isSuccess());
+        Optional<CompetitionThirdPartyConfigResource> competitionThirdPartyConfigResource = response.getOptionalSuccessObject();
 
-        assertEquals(1, errors.size());
-        assertEquals(HttpStatus.NOT_FOUND, errors.get(0).getStatusCode());
+        assertEquals(null, competitionThirdPartyConfigResource.get().getId());
+        assertEquals("", competitionThirdPartyConfigResource.get().getTermsAndConditionsLabel());
+        assertEquals("", competitionThirdPartyConfigResource.get().getTermsAndConditionsGuidance());
+        assertEquals("", competitionThirdPartyConfigResource.get().getProjectCostGuidanceUrl());
+
     }
 
     @Test
