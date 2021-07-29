@@ -35,10 +35,10 @@
                 </div>
 
                 <section th:each="section,iterStat : ${model.sections}">
-                    <h2 th:if="${!section.termsAndConditions || !model.competition.termsAndConditions.thirdPartyProcurement}"
+                    <h2 th:unless="${section.termsAndConditions}"
                         th:text="${section.name}" th:class="${iterStat.first} ? 'govuk-heading-m': 'govuk-heading-m govuk-!-margin-bottom-0'"/>
-                    <h2 th:if="${section.termsAndConditions && model.competition.termsAndConditions.thirdPartyProcurement}"
-                        th:text="${#strings.capitalize(model.thirdPartyConfig.termsAndConditionsLabel)}"
+                    <h2 th:if="${section.termsAndConditions}"
+                        th:text="${#strings.capitalize(model.termsAndConditionsTerminology)}"
                         th:class="${iterStat.first} ? 'govuk-heading-m': 'govuk-heading-m govuk-!-margin-bottom-0'"/>
                     <!-- #IFS10084.1 -->
                     <p class="govuk-hint" th:text="${section.guidance}" />
@@ -69,7 +69,7 @@
 
                         <li th:if="${section.termsAndConditions}">
                             <div class="task">
-                                <h3 class="govuk-heading-s" th:text="${model.termsAndConditionsTerminology}"></h3>
+                                <h3 class="govuk-heading-s" th:text="${#strings.capitalize(model.termsAndConditionsTerminology)}"></h3>
                                 <!-- #IFS10084.2 -->
                             </div>
                             <div>

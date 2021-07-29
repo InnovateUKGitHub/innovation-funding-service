@@ -56,6 +56,7 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
                 question,
                 data.getCompetition().getFundingRules() == FundingRules.SUBSIDY_CONTROL && northernIrelandSubsidyControlToggle,
                 getPartners(data.getApplication(), data.getCompetition(), question),
+                data.getCompetition().getTermsAndConditions().isThirdPartyProcurement(),
                 termsAndConditionsTerminology(data.getCompetition())
         );
     }

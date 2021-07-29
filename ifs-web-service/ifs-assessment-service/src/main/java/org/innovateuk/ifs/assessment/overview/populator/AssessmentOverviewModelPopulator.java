@@ -105,8 +105,9 @@ public class AssessmentOverviewModelPopulator {
         List<QuestionResource> questions = questionRestService.findByCompetition(assessment.getCompetition()).getSuccess();
         List<QuestionResource> assessorViewQuestions = new ArrayList<>(questions);
 
-        String termsAndConditionsTerminology = termsAndConditionsTerminology(competition);
         CompetitionThirdPartyConfigResource thirdPartyConfig = competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
+        competition.setCompetitionThirdPartyConfigResource(thirdPartyConfig);
+        String termsAndConditionsTerminology = termsAndConditionsTerminology(competition);
 
         return new AssessmentOverviewViewModel(assessmentId,
                 assessment.getApplication(),

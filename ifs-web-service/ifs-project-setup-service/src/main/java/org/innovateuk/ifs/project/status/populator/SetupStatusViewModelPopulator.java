@@ -66,7 +66,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     private CompetitionSetupPostAwardServiceRestService competitionSetupPostAwardServiceRestService;
 
     @Autowired
-    private CompetitionThirdPartyConfigRestService thirdPartyConfigRestService;
+    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
 
     @Autowired
     private NavigationUtils navigationUtils;
@@ -78,7 +78,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         boolean monitoringOfficer = monitoringOfficerService.isMonitoringOfficerOnProject(projectId, loggedInUser.getId()).getSuccess();
 
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
-        CompetitionThirdPartyConfigResource thirdPartyConfig = thirdPartyConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
+        CompetitionThirdPartyConfigResource thirdPartyConfig = competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
+        competition.setCompetitionThirdPartyConfigResource(thirdPartyConfig);
 
         RestResult<OrganisationResource> organisationResult = projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId());
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(project.getId(), Optional.of(loggedInUser.getId()));

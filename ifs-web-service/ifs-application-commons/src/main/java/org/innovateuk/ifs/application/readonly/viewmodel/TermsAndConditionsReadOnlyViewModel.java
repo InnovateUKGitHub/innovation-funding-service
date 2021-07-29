@@ -13,17 +13,20 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
     private final List<TermsAndConditionsRowReadOnlyViewModel> partners;
     private final boolean includeFundingRules;
     private final boolean displayCompleteStatus;
+    private final boolean thirdPartyProcurement;
     private final String termsAndConditionsTerminology;
 
     public TermsAndConditionsReadOnlyViewModel(ApplicationReadOnlyData data,
                                                QuestionResource question,
                                                boolean includeFundingRules,
                                                List<TermsAndConditionsRowReadOnlyViewModel> partners,
+                                               boolean thirdPartyProcurement,
                                                String termsAndConditionsTerminology) {
         super(data, question);
         this.partners = partners;
         this.includeFundingRules = includeFundingRules;
         this.displayCompleteStatus = !data.getApplication().isSubmitted() && !data.getCompetition().isExpressionOfInterest();
+        this.thirdPartyProcurement = thirdPartyProcurement;
         this.termsAndConditionsTerminology = termsAndConditionsTerminology;
     }
 
@@ -55,6 +58,8 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
     public boolean isIncludeFundingRules() {
         return includeFundingRules;
     }
+
+    public boolean isThirdPartyProcurement() { return thirdPartyProcurement; }
 
     public String getTermsAndConditionsTerminology() {
         return termsAndConditionsTerminology;
