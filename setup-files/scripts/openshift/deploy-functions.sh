@@ -210,10 +210,6 @@ function setMinimumNumberOfReplicas() {
     CURRENT_REPLICAS=$(oc describe dc/competition-mgt-svc ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
     sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/ifs-services/42-competition-mgt-svc.yml
 
-    echo "Setting idp replicas"
-    CURRENT_REPLICAS=$(oc describe dc/idp ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
-    sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/shib/56-idp.yml
-
     echo "Setting shib replicas"
     CURRENT_REPLICAS=$(oc describe dc/shib ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
     sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/shib/5-shib.yml

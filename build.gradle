@@ -33,7 +33,6 @@ apply plugin: 'com.google.cloud.tools.jib'
 
 apply from: "gradle-support/versions.gradle"
 apply from: "gradle-support/sonarqube.gradle"
-apply from: "gradle-support/certificates.gradle"
 apply from: "gradle-support/taurus.gradle"
 apply from: "gradle-support/pull-all-base-images.gradle"
 apply from: "gradle-support/stage-base-images.gradle"
@@ -84,8 +83,7 @@ def osFileMap = [
         [name:'docusign-config', type: 'config-maps'],
         [name:'finance-db-config', type: 'config-maps'],
         [name:'flyway-config', type: 'config-maps'],
-        [name:'idp-config', type: 'config-maps'],
-        [name:'ldap-config', type: 'config-maps'],
+        [name:'new-relic-config', type: 'config-maps'],
         [name:'new-relic-config', type: 'config-maps'],
         [name:'performance-config', type: 'config-maps'],
         [name:'shibboleth-config', type: 'config-maps'],
@@ -134,13 +132,8 @@ def osFileMap = [
         [name:'7-chrome', type: 'robot-tests'],
         [name:'8-robot', type: 'robot-tests'],
 
-        [name:'idp-route', type: 'routes'],
         [name:'mail-route', type: 'routes'],
         [name:'shib-route', type: 'routes'],
-
-        [name:'5-shib', type: 'shib'],
-        [name:'55-ldap', type: 'shib'],
-        [name:'56-idp', type: 'shib'],
 
         [name:'80-sil-stub', type: 'sil-stub'],
 
