@@ -226,7 +226,8 @@ public class CompetitionWebTestData {
                         .withName("Photonics for health")
                         .withLeadTechnologist(PETER_FREEMAN_ID),
                 grantCompetition()
-                        .withName("Comp to Delete 1"),
+                        .withName("Comp to Delete 1")
+                        .withLeadTechnologist(PETER_FREEMAN_ID),
                 ofGemCompetition()
                         .withName("OfGem competition")
         )
@@ -376,11 +377,8 @@ public class CompetitionWebTestData {
                         .withFundingRules(FundingRules.SUBSIDY_CONTROL),
                 grantCompetition()
                         .withName("Princes Trust Comp 1")
-                        .withResubmission(true)
-                        .withFundingRules(FundingRules.SUBSIDY_CONTROL),
-                grantCompetition()
-                        .withName("New Comp 1")
-                        .withResubmission(true)
+                        .withCompetitionType(THE_PRINCES_TRUST)
+                        .withLeadApplicantTypes(asSet(BUSINESS, RTO, RESEARCH, PUBLIC_SECTOR_OR_CHARITY))
                         .withFundingRules(FundingRules.SUBSIDY_CONTROL),
                 grantCompetition()
                         .withName("Always open competition")
