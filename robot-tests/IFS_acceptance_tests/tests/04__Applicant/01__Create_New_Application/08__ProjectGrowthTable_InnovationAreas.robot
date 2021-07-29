@@ -552,7 +552,7 @@ Custom suite setup
 
 the user navigate to competition
     log in as a different user             &{lead_applicant_credentials}
-
+    the user clicks the application tile if displayed
     the user clicks the button/link        link = ${applicationWithGrowth}
 
 Custom suite teardown
