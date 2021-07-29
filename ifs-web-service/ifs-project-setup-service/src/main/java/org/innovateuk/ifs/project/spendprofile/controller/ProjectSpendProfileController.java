@@ -8,12 +8,14 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.spendprofile.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.spendprofile.form.SpendProfileForm;
+import org.innovateuk.ifs.project.spendprofile.form.SpendProfileReviewForm;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.project.spendprofile.validation.SpendProfileCostValidator;
@@ -27,6 +29,7 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
@@ -43,6 +46,7 @@ import java.util.stream.Collectors;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
+import static org.innovateuk.ifs.project.constant.ProjectActivityStates.LEAD_ACTION_REQUIRED;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -81,9 +85,13 @@ public class ProjectSpendProfileController {
     @Autowired
     private MonitoringOfficerRestService monitoringOfficerRestService;
 
+    @Value("${ifs.monitoringofficer.spendprofile.update.enabled}")
+    private boolean moSpendProfileJourneyUpdateEnabled;
+
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION')")
     @GetMapping
-    public String viewSpendProfile(Model model,
+    public String viewSpendProfile(@ModelAttribute(value = "form", binding = false) SpendProfileReviewForm form,
+                                   Model model,
                                    @P("projectId")@PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    UserResource loggedInUser) {
@@ -106,8 +114,31 @@ public class ProjectSpendProfileController {
                                          UserResource loggedInUser) {
 
         model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId, loggedInUser));
+        model.addAttribute(FORM_ATTR_NAME, null);
 
         return BASE_DIR + "/spend-profile";
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'REVIEW_SPEND_PROFILE')")
+    @PostMapping
+    public String submitSpendProfileReview(Model model,
+                                           @ModelAttribute(value = "form") SpendProfileReviewForm form,
+                                           @SuppressWarnings("unused") BindingResult bindingResult,
+                                           ValidationHandler validationHandler,
+                                           @P("projectId")@PathVariable Long projectId,
+                                           @PathVariable("organisationId") final Long organisationId,
+                                           UserResource loggedInUser) {
+        Supplier<String> failureView = () -> viewSpendProfile(form, model , projectId, organisationId, loggedInUser);
+        ApprovalType approvalType = form.isApproved() ? ApprovalType.APPROVED : ApprovalType.REJECTED;
+        ServiceResult<Void> generateResult = spendProfileService.approveOrRejectSpendProfile(projectId, approvalType);
+
+        return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () ->
+                submitSpendProfileReviewSuccessView(projectId)
+        );
+    }
+
+    private String submitSpendProfileReviewSuccessView(Long projectId) {
+        return "redirect:/project/" + projectId;
     }
 
     @PreAuthorize("hasPermission(new org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId(#projectId, #organisationId), 'EDIT_SPEND_PROFILE_SECTION')")
@@ -175,7 +206,6 @@ public class ProjectSpendProfileController {
     private String saveSpendProfileSuccessView(final Long projectId, final Long organisationId, final Long userId) {
         final String urlSuffix = projectService.isUserLeadPartner(projectId, userId) ? "/review" : "";
         return "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile" + urlSuffix;
-
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION') && hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'MARK_SPEND_PROFILE_INCOMPLETE') && hasPermission(#projectOrganisationCompositeId, 'IS_NOT_FROM_OWN_ORGANISATION')")
@@ -338,25 +368,44 @@ public class ProjectSpendProfileController {
 
         Map<Long, OrganisationReviewDetails> editablePartners = getOrganisationReviewDetails(projectResource.getId(), organisations, loggedInUser);
 
+        ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty());
+
         return new ProjectSpendProfileProjectSummaryViewModel(projectResource.getId(),
                 projectResource.getApplication(), projectResource.getName(),
                 organisations,
                 leadOrganisation,
                 projectResource.getSpendProfileSubmittedDate() != null,
                 editablePartners,
-                isApproved(projectResource.getId()),
-                isMonitoringOfficer);
+                isApproved(teamStatus),
+                isRejected(teamStatus),
+                isMonitoringOfficer,
+                moSpendProfileJourneyUpdateEnabled);
     }
 
     private boolean isApproved(final Long projectId) {
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
+        return isApproved(teamStatus);
+    }
+
+    private boolean isApproved(ProjectTeamStatusResource teamStatus) {
         return COMPLETE.equals(teamStatus.getLeadPartnerStatus().getSpendProfileStatus());
+    }
+
+    private boolean isRejected(ProjectTeamStatusResource teamStatus) {
+        return LEAD_ACTION_REQUIRED.equals(teamStatus.getLeadPartnerStatus().getSpendProfileStatus());
     }
 
     private Map<Long, OrganisationReviewDetails> getOrganisationReviewDetails(final Long projectId, List<OrganisationResource> partnerOrganisations, final UserResource loggedInUser) {
         return partnerOrganisations.stream().collect(Collectors.toMap(OrganisationResource::getId,
-                o -> new OrganisationReviewDetails(o.getName(), spendProfileService.getSpendProfile(projectId, o.getId()).map(SpendProfileResource::isMarkedAsComplete).orElse(false), isUserPartOfThisOrganisation(projectId, o.getId(), loggedInUser), true),
-                (v1, v2) -> v1, LinkedHashMap::new));
+                o -> { Optional<SpendProfileResource> spendProfileResource =spendProfileService.getSpendProfile(projectId, o.getId());
+                       return  new OrganisationReviewDetails(o.getId(),
+                               o.getName(),
+                               spendProfileResource.map(SpendProfileResource::isMarkedAsComplete).orElse(false),
+                               isUserPartOfThisOrganisation(projectId, o.getId(), loggedInUser),
+                               true,
+                               spendProfileResource.map(SpendProfileResource::getReviewedBy).orElse(null),
+                               spendProfileResource.map(SpendProfileResource::getReviewedOn).orElse(null));
+                       }, (v1, v2) -> v1, LinkedHashMap::new));
     }
 
     private boolean isUserPartOfThisOrganisation(final Long projectId, final Long organisationId, final UserResource loggedInUser) {

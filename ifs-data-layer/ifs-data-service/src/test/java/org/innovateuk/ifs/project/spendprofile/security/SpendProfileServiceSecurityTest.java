@@ -95,6 +95,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
                     verify(spendProfilePermissionRules).innovationLeadUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
                     verify(spendProfilePermissionRules).stakeholdersCanSeeSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
                     verify(spendProfilePermissionRules).auditorUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(spendProfilePermissionRules).projectMoCanViewTheirProjectSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(spendProfilePermissionRules);
                 });
     }
@@ -242,7 +243,9 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
                         type != COMP_ADMIN &&
                         type != SYSTEM_MAINTAINER &&
                         type != IFS_ADMINISTRATOR &&
-                        type != SUPER_ADMIN_USER)
+                        type != SUPER_ADMIN_USER &&
+                        type != MONITORING_OFFICER &&
+                        type != KNOWLEDGE_TRANSFER_ADVISER)
                 .collect(toList());
     }
 
