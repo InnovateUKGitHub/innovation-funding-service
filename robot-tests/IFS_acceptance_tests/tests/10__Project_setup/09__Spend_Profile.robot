@@ -162,13 +162,6 @@ the monitoring officer can download the SP CSV files when status is incomplete
     And the user should see the element             jQuery = td:contains("${Wordpedia_Partner_Org_Name}-spend-profile.csv")+td:contains("Incomplete")
     And the user should see the element             jQuery = td:contains("${Jabbertype_Partner_Org_Name}-spend-profile.csv")+td:contains("Incomplete")
 
-#Change MO for the project
-#    [Documentation]    IFS-9675
-#    Given the user navigates to the page            ${server}/project-setup-management/project/${PS_SP_Project_Id}/monitoring-officer
-#    When The user clicks the button/link            jQuery = a:contains("Change monitoring officer")
-#    And Search for MO                               Orvill  Orville Gibbs
-#    Then The internal user assign project to MO     ${PS_SP_Application_No}  ${PS_SP_Application_Title}
-
 Lead partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899, INFUND-7685
     [Tags]  HappyPath
