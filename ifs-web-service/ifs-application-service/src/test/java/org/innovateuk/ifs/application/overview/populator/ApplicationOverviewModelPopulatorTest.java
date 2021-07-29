@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -39,6 +40,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
 import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
@@ -80,6 +82,8 @@ public class ApplicationOverviewModelPopulatorTest {
     private AsyncFuturesGenerator asyncFuturesGenerator;
     @Mock
     private ApplicationUrlHelper applicationUrlHelper;
+    @Mock
+    private GrantTermsAndConditionsResource grantTermsAndConditionsResource;
 
     @Before
     public void setupExpectations() {
@@ -88,8 +92,10 @@ public class ApplicationOverviewModelPopulatorTest {
 
     @Test
     public void populateModel() {
+        GrantTermsAndConditionsResource termsAndCondition = newGrantTermsAndConditionsResource().withName("Innovate UK").build();
         CompetitionResource competition = newCompetitionResource()
                 .withCollaborationLevel(SINGLE)
+                .withTermsAndConditions(termsAndCondition)
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
@@ -141,6 +147,7 @@ public class ApplicationOverviewModelPopulatorTest {
         when(messageSource.getMessage("ifs.section.termsAndConditions.description", null, Locale.getDefault())).thenReturn("T&Cs description");
         when(applicationUrlHelper.getQuestionUrl(any(), anyLong(), anyLong(), anyLong())).thenReturn(Optional.of("/the-question-url"));
         when(sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(restSuccess(completedSectionsByOrganisation));
+        when(grantTermsAndConditionsResource.isThirdPartyProcurement()).thenReturn(false);
 
         ApplicationOverviewViewModel viewModel = populator.populateModel(application, user);
 
