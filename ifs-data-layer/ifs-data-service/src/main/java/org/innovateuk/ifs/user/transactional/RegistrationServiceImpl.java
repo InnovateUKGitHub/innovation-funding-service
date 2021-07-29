@@ -145,7 +145,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     private String getPasswordOrPlaceholder(UserCreationResource user) {
          if (shouldBePending(user)) {
-             return randomAlphabetic(6) + randomAlphabetic(6).toUpperCase() + randomNumeric(6);
+             return randomAlphabetic(6).toLowerCase() + randomAlphabetic(6).toUpperCase() + randomNumeric(6);
          } else {
              return user.getPassword();
          }
@@ -284,7 +284,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     public ServiceResult<User> activatePendingUser(User user,
                                                    String password,
                                                    String hash) {
-        if(monitoringOfficerInviteRepository.existsByHash(hash)) {
+        if (monitoringOfficerInviteRepository.existsByHash(hash)) {
             return activateUser(user)
                     .andOnSuccess(activatedUser -> idpService.updateUserPassword(activatedUser.getUid(), password))
                     .andOnSuccessReturn(() -> user);

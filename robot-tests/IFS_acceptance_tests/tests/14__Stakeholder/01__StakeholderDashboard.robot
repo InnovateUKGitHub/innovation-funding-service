@@ -17,6 +17,8 @@ Documentation   IFS-4189 Add/Remove Stakeholders
 ...
 ...             IFS-9038 Urgent: ATI Stakeholders having issues opening appendices
 ...
+...             IFS-10089 Stakeholder getting permission error on accessing spend profile section
+...
 Force Tags      HappyPath
 Resource        ../../resources/defaultResources.robot
 Resource        ../../resources/common/Competition_Commons.robot
@@ -32,6 +34,7 @@ ${uk_based_applicant_new}                   aastha.walia@test.com
 ${steakHolderCompId}                        ${competition_ids["Rolling stock future developments"]}
 ${stakeHolderApplicationId}                 ${application_ids["New materials for lighter stock"]}
 ${stakeHolderHighSpeedRailApplicationID}    ${application_ids["High-speed rail and its effects on soil compaction"]}
+${stakeHolderProjectID}                     ${project_ids["High-speed rail and its effects on water quality"]}
 
 
 *** Test Cases ***
@@ -236,6 +239,11 @@ Stakeholders can download appendices
     And select window                                                     title = Page not found - Innovation Funding Service
     Then the user should not see internal server and forbidden errors
     [Teardown]  the user closes the last opened tab
+
+Stakeholders can access spend profile section
+    [Documentation]  IIFS-10089
+    When the user navigates to the page     ${server}/project-setup-management/project/${stakeHolderProjectID}/spend-profile/approval
+    Then the user should see the element    jQuery = h1:contains("Spend profile")
 
 *** Keywords ***
 new user apply for competition and create account
