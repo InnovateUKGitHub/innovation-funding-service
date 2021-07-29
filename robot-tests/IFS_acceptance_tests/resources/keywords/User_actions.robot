@@ -191,7 +191,8 @@ the user selects option from type ahead
     [Arguments]   ${inputId}  ${searchTerm}  ${optionSelector}
     the user clicks the button/link                       id = ${inputId}
     the user should see option in type ahead field        id = ${inputId}  ${optionSelector}
-    the user clicks the button/link                       jQuery = ul li:contains("${optionSelector}")
+    scroll element into view                              jQuery = ul li:contains("${optionSelector}")
+    click element                                         jQuery = ul li:contains("${optionSelector}")
     mouse out                                             ${inputId}
 
 the user should see option in type ahead field
