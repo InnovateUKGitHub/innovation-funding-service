@@ -25,4 +25,9 @@ public class GrantTermsAndConditionsResource extends VersionedTemplateResource {
     public boolean isThirdPartyProcurement() {
         return name.equals(PROCUREMENT_THIRD_PARTY);
     }
+
+    @JsonIgnore
+    public boolean isProcurementThirdParty() {
+        return name.equals("Procurement Third Party");
+    }
 }

@@ -472,9 +472,7 @@ public class CompetitionWebTestData {
         return thirdPartyCompetition()
                 .withCompetitionCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK)
                 .withTermsAndConditionsLabel("Strategic Innovation Fund Governance Document")
-                .withTermsAndConditionsGuidance("<h1 class=\"govuk-heading-l\">Award terms and conditions</h1>" +
-                        "<p class=\"govuk-body\"><a href=\"/competition/133/info/terms-and-conditions/full\">View full terms and conditions</a></p>" +
-                        "<h2 class=\"govuk-heading-m\">A summary of the award terms and conditions</h2>" +
+                .withTermsAndConditionsGuidance("<h2 class=\"govuk-heading-m\">A summary of the award terms and conditions</h2>" +
                         "<p class=\"govuk-body\">The full terms and conditions are specific to this procurement competition. They will differ from any you have agreed to before. By submitting an application you are agreeing to the full terms and conditions pending the final contract if you are successful. It is your responsibility to make sure you read these terms.</p>" +
                         "<p class=\"govuk-body\">They represent an agreement between the funding authority and your organisation and include details about your obligations and the administration of your project. They cover:</p>" +
                         "<ul class=\"govuk-list govuk-list--bullet\">" +
@@ -490,9 +488,9 @@ public class CompetitionWebTestData {
                         "</ul>" +
                         "<p class=\"govuk-body\">This list is not exhaustive.</p>" +
                         "<p class=\"govuk-body\">If you are successful in your application you must sign a final contract with the funding authority which may include additional details agreed between you and the funding authority.</p>" +
-                        "<p class=\"govuk-body\">If there is anything you do not understand, please <a href=\"/info/contact\">contact us</a>.</p>" +
-                        "<p class=\"govuk-body govuk-!-margin-top-9 user-feedback\"><span class=\"govuk-!-font-weight-bold\">Need help with this service?</span> <a class=\"govuk-link\" href=\"/info/contact\">Contact us</a></p>")
-                .withProjectCostGuidanceUrl("https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/small-business-research-initiative-sbri-project-costs-guidance");
+                        "<p class=\"govuk-body\">If there is anything you do not understand, please <a href=\"/info/contact\">contact us</a>.</p>")
+                .withProjectCostGuidanceUrl("https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/small-business-research-initiative-sbri-project-costs-guidance")
+                .withTermsAndConditionsTemplate("third-party-terms-and-conditions");
     }
 
     private static CompetitionLineBuilder thirdPartyCompetition() {
