@@ -1,0 +1,18 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+
+The spend profile for this project is ready for you to review:
+${applicationId} : ${applicationName}
+
+Please sign into your Innovate UK dashboard:${dashboardUrl} and review the
+spend profile in the project setup section.
+
+The project cannot start until you approve the spend profile.
+
+Yours sincerely
+
+Innovate UK, part of UK Research and Innovation
+Tel: 0300 321 4357
+Email: competitions@innovateuk.ukri.org
+</@layout.defaultPlainText>

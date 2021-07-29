@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
@@ -47,12 +48,16 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     private UserResource competitionFinanceUserResourceOnCompetition;
     private UserResource auditorUser;
     private Competition competition;
+    private UserResource monitoringOfficerUserResourceOnProject1;
 
     @Mock
     private ApplicationRepository applicationRepository;
 
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
+
+    @Mock
+    private MonitoringOfficerRepository monitoringOfficerRepository;
 
     @Before
     public void setup() {
@@ -69,6 +74,9 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
 
         User auditor = newUser().withRoles(singleton(AUDITOR)).build();
         auditorUser = newUserResource().withId(auditor.getId()).withRoleGlobal(AUDITOR).build();
+
+        User moUserOnProject1 = newUser().withRoles(singleton(Role.MONITORING_OFFICER)).build();
+        monitoringOfficerUserResourceOnProject1 = newUserResource().withId(moUserOnProject1.getId()).withRoleGlobal(Role.MONITORING_OFFICER).build();
 
         competition = newCompetition().withLeadTechnologist(innovationLeadUserOnProject1).build();
         competitionResource = newCompetitionResource().withId(competition.getId()).build();
@@ -231,6 +239,14 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     @Test
     public void auditorCanViewProjectStatus() {
         assertTrue(rules.assignedAuditorCanViewProjectStatus(projectResource1, auditorUser));
+    }
+
+    @Test
+    public void assignedMoUsersCanViewProjectStatus() {
+        when(monitoringOfficerRepository.existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), monitoringOfficerUserResourceOnProject1.getId())).thenReturn(true);
+
+        assertTrue(rules.assignedMoUsersCanViewProjectStatus(projectResource1, monitoringOfficerUserResourceOnProject1));
+        assertFalse(rules.assignedMoUsersCanViewProjectStatus(projectResource1, stakeholderUserResourceOnCompetition));
     }
 
     @Test

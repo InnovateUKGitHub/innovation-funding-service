@@ -213,7 +213,7 @@ Registered users applying for an international competition see only UK based org
     [Tags]  HappyPath
     Given the user clicks the button/link              link = Back to tell us where your organisation is based
     When user selects where is organisation based      isNotInternational
-    Then the user should see the element               jQuery = label:contains("Empire Ltd")
+    Then the user should see only uk based organisations
     And the user should see the element                link = Apply with a different organisation
 
 Registered UK based user applies for International Competition
@@ -785,6 +785,7 @@ the user provides international organisation details
     the user enters text to a text field                               id = addressLine1  ${internationalOrganisationFirstLineAddress}
     the user enters text to a text field                               id = town  ${international_org_town}
     input text                                                         id = country  ${international_org_country}
+    the user should see country in dropdown                            id = country  ${international_org_country_complete}
     the user clicks the button/link                                    jQuery = ul li:contains("${international_org_country_complete}")
     the user clicks the button/link                                    id = ${button_id}
 
@@ -1260,3 +1261,8 @@ the lead can see multiple appendices uploaded to the technical approach question
     the user should see the element     jQuery = a:contains("${valid_pdf}")
     the user should see the element     jQuery = a:contains("${ods_file}")
     the user should see the element     jQuery = a:contains("${excel_file}")
+
+the user should see only uk based organisations
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots    page should contain element  jQuery = label:contains("Empire Ltd")
+    Run Keyword If  '${status}' == 'PASS'  the user should see the element     jQuery = label:contains("Empire Ltd")
+    ...                             ELSE   the user should see the element     jQuery = dt:contains("Empire Ltd")
