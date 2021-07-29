@@ -384,10 +384,6 @@ task osInitClusterLocal(type: Exec) {
     args = [openshiftEnv, "local", project.version]
 }
 
-task osApplySecretsLocal(type: Exec) {
-    executable = 'setup-files/scripts/openshift/os-apply-local-secrets.sh'
-    args = [openshiftEnv, "local", project.version]
-}
 
 task osDeployLocal(type: Exec, dependsOn: prepareDeployAndUpgrade) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
@@ -586,11 +582,6 @@ task osApplyAwsSecretsRemote(type: Exec) {
     args = [openshiftEnv, "remote", project.version, project.findProperty("use_iam") ?: "true", project.findProperty("sso_sp") ?: ""]
 }
 
-task osApplyLocalSecretsRemote(type: Exec) {
-    executable = 'setup-files/scripts/openshift/os-apply-local-secrets.sh'
-    args = [openshiftEnv, "remote", project.version]
-}
-
 task osDeployRemote(type: Exec, dependsOn: prepareDeployAndUpgrade) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "remote", project.version]
@@ -661,15 +652,6 @@ task osTestResults(type: Exec) {
     args = [openshiftEnv, "remote", project.version]
 }
 
-task osDeployAuthServices(type: Exec, dependsOn: prepareDeployAndUpgrade) {
-    executable = 'setup-files/scripts/openshift/os-deploy-auth-services.sh'
-    args = [openshiftEnv, "remote", project.version,
-            project.findProperty("nexus_username") ?: "",
-            project.findProperty("nexus_password") ?: "",
-            project.findProperty("nexus_email") ?: "",
-            project.version,
-            project.findProperty("nexus_repository") ?: ""]
-}
 
 task osDeployIfsServicesUsingNexusImages(type: Exec, dependsOn: prepareDeployAndUpgrade) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'

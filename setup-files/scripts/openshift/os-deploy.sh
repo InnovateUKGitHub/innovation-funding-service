@@ -47,7 +47,6 @@ function deploy() {
     oc create -f $(getBuildLocation)/survey/ ${SVC_ACCOUNT_CLAUSE}
 
     oc create -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
-    oc create -f $(getBuildLocation)/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
 }
 
 # Entry point
