@@ -226,8 +226,7 @@ public class CompetitionWebTestData {
                         .withName("Photonics for health")
                         .withLeadTechnologist(PETER_FREEMAN_ID),
                 grantCompetition()
-                        .withName("Comp to Delete 1")
-                        .withLeadTechnologist(PETER_FREEMAN_ID),
+                        .withName("Comp to Delete 1"),
                 ofGemCompetition()
                         .withName("OfGem competition")
         )
