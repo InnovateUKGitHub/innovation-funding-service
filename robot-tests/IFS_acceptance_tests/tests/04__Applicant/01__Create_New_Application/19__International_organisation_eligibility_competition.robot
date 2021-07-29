@@ -23,6 +23,8 @@ Documentation     IFS-7195  Organisational eligibility category in Competition s
 ...
 ...               IFS-9579 MO documents: Change of internal approve/reject authority
 ...
+...               IFS-9679 MO Spend profile: IFS Admin only to be able to approve or reject spend profiles
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin Applicant
@@ -612,24 +614,24 @@ Uk based lead applicant moves application to project setup and generates GOL
 IFS Admin approves the Spend profile
     [Documentation]  IFS-9679
     [Tags]  HappyPath
-    When Log in as a different user                  &{ifs_admin_user_credentials}
-    the user navigates to the page                   ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
-    the user selects the radio button                spendProfileApproved  true
-    the user should not see an error in the page
-    the user clicks the button/link                  jQuery = button.govuk-button:contains("Submit")
+    Given Log in as a different user                      &{ifs_admin_user_credentials}
+    And the user navigates to the page                    ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
+    When the user selects the radio button                spendProfileApproved  true
+    And the user should not see an error in the page
+    Then the user clicks the button/link                  jQuery = button.govuk-button:contains("Submit")
 
 GOL template to be updated with country for correspondents address
-    [Documentation]     IFS - 7241  IFS-9579
-    Given Log in as a different user                                          &{ukLeadOrganisationCredentials}
-    the user complete all sections of the project setup and generates GOL
-    When Log in as a different user                                           &{ifs_admin_user_credentials}
-    the user navigates to the page                                            ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
-    the user selects the radio button                                         spendProfileApproved  true
-    the user should not see an error in the page
-    the user clicks the button/link                                           jQuery = button.govuk-button:contains("Submit")
-    Given Log in as a different user                                          &{ukLeadOrganisationCredentials}
-    When the user navigates to the page                                       ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/template
-    Then element should contain                                               xpath = //p[1]     Argentina
+    [Documentation]     IFS - 7241  IFS-9579  IFS-9679
+    Given Log in as a different user                                              &{ukLeadOrganisationCredentials}
+    And the user complete all sections of the project setup and generates GOL
+    When Log in as a different user                                               &{ifs_admin_user_credentials}
+    And the user navigates to the page                                            ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
+    And the user selects the radio button                                         spendProfileApproved  true
+    And the user should not see an error in the page
+    And the user clicks the button/link                                           jQuery = button.govuk-button:contains("Submit")
+    Then Log in as a different user                                               &{ukLeadOrganisationCredentials}
+    And the user navigates to the page                                            ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/template
+    And element should contain                                                    xpath = //p[1]     Argentina
 
 *** Keywords ***
 Custom Suite Setup
