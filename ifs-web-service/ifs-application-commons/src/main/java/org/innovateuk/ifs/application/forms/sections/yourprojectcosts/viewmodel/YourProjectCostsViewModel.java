@@ -285,4 +285,8 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
     public BigDecimal getGrantClaimPercentage() {
         return grantClaimPercentage;
     }
+
+    public Boolean isVatHidden() {
+        return true;
+    }
 }
