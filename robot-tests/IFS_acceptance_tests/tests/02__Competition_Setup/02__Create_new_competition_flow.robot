@@ -761,12 +761,12 @@ Innovation leads can be added to a competition
 User deletes the competition
     [Documentation]  IFS-1084
     [Tags]  HappyPath
-    Given the comp admin creates competition
-    And The user clicks the button/link         link = No competition title defined
-    When the user clicks the button/link        link = Delete competition
-    And the user clicks the button/link         css = .delete-modal button[type="submit"]
-    And the user navigates to the page          ${CA_UpcomingComp}
-    Then The user should not see the element    link = No competition title defined
+    Given the user navigates to the page            ${CA_UpcomingComp}
+    And the user clicks the button/link             link = Create competition
+    And Get current url
+    When the user clicks the button/link            link = Delete competition
+    And the user clicks the button/link             css = .delete-modal button[type="submit"]
+    Then the user should see page not found error   ${deletedCompUrl}
 
 User deletes the competition on completing all competition details
     [Documentation]  IFS-8496
@@ -1039,3 +1039,13 @@ the comp admin creates competition with all sections details
     the user clicks the button/link                                                  link = Competition setup
     the user clicks the button/link                                                  link = Documents
     the user clicks the button/link                                                  id = doneButton
+
+Get current url
+    ${deletedCompUrl} =   get location
+    set suite variable  ${deletedCompUrl}
+
+the user should see page not found error
+    [Arguments]  ${compUrl}
+    go to                               ${compUrl}
+    the user should see the element     jQuery = h1:contains("Page not found")
+    the user should see the element     jQUery = span:contains("${compUrl}")
