@@ -28,9 +28,11 @@ resources:
 #  - storage/persistent-volume-claim.yml
 #  - storage/persistent-volume.yml
 
-patchesStrategicMerge:
+
   - config-maps/idp-config.yml
   - config-maps/ldap-config.yml
   - config-maps/shibboleth-config.yml
   - config-maps/web-config.yml
+
+patchesStrategicMerge:
   - auth/registration-service/registration-deployment.yml
