@@ -10,3 +10,4 @@ bases:
 
 components:
   - ../../../components/robot
+  - ../../../patches/pull-secrets-patch
