@@ -377,7 +377,9 @@ public class CompetitionWebTestData {
                         .withFundingRules(FundingRules.SUBSIDY_CONTROL),
                 grantCompetition()
                         .withName("Princes Trust Comp 1")
-                        .withCompetitionType(THE_PRINCES_TRUST),
+                        .withCompetitionType(THE_PRINCES_TRUST)
+                        .withLeadApplicantTypes(asSet(BUSINESS, RTO, RESEARCH, PUBLIC_SECTOR_OR_CHARITY))
+                        .withFundingRules(FundingRules.SUBSIDY_CONTROL),
                 grantCompetition()
                         .withName("Always open competition")
                         .withAlwaysOpen(true)
