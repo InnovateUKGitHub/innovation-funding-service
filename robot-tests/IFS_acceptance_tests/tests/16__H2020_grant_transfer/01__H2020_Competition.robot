@@ -218,8 +218,8 @@ Custom Suite Setup
     Connect to database  @{database}
 
 The user is able to see that the application is now in project setup
-    the user clicks the button/link                     jQuery = a:contains("Project setup")
-    the user should see the element                      link = H2020 Grant Transfer
+    the user clicks the button/link     jQuery = a:contains("Project setup")
+    the user should see the element     link = H2020 Grant Transfer
 
 The internal user is able to progress an application to project set up
     the user clicks the button/link                             link = H2020 Grant Transfer
@@ -415,7 +415,7 @@ The user is able to complete Application details section
     the user enters text to a text field                 id = endDateYear  ${nextyear}
     the user enters text to a text field                 id = grantAgreementNumber            123456
     the user enters text to a text field                 id = participantId                   123456789
-    input text                                           id = actionType    (CSA) Coordination and Support Actions
+    Wait Until Keyword Succeeds Without Screenshots      20s    200ms   input text    id = actionType    (CSA) Coordination and Support Actions
     the user clicks the button/link                      jQuery = ul li:contains("(CSA) Coordination and Support Actions")
     the user enters text to a text field                 id = fundingContribution             123456
     the user clicks the button/link                      jQuery = label:contains("No")
@@ -559,9 +559,9 @@ the user is able to filter on status
 
 the user refreshes until h2020 element appears on page
     [Arguments]  ${selector}
-    Wait Until Keyword Succeeds Without Screenshots     120s   2s   reload and check if h2020 element appears    ${selector}
+    Wait Until Keyword Succeeds Without Screenshots     120s   1s   reload and check if h2020 element appears    ${selector}
 
 reload and check if h2020 element appears
     [Arguments]  ${selector}
     the user reloads the page
-    Wait Until Page Contains Element Without Screenshots    ${selector}     1s
+    Wait Until Page Contains Element Without Screenshots    ${selector}     30s

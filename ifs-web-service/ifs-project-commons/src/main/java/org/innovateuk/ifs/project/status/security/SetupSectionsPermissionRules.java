@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.sections.SectionAccess;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -133,6 +135,11 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessSpendProfileSection, SecurityRuleUtil::hasStakeholderAuthority);
     }
 
+    @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "Project MO can access the Spend Profile")
+    public boolean projectMoCanAccessSpendProfileSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return isMonitoringOfficerOnProject(projectCompositeId.id(), user.getId());
+    }
+
     @PermissionRule(value = "ACCESS_DOCUMENTS_SECTION", description = "Comp admin or project finance users can access the Documents section")
     public boolean internalAdminUserCanAccessDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessDocumentsSection, SecurityRuleUtil::isInternalAdmin);
@@ -229,6 +236,13 @@ public class SetupSectionsPermissionRules {
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_NOTES_SECTION", description = "A Auditor user can always access the Finance checks notes section")
     public boolean auditorUserCanAccessFinanceChecksNotesSection(ProjectCompositeId projectCompositeId, UserResource user) {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessFinanceChecksNotesSection, SecurityRuleUtil::hasAuditorAuthority);
+    }
+
+    private boolean isMonitoringOfficerOnProject(long projectId, long userId) {
+        return Optional.ofNullable(projectService.getById(projectId))
+                .map(ProjectResource::getMonitoringOfficerUser)
+                .map(monitoringOfficerId -> monitoringOfficerId.equals(userId))
+                .orElse(false);
     }
 
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<SetupSectionInternalUser, UserResource, SectionAccess> sectionCheckFn, Function<UserResource, Boolean> userCheckFn) {

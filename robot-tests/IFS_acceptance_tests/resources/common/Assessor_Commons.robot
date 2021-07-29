@@ -42,7 +42,7 @@ the assessor adds score and feedback for every question
       \    mouse out  css = .editor
       \    Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button with resubmission              jquery = button:contains("Save and return to assessment overview")
-#    clicking too fast as part of AT run so as  a turn around added this line
+    #clicking too fast as part of AT run so as  a turn around added this line
     ${error} =   Run Keyword and return status without screenshots     page should contain     An unexpected error occurred.
     Run Keyword If    '${error}' == 'True'                             the user clicks the button/link   jQuery = button:contains("Save and return to assessment overview")
 

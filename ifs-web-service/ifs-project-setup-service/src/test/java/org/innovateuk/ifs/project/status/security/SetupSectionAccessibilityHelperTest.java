@@ -249,6 +249,35 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
         assertEquals(NOT_ACCESSIBLE, access);
     }
 
+    @Test
+    public void cannotReviewSpendProfileSectionWhenProjectIsOfflineOrWithdrawn() {
+        when(setupProgressChecker.isOfflineOrWithdrawn()).thenReturn(true);
+
+        SectionAccess access = helper.canReviewSpendProfileSection(organisation);
+
+        assertEquals(NOT_ACCESSIBLE, access);
+    }
+
+    @Test
+    public void cannotReviewSpendProfileSectionWhenSpendProfileNotGenerated() {
+        when(setupProgressChecker.isOfflineOrWithdrawn()).thenReturn(false);
+        when(setupProgressChecker.isSpendProfileGenerated()).thenReturn(false);
+
+        SectionAccess access = helper.canReviewSpendProfileSection(organisation);
+
+        assertEquals(NOT_ACCESSIBLE, access);
+    }
+
+    @Test
+    public void canReviewSpendProfileSection() {
+        when(setupProgressChecker.isOfflineOrWithdrawn()).thenReturn(false);
+        when(setupProgressChecker.isSpendProfileGenerated()).thenReturn(true);
+
+        SectionAccess access = helper.canReviewSpendProfileSection(organisation);
+
+        assertEquals(ACCESSIBLE, access);
+    }
+
     private void doTest(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall,
                         boolean spendProfileApproved, boolean docsApproved, boolean bankDetailsApproved, boolean golAvailable, boolean golSent,
                         SectionAccess expectedAccess) {
