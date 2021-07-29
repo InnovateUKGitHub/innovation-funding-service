@@ -166,7 +166,8 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
     public boolean canSpendProfileBeApprovedOrRejected(ProjectResource project, UserResource user){
        return (user.hasAuthority(IFS_ADMINISTRATOR) &&
                !user.hasAnyAuthority(asList(AUDITOR, COMP_ADMIN, PROJECT_FINANCE)));
-               
+    }
+    
     @PermissionRule(value = "READ_SPEND_PROFILE_REVIEW", description = "Project mo can read the project's spend profiles review")
     public boolean projectMoCanCompleteSpendProfile(ProjectCompositeId projectCompositeId, UserResource user) {
         return isMonitoringOfficer(projectCompositeId.id(), user.getId());

@@ -241,6 +241,7 @@ public class SetupSectionsPermissionRules {
     @PermissionRule(value = "APPROVE_REJECT_SPEND_PROFILE", description = "Internal users can approve or reject documents")
     public boolean canUserApproveOrRejectSpendProfile(ProjectCompositeId projectCompositeId, UserResource user) {
          return hasIFSAdminAuthority(user);
+    }
     private boolean isMonitoringOfficerOnProject(long projectId, long userId) {
         return Optional.ofNullable(projectService.getById(projectId))
                 .map(ProjectResource::getMonitoringOfficerUser)
