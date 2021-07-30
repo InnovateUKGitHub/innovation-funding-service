@@ -311,6 +311,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((procurementMilestone, competitionResource) -> competitionResource.setProcurementMilestones(procurementMilestone), procurementMilestones);
     }
 
+    public CompetitionResourceBuilder withCompetitionThirdPartyConfigResource(CompetitionThirdPartyConfigResource... competitionThirdPartyConfigResources) {
+        return withArraySetFieldByReflection("competitionThirdPartyConfig", competitionThirdPartyConfigResources);
+    }
+
     @Override
     protected CompetitionResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionResource>> actions) {
         return new CompetitionResourceBuilder(actions);

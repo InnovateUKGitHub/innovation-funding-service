@@ -9,7 +9,9 @@ import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -80,6 +82,8 @@ public class ApplicationOverviewModelPopulatorTest {
     private AsyncFuturesGenerator asyncFuturesGenerator;
     @Mock
     private ApplicationUrlHelper applicationUrlHelper;
+    @Mock
+    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
 
     @Before
     public void setupExpectations() {
@@ -88,6 +92,9 @@ public class ApplicationOverviewModelPopulatorTest {
 
     @Test
     public void populateModel() {
+
+        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = new CompetitionThirdPartyConfigResource();
+
         CompetitionResource competition = newCompetitionResource()
                 .withCollaborationLevel(SINGLE)
                 .build();
@@ -141,6 +148,7 @@ public class ApplicationOverviewModelPopulatorTest {
         when(messageSource.getMessage("ifs.section.termsAndConditions.description", null, Locale.getDefault())).thenReturn("T&Cs description");
         when(applicationUrlHelper.getQuestionUrl(any(), anyLong(), anyLong(), anyLong())).thenReturn(Optional.of("/the-question-url"));
         when(sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(restSuccess(completedSectionsByOrganisation));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         ApplicationOverviewViewModel viewModel = populator.populateModel(application, user);
 
@@ -192,5 +200,4 @@ public class ApplicationOverviewModelPopulatorTest {
 
         verify(questionService).removeNotifications(questionStatuses);
     }
-
 }
