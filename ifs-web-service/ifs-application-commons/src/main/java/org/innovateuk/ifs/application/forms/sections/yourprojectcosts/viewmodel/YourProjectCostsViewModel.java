@@ -59,6 +59,8 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     private final BigDecimal grantClaimPercentage;
 
+    private final boolean hideVatQuestion;
+
     public YourProjectCostsViewModel(long applicationId,
                                      String competitionName,
                                      long sectionId,
@@ -82,7 +84,8 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      boolean yourFecCostRequired,
                                      Long yourFecCostSectionId,
                                      Boolean fecModelEnabled,
-                                     BigDecimal grantClaimPercentage) {
+                                     BigDecimal grantClaimPercentage,
+                                     boolean hideVatQuestion) {
         this.internal = false;
         this.organisationId = organisationId;
         this.applicationId = applicationId;
@@ -108,6 +111,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.yourFecCostSectionId = yourFecCostSectionId;
         this.fecModelEnabled = fecModelEnabled;
         this.grantClaimPercentage = grantClaimPercentage;
+        this.hideVatQuestion = hideVatQuestion;
     }
 
     public YourProjectCostsViewModel(long applicationId,
@@ -128,10 +132,11 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      boolean showCovidGuidance,
                                      boolean showJustificationForm,
                                      Boolean fecModelEnabled,
-                                     BigDecimal grantClaimPercentage) {
+                                     BigDecimal grantClaimPercentage,
+                                     boolean hideVatQuestion) {
         this(applicationId, competitionName, sectionId, competitionId, organisationId, complete, open,
                 includeVat, applicationName, organisationName, financesUrl, procurementCompetition, ktpCompetition, financeRowTypes,
-                overheadAlwaysTwenty, showCovidGuidance, showJustificationForm, false, false, null, false, null, fecModelEnabled, grantClaimPercentage);
+                overheadAlwaysTwenty, showCovidGuidance, showJustificationForm, false, false, null, false, null, fecModelEnabled, grantClaimPercentage, hideVatQuestion);
     }
 
     public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, boolean ktpCompetition, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, String competitionName, long applicationId) {
@@ -161,6 +166,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.yourFecCostSectionId = null;
         this.fecModelEnabled = null;
         this.grantClaimPercentage = BigDecimal.ZERO;
+        this.hideVatQuestion = false;
     }
 
     @Override
@@ -287,6 +293,6 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
     }
 
     public Boolean isVatHidden() {
-        return true;
+        return hideVatQuestion;
     }
 }
