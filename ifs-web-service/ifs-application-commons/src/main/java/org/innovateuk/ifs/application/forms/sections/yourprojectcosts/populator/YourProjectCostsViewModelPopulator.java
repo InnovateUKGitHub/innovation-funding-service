@@ -7,9 +7,9 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CovidType;
-import org.innovateuk.ifs.competition.resource.Funder;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
@@ -112,7 +112,7 @@ public class YourProjectCostsViewModelPopulator {
     private boolean isOfGemFunder(CompetitionResource competition) {
         return competition.getFunders()
                 .stream()
-                .anyMatch(competitionFunderResource -> competitionFunderResource.getFunder() == Funder.OFFICE_OF_GAS_AND_ELECTRICITY_MARKETS_OFGEM);
+                .anyMatch(CompetitionFunderResource::isOfGem);
     }
 
     private boolean isUserCanEditFecFinance(CompetitionResource competition, ApplicantSectionResource section, boolean open) {
