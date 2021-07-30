@@ -1,0 +1,47 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonAnnotations:
+  deployedWith: kustomize
+  environment: custom
+
+bases:
+  - ../stub-base
+
+components:
+  - ../../../components/mail
+  - ../../../components/sil-stub
+  - ../../../components/ifs-database
+  - ../../../components/cache-provider
+  - ../../../components/auth
+  - ../../../components/data-layer
+  - ../../../components/web-layer
+
+  - ../../../patches/new-relic-env-vars-patch
+  - ../../../patches/pull-secrets-patch
+  - ../../../patches/spring-profile-patch
+  - ../../../patches/wait-for-db-patch
+
+resources:
+  - config-maps/spring-config.yml
+  - config-maps/idp-config.yml
+  - config-maps/ldap-config.yml
+
+  - routes/idp-route.yml
+  - routes/shib-route.yml
+  - routes/mail-route.yml
+
+  - storage/gluster.yml
+  - storage/gluster-ep.yml
+  - storage/persistent-volume-claim.yml
+  - config-maps/shibboleth-config.yml
+  - config-maps/web-config.yml
+
+  - secrets/idp-keys-secrets.yml
+  - secrets/ldap-keys-secrets.yml
+  - secrets/sp-keys-secrets.yml
+  - secrets/sp-secrets.yml
+
+patchesStrategicMerge:
+  - config-maps/data-service-config.yml
+  - auth/registration-service/registration-deployment.yml

@@ -111,6 +111,23 @@ profiles:
         paths:
           - os-files/kustomize/env/stub/at
 
+  - name: custom
+    build:
+      local:
+        useDockerCLI: false
+        useBuildkit: false
+        tryImportMissing: true
+        push: true
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
+      artifacts: []
+    deploy:
+      kubeContext: custom
+      kustomize:
+        paths:
+          - os-files/kustomize/env/stub/custom
+
   - name: sysint
     build:
       local:
