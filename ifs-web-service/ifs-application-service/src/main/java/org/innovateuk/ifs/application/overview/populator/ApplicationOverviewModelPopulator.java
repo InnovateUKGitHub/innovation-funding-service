@@ -134,7 +134,8 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         }
 
         if (section.isTermsAndConditions() && data.getCompetition().getTermsAndConditions().isThirdPartyProcurement()) {
-            section.setName("Agreement");
+            String labelName = competitionThirdPartyConfigRestService.findOneByCompetitionId(data.getCompetition().getId()).getSuccess().getTermsAndConditionsLabel();
+            section.setName(labelName);
         }
 
         String subtitle = subtitle(data.getCompetition(), section);
