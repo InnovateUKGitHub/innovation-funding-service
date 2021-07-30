@@ -10,9 +10,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.resource.ApplicationFinanceType;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -40,7 +38,9 @@ import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newA
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionFunderResourceBuilder.newCompetitionFunderResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -142,6 +142,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertEquals(BigDecimal.ZERO, viewModel.getGrantClaimPercentage());
         assertNull(viewModel.getFecModelEnabled());
         assertFalse(viewModel.isFecModelDisabled());
+        assertFalse(viewModel.isVatHidden());
     }
 
     @Test
@@ -177,6 +178,89 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertFalse(viewModel.isProcurementCompetition());
         assertEquals("state_aid_checkbox_label", viewModel.getStateAidCheckboxLabelFragment());
         assertEquals(BigDecimal.ZERO, viewModel.getGrantClaimPercentage());
+        assertFalse(viewModel.isVatHidden());
+    }
+
+    @Test
+    public void populate_ofGem_thirdPartyProcurement() {
+        CompetitionFunderResource competitionFunderResource = newCompetitionFunderResource()
+                .withFunder(Funder.OFFICE_OF_GAS_AND_ELECTRICITY_MARKETS_OFGEM)
+                .build();
+        GrantTermsAndConditionsResource grantTermsAndConditions = newGrantTermsAndConditionsResource()
+                .withName("Procurement Third Party")
+                .build();
+        CompetitionResource competition = newCompetitionResource()
+                .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
+                .withFundingType(FundingType.PROCUREMENT)
+                .withFunders(Collections.singletonList(competitionFunderResource))
+                .withTermsAndConditions(grantTermsAndConditions)
+                .build();
+        OrganisationResource organisation = newOrganisationResource()
+                .withName("orgname")
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withId(APPLICATION_ID)
+                .withCompetition(competition.getId())
+                .withName("Name")
+                .build();
+        UserResource user = newUserResource().build();
+        ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
+
+        when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
+                .withOrganisation(organisation.getId())
+                .build()));
+        when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
+        when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
+        when(sectionService.getCompleted(APPLICATION_ID, ORGANISATION_ID)).thenReturn(singletonList(SECTION_ID));
+        when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(applicationFinance));
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+
+        YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, user);
+
+        assertTrue(viewModel.isVatHidden());
+    }
+
+    @Test
+    public void populate_nonOfGem_thirdPartyProcurement() {
+        CompetitionFunderResource competitionFunderResource = newCompetitionFunderResource()
+                .withFunder(Funder.OTHER_STAKEHOLDERS)
+                .build();
+        GrantTermsAndConditionsResource grantTermsAndConditions = newGrantTermsAndConditionsResource()
+                .withName("Procurement Third Party")
+                .build();
+        CompetitionResource competition = newCompetitionResource()
+                .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
+                .withFundingType(FundingType.PROCUREMENT)
+                .withFunders(Collections.singletonList(competitionFunderResource))
+                .withTermsAndConditions(grantTermsAndConditions)
+                .build();
+        OrganisationResource organisation = newOrganisationResource()
+                .withName("orgname")
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withId(APPLICATION_ID)
+                .withCompetition(competition.getId())
+                .withName("Name")
+                .build();
+        UserResource user = newUserResource().build();
+        ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
+
+        when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
+                .withOrganisation(organisation.getId())
+                .build()));
+        when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
+        when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
+        when(sectionService.getCompleted(APPLICATION_ID, ORGANISATION_ID)).thenReturn(singletonList(SECTION_ID));
+        when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(applicationFinance));
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+
+        YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, user);
+
+        assertFalse(viewModel.isVatHidden());
     }
 
     @Test
@@ -241,6 +325,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertNull(viewModel.getYourFecCostSectionId());
         assertNull(viewModel.getFecModelEnabled());
         assertFalse(viewModel.isFecModelDisabled());
+        assertFalse(viewModel.isVatHidden());
     }
 
     @Test
@@ -312,7 +397,8 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertNull(viewModel.getFecModelEnabled());
         assertFalse(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
-    }
+        assertFalse(viewModel.isVatHidden());
+   }
 
     @Test
     public void populate_ktp_for_lead_applicant_with_project_cost_enabled() {
@@ -389,6 +475,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertTrue(viewModel.getFecModelEnabled());
         assertFalse(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
+        assertFalse(viewModel.isVatHidden());
     }
 
     @Test
@@ -466,6 +553,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertTrue(viewModel.getFecModelEnabled());
         assertFalse(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
+        assertFalse(viewModel.isVatHidden());
     }
 
     @Test
@@ -531,6 +619,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertTrue(viewModel.getFecModelEnabled());
         assertFalse(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
+        assertFalse(viewModel.isVatHidden());
     }
 
     @Test
@@ -610,6 +699,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertTrue(viewModel.getFecModelEnabled());
         assertFalse(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
+        assertFalse(viewModel.isVatHidden());
     }
 
     @Test
@@ -689,6 +779,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertFalse(viewModel.getFecModelEnabled());
         assertTrue(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
+        assertFalse(viewModel.isVatHidden());
     }
 
     @Test
@@ -768,6 +859,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertTrue(viewModel.getFecModelEnabled());
         assertFalse(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
+        assertFalse(viewModel.isVatHidden());
     }
 
     @Test
@@ -847,5 +939,6 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertFalse(viewModel.getFecModelEnabled());
         assertTrue(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
+        assertFalse(viewModel.isVatHidden());
     }
 }
