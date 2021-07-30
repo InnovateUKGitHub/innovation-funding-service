@@ -611,15 +611,6 @@ Uk based lead applicant moves application to project setup and generates GOL
     Then Uk lead submits international competition application to assesment
     And Uk lead completes project setup details and generated GOL
 
-IFS Admin approves the Spend profile
-    [Documentation]  IFS-9679
-    [Tags]  HappyPath
-    Given Log in as a different user                      &{ifs_admin_user_credentials}
-    And the user navigates to the page                    ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
-    When the user selects the radio button                spendProfileApproved  true
-    And the user should not see an error in the page
-    Then the user clicks the button/link                  jQuery = button.govuk-button:contains("Submit")
-
 GOL template to be updated with country for correspondents address
     [Documentation]     IFS - 7241  IFS-9579  IFS-9679
     Given Log in as a different user                                              &{ukLeadOrganisationCredentials}
@@ -632,6 +623,15 @@ GOL template to be updated with country for correspondents address
     Then Log in as a different user                                               &{ukLeadOrganisationCredentials}
     And the user navigates to the page                                            ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/template
     And element should contain                                                    xpath = //p[1]     Argentina
+
+IFS Admin approves the Spend profile
+    [Documentation]  IFS-9679
+    [Tags]  HappyPath
+    Given Log in as a different user                      &{ifs_admin_user_credentials}
+    And the user navigates to the page                    ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
+    When the user selects the radio button                spendProfileApproved  true
+    And the user should not see an error in the page
+    Then the user clicks the button/link                  jQuery = button.govuk-button:contains("Submit")
 
 *** Keywords ***
 Custom Suite Setup
