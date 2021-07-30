@@ -190,6 +190,7 @@ reload and check if element appears
 the user selects option from type ahead
     [Arguments]   ${inputId}  ${searchTerm}  ${optionSelector}
     the user clicks the button/link                       id = ${inputId}
+    wait for autosave
     the user should see option in type ahead field        id = ${inputId}  ${optionSelector}
     scroll element into view                              jQuery = ul li:contains("${optionSelector}")
     click element                                         jQuery = ul li:contains("${optionSelector}")
