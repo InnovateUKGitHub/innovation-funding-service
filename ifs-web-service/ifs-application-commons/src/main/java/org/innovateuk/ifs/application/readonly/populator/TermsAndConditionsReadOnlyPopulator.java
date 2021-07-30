@@ -110,12 +110,12 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
 
     private String termsAndConditionsTerminology(CompetitionResource competitionResource) {
         if(FundingType.INVESTOR_PARTNERSHIPS == competitionResource.getFundingType()) {
-            return TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
+            return VIEW_TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
         }
         if(competitionResource.getTermsAndConditions().isThirdPartyProcurement()) {
             return competitionResource.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel();   //#10084.14
         }
-        return TERMS_AND_CONDITIONS_OTHER;
+        return VIEW_TERMS_AND_CONDITIONS_OTHER;
     }
 
     /* Doing this inside the supplier is pretty horrible. But stops us doing a rest request for the finances inside the loop. */

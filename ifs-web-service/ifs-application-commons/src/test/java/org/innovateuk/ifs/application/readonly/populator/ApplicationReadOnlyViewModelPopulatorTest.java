@@ -15,7 +15,10 @@ import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestServic
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
@@ -48,6 +51,7 @@ import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectatio
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionThirdPartyConfigResourceBuilder.newCompetitionThirdPartyConfigResource;
 import static org.innovateuk.ifs.supporter.builder.SupporterAssignmentResourceBuilder.newSupporterAssignmentResource;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentResourceBuilder.newApplicationAssessmentResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -111,6 +115,9 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
     @Mock
     private SupporterAssignmentRestService supporterAssignmentRestService;
 
+    @Mock
+    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
+
     @Before
     public void setupExpectations() {
         setupAsyncExpectations(futuresGeneratorMock);
@@ -120,6 +127,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
     public void populate() {
         long applicationId = 1L;
         long assessmentId = 2L;
+        String termsTemplate = "terms-template";
         UserResource user = newUserResource()
                 .withRoleGlobal(Role.APPLICANT)
                 .build();
@@ -132,7 +140,10 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         setField(populator, "populatorMap", asMap(QuestionSetupType.APPLICATION_TEAM, mockPopulator));
         setField(populator, "asyncFuturesGenerator", futuresGeneratorMock);
 
+        GrantTermsAndConditionsResource grantTermsAndConditions =
+                new GrantTermsAndConditionsResource("name", termsTemplate, 1);
         CompetitionResource competition = newCompetitionResource()
+                .withTermsAndConditions(grantTermsAndConditions)
                 .withFundingType(FundingType.GRANT)
                 .build();
         ApplicationResource application = newApplicationResource()
@@ -175,6 +186,15 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         ApplicationQuestionReadOnlyViewModel expectedRowModel = mock(ApplicationQuestionReadOnlyViewModel.class);
         FinanceReadOnlyViewModel expectedFinanceSummary = mock(FinanceReadOnlyViewModel.class);
 
+        String thirdPartyTncLabel = "3rd party tnc label";
+        String thirdPartyTncGuidance = "3rd party tnc guidance";
+        String thirdPartyCostGuidanceUrl = "https://www.google.com";
+        CompetitionThirdPartyConfigResource thirdPartyConfig = newCompetitionThirdPartyConfigResource()
+                .withTermsAndConditionsLabel(thirdPartyTncLabel)
+                .withTermsAndConditionsGuidance(thirdPartyTncGuidance)
+                .withProjectCostGuidanceUrl(thirdPartyCostGuidanceUrl)
+                .build();
+
         when(financeSummaryViewModelPopulator.populate(expectedData)).thenReturn(expectedFinanceSummary);
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
@@ -186,6 +206,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         when(sectionRestService.getByCompetition(competition.getId())).thenReturn(restSuccess(sections));
         when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(processRole)));
         when(assessorFormInputResponseRestService.getApplicationAssessment(applicationId, assessmentId)).thenReturn(restSuccess(assessorResponseFuture));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(thirdPartyConfig));
 
         when(mockPopulator.populate(questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
 
@@ -213,6 +234,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
     public void populateKtp() {
         long applicationId = 1L;
         long assessmentId = 2L;
+        String termsTemplate = "terms-template";
         OrganisationResource organisation = newOrganisationResource().build();
         UserResource user = newUserResource()
                 .withRolesGlobal(Arrays.asList(Role.KNOWLEDGE_TRANSFER_ADVISER, Role.ASSESSOR))
@@ -228,7 +250,10 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         setField(populator, "populatorMap", asMap(QuestionSetupType.KTP_ASSESSMENT, mockPopulator));
         setField(populator, "asyncFuturesGenerator", futuresGeneratorMock);
 
+        GrantTermsAndConditionsResource grantTermsAndConditions =
+                new GrantTermsAndConditionsResource("name", termsTemplate, 1);
         CompetitionResource competition = newCompetitionResource()
+                .withTermsAndConditions(grantTermsAndConditions)
                 .withFundingType(FundingType.KTP)
                 .build();
         ApplicationResource application = newApplicationResource()
@@ -284,6 +309,15 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         ApplicationQuestionReadOnlyViewModel expectedRowModel = mock(ApplicationQuestionReadOnlyViewModel.class);
         FinanceReadOnlyViewModel expectedFinanceSummary = mock(FinanceReadOnlyViewModel.class);
 
+        String thirdPartyTncLabel = "3rd party tnc label";
+        String thirdPartyTncGuidance = "3rd party tnc guidance";
+        String thirdPartyCostGuidanceUrl = "https://www.google.com";
+        CompetitionThirdPartyConfigResource thirdPartyConfig = newCompetitionThirdPartyConfigResource()
+                .withTermsAndConditionsLabel(thirdPartyTncLabel)
+                .withTermsAndConditionsGuidance(thirdPartyTncGuidance)
+                .withProjectCostGuidanceUrl(thirdPartyCostGuidanceUrl)
+                .build();
+
         when(financeSummaryViewModelPopulator.populate(expectedData)).thenReturn(expectedFinanceSummary);
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
@@ -296,6 +330,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(processRole)));
         when(assessorFormInputResponseRestService.getApplicationAssessment(applicationId, assessmentId)).thenReturn(restSuccess(assessorResponseFuture));
         when(supporterAssignmentRestService.getAssignmentsByApplicationId(applicationId)).thenReturn(restSuccess(supporterResponseFuture));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(thirdPartyConfig));
 
         when(mockPopulator.populate(questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
 

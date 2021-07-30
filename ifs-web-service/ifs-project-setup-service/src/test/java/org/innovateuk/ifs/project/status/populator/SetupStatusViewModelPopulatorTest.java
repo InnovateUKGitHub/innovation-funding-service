@@ -7,12 +7,10 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder;
 import org.innovateuk.ifs.competition.builder.CompetitionPostAwardServiceResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
-import org.innovateuk.ifs.competition.resource.CompetitionPostAwardServiceResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.PostAwardService;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupPostAwardServiceRestService;
+import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
@@ -57,6 +55,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder.newCompetitionDocumentResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionThirdPartyConfigResourceBuilder.newCompetitionThirdPartyConfigResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
@@ -117,6 +116,9 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     @Mock
     private CompetitionSetupPostAwardServiceRestService competitionSetupPostAwardServiceRestService;
 
+    @Mock
+    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
+
     private static final boolean monitoringOfficerExpected = true;
 
     private static final String liveProjectsLandingPageUrl = "https://ifs.local-dev/live-projects-landing-page";
@@ -126,7 +128,11 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                     .withTitle("Risk Register", "Plan Document")
                     .build(2);
 
-    private CompetitionResource competition = newCompetitionResource()
+    String termsTemplate = "terms-template";
+    GrantTermsAndConditionsResource grantTermsAndConditions =
+            new GrantTermsAndConditionsResource("name", termsTemplate, 1);
+    CompetitionResource competition = newCompetitionResource()
+            .withTermsAndConditions(grantTermsAndConditions)
             .withProjectDocument(projectDocumentConfig)
             .withProjectSetupStages(new ArrayList<>(EnumSet.allOf(ProjectSetupStage.class)))
             .build();
@@ -154,6 +160,15 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
             .withEmail("james.watts@email.co.uk")
             .withRoleGlobal(Role.APPLICANT)
             .withUID("2aerg234-aegaeb-23aer").build();
+
+    String thirdPartyTncLabel = "3rd party tnc label";
+    String thirdPartyTncGuidance = "3rd party tnc guidance";
+    String thirdPartyCostGuidanceUrl = "https://www.google.com";
+    CompetitionThirdPartyConfigResource thirdPartyConfig = newCompetitionThirdPartyConfigResource()
+            .withTermsAndConditionsLabel(thirdPartyTncLabel)
+            .withTermsAndConditionsGuidance(thirdPartyTncGuidance)
+            .withProjectCostGuidanceUrl(thirdPartyCostGuidanceUrl)
+            .build();
 
     @Before
     public void setupExpectations() {
@@ -1678,6 +1693,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         when(projectService.isProjectManager(loggedInUser.getId(), project.getId())).thenReturn(false);
         when(projectService.isProjectFinanceContact(loggedInUser.getId(), project.getId())).thenReturn(false);
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(thirdPartyConfig));
+
         setupCompetitionPostAwardServiceExpectations(project, PostAwardService.CONNECT);
     }
 
