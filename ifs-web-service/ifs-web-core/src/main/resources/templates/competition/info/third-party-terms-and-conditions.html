@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.termsAndConditionsLabel}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.termsAndConditionsLabel}" />
 </head>
 <body class="govuk-template__body grant-terms-conditions">
 
@@ -9,24 +9,22 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <div class="govuk-width-container">
-  <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-  <main class="govuk-main-wrapper" id="main-content" role="main">
-    <th:block th:insert="fragments/layout :: page-title"
-              th:with="pageTitle=${model.termsAndConditionsLabel},size='govuk-heading-l'" />
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle=${model.termsAndConditionsLabel},size='govuk-heading-l'" />
 
-    <th:block th:if="${model.procurementThirdParty}">
+        <th:block th:if="${model.procurementThirdParty}">
 
-      <th:block th:fragment="terms-and-conditions-content">
-        <p class="govuk-body"><a th:href="@{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.competitionId})}">View full terms and conditions</a></p>
-      </th:block>
+            <th:block th:fragment="terms-and-conditions-content">
+                    <p class="govuk-body"><a th:href="@{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.competitionId})}" th:text="|View ${model.termsAndConditionsLabel}|">View full terms and conditions</a></p>
+            </th:block>
 
-      <p th:utext="${model.termsAndConditionsGuidance}"></p>
+            <p th:utext="${model.termsAndConditionsGuidance}"></p>
 
-    </th:block>
-
-    <th:block th:insert="fragments/layout :: main-content-end" />
-  </main>
+        </th:block>
+    </main>
 </div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

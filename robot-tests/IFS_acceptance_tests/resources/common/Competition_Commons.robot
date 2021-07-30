@@ -120,8 +120,30 @@ the user fills in the CS Funding Information
     ${nextYearInTwoDigits}=                           get next year in two digits
     textfield should contain                          css = input[name="competitionCode"]   ${nextYearInTwoDigits}
     the user clicks the button/link                   jQuery = button:contains("Done")
+    the user should see the element                   jQuery = button:contains("Edit")
     the user clicks the button/link                   link = Back to competition details
     the user should see the element                   jQuery = div:contains("Funding information") ~ .task-status-complete
+
+the user fills in funding information for the third party procurement comp
+    the user clicks the button/link                   link = Funding information
+    the user clicks the button/link                   jQuery = button:contains("Generate code")
+    the user clicks the button/link                   id = funders[0].funder
+    the user clicks the button/link                   jQuery = ul li:contains("Office of Gas and Electricity Markets (Ofgem)")
+    mouse out                                         funders[0].funder
+    the user enters text to a text field              id = funders[0].funderBudget  142424242
+    the user enters text to a text field              id = pafNumber  2424
+    the user enters text to a text field              id = budgetCode  Ch0col@73
+    the user enters text to a text field              id = activityCode  133t
+    ${nextYearInTwoDigits}=                           get next year in two digits
+    textfield should contain                          css = input[name="competitionCode"]   ${nextYearInTwoDigits}
+    the user clicks the button/link                   jQuery = button:contains("Done")
+    the user should see the element                   jQuery = td:contains("Office of Gas and Electricity Markets (Ofgem)")
+    then the user should see the element              jQuery = button:contains("Edit")
+    the user clicks the button/link                   link = Back to competition details
+    the user should see the element                   jQuery = div:contains("Funding information") ~ .task-status-complete
+    the user clicks the button/link                   jQuery = a:contains("Complete")
+    the user clicks the button/link                   jQuery = button:contains('Done')
+    the user clicks the button/link                   jQuery = a:contains("Competition")
 
 the user fills in the CS Project eligibility
     [Arguments]  ${organisationType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
@@ -149,6 +171,8 @@ the user fills in the CS funding eligibility
     ...  ELSE IF   "${fundingRule}" == "STATE_AID" and '${researchCategory}' == 'false'          run keywords                        the user fills in maximum funding level percentage
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
     ...                                     AND              the user should see the element     jQuery = p:contains("Click edit to change the maximum funding level percentage.")
+    ...  ELSE IF   "${fundingRule}" == "NOT_AID" and '${researchCategory}' == 'false'            run keywords        the user fills in maximum funding level percentage
+    ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
     ...  ELSE IF    '${researchCategory}' == 'false'         run keywords                        the user fills in maximum funding level percentage
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
     ...                                     AND              the user fills in maximum funding level percentage for state aid

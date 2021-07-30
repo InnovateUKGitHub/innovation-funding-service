@@ -11,13 +11,17 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class CompetitionThirdPartyConfigResourceBuilder extends BaseBuilder<CompetitionThirdPartyConfigResource, CompetitionThirdPartyConfigResourceBuilder> {
 
-    private CompetitionThirdPartyConfigResourceBuilder(List<BiConsumer<Integer, CompetitionThirdPartyConfigResource>> newMultiActions) {
+    private CompetitionThirdPartyConfigResourceBuilder (List<BiConsumer<Integer, CompetitionThirdPartyConfigResource>> newMultiActions) {
         super(newMultiActions);
+    }
+
+    public static CompetitionThirdPartyConfigResourceBuilder newCompetitionThirdPartyConfigResource(List<BiConsumer<Integer, CompetitionThirdPartyConfigResource>> actions) {
+        return new CompetitionThirdPartyConfigResourceBuilder(actions);
     }
 
     @Override
     protected CompetitionThirdPartyConfigResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionThirdPartyConfigResource>> actions) {
-        return new CompetitionThirdPartyConfigResourceBuilder(actions);
+        return new CompetitionThirdPartyConfigResourceBuilder(emptyList()).with(uniqueIds());
     }
 
     @Override
