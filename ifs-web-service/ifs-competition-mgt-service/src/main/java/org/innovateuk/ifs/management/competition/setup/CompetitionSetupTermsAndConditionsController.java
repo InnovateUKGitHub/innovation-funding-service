@@ -346,12 +346,11 @@ public class CompetitionSetupTermsAndConditionsController {
         if (competition.getCompetitionTerms() != null)  {
             if (isProcurement && competition.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel() != null) {
                  competitionSetupRestService.deleteCompetitionThirdPartyConfigData(competition.getId());
-                 competition = competitionRestService.getCompetitionById(competition.getId()).getSuccess();
             }
             if (isThirdPartyProcurement && bindingResult.hasErrors()) {
                 competitionSetupRestService.deleteCompetitionTerms(competition.getId());
-                competition = competitionRestService.getCompetitionById(competition.getId()).getSuccess();
             }
+            competition = competitionRestService.getCompetitionById(competition.getId()).getSuccess();
         }
         return competition;
     }
