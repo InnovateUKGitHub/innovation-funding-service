@@ -57,6 +57,21 @@ k8s_wait() {
   done;
 }
 
+k8s_port_shib() {
+  k8s_wait shib
+  kubectl port-forward svc/shib 8443:443
+}
+
+k8s_port_idp() {
+  k8s_wait idp
+  kubectl port-forward svc/idp 9443:443
+}
+
+k8s_port_db() {
+  k8s_wait ifs-database
+  kubectl port-forward svc/ifs-database 3306:3306
+}
+
 k8s_rebuild_db() {
   k8s_delete ldap
   k8s_wait ldap
