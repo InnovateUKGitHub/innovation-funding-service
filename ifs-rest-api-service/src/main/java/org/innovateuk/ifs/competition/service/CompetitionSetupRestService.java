@@ -48,4 +48,6 @@ public interface CompetitionSetupRestService {
     RestResult<FileEntryResource> uploadCompetitionTerms(long competitionId, String contentType, long contentLength, String originalFilename, byte[] file);
 
     RestResult<Void> deleteCompetitionTerms(long competitionId);
+
+    RestResult<Void> deleteCompetitionThirdPartyConfigData(long competitionId);
 }

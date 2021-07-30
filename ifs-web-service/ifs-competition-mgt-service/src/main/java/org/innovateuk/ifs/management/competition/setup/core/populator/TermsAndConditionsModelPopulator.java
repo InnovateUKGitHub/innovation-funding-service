@@ -41,6 +41,11 @@ public class TermsAndConditionsModelPopulator {
 
         boolean termsAndConditionsDocUploaded = competitionResource.isCompetitionTermsUploaded();
 
+        String projectCostGuidanceLink = "";
+        if (competitionResource.getCompetitionThirdPartyConfigResource() != null) {
+            projectCostGuidanceLink = competitionResource.getCompetitionThirdPartyConfigResource().getProjectCostGuidanceUrl();
+        }
+
         boolean includeStateAid = includeStateAid(competitionResource);
 
         List<GrantTermsAndConditionsResource> termsAndConditionsList = termsAndConditionsRestService
@@ -57,7 +62,7 @@ public class TermsAndConditionsModelPopulator {
         }
 
         return new TermsAndConditionsViewModel(generalViewModel, termsAndConditionsList,
-                termsAndConditions, otherTermsAndConditions, termsAndConditionsDocUploaded, includeStateAid, stateAidPage);
+                termsAndConditions, otherTermsAndConditions, termsAndConditionsDocUploaded, includeStateAid, stateAidPage, projectCostGuidanceLink);
     }
 
     private boolean includeStateAid(CompetitionResource competitionResource) {

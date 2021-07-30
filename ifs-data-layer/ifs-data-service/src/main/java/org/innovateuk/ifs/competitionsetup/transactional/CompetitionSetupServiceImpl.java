@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionThirdPartyConfig;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
@@ -127,6 +128,9 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     public static final BigDecimal DEFAULT_ASSESSOR_PAY = new BigDecimal(100);
 
+    @Autowired
+    private CompetitionThirdPartyConfigRepository competitionThirdPartyConfigRepository;
+
     @Override
     @Transactional
     public ServiceResult<String> generateCompetitionCode(Long id, ZonedDateTime dateTime) {
@@ -183,6 +187,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         newCompetition.setCompetitionAssessmentConfig(existingCompetition.getCompetitionAssessmentConfig());
         newCompetition.setCompetitionOrganisationConfig(existingCompetition.getCompetitionOrganisationConfig());
         newCompetition.setCompetitionApplicationConfig(existingCompetition.getCompetitionApplicationConfig());
+        newCompetition.setCompetitionThirdPartyConfig(existingCompetition.getCompetitionThirdPartyConfig());
         return newCompetition;
     }
 
@@ -409,6 +414,28 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 .andOnSuccess(competition -> find(competition.getCompetitionTerms(), notFoundError(FileEntry.class))
                         .andOnSuccess(competitionTerms -> fileService.deleteFileIgnoreNotFound(competitionTerms.getId()))
                         .andOnSuccessReturnVoid(() -> competition.setCompetitionTerms(null)));
+    }
+
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> deleteCompetitionThirdPartyConfigData(long competitionId) {
+        return getCompetition(competitionId).andOnSuccess(competition ->
+                resetThirdPartyConfigData(competition).andOnSuccess(() -> {
+                    competition.setCompetitionTerms(null);
+                    competitionRepository.save(competition);
+                    return serviceSuccess();
+                }));
+    }
+
+    private ServiceResult<Void> resetThirdPartyConfigData(Competition competition) {
+        return find(competitionThirdPartyConfigRepository.findOneByCompetitionId(competition.getId()), notFoundError(CompetitionThirdPartyConfig.class, competition.getId()))
+                .andOnSuccessReturnVoid((config) -> {
+                    config.setTermsAndConditionsLabel(null);
+                    config.setTermsAndConditionsGuidance(null);
+                    config.setProjectCostGuidanceUrl(null);
+                    competition.setCompetitionThirdPartyConfig(config);
+                });
     }
 
     private ServiceResult<Competition> findCompetition(long competitionId) {
