@@ -114,7 +114,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean alwaysOpen;
     private boolean subsidyControl;
     private boolean hasBusinessAndFinancialInformationQuestion;
-    private CompetitionThirdPartyConfigResource thirdPartyConfig;
+    private CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource;
 
     public CompetitionResource() {
     }
@@ -852,12 +852,12 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.subsidyControl = subsidyControl;
     }
 
-    public CompetitionThirdPartyConfigResource getThirdPartyConfig() {
-        return thirdPartyConfig;
+    public CompetitionThirdPartyConfigResource getCompetitionThirdPartyConfigResource() {
+        return competitionThirdPartyConfigResource;
     }
 
-    public void setThirdPartyConfig(CompetitionThirdPartyConfigResource thirdPartyConfig) {
-        this.thirdPartyConfig = thirdPartyConfig;
+    public void setCompetitionThirdPartyConfigResource(CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource) {
+        this.competitionThirdPartyConfigResource = competitionThirdPartyConfigResource;
     }
 
     @Override
@@ -934,7 +934,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(alwaysOpen, that.alwaysOpen)
                 .append(subsidyControl, that.subsidyControl)
                 .append(assessmentPeriods, that.assessmentPeriods)
-                .append(thirdPartyConfig, that.thirdPartyConfig)
+                .append(competitionThirdPartyConfigResource, that.competitionThirdPartyConfigResource)
                 .isEquals();
     }
 
@@ -1002,7 +1002,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(alwaysOpen)
                 .append(subsidyControl)
                 .append(assessmentPeriods)
-                .append(thirdPartyConfig)
+                .append(competitionThirdPartyConfigResource)
                 .toHashCode();
     }
 

@@ -94,7 +94,8 @@ public class ApplicationTermsModelPopulator {
                         subsidyBasisUrl.isPresent(),
                         subsidyBasisUrl.orElse(null),
                         thirdPartyConfigResource.getTermsAndConditionsLabel(),
-                        thirdPartyConfigResource.getTermsAndConditionsGuidance());
+                        thirdPartyConfigResource.getTermsAndConditionsGuidance(),
+                        competition.getTermsAndConditions().isThirdPartyProcurement());
             }
         }
 
@@ -108,7 +109,8 @@ public class ApplicationTermsModelPopulator {
                 isAllOrganisationsTermsAccepted(applicationId, competition.getId()),
                 additionalTerms,
                 thirdPartyConfigResource.getTermsAndConditionsLabel(),
-                thirdPartyConfigResource.getTermsAndConditionsGuidance());
+                thirdPartyConfigResource.getTermsAndConditionsGuidance(),
+                competition.getTermsAndConditions().isThirdPartyProcurement());
     }
 
     private Optional<String> subsidyBasisUrl(ApplicationResource application, CompetitionResource competition, OrganisationResource organisation) {

@@ -19,15 +19,19 @@ public class TermsAndConditionsFormPopulator {
         TermsAndConditionsForm termsAndConditionsForm = new TermsAndConditionsForm();
         if (competitionResource.getTermsAndConditions() != null) {
             termsAndConditionsForm.setTermsAndConditionsId(competitionResource.getTermsAndConditions().getId());
-            if (isThirdPartyProcurement(termsAndConditionsForm.getTermsAndConditionsId())) {
                 CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = competitionResource.getCompetitionThirdPartyConfigResource();
                 if (competitionThirdPartyConfigResource != null) {
-                    termsAndConditionsForm.setThirdPartyTermsAndConditionsLabel(competitionThirdPartyConfigResource.getTermsAndConditionsLabel());
-                    termsAndConditionsForm.setThirdPartyTermsAndConditionsText(competitionThirdPartyConfigResource.getTermsAndConditionsGuidance());
-                    termsAndConditionsForm.setProjectCostGuidanceLink(competitionThirdPartyConfigResource.getProjectCostGuidanceUrl());
+                    if (isThirdPartyProcurement(termsAndConditionsForm.getTermsAndConditionsId())) {
+                        termsAndConditionsForm.setThirdPartyTermsAndConditionsLabel(competitionThirdPartyConfigResource.getTermsAndConditionsLabel());
+                        termsAndConditionsForm.setThirdPartyTermsAndConditionsText(competitionThirdPartyConfigResource.getTermsAndConditionsGuidance());
+                        termsAndConditionsForm.setProjectCostGuidanceLink(competitionThirdPartyConfigResource.getProjectCostGuidanceUrl());
+                    } else {
+                        competitionThirdPartyConfigResource.setTermsAndConditionsLabel(null);
+                        competitionThirdPartyConfigResource.setProjectCostGuidanceUrl(null);
+                        competitionThirdPartyConfigResource.setTermsAndConditionsGuidance(null);
+                    }
                 }
             }
-        }
         return termsAndConditionsForm;
     }
 
@@ -40,7 +44,7 @@ public class TermsAndConditionsFormPopulator {
     }
 
     public void populateThirdPartyConfigData(TermsAndConditionsForm termsAndConditionsForm, CompetitionResource competition) {
-        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = new CompetitionThirdPartyConfigResource();
+        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = competition.getCompetitionThirdPartyConfigResource();
         competitionThirdPartyConfigResource.setTermsAndConditionsLabel(termsAndConditionsForm.getThirdPartyTermsAndConditionsLabel());
         competitionThirdPartyConfigResource.setTermsAndConditionsGuidance(termsAndConditionsForm.getThirdPartyTermsAndConditionsText());
         competitionThirdPartyConfigResource.setProjectCostGuidanceUrl(termsAndConditionsForm.getProjectCostGuidanceLink());
