@@ -311,8 +311,8 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((procurementMilestone, competitionResource) -> competitionResource.setProcurementMilestones(procurementMilestone), procurementMilestones);
     }
 
-    public CompetitionResourceBuilder withCompetitionThirdPartyConfigResource(CompetitionThirdPartyConfigResource... competitionThirdPartyConfigResources) {
-        return withArraySetFieldByReflection("competitionThirdPartyConfig", competitionThirdPartyConfigResources);
+    public CompetitionResourceBuilder withCompetitionThirdPartyConfig(CompetitionThirdPartyConfigResource... competitionThirdPartyConfigResource) {
+        return withArraySetFieldByReflection("competitionThirdPartyConfigResource", competitionThirdPartyConfigResource);
     }
 
     @Override

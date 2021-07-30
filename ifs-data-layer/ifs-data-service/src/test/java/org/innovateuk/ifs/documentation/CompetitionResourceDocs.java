@@ -89,6 +89,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("subsidyControl").description("Is the competition subsidy controlled").optional(),
             fieldWithPath("hasBusinessAndFinancialInformationQuestion").description("Does the competition have the business and financial information question").optional(),
             fieldWithPath("assessmentPeriods").description("The assessment periods on the competition").optional(),
+            fieldWithPath("competitionThirdPartyConfigResource").description("Third Party competition config resource").optional(),
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()

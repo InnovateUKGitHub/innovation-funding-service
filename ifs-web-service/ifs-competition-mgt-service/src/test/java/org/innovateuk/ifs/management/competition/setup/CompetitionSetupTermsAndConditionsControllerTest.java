@@ -4,9 +4,11 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
+import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
+import org.innovateuk.ifs.management.competition.setup.core.populator.TermsAndConditionsFormPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.populator.TermsAndConditionsModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -25,6 +27,7 @@ import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionThirdPartyConfigResourceBuilder.newCompetitionThirdPartyConfigResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
 import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.TERMS_AND_CONDITIONS;
@@ -35,7 +38,8 @@ import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -64,6 +68,15 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
 
     @Mock
     private TermsAndConditionsModelPopulator termsAndConditionsModelPopulator;
+
+    @Mock
+    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
+
+    @Mock
+    private TermsAndConditionsFormPopulator termsAndConditionsFormPopulator;
+
+    @Mock
+    CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource;
 
     @Override
     protected CompetitionSetupTermsAndConditionsController supplyControllerUnderTest() {
@@ -103,9 +116,11 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
 
     @Test
     public void uploadTermsAndConditions() throws Exception {
+        GrantTermsAndConditionsResource procurementTerms = newGrantTermsAndConditionsResource().withName("Procurement").build();
         CompetitionResource competitionResource = newCompetitionResource()
-                .withId(COMPETITION_ID)
-                .build();
+              .withTermsAndConditions(procurementTerms)
+              .withId(COMPETITION_ID)
+               .build();
 
         String fileName = "termsAndConditionsDoc";
         String originalFileName = "original filename";
@@ -119,6 +134,7 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
         form.setTermsAndConditionsDoc(file);
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
+        when(termsAndConditionsRestService.getById(any())).thenReturn(restSuccess(procurementTerms));
         when(competitionSetupRestService.uploadCompetitionTerms(COMPETITION_ID, file.getContentType(), file.getSize(),
                 file.getOriginalFilename(), getMultipartFileBytes(file))).thenReturn(restSuccess(fileEntryResource));
         when(competitionRestService.updateTermsAndConditionsForCompetition(
@@ -165,8 +181,9 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
 
         InOrder inOrder = inOrder(competitionSetupService, competitionSetupRestService, competitionRestService, termsAndConditionsRestService);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(termsAndConditionsRestService).getById(nonProcurementTerms.getId());
+        inOrder.verify(termsAndConditionsRestService, times(2)).getById(nonProcurementTerms.getId());
         inOrder.verify(competitionSetupRestService).deleteCompetitionTerms(competition.getId());
+        inOrder.verify(termsAndConditionsRestService, times(1)).getById(nonProcurementTerms.getId());
         inOrder.verify(competitionRestService).updateTermsAndConditionsForCompetition(
                 eq(COMPETITION_ID),
                 eq(nonProcurementTerms.getId()));
@@ -200,8 +217,7 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
 
         InOrder inOrder = inOrder(competitionSetupService, competitionSetupRestService, competitionRestService, termsAndConditionsRestService);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(termsAndConditionsRestService).getById(nonProcurementTerms.getId());
-        inOrder.verify(competitionSetupRestService).deleteCompetitionTerms(competition.getId());
+        inOrder.verify(termsAndConditionsRestService, times(3)).getById(nonProcurementTerms.getId());
         inOrder.verify(competitionRestService).updateTermsAndConditionsForCompetition(
                 eq(COMPETITION_ID),
                 eq(nonProcurementTerms.getId()));
@@ -346,12 +362,15 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
 
     @Test
     public void deleteTermsAndConditions() throws Exception {
+        GrantTermsAndConditionsResource procurementTerms = newGrantTermsAndConditionsResource().withName("Procurement").build();
         CompetitionResource competitionWithTermsDoc = newCompetitionResource()
                 .withId(COMPETITION_ID)
+                .withTermsAndConditions(procurementTerms)
                 .withCompetitionTerms(newFileEntryResource().build())
                 .build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionWithTermsDoc));
+        when(termsAndConditionsRestService.getById(procurementTerms.getId())).thenReturn(restSuccess(procurementTerms));
         when(competitionSetupRestService.deleteCompetitionTerms(COMPETITION_ID)).thenReturn(restSuccess());
 
         mockMvc.perform(multipart(format("%s/%d/section/terms-and-conditions", URL_PREFIX, COMPETITION_ID))
@@ -361,5 +380,49 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
 
         verify(competitionRestService).getCompetitionById(COMPETITION_ID);
         verify(competitionSetupRestService).deleteCompetitionTerms(COMPETITION_ID);
+    }
+
+    @Test
+    public void submitThirdPartyTermsAndConditionsSectionDetails() throws Exception {
+        GrantTermsAndConditionsResource thirdPartyProcurement = newGrantTermsAndConditionsResource()
+                .withName("Procurement Third Party")
+                .build();
+        CompetitionThirdPartyConfigResource thirdPartyConfigResource = newCompetitionThirdPartyConfigResource()
+                                      .withTermsAndConditionsLabel("Third Party")
+                                      .withTermsAndConditionsGuidance("Third Party Guidance")
+                                      .withProjectCostGuidanceUrl("Third Party Project Cost Guidance Link")
+                                      .build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .withCompetitionThirdPartyConfig(thirdPartyConfigResource)
+                .withCompetitionTerms(newFileEntryResource().build())
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+        when(termsAndConditionsRestService.getById(thirdPartyProcurement.getId())).thenReturn(restSuccess(thirdPartyProcurement));
+        when(competitionThirdPartyConfigRestService.update(competition.getId(), competition.getCompetitionThirdPartyConfigResource()))
+                .thenReturn(restSuccess());
+        when(competitionRestService.updateTermsAndConditionsForCompetition(
+                anyLong(),
+                anyLong())).thenReturn(restSuccess());
+        when(competitionSetupRestService.markSectionComplete(anyLong(), eq(TERMS_AND_CONDITIONS))).thenReturn(restSuccess());
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/terms-and-conditions")
+                .param("termsAndConditionsId", String.valueOf(thirdPartyProcurement.getId())))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/terms-and-conditions"));
+
+        InOrder inOrder = inOrder(competitionSetupService, competitionSetupRestService, competitionRestService, termsAndConditionsRestService, competitionThirdPartyConfigRestService);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
+        inOrder.verify(termsAndConditionsRestService, times(3)).getById(thirdPartyProcurement.getId());
+        inOrder.verify(competitionThirdPartyConfigRestService).update(eq(COMPETITION_ID), eq(thirdPartyConfigResource));
+        inOrder.verify(competitionRestService).updateTermsAndConditionsForCompetition(
+                eq(COMPETITION_ID),
+                eq(thirdPartyProcurement.getId()));
+        inOrder.verify(competitionSetupRestService).markSectionComplete(
+                eq(COMPETITION_ID),
+                eq(TERMS_AND_CONDITIONS));
+        inOrder.verifyNoMoreInteractions();
     }
 }

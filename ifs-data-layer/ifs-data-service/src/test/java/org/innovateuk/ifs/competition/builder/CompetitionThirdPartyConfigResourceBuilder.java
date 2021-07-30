@@ -15,10 +15,6 @@ public class CompetitionThirdPartyConfigResourceBuilder extends BaseBuilder<Comp
         super(newMultiActions);
     }
 
-    public static CompetitionThirdPartyConfigResourceBuilder newCompetitionThirdPartyConfigResource() {
-        return new CompetitionThirdPartyConfigResourceBuilder(emptyList()).with(uniqueIds());
-    }
-
     @Override
     protected CompetitionThirdPartyConfigResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionThirdPartyConfigResource>> actions) {
         return new CompetitionThirdPartyConfigResourceBuilder(actions);
@@ -29,6 +25,10 @@ public class CompetitionThirdPartyConfigResourceBuilder extends BaseBuilder<Comp
         return new CompetitionThirdPartyConfigResource();
     }
 
+    public static CompetitionThirdPartyConfigResourceBuilder newCompetitionThirdPartyConfigResource() {
+        return new CompetitionThirdPartyConfigResourceBuilder(emptyList()).with(uniqueIds());
+    }
+
     public CompetitionThirdPartyConfigResourceBuilder withTermsAndConditionsLabel(String... termsAndConditionsLabel) {
         return withArraySetFieldByReflection("termsAndConditionsLabel", termsAndConditionsLabel);
     }
@@ -37,7 +37,7 @@ public class CompetitionThirdPartyConfigResourceBuilder extends BaseBuilder<Comp
         return withArraySetFieldByReflection("termsAndConditionsGuidance", termsAndConditionsGuidance);
     }
 
-    public CompetitionThirdPartyConfigResourceBuilder withProjectCostGuidanceUrl(String... projectCostGuidanceUrl) {
+    public CompetitionThirdPartyConfigResourceBuilder eithProjectCostGuidanceUrl(String... projectCostGuidanceUrl) {
         return withArraySetFieldByReflection("projectCostGuidanceUrl", projectCostGuidanceUrl);
     }
 
