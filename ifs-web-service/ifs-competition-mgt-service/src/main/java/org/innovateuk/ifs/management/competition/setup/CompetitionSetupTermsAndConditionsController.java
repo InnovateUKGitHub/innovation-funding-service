@@ -344,7 +344,8 @@ public class CompetitionSetupTermsAndConditionsController {
 
     private CompetitionResource deleteDataInTermsSetupswitch(boolean isThirdPartyProcurement, boolean isProcurement, CompetitionResource competition, BindingResult bindingResult) {
         if (competition.getCompetitionTerms() != null)  {
-            if (isProcurement && competition.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel() != null) {
+            if (isProcurement && competition.getCompetitionThirdPartyConfigResource() != null
+                    && competition.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel() != null) {
                  competitionSetupRestService.deleteCompetitionThirdPartyConfigData(competition.getId());
             }
             if (isThirdPartyProcurement && bindingResult.hasErrors()) {
