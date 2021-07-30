@@ -11,22 +11,22 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class CompetitionThirdPartyConfigResourceBuilder extends BaseBuilder<CompetitionThirdPartyConfigResource, CompetitionThirdPartyConfigResourceBuilder> {
 
-    private CompetitionThirdPartyConfigResourceBuilder(List<BiConsumer<Integer, CompetitionThirdPartyConfigResource>> newMultiActions) {
+    private CompetitionThirdPartyConfigResourceBuilder (List<BiConsumer<Integer, CompetitionThirdPartyConfigResource>> newMultiActions) {
         super(newMultiActions);
+    }
+
+    public static CompetitionThirdPartyConfigResourceBuilder newCompetitionThirdPartyConfigResource() {
+        return new CompetitionThirdPartyConfigResourceBuilder(emptyList());
     }
 
     @Override
     protected CompetitionThirdPartyConfigResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionThirdPartyConfigResource>> actions) {
-        return new CompetitionThirdPartyConfigResourceBuilder(actions);
+        return new CompetitionThirdPartyConfigResourceBuilder(emptyList()).with(uniqueIds());
     }
 
     @Override
     protected CompetitionThirdPartyConfigResource createInitial() {
         return new CompetitionThirdPartyConfigResource();
-    }
-
-    public static CompetitionThirdPartyConfigResourceBuilder newCompetitionThirdPartyConfigResource() {
-        return new CompetitionThirdPartyConfigResourceBuilder(emptyList()).with(uniqueIds());
     }
 
     public CompetitionThirdPartyConfigResourceBuilder withTermsAndConditionsLabel(String... termsAndConditionsLabel) {
@@ -40,5 +40,4 @@ public class CompetitionThirdPartyConfigResourceBuilder extends BaseBuilder<Comp
     public CompetitionThirdPartyConfigResourceBuilder withProjectCostGuidanceUrl(String... projectCostGuidanceUrl) {
         return withArraySetFieldByReflection("projectCostGuidanceUrl", projectCostGuidanceUrl);
     }
-
 }

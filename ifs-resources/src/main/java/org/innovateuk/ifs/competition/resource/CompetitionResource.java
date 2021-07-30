@@ -934,6 +934,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(alwaysOpen, that.alwaysOpen)
                 .append(subsidyControl, that.subsidyControl)
                 .append(assessmentPeriods, that.assessmentPeriods)
+                .append(competitionThirdPartyConfigResource, that.competitionThirdPartyConfigResource)
                 .isEquals();
     }
 
@@ -1001,6 +1002,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(alwaysOpen)
                 .append(subsidyControl)
                 .append(assessmentPeriods)
+                .append(competitionThirdPartyConfigResource)
                 .toHashCode();
     }
 

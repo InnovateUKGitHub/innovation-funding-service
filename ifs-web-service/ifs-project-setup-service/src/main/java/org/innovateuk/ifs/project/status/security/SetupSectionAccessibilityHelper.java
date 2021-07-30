@@ -239,6 +239,19 @@ public class SetupSectionAccessibilityHelper {
         }
     }
 
+    public SectionAccess canReviewSpendProfileSection(OrganisationResource organisation) {
+        if (setupProgressChecker.isOfflineOrWithdrawn()) {
+            return NOT_ACCESSIBLE;
+        }
+
+        if (!setupProgressChecker.isSpendProfileGenerated()) {
+            return fail(String.format("Unable to review Spend Profile section until Partner Organisation %s has had its Spend Profile submitted"
+                            , organisation.getName()));
+        }
+
+        return ACCESSIBLE;
+    }
+
     private boolean isFromOwnOrganisation(OrganisationResource userOrganisation, Long organisationIdFromUrl) {
 
         return userOrganisation.getId().equals(organisationIdFromUrl);

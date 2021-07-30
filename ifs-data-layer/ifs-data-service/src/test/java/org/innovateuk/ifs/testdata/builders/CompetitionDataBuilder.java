@@ -5,10 +5,11 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
-import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
+import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
@@ -501,6 +502,29 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             competitionAssessmentConfigResource.setAssessorFinanceView(line.getAssessorFinanceView());
             competitionAssessmentConfigResource.setIncludeAverageAssessorScoreInNotifications(false);
             competitionAssessmentConfigService.update(data.getCompetition().getId(), competitionAssessmentConfigResource);
+        });
+    }
+
+    public CompetitionDataBuilder withCompetitionTermsAndConditions(CompetitionLine line) {
+        CompetitionDataBuilder competitionDataBuilder = asCompAdmin(data -> {
+            if (line.getTermsAndConditionsTemplate() != null) {
+                GrantTermsAndConditions termsAndConditions =termsAndConditionsRepository.findOneByTemplate(line.getTermsAndConditionsTemplate());
+                competitionService.updateTermsAndConditionsForCompetition(data.getCompetition().getId(), termsAndConditions.getId());
+            }
+        });
+
+        return competitionDataBuilder.withCompetitionTermsAndConditionsFileUpload();
+    }
+
+    public CompetitionDataBuilder withCompetitionTermsAndConditionsFileUpload() {
+        return asCompAdmin(data -> {
+            doCompetitionDetailsUpdate(data, competition -> {
+                FileEntryResource termsAndConditionsFile = new FileEntryResource();
+                termsAndConditionsFile.setName("webtest.pdf");
+                termsAndConditionsFile.setFilesizeBytes(7945);
+                termsAndConditionsFile.setMediaType("application/pdf");
+                competition.setCompetitionTerms(termsAndConditionsFile);
+            });
         });
     }
 
