@@ -8,6 +8,9 @@ alias sext="skaffold dev -f skaffold-EXT.yml --rpc-http-port=50054 --rpc-port=50
 alias sdev="skaffold dev --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true"
 alias scust="skaffold dev -f skaffold-CUSTOM.yml --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true"
 
+alias sdevx="skaffold dev --watch-image=[] --cache-artifacts=false --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true"
+alias scustx="skaffold dev -f skaffold-CUSTOM.yml --cache-artifacts=false --watch-image=[] --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true"
+
 
 # View state/events for dev/custom in firefox
 alias state="open -a Firefox http://localhost:50052/v1/state"
@@ -32,6 +35,16 @@ alias logds="kubectl logs -f $(kubectl get pod -l app=data-service -o name)"
 log() {
     pod=$(kubectl get pod -l app="$1" -o name)
     kubectl logs -f $pod
+}
+
+exec() {
+  pod=$(kubectl get pod -l app="$1" -o name)
+  kubectl exec --stdin --tty $pod -- /bin/bash
+}
+
+delete() {
+  pod=$(kubectl get pod -l app="$1" -o name)
+  kubectl delete po $pod
 }
 
 sync_ldap() {
