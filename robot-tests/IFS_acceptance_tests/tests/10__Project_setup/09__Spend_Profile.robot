@@ -420,10 +420,7 @@ Project Finance cannot see the approve and reject options for the spend profile
     [Tags]
     [Setup]  Log in as a different user                        &{internal_finance_credentials}
     Given the user navigates to the page                       ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
-    Then the user should not see the spend profile details     
-    [Setup]  Log in as a different user              &{internal_finance_credentials}
-    Given the user navigates to the page             ${server}/project-setup-management/competition/${PS_Competition_Id}/status
-    Then the project finance user should see the spend profile details
+    Then the user should not see the spend profile details
 
 Monitoring officer is able to see Spend Profile approval page
     [Documentation]   IFS-9677
