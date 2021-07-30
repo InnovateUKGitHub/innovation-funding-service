@@ -168,20 +168,20 @@ Eligibility: server side validation and autosave
 Eligibility: User enters valid values and saves
     [Documentation]    INFUND-6916, INFUND-7487
     [Tags]
-    Given the internal user navigates to public content     ${public_content_competition_name}
-    And the user clicks the button/link                    link = Eligibility
-    And the user enters text to a text field               css = .contentGroup:first-of-type input[id^="contentGroups"][id$="heading"]   Nationality Eligibility Heading
-    And the user enters text to a text field                css = .contentGroup:first-of-type .editor   You can give your views on new or changing government policies by responding to consultations. Government departments take these responses into consideration before making decisions
+    Given the internal user navigates to public content      ${public_content_competition_name}
+    And the user clicks the button/link                      link = Eligibility
+    And the user enters text to a text field                 css = .contentGroup:first-of-type input[id^="contentGroups"][id$="heading"]   Nationality Eligibility Heading
+    And the user enters text to a text field                 css = .contentGroup:first-of-type .editor   You can give your views on new or changing government policies by responding to consultations. Government departments take these responses into consideration before making decisions
     When the user uploads the file                           css = .contentGroup:first-of-type input[name^="contentGroups"][name$="attachment"]     ${valid_pdf}
-    And the user clicks the button/link                    jQuery = button:contains("+ add new section")
-    And The user enters text to a text field                css = .contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="heading"]   Minimum Eligibility Threshold
-    And The user enters text to a text field                css = .contentGroup:nth-of-type(2) .editor    One of the important new changes we are introducing through these reforms is establishing the national eligibility criteria for adult care and support
-    And the user uploads the file                           css = .contentGroup:nth-of-type(2) input[name^="contentGroups"][name$="attachment"]   ${valid_pdf}
-    And the user clicks the button/link                    jQuery = button:contains("Save and review")
-    And the user clicks the button/link                    link = Return to public content
+    And the user clicks the button/link                      jQuery = button:contains("+ add new section")
+    And The user enters text to a text field                 css = .contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="heading"]   Minimum Eligibility Threshold
+    And The user enters text to a text field                 css = .contentGroup:nth-of-type(2) .editor    One of the important new changes we are introducing through these reforms is establishing the national eligibility criteria for adult care and support
+    And the user uploads the file                            css = .contentGroup:nth-of-type(2) input[name^="contentGroups"][name$="attachment"]   ${valid_pdf}
+    And the user clicks the button/link                      jQuery = button:contains("Save and review")
+    And the user clicks the button/link                      link = Return to public content
     Then the user should be redirected to the correct page   ${public_content_overview}
-    And the user should see the element                    link = Eligibility
-    And the user should see the element                     css = li:nth-child(3) .task-status-complete
+    And the user should see the element                      link = Eligibility
+    And the user should see the element                      css = li:nth-child(3) .task-status-complete
 
 Eligibility: Contains the correct values when viewed, Edit sections
     [Documentation]    INFUND-6916, INFUND-7487
@@ -319,8 +319,8 @@ Publish public content: Publish once all sections are complete
     [Documentation]    INFUND-6914
     [Tags]
     Given the user should not see the element           jQuery = small:contains("Last published")
-    And the user clicks the button/link                jQuery = button:contains("Publish content")
-    And the user should see the element                jQuery = small:contains("Last published")
+    And the user clicks the button/link                 jQuery = button:contains("Publish content")
+    And the user should see the element                 jQuery = small:contains("Last published")
     And the user should not see the element             jQuery = button:contains("Publish content")
     When the user clicks the button/link                link = Competition information and search
     And the user clicks the button/link                 link = Edit
