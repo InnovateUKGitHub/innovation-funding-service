@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
+import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -47,6 +48,9 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
+    @Autowired
+    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
+
     @Value("${ifs.subsidy.control.northern.ireland.enabled:false}")
     private boolean northernIrelandSubsidyControlToggle;
 
@@ -57,7 +61,9 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
                 question,
                 data.getCompetition().getFundingRules() == FundingRules.SUBSIDY_CONTROL && northernIrelandSubsidyControlToggle,
                 getPartners(data.getApplication(), data.getCompetition(), question),
-                termsAndConditionsTerminology(data.getCompetition())
+                termsAndConditionsTerminology(data.getCompetition()),
+                data.getCompetition().getTermsAndConditions().isThirdPartyProcurement(),
+                competitionThirdPartyConfigRestService.findOneByCompetitionId(data.getCompetition().getId()).getSuccess().getTermsAndConditionsLabel()
         );
     }
 
