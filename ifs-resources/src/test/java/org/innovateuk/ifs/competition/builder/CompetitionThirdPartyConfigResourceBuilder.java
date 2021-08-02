@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class CompetitionThirdPartyConfigResourceBuilder extends BaseBuilder<CompetitionThirdPartyConfigResource, CompetitionThirdPartyConfigResourceBuilder> {
 
@@ -21,7 +20,7 @@ public class CompetitionThirdPartyConfigResourceBuilder extends BaseBuilder<Comp
 
     @Override
     protected CompetitionThirdPartyConfigResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionThirdPartyConfigResource>> actions) {
-        return new CompetitionThirdPartyConfigResourceBuilder(emptyList()).with(uniqueIds());
+        return new CompetitionThirdPartyConfigResourceBuilder(actions);
     }
 
     @Override
