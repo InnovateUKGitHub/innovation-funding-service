@@ -81,3 +81,45 @@ k8s_rebuild_db() {
   k8s_wait data-service
   k8s_sync_ldap
 }
+
+k8s_clean() {
+  kubectl delete deployment --all
+  kubectl delete svc application-svc
+  kubectl delete svc assessment-svc
+  kubectl delete svc cache-provider
+  kubectl delete svc competition-mgt-svc
+  kubectl delete svc data-service
+  kubectl delete svc data-service-alerts
+  kubectl delete svc finance-data-service
+  kubectl delete svc front-door-svc
+  kubectl delete svc idp
+  kubectl delete svc ifs-database
+  kubectl delete svc ldap
+  kubectl delete svc registration-svc
+  kubectl delete svc project-setup-mgt-svc
+  kubectl delete svc project-setup-svc
+  kubectl delete svc shib
+  kubectl delete svc sil-stub
+  kubectl delete svc survey-data-svc
+  kubectl delete svc survey-svc
+  kubectl delete configmap cache-config
+  kubectl delete configmap data-service-config
+  kubectl delete configmap db-config
+  kubectl delete configmap docusign-config
+  kubectl delete configmap feature-toggle-config
+  kubectl delete configmap finance-data-service-config
+  kubectl delete configmap flyway-config
+  kubectl delete configmap idp-config
+  kubectl delete configmap ldap-config
+  kubectl delete configmap  mysql-initdb-config
+  kubectl delete configmap  new-relic-config
+  kubectl delete configmap  performance-config
+  kubectl delete configmap  shibboleth-config
+  kubectl delete configmap  spring-profile-env
+  kubectl delete configmap  survey-data-service-config
+  kubectl delete configmap  web-config
+  kubectl delete secrets idp-keys-secrets
+  kubectl delete secrets ldap-keys-secrets
+  kubectl delete secrets sp-secrets
+  kubectl delete secrets sp-keys-secrets
+}
