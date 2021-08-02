@@ -108,7 +108,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     private SetupSectionStatus setupSectionStatus;
 
     @Mock
-    private AsyncFuturesGenerator futuresGeneratorMock;
+    private AsyncFuturesGenerator futuresGenerator;
 
     @Mock
     private NavigationUtils navigationUtils;
@@ -154,7 +154,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     private RestResult<MonitoringOfficerResource> monitoringOfficerFoundResult = restSuccess(monitoringOfficer);
     private RestResult<MonitoringOfficerResource> monitoringOfficerNotFoundResult = restFailure(HttpStatus.NOT_FOUND);
 
-    private UserResource loggedInUser = newUserResource().withId(1L)
+    private UserResource loggedInUser = newUserResource()
+            .withId(1L)
             .withFirstName("James")
             .withLastName("Watts")
             .withEmail("james.watts@email.co.uk")
@@ -172,7 +173,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
     @Before
     public void setupExpectations() {
-        setupAsyncExpectations(futuresGeneratorMock);
+        setupAsyncExpectations(futuresGenerator);
     }
 
     @Test
@@ -327,6 +328,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     @Test
     public void viewProjectSetupStatusWithProjectDetailsSubmittedAndFinanceContactSubmittedAsFinanceContact() {
 
+        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = newCompetitionThirdPartyConfigResource().build();
+
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withBankDetailsStatus(COMPLETE)
@@ -376,6 +379,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         when(projectService.isProjectManager(loggedInUser.getId(), project.getId())).thenReturn(false);
         when(projectService.isProjectFinanceContact(loggedInUser.getId(), project.getId())).thenReturn(true);
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
         setupCompetitionPostAwardServiceExpectations(project, PostAwardService.IFS_POST_AWARD);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
@@ -1520,6 +1524,9 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     }
 
     private SetupStatusViewModel performDocumentsForMOViewTest(DocumentStatus document1Status, DocumentStatus document2Status) {
+
+        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = newCompetitionThirdPartyConfigResource().build();
+
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
@@ -1556,6 +1563,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectRestService.getOrganisationByProjectAndUser(project.getId(), monitoringOfficer.getId())).thenReturn(restSuccess(newOrganisationResource().build()));
         when(statusService.getProjectTeamStatus(eq(project.getId()), any(Optional.class))).thenReturn(teamStatus);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(organisationResource);
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         when(monitoringOfficerService.findMonitoringOfficerForProject(project.getId())).thenReturn(restSuccess(monitoringOfficer));
         setupCompetitionPostAwardServiceExpectations(project, PostAwardService.CONNECT);
@@ -1614,7 +1622,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
     @Test
     public void viewFinanceChecksStatusForMo() {
-
         CompetitionResource sbriCompetition = newCompetitionResource()
                 .withFundingType(FundingType.PROCUREMENT)
                 .withProjectDocument(projectDocumentConfig)
@@ -1641,7 +1648,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus, true, sbriCompetition);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-
         assertTrue(viewModel.isMonitoringOfficer());
 
         Optional<SetupStatusStageViewModel> stageViewModel = viewModel.getStages().stream()
@@ -1673,6 +1679,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withRole(PROJECT_MANAGER)
                 .build();
 
+        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = newCompetitionThirdPartyConfigResource().build();
+
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(organisationResource.getId());
         when(projectRestService.existsOnApplication(project.getId(), organisationResource.getId())).thenReturn(restSuccess(true));
@@ -1681,6 +1689,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(monitoringOfficerService.isMonitoringOfficerOnProject(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(isUserMoOnProject));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(organisationResource);
         when(projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource ));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().
                 withUser(loggedInUser.getId())
                 .withOrganisation(organisationResource.getId())
