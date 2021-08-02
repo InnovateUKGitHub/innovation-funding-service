@@ -40,5 +40,4 @@ public class CompetitionThirdPartyConfigResourceBuilder extends BaseBuilder<Comp
     public CompetitionThirdPartyConfigResourceBuilder withProjectCostGuidanceUrl(String... projectCostGuidanceUrl) {
         return withArraySetFieldByReflection("projectCostGuidanceUrl", projectCostGuidanceUrl);
     }
-
 }

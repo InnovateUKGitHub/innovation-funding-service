@@ -55,7 +55,7 @@ public class ApplicationTermsModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         QuestionResource question = questionRestService.findById(termsQuestionId).getSuccess();
         boolean additionalTerms = competition.getCompetitionTerms() != null;
-        CompetitionThirdPartyConfigResource thirdPartyConfigResource = competitionThirdPartyConfigResource(competition.getId());
+        CompetitionThirdPartyConfigResource thirdPartyConfigResource = getCompetitionThirdPartyConfigResource(competition.getId());
 
         if (organisationId != null && !readOnly && !competition.isExpressionOfInterest())  {
             // is the current user a member of this application?
@@ -164,7 +164,7 @@ public class ApplicationTermsModelPopulator {
                 .allMatch(completedSections -> completedSections.contains(termsAndConditionsSectionId));
     }
 
-    private CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource(long competitionId) {
+    private CompetitionThirdPartyConfigResource getCompetitionThirdPartyConfigResource(long competitionId) {
         return competitionThirdPartyConfigRestService.findOneByCompetitionId(competitionId).getSuccess();
     }
 }
