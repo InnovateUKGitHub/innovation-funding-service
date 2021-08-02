@@ -75,7 +75,7 @@ public class CompetitionTermsViewModel {
     public String toString() {
         return "CompetitionTermsViewModel{" +
                 "competitionId=" + competitionId +
-                ",termsAndConditions=" + termsAndConditions.toString() +
+                ",termsAndConditions=" + (termsAndConditions == null ? null : termsAndConditions.toString()) +
                 ",termsAndConditionsLabel=" + termsAndConditionsLabel +
                 ",termsAndConditionsGuidance=" + termsAndConditionsGuidance +
                 '}';

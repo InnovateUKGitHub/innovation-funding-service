@@ -40,6 +40,7 @@ import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
+import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.*;
@@ -85,6 +86,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionThirdPartyConfigResourceBuilder.newCompetitionThirdPartyConfigResource;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
@@ -101,10 +103,11 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMVCTest<AssessmentOverviewController> {
+public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVCTest<AssessmentOverviewController> {
 
     private static final long APPLICATION_ID = 1L;
 
@@ -117,6 +120,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
     private QuestionResource termsAndConditionsQuestion;
     private CompetitionResource competition;
     private AssessmentResource assessment;
+    private CompetitionThirdPartyConfigResource thirdPartyConfig;
 
     @Mock
     private AssessmentService assessmentService;
@@ -132,6 +136,9 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
     @Mock
     private AssessmentRestService assessmentRestService;
+
+    @Mock
+    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
 
     @Spy
     @InjectMocks
@@ -288,6 +295,15 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         List<AssessorFormInputResponseResource> assessorResponses = combineLists(combineLists(assessorResponsesScope,
                 assessorResponsesBusinessOpportunity), assessorResponsesPotentialMarket);
 
+        String thirdPartyTncLabel = "3rd party tnc label";
+        String thirdPartyTncGuidance = "3rd party tnc guidance";
+        String thirdPartyCostGuidanceUrl = "https://www.google.com";
+        thirdPartyConfig = newCompetitionThirdPartyConfigResource()
+                .withTermsAndConditionsLabel(thirdPartyTncLabel)
+                .withTermsAndConditionsGuidance(thirdPartyTncGuidance)
+                .withProjectCostGuidanceUrl(thirdPartyCostGuidanceUrl)
+                .build();
+
         when(assessmentService.getById(assessment.getId())).thenReturn(assessment);
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(sectionRestService.getByCompetitionIdVisibleForAssessment(competition.getId())).thenReturn(restSuccess(sections));
@@ -295,6 +311,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         when(formInputRestService.getByCompetitionIdAndScope(competition.getId(), ASSESSMENT)).thenReturn(restSuccess(assessorFormInputs));
         when(assessorFormInputResponseRestService.getAllAssessorFormInputResponses(assessment.getId())).thenReturn(restSuccess(assessorResponses));
         when(formInputResponseRestService.getResponsesByApplicationId(APPLICATION_ID)).thenReturn(restSuccess(applicantResponses));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(thirdPartyConfig));
     }
 
     @Test
@@ -413,7 +430,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 emptyList(),
                 false,
                 false,
-                new CompetitionThirdPartyConfigResource()
+                thirdPartyConfig
         );
 
         ApplicationResource application = newApplicationResource().build();

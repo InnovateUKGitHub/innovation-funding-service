@@ -2,8 +2,10 @@ package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
+import org.innovateuk.ifs.competition.populator.CompetitionTermsAndConditionsPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -16,10 +18,12 @@ import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionThirdPartyConfigResourceBuilder.newCompetitionThirdPartyConfigResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 public class CompetitionControllerTest extends BaseControllerMockMVCTest<CompetitionController> {
 
@@ -30,6 +34,9 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
 
     @Mock
     private CompetitionOverviewPopulator overviewPopulator;
+
+    @Mock
+    private CompetitionTermsAndConditionsPopulator competitionTermsAndConditionsPopulator;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -83,14 +90,32 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
                 .withTermsAndConditions(termsAndConditions)
                 .build();
 
-        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
+        String thirdPartyTncLabel = "3rd party tnc label";
+        String thirdPartyTncGuidance = "3rd party tnc guidance";
+        String thirdPartyCostGuidanceUrl = "https://www.google.com";
+        final CompetitionThirdPartyConfigResource thirdPartyConfig = newCompetitionThirdPartyConfigResource()
+                .withTermsAndConditionsLabel(thirdPartyTncLabel)
+                .withTermsAndConditionsGuidance(thirdPartyTncGuidance)
+                .withProjectCostGuidanceUrl(thirdPartyCostGuidanceUrl)
+                .build();
+
+        CompetitionTermsViewModel viewModel = new CompetitionTermsViewModel(
+                competitionResource.getId(),
+                termsAndConditions,
+                thirdPartyTncLabel,
+                thirdPartyTncGuidance);
+
+        //when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
+        //when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competitionResource.getId())).thenReturn(restSuccess(thirdPartyConfig));
+        when(competitionTermsAndConditionsPopulator.populate(competitionResource.getId())).thenReturn(viewModel);
 
         mockMvc.perform(get("/competition/{id}/info/terms-and-conditions", competitionResource.getId()))
+                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("model", new CompetitionTermsViewModel(competitionResource.getId())))
+                .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name("competition/info/special-terms-and-conditions"));
 
-        verify(competitionRestService, only()).getCompetitionById(competitionResource.getId());
+        //verify(competitionRestService, only()).getCompetitionById(competitionResource.getId());
     }
 
     @Test
