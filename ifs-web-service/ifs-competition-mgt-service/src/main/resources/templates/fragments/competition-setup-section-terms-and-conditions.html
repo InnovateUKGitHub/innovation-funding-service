@@ -61,7 +61,7 @@
                 Terms and conditions</a>
             </p>
             <th:block th:if="${model.currentTermsAndConditions.thirdPartyProcurement}" >
-            <p class="govuk-body">This is the Project Costs Guidance link applicants will see in the Projects Costs section.</p>
+            <p class="govuk-body">This is the project costs guidance link applicants will see in the project costs section.</p>
 
             <p class="govuk-body"><a th:text="|${model.projectCostGuidanceLink}  (opens in a new window)|"
                                      th:href="@{${model.projectCostGuidanceLink}}"
@@ -104,7 +104,7 @@
                 <div id="procurement-thirdparty-label" class="govuk-form-group govuk-!-margin-top-6"
                      th:classappend="${#fields.hasErrors('thirdPartyTermsAndConditionsLabel')} ? 'govuk-form-group--error'">
                      <label class="govuk-label govuk-label--s" for="thirdPartyTermsAndConditionsLabel">
-                        Label to replace Terms and Conditions
+                        Label to replace terms and conditions
                      </label>
                     <span class="govuk-hint">Appears against the applicant terms and conditions.</span>
                         <th:block th:if="${#fields.hasErrors('thirdPartyTermsAndConditionsLabel')}">
@@ -121,7 +121,7 @@
 
                 <div id="agreement-content" div class="govuk-form-group" th:classappend="${#fields.hasErrors('thirdPartyTermsAndConditionsText')} ? 'govuk-form-group--error'">
                    <label class="govuk-label govuk-label--s" for="thirdPartyTermsAndConditionsText">
-                      Description text for T&C page
+                      Description text for terms and conditions page
                    </label>
                    <span class="govuk-hint"> Appears against the applicant terms and conditions.</span>
                    <th:block th:if="${#fields.hasErrors('thirdPartyTermsAndConditionsText')}">
@@ -140,7 +140,7 @@
 
                 <div id="project-cost-guidance-url" class="govuk-form-group" th:classappend="${#fields.hasErrors('projectCostGuidanceLink')} ? 'govuk-form-group--error'">
                    <label class="govuk-label govuk-label--s" for="projectCostGuidanceLink">
-                      Project Costs Guidance link
+                      Project costs guidance link
                    </label>
                    <span class="govuk-hint">Appears against the acceptance of an applicant project costs.</span>
                    <th:block th:if="${#fields.hasErrors('projectCostGuidanceLink')}">

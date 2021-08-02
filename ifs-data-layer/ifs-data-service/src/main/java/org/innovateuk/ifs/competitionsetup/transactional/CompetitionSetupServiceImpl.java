@@ -422,7 +422,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<Void> deleteCompetitionThirdPartyConfigData(long competitionId) {
         return getCompetition(competitionId).andOnSuccess(competition ->
                 resetThirdPartyConfigData(competition).andOnSuccess(() -> {
-                    competition.setCompetitionTerms(null);
                     competitionRepository.save(competition);
                     return serviceSuccess();
                 }));
