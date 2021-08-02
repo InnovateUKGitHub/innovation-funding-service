@@ -15,8 +15,8 @@ public class CompetitionThirdPartyConfigResourceBuilder extends BaseBuilder<Comp
         super(newMultiActions);
     }
 
-    public static CompetitionThirdPartyConfigResourceBuilder newCompetitionThirdPartyConfigResource(List<BiConsumer<Integer, CompetitionThirdPartyConfigResource>> actions) {
-        return new CompetitionThirdPartyConfigResourceBuilder(actions);
+    public static CompetitionThirdPartyConfigResourceBuilder newCompetitionThirdPartyConfigResource() {
+        return new CompetitionThirdPartyConfigResourceBuilder(emptyList());
     }
 
     @Override
@@ -27,10 +27,6 @@ public class CompetitionThirdPartyConfigResourceBuilder extends BaseBuilder<Comp
     @Override
     protected CompetitionThirdPartyConfigResource createInitial() {
         return new CompetitionThirdPartyConfigResource();
-    }
-
-    public static CompetitionThirdPartyConfigResourceBuilder newCompetitionThirdPartyConfigResource() {
-        return new CompetitionThirdPartyConfigResourceBuilder(emptyList()).with(uniqueIds());
     }
 
     public CompetitionThirdPartyConfigResourceBuilder withTermsAndConditionsLabel(String... termsAndConditionsLabel) {
