@@ -247,6 +247,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ApplicationOrganisationQuestionnaireResponseRepository applicationOrganisationQuestionnaireResponseRepository;
     protected QuestionnaireResponseRepository questionnaireResponseRepository;
     protected CompetitionThirdPartyConfigService competitionThirdPartyConfigService;
+    protected GrantTermsAndConditionsRepository termsAndConditionsRepository;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -384,6 +385,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         applicationOrganisationQuestionnaireResponseRepository = serviceLocator.getBean(ApplicationOrganisationQuestionnaireResponseRepository.class);
         questionnaireResponseRepository = serviceLocator.getBean(QuestionnaireResponseRepository.class);
         competitionThirdPartyConfigService = serviceLocator.getBean(CompetitionThirdPartyConfigService.class);
+        termsAndConditionsRepository = serviceLocator.getBean(GrantTermsAndConditionsRepository.class);
     }
 
     protected UserResource compAdmin() {

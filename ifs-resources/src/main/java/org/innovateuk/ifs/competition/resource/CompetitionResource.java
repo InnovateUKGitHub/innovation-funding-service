@@ -114,6 +114,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean alwaysOpen;
     private boolean subsidyControl;
     private boolean hasBusinessAndFinancialInformationQuestion;
+    private CompetitionThirdPartyConfigResource thirdPartyConfig;
 
     public CompetitionResource() {
     }
@@ -851,6 +852,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.subsidyControl = subsidyControl;
     }
 
+    public CompetitionThirdPartyConfigResource getThirdPartyConfig() {
+        return thirdPartyConfig;
+    }
+
+    public void setThirdPartyConfig(CompetitionThirdPartyConfigResource thirdPartyConfig) {
+        this.thirdPartyConfig = thirdPartyConfig;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -925,6 +934,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(alwaysOpen, that.alwaysOpen)
                 .append(subsidyControl, that.subsidyControl)
                 .append(assessmentPeriods, that.assessmentPeriods)
+                .append(thirdPartyConfig, that.thirdPartyConfig)
                 .isEquals();
     }
 
@@ -992,6 +1002,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(alwaysOpen)
                 .append(subsidyControl)
                 .append(assessmentPeriods)
+                .append(thirdPartyConfig)
                 .toHashCode();
     }
 
