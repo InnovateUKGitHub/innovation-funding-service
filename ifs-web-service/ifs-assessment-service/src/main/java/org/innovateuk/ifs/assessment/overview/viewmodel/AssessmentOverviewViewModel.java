@@ -26,6 +26,7 @@ public class AssessmentOverviewViewModel {
     private final String termsAndConditionsTerminology;
     private final List<TermsAndConditionsRowReadOnlyViewModel> termsAndConditionsRows;
     private final boolean dualTermsAndConditions;
+    private final boolean thirdPartyProcurement;
     private final CompetitionThirdPartyConfigResource thirdPartyConfig;
 
     public AssessmentOverviewViewModel(long assessmentId,
@@ -40,6 +41,7 @@ public class AssessmentOverviewViewModel {
                                        String termsAndConditionsTerminology,
                                        List<TermsAndConditionsRowReadOnlyViewModel> termsAndConditionsRows,
                                        boolean dualTermsAndConditions,
+                                       boolean thirdPartyProcurement,
                                        CompetitionThirdPartyConfigResource thirdPartyConfig) {
         this.assessmentId = assessmentId;
         this.applicationId = applicationId;
@@ -53,6 +55,7 @@ public class AssessmentOverviewViewModel {
         this.termsAndConditionsTerminology = termsAndConditionsTerminology;
         this.termsAndConditionsRows = termsAndConditionsRows;
         this.dualTermsAndConditions = dualTermsAndConditions;
+        this.thirdPartyProcurement = thirdPartyProcurement;
         this.thirdPartyConfig = thirdPartyConfig;
     }
 
@@ -103,6 +106,8 @@ public class AssessmentOverviewViewModel {
     public boolean isDualTermsAndConditions() {
         return dualTermsAndConditions;
     }
+
+    public boolean isThirdPartyProcurement() { return thirdPartyProcurement; }
 
     public CompetitionThirdPartyConfigResource getThirdPartyConfig() { return thirdPartyConfig; }
 

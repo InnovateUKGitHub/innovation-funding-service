@@ -39,6 +39,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.*;
@@ -176,8 +177,11 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
     @Before
     public void setup() {
         super.setup();
-
+        String termsTemplate = "terms-template";
+        GrantTermsAndConditionsResource grantTermsAndConditions =
+                new GrantTermsAndConditionsResource("name", termsTemplate, 1);
         competition = newCompetitionResource()
+                .withTermsAndConditions(grantTermsAndConditions)
                 .withAssessorAcceptsDate(ZonedDateTime.now().minusDays(2))
                 .withAssessorDeadlineDate(ZonedDateTime.now().plusDays(4))
                 .withName("Super creative competition name")
@@ -407,6 +411,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 expectedAppendices,
                 "Award terms and conditions",
                 emptyList(),
+                false,
                 false,
                 new CompetitionThirdPartyConfigResource()
         );

@@ -24,6 +24,7 @@ public class ApplicationOverviewViewModel implements BaseAnalyticsViewModel {
     private final Set<ApplicationOverviewSectionViewModel> sections;
     private final Boolean reopened;
     private final ZonedDateTime reopenedDate;
+    private final boolean thirdPartyProcurement;
     private final CompetitionThirdPartyConfigResource thirdPartyConfig;
 
     public ApplicationOverviewViewModel(ProcessRoleResource processRole, CompetitionResource competition,
@@ -36,6 +37,7 @@ public class ApplicationOverviewViewModel implements BaseAnalyticsViewModel {
         this.sections = sections;
         this.reopened = reopened;
         this.reopenedDate = reopenedDate;
+        this.thirdPartyProcurement = competition.getTermsAndConditions().isThirdPartyProcurement();
         this.thirdPartyConfig = thirdPartyConfig;
     }
 
@@ -64,6 +66,8 @@ public class ApplicationOverviewViewModel implements BaseAnalyticsViewModel {
     public Set<ApplicationOverviewSectionViewModel> getSections() {
         return sections;
     }
+
+    public boolean isThirdPartyProcurement() { return thirdPartyProcurement; }
 
     public CompetitionThirdPartyConfigResource getThirdPartyConfig() { return thirdPartyConfig; }
 

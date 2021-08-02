@@ -121,6 +121,7 @@ public class AssessmentOverviewModelPopulator {
                 termsAndConditionsTerminology,
                 getTermsAndConditionsRows(questions, application, competition),
                 competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && competition.getOtherFundingRulesTermsAndConditions() != null && northernIrelandSubsidyControlToggle,
+                competition.getTermsAndConditions().isThirdPartyProcurement(),
                 thirdPartyConfig
         );
     }

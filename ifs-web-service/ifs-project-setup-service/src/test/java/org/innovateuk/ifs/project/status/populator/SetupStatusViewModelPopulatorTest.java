@@ -897,6 +897,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         when(projectService.isProjectManager(loggedInUser.getId(), project.getId())).thenReturn(true);
         when(projectService.isProjectFinanceContact(loggedInUser.getId(), project.getId())).thenReturn(true);
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(thirdPartyConfig));
         setupCompetitionPostAwardServiceExpectations(project, PostAwardService.IFS_POST_AWARD);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
@@ -1622,7 +1623,11 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
     @Test
     public void viewFinanceChecksStatusForMo() {
+        String termsTemplate = "terms-template";
+        GrantTermsAndConditionsResource grantTermsAndConditions =
+                new GrantTermsAndConditionsResource("name", termsTemplate, 1);
         CompetitionResource sbriCompetition = newCompetitionResource()
+                .withTermsAndConditions(grantTermsAndConditions)
                 .withFundingType(FundingType.PROCUREMENT)
                 .withProjectDocument(projectDocumentConfig)
                 .withProjectSetupStages(new ArrayList<>(EnumSet.allOf(ProjectSetupStage.class)))
@@ -1679,8 +1684,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withRole(PROJECT_MANAGER)
                 .build();
 
-        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = newCompetitionThirdPartyConfigResource().build();
-
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(organisationResource.getId());
         when(projectRestService.existsOnApplication(project.getId(), organisationResource.getId())).thenReturn(restSuccess(true));
@@ -1689,7 +1692,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(monitoringOfficerService.isMonitoringOfficerOnProject(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(isUserMoOnProject));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(organisationResource);
         when(projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
-        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource ));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competitionResource.getId())).thenReturn(restSuccess(thirdPartyConfig));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().
                 withUser(loggedInUser.getId())
                 .withOrganisation(organisationResource.getId())
@@ -1702,7 +1705,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         when(projectService.isProjectManager(loggedInUser.getId(), project.getId())).thenReturn(false);
         when(projectService.isProjectFinanceContact(loggedInUser.getId(), project.getId())).thenReturn(false);
-        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(thirdPartyConfig));
 
         setupCompetitionPostAwardServiceExpectations(project, PostAwardService.CONNECT);
     }

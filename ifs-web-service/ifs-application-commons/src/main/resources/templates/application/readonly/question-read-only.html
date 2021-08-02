@@ -337,7 +337,7 @@
     </th:block>
 </th:block>
 
-<th:block th:fragment="terms-and-conditions-partner-table (applicationId, questionId, partners, includeFundingRules, displayCompleteStatus, termsAndConditionsTerminology)">
+<th:block th:fragment="terms-and-conditions-partner-table (applicationId, questionId, partners, includeFundingRules, displayCompleteStatus, thirdPartyProcurement, termsAndConditionsTerminology)">
     <!--/*@thymesVar id="applicationId" type="java.lang.Long"*/-->
     <!--/*@thymesVar id="questionId" type="java.lang.Long"*/-->
     <!--/*@thymesVar id="partners" type="java.util.List"*/-->
@@ -351,7 +351,8 @@
                 th:if="${includeFundingRules}">Funding rules</th>
             <th scope="col" class="govuk-table__header">
                 <!-- Terms and conditions -->
-                <th:block th:text="${#strings.capitalize(termsAndConditionsTerminology)}"></th:block>
+                <th:block th:unless="${thirdPartyProcurement}" th:text="${'Terms and conditions'}"></th:block>
+                <th:block th:if="${thirdPartyProcurement}" th:text="${#strings.capitalize(termsAndConditionsTerminology)}"></th:block>
                 <!-- #IFS10084.7 -->
             </th>
             <th scope="col" class="govuk-table__header"
@@ -400,7 +401,7 @@
                 <!-- #IFS10084.15 -->
             </div>
         </th:block>
-        <th:block th:insert="this :: terms-and-conditions-partner-table (${model.applicationId}, ${model.questionId}, ${model.partners}, ${model.includeFundingRules}, ${model.displayCompleteStatus}, ${model.termsAndConditionsTerminology})" />
+        <th:block th:insert="this :: terms-and-conditions-partner-table (${model.applicationId}, ${model.questionId}, ${model.partners}, ${model.includeFundingRules}, ${model.displayCompleteStatus}, ${model.thirdPartyProcurement}, ${model.termsAndConditionsTerminology})" />
     </div>
 </th:block>
 

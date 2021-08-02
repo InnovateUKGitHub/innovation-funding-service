@@ -35,9 +35,9 @@
                 </div>
 
                 <section th:each="section,iterStat : ${model.sections}">
-                    <h2 th:unless="${section.termsAndConditions}"
+                    <h2 th:if="${!section.termsAndConditions || !model.thirdPartyProcurement}"
                         th:text="${section.name}" th:class="${iterStat.first} ? 'govuk-heading-m': 'govuk-heading-m govuk-!-margin-bottom-0'"/>
-                    <h2 th:if="${section.termsAndConditions}"
+                    <h2 th:if="${section.termsAndConditions && model.thirdPartyProcurement}"
                         th:text="${#strings.capitalize(model.termsAndConditionsTerminology)}"
                         th:class="${iterStat.first} ? 'govuk-heading-m': 'govuk-heading-m govuk-!-margin-bottom-0'"/>
                     <!-- #IFS10084.1 -->
@@ -73,7 +73,7 @@
                                 <!-- #IFS10084.2 -->
                             </div>
                             <div>
-                                <th:block th:insert="application/readonly/question-read-only :: terms-and-conditions-partner-table(${model.applicationId}, ${section.questions.get(0).questionId}, ${model.termsAndConditionsRows}, ${model.dualTermsAndConditions}, ${false}, ${model.thirdPartyConfig.termsAndConditionsLabel})" />
+                                <th:block th:insert="application/readonly/question-read-only :: terms-and-conditions-partner-table(${model.applicationId}, ${section.questions.get(0).questionId}, ${model.termsAndConditionsRows}, ${model.dualTermsAndConditions}, ${false}, ${model.thirdPartyProcurement}, ${model.thirdPartyConfig.termsAndConditionsLabel})" />
                             </div>
                         </li>
                     </ul>

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -92,10 +93,12 @@ public class ApplicationOverviewModelPopulatorTest {
 
     @Test
     public void populateModel() {
-
+        String termsTemplate = "terms-template";
+        GrantTermsAndConditionsResource grantTermsAndConditions =
+                new GrantTermsAndConditionsResource("name", termsTemplate, 1);
         CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = new CompetitionThirdPartyConfigResource();
-
         CompetitionResource competition = newCompetitionResource()
+                .withTermsAndConditions(grantTermsAndConditions)
                 .withCollaborationLevel(SINGLE)
                 .build();
         ApplicationResource application = newApplicationResource()
