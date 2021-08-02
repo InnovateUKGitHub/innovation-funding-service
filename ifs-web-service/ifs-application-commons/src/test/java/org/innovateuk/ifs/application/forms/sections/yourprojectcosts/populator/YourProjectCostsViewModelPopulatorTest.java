@@ -38,10 +38,12 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.resource.ApplicationState.OPENED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionThirdPartyConfigResourceBuilder.newCompetitionThirdPartyConfigResource;
 import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -929,5 +931,67 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertFalse(viewModel.getFecModelEnabled());
         assertTrue(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
+    }
+
+    @Test
+    public void populate_thirdPartyApplication() {
+        CompetitionThirdPartyConfigResource thirdPartyConfigResource = newCompetitionThirdPartyConfigResource()
+                .withTermsAndConditionsLabel("Test label")
+                .withTermsAndConditionsGuidance("Test guidance")
+                .withProjectCostGuidanceUrl("https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance")
+                .build();
+        GrantTermsAndConditionsResource grantTermsAndConditionsResource = newGrantTermsAndConditionsResource()
+                .withTemplate("third-party-terms-and-conditions")
+                .withName("Procurement Third Party")
+                .build();
+        CompetitionResource thirdPartyCompetition = newCompetitionResource()
+                .withCompetitionStatus(OPEN)
+                .withCompetitionThirdPartyConfig(thirdPartyConfigResource)
+                .withName("Third party competition")
+                .withTermsAndConditions(grantTermsAndConditionsResource)
+                .build();
+        OrganisationResource organisation = newOrganisationResource()
+                .withOrganisationNumber("88L")
+                .withOrganisationType(1L)
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(thirdPartyCompetition.getId())
+                .withLeadOrganisationId(organisation.getId())
+                .withApplicationState(OPENED)
+                .withName("Third party competition application")
+                .withCollaborativeProject(false)
+                .build();
+        SectionResource section = newSectionResource()
+                .withId(SECTION_ID)
+                .withCompetition(thirdPartyCompetition.getId())
+                .build();
+        UserResource user = newUserResource()
+                .withRoleGlobal(Role.APPLICANT)
+                .build();
+        ApplicantSectionResource applicantSectionResource = newApplicantSectionResource()
+                .withCurrentUser(user)
+                .withApplication(application)
+                .withSection(section)
+                .build();
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
+                .withApplication(application.getId())
+                .build();
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(thirdPartyCompetition.getId())).thenReturn(restSuccess(thirdPartyCompetition));
+        when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
+        when(applicantRestService.getSection(user.getId(), application.getId(), section.getId())).thenReturn(applicantSectionResource);
+        when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinanceResource));
+        when(sectionService.getCompleted(application.getId(), organisation.getId())).thenReturn(Arrays.asList(SECTION_ID));
+        when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
+                .withOrganisation(organisation.getId())
+                .build()));
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinanceResource));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(thirdPartyCompetition.getId())).thenReturn(restSuccess(thirdPartyConfigResource));
+
+        YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
+
+        assertEquals(thirdPartyConfigResource.getProjectCostGuidanceUrl(), viewModel.getThirdPartyProjectCostGuidanceLink());
+        assertEquals(thirdPartyCompetition.getId(), viewModel.getCompetitionId());
+        assertFalse(viewModel.isProcurementCompetition());
     }
 }

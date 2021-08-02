@@ -20,7 +20,6 @@ import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -84,9 +83,6 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
 
     @Autowired
     private SupporterAssignmentRestService supporterAssignmentRestService;
-
-    @Autowired
-    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
 
     private Map<QuestionSetupType, QuestionReadOnlyViewModelPopulator<?>> populatorMap;
 
