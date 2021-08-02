@@ -314,7 +314,7 @@ public class CompetitionSetupTermsAndConditionsController {
         if (competition.getCompetitionThirdPartyConfigResource() == null) {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsLabel", "Please enter a label to replace terms and conditions."));
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsText", "Please enter a description text for terms and conditions page."));
-            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "projectCostGuidanceLink", "Please enter a project cost guidance link."));
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "projectCostGuidanceLink", "Please enter a project costs guidance link."));
         } else {
             if (competition.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel().isEmpty()) {
                 bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsLabel", "Please enter a label to replace terms and conditions."));
@@ -323,7 +323,7 @@ public class CompetitionSetupTermsAndConditionsController {
                 bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsText", "Please enter a description text for terms and conditions page."));
             }
             if (competition.getCompetitionThirdPartyConfigResource().getProjectCostGuidanceUrl().isEmpty()) {
-                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "projectCostGuidanceLink", "Please enter a project cost guidance link."));
+                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "projectCostGuidanceLink", "Please enter a project costs guidance link."));
             }
 
         }
