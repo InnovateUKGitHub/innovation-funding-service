@@ -344,11 +344,17 @@ public class CompetitionSetupTermsAndConditionsController {
 
     private CompetitionResource deleteDataInTermsSetupswitch(boolean isThirdPartyProcurement, boolean isProcurement, CompetitionResource competition, BindingResult bindingResult) {
         if (competition.getCompetitionTerms() != null)  {
-            if (isProcurement && competition.getCompetitionThirdPartyConfigResource() != null
-                    && competition.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel() != null) {
-                 competitionSetupRestService.deleteCompetitionThirdPartyConfigData(competition.getId());
+            boolean isProcurementSaved = false;
+            boolean isThirdPartyProcurementSaved = false;
+            if (competition.getTermsAndConditions() != null) {
+               isProcurementSaved = competition.getTermsAndConditions().isProcurement();
+               isThirdPartyProcurementSaved = competition.getTermsAndConditions().isThirdPartyProcurement();
             }
-            if (isThirdPartyProcurement && bindingResult.hasErrors()) {
+            if (isThirdPartyProcurement && isProcurementSaved) {
+                competitionSetupRestService.deleteCompetitionTerms(competition.getId());
+            }
+            if (isProcurement && isThirdPartyProcurementSaved) {
+                competitionSetupRestService.deleteCompetitionThirdPartyConfigData(competition.getId());
                 competitionSetupRestService.deleteCompetitionTerms(competition.getId());
             }
             competition = competitionRestService.getCompetitionById(competition.getId()).getSuccess();
