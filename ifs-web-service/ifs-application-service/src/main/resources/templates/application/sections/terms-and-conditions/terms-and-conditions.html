@@ -36,7 +36,7 @@
             <th:block th:insert="fragments/layout :: main-content-end"/>
         </th:block>
         <th:block th:unless="${model.subsidyBasisRequiredButIncomplete}"
-                  th:with="thirdPartyLabel=${#strings.capitalize(#strings.toLowerCase(model.termsAndConditionsLabel))}">
+                  th:with="thirdPartyLabel=${model.termsAndConditionsLabel}">
             <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
                  aria-labelledby="error-summary-title"
                  role="alert"
