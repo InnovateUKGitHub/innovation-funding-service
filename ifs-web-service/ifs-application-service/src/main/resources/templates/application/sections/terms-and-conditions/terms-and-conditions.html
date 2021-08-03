@@ -105,7 +105,7 @@
                 </th:block>
                 <div id="terms-accepted" class="form-footer govuk-body govuk-!-margin-bottom-6" th:if="${model.termsAccepted.isPresent() ? model.termsAccepted.get() : false}">
                     <div class="form-footer__actions">
-                        <span th:unless="${model.isThirdPartyProcurementCompetition}" th:text="Terms and conditions accepted"></span>
+                        <span th:unless="${model.isThirdPartyProcurementCompetition}" th:text="|Terms and conditions accepted|"></span>
                         <span th:if="${model.isThirdPartyProcurementCompetition}" th:text="|${thirdPartyLabel} accepted|"></span>
                         <th:block th:unless="${model.migratedTerms}">
                             at <span th:text="${#strings.toLowerCase(#temporals.format(model.termsAcceptedOn.get(), 'h:mma'))}"> 6:10pm</span>
