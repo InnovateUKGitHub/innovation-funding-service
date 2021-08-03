@@ -36,3 +36,4 @@ resources:
 
 patchesStrategicMerge:
   - auth/registration-service/registration-deployment.yml
+  - sil-stub/sil-stub-deployment.yml
