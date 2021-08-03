@@ -22,7 +22,7 @@ public class GrantTermsAndConditionsResource extends VersionedTemplateResource {
     }
 
     @JsonIgnore
-    public boolean isThirdPartyProcurement() {
+    public boolean isProcurementThirdParty() {
         return name.equals(PROCUREMENT_THIRD_PARTY);
     }
 }

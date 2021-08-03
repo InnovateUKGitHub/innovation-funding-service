@@ -14,7 +14,7 @@ public class GrantTermsAndConditionsResourceTest {
                 .withName("Procurement Third Party")
                 .build();
 
-        assertTrue(grantTermsAndConditionsResource.isThirdPartyProcurement());
+        assertTrue(grantTermsAndConditionsResource.isProcurementThirdParty());
     }
 
     @Test
@@ -23,6 +23,6 @@ public class GrantTermsAndConditionsResourceTest {
                 .withName("Procurement")
                 .build();
 
-        assertFalse(grantTermsAndConditionsResource.isThirdPartyProcurement());
+        assertFalse(grantTermsAndConditionsResource.isProcurementThirdParty());
     }
 }

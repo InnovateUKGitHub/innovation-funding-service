@@ -48,7 +48,7 @@ public class CompetitionTermsViewModel {
     }
 
     public boolean isProcurementThirdParty() {
-        return termsAndConditions.isThirdPartyProcurement();
+        return termsAndConditions.isProcurementThirdParty();
     }
 
     @Override
