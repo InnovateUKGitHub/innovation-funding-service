@@ -598,7 +598,6 @@ the user should be able to see the read only view of question correctly
     the user should see the element  jQuery = dt:contains("Max word count") + dd:contains("500")
     the user should see the element  jQuery = dt:contains("Appendix uploads") + dd:contains("1")
     the user should see the element  jQuery = dt:contains("Accepted appendix file types")
-    the user should see the element  jQuery = dt:contains("Accepted appendix file types")
     the user should see the element  jQuery = dt:contains("Appendix guidance") + dd:contains("You may include an appendix of additional information to provide details of the specific expertise and track record of each project partner and each subcontractor.")
     the user should see the element  jQuery = dt:contains("Scored") + dd:contains("Yes")
     the user should see the element  jQuery = dt:contains("Out of") + dd:contains("10")
