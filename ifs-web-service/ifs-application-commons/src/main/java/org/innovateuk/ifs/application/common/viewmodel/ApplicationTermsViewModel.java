@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.common.viewmodel;
 
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 
 import java.time.ZonedDateTime;
 import java.util.Optional;
@@ -28,6 +29,7 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
     private final String termsAndConditionsLabel;
     private final String termsAndConditionsGuidance;
     private final boolean isThirdPartyProcurementCompetition;
+    private FileEntryResource competitionTerms;
 
     public ApplicationTermsViewModel(long applicationId,
                                      String applicationName,
@@ -46,7 +48,8 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
                                      String subsidyBasisQuestionUrl,
                                      String termsAndConditionsLabel,
                                      String termsAndConditionsGuidance,
-                                     boolean isThirdPartyProcurementCompetition) {
+                                     boolean isThirdPartyProcurementCompetition,
+                                     FileEntryResource competitionTerms) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.competitionName = competitionName;
@@ -66,6 +69,7 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
         this.termsAndConditionsLabel = termsAndConditionsLabel;
         this.termsAndConditionsGuidance = termsAndConditionsGuidance;
         this.isThirdPartyProcurementCompetition = isThirdPartyProcurementCompetition;
+        this.competitionTerms = competitionTerms;
     }
 
     public ApplicationTermsViewModel(long applicationId,
@@ -78,7 +82,8 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
                                      boolean additionalTerms,
                                      String termsAndConditionsLabel,
                                      String termsAndConditionsGuidance,
-                                     boolean isThirdPartyProcurementCompetition) {
+                                     boolean isThirdPartyProcurementCompetition,
+                                     FileEntryResource competitionTerms) {
         this.applicationId = applicationId;
         this.applicationName = null;
         this.competitionName = competitionName;
@@ -98,6 +103,7 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
         this.termsAndConditionsLabel = termsAndConditionsLabel;
         this.termsAndConditionsGuidance = termsAndConditionsGuidance;
         this.isThirdPartyProcurementCompetition = isThirdPartyProcurementCompetition;
+        this.competitionTerms = competitionTerms;
     }
 
     @Override
@@ -180,5 +186,9 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
 
     public boolean isThirdPartyProcurementCompetition() {
         return isThirdPartyProcurementCompetition;
+    }
+
+    public boolean isTermsAndConditionsUploaded() {
+        return competitionTerms != null;
     }
 }
