@@ -1,20 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: registration-svc
+  name: sil-stub
 spec:
   template:
     spec:
       containers:
-        - name: spring-boot-service-container
-          env:
-          - name: SHIBBOLETH_LDAP_REQUIREVALIDPPOLICY
-            value: "false"
+        - name: sil-stub
           livenessProbe:
             httpGet:
               path: /monitoring/health
               port: 8080
-            initialDelaySeconds: 30
+            initialDelaySeconds: 40
             periodSeconds: 31
             timeoutSeconds: 5
             successThreshold: 1
@@ -23,8 +20,14 @@ spec:
             httpGet:
               path: /monitoring/health
               port: 8080
-            initialDelaySeconds: 30
+            initialDelaySeconds: 40
             periodSeconds: 5
             timeoutSeconds: 5
             successThreshold: 1
             failureThreshold: 1
+          resources:
+            limits:
+              cpu: 750m
+            requests:
+              cpu: 100m
+              memory: 750m

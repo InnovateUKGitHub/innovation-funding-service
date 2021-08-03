@@ -1,15 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: registration-svc
+  name: front-door-svc
 spec:
   template:
     spec:
       containers:
         - name: spring-boot-service-container
-          env:
-          - name: SHIBBOLETH_LDAP_REQUIREVALIDPPOLICY
-            value: "false"
           livenessProbe:
             httpGet:
               path: /monitoring/health
@@ -28,3 +25,9 @@ spec:
             timeoutSeconds: 5
             successThreshold: 1
             failureThreshold: 1
+          resources:
+            limits:
+              cpu: 500m
+            requests:
+              cpu: 100m
+              memory: 500m
