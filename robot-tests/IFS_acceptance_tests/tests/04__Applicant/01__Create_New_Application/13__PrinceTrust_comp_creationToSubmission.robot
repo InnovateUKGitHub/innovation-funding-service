@@ -17,29 +17,23 @@ Resource        ../../../resources/common/Competition_Commons.robot
 
 
 *** Variables ***
-${comp_name}         The Prince Trust competition
-${application_name}  The Prince Trust Application
+${comp_name}         Princes Trust Comp 1
+${application_name}  Princes Trust Application
 
 *** Test Cases ***
-Comp Admin creates The Prince's Trust type competition
-    [Documentation]  IFS-2688  IFS-8779  IFS-8847
-    [Tags]
-    Given Logging in and Error Checking                          &{Comp_admin1_credentials}
-    Then the competition admin creates The Prince's Trust Comp   ${rto_type_id}  ${comp_name}  Prince
-
 Applicant applies to newly created The Prince's Trust competition
     [Documentation]  IFS-2688
     [Tags]
-    Given get competition id and set open date to yesterday  ${comp_name}
-    And Log in as a different user                           &{RTO_lead_applicant_credentials}
-    Then logged in user applies to competition               ${comp_name}  3
+    Given the user logs-in in new browser           &{rto_lead_applicant_credentials}
+    Then logged in user applies to competition      ${comp_name}  3
 
 Applicant submits his application
     [Documentation]  IFS-2688  IFS-3287  IFS-5920  IFS-7718
     [Tags]
     Given the user clicks the button/link                            link = Application details
-    When the user fills in the Application details                   ${application_name}  ${tomorrowday}  ${month}  ${nextyear}
+    When the user fills in the Prince's Trust Application details    ${application_name}  ${tomorrowday}  ${month}  ${nextyear}
     And the user completes all other sections of an application
+    And the user selects PT Research category          Feasibility studies
     Then the applicant submits the application
 
 *** Keywords ***
@@ -47,28 +41,6 @@ Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
     Connect to database  @{database}
-
-The competition admin creates The Prince's Trust Comp
-    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
-    the user navigates to the page                            ${CA_UpcomingComp}
-    the user clicks the button/link                           jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details                  ${competition}  ${month}  ${nextyear}  ${compType_PT}  SUBSIDY_CONTROL  GRANT
-    the user selects the Terms and Conditions                 ${compType_PT}  SUBSIDY_CONTROL
-    the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility              ${orgType}  1  false  single-or-collaborative  # 1 means 30%
-    the user fills in the CS funding eligibility              false   ${compType_PT}   SUBSIDY_CONTROL
-    the user selects the organisational eligibility to no     false
-    the user fills in the CS Milestones                       RELEASE_FEEDBACK   ${month}   ${nextyear}   No
-    the user marks the Application as done(Prince's Trust comp)
-    the user fills in the CS Assessors                        GRANT
-    the user fills in the CS Documents in other projects
-    the user clicks the button/link                           link = Public content
-    the user fills in the Public content and publishes        ${extraKeyword}
-    the user clicks the button/link                           link = Return to setup overview
-    the user clicks the button/link                           jQuery = a:contains("Complete")
-    the user clicks the button/link                           css = button[type="submit"]
-    the user navigates to the page                            ${CA_UpcomingComp}
-    the user should see the element                           jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
 the lead applicant fills all the questions and marks as complete(Prince's Trust comp type)
     the applicant completes application team
@@ -91,6 +63,19 @@ the lead applicant answers the four sections as complete
     the lead applicant marks every question as complete  2. Innovation
     the lead applicant marks every question as complete  3. Project team
     the lead applicant marks every question as complete  4. Funding and adding value
+
+the user selects PT Research category
+    [Arguments]  ${res_category}
+    the user clicks the button/link   link=Research category
+    # checking here applicant should see only one research category(checkbox) set while creating EOI compeition(IFS-2941 and IFS-4080)
+    ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots   page should contain element    jQuery=h1 span:contains("Princes Trust Application")
+    Run Keyword If  '${status}' == 'PASS'  Run keywords    the user should not see the element   css = label[for="researchCategory2"]
+    ...    AND             the user should not see the element   css = label[for="researchCategory3"]
+    ...    AND             the user selects the checkbox         researchCategory
+    Run Keyword If    '${status}' == 'FAIL'    the user clicks the button twice      jQuery = label:contains("${res_category}")
+    the user clicks the button/link            id=application-question-complete
+    the user clicks the button/link            link=Back to application overview
+    the user should see the element            jQuery=li:contains("Research category") > .task-status-complete
 
 the user completes all other sections of an application
     the applicant completes application team
