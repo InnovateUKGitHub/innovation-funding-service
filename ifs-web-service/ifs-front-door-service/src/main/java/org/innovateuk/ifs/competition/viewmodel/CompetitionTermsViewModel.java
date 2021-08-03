@@ -3,11 +3,13 @@ package org.innovateuk.ifs.competition.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 
 public class CompetitionTermsViewModel {
 
     private final long competitionId;
     GrantTermsAndConditionsResource termsAndConditions;
+    private FileEntryResource competitionTerms;
     private String termsAndConditionsLabel;
     private String termsAndConditionsGuidance;
 
@@ -23,10 +25,12 @@ public class CompetitionTermsViewModel {
 
     public CompetitionTermsViewModel(long competitionId,
                                      GrantTermsAndConditionsResource termsAndConditions,
+                                     FileEntryResource competitionTerms,
                                      String termsAndConditionsLabel,
                                      String termsAndConditionsGuidance) {
         this.competitionId = competitionId;
         this.termsAndConditions = termsAndConditions;
+        this.competitionTerms = competitionTerms;
         this.termsAndConditionsLabel = termsAndConditionsLabel;
         this.termsAndConditionsGuidance = termsAndConditionsGuidance;
     }
@@ -49,6 +53,10 @@ public class CompetitionTermsViewModel {
 
     public boolean isProcurementThirdParty() {
         return termsAndConditions.isProcurementThirdParty();
+    }
+
+    public boolean isTermsAndConditionsUploaded() {
+        return competitionTerms != null;
     }
 
     @Override

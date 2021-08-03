@@ -10,12 +10,14 @@ import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionOverviewViewModel;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionTermsViewModel;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -97,10 +99,13 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
         GrantTermsAndConditionsResource termsAndConditions = new GrantTermsAndConditionsResource("T&C",
                 "third-party-terms-and-conditions", 3);
 
-        final CompetitionResource competitionResource = newCompetitionResource().build();
+        CompetitionResource competitionResource = newCompetitionResource().build();
+
+        FileEntryResource fileEntryResource = newFileEntryResource().build();
 
         CompetitionTermsViewModel competitionTermsViewModel = new CompetitionTermsViewModel(competitionResource.getId(),
                 termsAndConditions,
+                fileEntryResource,
                 "Strategic Innovation Fund Governance Document",
                 "<div>Guidance</div>");
 
