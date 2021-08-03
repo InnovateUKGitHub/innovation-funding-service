@@ -42,4 +42,26 @@ public class AdditionalInfoFormPopulatorTest {
         assertEquals(CompetitionFundersFixture.getTestCoFunders().size(), form.getFundersCount());
         assertEquals(Funder.ADVANCED_PROPULSION_CENTRE_APC, form.getFunders().get(0).getFunder());
     }
+
+    @Test
+    public void testGetSectionFormDataAdditionalInfoForOfGem() {
+        CompetitionResource competition = newCompetitionResource()
+                .withActivityCode("Activity Code")
+                .withCompetitionCode("c123")
+                .withPafCode("p123")
+                .withBudgetCode("b123")
+                .withFunders(CompetitionFundersFixture.getOfgemFunder())
+                .withId(8L).build();
+
+        CompetitionSetupForm result = service.populateForm(competition);
+
+        assertTrue(result instanceof AdditionalInfoForm);
+        AdditionalInfoForm form = (AdditionalInfoForm) result;
+        assertEquals("Activity Code", form.getActivityCode());
+        assertEquals("c123", form.getCompetitionCode());
+        assertEquals("p123", form.getPafNumber());
+        assertEquals("b123", form.getBudgetCode());
+        assertEquals(CompetitionFundersFixture.getOfgemFunder().size(), form.getFundersCount());
+        assertEquals(Funder.OFFICE_OF_GAS_AND_ELECTRICITY_MARKETS_OFGEM, form.getFunders().get(0).getFunder());
+    }
 }

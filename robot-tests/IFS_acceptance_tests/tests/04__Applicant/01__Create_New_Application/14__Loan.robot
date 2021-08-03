@@ -59,15 +59,11 @@ ${spend_profile}                           ${server}/project-setup-management/pr
 
 
 *** Test Cases ***
-The user can see qualtrics survey fields in business and financial information application question
+The user can see qualtrics survey link in business and financial information application question
     [Documentation]    IFS-9484
-    Given the user clicks the button/link                link = Business and financial information
-    And the user clicks the button/link                  id = edit
-    When the user clicks the button/link                 link = Complete the online business survey (opens in a new window)
-    And select window                                    Innovate UK - Innovation Continuity Loans
-#    And the user clicks the button/link                  id = NextButton
-#    Then the user should see qualtrics survey fields
-    [Teardown]  the user closes the last opened tab
+    Given the user clicks the button/link       link = Business and financial information
+    When the user clicks the button/link        id = edit
+    Then the user should see the element        link = Complete the online business survey (opens in a new window)
 
 The user will not be able to mark the application as complete without completing business and financial information
     [Documentation]    IFS-9484

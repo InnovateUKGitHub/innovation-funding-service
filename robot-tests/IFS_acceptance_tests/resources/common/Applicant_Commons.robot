@@ -77,6 +77,18 @@ the user fills in the Application details
     the user can mark the question as complete
     the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
 
+the user fills in the Prince's Trust Application details
+    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user should see the element       jQuery = h1:contains("Application details")
+    the user enters text to a text field  id = name  ${appTitle}
+    the user enters text to a text field  id = startDate  ${tomorrowday}
+    the user enters text to a text field  css = #application_details-startdate_month  ${month}
+    the user enters text to a text field  css = #application_details-startdate_year  ${nextyear}
+    the user enters text to a text field  css = [id="durationInMonths"]  24
+    the user should not see the element   link = Choose your innovation area
+    the user can mark the question as complete
+    the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
+
 the user fills in the Application details with no submit
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user should see the element       jQuery = h1:contains("Application details")
@@ -159,8 +171,8 @@ the user has read only view once section is marked complete
 
 the user fills in Labour
     the user expands the section               Labour
-    the user should see the element            css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input
-    the user enters text to a text field       id = working-days-per-year   230
+#   the user should see the element            css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input
+    the user enters text to a text field       id = working-days-per-year  230
     the user should see the element            jQuery = input[id$="role"]:text[value = ""]:first
     the user enters text to a text field       jQuery = input[id$="role"]:text[value = ""]:first    anotherrole
     the user enters text to a text field       jQuery = input[id$="gross"][value = ""]:first    120000
@@ -210,10 +222,13 @@ the user chooses 20% overheads option
     # overheads option : 20% Labour
     the user clicks the button/link    jQuery = button:contains("Overhead costs")
     the user clicks the button/link    css = [data-target="overhead-default-percentage"] label
+    wait for autosave
     the user clicks the button/link    jQuery = button:contains("Overhead costs")
 
 the user fills in Material
     the user clicks the button/link       jQuery = button:contains("Materials")
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    page should contain element   jQuery = button:contains("Add another materials cost")
+    Run Keyword If    '${status}' == 'FAIL'   the user clicks the button/link     id = accordion-finances-heading-3
     the user should see the element       css = table[id=material-costs-table] tbody tr:nth-of-type(1) td:nth-of-type(2) input
     the user enters text to a text field  css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     the user enters text to a text field  css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
@@ -726,10 +741,10 @@ the user can submit the application
 
 the lead invites already registered user
     [Arguments]   ${partner_email}  ${competition_title}
-    the user fills in the inviting steps                 ${partner_email}
+    the user fills in the inviting steps            ${partner_email}
     Logout as user
-    the user reads his email and clicks the link         ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
-    the user clicks the button/link                      link = Continue
+    the user reads his email and clicks the link    ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
+    the user clicks the button/link                 link = Continue
 
 partner applicant completes the project finances
     [Arguments]   ${application_title}  ${is_KTP}  ${collaboratorEmail}  ${collaboratorPassword}
@@ -880,7 +895,7 @@ applicant views readonly payment milestones subsections
 
 the user completes the application research category
     [Arguments]   ${res_category}
-    the user clicks the button/link                link = Research category
+    the user clicks the button/link                jQuery = a:contains("Research category")
     the user clicks the button twice               jQuery = label:contains("${res_category}")
     the user can mark the question as complete
     the user should see the element                jQuery = li:contains("Research category") > .task-status-complete

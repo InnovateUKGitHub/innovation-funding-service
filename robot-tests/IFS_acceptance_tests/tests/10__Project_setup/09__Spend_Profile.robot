@@ -75,6 +75,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...
 ...               IFS-9774 Investigate if its possible to fix AT's failure due to IDP upgrade
 ...
+...               IFS-9677 MO Spend profile: approve/reject
+...
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -149,6 +151,17 @@ Project Finance should no longer see the project in the Generate Spend Profile t
     Given the user navigates to the page      ${server}/project-setup-management/competition/${PS_SP_Project_Id}/status/pending-spend-profiles
     Then the user should not see the element  link = ${PS_SP_Application_Title}
 
+the monitoring officer can download the SP CSV files when status is incomplete
+    [Documentation]    IFS-9677
+    Given Assign monitoring officer to project      ${PS_SP_Application_No}  ${PS_SP_Application_Title}
+    When log in as a different user                 &{monitoring_officer_one_credentials}
+    And the user navigates to the page              ${server}/project-setup/project/${PS_SP_Project_Id}
+    And the user clicks the button/link             link = Spend profile
+    Then the monitoring officer can download the SP CSV files
+    And the user should see the element             jQuery = td:contains("${Ooba_Lead_Org_Name}-spend-profile.csv")+td:contains("Incomplete")
+    And the user should see the element             jQuery = td:contains("${Wordpedia_Partner_Org_Name}-spend-profile.csv")+td:contains("Incomplete")
+    And the user should see the element             jQuery = td:contains("${Jabbertype_Partner_Org_Name}-spend-profile.csv")+td:contains("Incomplete")
+
 Lead partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899, INFUND-7685
     [Tags]  HappyPath
@@ -209,8 +222,8 @@ Non-lead partner can view spend profile page
 Non-lead partner can see correct project start date and duration
     [Documentation]    INFUND-3970
     [Tags]
-    Then the user should see the element         jQuery = dt:contains("Project start date") ~ dd:contains("1 January ${nextYear}")
-    And the user should see the element          jQuery = dt:contains("Duration") ~ dd:contains("${project_duration} months")
+    Then the user should see the element    jQuery = dt:contains("Project start date") ~ dd:contains("1 January ${nextYear}")
+    And the user should see the element     jQuery = dt:contains("Duration") ~ dd:contains("${project_duration} months")
 
 Industrial partner can choose cancel on the dialogue
     [Documentation]    INFUND-6852
@@ -221,18 +234,18 @@ Industrial partner can choose cancel on the dialogue
 Non-lead partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
     [Tags]
-    Given the user clicks the button/link          link = Submit to lead partner
-    When the user clicks the button/link           jQuery = .govuk-button:contains("Submit")
-    Then the user should see the element           jQuery = p:contains("We have reviewed and confirmed your project costs")
-    And the user should not see the element        css = table a[type = "number"]    # checking here that the table has become read-only
+    Given the user clicks the button/link       link = Submit to lead partner
+    When the user clicks the button/link        jQuery = .govuk-button:contains("Submit")
+    Then the user should see the element        jQuery = p:contains("We have reviewed and confirmed your project costs")
+    And the user should not see the element     css = table a[type = "number"]    # checking here that the table has become read-only
 
 Status updates for industrial user after spend profile submission
     [Documentation]    INFUND-6881
-    [Setup]  the user navigates to the page    ${server}/project-setup/project/${PS_SP_Project_Id}
-    Given the user should see the element      css = ul li.complete:nth-child(6)
-    When the user clicks the button/link       link = View the status of partners
-    Then the user should see the element       css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
-    And the user should see the element        css = #table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(7)
+    [Setup]  the user navigates to the page     ${server}/project-setup/project/${PS_SP_Project_Id}
+    Given the user should see the element       css = ul li.complete:nth-child(6)
+    When the user clicks the button/link        link = View the status of partners
+    Then the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
+    And the user should see the element         css = #table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(7)
 
 Academic partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-5899
@@ -250,8 +263,8 @@ Academic partner can view spend profile page
 Academic partner can see correct project start date and duration
     [Documentation]    INFUND-3970
     [Tags]
-    Then the user should see the element    jQuery = dt:contains("Project start date") ~ dd:contains("1 January ${nextYear}")
-    And the user should see the element     jQuery = dt:contains("Duration") ~ dd:contains("${project_duration} months")
+    Then the user should see the element     jQuery = dt:contains("Project start date") ~ dd:contains("1 January ${nextYear}")
+    And the user should see the element      jQuery = dt:contains("Duration") ~ dd:contains("${project_duration} months")
 
 Academic partner can see the alternative academic view of the spend profile
     [Documentation]    INFUND-4819
@@ -279,10 +292,10 @@ Academic partner edits spend profile and this updates on the table
 Academic partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
     [Tags]
-    When the user clicks the button/link           link = Submit to lead partner
-    And the user clicks the button/link            jQuery = button.govuk-button:contains("Submit")
-    Then the user should see the element           jQuery = p:contains("We have reviewed and confirmed your project costs")
-    And the user should not see the element        css = table a[type = "number"]    # checking here that the table has become read-only
+    When the user clicks the button/link        link = Submit to lead partner
+    And the user clicks the button/link         jQuery = button.govuk-button:contains("Submit")
+    Then the user should see the element        jQuery = p:contains("We have reviewed and confirmed your project costs")
+    And the user should not see the element     css = table a[type = "number"]    # checking here that the table has become read-only
 
 Status updates for academic user after spend profile submission
     [Documentation]    INFUND-6881
@@ -377,52 +390,55 @@ PM's Spend profile Summary page gets updated after submit
     Then the user should see the element     jQuery = .success-alert p:contains("All project spend profiles have been sent to Innovate UK.")
     And the user should not see the element  jQuery = a:contains("Submit project spend profile")
 
-Status updates after spend profile submitted
-    [Documentation]    INFUND-6225  INFUND-3767  INFUND-3766
+MO receives an email notification and status updated after spend profile submitted
+    [Documentation]    INFUND-6225  INFUND-3767  INFUND-3766  IFS-9765
     Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_Project_Id}
     When the user clicks the button/link    link = View the status of partners
     And the user should see the element     css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
     Then partners can see the Spend Profile section completed
+    And the user reads his email            ${monitoring_officer_one_credentials["email"]}    You need to review the spend profile for project ${PS_SP_Application_Title}     The spend profile for this project is ready for you to review:
 
 Project Finance is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973, INFUND-5942 IFS-1871 IFS-9774
     [Tags]
-    [Setup]  Log in as a different user            &{internal_finance_credentials}
+    [Setup]  Log in as a different user              &{internal_finance_credentials}
     Given the user navigates to the page             ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     Then the project finance user should see the spend profile details
 
-Comp Admin is able to see Spend Profile approval page
-    [Documentation]    INFUND-2638, INFUND-5617, INFUND-6226, INFUND-5549
-    [Tags]
-    [Setup]    Log in as a different user    &{Comp_admin1_credentials}
-    Given the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
-    Then the comp admin should see the spend profile details
+Monitoring officer is able to see Spend Profile approval page
+    [Documentation]   IFS-9677
+    Given Log in as a different user                                     &{monitoring_officer_one_credentials}
+    When the user navigates to the page                                  ${server}/project-setup/project/${PS_SP_Project_Id}
+    And the user clicks the button/link                                  link = Spend profile
+    Then the monitoring officer should see the spend profile details
 
-Comp Admin can download the Spend Profile csv
-    [Documentation]    INFUND-3973, INFUND-5875
-    [Tags]
-    Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
-    And the user should see the element     jQuery = h1:contains("Spend profile")
-    Then the comp admin can download the SP CSV files
+Monitoring officer can download the Spend Profile csv
+    [Documentation]    IFS-9677
+    Given the user navigates to the page                          ${server}/project-setup/project/${PS_SP_Project_Id}
+    And the user clicks the button/link                           link = Spend profile
+    When the user should see the element                          jQuery = h1:contains("Spend profile")
+    Then the monitoring officer can download the SP CSV files
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 ,INFUND-5543, INFUND-7119
     [Tags]
-    [Setup]    log in as a different user    &{Comp_admin1_credentials}
+    Given log in as a different user         &{Comp_admin1_credentials}
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_Competition_Id}/status
-    Then the comp admin should see the SP status uodated correctly
+    Then the comp admin should see the SP status updated correctly
 
-Project Finance is able to Reject Spend Profile
-    [Documentation]    INFUND-2638, INFUND-5617
+Monitoring officer is able to Reject Spend Profile
+    [Documentation]    IFS-9677
     [Tags]
-    [Setup]    Log in as a different user    &{internal_finance_credentials}
-    Given the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
-    Then the project finance reject the SP
+    Given Log in as a different user             &{monitoring_officer_one_credentials}
+    When the user navigates to the page          ${server}/project-setup/project/${PS_SP_Project_Id}
+    And the user clicks the button/link          link = Spend profile
+    Then the monitoring officer reject the SP
 
 Status updates to a cross for the internal user's table
     [Documentation]    INFUND-6977
     [Tags]
-    Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_Competition_Id}/status
+    Given Log in as a different user        &{internal_finance_credentials}
+    And the user navigates to the page      ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     When the user clicks the button/link    link = 2
     Then the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.rejected  # Rejected Spend profile
 
@@ -439,9 +455,9 @@ Lead partner can see that the spend profile has been rejected
 Non Lead partners should still see a tick instead of an hourglass when spend profile has been rejected
     [Documentation]    INFUND-7422
     [Tags]
-    [Setup]  log in as a different user        &{collaborator1_credentials_sp}
+    [Setup]  log in as a different user                 &{collaborator1_credentials_sp}
     Given the user shouldn't see rejected SP message
-    When log in as a different user        &{collaborator2_credentials_sp}
+    When log in as a different user                     &{collaborator2_credentials_sp}
     Then the user shouldn't see rejected SP message
 
 Lead partner no longer has the 'submitted' view of the spend profiles
@@ -486,17 +502,19 @@ Lead partner can send the combined spend profile
     And the user should see the element      jQuery = button:contains("Cancel")
     When the user clicks the button/link     id = submit-send-all-spend-profiles
 
-Project Finance is able to Approve Spend Profile
-    [Documentation]    INFUND-2638, INFUND-5617, INFUND-5507, INFUND-5549
+Monitoring officer is able to Approve Spend Profile
+    [Documentation]    IFS-9677
     [Tags]
-    [Setup]    log in as a different user    &{internal_finance_credentials}
-    Given the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
-    Then the project finance approves to SP
+    Given log in as a different user            &{monitoring_officer_one_credentials}
+    When the user navigates to the page         ${server}/project-setup/project/${PS_SP_Project_Id}
+    And the user clicks the button/link         link = Spend profile
+    Then the monitoring officer approves to SP
 
 Status updates correctly for internal user's table after approval
-    [Documentation]    INFUND-5543
+    [Documentation]    INFUND-5543  IFS-9677
     [Tags]
-    Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_Competition_Id}/status
+    Given log in as a different user        &{internal_finance_credentials}
+    And the user navigates to the page      ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     When The user clicks the button/link    link = 2
     Then the user should see the element    css = #table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.ok        # Completed Spend profile
     And the user should see the element     css =#table-project-status tr:nth-of-type(3) td:nth-of-type(8).status.ok         # GOL
@@ -504,11 +522,11 @@ Status updates correctly for internal user's table after approval
 Project Finance still has a link to the spend profile after approval
     [Documentation]    INFUND-6046
     [Tags]
-    When the user clicks the button/link           jQuery = th:contains("${PS_SP_Application_Title}") ~ td:nth-child(8) a
-    Then the user clicks the button/link           link = ${Ooba_Lead_Org_Name}-spend-profile.csv
-    And the user clicks the button/link            link = ${Wordpedia_Partner_Org_Name}-spend-profile.csv
-    And the user clicks the button/link            link = ${Jabbertype_Partner_Org_Name}-spend-profile.csv
-    And the user should see the element            jQuery = h2:contains("The spend profile has been approved.")
+    When the user clicks the button/link     jQuery = th:contains("${PS_SP_Application_Title}") ~ td:nth-child(8) a
+    Then the user clicks the button/link     link = ${Ooba_Lead_Org_Name}-spend-profile.csv
+    And the user clicks the button/link      link = ${Wordpedia_Partner_Org_Name}-spend-profile.csv
+    And the user clicks the button/link      link = ${Jabbertype_Partner_Org_Name}-spend-profile.csv
+    And the user should see the element      jQuery = h2:contains("The spend profile has been approved.")
 
 Project finance user cannot access external users' spend profile page
     [Documentation]    INFUND-5911
@@ -734,8 +752,8 @@ project Manager doesn't have the option to send spend profiles until all partner
     the user should not see the element    jQuery = .govuk-button:contains("Review spend profiles")
 
 the user should see the validation messages triggred
-    the user should see a summary error         Your total costs are higher than your eligible costs.
-    the user clicks the button/link             jQuery = button:contains("Save and return to spend profile overview")
+    the user should see a summary error     Your total costs are higher than your eligible costs.
+    the user clicks the button/link         jQuery = button:contains("Save and return to spend profile overview")
 
 academic partner enter valid values in spend profile then should'e see validation error messages
     the user enters text to a text field     css = .spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    3  # Staff
@@ -799,22 +817,17 @@ the project finance user should see the spend profile details
     the user should see the element              css = #accept-profile
     the user should see the element              jQuery = #main-content button:contains("Reject")
 
-the comp admin should see the spend profile details
-    the element should be disabled       css = #accept-profile
-    the user should see the element      jQuery = #main-content button:contains("Reject")
-    the user should see the element      jQuery = h2:contains("Innovation Lead") ~ p:contains("Peter Freeman")
-    the user clicks the button/link      jQuery = #main-content button:contains("Reject")
-    the user should see the element      jQuery = p:contains("You should contact the Project Manager to explain why the spend profile is being returned.")
-    the user clicks the button/link      jQuery = .modal-reject-profile button:contains("Cancel")
-    the user should not see an error in the page
-    the user selects the checkbox        approvedByLeadTechnologist
-    the user should see the element      css = #accept-profile
-    the user clicks the button/link      jQuery = button:contains("Approved")
-    the user should see the element      jQuery = .modal-accept-profile h2:contains("Approved by Innovate UK")
-    the user clicks the button/link      jQuery = .modal-accept-profile button:contains("Cancel")
+the monitoring officer should see the spend profile details
+    the element should be disabled       css = #submit-button
+    the user should see the element      jQuery = p:contains("Please review the spend profile submitted by the project manager. You must accept or reject it based on Innovate UK's requirements.")
+    the user selects the radio button    approved  true
+    the user should see the element      css = #submit-button
+    the user should see the element      jQuery = td:contains("${Ooba_Lead_Org_Name}-spend-profile.csv")+td:contains("Complete")
+    the user should see the element      jQuery = td:contains("${Wordpedia_Partner_Org_Name}-spend-profile.csv")+td:contains("Complete")
+    the user should see the element      jQuery = td:contains("${Jabbertype_Partner_Org_Name}-spend-profile.csv")+td:contains("Complete")
     the user should not see an error in the page
 
-the comp admin can download the SP CSV files
+the monitoring officer can download the SP CSV files
     the user should see the element     link = ${Ooba_Lead_Org_Name}-spend-profile.csv
     the user should see the element     link = ${Wordpedia_Partner_Org_Name}-spend-profile.csv
     the user should see the element     link = ${Jabbertype_Partner_Org_Name}-spend-profile.csv
@@ -825,7 +838,7 @@ the comp admin can download the SP CSV files
     the user clicks the button/link     link = ${Jabbertype_Partner_Org_Name}-spend-profile.csv
     the user should not see an error in the page
 
-the comp admin should see the SP status uodated correctly
+the comp admin should see the SP status updated correctly
     the user clicks the button/link        link = 2
     the user should see the element        css = #table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok         # Project details
     the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(3)           # Documents
@@ -836,14 +849,13 @@ the comp admin should see the SP status uodated correctly
     the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action  # GOL
     the user should not see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
 
-the project finance reject the SP
-    the user should see the element     jQuery = #main-content button:contains("Reject")
-    the user clicks the button/link     jQuery = #main-content button:contains("Reject")
-    the user should see the element     jQUery = p:contains("You should contact the Project Manager to explain why the spend profile is being returned.")
-    the user clicks the button/link     jQuery = .modal-reject-profile button:contains("Cancel")
+the monitoring officer reject the SP
+    the user selects the radio button               approved   false
+    the user clicks the button/link                 css = #submit-button
+    the user clicks the button/link                 link = Spend profile
+    the user should see the element                 jQUery = p:contains("You have rejected this spend profile. Please contact the project manager to explain your decision.")
     the user should not see an error in the page
-    the user clicks the button/link     jQuery = #main-content button:contains("Reject")
-    the user clicks the button/link     jQuery = .modal-reject-profile button:contains('Reject')
+    the user should not see the element             css = #submit-button
 
 the user shouldn't see rejected SP message
     the user clicks the button/link    link = ${PS_SP_Application_Title}
@@ -867,19 +879,13 @@ Industrial/academic partner able to edit SP after receiving rights from lead
     the user clicks the button/link     link = View the status of partners
     the user should see the element     css = #table-project-status tr:nth-of-type(${user_row id}) td.status.ok:nth-of-type(7)
 
-the project finance approves to SP
-    the user selects the checkbox            approvedByLeadTechnologist
-    the user should see the element          jQuery = button:contains("Approved")
-    the user should see the element          jQuery = h2:contains("Innovation Lead") ~ p:contains("Peter Freeman")
-    the user clicks the button/link          jQuery = button:contains("Approved")
-    the user should see the element          jQuery = .modal-accept-profile h2:contains("Approved by Innovate UK")
-    the user clicks the button/link          jQuery = .modal-accept-profile button:contains("Cancel")
+the monitoring officer approves to SP
+    the user selects the radio button        approved  true
+    the user clicks the button/link          css = #submit-button
+    the user should see the element          jQuery = li:contains("Spend profile") div ~ .status:contains("Complete")
+    the user clicks the button/link          link = Spend profile
     the user should not see an error in the page
-    the user clicks the button/link          jQuery = button:contains("Approved")
-    the user clicks the button/link          jQuery = .modal-accept-profile button:contains("Approve")
-    the user clicks the button/link          link = 2
-    the user should see the element          jQuery = th div:contains("${PS_SP_Application_Title}")
-    the user should not see the element      jQuery = h3:contains("The spend profile has been approved")
+    the user clicks the button/link          jQuery = p:contains("You approved this spend profile")
 
 the user invites a new partner org
     the user logs-in in new browser             &{internal_finance_credentials}
@@ -897,3 +903,10 @@ the user can not generates the Spend Profile
 the user removes a new partner org
     the user navigates to the page                               ${server}/project-setup-management/competition/${PS_Competition_Id}/project/${PS_SP_Project_Id}/team
     the user is able to remove a pending partner organisation    Spend Profile Organisation
+
+Assign monitoring officer to project
+    [Arguments]  ${applicationNumber}   ${applicationTitle}
+    the user navigates to the page            ${server}/project-setup-management/monitoring-officer/view-all?ktp=false
+    search for MO                             Orvill  Orville Gibbs
+    the user should see the element           jQuery = span:contains("Assign projects to Monitoring Officer")
+    the internal user assign project to MO    ${applicationNumber}   ${applicationTitle}
