@@ -109,7 +109,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 isProjectFinanceContact,
                 competitionPostAwardServiceResource.getSuccess().getPostAwardService(),
                 navigationUtils.getLiveProjectsLandingPageUrl(),
-                competition.getTermsAndConditions().isThirdPartyProcurement(),
+                competition.getTermsAndConditions().isProcurementThirdParty(),
                 thirdPartyConfig);
     }
 

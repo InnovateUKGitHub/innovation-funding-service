@@ -423,7 +423,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                 emptyList(),
                 false,
                 false,
-                thirdPartyConfig
+                null
         );
 
         ApplicationResource application = newApplicationResource().build();

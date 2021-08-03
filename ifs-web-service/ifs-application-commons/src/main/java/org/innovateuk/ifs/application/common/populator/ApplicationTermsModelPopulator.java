@@ -177,7 +177,7 @@ public class ApplicationTermsModelPopulator {
         if (FundingType.INVESTOR_PARTNERSHIPS == competitionResource.getFundingType()) {
             return TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
         }
-        if(competitionResource.getTermsAndConditions().isThirdPartyProcurement()) {
+        if(competitionResource.getTermsAndConditions().isProcurementThirdParty()) {
             return competitionResource.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel();
         }
         return TERMS_AND_CONDITIONS_OTHER;

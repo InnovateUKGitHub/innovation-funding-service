@@ -37,7 +37,7 @@ public class ApplicationOverviewViewModel implements BaseAnalyticsViewModel {
         this.sections = sections;
         this.reopened = reopened;
         this.reopenedDate = reopenedDate;
-        this.thirdPartyProcurement = competition.getTermsAndConditions().isThirdPartyProcurement();
+        this.thirdPartyProcurement = competition.getTermsAndConditions().isProcurementThirdParty();
         this.thirdPartyConfig = thirdPartyConfig;
     }
 

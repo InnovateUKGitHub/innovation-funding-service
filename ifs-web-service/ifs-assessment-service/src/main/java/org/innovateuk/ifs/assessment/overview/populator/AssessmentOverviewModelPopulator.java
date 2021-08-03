@@ -119,7 +119,7 @@ public class AssessmentOverviewModelPopulator {
                 termsAndConditionsTerminology,
                 getTermsAndConditionsRows(questions, application, competition),
                 competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && competition.getOtherFundingRulesTermsAndConditions() != null && northernIrelandSubsidyControlToggle,
-                competition.getTermsAndConditions().isThirdPartyProcurement(),
+                competition.getTermsAndConditions().isProcurementThirdParty(),
                 competition.getCompetitionThirdPartyConfigResource()
         );
     }
@@ -248,7 +248,7 @@ public class AssessmentOverviewModelPopulator {
         if (FundingType.LOAN == competitionResource.getFundingType()) {
             return TERMS_AND_CONDITIONS_LOAN;
         }
-        if(competitionResource.getTermsAndConditions().isThirdPartyProcurement()) {
+        if(competitionResource.getTermsAndConditions().isProcurementThirdParty()) {
             return competitionResource.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel(); //"#IFS10084.13"
         }
         return TERMS_AND_CONDITIONS_OTHER;
