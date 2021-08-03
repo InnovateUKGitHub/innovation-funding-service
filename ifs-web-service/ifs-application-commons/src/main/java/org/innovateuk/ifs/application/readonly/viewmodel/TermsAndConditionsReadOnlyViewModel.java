@@ -13,21 +13,24 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
     private final List<TermsAndConditionsRowReadOnlyViewModel> partners;
     private final boolean includeFundingRules;
     private final boolean displayCompleteStatus;
-    private final boolean thirdPartyProcurement;
     private final String termsAndConditionsTerminology;
+    private final boolean thirdPartyProcurementCompetition;
+    private final String thirdPartyProcurementHeader;
 
     public TermsAndConditionsReadOnlyViewModel(ApplicationReadOnlyData data,
                                                QuestionResource question,
                                                boolean includeFundingRules,
                                                List<TermsAndConditionsRowReadOnlyViewModel> partners,
-                                               boolean thirdPartyProcurement,
-                                               String termsAndConditionsTerminology) {
+                                               String termsAndConditionsTerminology,
+                                               boolean thirdPartyProcurementCompetition,
+                                               String thirdPartyProcurementHeader) {
         super(data, question);
         this.partners = partners;
         this.includeFundingRules = includeFundingRules;
         this.displayCompleteStatus = !data.getApplication().isSubmitted() && !data.getCompetition().isExpressionOfInterest();
-        this.thirdPartyProcurement = thirdPartyProcurement;
         this.termsAndConditionsTerminology = termsAndConditionsTerminology;
+        this.thirdPartyProcurementCompetition = thirdPartyProcurementCompetition;
+        this.thirdPartyProcurementHeader = thirdPartyProcurementHeader;
     }
 
     @Override
@@ -59,8 +62,6 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
         return includeFundingRules;
     }
 
-    public boolean isThirdPartyProcurement() { return thirdPartyProcurement; }
-
     public String getTermsAndConditionsTerminology() {
         return termsAndConditionsTerminology;
     }
@@ -73,6 +74,14 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
         return partners.stream()
                 .filter(negate(TermsAndConditionsRowReadOnlyViewModel::isAccepted))
                 .collect(Collectors.toList());
+    }
+
+    public boolean isThirdPartyProcurementCompetition() {
+        return thirdPartyProcurementCompetition;
+    }
+
+    public String getThirdPartyProcurementHeader() {
+        return thirdPartyProcurementHeader;
     }
 
     public String getAccordionSectionId() {

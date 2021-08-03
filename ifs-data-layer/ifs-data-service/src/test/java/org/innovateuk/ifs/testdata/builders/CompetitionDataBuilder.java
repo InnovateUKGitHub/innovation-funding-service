@@ -506,12 +506,14 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     public CompetitionDataBuilder withCompetitionTermsAndConditions(CompetitionLine line) {
-        return asCompAdmin(data -> {
+        CompetitionDataBuilder competitionDataBuilder = asCompAdmin(data -> {
             if (line.getTermsAndConditionsTemplate() != null) {
                 GrantTermsAndConditions termsAndConditions =termsAndConditionsRepository.findOneByTemplate(line.getTermsAndConditionsTemplate());
                 competitionService.updateTermsAndConditionsForCompetition(data.getCompetition().getId(), termsAndConditions.getId());
             }
         });
+
+        return competitionDataBuilder.withCompetitionTermsAndConditionsFileUpload();
     }
 
     public CompetitionDataBuilder withCompetitionTermsAndConditionsFileUpload() {

@@ -44,7 +44,8 @@ public class TermsAndConditionsFormPopulator {
     }
 
     public void populateThirdPartyConfigData(TermsAndConditionsForm termsAndConditionsForm, CompetitionResource competition) {
-        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = competition.getCompetitionThirdPartyConfigResource();       competitionThirdPartyConfigResource.setTermsAndConditionsLabel(termsAndConditionsForm.getThirdPartyTermsAndConditionsLabel());
+        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = competition.getCompetitionThirdPartyConfigResource();
+        competitionThirdPartyConfigResource.setTermsAndConditionsLabel(termsAndConditionsForm.getThirdPartyTermsAndConditionsLabel());
         competitionThirdPartyConfigResource.setTermsAndConditionsGuidance(termsAndConditionsForm.getThirdPartyTermsAndConditionsText());
         competitionThirdPartyConfigResource.setProjectCostGuidanceUrl(termsAndConditionsForm.getProjectCostGuidanceLink());
         competition.setCompetitionThirdPartyConfigResource(competitionThirdPartyConfigResource);

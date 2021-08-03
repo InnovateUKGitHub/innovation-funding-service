@@ -13,7 +13,6 @@
             <h2 th:if="${section.termsAndConditions && model.thirdPartyProcurement}"
                 th:text="${#strings.capitalize(model.thirdPartyConfig.termsAndConditionsLabel)}"
                 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0"/>
-            <!-- #IFS10084.3 -->
 
             <div class="question" th:each="question, questionIter : ${section.questions}">
                 <h2 class="govuk-heading-m govuk-!-display-block" th:id="|print-questions-heading-${sectionIter.count}-${questionIter.count}|">
@@ -21,7 +20,6 @@
                           th:text="${question.name}"></span>
                     <span th:if="${section.termsAndConditions && model.thirdPartyProcurement}"
                           th:text="${#strings.capitalize(model.thirdPartyConfig.termsAndConditionsLabel)}"></span>
-                    <!-- #IFS10084.4 -->
                     <th:block th:if="${model.settings.includeAllAssessorFeedback}">
                         <th:block th:if="${question.fragment == 'generic'}" th:insert="application/readonly/score-overview :: generic (${question}, ${model.settings.assessmentId})"/>
                     </th:block>
@@ -57,12 +55,11 @@
     <th:block th:each="section, sectionIter : ${model.sections}">
         <section>
             <h2 th:if="${!section.termsAndConditions || !model.thirdPartyProcurement}"
-                 th:text="${section.name}"
+                th:text="${section.name}"
                 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0"/>
             <h2 th:if="${section.termsAndConditions && model.thirdPartyProcurement}"
-                 th:text="${#strings.capitalize(model.thirdPartyConfig.termsAndConditionsLabel)}"
+                th:text="${#strings.capitalize(model.thirdPartyConfig.termsAndConditionsLabel)}"
                 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0"/>
-            <!-- #IFS10084.5 -->
 
             <th:block th:if="${model.settings.includeAllAssessorFeedback && !model.ktpCompetition}">
                 <p th:if="${section.name.equals('Project details')}" class="govuk-body govuk-hint">This section is not scored but will provide background to the project.</p>
@@ -80,7 +77,6 @@
                                           th:text="${question.name}"></th:block>
                                 <th:block th:if="${section.termsAndConditions && model.thirdPartyProcurement}"
                                           th:text="${#strings.capitalize(model.thirdPartyConfig.termsAndConditionsLabel)}"></th:block>
-                                <!-- #IFS10084.6 -->
                             </span>
                             <th:block th:if="${model.settings.includeAllAssessorFeedback}">
                                 <th:block th:if="${question.fragment == 'generic'}" th:insert="application/readonly/score-overview :: generic (${question}, ${model.settings.assessmentId}, )"/>

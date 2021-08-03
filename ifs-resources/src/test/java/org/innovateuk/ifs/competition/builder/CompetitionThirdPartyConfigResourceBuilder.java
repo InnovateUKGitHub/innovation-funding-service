@@ -7,16 +7,15 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class CompetitionThirdPartyConfigResourceBuilder extends BaseBuilder<CompetitionThirdPartyConfigResource, CompetitionThirdPartyConfigResourceBuilder> {
 
-    private CompetitionThirdPartyConfigResourceBuilder(List<BiConsumer<Integer, CompetitionThirdPartyConfigResource>> newMultiActions) {
+    private CompetitionThirdPartyConfigResourceBuilder (List<BiConsumer<Integer, CompetitionThirdPartyConfigResource>> newMultiActions) {
         super(newMultiActions);
     }
 
     public static CompetitionThirdPartyConfigResourceBuilder newCompetitionThirdPartyConfigResource() {
-        return new CompetitionThirdPartyConfigResourceBuilder(emptyList()).with(uniqueIds());
+        return new CompetitionThirdPartyConfigResourceBuilder(emptyList());
     }
 
     @Override
@@ -40,5 +39,4 @@ public class CompetitionThirdPartyConfigResourceBuilder extends BaseBuilder<Comp
     public CompetitionThirdPartyConfigResourceBuilder withProjectCostGuidanceUrl(String... projectCostGuidanceUrl) {
         return withArraySetFieldByReflection("projectCostGuidanceUrl", projectCostGuidanceUrl);
     }
-
 }

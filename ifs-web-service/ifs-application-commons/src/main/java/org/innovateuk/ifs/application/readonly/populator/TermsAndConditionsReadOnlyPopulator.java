@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
+import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -31,7 +32,8 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsRowReadOnlyViewModel.TermsAndConditionsRowReadOnlyViewModelBuilder.aTermsAndConditionsRowReadOnlyViewModel;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.TERMS_AND_CONDITIONS;
-import static org.innovateuk.ifs.util.TermsAndConditionsUtil.*;
+import static org.innovateuk.ifs.util.TermsAndConditionsUtil.VIEW_TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
+import static org.innovateuk.ifs.util.TermsAndConditionsUtil.VIEW_TERMS_AND_CONDITIONS_OTHER;
 
 @SuppressWarnings("unchecked")
 @Component
@@ -46,6 +48,9 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
+    @Autowired
+    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
+
     @Value("${ifs.subsidy.control.northern.ireland.enabled:false}")
     private boolean northernIrelandSubsidyControlToggle;
 
@@ -56,8 +61,9 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
                 question,
                 data.getCompetition().getFundingRules() == FundingRules.SUBSIDY_CONTROL && northernIrelandSubsidyControlToggle,
                 getPartners(data.getApplication(), data.getCompetition(), question),
+                termsAndConditionsTerminology(data.getCompetition()),
                 data.getCompetition().getTermsAndConditions().isThirdPartyProcurement(),
-                termsAndConditionsTerminology(data.getCompetition())
+                competitionThirdPartyConfigRestService.findOneByCompetitionId(data.getCompetition().getId()).getSuccess().getTermsAndConditionsLabel()
         );
     }
 
@@ -111,9 +117,6 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
     private String termsAndConditionsTerminology(CompetitionResource competitionResource) {
         if(FundingType.INVESTOR_PARTNERSHIPS == competitionResource.getFundingType()) {
             return VIEW_TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
-        }
-        if(competitionResource.getTermsAndConditions().isThirdPartyProcurement()) {
-            return competitionResource.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel();   //#10084.14
         }
         return VIEW_TERMS_AND_CONDITIONS_OTHER;
     }

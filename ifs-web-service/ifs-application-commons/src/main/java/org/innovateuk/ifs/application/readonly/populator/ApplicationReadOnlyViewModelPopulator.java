@@ -19,9 +19,7 @@ import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestServic
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -86,9 +84,6 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
     @Autowired
     private SupporterAssignmentRestService supporterAssignmentRestService;
 
-    @Autowired
-    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
-
     private Map<QuestionSetupType, QuestionReadOnlyViewModelPopulator<?>> populatorMap;
 
     @Autowired
@@ -113,11 +108,8 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         Future<List<ProcessRoleResource>> processRolesFuture = async(() -> getProcessRoles(application));
         Future<List<ApplicationAssessmentResource>> assessorResponseFuture = async(() -> getAssessmentResponses(application, settings));
         Future<List<SupporterAssignmentResource>> supporterResponseFuture = async(() -> getSupporterFeedbackResponses(application, settings));
-        Future<CompetitionThirdPartyConfigResource> thirdPartyConfigResponseFuture = async(() -> competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess());
 
         List<ProcessRoleResource> processRoles = resolve(processRolesFuture);
-        CompetitionThirdPartyConfigResource thirdPartyConfig = resolve(thirdPartyConfigResponseFuture);
-        competition.setCompetitionThirdPartyConfigResource(thirdPartyConfig);
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, processRoles,
                 resolve(questionsFuture), resolve(formInputsFuture), resolve(formInputResponsesFuture), resolve(questionStatusesFuture),
@@ -153,7 +145,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 shouldDisplayKtpApplicationFeedback(competition, user, processRoles),
                 competition.isKtp(),
                 competition.getTermsAndConditions().isThirdPartyProcurement(),
-                thirdPartyConfig
+                competition.getCompetitionThirdPartyConfigResource()
         );
     }
 

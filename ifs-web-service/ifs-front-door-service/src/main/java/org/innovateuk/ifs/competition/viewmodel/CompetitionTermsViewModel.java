@@ -16,6 +16,12 @@ public class CompetitionTermsViewModel {
     }
 
     public CompetitionTermsViewModel(long competitionId,
+                                     GrantTermsAndConditionsResource termsAndConditions) {
+        this.competitionId = competitionId;
+        this.termsAndConditions = termsAndConditions;
+    }
+
+    public CompetitionTermsViewModel(long competitionId,
                                      GrantTermsAndConditionsResource termsAndConditions,
                                      String termsAndConditionsLabel,
                                      String termsAndConditionsGuidance) {
@@ -73,11 +79,29 @@ public class CompetitionTermsViewModel {
 
     @Override
     public String toString() {
-        return "CompetitionTermsViewModel{" +
-                "competitionId=" + competitionId +
-                ",termsAndConditions=" + (termsAndConditions == null ? null : termsAndConditions.toString()) +
-                ",termsAndConditionsLabel=" + termsAndConditionsLabel +
-                ",termsAndConditionsGuidance=" + termsAndConditionsGuidance +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append("CompetitionTermsViewModel{").append("\n");
+        sb.append("competitionId=").append(competitionId).append("\n");
+
+        if (termsAndConditions != null) {
+            sb.append("termsAndConditions{").append("\n");
+            sb.append("id=").append(termsAndConditions.getId()).append("\n");
+            sb.append("name=").append(termsAndConditions.getName()).append("\n");
+            sb.append("template=").append(termsAndConditions.getTemplate()).append("\n");
+            sb.append("version=").append(termsAndConditions.getVersion()).append("\n");
+            sb.append("}").append("\n");
+        }
+
+        if (termsAndConditionsLabel != null) {
+            sb.append("termsAndConditionsLabel=").append(termsAndConditionsLabel).append("\n");
+        }
+
+        if (termsAndConditionsGuidance != null) {
+            sb.append("termsAndConditionsGuidance=").append(termsAndConditionsGuidance).append("\n");
+        }
+
+        sb.append("}");
+
+        return sb.toString();
     }
 }

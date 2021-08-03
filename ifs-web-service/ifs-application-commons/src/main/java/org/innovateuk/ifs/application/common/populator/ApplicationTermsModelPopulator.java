@@ -57,10 +57,8 @@ public class ApplicationTermsModelPopulator {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         QuestionResource question = questionRestService.findById(termsQuestionId).getSuccess();
-        CompetitionThirdPartyConfigResource thirdPartyConfigResource = competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
-        competition.setCompetitionThirdPartyConfigResource(thirdPartyConfigResource);
         boolean additionalTerms = competition.getCompetitionTerms() != null;
-        String termsAndConditionsLabel = termsAndConditionsTerminology(competition);
+        CompetitionThirdPartyConfigResource thirdPartyConfigResource = getCompetitionThirdPartyConfigResource(competition.getId());
 
         if (organisationId != null && !readOnly && !competition.isExpressionOfInterest())  {
             // is the current user a member of this application?
@@ -98,7 +96,9 @@ public class ApplicationTermsModelPopulator {
                         additionalTerms,
                         subsidyBasisUrl.isPresent(),
                         subsidyBasisUrl.orElse(null),
-                        termsAndConditionsLabel);
+                        thirdPartyConfigResource.getTermsAndConditionsLabel(),
+                        thirdPartyConfigResource.getTermsAndConditionsGuidance(),
+                        competition.getTermsAndConditions().isThirdPartyProcurement());
             }
         }
 
@@ -109,7 +109,11 @@ public class ApplicationTermsModelPopulator {
                 termsQuestionId,
                 getTermsAndConditionsTemplate(competition, applicationId, organisationId),
                 application.isCollaborativeProject(),
-                isAllOrganisationsTermsAccepted(applicationId, competition.getId()), additionalTerms, termsAndConditionsLabel);
+                isAllOrganisationsTermsAccepted(applicationId, competition.getId()),
+                additionalTerms,
+                thirdPartyConfigResource.getTermsAndConditionsLabel(),
+                thirdPartyConfigResource.getTermsAndConditionsGuidance(),
+                competition.getTermsAndConditions().isThirdPartyProcurement());
     }
 
     private Optional<String> subsidyBasisUrl(ApplicationResource application, CompetitionResource competition, OrganisationResource organisation) {
@@ -161,6 +165,10 @@ public class ApplicationTermsModelPopulator {
                 .values()
                 .stream()
                 .allMatch(completedSections -> completedSections.contains(termsAndConditionsSectionId));
+    }
+
+    private CompetitionThirdPartyConfigResource getCompetitionThirdPartyConfigResource(long competitionId) {
+        return competitionThirdPartyConfigRestService.findOneByCompetitionId(competitionId).getSuccess();
     }
 
     private String termsAndConditionsTerminology(CompetitionResource competitionResource) {

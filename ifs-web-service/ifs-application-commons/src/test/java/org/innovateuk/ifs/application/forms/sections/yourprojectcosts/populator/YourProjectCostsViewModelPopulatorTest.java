@@ -10,10 +10,9 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.resource.ApplicationFinanceType;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
@@ -39,8 +38,12 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.resource.ApplicationState.OPENED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionThirdPartyConfigResourceBuilder.newCompetitionThirdPartyConfigResource;
+import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -75,6 +78,9 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
     @Mock
     private ApplicantRestService applicantRestService;
 
+    @Mock
+    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
+
     @Override
     protected YourProjectCostsViewModelPopulator supplyServiceUnderTest() {
         YourProjectCostsViewModelPopulator populator = new YourProjectCostsViewModelPopulator();
@@ -84,9 +90,15 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
 
     @Test
     public void populate() {
+        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = newCompetitionThirdPartyConfigResource()
+                .build();
+        GrantTermsAndConditionsResource termsAndConditionsResource = newGrantTermsAndConditionsResource()
+                .withName("Procurement")
+                .build();
         CompetitionResource competition = newCompetitionResource()
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
                 .withFundingType(FundingType.PROCUREMENT)
+                .withTermsAndConditions(termsAndConditionsResource)
                 .build();
         OrganisationResource organisation = newOrganisationResource()
                 .withName("orgname")
@@ -122,6 +134,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(applicantRestService.getSection(user.getId(), application.getId(), SECTION_ID)).thenReturn(applicantSection);
         when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, user);
 
@@ -146,9 +159,15 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
 
     @Test
     public void populate_nonProcurement() {
+        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = newCompetitionThirdPartyConfigResource()
+                .build();
+        GrantTermsAndConditionsResource termsAndConditionsResource = newGrantTermsAndConditionsResource()
+                .withName("Innovate UK")
+                .build();
         CompetitionResource competition = newCompetitionResource()
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
                 .withFundingType(FundingType.GRANT)
+                .withTermsAndConditions(termsAndConditionsResource)
                 .build();
         OrganisationResource organisation = newOrganisationResource()
                 .withName("orgname")
@@ -171,6 +190,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getCompleted(APPLICATION_ID, ORGANISATION_ID)).thenReturn(singletonList(SECTION_ID));
         when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, user);
 
@@ -182,11 +202,17 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
     @Test
     public void populate_ktp_for_lead_applicant_with_fec_feature_disabled() {
         ReflectionTestUtils.setField(service, "fecFinanceModelEnabled", false);
+        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = newCompetitionThirdPartyConfigResource()
+                .build();
+        GrantTermsAndConditionsResource termsAndConditionsResource = newGrantTermsAndConditionsResource()
+                .withName("Knowledge Transfer Partnership (KTP)")
+                .build();
         CompetitionResource competition = newCompetitionResource()
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
                 .withFundingType(FundingType.KTP)
                 .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
                 .withCompetitionStatus(CompetitionStatus.OPEN)
+                .withTermsAndConditions(termsAndConditionsResource)
                 .build();
         OrganisationResource organisation = newOrganisationResource()
                 .withName("orgname")
@@ -230,6 +256,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(null);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
 
@@ -247,11 +274,17 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
     public void populate_ktp_for_lead_applicant_with_null_your_fec_cost_section() {
         Long yourFundingSectionId = 4L;
 
+        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = newCompetitionThirdPartyConfigResource()
+                .build();
+        GrantTermsAndConditionsResource termsAndConditionsResource = newGrantTermsAndConditionsResource()
+                .withName("Knowledge Transfer Partnership (KTP)")
+                .build();
         CompetitionResource competition = newCompetitionResource()
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
                 .withFundingType(FundingType.KTP)
                 .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
                 .withCompetitionStatus(CompetitionStatus.OPEN)
+                .withTermsAndConditions(termsAndConditionsResource)
                 .build();
         OrganisationResource organisation = newOrganisationResource()
                 .withName("orgname")
@@ -300,6 +333,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(null);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
 
@@ -319,9 +353,15 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         Long yourFundingSectionId = 4L;
         Long yourFecCostSectionId = 5L;
 
+        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = newCompetitionThirdPartyConfigResource()
+                .build();
+        GrantTermsAndConditionsResource termsAndConditionsResource = newGrantTermsAndConditionsResource()
+                .withName("Knowledge Transfer Partnership (KTP)")
+                .build();
         CompetitionResource competition = newCompetitionResource()
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
                 .withFundingType(FundingType.KTP)
+                .withTermsAndConditions(termsAndConditionsResource)
                 .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
                 .withCompetitionStatus(CompetitionStatus.OPEN)
                 .build();
@@ -366,6 +406,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
 
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
+                .withApplication(application.getId())
                 .build()));
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
@@ -376,6 +417,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
 
@@ -396,11 +438,17 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         Long yourFundingSectionId = 4L;
         Long yourFecCostSectionId = 5L;
 
+        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = newCompetitionThirdPartyConfigResource()
+                .build();
+        GrantTermsAndConditionsResource termsAndConditionsResource = newGrantTermsAndConditionsResource()
+                .withName("Knowledge Transfer Partnership (KTP)")
+                .build();
         CompetitionResource competition = newCompetitionResource()
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
                 .withFundingType(FundingType.KTP)
                 .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
                 .withCompetitionStatus(CompetitionStatus.OPEN)
+                .withTermsAndConditions(termsAndConditionsResource)
                 .build();
         OrganisationResource organisation = newOrganisationResource()
                 .withName("orgname")
@@ -453,6 +501,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
 
@@ -470,11 +519,17 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
 
     @Test
     public void populate_ktp_for_collaborator_with_default_fec_values() {
+        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = newCompetitionThirdPartyConfigResource()
+                .build();
+        GrantTermsAndConditionsResource termsAndConditionsResource = newGrantTermsAndConditionsResource()
+                .withName("Knowledge Transfer Partnership (KTP)")
+                .build();
         CompetitionResource competition = newCompetitionResource()
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
                 .withFundingType(FundingType.KTP)
                 .withCompetitionStatus(CompetitionStatus.OPEN)
                 .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
+                .withTermsAndConditions(termsAndConditionsResource)
                 .build();
         OrganisationResource organisation = newOrganisationResource()
                 .withName("orgname")
@@ -518,6 +573,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(applicantRestService.getSection(user.getId(), application.getId(), SECTION_ID)).thenReturn(applicantSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
 
@@ -538,6 +594,11 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         Long yourFundingSectionId = 4L;
         Long yourFecCostSectionId = 5L;
 
+        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = newCompetitionThirdPartyConfigResource()
+                .build();
+        GrantTermsAndConditionsResource termsAndConditionsResource = newGrantTermsAndConditionsResource()
+                .withName("Knowledge Transfer Partnership (KTP)")
+                .build();
         List<FinanceRowType> expectedOrganisationFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
                 .filter(financeRowType -> !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
                 .collect(Collectors.toList());
@@ -547,6 +608,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withFundingType(FundingType.KTP)
                 .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
                 .withCompetitionStatus(CompetitionStatus.OPEN)
+                .withTermsAndConditions(termsAndConditionsResource)
                 .build();
         OrganisationResource organisation = newOrganisationResource()
                 .withName("orgname")
@@ -599,6 +661,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
 
@@ -617,6 +680,11 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         Long yourFundingSectionId = 4L;
         Long yourFecCostSectionId = 5L;
 
+        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = newCompetitionThirdPartyConfigResource()
+                .build();
+        GrantTermsAndConditionsResource termsAndConditionsResource = newGrantTermsAndConditionsResource()
+                .withName("Knowledge Transfer Partnership (KTP)")
+                .build();
         List<FinanceRowType> expectedOrganisationFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
                 .filter(financeRowType -> !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType))
                 .collect(Collectors.toList());
@@ -626,6 +694,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withFundingType(FundingType.KTP)
                 .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
                 .withCompetitionStatus(CompetitionStatus.OPEN)
+                .withTermsAndConditions(termsAndConditionsResource)
                 .build();
         OrganisationResource organisation = newOrganisationResource()
                 .withName("orgname")
@@ -678,6 +747,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
 
@@ -696,6 +766,11 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         Long yourFundingSectionId = 4L;
         Long yourFecCostSectionId = 5L;
 
+        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = newCompetitionThirdPartyConfigResource()
+                .build();
+        GrantTermsAndConditionsResource termsAndConditionsResource = newGrantTermsAndConditionsResource()
+                .withName("Knowledge Transfer Partnership (KTP)")
+                .build();
         List<FinanceRowType> expectedOrganisationFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
                 .filter(financeRowType -> !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
                 .collect(Collectors.toList());
@@ -705,6 +780,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withFundingType(FundingType.KTP)
                 .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
                 .withCompetitionStatus(CompetitionStatus.OPEN)
+                .withTermsAndConditions(termsAndConditionsResource)
                 .build();
         OrganisationResource organisation = newOrganisationResource()
                 .withName("orgname")
@@ -757,6 +833,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
 
@@ -775,6 +852,11 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         Long yourFundingSectionId = 4L;
         Long yourFecCostSectionId = 5L;
 
+        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = newCompetitionThirdPartyConfigResource()
+                .build();
+        GrantTermsAndConditionsResource termsAndConditionsResource = newGrantTermsAndConditionsResource()
+                .withName("Knowledge Transfer Partnership (KTP)")
+                .build();
         List<FinanceRowType> expectedOrganisationFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
                 .filter(financeRowType -> !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType))
                 .collect(Collectors.toList());
@@ -784,6 +866,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withFundingType(FundingType.KTP)
                 .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
                 .withCompetitionStatus(CompetitionStatus.OPEN)
+                .withTermsAndConditions(termsAndConditionsResource)
                 .build();
         OrganisationResource organisation = newOrganisationResource()
                 .withName("orgname")
@@ -836,6 +919,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
         when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
 
@@ -847,5 +931,67 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertFalse(viewModel.getFecModelEnabled());
         assertTrue(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
+    }
+
+    @Test
+    public void populate_thirdPartyApplication() {
+        CompetitionThirdPartyConfigResource thirdPartyConfigResource = newCompetitionThirdPartyConfigResource()
+                .withTermsAndConditionsLabel("Test label")
+                .withTermsAndConditionsGuidance("Test guidance")
+                .withProjectCostGuidanceUrl("https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance")
+                .build();
+        GrantTermsAndConditionsResource grantTermsAndConditionsResource = newGrantTermsAndConditionsResource()
+                .withTemplate("third-party-terms-and-conditions")
+                .withName("Procurement Third Party")
+                .build();
+        CompetitionResource thirdPartyCompetition = newCompetitionResource()
+                .withCompetitionStatus(OPEN)
+                .withCompetitionThirdPartyConfig(thirdPartyConfigResource)
+                .withName("Third party competition")
+                .withTermsAndConditions(grantTermsAndConditionsResource)
+                .build();
+        OrganisationResource organisation = newOrganisationResource()
+                .withOrganisationNumber("88L")
+                .withOrganisationType(1L)
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(thirdPartyCompetition.getId())
+                .withLeadOrganisationId(organisation.getId())
+                .withApplicationState(OPENED)
+                .withName("Third party competition application")
+                .withCollaborativeProject(false)
+                .build();
+        SectionResource section = newSectionResource()
+                .withId(SECTION_ID)
+                .withCompetition(thirdPartyCompetition.getId())
+                .build();
+        UserResource user = newUserResource()
+                .withRoleGlobal(Role.APPLICANT)
+                .build();
+        ApplicantSectionResource applicantSectionResource = newApplicantSectionResource()
+                .withCurrentUser(user)
+                .withApplication(application)
+                .withSection(section)
+                .build();
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
+                .withApplication(application.getId())
+                .build();
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(thirdPartyCompetition.getId())).thenReturn(restSuccess(thirdPartyCompetition));
+        when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
+        when(applicantRestService.getSection(user.getId(), application.getId(), section.getId())).thenReturn(applicantSectionResource);
+        when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinanceResource));
+        when(sectionService.getCompleted(application.getId(), organisation.getId())).thenReturn(Arrays.asList(SECTION_ID));
+        when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
+                .withOrganisation(organisation.getId())
+                .build()));
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinanceResource));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(thirdPartyCompetition.getId())).thenReturn(restSuccess(thirdPartyConfigResource));
+
+        YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
+
+        assertEquals(thirdPartyConfigResource.getProjectCostGuidanceUrl(), viewModel.getThirdPartyProjectCostGuidanceLink());
+        assertEquals(thirdPartyCompetition.getId(), viewModel.getCompetitionId());
+        assertFalse(viewModel.isProcurementCompetition());
     }
 }

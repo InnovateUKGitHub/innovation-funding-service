@@ -312,8 +312,8 @@ public class CompetitionSetupTermsAndConditionsController {
 
     private void validateThirdPartyConfigFields(CompetitionResource competition, BindingResult bindingResult) {
         if (competition.getCompetitionThirdPartyConfigResource() == null) {
-            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsLabel", "Please enter third party terms and conditions label."));
-            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsText", "Please enter third party terms and conditions text."));
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsLabel", "Please enter label to replace terms and conditions"));
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsText", "Please enter description text for terms and conditions page"));
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "projectCostGuidanceLink", "Please enter project cost guidance link."));
         } else {
             if (competition.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel().isEmpty()) {
@@ -344,11 +344,17 @@ public class CompetitionSetupTermsAndConditionsController {
 
     private CompetitionResource deleteDataInTermsSetupswitch(boolean isThirdPartyProcurement, boolean isProcurement, CompetitionResource competition, BindingResult bindingResult) {
         if (competition.getCompetitionTerms() != null)  {
-            if (isProcurement && competition.getCompetitionThirdPartyConfigResource() != null
-                    && competition.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel() != null) {
-                 competitionSetupRestService.deleteCompetitionThirdPartyConfigData(competition.getId());
+            boolean isProcurementSaved = false;
+            boolean isThirdPartyProcurementSaved = false;
+            if (competition.getTermsAndConditions() != null) {
+               isProcurementSaved = competition.getTermsAndConditions().isProcurement();
+               isThirdPartyProcurementSaved = competition.getTermsAndConditions().isThirdPartyProcurement();
             }
-            if (isThirdPartyProcurement && bindingResult.hasErrors()) {
+            if (isThirdPartyProcurement && isProcurementSaved) {
+                competitionSetupRestService.deleteCompetitionTerms(competition.getId());
+            }
+            if (isProcurement && isThirdPartyProcurementSaved) {
+                competitionSetupRestService.deleteCompetitionThirdPartyConfigData(competition.getId());
                 competitionSetupRestService.deleteCompetitionTerms(competition.getId());
             }
             competition = competitionRestService.getCompetitionById(competition.getId()).getSuccess();
