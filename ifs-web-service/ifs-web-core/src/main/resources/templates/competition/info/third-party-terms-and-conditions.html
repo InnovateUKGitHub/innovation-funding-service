@@ -18,12 +18,11 @@
         <th:block th:if="${model.procurementThirdParty}">
 
             <th:block th:fragment="terms-and-conditions-content">
-                    <p class="govuk-body"><a th:href="@{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.competitionId})}" th:text="|View ${model.termsAndConditionsLabel}|">View full terms and conditions</a></p>
-            </th:block>
-
-            <div class="govuk-body">
+                <p class="govuk-body"><a
+                        th:href="@{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.competitionId})}"
+                        th:text="|View ${#strings.toLowerCase(model.termsAndConditionsLabel)}|">View full terms and conditions</a></p>
                 <p th:utext="${model.termsAndConditionsGuidance}"></p>
-            </div>
+            </th:block>
 
         </th:block>
     </main>

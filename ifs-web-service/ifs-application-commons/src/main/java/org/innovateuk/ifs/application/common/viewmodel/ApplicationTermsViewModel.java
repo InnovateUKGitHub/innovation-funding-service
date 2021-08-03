@@ -25,6 +25,9 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
     private final boolean additionalTerms;
     private final boolean subsidyBasisRequiredButIncomplete;
     private final String subsidyBasisQuestionUrl;
+    private final String termsAndConditionsLabel;
+    private final String termsAndConditionsGuidance;
+    private final boolean isThirdPartyProcurementCompetition;
 
     public ApplicationTermsViewModel(long applicationId,
                                      String applicationName,
@@ -40,7 +43,10 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
                                      boolean termsAcceptedByAllOrganisations,
                                      boolean additionalTerms,
                                      boolean subsidyBasisRequiredButIncomplete,
-                                     String subsidyBasisQuestionUrl) {
+                                     String subsidyBasisQuestionUrl,
+                                     String termsAndConditionsLabel,
+                                     String termsAndConditionsGuidance,
+                                     boolean isThirdPartyProcurementCompetition) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.competitionName = competitionName;
@@ -57,6 +63,9 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
         this.showHeaderAndFooter = true;
         this.subsidyBasisRequiredButIncomplete = subsidyBasisRequiredButIncomplete;
         this.subsidyBasisQuestionUrl = subsidyBasisQuestionUrl;
+        this.termsAndConditionsLabel = termsAndConditionsLabel;
+        this.termsAndConditionsGuidance = termsAndConditionsGuidance;
+        this.isThirdPartyProcurementCompetition = isThirdPartyProcurementCompetition;
     }
 
     public ApplicationTermsViewModel(long applicationId,
@@ -66,7 +75,10 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
                                      String competitionTermsTemplate,
                                      boolean collaborativeApplication,
                                      boolean termsAcceptedByAllOrganisation,
-                                     boolean additionalTerms) {
+                                     boolean additionalTerms,
+                                     String termsAndConditionsLabel,
+                                     String termsAndConditionsGuidance,
+                                     boolean isThirdPartyProcurementCompetition) {
         this.applicationId = applicationId;
         this.applicationName = null;
         this.competitionName = competitionName;
@@ -83,6 +95,9 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
         this.showHeaderAndFooter = false;
         this.subsidyBasisRequiredButIncomplete = false;
         this.subsidyBasisQuestionUrl = null;
+        this.termsAndConditionsLabel = termsAndConditionsLabel;
+        this.termsAndConditionsGuidance = termsAndConditionsGuidance;
+        this.isThirdPartyProcurementCompetition = isThirdPartyProcurementCompetition;
     }
 
     @Override
@@ -153,5 +168,17 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
 
     public String getSubsidyBasisQuestionUrl() {
         return subsidyBasisQuestionUrl;
+    }
+
+    public String getTermsAndConditionsLabel() {
+        return termsAndConditionsLabel;
+    }
+
+    public String getTermsAndConditionsGuidance() {
+        return termsAndConditionsGuidance;
+    }
+
+    public boolean isThirdPartyProcurementCompetition() {
+        return isThirdPartyProcurementCompetition;
     }
 }

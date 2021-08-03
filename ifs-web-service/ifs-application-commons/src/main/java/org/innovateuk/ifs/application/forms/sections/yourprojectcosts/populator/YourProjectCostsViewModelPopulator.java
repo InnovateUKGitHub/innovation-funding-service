@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CovidType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -59,6 +60,10 @@ public class YourProjectCostsViewModelPopulator {
     @Autowired
     private ApplicantRestService applicantRestService;
 
+    @Autowired
+    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
+
+
     @Value("${ifs.ktp.fec.finance.model.enabled}")
     private boolean fecFinanceModelEnabled;
 
@@ -94,14 +99,16 @@ public class YourProjectCostsViewModelPopulator {
                     application.getName(),
                     organisation.getName(),
                     getYourFinancesUrl(applicationId, organisationId),
-                    FundingType.PROCUREMENT == competition.getFundingType(),
+                    isProcurementCompetition(competition),
+                    isThirdPartyProcurementCompetition(competition),
                     FundingType.KTP == competition.getFundingType(),
                     getFinanceRowTypes(competition, finance),
                     competition.isOverheadsAlwaysTwenty(),
                     CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType()),
                     organisation.getOrganisationType().equals(OrganisationTypeEnum.KNOWLEDGE_BASE.getId()),
                     finance.getFecModelEnabled(),
-                    getGrantClaimPercentage(application.getId(), organisation.getId()));
+                    getGrantClaimPercentage(application.getId(), organisation.getId()),
+                    getThirdPartyProjectCostGuidanceLink(competition));
         }
     }
 
@@ -133,7 +140,8 @@ public class YourProjectCostsViewModelPopulator {
                 application.getName(),
                 organisation.getName(),
                 getYourFinancesUrl(application.getId(), organisation.getId()),
-                FundingType.PROCUREMENT == competition.getFundingType(),
+                isProcurementCompetition(competition),
+                isThirdPartyProcurementCompetition(competition),
                 FundingType.KTP == competition.getFundingType(),
                 getFinanceRowTypes(competition, finance),
                 competition.isOverheadsAlwaysTwenty(),
@@ -145,7 +153,8 @@ public class YourProjectCostsViewModelPopulator {
                 yourFecCostRequired,
                 yourFecCostSectionId,
                 finance.getFecModelEnabled(),
-                getGrantClaimPercentage(application.getId(), organisation.getId()));
+                getGrantClaimPercentage(application.getId(), organisation.getId()),
+                getThirdPartyProjectCostGuidanceLink(competition));
     }
 
     private boolean isYourFecCostRequired(List<Long> completedSectionIds, Long yourFecCostSectionId) {
@@ -189,5 +198,17 @@ public class YourProjectCostsViewModelPopulator {
 
     private boolean isProjectCostSectionLocked(boolean yourFundingRequired, boolean yourFecCostRequired) {
         return yourFundingRequired || yourFecCostRequired;
+    }
+
+    private boolean isProcurementCompetition(CompetitionResource competition) {
+        return competition.getTermsAndConditions().isProcurement();
+    }
+
+    private boolean isThirdPartyProcurementCompetition(CompetitionResource competition) {
+        return competition.getTermsAndConditions().isThirdPartyProcurement();
+    }
+
+    private String getThirdPartyProjectCostGuidanceLink(CompetitionResource competition) {
+        return competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess().getProjectCostGuidanceUrl();
     }
 }

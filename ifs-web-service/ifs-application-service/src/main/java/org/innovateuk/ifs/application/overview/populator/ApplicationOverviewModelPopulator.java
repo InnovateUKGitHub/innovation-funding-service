@@ -13,6 +13,7 @@ import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -34,6 +35,7 @@ import static java.util.stream.Collectors.toCollection;
 import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
 import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QUESTION;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.TERMS_AND_CONDITIONS;
 
 
 /**
@@ -52,6 +54,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
     private final SectionStatusRestService sectionStatusRestService;
     private final QuestionService questionService;
     private final ApplicationUrlHelper applicationUrlHelper;
+    private static CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
 
     public ApplicationOverviewModelPopulator(AsyncFuturesGenerator asyncFuturesGenerator, CompetitionRestService competitionRestService,
                                              SectionRestService sectionRestService, QuestionRestService questionRestService,
@@ -59,7 +62,8 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                                              OrganisationRestService organisationRestService, QuestionStatusRestService questionStatusRestService,
                                              SectionStatusRestService sectionStatusRestService,
                                              QuestionService questionService,
-                                             ApplicationUrlHelper applicationUrlHelper) {
+                                             ApplicationUrlHelper applicationUrlHelper,
+                                             CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService) {
         super(asyncFuturesGenerator);
         this.competitionRestService = competitionRestService;
         this.sectionRestService = sectionRestService;
@@ -71,6 +75,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         this.sectionStatusRestService = sectionStatusRestService;
         this.questionService = questionService;
         this.applicationUrlHelper = applicationUrlHelper;
+        this.competitionThirdPartyConfigRestService = competitionThirdPartyConfigRestService;
     }
 
     public ApplicationOverviewViewModel populateModel(ApplicationResource application, UserResource user) {
@@ -128,6 +133,11 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                     .collect(toCollection(LinkedHashSet::new));
         }
 
+        if (section.isTermsAndConditions() && data.getCompetition().getTermsAndConditions().isThirdPartyProcurement()) {
+            String labelName = competitionThirdPartyConfigRestService.findOneByCompetitionId(data.getCompetition().getId()).getSuccess().getTermsAndConditionsLabel();
+            section.setName(labelName);
+        }
+
         String subtitle = subtitle(data.getCompetition(), section);
 
         return new ApplicationOverviewSectionViewModel(section.getId(), section.getName(), subtitle, rows);
@@ -180,14 +190,14 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         return getAssignableViewModel(question, data)
                 .map(avm ->
                         new ApplicationOverviewRowViewModel(
-                                getQuestionTitle(question),
+                                getQuestionTitle(question, data.getCompetition()),
                                 getRowUrlFromQuestion(question, data),
                                 complete,
                                 avm,
                                 showStatus)
                 ).orElse(
                         new ApplicationOverviewRowViewModel(
-                                getQuestionTitle(question),
+                                getQuestionTitle(question, data.getCompetition()),
                                 getRowUrlFromQuestion(question, data),
                                 complete,
                                 showStatus)
@@ -235,10 +245,10 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         }
     }
 
-    private static String getQuestionTitle(QuestionResource question) {
-        return question.getQuestionSetupType() == ASSESSED_QUESTION ?
-                format("%s. %s", question.getQuestionNumber(), question.getShortName()) :
-                question.getShortName();
+    private static String getQuestionTitle(QuestionResource question, CompetitionResource competition) {
+        return (question.getQuestionSetupType() == ASSESSED_QUESTION) ?
+                format("%s. %s", question.getQuestionNumber(), question.getShortName()) : thirdPartyTermsAndConditionsQuestion(question, competition) ?
+                getThirdPartyTermsAndConditionsQuestionTitle(competition) : question.getShortName();
     }
 
     private String getFinanceSectionSubTitle(CompetitionResource competition) {
@@ -251,4 +261,11 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         }
     }
 
+    private static boolean thirdPartyTermsAndConditionsQuestion(QuestionResource question, CompetitionResource competition) {
+        return question.getQuestionSetupType().equals(TERMS_AND_CONDITIONS) && competition.getTermsAndConditions().isThirdPartyProcurement();
+    }
+
+    private static String getThirdPartyTermsAndConditionsQuestionTitle(CompetitionResource competition) {
+        return competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess().getTermsAndConditionsLabel();
+    }
 }
