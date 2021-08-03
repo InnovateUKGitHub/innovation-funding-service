@@ -4,6 +4,8 @@ import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.transactional.QuestionStatusServiceImpl;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -28,10 +30,14 @@ import java.util.List;
 @Lazy
 public class TestQuestionService extends QuestionStatusServiceImpl {
 
+    private static final Logger LOG = LoggerFactory.getLogger(TestQuestionService.class);
+
     @PreAuthorize("hasPermission(#ids, 'UPDATE')")
     @Transactional
     public ServiceResult<List<ValidationMessages>> markAsCompleteWithoutApplicationCompletionStatusUpdate(final QuestionApplicationCompositeId ids,
                                                                                                           final Long markedAsCompleteById) {
+        LOG.info(ids.questionId.toString());
+        LOG.info(ids.applicationId.toString());
         return setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true, false);
     }
 }
