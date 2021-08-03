@@ -295,14 +295,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
         List<AssessorFormInputResponseResource> assessorResponses = combineLists(combineLists(assessorResponsesScope,
                 assessorResponsesBusinessOpportunity), assessorResponsesPotentialMarket);
 
-        String thirdPartyTncLabel = "3rd party tnc label";
-        String thirdPartyTncGuidance = "3rd party tnc guidance";
-        String thirdPartyCostGuidanceUrl = "https://www.google.com";
-        thirdPartyConfig = newCompetitionThirdPartyConfigResource()
-                .withTermsAndConditionsLabel(thirdPartyTncLabel)
-                .withTermsAndConditionsGuidance(thirdPartyTncGuidance)
-                .withProjectCostGuidanceUrl(thirdPartyCostGuidanceUrl)
-                .build();
+        thirdPartyConfig = newCompetitionThirdPartyConfigResource().build();
 
         when(assessmentService.getById(assessment.getId())).thenReturn(assessment);
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));

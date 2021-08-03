@@ -105,8 +105,6 @@ public class AssessmentOverviewModelPopulator {
         List<QuestionResource> questions = questionRestService.findByCompetition(assessment.getCompetition()).getSuccess();
         List<QuestionResource> assessorViewQuestions = new ArrayList<>(questions);
 
-        CompetitionThirdPartyConfigResource thirdPartyConfig = competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
-        competition.setCompetitionThirdPartyConfigResource(thirdPartyConfig);
         String termsAndConditionsTerminology = termsAndConditionsTerminology(competition);
 
         return new AssessmentOverviewViewModel(assessmentId,
@@ -122,7 +120,7 @@ public class AssessmentOverviewModelPopulator {
                 getTermsAndConditionsRows(questions, application, competition),
                 competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && competition.getOtherFundingRulesTermsAndConditions() != null && northernIrelandSubsidyControlToggle,
                 competition.getTermsAndConditions().isThirdPartyProcurement(),
-                thirdPartyConfig
+                competition.getCompetitionThirdPartyConfigResource()
         );
     }
 
