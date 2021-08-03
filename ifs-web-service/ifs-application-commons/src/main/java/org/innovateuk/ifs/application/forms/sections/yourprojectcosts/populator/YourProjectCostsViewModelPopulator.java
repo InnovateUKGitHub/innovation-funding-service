@@ -88,7 +88,7 @@ public class YourProjectCostsViewModelPopulator {
 
         boolean hideVatQuestion = competition.isProcurement()
                 && isOfGemFunder(competition)
-                && competition.getTermsAndConditions().isThirdPartyProcurement();
+                && competition.getTermsAndConditions().isProcurementThirdParty();
 
         if (isUserCanEditFecFinance(competition, section, open)) {
             return getYourFecProjectCostsViewModel(application, competition, organisation, section, finance, completedSectionIds, open, complete, includeVat, hideVatQuestion);
@@ -218,7 +218,7 @@ public class YourProjectCostsViewModelPopulator {
     }
 
     private boolean isThirdPartyProcurementCompetition(CompetitionResource competition) {
-        return competition.getTermsAndConditions().isThirdPartyProcurement();
+        return competition.getTermsAndConditions().isProcurementThirdParty();
     }
 
     private String getThirdPartyProjectCostGuidanceLink(CompetitionResource competition) {
