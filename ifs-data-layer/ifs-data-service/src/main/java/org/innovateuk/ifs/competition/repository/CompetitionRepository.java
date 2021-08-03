@@ -27,7 +27,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     String LIVE_QUERY_WHERE_CLAUSE = "WHERE CURRENT_TIMESTAMP >= " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND " +
             "NOT EXISTS (SELECT m.date FROM Milestone m WHERE " +
-                            "(m.type = 'FEEDBACK_RELEASED' OR m.competition.completionStage = org.innovateuk.ifs.competition.resource.CompetitionCompletionStage.COMPETITION_CLOSE)" +
+                            "(m.type = 'FEEDBACK_RELEASED' AND m.competition.completionStage = org.innovateuk.ifs.competition.resource.CompetitionCompletionStage.COMPETITION_CLOSE)" +
                               "AND m.competition.id = c.id) AND " +
              "c.setupComplete = TRUE AND c.nonIfs = FALSE";
 
