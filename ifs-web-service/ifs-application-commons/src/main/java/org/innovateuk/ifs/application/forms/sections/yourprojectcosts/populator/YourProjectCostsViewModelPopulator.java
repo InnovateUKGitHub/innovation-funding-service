@@ -205,7 +205,7 @@ public class YourProjectCostsViewModelPopulator {
     }
 
     private boolean isThirdPartyProcurementCompetition(CompetitionResource competition) {
-        return competition.getTermsAndConditions().isThirdPartyProcurement();
+        return competition.getTermsAndConditions().isProcurementThirdParty();
     }
 
     private String getThirdPartyProjectCostGuidanceLink(CompetitionResource competition) {

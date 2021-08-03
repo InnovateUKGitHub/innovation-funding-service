@@ -128,29 +128,29 @@ public class CompetitionSetupTermsAndConditionsController {
             return "competition/setup";
         }
 
-        boolean isThirdPartyProcurement = isThirdPartyProcurement(termsAndConditionsForm.getTermsAndConditionsId());
+        boolean isProcurementThirdParty = isProcurementThirdParty(termsAndConditionsForm.getTermsAndConditionsId());
         boolean isProcurement = isProcurement(termsAndConditionsForm.getTermsAndConditionsId());
 
-        if (isThirdPartyProcurement) {
+        if (isProcurementThirdParty) {
             termsAndConditionsFormPopulator.populateThirdPartyConfigData(termsAndConditionsForm, competition);
             validateThirdPartyConfigFields(competition, bindingResult);
         }
 
-        validateUploadFragment(isThirdPartyProcurement, isProcurement, competition, bindingResult);
+        validateUploadFragment(isProcurementThirdParty, isProcurement, competition, bindingResult);
 
         if (validationHandler.hasErrors()) {
             model.addAttribute(MODEL, termsAndConditionsModelPopulator.populateModel(competition, loggedInUser, false));
             return "competition/setup";
         }
 
-        if ( !(isProcurement || isThirdPartyProcurement)) {
+        if ( !(isProcurement || isProcurementThirdParty)) {
             competitionSetupRestService.deleteCompetitionTerms(competitionId);
         }
 
         Supplier<ServiceResult<Void>> saveAction = () -> nonStateAidSaveAction(competition, termsAndConditionsForm);
         Supplier<String> postSaveRedirect = () -> postSaveRedirectForSingleTermsAndConditions(competition);
 
-        if (isThirdPartyProcurement(termsAndConditionsForm.getTermsAndConditionsId())) {
+        if (isProcurementThirdParty(termsAndConditionsForm.getTermsAndConditionsId())) {
             saveThirdPartyTermsAndConditionsConfigData(competition);
         }
         return termsAndConditionsSection(validationHandler, competition, loggedInUser, model, saveAction, postSaveRedirect, false);
@@ -302,8 +302,8 @@ public class CompetitionSetupTermsAndConditionsController {
         return format("redirect:/competition/setup/%d/section/%s", competition.getId(), TERMS_AND_CONDITIONS.getPostMarkCompletePath());
     }
 
-    private boolean isThirdPartyProcurement(long termsAndConditionsId) {
-        return termsAndConditionsRestService.getById(termsAndConditionsId).getSuccess().isThirdPartyProcurement();
+    private boolean isProcurementThirdParty(long termsAndConditionsId) {
+        return termsAndConditionsRestService.getById(termsAndConditionsId).getSuccess().isProcurementThirdParty();
     }
 
     private ServiceResult<Void> saveThirdPartyTermsAndConditionsConfigData(CompetitionResource competition) {
@@ -312,48 +312,45 @@ public class CompetitionSetupTermsAndConditionsController {
 
     private void validateThirdPartyConfigFields(CompetitionResource competition, BindingResult bindingResult) {
         if (competition.getCompetitionThirdPartyConfigResource() == null) {
-            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsLabel", "Please enter label to replace terms and conditions"));
-            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsText", "Please enter description text for terms and conditions page"));
-            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "projectCostGuidanceLink", "Please enter project cost guidance link."));
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsLabel", "Please enter a label to replace terms and conditions."));
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsText", "Please enter a description text for terms and conditions page."));
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "projectCostGuidanceLink", "Please enter a project costs guidance link."));
         } else {
             if (competition.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel().isEmpty()) {
-                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsLabel", "Please enter third party terms and conditions label."));
+                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsLabel", "Please enter a label to replace terms and conditions."));
             }
             if (competition.getCompetitionThirdPartyConfigResource().getTermsAndConditionsGuidance().isEmpty()) {
-                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsText", "Please enter third party terms and conditions text."));
+                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsText", "Please enter a description text for terms and conditions page."));
             }
             if (competition.getCompetitionThirdPartyConfigResource().getProjectCostGuidanceUrl().isEmpty()) {
-                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "projectCostGuidanceLink", "Please enter project cost guidance link."));
+                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "projectCostGuidanceLink", "Please enter a project costs guidance link."));
             }
 
         }
     }
 
-    private void validateUploadFragment(boolean isThirdPartyProcurement, boolean isProcurement, CompetitionResource competition, BindingResult bindingResult) {
-        competition = deleteDataInTermsSetupswitch(isThirdPartyProcurement, isProcurement, competition, bindingResult);
+    private void validateUploadFragment(boolean isProcurementThirdParty, boolean isProcurement, CompetitionResource competition, BindingResult bindingResult) {
+        competition = deleteDataInTermsSetupswitch(isProcurementThirdParty, isProcurement, competition, bindingResult);
 
         if (competition.getCompetitionTerms() == null) {
-            if (isThirdPartyProcurement) {
-                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsDoc", "Please upload a terms and conditions document."));
-            }
             if (isProcurement) {
                 bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "termsAndConditionsDoc", "Upload a terms and conditions document."));
             }
         }
     }
 
-    private CompetitionResource deleteDataInTermsSetupswitch(boolean isThirdPartyProcurement, boolean isProcurement, CompetitionResource competition, BindingResult bindingResult) {
+    private CompetitionResource deleteDataInTermsSetupswitch(boolean isProcurementThirdParty, boolean isProcurement, CompetitionResource competition, BindingResult bindingResult) {
         if (competition.getCompetitionTerms() != null)  {
             boolean isProcurementSaved = false;
-            boolean isThirdPartyProcurementSaved = false;
+            boolean isProcurementThirdPartySaved = false;
             if (competition.getTermsAndConditions() != null) {
                isProcurementSaved = competition.getTermsAndConditions().isProcurement();
-               isThirdPartyProcurementSaved = competition.getTermsAndConditions().isThirdPartyProcurement();
+                isProcurementThirdPartySaved = competition.getTermsAndConditions().isProcurementThirdParty();
             }
-            if (isThirdPartyProcurement && isProcurementSaved) {
+            if (isProcurementThirdParty && isProcurementSaved) {
                 competitionSetupRestService.deleteCompetitionTerms(competition.getId());
             }
-            if (isProcurement && isThirdPartyProcurementSaved) {
+            if (isProcurement && isProcurementThirdPartySaved) {
                 competitionSetupRestService.deleteCompetitionThirdPartyConfigData(competition.getId());
                 competitionSetupRestService.deleteCompetitionTerms(competition.getId());
             }
@@ -367,7 +364,7 @@ public class CompetitionSetupTermsAndConditionsController {
         if (isProcurement(termsAndConditionsForm.getTermsAndConditionsId())) {
             file = termsAndConditionsForm.getTermsAndConditionsDoc();
         }
-        if (isThirdPartyProcurement(termsAndConditionsForm.getTermsAndConditionsId())) {
+        if (isProcurementThirdParty(termsAndConditionsForm.getTermsAndConditionsId())) {
             file = termsAndConditionsForm.getThirdPartyTermsAndConditionsDoc();
         }
         return file;
