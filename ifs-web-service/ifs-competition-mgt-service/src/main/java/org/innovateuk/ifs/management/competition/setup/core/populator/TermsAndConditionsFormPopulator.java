@@ -21,7 +21,7 @@ public class TermsAndConditionsFormPopulator {
             termsAndConditionsForm.setTermsAndConditionsId(competitionResource.getTermsAndConditions().getId());
                 CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = competitionResource.getCompetitionThirdPartyConfigResource();
                 if (competitionThirdPartyConfigResource != null) {
-                    if (isThirdPartyProcurement(termsAndConditionsForm.getTermsAndConditionsId())) {
+                    if (isProcurementThirdParty(termsAndConditionsForm.getTermsAndConditionsId())) {
                         termsAndConditionsForm.setThirdPartyTermsAndConditionsLabel(competitionThirdPartyConfigResource.getTermsAndConditionsLabel());
                         termsAndConditionsForm.setThirdPartyTermsAndConditionsText(competitionThirdPartyConfigResource.getTermsAndConditionsGuidance());
                         termsAndConditionsForm.setProjectCostGuidanceLink(competitionThirdPartyConfigResource.getProjectCostGuidanceUrl());
@@ -51,7 +51,7 @@ public class TermsAndConditionsFormPopulator {
         competition.setCompetitionThirdPartyConfigResource(competitionThirdPartyConfigResource);
     }
 
-    private boolean isThirdPartyProcurement(long termsAndConditionsId) {
-        return termsAndConditionsRestService.getById(termsAndConditionsId).getSuccess().isThirdPartyProcurement();
+    private boolean isProcurementThirdParty(long termsAndConditionsId) {
+        return termsAndConditionsRestService.getById(termsAndConditionsId).getSuccess().isProcurementThirdParty();
     }
 }
