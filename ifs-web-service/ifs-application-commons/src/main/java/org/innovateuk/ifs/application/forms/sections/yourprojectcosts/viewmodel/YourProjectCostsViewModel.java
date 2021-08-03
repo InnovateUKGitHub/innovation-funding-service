@@ -63,6 +63,8 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     private final String thirdPartyProjectCostGuidanceLink;
 
+    private final boolean hideVatQuestion;
+
     public YourProjectCostsViewModel(long applicationId,
                                      String competitionName,
                                      long sectionId,
@@ -88,7 +90,8 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      Long yourFecCostSectionId,
                                      Boolean fecModelEnabled,
                                      BigDecimal grantClaimPercentage,
-                                     String thirdPartyProjectCostGuidanceLink) {
+                                     String thirdPartyProjectCostGuidanceLink,
+                                     boolean hideVatQuestion) {
         this.internal = false;
         this.organisationId = organisationId;
         this.applicationId = applicationId;
@@ -116,6 +119,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.fecModelEnabled = fecModelEnabled;
         this.grantClaimPercentage = grantClaimPercentage;
         this.thirdPartyProjectCostGuidanceLink = thirdPartyProjectCostGuidanceLink;
+        this.hideVatQuestion = hideVatQuestion;
     }
 
     public YourProjectCostsViewModel(long applicationId,
@@ -138,13 +142,18 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      boolean showJustificationForm,
                                      Boolean fecModelEnabled,
                                      BigDecimal grantClaimPercentage,
-                                     String thirdPartyProjectCostGuidanceLink) {
+                                     String thirdPartyProjectCostGuidanceLink,
+                                     boolean hideVatQuestion) {
         this(applicationId, competitionName, sectionId, competitionId, organisationId, complete, open,
-                includeVat, applicationName, organisationName, financesUrl, procurementCompetition, thirdPartyProcurementCompetition, ktpCompetition, financeRowTypes,
-                overheadAlwaysTwenty, showCovidGuidance, showJustificationForm, false, false, null, false, null, fecModelEnabled, grantClaimPercentage, thirdPartyProjectCostGuidanceLink);
+                includeVat, applicationName, organisationName, financesUrl, procurementCompetition, thirdPartyProcurementCompetition,
+                ktpCompetition, financeRowTypes, overheadAlwaysTwenty, showCovidGuidance, showJustificationForm, false,
+                false, null, false, null, fecModelEnabled,
+                grantClaimPercentage, thirdPartyProjectCostGuidanceLink, hideVatQuestion);
     }
 
-    public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, boolean thirdPartyProcurementCompetition, boolean ktpCompetition, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, String competitionName, long applicationId) {
+    public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, boolean thirdPartyProcurementCompetition,
+                                     boolean ktpCompetition, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty,
+                                     String competitionName, long applicationId) {
         this.open = open;
         this.internal = internal;
         this.procurementCompetition = procurementCompetition;
@@ -173,6 +182,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.fecModelEnabled = null;
         this.grantClaimPercentage = BigDecimal.ZERO;
         this.thirdPartyProjectCostGuidanceLink = null;
+        this.hideVatQuestion = false;
     }
 
     @Override
@@ -304,5 +314,9 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     public String getThirdPartyProjectCostGuidanceLink() {
         return thirdPartyProjectCostGuidanceLink;
+    }
+
+    public Boolean isVatHidden() {
+        return hideVatQuestion;
     }
 }
