@@ -50,4 +50,8 @@ public class CompetitionFunderResource {
     public void setCompetitionId(Long competitionId) {
         this.competitionId = competitionId;
     }
+
+    public boolean isOfGem() {
+        return (funder == Funder.OFFICE_OF_GAS_AND_ELECTRICITY_MARKETS_OFGEM);
+    }
 }

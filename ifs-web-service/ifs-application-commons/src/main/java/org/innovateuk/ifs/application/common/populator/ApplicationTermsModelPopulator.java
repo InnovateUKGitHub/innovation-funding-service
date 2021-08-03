@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -26,8 +25,6 @@ import java.time.ZonedDateTime;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
-import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
-import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_OTHER;
 
 @Component
 public class ApplicationTermsModelPopulator {
@@ -171,15 +168,5 @@ public class ApplicationTermsModelPopulator {
 
     private CompetitionThirdPartyConfigResource getCompetitionThirdPartyConfigResource(long competitionId) {
         return competitionThirdPartyConfigRestService.findOneByCompetitionId(competitionId).getSuccess();
-    }
-
-    private String termsAndConditionsTerminology(CompetitionResource competitionResource) {
-        if (FundingType.INVESTOR_PARTNERSHIPS == competitionResource.getFundingType()) {
-            return TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
-        }
-        if(competitionResource.getTermsAndConditions().isProcurementThirdParty()) {
-            return competitionResource.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel();
-        }
-        return TERMS_AND_CONDITIONS_OTHER;
     }
 }
