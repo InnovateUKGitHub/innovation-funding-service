@@ -56,18 +56,18 @@ Application details validation message check
 RTO lead has read only view after submission
     [Documentation]    INFUND-7405, INFUND-8599  IFS-5920
     [Tags]
-    Given the user navigates to the page                   ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link                    link = ${application_rto_name}
-    And the user fills in the organisation information     ${application_rto_name}  ${SMALL_ORGANISATION_SIZE}
-    And the user clicks the button/link                    link = Your funding
+    Given the user navigates to the page                        ${APPLICANT_DASHBOARD_URL}
+    And the user clicks the button/link                         link = ${application_rto_name}
+    And the user fills in the organisation information          ${application_rto_name}  ${SMALL_ORGANISATION_SIZE}
+    And the user clicks the button/link                         link = Your funding
     And the user marks your funding section as complete
     And the user enters the project location
-    When Run Keyword And Ignore Error Without Screenshots  the user clicks the button/link  css = .govuk-details__summary[aria-expanded="false"]
+    When Run Keyword And Ignore Error Without Screenshots       the user clicks the button/link  css = .govuk-details__summary[aria-expanded="false"]
     And the user puts zero project costs
-    When the user clicks the button/link                   link = Return to application overview
+    When the user clicks the button/link                        link = Return to application overview
     And the user accept the competition terms and conditions    Return to application overview
-    And the user clicks the button/link                    link = Review and submit
-    And the user should not see the element                css = input
+    And the user clicks the button/link                         link = Review and submit
+    And the user should not see the element                     css = input
 
 Application overview complete status
     [Documentation]  IFS-4265
@@ -126,7 +126,6 @@ Status of the submitted application
     Then the user should see the element  jQuery = .in-progress li:contains("${application_rto_name}") .msg-progress:contains("Submitted")
     And the user clicks the button/link   link = ${application_rto_name}
     And the user should see the element   link = View application
-    And the user should see the element   link = Print application
 
 *** Keywords ***
 the applicant clicks Yes in the submit modal

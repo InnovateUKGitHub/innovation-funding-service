@@ -70,17 +70,12 @@ Companies House: Valid registration number
     Then the user clicks the button/link         jQuery = a:contains("Next")
     And the user should see the element          link = TESCO PLC
 
-Companies House: Empty company name field
-    [Documentation]    INFUND-887  IFS-7723
-    [Tags]
-    When the user searches for organisation     ${EMPTY}
-    Then the user should see the element        jQuery = p:contains("matching the search") span:contains("0") + span:contains("Companies")
-
-Companies House: Empty company name field validation message
-    [Documentation]    IFS-7723  IFS-7722
-    [Tags]
-    Given the user clicks the button/link                  link = Back to enter your organisation's details
-    When the user searches for organisation                ${EMPTY}
+Companies House: Empty company name field with validation message
+    [Documentation]    INFUND-887  IFS-7723  IFS-7723  IFS-7722
+    Given the user searches for organisation               ${EMPTY}
+    And the user should see the element                    jQuery = p:contains("matching the search") span:contains("0") + span:contains("Companies")
+    When the user clicks the button/link                   link = Back to enter your organisation's details
+    And the user searches for organisation                 ${EMPTY}
     Then the user should see a field and summary error     You must enter an organisation name or company registration number.
 
 Companies House: Search for a dissolved company and the result should be disabled
@@ -153,7 +148,6 @@ Applicant goes to the organisation search page
 the user can see organisation details in db
     Connect to Database    @{database}
     ${result} =  get details of existing organisation
-    log   ${result}
     Should not Be Empty     ${result}
 
 user selects where is organisation based

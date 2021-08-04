@@ -278,7 +278,6 @@ the user accepts invitation to collaborate
      the user clicks the button/link                jQuery = button:contains("Save and continue")
      the user clicks the button/link                link = Application team
 
-
 the user accepts invitation to join application under same organisation
      Logout as user
      the user reads his email and clicks the link     troy.ward@gmail.com  Invitation to contribute in KTP new competition  You are invited by Steve Smith to participate in an application for funding through the Innovation Funding Service.  2
