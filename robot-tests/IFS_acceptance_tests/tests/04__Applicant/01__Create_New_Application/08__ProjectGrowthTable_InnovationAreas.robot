@@ -39,6 +39,7 @@ Resource          ../../../resources/common/Competition_Commons.robot
 ${compWithoutGrowth}         FromCompToNewAppl without GrowthTable
 ${applicationWithoutGrowth}  NewApplFromNewComp without GrowthTable
 ${compWithGrowth}            All-Innov-Areas With GrowthTable    #of Sector Competition type
+${compWithGrowthId}          ${competition_ids['${compWithGrowth}']}
 ${applicationWithGrowth}     All-Innov-Areas Application With GrowthTable
 ${newUsersEmail}             liam@innovate.com
 ${ineligibleMessage}         Your organisation type does not match our eligibility criteria for lead applicants.
@@ -550,9 +551,9 @@ Custom suite setup
     Connect to database  @{database}
 
 the user navigate to competition
-    log in as a different user                            &{lead_applicant_credentials}
+    log in as a different user             &{lead_applicant_credentials}
     the user clicks the application tile if displayed
-    the user clicks the button/link                       link = ${applicationWithGrowth}
+    the user clicks the button/link        link = ${applicationWithGrowth}
 
 Custom suite teardown
     Close browser and delete emails
