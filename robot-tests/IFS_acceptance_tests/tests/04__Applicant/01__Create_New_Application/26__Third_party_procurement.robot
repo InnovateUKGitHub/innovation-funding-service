@@ -69,7 +69,6 @@ the user should see third party t&c validations
     the user should see a field and summary error       Please enter a label to replace terms and conditions.
     the user should see a field and summary error       Please enter a description text for terms and conditions page.
     the user should see a field and summary error       Please enter a project costs guidance link.
-    the user should see a field and summary error       Please upload a terms and conditions document.
     the user uploads the file                           css = .inputfile  ${ods_file}
     the user should see the element                     jQuery = :contains("${wrong_filetype_validation_error}")
 
