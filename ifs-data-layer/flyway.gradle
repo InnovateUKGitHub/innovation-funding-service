@@ -8,16 +8,16 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.flywaydb:flyway-gradle-plugin:5.2.4'
-        classpath 'org.flywaydb:flyway-core:5.2.4'
+        classpath 'org.flywaydb:flyway-gradle-plugin:7.1.1'
+        classpath 'org.flywaydb:flyway-core:7.1.1'
     }
 }
 
 dependencies {
-    implementation enforcedPlatform("org.flywaydb:flyway-core:5.2.4")
+    implementation enforcedPlatform("org.flywaydb:flyway-core:7.1.1")
     implementation enforcedPlatform("com.h2database:h2:1.4.199")
 
-    compile "org.flywaydb:flyway-core" //7.1.1!!!
+    compile "org.flywaydb:flyway-core"
     compile "org.mariadb.jdbc:mariadb-java-client"
     testCompile "com.h2database:h2" //1.4.200
 }
