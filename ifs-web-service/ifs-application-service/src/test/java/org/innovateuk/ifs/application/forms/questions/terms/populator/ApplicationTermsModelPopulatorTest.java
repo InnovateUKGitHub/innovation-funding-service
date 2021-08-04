@@ -646,7 +646,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionResource.getId(), organisation.getId(), true);
 
-        assertEquals(thirdPartyCompetition.getTermsAndConditions().isThirdPartyProcurement(), actual.isThirdPartyProcurementCompetition());
+        assertEquals(thirdPartyCompetition.getTermsAndConditions().isProcurementThirdParty(), actual.isThirdPartyProcurementCompetition());
         assertEquals(thirdPartyCompetition.getTermsAndConditions().getTemplate(), actual.getCompetitionTermsTemplate());
         assertEquals(thirdPartyConfigResource.getTermsAndConditionsLabel(), actual.getTermsAndConditionsLabel());
         assertEquals(thirdPartyConfigResource.getTermsAndConditionsGuidance(), actual.getTermsAndConditionsGuidance());

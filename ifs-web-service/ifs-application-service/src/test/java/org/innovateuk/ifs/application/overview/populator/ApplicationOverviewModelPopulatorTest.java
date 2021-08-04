@@ -152,7 +152,7 @@ public class ApplicationOverviewModelPopulatorTest {
         when(messageSource.getMessage("ifs.section.termsAndConditions.description", null, Locale.getDefault())).thenReturn("T&Cs description");
         when(applicationUrlHelper.getQuestionUrl(any(), anyLong(), anyLong(), anyLong())).thenReturn(Optional.of("/the-question-url"));
         when(sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(restSuccess(completedSectionsByOrganisation));
-        when(grantTermsAndConditionsResource.isThirdPartyProcurement()).thenReturn(false);
+        when(grantTermsAndConditionsResource.isProcurementThirdParty()).thenReturn(false);
 
         ApplicationOverviewViewModel viewModel = populator.populateModel(application, user);
 
@@ -271,7 +271,7 @@ public class ApplicationOverviewModelPopulatorTest {
         when(applicationUrlHelper.getQuestionUrl(any(), anyLong(), anyLong(), anyLong())).thenReturn(Optional.of("/the-question-url"));
         when(sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(restSuccess(completedSectionsByOrganisation));
         when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(thirdPartyConfigResource));
-        when(grantTermsAndConditionsResource.isThirdPartyProcurement()).thenReturn(false);
+        when(grantTermsAndConditionsResource.isProcurementThirdParty()).thenReturn(false);
 
         ApplicationOverviewViewModel viewModel = populator.populateModel(application, user);
 
