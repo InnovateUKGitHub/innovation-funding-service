@@ -77,18 +77,6 @@ the user fills in the Application details
     the user can mark the question as complete
     the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
 
-the user fills in the Prince's Trust Application details
-    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
-    the user should see the element       jQuery = h1:contains("Application details")
-    the user enters text to a text field  id = name  ${appTitle}
-    the user enters text to a text field  id = startDate  ${tomorrowday}
-    the user enters text to a text field  css = #application_details-startdate_month  ${month}
-    the user enters text to a text field  css = #application_details-startdate_year  ${nextyear}
-    the user enters text to a text field  css = [id="durationInMonths"]  24
-    the user should not see the element   link = Choose your innovation area
-    the user can mark the question as complete
-    the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
-
 the user fills in the Application details with no submit
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user should see the element       jQuery = h1:contains("Application details")
@@ -171,8 +159,8 @@ the user has read only view once section is marked complete
 
 the user fills in Labour
     the user expands the section               Labour
-#   the user should see the element            css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input
-    the user enters text to a text field       id = working-days-per-year  230
+    the user should see the element            css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input
+    the user enters text to a text field       id = working-days-per-year   230
     the user should see the element            jQuery = input[id$="role"]:text[value = ""]:first
     the user enters text to a text field       jQuery = input[id$="role"]:text[value = ""]:first    anotherrole
     the user enters text to a text field       jQuery = input[id$="gross"][value = ""]:first    120000
