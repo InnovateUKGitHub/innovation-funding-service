@@ -138,21 +138,6 @@ Lead should not see pending status or resend invite for accepted invite
     And The user should not see the element     jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td button:contains("Resend invite")
     [Teardown]  logout as user
 
-The guest user applies to a competition and creates account
-    [Documentation]  IFS-2440
-    [Tags]
-    # Business organisation type - Competition:Aerospace technology investment sector
-    Given the user applies to competition and enters organisation type link  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}   radio-1   org2
-    Then the user creates an account and signs in
-
-New Lead Applicant invites new user as collaborator on his application
-    [Documentation]  IFS-2440
-    [Tags]
-    # Business organisation type for the collaborator as well.
-    Given the lead applicant invites the collaborator
-    Then partner organisation accepts the invite to collaborate     ${newCollaborator}  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  ${BUSINESS_TYPE_ID}
-    And the lead applicant is no longer directed to the team page
-
 *** Keywords ***
 the user can see the updated company name throughout the application
     Given the user navigates to the page     ${APPLICANT_DASHBOARD_URL}
