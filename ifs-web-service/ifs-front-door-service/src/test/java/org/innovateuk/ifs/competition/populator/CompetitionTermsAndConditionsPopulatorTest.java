@@ -72,8 +72,8 @@ public class CompetitionTermsAndConditionsPopulatorTest {
         assertTrue(competitionTermsViewModel.isProcurementThirdParty());
         assertTrue(competitionTermsViewModel.isTermsAndConditionsUploaded());
         assertEquals(grantTermsAndConditionsResource, competitionTermsViewModel.getTermsAndConditions());
-        assertEquals("TermsAndConditionsLabel", competitionTermsViewModel.getTermsAndConditionsLabel());
-        assertEquals("TermsAndConditionsGuidance", competitionTermsViewModel.getTermsAndConditionsGuidance());
+        assertEquals("TermsAndConditionsLabel", competitionTermsViewModel.getThirdPartyConfig().getTermsAndConditionsLabel());
+        assertEquals("TermsAndConditionsGuidance", competitionTermsViewModel.getThirdPartyConfig().getTermsAndConditionsGuidance());
         assertEquals("CompetitionTermsViewModel{\n" +
                 "competitionId=1\n" +
                 "termsAndConditions{\n" +
@@ -102,8 +102,8 @@ public class CompetitionTermsAndConditionsPopulatorTest {
         assertFalse(competitionTermsViewModel.isProcurementThirdParty());
         assertFalse(competitionTermsViewModel.isTermsAndConditionsUploaded());
         assertEquals(grantTermsAndConditionsResource, competitionTermsViewModel.getTermsAndConditions());
-        assertNull(competitionTermsViewModel.getTermsAndConditionsLabel());
-        assertNull(competitionTermsViewModel.getTermsAndConditionsGuidance());
+        assertNull(competitionTermsViewModel.getThirdPartyConfig().getTermsAndConditionsLabel());
+        assertNull(competitionTermsViewModel.getThirdPartyConfig().getTermsAndConditionsGuidance());
         assertEquals("CompetitionTermsViewModel{\n" +
                 "competitionId=1\n" +
                 "termsAndConditions{\n" +

@@ -32,8 +32,7 @@ public class CompetitionTermsAndConditionsPopulator {
             competitionTermsViewModel = new CompetitionTermsViewModel(competitionId,
                     grantTermsAndConditionsResource,
                     competition.getCompetitionTerms(),
-                    thirdPartyConfig.getTermsAndConditionsLabel(),
-                    thirdPartyConfig.getTermsAndConditionsGuidance());
+                    thirdPartyConfig);
         } else {
             competitionTermsViewModel = new CompetitionTermsViewModel(competitionId, grantTermsAndConditionsResource);
         }

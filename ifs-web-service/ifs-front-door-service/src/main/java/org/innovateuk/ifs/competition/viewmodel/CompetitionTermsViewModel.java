@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 
@@ -10,8 +11,7 @@ public class CompetitionTermsViewModel {
     private final long competitionId;
     GrantTermsAndConditionsResource termsAndConditions;
     private FileEntryResource competitionTerms;
-    private String termsAndConditionsLabel;
-    private String termsAndConditionsGuidance;
+    private CompetitionThirdPartyConfigResource thirdPartyConfig;
 
     public CompetitionTermsViewModel(long competitionId) {
         this.competitionId = competitionId;
@@ -26,13 +26,11 @@ public class CompetitionTermsViewModel {
     public CompetitionTermsViewModel(long competitionId,
                                      GrantTermsAndConditionsResource termsAndConditions,
                                      FileEntryResource competitionTerms,
-                                     String termsAndConditionsLabel,
-                                     String termsAndConditionsGuidance) {
+                                     CompetitionThirdPartyConfigResource thirdPartyConfig) {
         this.competitionId = competitionId;
         this.termsAndConditions = termsAndConditions;
         this.competitionTerms = competitionTerms;
-        this.termsAndConditionsLabel = termsAndConditionsLabel;
-        this.termsAndConditionsGuidance = termsAndConditionsGuidance;
+        this.thirdPartyConfig = thirdPartyConfig;
     }
 
     public long getCompetitionId() {
@@ -43,12 +41,8 @@ public class CompetitionTermsViewModel {
         return termsAndConditions;
     }
 
-    public String getTermsAndConditionsLabel() {
-        return termsAndConditionsLabel;
-    }
-
-    public String getTermsAndConditionsGuidance() {
-        return termsAndConditionsGuidance;
+    public CompetitionThirdPartyConfigResource getThirdPartyConfig() {
+        return thirdPartyConfig;
     }
 
     public boolean isProcurementThirdParty() {
@@ -70,8 +64,7 @@ public class CompetitionTermsViewModel {
         return new EqualsBuilder()
                 .append(competitionId, that.competitionId)
                 .append(termsAndConditions, that.termsAndConditions)
-                .append(termsAndConditionsLabel, that.termsAndConditionsLabel)
-                .append(termsAndConditionsGuidance, that.termsAndConditionsGuidance)
+                .append(thirdPartyConfig, that.thirdPartyConfig)
                 .isEquals();
     }
 
@@ -80,8 +73,7 @@ public class CompetitionTermsViewModel {
         return new HashCodeBuilder(17, 37)
                 .append(competitionId)
                 .append(termsAndConditions)
-                .append(termsAndConditionsLabel)
-                .append(termsAndConditionsGuidance)
+                .append(thirdPartyConfig)
                 .toHashCode();
     }
 
@@ -100,12 +92,12 @@ public class CompetitionTermsViewModel {
             sb.append("}").append("\n");
         }
 
-        if (termsAndConditionsLabel != null) {
-            sb.append("termsAndConditionsLabel=").append(termsAndConditionsLabel).append("\n");
+        if (thirdPartyConfig.getTermsAndConditionsLabel() != null) {
+            sb.append("termsAndConditionsLabel=").append(thirdPartyConfig.getTermsAndConditionsLabel()).append("\n");
         }
 
-        if (termsAndConditionsGuidance != null) {
-            sb.append("termsAndConditionsGuidance=").append(termsAndConditionsGuidance).append("\n");
+        if (thirdPartyConfig.getTermsAndConditionsGuidance() != null) {
+            sb.append("termsAndConditionsGuidance=").append(thirdPartyConfig.getTermsAndConditionsGuidance()).append("\n");
         }
 
         sb.append("}");

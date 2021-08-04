@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.termsAndConditionsLabel}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.thirdPartyConfig.termsAndConditionsLabel}" />
 </head>
 <body class="govuk-template__body grant-terms-conditions">
 
@@ -13,7 +13,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle=${model.termsAndConditionsLabel},size='govuk-heading-l'" />
+                  th:with="pageTitle=${model.thirdPartyConfig.termsAndConditionsLabel},size='govuk-heading-l'" />
 
         <th:block th:if="${model.procurementThirdParty}">
 
@@ -21,14 +21,15 @@
                 <th:block th:if="${model.termsAndConditionsUploaded}">
                     <p class="govuk-body"><a
                             th:href="@{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.competitionId})}"
-                            th:text="|View ${model.termsAndConditionsLabel}|">View full terms and conditions</a></p>
+                            th:text="|View ${model.thirdPartyConfig.termsAndConditionsLabel}|">View full terms and conditions</a></p>
                 </th:block>
                 <div class="govuk-body">
-                    <p th:utext="${model.termsAndConditionsGuidance}"></p>
+                    <p th:utext="${model.thirdPartyConfig.termsAndConditionsGuidance}"></p>
                 </div>
             </th:block>
 
         </th:block>
+
     </main>
 </div>
 <th:block th:insert="fragments/layout :: footer" />
