@@ -168,9 +168,6 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
                 if (updateApplicationCompletionStatus) {
                     validationMessages = questionStatusService.markAsComplete(questionKey, lead.getId()).getSuccess();
                 } else {
-                    LOG.info(question.getName());
-                    LOG.info(data.getApplication().getName());
-                    LOG.info(data.getApplication().getCompetitionName());
                     validationMessages = testQuestionService.markAsCompleteWithoutApplicationCompletionStatusUpdate(questionKey, lead.getId()).getSuccess();
                 }
                 assertTrue("Marking question as complete has returned errors " + toJson(validationMessages),

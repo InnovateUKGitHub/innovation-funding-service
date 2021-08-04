@@ -30,14 +30,10 @@ import java.util.List;
 @Lazy
 public class TestQuestionService extends QuestionStatusServiceImpl {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TestQuestionService.class);
-
     @PreAuthorize("hasPermission(#ids, 'UPDATE')")
     @Transactional
     public ServiceResult<List<ValidationMessages>> markAsCompleteWithoutApplicationCompletionStatusUpdate(final QuestionApplicationCompositeId ids,
                                                                                                           final Long markedAsCompleteById) {
-        LOG.info(ids.questionId.toString());
-        LOG.info(ids.applicationId.toString());
         return setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true, false);
     }
 }
