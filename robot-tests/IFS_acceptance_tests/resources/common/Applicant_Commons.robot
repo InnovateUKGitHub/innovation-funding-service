@@ -77,6 +77,22 @@ the user fills in the Application details
     the user can mark the question as complete
     the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
 
+the user fills in third-party Application details
+    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user should see the element                        jQuery = h1:contains("Application details")
+    the user enters text to a text field                   css = [id="name"]  ${appTitle}
+    the user enters text to a text field                   id = startDate  ${tomorrowday}
+    the user enters text to a text field                   css = #application_details-startdate_month  ${month}
+    the user enters text to a text field                   css = #application_details-startdate_year  ${nextyear}
+    the user enters text to a text field                   css = [id="durationInMonths"]  24
+    the user selects the value from the drop-down menu     INNOVATE_UK_WEBSITE   id = competitionReferralSource
+    the user selects the radio button                      START_UP_ESTABLISHED_FOR_LESS_THAN_A_YEAR   company-age-less-than-one
+    the user selects the value from the drop-down menu     Energy   id = companyPrimaryFocus
+#    the user clicks the button twice                       css = label[for="resubmission-no"]
+    the user should not see the element                    link = Choose your innovation area
+    the user can mark the question as complete
+    the user should see the element                        jQuery = li:contains("Application details") > .task-status-complete
+
 the user fills in the Application details with no submit
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user should see the element       jQuery = h1:contains("Application details")
