@@ -248,3 +248,19 @@ profiles:
       kustomize:
         paths:
           - os-files/kustomize/env/stub/local/dev
+
+  - name: robot
+    build:
+      local:
+        useDockerCLI: false
+        useBuildkit: false
+        tryImportMissing: true
+        push: true
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
+    deploy:
+      kubeContext: robot
+      kustomize:
+        paths:
+          - os-files/kustomize/components/robot
