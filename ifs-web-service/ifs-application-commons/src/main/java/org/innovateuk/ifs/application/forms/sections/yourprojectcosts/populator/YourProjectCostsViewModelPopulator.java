@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CovidType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -85,8 +86,12 @@ public class YourProjectCostsViewModelPopulator {
 
         boolean includeVat = STANDARD_WITH_VAT.equals(competition.getApplicationFinanceType());
 
+        boolean hideVatQuestion = competition.isProcurement()
+                && isOfGemFunder(competition)
+                && competition.getTermsAndConditions().isProcurementThirdParty();
+
         if (isUserCanEditFecFinance(competition, section, open)) {
-            return getYourFecProjectCostsViewModel(application, competition, organisation, section, finance, completedSectionIds, open, complete, includeVat);
+            return getYourFecProjectCostsViewModel(application, competition, organisation, section, finance, completedSectionIds, open, complete, includeVat, hideVatQuestion);
         } else {
             return new YourProjectCostsViewModel(applicationId,
                     competition.getName(),
@@ -108,8 +113,15 @@ public class YourProjectCostsViewModelPopulator {
                     organisation.getOrganisationType().equals(OrganisationTypeEnum.KNOWLEDGE_BASE.getId()),
                     finance.getFecModelEnabled(),
                     getGrantClaimPercentage(application.getId(), organisation.getId()),
-                    getThirdPartyProjectCostGuidanceLink(competition));
+                    getThirdPartyProjectCostGuidanceLink(competition),
+                    hideVatQuestion);
         }
+    }
+
+    private boolean isOfGemFunder(CompetitionResource competition) {
+        return competition.getFunders()
+                .stream()
+                .anyMatch(CompetitionFunderResource::isOfGem);
     }
 
     private boolean isUserCanEditFecFinance(CompetitionResource competition, ApplicantSectionResource section, boolean open) {
@@ -122,7 +134,7 @@ public class YourProjectCostsViewModelPopulator {
     private YourProjectCostsViewModel getYourFecProjectCostsViewModel(ApplicationResource application, CompetitionResource competition,
                                                                       OrganisationResource organisation, ApplicantSectionResource section,
                                                                       BaseFinanceResource finance, List<Long> completedSectionIds,
-                                                                      boolean open, boolean complete, boolean includeVat) {
+                                                                      boolean open, boolean complete, boolean includeVat, boolean hideVatQuestion) {
         Long yourFundingSectionId = getYourFundingSectionId(section);
         boolean yourFundingRequired = !completedSectionIds.contains(yourFundingSectionId);
         Long yourFecCostSectionId = getYourFecCostSectionId(section);
@@ -154,7 +166,8 @@ public class YourProjectCostsViewModelPopulator {
                 yourFecCostSectionId,
                 finance.getFecModelEnabled(),
                 getGrantClaimPercentage(application.getId(), organisation.getId()),
-                getThirdPartyProjectCostGuidanceLink(competition));
+                getThirdPartyProjectCostGuidanceLink(competition),
+                hideVatQuestion);
     }
 
     private boolean isYourFecCostRequired(List<Long> completedSectionIds, Long yourFecCostSectionId) {
@@ -205,7 +218,7 @@ public class YourProjectCostsViewModelPopulator {
     }
 
     private boolean isThirdPartyProcurementCompetition(CompetitionResource competition) {
-        return competition.getTermsAndConditions().isThirdPartyProcurement();
+        return competition.getTermsAndConditions().isProcurementThirdParty();
     }
 
     private String getThirdPartyProjectCostGuidanceLink(CompetitionResource competition) {

@@ -133,7 +133,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                     .collect(toCollection(LinkedHashSet::new));
         }
 
-        if (section.isTermsAndConditions() && data.getCompetition().getTermsAndConditions().isThirdPartyProcurement()) {
+        if (section.isTermsAndConditions() && data.getCompetition().getTermsAndConditions().isProcurementThirdParty()) {
             String labelName = competitionThirdPartyConfigRestService.findOneByCompetitionId(data.getCompetition().getId()).getSuccess().getTermsAndConditionsLabel();
             section.setName(labelName);
         }
@@ -262,7 +262,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
     }
 
     private static boolean thirdPartyTermsAndConditionsQuestion(QuestionResource question, CompetitionResource competition) {
-        return question.getQuestionSetupType().equals(TERMS_AND_CONDITIONS) && competition.getTermsAndConditions().isThirdPartyProcurement();
+        return question.getQuestionSetupType().equals(TERMS_AND_CONDITIONS) && competition.getTermsAndConditions().isProcurementThirdParty();
     }
 
     private static String getThirdPartyTermsAndConditionsQuestionTitle(CompetitionResource competition) {

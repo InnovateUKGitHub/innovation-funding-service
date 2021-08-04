@@ -144,7 +144,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                         .collect(Collectors.groupingBy(SupporterAssignmentReadOnlyViewModel::getState)) : emptyMap(),
                 shouldDisplayKtpApplicationFeedback(competition, user, processRoles),
                 competition.isKtp(),
-                competition.getTermsAndConditions().isThirdPartyProcurement(),
+                competition.getTermsAndConditions().isProcurementThirdParty(),
                 competition.getCompetitionThirdPartyConfigResource()
         );
     }

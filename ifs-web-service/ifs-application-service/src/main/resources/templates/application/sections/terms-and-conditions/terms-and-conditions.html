@@ -36,7 +36,7 @@
             <th:block th:insert="fragments/layout :: main-content-end"/>
         </th:block>
         <th:block th:unless="${model.subsidyBasisRequiredButIncomplete}"
-                  th:with="thirdPartyLabel=${#strings.toLowerCase(model.termsAndConditionsLabel)}">
+                  th:with="thirdPartyLabel=${model.termsAndConditionsLabel}">
             <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
                  aria-labelledby="error-summary-title"
                  role="alert"
@@ -82,7 +82,7 @@
                                        type="checkbox" data-switches-button-status="#agree-terms-button"
                                        id="agreed"
                                        th:field="*{agreed}" />
-                                <label th:unless="${model.additionalTerms}" for="agreed" class="govuk-label govuk-checkboxes__label">
+                                <label th:unless="${model.additionalTerms or model.isThirdPartyProcurementCompetition}" for="agreed" class="govuk-label govuk-checkboxes__label">
                                     I agree to the award terms and conditions set out by Innovate UK.
                                 </label>
                                 <label th:if="${model.additionalTerms and !model.isThirdPartyProcurementCompetition}" for="agreed" class="govuk-label govuk-checkboxes__label">
@@ -105,8 +105,8 @@
                 </th:block>
                 <div id="terms-accepted" class="form-footer govuk-body govuk-!-margin-bottom-6" th:if="${model.termsAccepted.isPresent() ? model.termsAccepted.get() : false}">
                     <div class="form-footer__actions">
-                        <span th:unless="${model.isThirdPartyProcurementCompetition}" th:text="Terms and conditions accepted"></span>
-                        <span th:if="${model.isThirdPartyProcurementCompetition}" th:text="|${#strings.capitalize(thirdPartyLabel)} accepted|"></span>
+                        <span th:unless="${model.isThirdPartyProcurementCompetition}" th:text="|Terms and conditions accepted|"></span>
+                        <span th:if="${model.isThirdPartyProcurementCompetition}" th:text="|${thirdPartyLabel} accepted|"></span>
                         <th:block th:unless="${model.migratedTerms}">
                             at <span th:text="${#strings.toLowerCase(#temporals.format(model.termsAcceptedOn.get(), 'h:mma'))}"> 6:10pm</span>
                             on <span th:text="${#temporals.format(model.termsAcceptedOn.get(), 'd MMMM yyyy')}"> 08 May 2019</span>
