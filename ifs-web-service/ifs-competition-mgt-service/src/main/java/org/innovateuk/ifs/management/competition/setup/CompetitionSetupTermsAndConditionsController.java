@@ -190,6 +190,11 @@ public class CompetitionSetupTermsAndConditionsController {
 
         MultipartFile file = getTermsAndConditionsFile(termsAndConditionsForm);
 
+        boolean isProcurementThirdParty = isProcurementThirdParty(termsAndConditionsForm.getTermsAndConditionsId());
+        boolean isProcurement = isProcurement(termsAndConditionsForm.getTermsAndConditionsId());
+
+        validateUploadFragment(isProcurementThirdParty, isProcurement, competition, bindingResult);
+
         RestResult<FileEntryResource> uploadResult = competitionSetupRestService.uploadCompetitionTerms(competitionId, file.getContentType(), file.getSize(),
                 file.getOriginalFilename(), getMultipartFileBytes(file));
 
@@ -347,7 +352,7 @@ public class CompetitionSetupTermsAndConditionsController {
                isProcurementSaved = competition.getTermsAndConditions().isProcurement();
                 isProcurementThirdPartySaved = competition.getTermsAndConditions().isProcurementThirdParty();
             }
-            if (isProcurementThirdParty && isProcurementSaved) {
+            if (!bindingResult.hasErrors() && isProcurementThirdParty && isProcurementSaved) {
                 competitionSetupRestService.deleteCompetitionTerms(competition.getId());
             }
             if (isProcurement && isProcurementThirdPartySaved) {
