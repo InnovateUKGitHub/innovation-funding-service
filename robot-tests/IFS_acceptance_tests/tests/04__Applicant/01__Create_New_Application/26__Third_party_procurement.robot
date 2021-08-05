@@ -148,11 +148,30 @@ Comp admin closes the assessment and releases feedback
     And the user clicks the application tile if displayed
     Then the user should see the element                    jQuery = li:contains("${thirdPartyProcurementApplicationName}") .status-msg:contains("Successful")
 
+Internal user can view third-party terms and conditions
+    [Documentation]  IFS-10083  IFS-10084
+    Given Requesting competition ID of this Project
+    And requesting application ID of this application
+    And Log in as a different user                          &{ifs_admin_user_credentials}
+    And The user navigates to the page                      ${server}/management/competition/${ThirdPartyCompId}/application/${ThirdPartyApplicationId}
+    When The user should see the element                    jQuery = button:contains("Strategic Innovation Fund governance document")
+    And the user clicks the button twice                    jQuery = button:contains("Strategic Innovation Fund governance document")
+    Then the user should see the element                    jQuery = th:contains("Partner") + th:contains("Strategic Innovation Fund governance document")
+    And The user should see the element                     jQuery = td:contains("Empire Ltd") ~ td:contains("Procurement Third Party")
+
 *** Keywords ***
 Custom suite setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
     Set predefined date variables
     Connect to database              @{database}
+
+Requesting competition ID of this Project
+    ${ThirdPartyCompId} =  get comp id from comp title    ${thirdPartyProcurementCompetitionName}
+    Set suite variable   ${ThirdPartyCompId}
+
+requesting application ID of this application
+    ${ThirdPartyApplicationId} =  get application id by name   ${thirdPartyProcurementApplicationName}
+    Set suite variable    ${ThirdPartyApplicationId}
 
 comp admin creates procurement competition
     the user fills in the CS Project eligibility              ${BUSINESS_TYPE_ID}    2   false   single-or-collaborative
