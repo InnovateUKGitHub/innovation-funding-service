@@ -47,7 +47,7 @@
                             <th:block th:unless="${model.investorPartnershipCompetition}">
                                 <span th:unless="${model.thirdPartyProcurement}" th:text="${'view the award terms and conditions'}" />
                                 <span th:if="${model.thirdPartyProcurement}" th:text="${'view the ' + #strings.toLowerCase(model.thirdPartyConfig.termsAndConditionsLabel)}" />
-                                <!-- #IFS10084.12 -->
+
                             </th:block>
                         </a>
                     </li>

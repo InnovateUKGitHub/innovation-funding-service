@@ -114,7 +114,7 @@ public class AssessmentOverviewModelPopulator {
                 competition.getName(),
                 competition.getAssessmentDaysLeftPercentage(),
                 competition.getAssessmentDaysLeft(),
-                getSections(assessment, assessorViewQuestions),
+                getSections(assessment, assessorViewQuestions, competition),
                 getAppendices(assessment.getApplication(), assessorViewQuestions),
                 termsAndConditionsTerminology,
                 getTermsAndConditionsRows(questions, application, competition),
@@ -125,7 +125,8 @@ public class AssessmentOverviewModelPopulator {
     }
 
     private List<AssessmentOverviewSectionViewModel> getSections(AssessmentResource assessment,
-                                                                 List<QuestionResource> questions) {
+                                                                 List<QuestionResource> questions,
+                                                                 CompetitionResource competition) {
         List<SectionResource> sections = sectionRestService.getByCompetitionIdVisibleForAssessment(assessment.getCompetition()).getSuccess();
 
         Map<Long, List<FormInputResource>> formInputs = getFormInputsByQuestion(assessment.getCompetition());
@@ -140,7 +141,8 @@ public class AssessmentOverviewModelPopulator {
                     .collect(toList());
 
             return new AssessmentOverviewSectionViewModel(sectionResource.getId(),
-                    sectionResource.getName(),
+                    (sectionResource.getType() == TERMS_AND_CONDITIONS && competition.getTermsAndConditions().isProcurementThirdParty()) ?
+                            competition.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel() : sectionResource.getName(),
                     sectionResource.getAssessorGuidanceDescription(),
                     getQuestions(sectionQuestions, formInputs, responses),
                     sectionResource.getType() == FINANCES,
@@ -249,7 +251,7 @@ public class AssessmentOverviewModelPopulator {
             return TERMS_AND_CONDITIONS_LOAN;
         }
         if(competitionResource.getTermsAndConditions().isProcurementThirdParty()) {
-            return competitionResource.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel(); //"#IFS10084.13"
+            return competitionResource.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel();
         }
         return TERMS_AND_CONDITIONS_OTHER;
     }
