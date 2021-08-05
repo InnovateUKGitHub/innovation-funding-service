@@ -57,28 +57,96 @@ Comp admin selects third party funder in funding information
     Then the user navigates to the page                                                ${CA_UpcomingComp}
     And the user should see the element                                                jQuery = h3 a:contains("Third party procurement competition")
 
-#User applies to third party competition
-#    [Documentation]  IFS-10083
-#    [Setup]  get competition id and set open date to yesterday      ${thirdPartyProcurementCompetitionName}
-#    Given log in as a different user                                &{lead_applicant_credentials}
-#    And logged in user applies to competition                       ${thirdPartyProcurementCompetitionName}  3
-#    When the user fills in third-party Application details          ${thirdPartyProcurementApplicationName}  ${tomorrowday}  ${month}  ${nextyear}
-#    And the applicant completes Application Team
-#    And the applicant marks EDI question as complete
-#    And the lead applicant fills all the questions and marks as complete(procurement)
-#    Then the lead completes the questions with multiple answer choice and multiple appendices
-#    And the third party applicant can view the strategic innovation terms and conditions
+User applies to third party competition
+    [Documentation]  IFS-10083
+    [Setup]  get competition id and set open date to yesterday                                  ${thirdPartyProcurementCompetitionName}
+    Given log in as a different user                                                            &{lead_applicant_credentials}
+    And logged in user applies to competition                                                   ${thirdPartyProcurementCompetitionName}  3
+    When the user fills in third-party Application details                                      ${thirdPartyProcurementApplicationName}  ${tomorrowday}  ${month}  ${nextyear}
+    And the applicant completes Application Team
+    And the applicant marks EDI question as complete
+    And the lead applicant fills all the questions and marks as complete(procurement)
+    Then the lead completes the questions with multiple answer choice and multiple appendices
+    And the third party applicant can view the strategic innovation terms and conditions        Strategic Innovation Fund governance document
 
-#Applicant fills in project finances without any VAT validations
-#    [Documentation]   IFS-10134
-#    Given the user navigates to Your-finances page            ${thirdPartyProcurementApplicationName}
-#    And the user fills the procurement project costs          Calculate  52,214
-#    When the user clicks the button/link                      css = label[for="stateAidAgreed"]
-#    And the user clicks the button/link                       jQuery = button:contains("Mark as complete")
-#    And the user should not see a field and summary error     Select if you are VAT registered
-#    Then the user enters the project location
-#    And the user fills in the organisation information        ${thirdPartyProcurementApplicationName}  ${SMALL_ORGANISATION_SIZE}
-#    And Applicant fills in payment milestones
+Applicant fills in project finances without any VAT validations
+    [Documentation]   IFS-10134
+    Given the user navigates to Your-finances page            ${thirdPartyProcurementApplicationName}
+    And the user fills the procurement project costs          Calculate  52,214
+    When the user clicks the button/link                      css = label[for="stateAidAgreed"]
+    And the user clicks the button/link                       jQuery = button:contains("Mark as complete")
+    And the user should not see a field and summary error     Select if you are VAT registered
+    Then the user enters the project location
+    And the user fills in the organisation information        ${thirdPartyProcurementApplicationName}  ${SMALL_ORGANISATION_SIZE}
+    And applicant fills in payment milestones
+
+the user submits the third party procurement appliication
+    [Documentation]   IFS-10083
+    [Setup]  Get competitions id and set it as suite variable   ${thirdPartyProcurementCompetitionName}
+    Given the user clicks the button/link                       id = application-overview-submit-cta
+    And the user should see the element                         jQuery = h2:contains("Strategic Innovation Fund governance document")
+    When the user clicks the button/link                        id = accordion-questions-heading-4-1
+    And the user should see the element                         jQuery = td:contains("Empire Ltd")+td:contains("Procurement Third Party")+td:contains("Accepted")
+    And the user clicks the button/link                         id = submit-application-button
+    Then the user should see the element                        jQuery = h2:contains("Application submitted")
+    And the user should see procurement terms and conditions in application summary
+    [Teardown]  update milestone to yesterday                   ${competitionId}  SUBMISSION_DATE
+
+Invite a registered assessor
+    [Documentation]  IFS-10084
+    Given log in as a different user             &{Comp_admin1_credentials}
+    When the user clicks the button/link         link = ${thirdPartyProcurementCompetitionName}
+    And the user clicks the button/link          link = Invite assessors to assess the competition
+    And the user enters text to a text field     id = assessorNameFilter   Paul Plum
+    And the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
+    Then the user clicks the button/link         jQuery = tr:contains("Paul Plum") label[for^="assessor-row"]
+    And the user clicks the button/link          jQuery = .govuk-button:contains("Add selected to invite list")
+    And the user clicks the button/link          link = Invite
+    And the user clicks the button/link          link = Review and send invites
+    And the user enters text to a text field     id = message    This is custom text
+    And the user clicks the button/link          jQuery = .govuk-button:contains("Send invitation")
+
+Allocated assessor accepts invite to assess the competition
+    [Documentation]  IFS-10084
+    Given Log in as a different user                           &{assessor_credentials}
+    When The user clicks the button/link                       Link = ${thirdPartyProcurementCompetitionName}
+    And the user selects the radio button                      acceptInvitation  true
+    And The user clicks the button/link                        jQuery = button:contains("Confirm")
+    Then the user should be redirected to the correct page     ${server}/assessment/assessor/dashboard
+
+Comp Admin allocates assessor to application
+    [Documentation]  IFS-10084
+    Given log in as a different user                 &{Comp_admin1_credentials}
+    When The user clicks the button/link             link = Dashboard
+    And The user clicks the button/link              link = ${thirdPartyProcurementCompetitionName}
+    And The user clicks the button/link              jQuery = a:contains("Manage assessments")
+    And the user clicks the button/link              jQuery = a:contains("Allocate applications")
+    Then the user clicks the button/link             jQuery = tr:contains("${thirdPartyProcurementApplicationName}") a:contains("Assign")
+    And the user adds an assessor to application     jQuery = tr:contains("Paul Plum") :checkbox
+    And the user navigates to the page               ${server}/management/competition/${competitionId}
+    And the user clicks the button/link              jQuery = button:contains("Notify assessors")
+
+Allocated assessor assess the application
+    [Documentation]  IFS-10084
+    Given Log in as a different user                                        &{assessor_credentials}
+    And the user clicks the button/link                                     link = ${thirdPartyProcurementCompetitionName}
+    And the user clicks the button/link                                     jQuery = li:contains("${thirdPartyProcurementApplicationName}") a:contains("Accept or reject")
+    And the user selects the radio button                                   assessmentAccept  true
+    And the user clicks the button/link                                     jQuery = .govuk-button:contains("Confirm")
+    And the user should be redirected to the correct page                   ${server}/assessment/assessor/dashboard/competition/${competitionId}
+    When the user clicks the button/link                                    link = ${thirdPartyProcurementApplicationName}
+    Then assessor should see third party procurement terms and conditions   Strategic Innovation Fund governance document
+    And the assessor submits the assessment
+
+Comp admin closes the assessment and releases feedback
+    [Documentation]  IFS-10084
+    Given log in as a different user                        &{Comp_admin1_credentials}
+    When making the application a successful project        ${competitionId}    ${thirdPartyProcurementApplicationName}
+    And the user navigates to the page                      ${server}/management/competition/${competitionId}
+    And the user clicks the button/link                     css = button[type="submit"][formaction$="release-feedback"]
+    And log in as a different user                          &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
+    Then the user should see the element                    jQuery = li:contains("${thirdPartyProcurementApplicationName}") .status-msg:contains("Successful")
 
 *** Keywords ***
 Custom suite setup
@@ -120,16 +188,50 @@ the user verifies valid terms and conditions text is displaying
     [Teardown]   the user closes the last opened tab
 
 the third party applicant can view the strategic innovation terms and conditions
-    the user clicks the button/link    link = Strategic Innovation Fund Governance Document
-    the user should see the element    jQuery = h1:contains("Strategic Innovation Fund Governance Document")
+    [Arguments]  ${title}
+    the user clicks the button/link    link = ${title}
+    the user should see the element    jQuery = h1:contains("${title}")
+    the user should see the element    link = View ${title}
+    the user should see the element    jQuery = p:contains("Summary of ${title}")
+    the user selects the checkbox      agreed
+    the user clicks the button/link    jQuery = button:contains("Agree and continue")
+    the user should see the element    jQuery = .form-footer:contains("${title} accepted")
+    the user clicks the button/link    link = Return to application overview
 
-Applicant fills in payment milestones
+applicant fills in payment milestones
     the user clicks the button/link                           link = Your payment milestones
     the user clicks the button/link                           jQuery = button:contains("Open all")
-    applicant fills in payment milestone                      accordion-finances-content  2  Milestone 1  £72,839  taskOrActivity 1  deliverable 1  successCriteria 1
+    applicant fills in payment milestone                      accordion-finances-content  2  Milestone 1  £60,699  taskOrActivity 1  deliverable 1  successCriteria 1
     the user clicks the button/link                           id = mark-all-as-complete
-    applicant views saved payment milestones                  2  £72,839  Milestone 1  100%  £72,839  100%
+    applicant views saved payment milestones                  2  £60,699  Milestone 1  100%  £60,699  100%
     applicant views readonly payment milestones subsections   taskOrActivity 1  deliverable 1  successCriteria 1
     the user should see the element                           jQuery = li:contains("Your payment milestones") > .task-status-complete
     the user clicks the button/link                           link = Back to application overview
     the user should see the element                           jQuery = li:contains("Your project finances") > .task-status-complete
+
+the user should see procurement terms and conditions in application summary
+    the user clicks the button/link     link = View application
+    the user should see the element     jQuery = td:contains("Empire Ltd")+td:contains("Procurement Third Party")
+
+the assessor submits the assessment
+    the user clicks the button/link                             link = Finances overview
+    the user should see the element                             jQuery = h2:contains("Project cost breakdown") ~ div:contains("Total VAT")
+    the user clicks the button/link                             link = Back to your assessment overview
+    the assessor adds score and feedback for every question     11   # value 5: is the number of questions to loop through to submit feedback
+    the user clicks the button/link                             link = Review and complete your assessment
+    the user selects the radio button                           fundingConfirmation  true
+    the user enters text to a text field                        id = feedback    Procurement application assessed
+    the user clicks the button/link                             jQuery = .govuk-button:contains("Save assessment")
+    the user clicks the button/link                             jQuery = li:contains("${thirdPartyProcurementApplicationName}") label[for^="assessmentIds"]
+    the user clicks the button/link                             jQuery = .govuk-button:contains("Submit assessments")
+    the user clicks the button/link                             jQuery = button:contains("Yes I want to submit the assessments")
+    the user should see the element                             jQuery = li:contains("${thirdPartyProcurementApplicationName}") strong:contains("Recommended")
+
+assessor should see third party procurement terms and conditions
+    [Arguments]  ${title}
+    the user should see the element    jQuery = h2:contains("${title}")
+    the user clicks the button/link    jQuery = a:contains("Procurement Third Party")
+    the user should see the element    jQuery = h1:contains("${title}")
+    the user should see the element    link = View ${title}
+    the user should see the element    jQuery = p:contains("Summary of ${title}")
+    the user clicks the button/link    link = Back to assessment overview
