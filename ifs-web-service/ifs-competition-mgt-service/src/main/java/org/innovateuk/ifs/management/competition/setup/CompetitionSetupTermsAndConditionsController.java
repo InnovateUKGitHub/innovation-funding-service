@@ -190,11 +190,6 @@ public class CompetitionSetupTermsAndConditionsController {
 
         MultipartFile file = getTermsAndConditionsFile(termsAndConditionsForm);
 
-        boolean isProcurementThirdParty = isProcurementThirdParty(termsAndConditionsForm.getTermsAndConditionsId());
-        boolean isProcurement = isProcurement(termsAndConditionsForm.getTermsAndConditionsId());
-
-        validateUploadFragment(isProcurementThirdParty, isProcurement, competition, bindingResult);
-
         RestResult<FileEntryResource> uploadResult = competitionSetupRestService.uploadCompetitionTerms(competitionId, file.getContentType(), file.getSize(),
                 file.getOriginalFilename(), getMultipartFileBytes(file));
 
