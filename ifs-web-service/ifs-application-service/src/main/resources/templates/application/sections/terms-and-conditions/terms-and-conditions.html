@@ -51,17 +51,16 @@
             <th:block th:if="${model.showHeaderAndFooter}">
                 <!-- /* 1, Where there is only one organisation in the application: */ -->
                 <div th:unless="${model.collaborativeApplication or model.isThirdPartyProcurementCompetition}" class="message-alert govuk-!-margin-bottom-6">
-                    <p class="govuk-body">You must read these terms and conditions and accept them by ticking the box at the end
-                        of the page.</p>
+                    <p class="govuk-body">You must read and agree to the terms and conditions by ticking the box at the end of the page.</p>
                 </div>
                 <div th:if="${model.isThirdPartyProcurementCompetition}" class="message-alert govuk-!-margin-bottom-6">
                     <p class="govuk-body"
-                       th:text="|You must read the ${thirdPartyLabel} and accept them by ticking the box at the end of the page.|"></p>
+                       th:text="|You must read and agree to the ${thirdPartyLabel} by ticking the box at the end of the page.|"></p>
                 </div>
                 <!-- /* 2. Where there is more than one organisation in the application: */ -->
                 <div th:if="${model.collaborativeApplication}" class="message-alert govuk-!-margin-bottom-6">
                     <p class="govuk-body">
-                        You must read these terms and conditions and accept them by ticking the box at the end of the page. Your
+                        You must read and agree to the terms and conditions by ticking the box at the end of the page. Your
                         application cannot be submitted until all partners have read and accepted the terms.
                         <a class="govuk-link" th:href="@{/application/{applicationId}/form/terms-and-conditions/question/{questionId}/partner-status(applicationId=${model.applicationId},questionId=${model.questionId})}">View partners' acceptance</a>
                     </p>
@@ -90,7 +89,7 @@
                                     I understand I need to agree to the final contract if my application is successful.
                                 </label>
                                 <th:label th:if="${model.isThirdPartyProcurementCompetition}" for="agreed" class="govuk-label govuk-checkboxes__label"
-                                    th:text="|I agree to the ${thirdPartyLabel} set out by the funding authority I understand I need to agree to the final contract if my application is successful.|">
+                                    th:text="|I agree to the ${thirdPartyLabel} set out by the funding authority. I understand I need to agree to the final contract if my application is successful.|">
                                 </th:label>
                             </div>
                         </div>
