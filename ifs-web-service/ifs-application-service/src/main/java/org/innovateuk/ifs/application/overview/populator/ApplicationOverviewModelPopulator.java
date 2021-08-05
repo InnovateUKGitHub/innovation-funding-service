@@ -140,7 +140,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
 
         String subtitle = subtitle(data.getCompetition(), section);
 
-        return new ApplicationOverviewSectionViewModel(section.getId(), section.getName(), subtitle, rows);
+        return new ApplicationOverviewSectionViewModel(section.getId(), section.getName(), subtitle, rows, section.isTermsAndConditions());
     }
 
     private String subtitle(CompetitionResource competition, SectionResource section) {

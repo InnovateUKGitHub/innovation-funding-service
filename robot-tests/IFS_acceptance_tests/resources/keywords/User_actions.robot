@@ -192,6 +192,7 @@ the user selects option from type ahead
     the user clicks the button/link                       id = ${inputId}
     wait for autosave
     the user should see option in type ahead field        id = ${inputId}  ${optionSelector}
+    wait for autosave
     mouse out                                             id = ${inputId}
 
 the user should see option in type ahead field
