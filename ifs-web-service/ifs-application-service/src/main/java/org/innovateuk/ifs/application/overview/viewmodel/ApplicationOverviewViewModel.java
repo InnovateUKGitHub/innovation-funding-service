@@ -29,8 +29,7 @@ public class ApplicationOverviewViewModel implements BaseAnalyticsViewModel {
 
     public ApplicationOverviewViewModel(ProcessRoleResource processRole, CompetitionResource competition,
                                         ApplicationResource application, Set<ApplicationOverviewSectionViewModel> sections,
-                                        Boolean reopened, ZonedDateTime reopenedDate,
-                                        CompetitionThirdPartyConfigResource thirdPartyConfig) {
+                                        Boolean reopened, ZonedDateTime reopenedDate) {
         this.processRole = processRole;
         this.competition = competition;
         this.application = application;
@@ -38,7 +37,7 @@ public class ApplicationOverviewViewModel implements BaseAnalyticsViewModel {
         this.reopened = reopened;
         this.reopenedDate = reopenedDate;
         this.thirdPartyProcurement = competition.getTermsAndConditions().isProcurementThirdParty();
-        this.thirdPartyConfig = thirdPartyConfig;
+        this.thirdPartyConfig = competition.getCompetitionThirdPartyConfigResource();
     }
 
     @Override

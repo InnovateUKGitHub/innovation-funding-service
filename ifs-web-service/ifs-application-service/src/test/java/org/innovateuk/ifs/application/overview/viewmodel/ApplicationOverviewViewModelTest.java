@@ -24,7 +24,7 @@ public class ApplicationOverviewViewModelTest {
                 .build();
         ApplicationOverviewViewModel viewModel = new ApplicationOverviewViewModel(null,
                 competition,
-                null, null, null, null, new CompetitionThirdPartyConfigResource());
+                null, null, null, null);
 
         // when
         String result = viewModel.getTermsAndConditionsTerminology();
@@ -45,7 +45,7 @@ public class ApplicationOverviewViewModelTest {
                 .build();
         ApplicationOverviewViewModel viewModel = new ApplicationOverviewViewModel(null,
                 competition,
-                null, null, null, null, new CompetitionThirdPartyConfigResource());
+                null, null, null, null);
 
         // when
         String result = viewModel.getTermsAndConditionsTerminology();
