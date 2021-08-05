@@ -4,9 +4,12 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.spendprofile.controller.OrganisationReviewDetails;
+import org.innovateuk.ifs.user.resource.Role;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Module: innovation-funding-service
@@ -21,14 +24,19 @@ public class ProjectSpendProfileProjectSummaryViewModel {
     private OrganisationResource leadOrganisation;
     private boolean submitted;
     private boolean approved;
+    private boolean rejected;
     private boolean monitoringOfficer;
+    private boolean moSpendProfileJourneyUpdateEnabled;
+    private OrganisationReviewDetails leadOrganisationReviewDetails;
 
     public ProjectSpendProfileProjectSummaryViewModel(Long projectId, Long applicationId, String projectName,
                                                       List<OrganisationResource> partnerOrganisations,
                                                       OrganisationResource leadOrganisation, boolean submitted,
                                                       Map<Long, OrganisationReviewDetails> editablePartners,
                                                       boolean approved,
-                                                      boolean monitoringOfficer) {
+                                                      boolean rejected,
+                                                      boolean monitoringOfficer,
+                                                      boolean moSpendProfileJourneyUpdateEnabled) {
         this.projectId = projectId;
         this.applicationId = applicationId;
         this.projectName = projectName;
@@ -37,7 +45,17 @@ public class ProjectSpendProfileProjectSummaryViewModel {
         this.submitted = submitted;
         this.editablePartners = editablePartners;
         this.approved = approved;
+        this.rejected = rejected;
         this.monitoringOfficer = monitoringOfficer;
+        this.moSpendProfileJourneyUpdateEnabled = moSpendProfileJourneyUpdateEnabled;
+        this.leadOrganisationReviewDetails = getLeadOrganisationReviewDetails(leadOrganisation, editablePartners);
+    }
+
+    private OrganisationReviewDetails getLeadOrganisationReviewDetails(OrganisationResource leadOrganisation, Map<Long, OrganisationReviewDetails> editablePartners) {
+        return editablePartners.values().stream()
+                .filter(organisationReviewDetails -> organisationReviewDetails.getOrganisationId() == leadOrganisation.getId())
+                .findFirst()
+                .orElse(null);
     }
 
     public Long getProjectId() {
@@ -59,7 +77,6 @@ public class ProjectSpendProfileProjectSummaryViewModel {
     public Map<Long, OrganisationReviewDetails> getEditablePartners() {
         return editablePartners;
     }
-
 
     public List<OrganisationResource> getPartnerOrganisations() {
         return partnerOrganisations;
@@ -85,6 +102,10 @@ public class ProjectSpendProfileProjectSummaryViewModel {
 
     public boolean isApproved() { return approved; }
 
+    public boolean isRejected() {
+        return rejected;
+    }
+
     public Long getApplicationId() {
         return applicationId;
     }
@@ -95,6 +116,25 @@ public class ProjectSpendProfileProjectSummaryViewModel {
 
     public void setMonitoringOfficer(boolean monitoringOfficer) {
         this.monitoringOfficer = monitoringOfficer;
+    }
+
+    public boolean showMoSpendProfileJourney() {
+        return moSpendProfileJourneyUpdateEnabled && monitoringOfficer;
+    }
+
+    public boolean userCanReviewSpendProfile() {
+        return submitted && !(approved || rejected);
+    }
+
+    public boolean isSpendProfileReviewedByMO() {
+        return leadOrganisationReviewDetails != null
+                && leadOrganisationReviewDetails.getReviewedBy().hasRole(Role.MONITORING_OFFICER);
+    }
+
+    public ZonedDateTime spendProfileReviewedOn() {
+        return Optional.ofNullable(leadOrganisationReviewDetails)
+                .map(organisationReviewDetails -> organisationReviewDetails.getReviewedOn())
+                .orElse(null);
     }
 
     @Override
@@ -113,6 +153,8 @@ public class ProjectSpendProfileProjectSummaryViewModel {
                 .append(editablePartners, that.editablePartners)
                 .append(partnerOrganisations, that.partnerOrganisations)
                 .append(approved, that.approved)
+                .append(monitoringOfficer, that.monitoringOfficer)
+                .append(moSpendProfileJourneyUpdateEnabled, that.moSpendProfileJourneyUpdateEnabled)
                 .isEquals();
     }
 
@@ -126,6 +168,8 @@ public class ProjectSpendProfileProjectSummaryViewModel {
                 .append(partnerOrganisations)
                 .append(submitted)
                 .append(approved)
+                .append(monitoringOfficer)
+                .append(moSpendProfileJourneyUpdateEnabled)
                 .toHashCode();
     }
 }
