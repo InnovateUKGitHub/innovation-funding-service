@@ -15,5 +15,5 @@ data:
   IFS_EARLY_METRICS_URL: "https://openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org/early-metrics"
   IFS_WEB_BASEURL: "https://openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org"
   IFS_SHOW_COVID_QUESTIONNAIRE_LINKS: 'true'
-  IFS_WEB_VIRTUALASSISTANT_BOTSECRET: '9pgg24ZBXT4.F6mWxf_wGBXr1QUx9VCvCaUMOFv3sUviDfYqYIDNtWI'
+  IFS_WEB_VIRTUALASSISTANT_BOTSECRET: 'unset'
   IFS_WEB_VIRTUALASSISTANT_BOTID: 'ukridev-qnamaker-bot'

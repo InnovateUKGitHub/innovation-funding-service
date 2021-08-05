@@ -5,4 +5,5 @@ metadata:
 data:
   DB_URL: "jdbc:mysql://ifs-database:3306/ifs_survey"
   DB_USER: "root"
+  # Dev docker mode only
   DB_PASS: "password"
