@@ -5,7 +5,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionTermsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.junit.Before;
@@ -29,9 +28,6 @@ public class CompetitionTermsAndConditionsPopulatorTest {
 
     @Mock
     private CompetitionRestService competitionRestService;
-
-    @Mock
-    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
 
     private long competitionId;
 
@@ -63,8 +59,7 @@ public class CompetitionTermsAndConditionsPopulatorTest {
 
         competitionResource.setTermsAndConditions(grantTermsAndConditionsResource);
         competitionResource.setCompetitionTerms(fileEntryResource);
-
-        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competitionId)).thenReturn(RestResult.restSuccess(competitionThirdPartyConfigResource));
+        competitionResource.setCompetitionThirdPartyConfigResource(competitionThirdPartyConfigResource);
 
         CompetitionTermsViewModel competitionTermsViewModel = competitionTermsAndConditionsPopulator.populate(competitionId);
 
@@ -87,7 +82,6 @@ public class CompetitionTermsAndConditionsPopulatorTest {
                 "}", competitionTermsViewModel.toString());
 
         verify(competitionRestService).getCompetitionById(competitionId);
-        verify(competitionThirdPartyConfigRestService).findOneByCompetitionId(competitionId);
     }
 
     @Test
