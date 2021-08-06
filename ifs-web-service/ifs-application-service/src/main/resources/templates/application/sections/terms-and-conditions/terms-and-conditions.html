@@ -90,21 +90,16 @@
                                         target="_blank">full terms and conditions (opens in a new window)</a> set out by the funding authority.
                                     I understand I need to agree to the final contract if my application is successful.
                                 </label>
-                                <th:label th:if="${model.isThirdPartyProcurementCompetition}" for="agreed" class="govuk-label govuk-checkboxes__label">
-                                    <div th:if="${model.isTermsAndConditionsUploaded}">
-                                    I agree to the <a
-                                            th:href="@{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.competitionId})}"
-                                            th:text="|${thirdPartyLabel} (opens in a new window)|"
-                                            target="_blank"></a>
-                                        set out by the funding authority. I understand I need to agree to the final contract if my application is successful.
-                                    </div>
-                                    <div th:unless="${model.isTermsAndConditionsUploaded}">
-                                        I agree to the <a
-                                            th:href="${model.thirdPartyConfig.projectCostGuidanceUrl}"
-                                            th:text="|${thirdPartyLabel} (opens in a new window)|"
-                                            target="_blank"></a>
-                                        set out by the funding authority. I understand I need to agree to the final contract if my application is successful.
-                                    </div>
+                                <th:label th:if="${model.isThirdPartyProcurementCompetition}" for="agreed"
+                                          class="govuk-label govuk-checkboxes__label">
+                                    I agree to the <a th:if="${model.isTermsAndConditionsUploaded}"
+                                                      th:href="@{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.competitionId})}"
+                                                      th:text="|${thirdPartyLabel} (opens in a new window)|"
+                                                      target="_blank"></a>
+                                    <a th:unless="${model.isTermsAndConditionsUploaded}"
+                                       th:href="${model.thirdPartyConfig.projectCostGuidanceUrl}"
+                                       th:text="|${thirdPartyLabel} (opens in a new window)|"
+                                       target="_blank"></a> set out by the funding authority. I understand I need to agree to the final contract if my application is successful.
                                 </th:label>
                             </div>
                         </div>
