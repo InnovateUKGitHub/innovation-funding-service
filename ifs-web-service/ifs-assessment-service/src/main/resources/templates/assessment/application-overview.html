@@ -36,6 +36,7 @@
 
                 <section th:each="section,iterStat : ${model.sections}">
                     <h2 th:text="${section.name}" th:class="${iterStat.first} ? 'govuk-heading-m': 'govuk-heading-m govuk-!-margin-bottom-0'"/>
+
                     <p class="govuk-hint" th:text="${section.guidance}" />
                     <ul class="task-list" th:classappend="${section.hasAnyScoredQuestions()} ? 'govuk-!-margin-bottom-6': ''">
                         <li th:each="question : ${section.questions}" th:class="${!question.responseRequired}? 'read-only'"
@@ -64,10 +65,11 @@
 
                         <li th:if="${section.termsAndConditions}">
                             <div class="task">
-                                <h3 class="govuk-heading-s" th:text="${model.termsAndConditionsTerminology}"></h3>
+                                <h3 class="govuk-heading-s" th:text="${#strings.capitalize(model.termsAndConditionsTerminology)}"></h3>
+
                             </div>
                             <div>
-                                <th:block th:insert="application/readonly/question-read-only :: terms-and-conditions-partner-table(${model.applicationId}, ${section.questions.get(0).questionId}, ${model.termsAndConditionsRows}, ${model.dualTermsAndConditions}, ${false})" />
+                                <th:block th:insert="application/readonly/question-read-only :: terms-and-conditions-partner-table(${model.applicationId}, ${section.questions.get(0).questionId}, ${model.termsAndConditionsRows}, ${model.dualTermsAndConditions}, ${false}, ${model.thirdPartyProcurement}, ${model.thirdPartyConfig.termsAndConditionsLabel})" />
                             </div>
                         </li>
                     </ul>

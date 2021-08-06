@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.status.viewmodel;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.competition.resource.PostAwardService;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -28,6 +29,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private final boolean projectFinanceContact;
     private final PostAwardService postAwardService;
     private final String liveProjectsLandingPageUrl;
+    private final boolean thirdPartyProcurement;
+    private final CompetitionThirdPartyConfigResource thirdPartyConfig;
 
     public SetupStatusViewModel(ProjectResource project,
                                 boolean monitoringOfficer,
@@ -37,7 +40,9 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
                                 boolean projectManager,
                                 boolean projectFinanceContact,
                                 PostAwardService postAwardService,
-                                String liveProjectsLandingPageUrl) {
+                                String liveProjectsLandingPageUrl,
+                                boolean thirdPartyProcurement,
+                                CompetitionThirdPartyConfigResource thirdPartyConfig) {
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.monitoringOfficer = monitoringOfficer;
@@ -53,6 +58,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.projectFinanceContact = projectFinanceContact;
         this.postAwardService = postAwardService;
         this.liveProjectsLandingPageUrl = liveProjectsLandingPageUrl;
+        this.thirdPartyProcurement = thirdPartyProcurement;
+        this.thirdPartyConfig = thirdPartyConfig;
     }
 
     public Long getProjectId() {
@@ -142,4 +149,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     public boolean isLiveProjectMessageVisible() {
         return !isKtpCompetition() && getProjectState().isLive();
     }
+
+    public boolean isThirdPartyProcurement() { return thirdPartyProcurement; }
+
+    public CompetitionThirdPartyConfigResource getThirdPartyConfig() { return thirdPartyConfig; }
 }
