@@ -27,10 +27,6 @@ public class TermsAndConditionsFormPopulator {
                         termsAndConditionsForm.setThirdPartyTermsAndConditionsLabel(competitionThirdPartyConfigResource.getTermsAndConditionsLabel());
                         termsAndConditionsForm.setThirdPartyTermsAndConditionsText(competitionThirdPartyConfigResource.getTermsAndConditionsGuidance());
                         termsAndConditionsForm.setProjectCostGuidanceLink(competitionThirdPartyConfigResource.getProjectCostGuidanceUrl());
-                    } else {
-                        competitionThirdPartyConfigResource.setTermsAndConditionsLabel(null);
-                        competitionThirdPartyConfigResource.setProjectCostGuidanceUrl(PROJECT_COST_GUIDANCE_HTTP);
-                        competitionThirdPartyConfigResource.setTermsAndConditionsGuidance(null);
                     }
                     prePopulateWithHttp(termsAndConditionsForm, competitionThirdPartyConfigResource);
                 }
@@ -59,8 +55,8 @@ public class TermsAndConditionsFormPopulator {
     }
 
     private void prePopulateWithHttp(TermsAndConditionsForm termsAndConditionsForm, CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource) {
-     //   if(competitionThirdPartyConfigResource.getProjectCostGuidanceUrl() == null || competitionThirdPartyConfigResource.getProjectCostGuidanceUrl().isEmpty()) {
+        if(competitionThirdPartyConfigResource.getProjectCostGuidanceUrl() == null || competitionThirdPartyConfigResource.getProjectCostGuidanceUrl().isEmpty()) {
             termsAndConditionsForm.setProjectCostGuidanceLink(PROJECT_COST_GUIDANCE_HTTP);
-      //  }
+        }
     }
 }
