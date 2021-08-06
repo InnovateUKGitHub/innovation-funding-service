@@ -45,6 +45,7 @@ public class CompetitionTermsAndConditionsPopulatorTest {
 
         competitionResource = newCompetitionResource()
                 .withId(competitionId)
+                .withCompetitionThirdPartyConfig(competitionThirdPartyConfigResource)
                 .build();
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(RestResult.restSuccess(competitionResource));
@@ -90,14 +91,13 @@ public class CompetitionTermsAndConditionsPopulatorTest {
 
         competitionResource.setTermsAndConditions(grantTermsAndConditionsResource);
 
-        CompetitionTermsViewModel competitionTermsViewModel = competitionTermsAndConditionsPopulator.populate(competitionId);
+        CompetitionTermsViewModel competitionTermsViewModel = competitionTermsAndConditionsPopulator.populate(competitionResource.getId());
 
         assertEquals(competitionId, competitionTermsViewModel.getCompetitionId());
         assertFalse(competitionTermsViewModel.isProcurementThirdParty());
         assertFalse(competitionTermsViewModel.isTermsAndConditionsUploaded());
         assertEquals(grantTermsAndConditionsResource, competitionTermsViewModel.getTermsAndConditions());
-        assertNull(competitionTermsViewModel.getThirdPartyConfig().getTermsAndConditionsLabel());
-        assertNull(competitionTermsViewModel.getThirdPartyConfig().getTermsAndConditionsGuidance());
+        assertNull(competitionTermsViewModel.getThirdPartyConfig());
         assertEquals("CompetitionTermsViewModel{\n" +
                 "competitionId=1\n" +
                 "termsAndConditions{\n" +

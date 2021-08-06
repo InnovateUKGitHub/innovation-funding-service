@@ -92,12 +92,14 @@ public class CompetitionTermsViewModel {
             sb.append("}").append("\n");
         }
 
-        if (thirdPartyConfig.getTermsAndConditionsLabel() != null) {
-            sb.append("termsAndConditionsLabel=").append(thirdPartyConfig.getTermsAndConditionsLabel()).append("\n");
-        }
+        if (thirdPartyConfig != null) {
+            if (thirdPartyConfig.getTermsAndConditionsLabel() != null) {
+                sb.append("termsAndConditionsLabel=").append(thirdPartyConfig.getTermsAndConditionsLabel()).append("\n");
+            }
 
-        if (thirdPartyConfig.getTermsAndConditionsGuidance() != null) {
-            sb.append("termsAndConditionsGuidance=").append(thirdPartyConfig.getTermsAndConditionsGuidance()).append("\n");
+            if (thirdPartyConfig.getTermsAndConditionsGuidance() != null) {
+                sb.append("termsAndConditionsGuidance=").append(thirdPartyConfig.getTermsAndConditionsGuidance()).append("\n");
+            }
         }
 
         sb.append("}");
