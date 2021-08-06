@@ -44,6 +44,7 @@ public class CompetitionSetupTermsAndConditionsController {
     public static final String COMPETITION_ID_KEY = "competitionId";
     public static final String COMPETITION_SETUP_FORM_KEY = "competitionSetupForm";
     private static final String MODEL = "model";
+    private static final String PROJECT_COST_GUIDANCE_HTTP = "http://";
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -314,7 +315,6 @@ public class CompetitionSetupTermsAndConditionsController {
         if (competition.getCompetitionThirdPartyConfigResource() == null) {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsLabel", "Please enter a label to replace terms and conditions."));
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsText", "Please enter a description text for terms and conditions page."));
-            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "projectCostGuidanceLink", "Please enter a project costs guidance link."));
         } else {
             if (competition.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel().isEmpty()) {
                 bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsLabel", "Please enter a label to replace terms and conditions."));
@@ -322,11 +322,8 @@ public class CompetitionSetupTermsAndConditionsController {
             if (competition.getCompetitionThirdPartyConfigResource().getTermsAndConditionsGuidance().isEmpty()) {
                 bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsText", "Please enter a description text for terms and conditions page."));
             }
-            if (competition.getCompetitionThirdPartyConfigResource().getProjectCostGuidanceUrl().isEmpty()) {
-                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "projectCostGuidanceLink", "Please enter a project costs guidance link."));
-            }
-
         }
+        validateProjectCostGuidanceLink(competition, bindingResult);
     }
 
     private void validateUploadFragment(boolean isProcurementThirdParty, boolean isProcurement, CompetitionResource competition, BindingResult bindingResult) {
@@ -373,5 +370,13 @@ public class CompetitionSetupTermsAndConditionsController {
     private String getFileUploadedString(CompetitionResource competitionResource) {
         return competitionResource.getTermsAndConditions().isProcurement() ? "termsAndConditionsDoc"
                 : "thirdPartyTermsAndConditionsDoc";
+    }
+
+    private void validateProjectCostGuidanceLink(CompetitionResource competition, BindingResult bindingResult) {
+        if (competition.getCompetitionThirdPartyConfigResource() == null ||
+                competition.getCompetitionThirdPartyConfigResource().getProjectCostGuidanceUrl().isEmpty() ||
+                competition.getCompetitionThirdPartyConfigResource().getProjectCostGuidanceUrl().equals(PROJECT_COST_GUIDANCE_HTTP)) {
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "projectCostGuidanceLink", "Please enter a project costs guidance link."));
+        }
     }
 }

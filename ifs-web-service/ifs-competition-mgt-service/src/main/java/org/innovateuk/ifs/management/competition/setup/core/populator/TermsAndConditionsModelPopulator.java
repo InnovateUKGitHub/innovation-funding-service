@@ -41,9 +41,11 @@ public class TermsAndConditionsModelPopulator {
 
         boolean termsAndConditionsDocUploaded = competitionResource.isCompetitionTermsUploaded();
 
-        String projectCostGuidanceLink = "";
+        String projectCostGuidanceLink = "http://";
         if (competitionResource.getCompetitionThirdPartyConfigResource() != null) {
-            projectCostGuidanceLink = competitionResource.getCompetitionThirdPartyConfigResource().getProjectCostGuidanceUrl();
+            if (competitionResource.getCompetitionThirdPartyConfigResource().getProjectCostGuidanceUrl() !=null) {
+                projectCostGuidanceLink = competitionResource.getCompetitionThirdPartyConfigResource().getProjectCostGuidanceUrl();
+            }
         }
 
         boolean includeStateAid = includeStateAid(competitionResource);
