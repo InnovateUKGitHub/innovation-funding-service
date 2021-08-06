@@ -70,7 +70,7 @@ public class TermsAndConditionsModelPopulator {
 
     private String getProjectCostGuidanceLink(CompetitionResource competitionResource, GrantTermsAndConditionsResource termsAndConditions) {
         String projectCostGuidanceLink = "http://";
-        if (!termsAndConditions.isProcurement() && competitionResource.getCompetitionThirdPartyConfigResource() != null) {
+        if (competitionResource.getCompetitionThirdPartyConfigResource() != null) {
             if (competitionResource.getCompetitionThirdPartyConfigResource().getProjectCostGuidanceUrl() !=null) {
                 projectCostGuidanceLink = competitionResource.getCompetitionThirdPartyConfigResource().getProjectCostGuidanceUrl();
             }
