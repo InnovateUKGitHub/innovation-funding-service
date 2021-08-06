@@ -36,7 +36,7 @@
             <th:block th:insert="fragments/layout :: main-content-end"/>
         </th:block>
         <th:block th:unless="${model.subsidyBasisRequiredButIncomplete}"
-                  th:with="thirdPartyLabel=${model.termsAndConditionsLabel}">
+                  th:with="thirdPartyLabel=${model.thirdPartyConfig.termsAndConditionsLabel}">
             <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
                  aria-labelledby="error-summary-title"
                  role="alert"
@@ -88,8 +88,15 @@
                                     I agree to the <a th:href="@{/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.competitionId})}">full terms and conditions</a> set out by the funding authority.
                                     I understand I need to agree to the final contract if my application is successful.
                                 </label>
-                                <th:label th:if="${model.isThirdPartyProcurementCompetition}" for="agreed" class="govuk-label govuk-checkboxes__label"
-                                    th:text="|I agree to the ${thirdPartyLabel} set out by the funding authority. I understand I need to agree to the final contract if my application is successful.|">
+                                <th:label th:if="${model.isThirdPartyProcurementCompetition}" for="agreed" class="govuk-label govuk-checkboxes__label">
+                                    <div th:if="${model.isTermsAndConditionsUploaded}">
+                                    I agree to the <a th:href="@{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.competitionId})}" th:text="${thirdPartyLabel}"></a>
+                                        set out by the funding authority. I understand I need to agree to the final contract if my application is successful.
+                                    </div>
+                                    <div th:unless="${model.isTermsAndConditionsUploaded}">
+                                        I agree to the <a th:href="${model.thirdPartyConfig.projectCostGuidanceUrl}" th:text="${thirdPartyLabel}"></a>
+                                        set out by the funding authority. I understand I need to agree to the final contract if my application is successful.
+                                    </div>
                                 </th:label>
                             </div>
                         </div>
