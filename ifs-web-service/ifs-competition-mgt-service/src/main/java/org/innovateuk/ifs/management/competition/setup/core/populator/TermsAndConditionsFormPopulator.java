@@ -48,6 +48,7 @@ public class TermsAndConditionsFormPopulator {
         competitionThirdPartyConfigResource.setTermsAndConditionsLabel(termsAndConditionsForm.getThirdPartyTermsAndConditionsLabel());
         competitionThirdPartyConfigResource.setTermsAndConditionsGuidance(termsAndConditionsForm.getThirdPartyTermsAndConditionsText());
         competitionThirdPartyConfigResource.setProjectCostGuidanceUrl(termsAndConditionsForm.getProjectCostGuidanceLink());
+        competitionThirdPartyConfigResource.setCompetitionId(competition.getId());
         competition.setCompetitionThirdPartyConfigResource(competitionThirdPartyConfigResource);
     }
 
