@@ -663,7 +663,7 @@ the user accept the competition terms and conditions
 the user accept the procurement terms and conditions
     the user clicks the button/link    link = Award terms and conditions
     the user clicks the button/link    link = View full terms and conditions (opens in a new window)
-    the user goes back to the previous page
+    the user closes the last opened tab
     the user selects the checkbox      agreed
     the user clicks the button/link    jQuery = button:contains("Agree and continue")
     the user should see the element    jQuery = .form-footer:contains("Terms and conditions accepted")
