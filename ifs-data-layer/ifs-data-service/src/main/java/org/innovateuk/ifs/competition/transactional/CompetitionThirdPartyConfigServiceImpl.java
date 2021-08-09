@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionThirdPartyConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionThirdPartyConfigMapper;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionThirdPartyConfigRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.transactional.RootTransactionalService;
@@ -20,6 +22,9 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class CompetitionThirdPartyConfigServiceImpl extends RootTransactionalService implements CompetitionThirdPartyConfigService {
 
     @Autowired
+    private CompetitionRepository competitionRepository;
+
+    @Autowired
     private CompetitionThirdPartyConfigRepository competitionThirdPartyConfigRepository;
 
     @Autowired
@@ -32,6 +37,17 @@ public class CompetitionThirdPartyConfigServiceImpl extends RootTransactionalSer
             return serviceSuccess(mapper.mapToResource(config.get()));
         }
         return serviceSuccess(new CompetitionThirdPartyConfigResource("","", ""));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<CompetitionThirdPartyConfigResource> create(CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource) {
+        Long competitionId = competitionThirdPartyConfigResource.getCompetitionId();
+        return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
+                .andOnSuccessReturn((competition) -> {
+                    competition.setCompetitionThirdPartyConfig(mapper.mapToDomain(competitionThirdPartyConfigResource));
+                    return mapper.mapToResource(competition.getCompetitionThirdPartyConfig());
+                });
     }
 
     @Override

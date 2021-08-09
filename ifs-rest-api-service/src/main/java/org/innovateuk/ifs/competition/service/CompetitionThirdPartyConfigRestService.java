@@ -5,5 +5,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResour
 
 public interface CompetitionThirdPartyConfigRestService {
     RestResult<CompetitionThirdPartyConfigResource> findOneByCompetitionId(long competitionId);
+    RestResult<CompetitionThirdPartyConfigResource> create(CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource);
     RestResult<Void> update(long competitionId, CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource);
 }
