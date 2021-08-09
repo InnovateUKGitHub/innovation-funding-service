@@ -39,4 +39,12 @@ public class CompetitionThirdPartyConfigResourceBuilder extends BaseBuilder<Comp
     public CompetitionThirdPartyConfigResourceBuilder withProjectCostGuidanceUrl(String... projectCostGuidanceUrl) {
         return withArraySetFieldByReflection("projectCostGuidanceUrl", projectCostGuidanceUrl);
     }
+
+    public CompetitionThirdPartyConfigResourceBuilder withId(Long... id) {
+        return withArraySetFieldByReflection("id", id);
+    }
+
+    public CompetitionThirdPartyConfigResourceBuilder withCompetitionId(Long... competitionId) {
+        return withArraySetFieldByReflection("competitionId", competitionId);
+    }
 }
