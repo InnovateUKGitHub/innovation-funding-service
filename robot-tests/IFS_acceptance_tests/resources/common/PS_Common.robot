@@ -614,6 +614,8 @@ The project finance user approves bank details
     the user clicks the button/link           jQuery = .govuk-button:contains("Approve account")
 
 internal user approve uploaded documents
+    ${today} =  get today
+    set suite variable  ${today}
     the user selects the radio button      approved   true
     the user clicks the button/link        id = submit-button
     the user clicks the button/link        id = accept-document
@@ -646,10 +648,32 @@ Search for MO
 
 The internal user assign project to MO
     [Arguments]  ${search_ID}  ${project_name}
-    the element should be disabled      jQuery = button:contains("Assign")
-    input text                          id = projectId    ${search_ID}
-    the user clicks the button/link     jQuery = ul li:contains("${search_ID} - ${project_name}")
-    the user clicks the button/link     jQuery = button:contains("Assign")
+    the element should be disabled              jQuery = button:contains("Assign")
+    input text                                  id = projectId   ${search_ID}
+    the user should see project in dropdown     id = projectId   ${search_ID}  ${project_name}
+    the user clicks the button/link             jQuery = ul li:contains("${search_ID} - ${project_name}")
+    the user clicks the button/link             jQuery = button:contains("Assign")
+
+the user should see project in dropdown
+    [Arguments]  ${locator}  ${labelOrId}  ${actualName}
+    :FOR    ${i}    IN RANGE  10
+    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots  element should be visible  jQuery = ul li:contains("${labelOrId} - ${actualName}")
+    \  Exit For Loop If  '${status}'=='PASS'
+    \  run keyword if  '${status}'=='FAIL'   retry entering the project     ${locator}   ${labelOrId}
+    \  ${i} =  Set Variable  ${i + 1}
+
+the user should see country in dropdown
+    [Arguments]  ${locator}  ${searchWord}
+    :FOR    ${i}    IN RANGE  10
+    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots  element should be visible  jQuery = ul li:contains("${searchWord}")
+    \  Exit For Loop If  '${status}'=='PASS'
+    \  run keyword if  '${status}'=='FAIL'   retry entering the project     ${locator}   ${searchWord}
+    \  ${i} =  Set Variable  ${i + 1}
+
+retry entering the project
+    [Arguments]  ${locator}  ${searchWord}
+    clear element text      ${locator}
+    input text              ${locator}   ${searchWord}
 
 the user completes the project team details
     the user clicks the button/link     link = Project team
@@ -789,8 +813,9 @@ the user fills correspondence address for non-uk based organisations
 
 enter the country in the autocomplete field
     [Arguments]         ${country}  ${completeCountryName}
-    input text                          id = country        ${country}
-    the user clicks the button/link     jQuery = ul li:contains("${completeCountryName}")
+    input text                                  id = country        ${country}
+    wait for autosave
+    the user clicks the button/link             jQuery = ul li:contains("${completeCountryName}")
 
 the user should see project is live with review its progress link
     the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
@@ -888,10 +913,10 @@ the internal user reverts the viability
     the user clicks the button/link          link = Back to finance checks
 
 the user edits the payment milestone
-     the user clicks the button/link                        id = edit
-     the user clicks the button/link                        jQuery = button:contains("Open all")
-     the user enters multiple strings into a text field     id = milestones[1].taskOrActivity    This is an edited text${SPACE}    3
-     the user clicks the button/link                        jQuery = button:contains("Save and return to payment milestone check")
+    the user clicks the button/link                        id = edit
+    the user clicks the button/link                        jQuery = button:contains("Open all")
+    the user enters multiple strings into a text field     id = milestones[1].taskOrActivity    This is an edited text${SPACE}    3
+    the user clicks the button/link                        jQuery = button:contains("Save and return to payment milestone check")
 
 the internal user approves payment milestone
     the user selects the checkbox       approve-milestones

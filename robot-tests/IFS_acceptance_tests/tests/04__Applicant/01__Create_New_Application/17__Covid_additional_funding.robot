@@ -209,15 +209,13 @@ Competition goes into previous
     [Setup]  log in as a different user  &{Comp_admin1_credentials}
     Given the user clicks the button/link    jQuery = a:contains("Project setup (")
     And The user should not see the element  link = ${COVIDcompetitionTitle}
-    when the user clicks the button/link     jQuery = a:contains("Previous (")
+    When the user clicks the button/link     jQuery = a:contains("Previous (")
     Then The user should see the element in the paginated list       link = ${COVIDcompetitionTitle}
 
 *** Keywords ***
 Custom Suite Setup
     The user logs-in in new browser   &{lead_applicant_credentials}
     Set predefined date variables
-    ${today}  get today
-    set suite variable  ${today}
     Connect to database  @{database}
 
 Custom Suite teardown
@@ -257,7 +255,7 @@ the project finance approves all steps before finance
     the user navigates to the page               ${server}/project-setup-management/competition/${COVIDcompetitionId}/status/all
     the user clicks the button/link              jQuery = td.action:nth-of-type(4)
     search for MO                                Orvill  Orville Gibbs
-    And the internal user assign project to MO   ${application_id}  ${COVIDapplicationTitle1}
+    the internal user assign project to MO       ${application_id}  ${COVIDapplicationTitle1}
     the user navigates to the page               ${server}/project-setup-management/competition/${COVIDcompetitionId}/status/all
     the user clicks the button/link              jQuery = td.action:nth-of-type(5)
     approve bank account details
@@ -297,6 +295,8 @@ External project finance creates account
 
 the user completes covid application
     the user clicks the button/link                          jQuery = a:contains("Start new application")
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  jQuery = label:contains("Empire Ltd")
+    Run Keyword if  '${status}' == 'PASS'    the user clicks the button twice   jQuery = label:contains("Empire Ltd")
     the user clicks the button/link                          jQuery = button:contains("Save and continue")
     the user clicks the button/link                          link = Application details
     the user fills in the Application details                ${COVIDapplicationTitle1}  ${tomorrowday}  ${month}  ${nextyear}

@@ -37,12 +37,14 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfileNotifications;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfileProcess;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
@@ -147,6 +149,9 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private CompetitionService competitionService;
 
     private static final String SPEND_PROFILE_STATE_ERROR = "Set Spend Profile workflow status to sent failed for project %s";
+
+    @Value("${ifs.monitoringofficer.spendprofile.update.enabled}")
+    private boolean isMOSpendProfileUpdateEnabled;
 
     @Override
     @Transactional
@@ -316,6 +321,16 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         globalArguments.put("dashboardUrl", webBaseUrl);
         globalArguments.put("applicationId", project.getApplication().getId());
         globalArguments.put("competitionName", project.getApplication().getCompetition().getName());
+        return globalArguments;
+
+    }
+
+    private Map<String, Object> createGlobalArgsForMOSpendProfileReviewEmail(Project project, User user) {
+        Map<String, Object> globalArguments = new HashMap<>();
+        globalArguments.put("monitoringOfficer", user);
+        globalArguments.put("applicationName", project.getApplication().getName());
+        globalArguments.put("applicationId", project.getApplication().getId());
+        globalArguments.put("dashboardUrl", webBaseUrl);
         return globalArguments;
 
     }
@@ -494,12 +509,16 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     public ServiceResult<SpendProfileResource> getSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         return getSpendProfileEntity(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId())
                 .andOnSuccessReturn(profile -> {
+                    SpendProfileProcess spendProfileProcess = spendProfileWorkflowHandler.getReviewOutcome(profile.getProject());
 
                     SpendProfileResource resource = new SpendProfileResource();
                     resource.setId(profile.getId());
                     resource.setGeneratedBy(userMapper.mapToResource(profile.getGeneratedBy()));
                     resource.setGeneratedDate(profile.getGeneratedDate());
                     resource.setMarkedAsComplete(profile.isMarkedAsComplete());
+                    resource.setReviewedBy(userMapper.mapToResource(spendProfileProcess.getInternalParticipant()));
+                    resource.setReviewedOn(spendProfileProcess.getLastModified());
+
                     return resource;
                 });
     }
@@ -553,11 +572,26 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
             if (spendProfileWorkflowHandler.submit(project)) {
                 project.setSpendProfileSubmittedDate(ZonedDateTime.now());
                 updateApprovalOfSpendProfile(projectId, ApprovalType.UNSET);
+                if (isMOSpendProfileUpdateEnabled) {
+                  sendSpendProfileReviewNotification(project);
+                }
                 return serviceSuccess();
             } else {
                 return serviceFailure(SPEND_PROFILES_HAVE_ALREADY_BEEN_SUBMITTED);
             }
         });
+    }
+
+    private ServiceResult<Void> sendSpendProfileReviewNotification(Project project) {
+        Optional<MonitoringOfficer> monitoringOfficer = projectUsersHelper.getMOByProjectId(project.getId());
+        if (monitoringOfficer.isPresent() && monitoringOfficer.get().getUser() != null) {
+            User user = monitoringOfficer.get().getUser();
+            NotificationTarget monitoringOfficerTarget = new UserNotificationTarget(user.getName(), user.getEmail());
+            Map<String, Object> globalArguments = createGlobalArgsForMOSpendProfileReviewEmail(project, user);
+            Notification notification = new Notification(systemNotificationSource, monitoringOfficerTarget, SpendProfileNotifications.MONITORING_OFFICER_SPENDPROFILE_REVIEW_NOTIFICATION, globalArguments);
+            return notificationService.sendNotificationWithFlush(notification, EMAIL);
+        }
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> rejectSpendProfileSubmission(Long projectId) {

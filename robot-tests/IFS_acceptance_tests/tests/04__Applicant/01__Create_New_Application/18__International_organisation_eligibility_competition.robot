@@ -211,30 +211,24 @@ Registered users applying for an international competition see no international 
 Registered users applying for an international competition see only UK based organisations if they are UK based
     [Documentation]    IFS-7252
     [Tags]  HappyPath
-     Given the user clicks the button/link              link = Back to tell us where your organisation is based
-     When user selects where is organisation based      isNotInternational
-     Then the user should see the element               jQuery = dt:contains("Empire Ltd")
-     And the user should see the element                link = Apply with a different organisation
+    Given the user clicks the button/link              link = Back to tell us where your organisation is based
+    When user selects where is organisation based      isNotInternational
+    Then the user should see only uk based organisations
+    And the user should see the element                link = Apply with a different organisation
 
 Registered UK based user applies for International Competition
     [Documentation]    IFS-7197  IFS-7723
     [Tags]  HappyPath
-    Given the user clicks the button/link                                          link = Apply with a different organisation
-    When the user selects organisation type as business                            radio-1
-# TODO should be implemented on ifs-7224
-#    And the user enters organisation details manually on companies house link      ${ukLeadOrganisationName}
-#   Then the user verifies uk based organisation details
-# TODO Should be removed on completing ifs-7224
-    Then the user search for organisation name on Companies house                   SAGA  ${ukLeadOrganisationName}
-# TODO should be implemented on ifs-7224
-    #And the user clicks the button/link                                           name = save-organisation
+    Given the user clicks the button/link                             link = Apply with a different organisation
+    When the user selects organisation type as business               radio-1
+    Then the user search for organisation name on Companies house     SAGA  ${ukLeadOrganisationName}
 
 Registered UK based lead user invites partner organisation(with registered email/user)
     [Documentation]    IFS-7197
     [Tags]  HappyPath
     Given the user clicks the button/link     link = Application team
     When invite partner organisation          Test Empire  Daniel Tan  ${lead_intl_email_one}
-    Then the user should see the element      jQuery = td:contains("Steve") ~ td:contains("Lead")
+    Then the user should see the element      jQuery = td:contains("steve") ~ td:contains("Lead")
     And the user should see the element       jQuery = td:contains("Daniel Tan (pending for")
 
 Partner organisation(with registered email/user) accepts the invite
@@ -269,7 +263,7 @@ Registered UK based lead user invites partner organisation(with non-registered e
     [Setup]  logout as user
     Given Registered UK based lead user goes to the application team
     When invite partner organisation                                     New Empire  Tim Simpson  ${partner_international_email}
-    Then the user should see the element                                 jQuery = td:contains("Steve") ~ td:contains("Lead")
+    Then the user should see the element                                 jQuery = td:contains("steve") ~ td:contains("Lead")
     And the user should see the element                                  jQuery = td:contains("Tim Simpson (pending for")
 
 Partner organisation(with non-registered email/user) accepts the invite
@@ -791,6 +785,7 @@ the user provides international organisation details
     the user enters text to a text field                               id = addressLine1  ${internationalOrganisationFirstLineAddress}
     the user enters text to a text field                               id = town  ${international_org_town}
     input text                                                         id = country  ${international_org_country}
+    the user should see country in dropdown                            id = country  ${international_org_country_complete}
     the user clicks the button/link                                    jQuery = ul li:contains("${international_org_country_complete}")
     the user clicks the button/link                                    id = ${button_id}
 
@@ -1266,3 +1261,8 @@ the lead can see multiple appendices uploaded to the technical approach question
     the user should see the element     jQuery = a:contains("${valid_pdf}")
     the user should see the element     jQuery = a:contains("${ods_file}")
     the user should see the element     jQuery = a:contains("${excel_file}")
+
+the user should see only uk based organisations
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots    page should contain element  jQuery = label:contains("Empire Ltd")
+    Run Keyword If  '${status}' == 'PASS'  the user should see the element     jQuery = label:contains("Empire Ltd")
+    ...                             ELSE   the user should see the element     jQuery = dt:contains("Empire Ltd")

@@ -2,22 +2,23 @@
 Resource    ../../resources/defaultResources.robot
 
 *** Variables ***
-${assessor_ben}              Benjamin Nixon
-${assessor_joel}             Joel George
-${assessor_madeleine}        Madeleine Martin
-${assessor_riley}            Riley Butler
-${assessor_ben_email}        benjamin.nixon@gmail.com
-${assessor_joel_email}       joel.george@gmail.com
-${assessor_joel_id}          ${user_ids['${assessor_joel_email}']}
-${assessor_madeleine_email}  madeleine.martin@gmail.com
-${assessor_riley_email}      riley.butler@gmail.com
-${aaron_robertson_email}     aaron.robertson@load.example.com
-${peter_styles_email}        peter.styles@load.example.com
+${assessor_ben}                        Benjamin Nixon
+${assessor_joel}                       Joel George
+${assessor_madeleine}                  Madeleine Martin
+${assessor_riley}                      Riley Butler
+${assessor_ben_email}                  benjamin.nixon@gmail.com
+${assessor_joel_email}                 joel.george@gmail.com
+${assessor_joel_id}                    ${user_ids['${assessor_joel_email}']}
+${assessor_madeleine_email}            madeleine.martin@gmail.com
+${assessor_riley_email}                riley.butler@gmail.com
+${aaron_robertson_email}               aaron.robertson@load.example.com
+${peter_styles_email}                  peter.styles@load.example.com
 ${Neural_network_application}          ${application_ids["${CLOSED_COMPETITION_APPLICATION_TITLE}"]}
 ${computer_vision_application_name}    Computer vision and machine learning for transport networks
 ${computer_vision_application}         ${application_ids["${computer_vision_application_name}"]}
 ${crowd_source_application_name}       Crowd sourced cycling navigator
 ${crowd_source_application}            ${application_ids["${crowd_source_application_name}"]}
+${Assessment_Comp_title}               Assessments of load capabilities
 
 *** Keywords ***
 Invited guest user log in
@@ -41,6 +42,9 @@ the assessor adds score and feedback for every question
       \    mouse out  css = .editor
       \    Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button with resubmission              jquery = button:contains("Save and return to assessment overview")
+    #clicking too fast as part of AT run so as  a turn around added this line
+    ${error} =   Run Keyword and return status without screenshots     page should contain     An unexpected error occurred.
+    Run Keyword If    '${error}' == 'True'                             the user clicks the button/link   jQuery = button:contains("Save and return to assessment overview")
 
 the competition admin invites assessors to the competition
     the competition admin selects assessors and add them to invite list
@@ -96,10 +100,10 @@ The internal user invites a user as an assessor
     the user clicks the button/link                      jQuery = .govuk-button:contains("Add assessors to list")
 
 the user should see the competition details
-    [Arguments]  ${comp_name}  ${comp_status}  ${sector}  ${area}  ${link}  ${link2}
+    [Arguments]  ${comp_name}  ${comp_status}  ${sector}  ${area}  ${link}  ${link2}  ${competitiontype}
     the user should see the element      jQuery =.govuk-caption-l:contains("${comp_name}")
     the user should see the element      jQuery =h1:contains("${comp_status}")
-    the user should see the element      jQuery = dt:contains("Competition type") ~ dd:contains("Programme")
+    the user should see the element      jQuery = dt:contains("Competition type") ~ dd:contains("${competitiontype}")
     the user should see the element      jQuery = dt:contains("Innovation sector") ~ dd:contains("${sector}")
     the user should see the element      jQuery = dt:contains("Innovation area") ~ dd:contains("${area}")
     #The following checks test if the correct buttons are disabled
@@ -108,7 +112,8 @@ the user should see the competition details
     the user should see the element      jQuery = a:contains("${link2}")
 
 comp admin navigate to manage applications
-    the user clicks the button/link       link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    [Arguments]   ${comp_name}
+    the user clicks the button/link       link = ${comp_name}
     the user clicks the button/link       jQuery = a:contains("Manage assessments")
     the user clicks the button/link       jQuery = a:contains("Manage applications")
 

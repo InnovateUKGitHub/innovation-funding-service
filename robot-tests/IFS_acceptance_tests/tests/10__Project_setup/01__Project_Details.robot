@@ -94,8 +94,9 @@ Status updates correctly for internal user's table
 Non-lead partner can see the project setup page
     [Documentation]    INFUND-2612 INFUND-2621 INFUND-4428 INFUND-5827 INFUND-5805 INFUND-7432
     [Tags]  HappyPath
-    [Setup]  log in as a different user             &{collaborator1_credentials}
-    Given the user should see the grant award terms and conditions
+    [Setup]  log in as a different user                                 &{collaborator1_credentials}
+    Given the user clicks the application tile if displayed
+    When the user should see the grant award terms and conditions
     Then the user should see the project setup stages
     And the user checks for project detail status on team status page   Ludlow
     And Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
@@ -375,7 +376,7 @@ the user save the target start date
     the user should see the element            jQuery = td:contains("1 Jan ${nextyear}")
 
 the user select exisitng user as project manager
-    the user should see the element                jQuery = .govuk-hint:contains("Who will be the Project Manager for your project?")
+    the user should see the element               jQuery = .govuk-hint:contains("Who will be the Project Manager for your project?")
     the user selects the radio button             projectManager    new
     the user should see the element               id = invite-project-manager
     the user selects the radio button             projectManager    projectManager1
@@ -410,20 +411,20 @@ the non-lead partner see the completed project details
     the user should see the element                     jQuery = tr:contains("Empire") td.ok:nth-of-type(1)
 
 the lead partner see the completed project details
-    the user logs in and navigates to project details      &{lead_applicant_credentials}
-    the user should see the element             jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}")
+    the user logs in and navigates to project details     &{lead_applicant_credentials}
+    the user should see the element                       jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}")
     all the fields are completed
-    the user navigates to the page               ${Project_In_Setup_Page}
-    the user clicks the button/link              link = View the status of partners
-    the user should see the element              jQuery = tr:contains("Empire") td.ok:nth-of-type(1)
+    the user navigates to the page                        ${Project_In_Setup_Page}
+    the user clicks the button/link                       link = View the status of partners
+    the user should see the element                       jQuery = tr:contains("Empire") td.ok:nth-of-type(1)
 
 the non-lead partner cannot changes any project details
-    the user clicks the button/link             link = Project details
-    the user should see the element             jQuery = td:contains("Target start date") ~ td:contains("1 Jan 2023")
-    the user should not see the element         link = Target start date
-    the user should see the element             jQuery = td:contains("Correspondence address") ~ td:contains("Montrose House 1, Neston, CH64 3RU")
-    the user should not see the element         link = Correspondence address
-    the user navigates to the page              ${Project_Start_Date_Page}
+    the user clicks the button/link                                   link = Project details
+    the user should see the element                                   jQuery = td:contains("Target start date") ~ td:contains("1 Jan 2023")
+    the user should not see the element                               link = Target start date
+    the user should see the element                                   jQuery = td:contains("Correspondence address") ~ td:contains("Montrose House 1, Neston, CH64 3RU")
+    the user should not see the element                               link = Correspondence address
+    the user navigates to the page                                    ${Project_Start_Date_Page}
     the user should be able to see change start date instructions
     the user navigates to the page and gets a custom error message    ${Project_Address_Page}    ${403_error_message}
 

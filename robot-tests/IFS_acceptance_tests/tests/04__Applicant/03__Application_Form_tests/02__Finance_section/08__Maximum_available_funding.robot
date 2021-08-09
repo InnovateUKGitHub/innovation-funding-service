@@ -205,7 +205,7 @@ the user accepts the invite to collaborate
     the user reads his email and clicks the link     ${user_name}  Invitation to collaborate in ${competition_name}  You will be joining as part of the organisation  2
     the user clicks the button/link                  jQuery = a:contains("Continue")
     the guest user inserts user email and password   ${user_name}  ${password}
-    the guest user clicks the log-in button
+    the user clicks the button/link                  jQuery = button:contains("Sign in")
     the user clicks the button/link                  css = .govuk-button[type="submit"]   #Save and continue
 
 the correct funding is displayed to academic user
