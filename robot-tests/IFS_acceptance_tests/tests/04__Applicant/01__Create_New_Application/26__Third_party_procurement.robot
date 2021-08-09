@@ -213,7 +213,7 @@ the third party applicant can view the strategic innovation terms and conditions
     the user should see the element    jQuery = h1:contains("${title}")
     the user should see the element    link = View ${title} (opens in a new window)
     the user should see the element    jQuery = p:contains("Summary of ${title}")
-    the user should see the element    link = ${title}
+    the user should see the element    link = ${title} (opens in a new window)
     the user selects the checkbox      agreed
     the user clicks the button/link    jQuery = button:contains("Agree and continue")
     the user should see the element    jQuery = .form-footer:contains("${title} accepted")
