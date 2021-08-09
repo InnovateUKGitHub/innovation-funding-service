@@ -473,7 +473,8 @@ public class CompetitionWebTestData {
                 .withInnovationSector("None")
                 .withInnovationAreas(asSet(67L))
                 .withIncludeYourOrganisation(false)
-                .withResearchRatio(100);
+                .withResearchRatio(100)
+                .withTermsAndConditionsTemplate("procurement-terms-and-conditions");
     }
 
     private static CompetitionLineBuilder ofGemCompetition() {
