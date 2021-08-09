@@ -13,6 +13,9 @@ public class CompetitionThirdPartyConfigController {
     @Autowired
     private CompetitionThirdPartyConfigService competitionThirdPartyConfigService;
 
+    public CompetitionThirdPartyConfigController() {
+    }
+
     @PostMapping
     public RestResult<CompetitionThirdPartyConfigResource> create(@RequestBody CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource) {
         return competitionThirdPartyConfigService.create(competitionThirdPartyConfigResource).toPostCreateResponse();
