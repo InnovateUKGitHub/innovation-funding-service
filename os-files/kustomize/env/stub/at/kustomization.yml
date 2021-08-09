@@ -5,9 +5,6 @@ commonAnnotations:
   deployedWith: kustomize
   environment: at
 
-bases:
-  - ../custom
-
 components:
   - ../../../components/robot
   - ../../../patches/pull-secrets-patch
