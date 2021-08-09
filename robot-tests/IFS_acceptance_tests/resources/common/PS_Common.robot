@@ -814,7 +814,7 @@ the user fills correspondence address for non-uk based organisations
 enter the country in the autocomplete field
     [Arguments]         ${country}  ${completeCountryName}
     input text                                  id = country        ${country}
-    the user should see country in dropdown     id = country        ${completeCountryName}
+    wait for autosave
     the user clicks the button/link             jQuery = ul li:contains("${completeCountryName}")
 
 the user should see project is live with review its progress link

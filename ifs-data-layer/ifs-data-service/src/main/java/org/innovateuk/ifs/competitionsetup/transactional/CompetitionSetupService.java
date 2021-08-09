@@ -86,4 +86,8 @@ public interface CompetitionSetupService {
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<Void> deleteCompetitionTerms(long competitionId);
 
+    @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can update competition terms")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    ServiceResult<Void> deleteCompetitionThirdPartyConfigData(long competitionId);
+
 }

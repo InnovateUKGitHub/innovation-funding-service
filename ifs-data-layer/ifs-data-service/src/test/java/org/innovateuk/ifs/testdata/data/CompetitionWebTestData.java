@@ -225,6 +225,9 @@ public class CompetitionWebTestData {
                 grantCompetition()
                         .withName("Photonics for health")
                         .withLeadTechnologist(PETER_FREEMAN_ID),
+                grantCompetition()
+                        .withName("Comp to Delete 1")
+                        .withLeadTechnologist(PETER_FREEMAN_ID),
                 ofGemCompetition()
                         .withName("OfGem competition")
         )
@@ -373,6 +376,11 @@ public class CompetitionWebTestData {
                         .withResubmission(true)
                         .withFundingRules(FundingRules.SUBSIDY_CONTROL),
                 grantCompetition()
+                        .withName("Princes Trust Comp 1")
+                        .withCompetitionType(THE_PRINCES_TRUST)
+                        .withLeadApplicantTypes(asSet(BUSINESS, RTO, RESEARCH, PUBLIC_SECTOR_OR_CHARITY))
+                        .withFundingRules(FundingRules.SUBSIDY_CONTROL),
+                grantCompetition()
                         .withName("Always open competition")
                         .withAlwaysOpen(true)
                         .withResubmission(true),
@@ -472,27 +480,36 @@ public class CompetitionWebTestData {
         return thirdPartyCompetition()
                 .withCompetitionCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK)
                 .withTermsAndConditionsLabel("Strategic Innovation Fund Governance Document")
-                .withTermsAndConditionsGuidance("<h1 class=\"govuk-heading-l\">Award terms and conditions</h1>" +
-                        "<p class=\"govuk-body\"><a href=\"/competition/133/info/terms-and-conditions/full\">View full terms and conditions</a></p>" +
-                        "<h2 class=\"govuk-heading-m\">A summary of the award terms and conditions</h2>" +
-                        "<p class=\"govuk-body\">The full terms and conditions are specific to this procurement competition. They will differ from any you have agreed to before. By submitting an application you are agreeing to the full terms and conditions pending the final contract if you are successful. It is your responsibility to make sure you read these terms.</p>" +
-                        "<p class=\"govuk-body\">They represent an agreement between the funding authority and your organisation and include details about your obligations and the administration of your project. They cover:</p>" +
-                        "<ul class=\"govuk-list govuk-list--bullet\">" +
-                        "<li>intellectual property rights</li>" +
-                        "<li>confidentiality</li>" +
-                        "<li>publicity</li>" +
-                        "<li>accounting and payments</li>" +
-                        "<li>monitoring and reporting</li>" +
-                        "<li>final report and evaluation</li>" +
-                        "<li>termination</li>" +
-                        "<li>warranties and insurance</li>" +
-                        "<li>resolution procedure</li>" +
-                        "</ul>" +
-                        "<p class=\"govuk-body\">This list is not exhaustive.</p>" +
-                        "<p class=\"govuk-body\">If you are successful in your application you must sign a final contract with the funding authority which may include additional details agreed between you and the funding authority.</p>" +
-                        "<p class=\"govuk-body\">If there is anything you do not understand, please <a href=\"/info/contact\">contact us</a>.</p>" +
-                        "<p class=\"govuk-body govuk-!-margin-top-9 user-feedback\"><span class=\"govuk-!-font-weight-bold\">Need help with this service?</span> <a class=\"govuk-link\" href=\"/info/contact\">Contact us</a></p>")
-                .withProjectCostGuidanceUrl("https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/small-business-research-initiative-sbri-project-costs-guidance");
+                .withTermsAndConditionsGuidance("<h2 class=\"govuk-heading-m\">Summary of Strategic Innovation Fund governance document.</h2>\n" +
+                        "            <p class=\"govuk-body\">\n" +
+                        "                <a href=\"https://www.ofgem.gov.uk/sites/default/files/2021-06/draft_sif_governance_document_consultation_copy_020621_0.pdf\">The SIF governance document</a> is specific to the Ofgem Strategic Innovation Fund (SIF). Applicants wishing to collaborate on projects funded through the SIF must comply with this SIF Governance Document.  It is your responsibility to make sure you have read it.\n" +
+                        "            </p>\n" +
+                        "            <p class=\"govuk-body\">\n" +
+                        "                The SIF governance document represents an agreement between the Ofgem and your organisation and include details about your obligations and the administration of your project.\n" +
+                        "            </p>\n" +
+                        "            <p class=\"govuk-body\">\n" +
+                        "                They cover:\n" +
+                        "            </p>\n" +
+                        "            <ul class=\"govuk-list govuk-list--bullet\">\n" +
+                        "                <li>eligibility criteria</li>\n" +
+                        "                <li>application process</li>\n" +
+                        "                <li>assessment of projects</li>\n" +
+                        "                <li>project delivery and monitoring</li>\n" +
+                        "                <li>funding arrangements</li>\n" +
+                        "                <li>project administration, including compliance and audits</li>\n" +
+                        "                <li>intellectual property rights and royalties</li>\n" +
+                        "                <li>learning and collaboration, including external stakeholder relationship development, information sharing and reporting</li>\n" +
+                        "            </ul>\n" +
+                        "            <p class=\"govuk-body\">This list is not exhaustive.</p>\n" +
+                        "            <p class=\"govuk-body\">\n" +
+                        "                If your application is successful, Ofgem will issue a direction to the network licensee leading the project, which confirms the deliverables for which they are accountable.\n" +
+                        "            </p>\n" +
+                        "            <p class=\"govuk-body\">\n" +
+                        "                By ticking the box and submitting an application, you are confirming that you have read and are satisfied that you understand the regulatory framework.\n" +
+                        "            </p>\n" +
+                        "            <p class=\"govuk-body\">If there is any aspect of the SIF you do not understand, please <a href=\"/info/contact\">contact us</a>.</p>\n")
+                .withProjectCostGuidanceUrl("https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/small-business-research-initiative-sbri-project-costs-guidance")
+                .withTermsAndConditionsTemplate("third-party-terms-and-conditions");
     }
 
     private static CompetitionLineBuilder thirdPartyCompetition() {

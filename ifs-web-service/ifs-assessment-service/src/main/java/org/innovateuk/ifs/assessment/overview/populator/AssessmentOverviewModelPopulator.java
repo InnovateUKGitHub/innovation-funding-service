@@ -17,8 +17,10 @@ import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -89,6 +91,9 @@ public class AssessmentOverviewModelPopulator {
     @Autowired
     private ApplicationRestService applicationRestService;
 
+    @Autowired
+    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
+
     @Value("${ifs.subsidy.control.northern.ireland.enabled}")
     private boolean northernIrelandSubsidyControlToggle;
 
@@ -109,16 +114,19 @@ public class AssessmentOverviewModelPopulator {
                 competition.getName(),
                 competition.getAssessmentDaysLeftPercentage(),
                 competition.getAssessmentDaysLeft(),
-                getSections(assessment, assessorViewQuestions),
+                getSections(assessment, assessorViewQuestions, competition),
                 getAppendices(assessment.getApplication(), assessorViewQuestions),
                 termsAndConditionsTerminology,
                 getTermsAndConditionsRows(questions, application, competition),
-                competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && competition.getOtherFundingRulesTermsAndConditions() != null && northernIrelandSubsidyControlToggle
+                competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && competition.getOtherFundingRulesTermsAndConditions() != null && northernIrelandSubsidyControlToggle,
+                competition.getTermsAndConditions().isProcurementThirdParty(),
+                competition.getCompetitionThirdPartyConfigResource()
         );
     }
 
     private List<AssessmentOverviewSectionViewModel> getSections(AssessmentResource assessment,
-                                                                 List<QuestionResource> questions) {
+                                                                 List<QuestionResource> questions,
+                                                                 CompetitionResource competition) {
         List<SectionResource> sections = sectionRestService.getByCompetitionIdVisibleForAssessment(assessment.getCompetition()).getSuccess();
 
         Map<Long, List<FormInputResource>> formInputs = getFormInputsByQuestion(assessment.getCompetition());
@@ -133,7 +141,8 @@ public class AssessmentOverviewModelPopulator {
                     .collect(toList());
 
             return new AssessmentOverviewSectionViewModel(sectionResource.getId(),
-                    sectionResource.getName(),
+                    (sectionResource.getType() == TERMS_AND_CONDITIONS && competition.getTermsAndConditions().isProcurementThirdParty()) ?
+                            competition.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel() : sectionResource.getName(),
                     sectionResource.getAssessorGuidanceDescription(),
                     getQuestions(sectionQuestions, formInputs, responses),
                     sectionResource.getType() == FINANCES,
@@ -240,6 +249,9 @@ public class AssessmentOverviewModelPopulator {
         }
         if (FundingType.LOAN == competitionResource.getFundingType()) {
             return TERMS_AND_CONDITIONS_LOAN;
+        }
+        if(competitionResource.getTermsAndConditions().isProcurementThirdParty()) {
+            return competitionResource.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel();
         }
         return TERMS_AND_CONDITIONS_OTHER;
     }

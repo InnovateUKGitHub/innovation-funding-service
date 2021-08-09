@@ -143,7 +143,9 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                                 assignment.getUserSimpleOrganisation()))
                         .collect(Collectors.groupingBy(SupporterAssignmentReadOnlyViewModel::getState)) : emptyMap(),
                 shouldDisplayKtpApplicationFeedback(competition, user, processRoles),
-                competition.isKtp()
+                competition.isKtp(),
+                competition.getTermsAndConditions().isProcurementThirdParty(),
+                competition.getCompetitionThirdPartyConfigResource()
         );
     }
 
@@ -162,13 +164,13 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 .map(questionId -> data.getQuestionIdToQuestion().get(questionId))
                 .map(question ->  populateQuestionViewModel(question, data, settings))
                 .collect(toCollection(LinkedHashSet::new));
-        return new ApplicationSectionReadOnlyViewModel(section.getName(), false, questionViews);
+        return new ApplicationSectionReadOnlyViewModel(section.getName(), false, section.isTermsAndConditions(), questionViews);
     }
 
     //Currently only theA finance section has child sections.
     private ApplicationSectionReadOnlyViewModel sectionWithChildren(SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
         ApplicationQuestionReadOnlyViewModel finance = financeSummaryViewModelPopulator.populate(data);
-        return new ApplicationSectionReadOnlyViewModel(section.getName(), true, ImmutableSet.of(finance));
+        return new ApplicationSectionReadOnlyViewModel(section.getName(), true, section.isTermsAndConditions(), ImmutableSet.of(finance));
     }
 
     private ApplicationQuestionReadOnlyViewModel populateQuestionViewModel(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
