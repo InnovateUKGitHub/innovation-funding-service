@@ -195,7 +195,7 @@ the user completes required fields in third party procurement competition
     [Arguments]  ${title}  ${summary}  ${url}
     the user enters text to a text field        id = thirdPartyTermsAndConditionsLabel   ${title}
     the user enters text to a text field        css = .editor   ${summary}
-    the user should see the element             jQuery = span:contains("Insert a link including the full URL http://")
+    the user should see the element             jQuery = span:contains("Insert a link including the full URL http:// or https://")
     the user enters text to a text field        id = projectCostGuidanceLink   ${url}
     the user uploads the file                   css = .inputfile  ${valid_pdf}
 
