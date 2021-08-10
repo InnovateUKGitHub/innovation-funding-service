@@ -513,18 +513,20 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             }
         });
 
-        return competitionDataBuilder.withCompetitionTermsAndConditionsFileUpload();
+        return competitionDataBuilder.withCompetitionTermsAndConditionsFileUpload(line);
     }
 
-    public CompetitionDataBuilder withCompetitionTermsAndConditionsFileUpload() {
+    public CompetitionDataBuilder withCompetitionTermsAndConditionsFileUpload(CompetitionLine line) {
         return asCompAdmin(data -> {
-            doCompetitionDetailsUpdate(data, competition -> {
-                FileEntryResource termsAndConditionsFile = new FileEntryResource();
-                termsAndConditionsFile.setName("webtest.pdf");
-                termsAndConditionsFile.setFilesizeBytes(7945);
-                termsAndConditionsFile.setMediaType("application/pdf");
-                competition.setCompetitionTerms(termsAndConditionsFile);
-            });
+            if (line.getTermsAndConditionsTemplate() != null) {
+                doCompetitionDetailsUpdate(data, competition -> {
+                    FileEntryResource termsAndConditionsFile = new FileEntryResource();
+                    termsAndConditionsFile.setName("webtest.pdf");
+                    termsAndConditionsFile.setFilesizeBytes(7945);
+                    termsAndConditionsFile.setMediaType("application/pdf");
+                    competition.setCompetitionTerms(termsAndConditionsFile);
+                });
+            }
         });
     }
 

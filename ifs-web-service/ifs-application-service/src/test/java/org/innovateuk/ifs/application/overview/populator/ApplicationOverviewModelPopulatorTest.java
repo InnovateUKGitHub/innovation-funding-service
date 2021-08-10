@@ -267,7 +267,7 @@ public class ApplicationOverviewModelPopulatorTest {
         when(questionService.getNotificationsForUser(questionStatuses, user.getId())).thenReturn(questionStatuses);
         when(messageSource.getMessage("ifs.section.finances.description", null, Locale.getDefault())).thenReturn("Finance description");
         when(messageSource.getMessage("ifs.section.projectDetails.description", null, Locale.getDefault())).thenReturn("Project details description");
-        when(messageSource.getMessage("ifs.section.termsAndConditions.description", null, Locale.getDefault())).thenReturn("Third party description");
+        when(messageSource.getMessage("ifs.section.termsAndConditionsProcurementThirdParty.description", null, Locale.getDefault())).thenReturn("You must agree to it before you submit your application");
         when(applicationUrlHelper.getQuestionUrl(any(), anyLong(), anyLong(), anyLong())).thenReturn(Optional.of("/the-question-url"));
         when(sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(restSuccess(completedSectionsByOrganisation));
         when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(thirdPartyConfigResource));
@@ -318,10 +318,9 @@ public class ApplicationOverviewModelPopulatorTest {
 
         ApplicationOverviewSectionViewModel termsAndConditionsSection = sectionIterator.next();
         assertEquals("Test label", termsAndConditionsSection.getTitle());
-        assertEquals("Third party description", termsAndConditionsSection.getSubTitle());
+        assertEquals("You must agree to it before you submit your application", termsAndConditionsSection.getSubTitle());
         assertEquals((long) sections.get(3).getId(), termsAndConditionsSection.getId());
 
         verify(questionService).removeNotifications(questionStatuses);
     }
-
 }

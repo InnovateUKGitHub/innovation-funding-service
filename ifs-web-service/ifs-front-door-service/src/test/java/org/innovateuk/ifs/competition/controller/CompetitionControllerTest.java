@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
 import org.innovateuk.ifs.competition.populator.CompetitionTermsAndConditionsPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionThirdPartyConfigResourceBuilder.newCompetitionThirdPartyConfigResource;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.mockito.Mockito.*;
@@ -103,11 +105,15 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
 
         FileEntryResource fileEntryResource = newFileEntryResource().build();
 
+        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = newCompetitionThirdPartyConfigResource()
+                .withTermsAndConditionsLabel("Strategic Innovation Fund Governance Document")
+                .withTermsAndConditionsGuidance( "<div>Guidance</div>")
+                .build();
+
         CompetitionTermsViewModel competitionTermsViewModel = new CompetitionTermsViewModel(competitionResource.getId(),
                 termsAndConditions,
                 fileEntryResource,
-                "Strategic Innovation Fund Governance Document",
-                "<div>Guidance</div>");
+                competitionThirdPartyConfigResource);
 
         when(competitionTermsAndConditionsPopulator.populate(competitionResource.getId())).thenReturn(competitionTermsViewModel);
 
