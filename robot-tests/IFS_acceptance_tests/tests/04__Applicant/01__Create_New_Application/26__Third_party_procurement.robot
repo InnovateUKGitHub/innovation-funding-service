@@ -11,6 +11,8 @@ Documentation    IFS-10080 Third party procurement: Comp setup configuration
 ...
 ...              IFS-10169 Third party procurement: Read-only costs guidance link
 ...
+...              IFS-10151 Include the link to the T&C on the T&C tickbox label
+...
 Suite Setup       Custom suite setup
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/Competition_Commons.robot
@@ -59,7 +61,7 @@ Comp admin selects third party funder in funding information
     And the user should see the element                                                jQuery = h3 a:contains("Third party procurement competition")
 
 User applies to third party competition
-    [Documentation]  IFS-10083
+    [Documentation]  IFS-10083  IFS-10157
     [Setup]  get competition id and set open date to yesterday                                  ${thirdPartyProcurementCompetitionName}
     Given log in as a different user                                                            &{lead_applicant_credentials}
     And logged in user applies to competition                                                   ${thirdPartyProcurementCompetitionName}  3
@@ -81,7 +83,7 @@ Applicant fills in project finances without any VAT validations
     And the user fills in the organisation information        ${thirdPartyProcurementApplicationName}  ${SMALL_ORGANISATION_SIZE}
     And applicant fills in payment milestones
 
-the user submits the third party procurement appliication
+the user submits the third party procurement application
     [Documentation]   IFS-10083
     [Setup]  Get competitions id and set it as suite variable   ${thirdPartyProcurementCompetitionName}
     Given the user clicks the button/link                       id = application-overview-submit-cta
@@ -204,7 +206,7 @@ the user verifies valid terms and conditions text is displaying
     the user clicks the button/link                     jQuery = a:contains("Procurement Third Party (opens in a new window)")
     select window                                       title = ${title} - Innovation Funding Service
     the user should see the element                     jQuery = h1:contains("${title}")
-    the user should see the element                     jQuery = a:contains("View ${title}")
+    the user should see the element                     jQuery = a:contains("View ${title} (opens in a new window)")
     the user should see the element                     jQuery = p:contains("Summary of ${title}")
     [Teardown]   the user closes the last opened tab
 
@@ -212,8 +214,9 @@ the third party applicant can view the strategic innovation terms and conditions
     [Arguments]  ${title}
     the user clicks the button/link    link = ${title}
     the user should see the element    jQuery = h1:contains("${title}")
-    the user should see the element    link = View ${title}
+    the user should see the element    link = View ${title} (opens in a new window)
     the user should see the element    jQuery = p:contains("Summary of ${title}")
+    the user should see the element    link = ${title} (opens in a new window)
     the user selects the checkbox      agreed
     the user clicks the button/link    jQuery = button:contains("Agree and continue")
     the user should see the element    jQuery = .form-footer:contains("${title} accepted")
@@ -253,6 +256,6 @@ assessor should see third party procurement terms and conditions
     the user should see the element    jQuery = h2:contains("${title}")
     the user clicks the button/link    jQuery = a:contains("Procurement Third Party")
     the user should see the element    jQuery = h1:contains("${title}")
-    the user should see the element    link = View ${title}
+    the user should see the element    link = View ${title} (opens in a new window)
     the user should see the element    jQuery = p:contains("Summary of ${title}")
     the user clicks the button/link    link = Back to assessment overview

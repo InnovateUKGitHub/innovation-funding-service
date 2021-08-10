@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.common.viewmodel;
 
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 
 import java.time.ZonedDateTime;
@@ -26,8 +27,7 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
     private final boolean additionalTerms;
     private final boolean subsidyBasisRequiredButIncomplete;
     private final String subsidyBasisQuestionUrl;
-    private final String termsAndConditionsLabel;
-    private final String termsAndConditionsGuidance;
+    private final CompetitionThirdPartyConfigResource thirdPartyConfig;
     private final boolean isThirdPartyProcurementCompetition;
     private FileEntryResource competitionTerms;
 
@@ -46,8 +46,7 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
                                      boolean additionalTerms,
                                      boolean subsidyBasisRequiredButIncomplete,
                                      String subsidyBasisQuestionUrl,
-                                     String termsAndConditionsLabel,
-                                     String termsAndConditionsGuidance,
+                                     CompetitionThirdPartyConfigResource thirdPartyConfig,
                                      boolean isThirdPartyProcurementCompetition,
                                      FileEntryResource competitionTerms) {
         this.applicationId = applicationId;
@@ -66,8 +65,7 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
         this.showHeaderAndFooter = true;
         this.subsidyBasisRequiredButIncomplete = subsidyBasisRequiredButIncomplete;
         this.subsidyBasisQuestionUrl = subsidyBasisQuestionUrl;
-        this.termsAndConditionsLabel = termsAndConditionsLabel;
-        this.termsAndConditionsGuidance = termsAndConditionsGuidance;
+        this.thirdPartyConfig = thirdPartyConfig;
         this.isThirdPartyProcurementCompetition = isThirdPartyProcurementCompetition;
         this.competitionTerms = competitionTerms;
     }
@@ -80,8 +78,7 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
                                      boolean collaborativeApplication,
                                      boolean termsAcceptedByAllOrganisation,
                                      boolean additionalTerms,
-                                     String termsAndConditionsLabel,
-                                     String termsAndConditionsGuidance,
+                                     CompetitionThirdPartyConfigResource thirdPartyConfig,
                                      boolean isThirdPartyProcurementCompetition,
                                      FileEntryResource competitionTerms) {
         this.applicationId = applicationId;
@@ -100,8 +97,7 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
         this.showHeaderAndFooter = false;
         this.subsidyBasisRequiredButIncomplete = false;
         this.subsidyBasisQuestionUrl = null;
-        this.termsAndConditionsLabel = termsAndConditionsLabel;
-        this.termsAndConditionsGuidance = termsAndConditionsGuidance;
+        this.thirdPartyConfig = thirdPartyConfig;
         this.isThirdPartyProcurementCompetition = isThirdPartyProcurementCompetition;
         this.competitionTerms = competitionTerms;
     }
@@ -176,12 +172,8 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
         return subsidyBasisQuestionUrl;
     }
 
-    public String getTermsAndConditionsLabel() {
-        return termsAndConditionsLabel;
-    }
-
-    public String getTermsAndConditionsGuidance() {
-        return termsAndConditionsGuidance;
+    public CompetitionThirdPartyConfigResource getThirdPartyConfig() {
+        return thirdPartyConfig;
     }
 
     public boolean isThirdPartyProcurementCompetition() {
