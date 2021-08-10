@@ -9,6 +9,8 @@ Documentation    IFS-10080 Third party procurement: Comp setup configuration
 ...
 ...              IFS-10134 Ofgem programme: no VAT
 ...
+...              IFS-10169 Third party procurement: Read-only costs guidance link
+...
 ...              IFS-10151 Include the link to the T&C on the T&C tickbox label
 ...
 Suite Setup       Custom suite setup
@@ -34,7 +36,7 @@ Third party procurement terms and conditions validations
     Then the user should see third party t&c validations
 
 Comp admin can configure third party procurement terms and conditions
-    [Documentation]  IFS-10081  IFS-10082
+    [Documentation]  IFS-10081  IFS-10082  IFS-10169
     Given the user completes required fields in third party procurement competition     Innovation Fund governance document  Summary of Innovation Fund governance document   https://www.google.com
     When the user clicks the button/link                                                jQuery = button:contains("Done")
     Then the user should see the element                                                link = https://www.google.com (opens in a new window)
@@ -42,7 +44,7 @@ Comp admin can configure third party procurement terms and conditions
     And the user verifies valid terms and conditions text is displaying                 Innovation Fund governance document
 
 Comp admin can edit the third party procurement terms and conditions
-    [Documentation]  IFS-10081  IFS-10082
+    [Documentation]  IFS-10081  IFS-10082  IFS-10169
     Given the user clicks the button/link                                             jQuery = button:contains("Edit")
     And the user completes required fields in third party procurement competition     Strategic Innovation Fund governance document  Summary of Strategic Innovation Fund governance document   https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/small-business-research-initiative-sbri-project-costs-guidance
     When the user clicks the button/link                                              jQuery = button:contains("Done")
@@ -195,6 +197,7 @@ the user completes required fields in third party procurement competition
     [Arguments]  ${title}  ${summary}  ${url}
     the user enters text to a text field        id = thirdPartyTermsAndConditionsLabel   ${title}
     the user enters text to a text field        css = .editor   ${summary}
+    the user should see the element             jQuery = span:contains("Insert a link including the full URL http:// or https://")
     the user enters text to a text field        id = projectCostGuidanceLink   ${url}
     the user uploads the file                   css = .inputfile  ${valid_pdf}
 
