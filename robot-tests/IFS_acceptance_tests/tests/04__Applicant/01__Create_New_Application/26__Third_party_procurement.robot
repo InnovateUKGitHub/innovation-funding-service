@@ -203,7 +203,7 @@ the user verifies valid terms and conditions text is displaying
     the user clicks the button/link                     jQuery = a:contains("Procurement Third Party (opens in a new window)")
     select window                                       title = ${title} - Innovation Funding Service
     the user should see the element                     jQuery = h1:contains("${title}")
-    the user should see the element                     jQuery = a:contains("View ${title}")
+    the user should see the element                     jQuery = a:contains("View ${title} (opens in a new window)")
     the user should see the element                     jQuery = p:contains("Summary of ${title}")
     [Teardown]   the user closes the last opened tab
 
@@ -211,9 +211,9 @@ the third party applicant can view the strategic innovation terms and conditions
     [Arguments]  ${title}
     the user clicks the button/link    link = ${title}
     the user should see the element    jQuery = h1:contains("${title}")
-    the user should see the element    link = View ${title}
+    the user should see the element    link = View ${title} (opens in a new window)
     the user should see the element    jQuery = p:contains("Summary of ${title}")
-    the user should see the element    link = ${title}
+    the user should see the element    link = ${title} (opens in a new window)
     the user selects the checkbox      agreed
     the user clicks the button/link    jQuery = button:contains("Agree and continue")
     the user should see the element    jQuery = .form-footer:contains("${title} accepted")
@@ -253,6 +253,6 @@ assessor should see third party procurement terms and conditions
     the user should see the element    jQuery = h2:contains("${title}")
     the user clicks the button/link    jQuery = a:contains("Procurement Third Party")
     the user should see the element    jQuery = h1:contains("${title}")
-    the user should see the element    link = View ${title}
+    the user should see the element    link = View ${title} (opens in a new window)
     the user should see the element    jQuery = p:contains("Summary of ${title}")
     the user clicks the button/link    link = Back to assessment overview
