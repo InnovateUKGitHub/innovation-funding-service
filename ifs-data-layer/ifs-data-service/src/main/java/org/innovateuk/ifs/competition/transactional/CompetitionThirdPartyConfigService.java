@@ -10,5 +10,8 @@ public interface CompetitionThirdPartyConfigService {
     ServiceResult<CompetitionThirdPartyConfigResource> findOneByCompetitionId(long competitionId);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<CompetitionThirdPartyConfigResource> create(CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource);
+
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> update(long competitionId, CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource);
 }

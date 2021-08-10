@@ -249,7 +249,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         Competition toBeCreatedCompetition = competitionArgumentCaptor.getValue();
 
         assertNotNull(toBeCreatedCompetition);
-        assertNotNull(toBeCreatedCompetition.getCompetitionThirdPartyConfig());
+        assertNull(toBeCreatedCompetition.getCompetitionThirdPartyConfig());
 
         verify(programmeTemplate).copyTemplatePropertiesToCompetition(competition);
     }

@@ -320,7 +320,13 @@ public class CompetitionSetupTermsAndConditionsController {
     }
 
     private ServiceResult<Void> saveThirdPartyTermsAndConditionsConfigData(CompetitionResource competition) {
-        return competitionThirdPartyConfigRestService.update(competition.getId(), competition.getCompetitionThirdPartyConfigResource()).toServiceResult();
+        if (competition.getCompetitionThirdPartyConfigResource().getId() == null) {
+            competitionThirdPartyConfigRestService.create(competition.getCompetitionThirdPartyConfigResource());
+        } else {
+            competitionThirdPartyConfigRestService.update(competition.getId(), competition.getCompetitionThirdPartyConfigResource());
+        }
+
+        return serviceSuccess();
     }
 
     private void validateThirdPartyConfigFields(CompetitionResource competition, BindingResult bindingResult) {

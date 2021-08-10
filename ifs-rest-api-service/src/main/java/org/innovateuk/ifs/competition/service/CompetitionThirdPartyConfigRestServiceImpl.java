@@ -17,6 +17,11 @@ public class CompetitionThirdPartyConfigRestServiceImpl extends BaseRestService 
     }
 
     @Override
+    public RestResult<CompetitionThirdPartyConfigResource> create(CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource) {
+        return postWithRestResult(COMPETITION_THIRD_PARTY_CONFIG_URL, competitionThirdPartyConfigResource, CompetitionThirdPartyConfigResource.class);
+    }
+
+    @Override
     public RestResult<Void> update(long competitionId, CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource) {
         return putWithRestResult(COMPETITION_THIRD_PARTY_CONFIG_URL + "/" + competitionId, competitionThirdPartyConfigResource, Void.class);
     }
