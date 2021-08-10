@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.competition.setup.core.viewmodel;
 
-import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 
 import java.util.List;
@@ -15,13 +14,15 @@ public class TermsAndConditionsViewModel extends CompetitionSetupViewModel {
     private final boolean termsAndConditionsDocUploaded;
     private final boolean includeStateAid;
     private final boolean stateAidPage;
+    private  String projectCostGuidanceLink;
 
     public TermsAndConditionsViewModel(GeneralSetupViewModel generalSetupViewModel,
                                        List<GrantTermsAndConditionsResource> termsAndConditionsList,
                                        GrantTermsAndConditionsResource currentTermsAndConditions,
                                        GrantTermsAndConditionsResource currentStateAidTermsAndConditions,
                                        boolean termsAndConditionsDocUploaded,
-                                       boolean includeStateAid, boolean stateAidPage) {
+                                       boolean includeStateAid, boolean stateAidPage,
+                                       String projectCostGuidanceLink) {
         this.generalSetupViewModel = generalSetupViewModel;
         this.termsAndConditionsList = termsAndConditionsList;
         this.currentTermsAndConditions = currentTermsAndConditions;
@@ -29,6 +30,7 @@ public class TermsAndConditionsViewModel extends CompetitionSetupViewModel {
         this.termsAndConditionsDocUploaded = termsAndConditionsDocUploaded;
         this.includeStateAid = includeStateAid;
         this.stateAidPage = stateAidPage;
+        this.projectCostGuidanceLink = projectCostGuidanceLink;
     }
 
     public List<GrantTermsAndConditionsResource> getTermsAndConditionsList() {
@@ -53,5 +55,13 @@ public class TermsAndConditionsViewModel extends CompetitionSetupViewModel {
 
     public boolean isStateAidPage() {
         return stateAidPage;
+    }
+
+    public String getProjectCostGuidanceLink() {
+        return projectCostGuidanceLink;
+    }
+
+    public void setProjectCostGuidanceLink(String projectCostGuidanceLink) {
+        this.projectCostGuidanceLink = projectCostGuidanceLink;
     }
 }

@@ -2,17 +2,61 @@ package org.innovateuk.ifs.competition.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 
 public class CompetitionTermsViewModel {
 
     private final long competitionId;
+    GrantTermsAndConditionsResource termsAndConditions;
+    private FileEntryResource competitionTerms;
+    private String termsAndConditionsLabel;
+    private String termsAndConditionsGuidance;
 
     public CompetitionTermsViewModel(long competitionId) {
         this.competitionId = competitionId;
     }
 
+    public CompetitionTermsViewModel(long competitionId,
+                                     GrantTermsAndConditionsResource termsAndConditions) {
+        this.competitionId = competitionId;
+        this.termsAndConditions = termsAndConditions;
+    }
+
+    public CompetitionTermsViewModel(long competitionId,
+                                     GrantTermsAndConditionsResource termsAndConditions,
+                                     FileEntryResource competitionTerms,
+                                     String termsAndConditionsLabel,
+                                     String termsAndConditionsGuidance) {
+        this.competitionId = competitionId;
+        this.termsAndConditions = termsAndConditions;
+        this.competitionTerms = competitionTerms;
+        this.termsAndConditionsLabel = termsAndConditionsLabel;
+        this.termsAndConditionsGuidance = termsAndConditionsGuidance;
+    }
+
     public long getCompetitionId() {
         return competitionId;
+    }
+
+    public GrantTermsAndConditionsResource getTermsAndConditions() {
+        return termsAndConditions;
+    }
+
+    public String getTermsAndConditionsLabel() {
+        return termsAndConditionsLabel;
+    }
+
+    public String getTermsAndConditionsGuidance() {
+        return termsAndConditionsGuidance;
+    }
+
+    public boolean isProcurementThirdParty() {
+        return termsAndConditions.isProcurementThirdParty();
+    }
+
+    public boolean isTermsAndConditionsUploaded() {
+        return competitionTerms != null;
     }
 
     @Override
@@ -25,6 +69,9 @@ public class CompetitionTermsViewModel {
 
         return new EqualsBuilder()
                 .append(competitionId, that.competitionId)
+                .append(termsAndConditions, that.termsAndConditions)
+                .append(termsAndConditionsLabel, that.termsAndConditionsLabel)
+                .append(termsAndConditionsGuidance, that.termsAndConditionsGuidance)
                 .isEquals();
     }
 
@@ -32,13 +79,37 @@ public class CompetitionTermsViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(competitionId)
+                .append(termsAndConditions)
+                .append(termsAndConditionsLabel)
+                .append(termsAndConditionsGuidance)
                 .toHashCode();
     }
 
     @Override
     public String toString() {
-        return "CompetitionTermsViewModel{" +
-                "competitionId=" + competitionId +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append("CompetitionTermsViewModel{").append("\n");
+        sb.append("competitionId=").append(competitionId).append("\n");
+
+        if (termsAndConditions != null) {
+            sb.append("termsAndConditions{").append("\n");
+            sb.append("id=").append(termsAndConditions.getId()).append("\n");
+            sb.append("name=").append(termsAndConditions.getName()).append("\n");
+            sb.append("template=").append(termsAndConditions.getTemplate()).append("\n");
+            sb.append("version=").append(termsAndConditions.getVersion()).append("\n");
+            sb.append("}").append("\n");
+        }
+
+        if (termsAndConditionsLabel != null) {
+            sb.append("termsAndConditionsLabel=").append(termsAndConditionsLabel).append("\n");
+        }
+
+        if (termsAndConditionsGuidance != null) {
+            sb.append("termsAndConditionsGuidance=").append(termsAndConditionsGuidance).append("\n");
+        }
+
+        sb.append("}");
+
+        return sb.toString();
     }
 }

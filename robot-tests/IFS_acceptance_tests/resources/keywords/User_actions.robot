@@ -190,15 +190,21 @@ reload and check if element appears
 the user selects option from type ahead
     [Arguments]   ${inputId}  ${searchTerm}  ${optionSelector}
     the user clicks the button/link                       id = ${inputId}
+    wait for autosave
     the user should see option in type ahead field        id = ${inputId}  ${optionSelector}
-    scroll element into view                              jQuery = ul li:contains("${optionSelector}")
-    click element                                         jQuery = ul li:contains("${optionSelector}")
-    mouse out                                             ${inputId}
+    wait for autosave
+    mouse out                                             id = ${inputId}
 
 the user should see option in type ahead field
     [Arguments]  ${locator}  ${searchWord}
     :FOR    ${i}    IN RANGE  10
-    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots  element should be visible  jQuery = ul li:contains("${searchWord}")
+    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots   click element    jQuery = ul li:contains("${searchWord}")
     \  Exit For Loop If  '${status}'=='PASS'
-    \  run keyword if  '${status}'=='FAIL'   the user clicks the button/link    ${locator}
+    \  run keyword if  '${status}'=='FAIL'   the user tries to select the option again    ${locator}  ${searchWord}
     \  ${i} =  Set Variable  ${i + 1}
+
+the user tries to select the option again
+    [Arguments]  ${locator}  ${searchWord}
+    the user clicks the button/link     ${locator}
+    wait for autosave
+    click element                       jQuery = ul li:contains("${searchWord}")

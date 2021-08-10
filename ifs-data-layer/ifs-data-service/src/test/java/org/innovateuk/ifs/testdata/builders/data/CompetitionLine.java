@@ -43,10 +43,11 @@ public class CompetitionLine {
     private Boolean includeYourOrganisation;
     private FundingRules fundingRules;
     private Boolean alwaysOpen;
-    private boolean priority;
     private String termsAndConditionsLabel;
     private String termsAndConditionsGuidance;
     private String projectCostGuidanceUrl;
+    private String termsAndConditionsTemplate;
+    private boolean priority;
 
     public CompetitionLine() {
     }
@@ -353,5 +354,13 @@ public class CompetitionLine {
 
     public void setProjectCostGuidanceUrl(String projectCostGuidanceUrl) {
         this.projectCostGuidanceUrl = projectCostGuidanceUrl;
+    }
+
+    public String getTermsAndConditionsTemplate() {
+        return termsAndConditionsTemplate;
+    }
+
+    public void setTermsAndConditionsTemplate(String termsAndConditionsTemplate) {
+        this.termsAndConditionsTemplate = termsAndConditionsTemplate;
     }
 }
