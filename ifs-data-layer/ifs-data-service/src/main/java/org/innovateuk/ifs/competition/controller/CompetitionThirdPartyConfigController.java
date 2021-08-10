@@ -13,21 +13,18 @@ public class CompetitionThirdPartyConfigController {
     @Autowired
     private CompetitionThirdPartyConfigService competitionThirdPartyConfigService;
 
-    public CompetitionThirdPartyConfigController() {
-    }
-
-    @PostMapping
-    public RestResult<CompetitionThirdPartyConfigResource> create(@RequestBody CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource) {
-        return competitionThirdPartyConfigService.create(competitionThirdPartyConfigResource).toPostCreateResponse();
-    }
-
     @GetMapping("/{competitionId}")
     public RestResult<CompetitionThirdPartyConfigResource> findOneByCompetitionId(@PathVariable final long competitionId) {
         return competitionThirdPartyConfigService.findOneByCompetitionId(competitionId).toGetResponse();
     }
 
+    @PostMapping
+    public RestResult<CompetitionThirdPartyConfigResource> create(@RequestBody final CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource) {
+        return competitionThirdPartyConfigService.create(competitionThirdPartyConfigResource).toPostCreateResponse();
+    }
+
     @PutMapping("/{competitionId}")
-    public RestResult<Void> update(@PathVariable final long competitionId, @RequestBody CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource) {
+    public RestResult<Void> update(@PathVariable final long competitionId, @RequestBody final CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource) {
         return competitionThirdPartyConfigService.update(competitionId, competitionThirdPartyConfigResource).toPutResponse();
     }
 }

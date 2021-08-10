@@ -4,10 +4,9 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionThirdPartyConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionThirdPartyConfigMapper;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionThirdPartyConfigRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
-import org.innovateuk.ifs.transactional.RootTransactionalService;
+import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,10 +18,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-public class CompetitionThirdPartyConfigServiceImpl extends RootTransactionalService implements CompetitionThirdPartyConfigService {
-
-    @Autowired
-    private CompetitionRepository competitionRepository;
+public class CompetitionThirdPartyConfigServiceImpl extends BaseTransactionalService implements CompetitionThirdPartyConfigService {
 
     @Autowired
     private CompetitionThirdPartyConfigRepository competitionThirdPartyConfigRepository;
