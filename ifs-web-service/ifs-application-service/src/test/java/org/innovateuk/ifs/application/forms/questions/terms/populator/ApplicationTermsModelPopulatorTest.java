@@ -165,9 +165,6 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
-        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
-        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competitionFinanceType.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
-
     }
 
     @Test
@@ -250,7 +247,6 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(sectionService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
-        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, organisationId,  false);
 
@@ -567,7 +563,6 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(questionStatusRestService.getMarkedAsCompleteByQuestionApplicationAndOrganisation(
                 subsidyBasisQuestion.getId(), application.getId(), organisation.getId()))
                 .thenReturn(restSuccess(Optional.of(newQuestionStatusResource().withMarkedAsComplete(false).build())));
-        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, organisationId, false);
 
@@ -639,7 +634,6 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(competitionRestService
                 .getCompetitionById(application.getCompetition())).thenReturn(restSuccess(thirdPartyCompetition));
         when(questionRestService.findById(questionResource.getId())).thenReturn(restSuccess(questionResource));
-        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(thirdPartyCompetition.getId())).thenReturn(restSuccess(thirdPartyConfigResource));
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinanceResource));
         when(sectionService.getSectionsForCompetitionByType(thirdPartyCompetition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(sectionResource));
         when(sectionService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(sectionResource.getId())));
@@ -648,8 +642,8 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         assertEquals(thirdPartyCompetition.getTermsAndConditions().isProcurementThirdParty(), actual.isThirdPartyProcurementCompetition());
         assertEquals(thirdPartyCompetition.getTermsAndConditions().getTemplate(), actual.getCompetitionTermsTemplate());
-        assertEquals(thirdPartyConfigResource.getTermsAndConditionsLabel(), actual.getTermsAndConditionsLabel());
-        assertEquals(thirdPartyConfigResource.getTermsAndConditionsGuidance(), actual.getTermsAndConditionsGuidance());
+        assertEquals(thirdPartyConfigResource.getTermsAndConditionsLabel(), actual.getThirdPartyConfig().getTermsAndConditionsLabel());
+        assertEquals(thirdPartyConfigResource.getTermsAndConditionsGuidance(), actual.getThirdPartyConfig().getTermsAndConditionsGuidance());
 
         InOrder inOrder = inOrder(applicationRestService, competitionRestService
                 , questionRestService, competitionThirdPartyConfigRestService,
@@ -658,7 +652,6 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         inOrder.verify(competitionRestService
         ).getCompetitionById(thirdPartyCompetition.getId());
         inOrder.verify(questionRestService).findById(questionResource.getId());
-        inOrder.verify(competitionThirdPartyConfigRestService).findOneByCompetitionId(thirdPartyCompetition.getId());
         inOrder.verify(applicationFinanceRestService).getApplicationFinance(application.getId(), organisation.getId());
         inOrder.verify(sectionService).getSectionsForCompetitionByType(thirdPartyCompetition.getId(), TERMS_AND_CONDITIONS);
         inOrder.verify(sectionService).getCompletedSectionsByOrganisation(application.getId());

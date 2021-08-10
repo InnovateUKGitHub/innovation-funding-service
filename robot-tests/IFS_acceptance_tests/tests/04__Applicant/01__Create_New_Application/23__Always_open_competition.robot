@@ -88,13 +88,15 @@ the user should not see submission deadline date in public content dates
 
 the user creates a new open ended competiton
     [Documentation]  IFS-8848
-    Given the user clicks the button/link                             link = Back to public content
-    And the user clicks the button/link                               link = Competition details
-    And the competition admin creates open ended competition          ${business_type_id}  ${openEndedCompName}  Open ended  ${compType_Programme}  STATE_AID  GRANT  PROJECT_SETUP  yes  1  true  collaborative
-    When the user navigates to the page                               ${frontDoor}
-    And the user clicks the button/link in the paginated list         link = ${openEndedCompName}
+    Given the user clicks the button/link                       link = Back to public content
+    When the user clicks the button/link                        link = Competition details
+    Then the competition admin creates open ended competition   ${business_type_id}  ${openEndedCompName}  Open ended  ${compType_Programme}  STATE_AID  GRANT  PROJECT_SETUP  yes  1  true  collaborative
+
+the user check for valid content on front end for open ended competitions
+    [Documentation]  IFS-8848
+    [Setup]  get competition id and set open date to yesterday      ${openEndedCompName}
+    When the user navigates to the page                             ${server}/competition/${competitionId}/overview
     Then the user check for valid content on front end
-    [Teardown]  get competition id and set open date to yesterday     ${openEndedCompName}
 
 the user should see the disabled send notification and release feedback button
     [Documentation]  IFS-9750
