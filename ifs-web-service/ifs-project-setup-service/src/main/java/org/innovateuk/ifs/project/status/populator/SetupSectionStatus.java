@@ -75,15 +75,36 @@ public class SetupSectionStatus {
         }
     }
 
-    public SectionStatus spendProfileSectionStatus(final ProjectActivityStates spendProfileState) {
+    public SectionStatus spendProfileSectionStatus(final ProjectActivityStates spendProfileState, boolean isProjectMO) {
 
-        switch(spendProfileState) {
+        if (isProjectMO){
+            return spendProfileStatusDisplayForMO(spendProfileState);
+        }
+        else{
+            switch (spendProfileState) {
+                case PENDING:
+                    return HOURGLASS;
+                case ACTION_REQUIRED:
+                    return FLAG;
+                case LEAD_ACTION_REQUIRED:
+                    return LEAD_ACTION_FLAG;
+                case COMPLETE:
+                    return TICK;
+                default:
+                    return EMPTY;
+            }
+        }
+    }
+    private SectionStatus spendProfileStatusDisplayForMO(ProjectActivityStates spendProfileState) {
+        switch (spendProfileState) {
+            case NOT_STARTED:
+                return INCOMPLETE;
             case PENDING:
                 return HOURGLASS;
             case ACTION_REQUIRED:
                 return FLAG;
             case LEAD_ACTION_REQUIRED:
-                return LEAD_ACTION_FLAG;
+                return INCOMPLETE;
             case COMPLETE:
                 return TICK;
             default:

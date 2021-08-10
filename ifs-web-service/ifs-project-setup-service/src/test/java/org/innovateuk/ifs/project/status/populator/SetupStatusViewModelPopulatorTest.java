@@ -43,13 +43,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -77,7 +77,9 @@ import static org.innovateuk.ifs.sections.SectionStatus.MO_ACTION_REQUIRED;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -1679,6 +1681,86 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectService.isProjectManager(loggedInUser.getId(), project.getId())).thenReturn(false);
         when(projectService.isProjectFinanceContact(loggedInUser.getId(), project.getId())).thenReturn(false);
         setupCompetitionPostAwardServiceExpectations(project, PostAwardService.CONNECT);
+    }
+
+    @Test
+    public void viewSpendProfileRejectedStatusAsMO() {
+        ReflectionTestUtils.setField(populator, "isMOSpendProfileUpdateEnabled", false);
+        SetupStatusViewModel viewModel = setSpendProfileProjectSetup(LEAD_ACTION_REQUIRED);
+        assertTrue(viewModel.isMonitoringOfficer());
+        assertStageStatus(viewModel, SPEND_PROFILE, LEAD_ACTION_FLAG);
+    }
+
+    @Test
+    public void viewImprovedSpendProfileRejectedStatusAsMO() {
+        ReflectionTestUtils.setField(populator, "isMOSpendProfileUpdateEnabled", true);
+        SetupStatusViewModel viewModel = setSpendProfileProjectSetup(LEAD_ACTION_REQUIRED);
+        assertTrue(viewModel.isMonitoringOfficer());
+        assertStageStatus(viewModel, SPEND_PROFILE, INCOMPLETE);
+    }
+
+    @Test
+    public void viewImprovedSpendProfileApprovedStatusAsMO() {
+        ReflectionTestUtils.setField(populator, "isMOSpendProfileUpdateEnabled", true);
+        SetupStatusViewModel viewModel = setSpendProfileProjectSetup(COMPLETE);
+        assertTrue(viewModel.isMonitoringOfficer());
+        assertStageStatus(viewModel, SPEND_PROFILE, TICK);
+    }
+
+    @Test
+    public void viewImprovedSpendProfileAwaitingReviewStatusAsMO() {
+        ReflectionTestUtils.setField(populator, "isMOSpendProfileUpdateEnabled", true);
+        SetupStatusViewModel viewModel = setSpendProfileProjectSetup(PENDING);
+        assertTrue(viewModel.isMonitoringOfficer());
+        assertStageStatus(viewModel, SPEND_PROFILE, HOURGLASS);
+    }
+
+    @Test
+    public void viewImprovedSpendProfileNotYetSubmittedStatusAsMO() {
+        ReflectionTestUtils.setField(populator, "isMOSpendProfileUpdateEnabled", true);
+        SetupStatusViewModel viewModel = setSpendProfileProjectSetup(NOT_STARTED);
+        assertTrue(viewModel.isMonitoringOfficer());
+        assertStageStatus(viewModel, SPEND_PROFILE, INCOMPLETE);
+    }
+
+    private SetupStatusViewModel setSpendProfileProjectSetup(ProjectActivityStates projectActivityState) {
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
+                        .withOrganisationId(organisationResource.getId())
+                        .withProjectDetailsStatus(COMPLETE)
+                        .withFinanceContactStatus(NOT_STARTED)
+                        .withSpendProfileStatus(projectActivityState)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
+                        .withIsLeadPartner(true)
+                        .build())
+                .withPartnerStatuses(newProjectPartnerStatusResource()
+                        .withFinanceContactStatus(NOT_STARTED)
+                        .build(1))
+                .withProjectState(LIVE)
+                .withProjectManagerAssigned(true)
+                .build();
+
+        project = newProjectResource()
+                .withProjectState(LIVE)
+                .withApplication(application)
+                .withCompetition(competition.getId())
+                .withMonitoringOfficerUser(monitoringOfficer.getId())
+                .withProjectUsers(singletonList(newProjectUserResource().withRole(ProjectParticipantRole.MONITORING_OFFICER).build().getId()))
+                .build();
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(monitoringOfficerService.isMonitoringOfficerOnProject(project.getId(), monitoringOfficer.getId())).thenReturn(restSuccess(true));
+        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competition));
+        when(projectRestService.getOrganisationByProjectAndUser(project.getId(), monitoringOfficer.getId())).thenReturn(restSuccess(newOrganisationResource().build()));
+        when(statusService.getProjectTeamStatus(eq(project.getId()), any(Optional.class))).thenReturn(teamStatus);
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(organisationResource);
+
+        when(monitoringOfficerService.findMonitoringOfficerForProject(project.getId())).thenReturn(restSuccess(monitoringOfficer));
+        setupCompetitionPostAwardServiceExpectations(project, PostAwardService.CONNECT);
+
+        UserResource loggedInMO = newUserResource().withId(monitoringOfficer.getId()).withRoleGlobal(MONITORING_OFFICER).build();
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInMO);
+        return viewModel;
     }
 
     private void setupCompetitionPostAwardServiceExpectations(ProjectResource project, PostAwardService postAwardService) {
