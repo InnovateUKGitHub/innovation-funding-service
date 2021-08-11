@@ -67,13 +67,24 @@ public class MonitoringOfficerDashboardViewModelPopulator {
                                                         boolean previousProject,
                                                         boolean documentsComplete,
                                                         boolean documentsIncomplete,
-                                                        boolean documentsAwaitingReview) {
+                                                        boolean documentsAwaitingReview,
+                                                        boolean spendProfileComplete,
+                                                        boolean spendProfileIncomplete,
+                                                        boolean spendProfileAwaitingReview) {
         List<ProjectResource> projectsFilteredByState = monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(),
                 projectInSetup, previousProject).getSuccess();
-        List<ProjectResource> projectsFilteredByDocuments = projectsFilteredByDocuments(projectsFilteredByState, documentsComplete, documentsIncomplete, documentsAwaitingReview);
+        List<ProjectResource> projectsFilteredByDocuments = projectsFilteredByDocuments(projectsFilteredByState
+                , documentsComplete
+                , documentsIncomplete
+                , documentsAwaitingReview);
+        List<ProjectResource> projectsFilteredBySpendProfile = projectsFilteredBySpendProfile(projectsFilteredByDocuments
+                , spendProfileComplete
+                , spendProfileIncomplete
+                , spendProfileAwaitingReview);
+
         MonitoringOfficerSummaryViewModel monitoringOfficerSummaryViewModel = monitoringOfficerSummaryViewModelPopulator.populate(user);
 
-        return new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projectsFilteredByDocuments, user), monitoringOfficerSummaryViewModel, isMOJourneyUpdateEnabled, isMOSpendProfileUpdateEnabled);
+        return new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projectsFilteredBySpendProfile, user), monitoringOfficerSummaryViewModel, isMOJourneyUpdateEnabled, isMOSpendProfileUpdateEnabled);
     }
 
     private String documentSectionStatusMOView(ProjectResource project, CompetitionResource competition) {
@@ -130,7 +141,10 @@ public class MonitoringOfficerDashboardViewModelPopulator {
                 .collect(toList());
     }
 
-    private List<ProjectResource> projectsFilteredByDocuments(List<ProjectResource> projects, boolean documentsComplete, boolean documentsIncomplete, boolean documentsAwaitingReview) {
+    private List<ProjectResource> projectsFilteredByDocuments(List<ProjectResource> projects
+            , boolean documentsComplete
+            , boolean documentsIncomplete
+            , boolean documentsAwaitingReview) {
 
         List<ProjectResource> projectsWithDocumentsComplete = projectFilterPopulator.getProjectsWithDocumentsComplete(projects);
         List<ProjectResource> projectsWithDocumentsInComplete = projectFilterPopulator.getProjectsWithDocumentsInComplete(projects);
@@ -151,6 +165,33 @@ public class MonitoringOfficerDashboardViewModelPopulator {
         } else if (documentsAwaitingReview) {
             return projectsWithDocumentsAwaitingReview;
         } else return projects;
+    }
+
+    private List<ProjectResource> projectsFilteredBySpendProfile(List<ProjectResource> projects
+            , boolean spendProfileComplete
+            , boolean spendProfileInComplete
+            , boolean spendProfileAwaitingReview) {
+
+        List<ProjectResource> projectsWithSpendProfileComplete = projectFilterPopulator.getProjectsWithSpendProfileComplete(projects);
+        List<ProjectResource> projectsWithSpendProfileInComplete = projectFilterPopulator.getProjectsWithSpendProfileInComplete(projects);
+        List<ProjectResource> projectsWithSpendProfileAwaitingReview = projectFilterPopulator.getProjectsWithSpendProfileAwaitingReview(projects);
+
+        if (spendProfileComplete && spendProfileInComplete && spendProfileAwaitingReview) {
+            return Stream.of(projectsWithSpendProfileComplete, projectsWithSpendProfileInComplete, projectsWithSpendProfileAwaitingReview).flatMap(Collection::stream).distinct().collect(Collectors.toList());
+        } else if (spendProfileComplete && spendProfileInComplete) {
+            return Stream.of(projectsWithSpendProfileComplete, projectsWithSpendProfileInComplete).flatMap(Collection::stream).distinct().collect(Collectors.toList());
+        } else if (spendProfileAwaitingReview && spendProfileComplete) {
+            return Stream.of(projectsWithSpendProfileComplete, projectsWithSpendProfileAwaitingReview).flatMap(Collection::stream).distinct().collect(Collectors.toList());
+        } else if (spendProfileInComplete && spendProfileAwaitingReview) {
+            return Stream.of(projectsWithSpendProfileInComplete, projectsWithSpendProfileAwaitingReview).flatMap(Collection::stream).distinct().collect(Collectors.toList());
+        } else if (spendProfileComplete) {
+            return projectsWithSpendProfileComplete;
+        } else if (spendProfileInComplete) {
+            return projectsWithSpendProfileInComplete;
+        } else if (spendProfileAwaitingReview) {
+            return projectsWithSpendProfileAwaitingReview;
+        } else return projects;
+
     }
 
     private boolean hasDocumentAwaitingReview(ProjectResource project) {
