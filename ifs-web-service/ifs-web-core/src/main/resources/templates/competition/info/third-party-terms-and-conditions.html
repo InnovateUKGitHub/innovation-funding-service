@@ -24,8 +24,8 @@
                             th:text="|View ${model.thirdPartyConfig.termsAndConditionsLabel} (opens in a new window)|"
                             target="_blank">View full terms and conditions</a></p>
                 </th:block>
-                <div class="govuk-body">
-                    <p th:utext="${model.thirdPartyConfig.termsAndConditionsGuidance}"></p>
+                <div class="govuk-body wysiwyg-styles">
+                    <p ifs:utext="${model.thirdPartyConfig.termsAndConditionsGuidance}"></p>
                 </div>
             </th:block>
 
