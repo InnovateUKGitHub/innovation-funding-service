@@ -593,7 +593,7 @@ Monitoring officer assign link should be displayed on completing correspondence 
 
 Monitoring office can see the correspondence address entered by non uk based lead applicant in project setup dashboard
     [Documentation]     IFS - 7241
-    Given ifs admin assigns MO to the competition in project setup      ${ApplicationID}
+    Given ifs admin assigns MO to the competition in project setup      ${ApplicationID}    ${internationalApplicationTitle}
     When the user navigates to the page                                 ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
     Then the user should see the element                                jQuery = p:contains("Argentina")
 
@@ -629,9 +629,10 @@ IFS Admin approves the Spend profile
     [Tags]  HappyPath
 #    Given Log in as a different user                      &{ifs_admin_user_credentials}
     Given the user navigates to the page                    ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
-    When the user selects the radio button                  spendProfileApproved  true
+#    When the user selects the radio button                  spendProfileApproved  true
+    Then The user should see the element                    jQuery = h2:contains("The spend profile has been approved.")
     And the user should not see an error in the page
-    Then the user clicks the button/link                    jQuery = button.govuk-button:contains("Submit")
+#    Then the user clicks the button/link                    jQuery = button.govuk-button:contains("Submit")
 
 *** Keywords ***
 Custom Suite Setup
