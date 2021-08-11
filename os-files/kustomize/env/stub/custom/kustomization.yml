@@ -5,9 +5,6 @@ commonAnnotations:
   deployedWith: kustomize
   environment: custom
 
-bases:
-  - ../stub-base
-
 components:
   - ../../../components/mail
   - ../../../components/sil-stub
