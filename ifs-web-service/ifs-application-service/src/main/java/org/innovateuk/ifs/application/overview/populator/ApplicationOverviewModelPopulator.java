@@ -162,7 +162,9 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 if (competition.isExpressionOfInterest()) {
                     messageCode = "ifs.section.termsAndConditionsEoi.description";
                 } else {
-                    messageCode = "ifs.section.termsAndConditions.description";
+                    messageCode = competition.getTermsAndConditions().isProcurementThirdParty()
+                            ? "ifs.section.termsAndConditionsProcurementThirdParty.description"
+                            : "ifs.section.termsAndConditions.description";
                 }
                 break;
             case APPLICATION_QUESTIONS:

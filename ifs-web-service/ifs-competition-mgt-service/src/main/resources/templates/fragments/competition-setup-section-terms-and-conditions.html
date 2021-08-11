@@ -143,6 +143,7 @@
                       Project costs guidance link
                    </label>
                    <span class="govuk-hint">Appears against the acceptance of an applicant project costs.</span>
+                   <span class="govuk-hint">Insert a link including the full URL http:// or https://</span>
                    <th:block th:if="${#fields.hasErrors('projectCostGuidanceLink')}">
                       <span class="govuk-error-message" th:each="err : ${#fields.errors('projectCostGuidanceLink')}" th:text="${err}" />
                    </th:block>
@@ -150,7 +151,7 @@
                        id="projectCostGuidanceLink"
                        type="text"
                        th:errorclass="govuk-input--error"
-                       th:field="${competitionSetupForm.projectCostGuidanceLink}"
+                       th:field="${model.projectCostGuidanceLink}"
                        required="required"
                        maxlength="255"
                        th:attr="data-required-errormessage=#{validation.thirdParty.termsandconditionsform.projectCostGuidanceLink.required}" />

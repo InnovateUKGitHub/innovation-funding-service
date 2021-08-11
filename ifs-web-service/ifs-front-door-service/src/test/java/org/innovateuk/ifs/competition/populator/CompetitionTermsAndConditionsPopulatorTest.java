@@ -5,7 +5,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionTermsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.junit.Before;
@@ -30,9 +29,6 @@ public class CompetitionTermsAndConditionsPopulatorTest {
     @Mock
     private CompetitionRestService competitionRestService;
 
-    @Mock
-    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
-
     private long competitionId;
 
     private CompetitionResource competitionResource;
@@ -49,6 +45,7 @@ public class CompetitionTermsAndConditionsPopulatorTest {
 
         competitionResource = newCompetitionResource()
                 .withId(competitionId)
+                .withCompetitionThirdPartyConfig(competitionThirdPartyConfigResource)
                 .build();
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(RestResult.restSuccess(competitionResource));
@@ -63,8 +60,7 @@ public class CompetitionTermsAndConditionsPopulatorTest {
 
         competitionResource.setTermsAndConditions(grantTermsAndConditionsResource);
         competitionResource.setCompetitionTerms(fileEntryResource);
-
-        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competitionId)).thenReturn(RestResult.restSuccess(competitionThirdPartyConfigResource));
+        competitionResource.setCompetitionThirdPartyConfigResource(competitionThirdPartyConfigResource);
 
         CompetitionTermsViewModel competitionTermsViewModel = competitionTermsAndConditionsPopulator.populate(competitionId);
 
@@ -72,8 +68,8 @@ public class CompetitionTermsAndConditionsPopulatorTest {
         assertTrue(competitionTermsViewModel.isProcurementThirdParty());
         assertTrue(competitionTermsViewModel.isTermsAndConditionsUploaded());
         assertEquals(grantTermsAndConditionsResource, competitionTermsViewModel.getTermsAndConditions());
-        assertEquals("TermsAndConditionsLabel", competitionTermsViewModel.getTermsAndConditionsLabel());
-        assertEquals("TermsAndConditionsGuidance", competitionTermsViewModel.getTermsAndConditionsGuidance());
+        assertEquals("TermsAndConditionsLabel", competitionTermsViewModel.getThirdPartyConfig().getTermsAndConditionsLabel());
+        assertEquals("TermsAndConditionsGuidance", competitionTermsViewModel.getThirdPartyConfig().getTermsAndConditionsGuidance());
         assertEquals("CompetitionTermsViewModel{\n" +
                 "competitionId=1\n" +
                 "termsAndConditions{\n" +
@@ -87,7 +83,6 @@ public class CompetitionTermsAndConditionsPopulatorTest {
                 "}", competitionTermsViewModel.toString());
 
         verify(competitionRestService).getCompetitionById(competitionId);
-        verify(competitionThirdPartyConfigRestService).findOneByCompetitionId(competitionId);
     }
 
     @Test
@@ -96,14 +91,13 @@ public class CompetitionTermsAndConditionsPopulatorTest {
 
         competitionResource.setTermsAndConditions(grantTermsAndConditionsResource);
 
-        CompetitionTermsViewModel competitionTermsViewModel = competitionTermsAndConditionsPopulator.populate(competitionId);
+        CompetitionTermsViewModel competitionTermsViewModel = competitionTermsAndConditionsPopulator.populate(competitionResource.getId());
 
         assertEquals(competitionId, competitionTermsViewModel.getCompetitionId());
         assertFalse(competitionTermsViewModel.isProcurementThirdParty());
         assertFalse(competitionTermsViewModel.isTermsAndConditionsUploaded());
         assertEquals(grantTermsAndConditionsResource, competitionTermsViewModel.getTermsAndConditions());
-        assertNull(competitionTermsViewModel.getTermsAndConditionsLabel());
-        assertNull(competitionTermsViewModel.getTermsAndConditionsGuidance());
+        assertNull(competitionTermsViewModel.getThirdPartyConfig());
         assertEquals("CompetitionTermsViewModel{\n" +
                 "competitionId=1\n" +
                 "termsAndConditions{\n" +
