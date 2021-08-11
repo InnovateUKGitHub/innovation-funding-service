@@ -330,8 +330,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     @Test
     public void viewProjectSetupStatusWithProjectDetailsSubmittedAndFinanceContactSubmittedAsFinanceContact() {
 
-        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = newCompetitionThirdPartyConfigResource().build();
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withBankDetailsStatus(COMPLETE)
@@ -381,7 +379,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         when(projectService.isProjectManager(loggedInUser.getId(), project.getId())).thenReturn(false);
         when(projectService.isProjectFinanceContact(loggedInUser.getId(), project.getId())).thenReturn(true);
-        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(thirdPartyConfig));
         setupCompetitionPostAwardServiceExpectations(project, PostAwardService.IFS_POST_AWARD);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
@@ -1740,7 +1738,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         ReflectionTestUtils.setField(populator, "isMOSpendProfileUpdateEnabled", true);
         SetupStatusViewModel viewModel = setSpendProfileProjectSetup(PENDING);
         assertTrue(viewModel.isMonitoringOfficer());
-        assertStageStatus(viewModel, SPEND_PROFILE, HOURGLASS);
+        assertStageStatus(viewModel, SPEND_PROFILE, MO_ACTION_REQUIRED);
     }
 
     @Test
@@ -1782,7 +1780,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectRestService.getOrganisationByProjectAndUser(project.getId(), monitoringOfficer.getId())).thenReturn(restSuccess(newOrganisationResource().build()));
         when(statusService.getProjectTeamStatus(eq(project.getId()), any(Optional.class))).thenReturn(teamStatus);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(organisationResource);
-
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(thirdPartyConfig));
         when(monitoringOfficerService.findMonitoringOfficerForProject(project.getId())).thenReturn(restSuccess(monitoringOfficer));
         setupCompetitionPostAwardServiceExpectations(project, PostAwardService.CONNECT);
 
