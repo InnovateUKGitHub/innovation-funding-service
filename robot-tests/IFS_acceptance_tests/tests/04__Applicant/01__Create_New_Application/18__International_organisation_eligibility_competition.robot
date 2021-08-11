@@ -473,21 +473,21 @@ Internal user can view address details
     [Tags]  HappyPath
     [Setup]  Requesting project ID of this Project
     Given logging in and error checking                &{internal_finance_credentials}
-    When the user navigates to the page                ${server}/project-setup-management/competition/${internationalCompetitionId}/project/${IntlProjectID}/team
+    When the user navigates to the page                ${server}/project-setup-management/competition/${internationalCompetitionId}/project/${ProjectID}/team
     Then the user should see the element               jQuery = td:contains("${addressLine1}")
 
 External dashboard - hide the bank details if partner is non-uk based
     [Documentation]    IFS - 7163
     [Tags]
     Given the user logs-in in new browser        &{partnerApplicantCredentialsNonUKBased}
-    When the user navigates to the page          ${server}/project-setup/project/${IntlProjectID}
+    When the user navigates to the page          ${server}/project-setup/project/${ProjectID}
     Then the user should not see the element     jQuery = h2:contains("Bank details")
 
 External dashboard - non-uk based partner applicant can complete the project location details
     [Documentation]    IFS - 7240
     [Tags]
     [Setup]  Requesting test empire organisation ID of this Project
-    Given the user navigates to the page                                             ${server}/project-setup/project/${IntlProjectID}/organisation/${organistaionTestEmpireID}/partner-project-location
+    Given the user navigates to the page                                             ${server}/project-setup/project/${ProjectID}/organisation/${organistaionTestEmpireID}/partner-project-location
     When the user should see project location details in project details section
     And the user enters text to a text field                                         id = town     delhi
     And the user clicks the button/link                                              jQuery = button:contains("Save project location")
@@ -497,13 +497,13 @@ External dashboard - hide the bank details if lead organisation is non-uk based
     [Documentation]    IFS - 7163
     [Tags]
     Given Log in as a different user             &{leadApplicantCredentials}
-    When the user navigates to the page          ${server}/project-setup/project/${IntlProjectID}
+    When the user navigates to the page          ${server}/project-setup/project/${ProjectID}
     Then the user should not see the element     jQuery = h2:contains("Bank details")
 
 Correspondence address field validations
     [Documentation]     IFS - 7241
     [Tags]
-    Given the user navigates to the page                                   ${server}/project-setup/project/${IntlProjectID}/details
+    Given the user navigates to the page                                   ${server}/project-setup/project/${ProjectID}/details
     when the user clicks the button/link                                   link = Correspondence address
     And the user check for correspondence address titles and info text
     And the user clicks the button/link                                    id = save-project-address-button
@@ -524,7 +524,7 @@ non-uk based lead applicant can complete the correspondence address
 
 Non-uk based project location validations in project setup
     [Documentation]    IFS - 7240
-    Given the user navigates to the page                                             ${server}/project-setup/project/${IntlProjectID}/organisation/${organisationTestEmpireOneID}/partner-project-location
+    Given the user navigates to the page                                             ${server}/project-setup/project/${ProjectID}/organisation/${organisationTestEmpireOneID}/partner-project-location
     When the user should see project location details in project details section
     And The user clears text in the text field                                       id = town
     And the user clicks the button/link                                              jQuery = button:contains("Save project location")
@@ -540,7 +540,7 @@ External dashboard - non-uk based lead applicant can complete the project locati
 non-uk based partner applicant can see the read only view of the corresponding address
     [Documentation]     IFS - 7241
     Given Log in as a different user                                                       &{partnerApplicantCredentialsNonUKBased}
-    When the user navigates to the page                                                    ${server}/project-setup/project/${IntlProjectID}/details
+    When the user navigates to the page                                                    ${server}/project-setup/project/${ProjectID}/details
     Then the user should see read only view of completed correspondence address details
 
 External dashboard - lead applicant - view status of partners - bank details not required message should display for international lead applicant organisation
@@ -555,7 +555,7 @@ External dashboard - partner organisation - view status of partners - bank detai
     [Documentation]    IFS - 7163
     [Tags]
     Given Log in as a different user                                                                            &{partnerApplicantCredentialsNonUKBased}
-    And The user navigates to the page                                                                          ${server}/project-setup/project/${IntlProjectID}
+    And The user navigates to the page                                                                          ${server}/project-setup/project/${ProjectID}
     When the user clicks the button/link                                                                        link = View the status of partners
     Then bank details not required message should display for non uk based and zero funding partner organisations
 
@@ -583,7 +583,7 @@ Non-uk based organisations project location details updated in ifs admin project
 
 comp admin can see the correspondence address entered by non uk based lead applicant in project setup dashboard
     [Documentation]     IFS - 7241
-    When the user navigates to the page      ${server}/project-setup-management/competition/${internationalCompetitionId}/project/${IntlProjectID}/details
+    When the user navigates to the page      ${server}/project-setup-management/competition/${internationalCompetitionId}/project/${ProjectID}/details
     Then the user should see the element     jQuery = td:contains("Calle 11, San Sebastian,")
     And the user should see the element      jQuery = td:contains("Argentina, X5187XAB")
 
@@ -594,7 +594,7 @@ Monitoring officer assign link should be displayed on completing correspondence 
 Monitoring office can see the correspondence address entered by non uk based lead applicant in project setup dashboard
     [Documentation]     IFS - 7241
     Given ifs admin assigns MO to the competition in project setup      ${ApplicationID}
-    When the user navigates to the page                                 ${server}/project-setup-management/project/${IntlProjectID}/monitoring-officer
+    When the user navigates to the page                                 ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
     Then the user should see the element                                jQuery = p:contains("Argentina")
 
 Partner applicant can upload appendix file
@@ -616,19 +616,19 @@ GOL template to be updated with country for correspondents address
     Given Log in as a different user                                              &{ukLeadOrganisationCredentials}
     And the user complete all sections of the project setup and generates GOL
     When Log in as a different user                                               &{ifs_admin_user_credentials}
-    And the user navigates to the page                                            ${server}/project-setup-management/project/${IntlProjectID}/spend-profile/approval
+    And the user navigates to the page                                            ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
     And the user selects the radio button                                         spendProfileApproved  true
     And the user should not see an error in the page
     And the user clicks the button/link                                           jQuery = button.govuk-button:contains("Submit")
 #    Then Log in as a different user                                               &{ukLeadOrganisationCredentials}
-    And the user navigates to the page                                            ${server}/project-setup-management/project/${IntlProjectID}/grant-offer-letter/template
+    And the user navigates to the page                                            ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/template
     Then element should contain                                                    xpath = //p[1]     Argentina
 
 IFS Admin approves the Spend profile
     [Documentation]  IFS-9679
     [Tags]  HappyPath
 #    Given Log in as a different user                      &{ifs_admin_user_credentials}
-    Given the user navigates to the page                    ${server}/project-setup-management/project/${IntlProjectID}/spend-profile/approval
+    Given the user navigates to the page                    ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
     When the user selects the radio button                  spendProfileApproved  true
     And the user should not see an error in the page
     Then the user clicks the button/link                    jQuery = button.govuk-button:contains("Submit")
@@ -908,8 +908,8 @@ Requesting competition ID of this Project
     Set suite variable      ${internationalCompetitionId}
 
 Requesting project ID of this Project
-    ${IntlProjectID} =  get project id by name     ${internationalApplicationTitle}
-    Set suite variable     ${IntlProjectID}
+    ${ProjectID} =  get project id by name     ${internationalApplicationTitle}
+    Set suite variable     ${ProjectID}
 
 Requesting innovate uk organisation ID of this Project
     ${organistaionInnovateID} =  get organisation id by name     ${partnerOrganisationNameUKBased}
