@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionAssessmentConfig;
-import org.innovateuk.ifs.competition.domain.CompetitionThirdPartyConfig;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionAssessmentConfigRepository;
@@ -112,7 +111,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         competition.setCompetitionType(competitionType.get());
         setDefaultAssessorPayAndCountAndAverageAssessorScore(competition);
-        setDefaultThirdPartyConfig(competition);
         setDefaultProjectDocuments(competition);
 
         CompetitionTemplate template = templates.get(competition.getCompetitionTypeEnum());
@@ -192,17 +190,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
                 competitionAssessmentConfig.setAssessorFinanceView(AssessorFinanceView.ALL);
             }
             competition.setCompetitionAssessmentConfig(competitionAssessmentConfig);
-        }
-
-        return competition;
-    }
-
-    private Competition setDefaultThirdPartyConfig(Competition competition) {
-
-        if (competition.getCompetitionThirdPartyConfig() == null) {
-            CompetitionThirdPartyConfig competitionThirdPartyConfig = new CompetitionThirdPartyConfig();
-            competitionThirdPartyConfig.setCompetition(competition);
-            competition.setCompetitionThirdPartyConfig(competitionThirdPartyConfig);
         }
 
         return competition;

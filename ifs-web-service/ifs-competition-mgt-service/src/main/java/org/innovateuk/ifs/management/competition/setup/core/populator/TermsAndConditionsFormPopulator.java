@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 public class TermsAndConditionsFormPopulator {
     @Autowired
     private TermsAndConditionsRestService termsAndConditionsRestService;
+    private static final String PROJECT_COST_GUIDANCE_HTTP = "http://";
+
 
     public TermsAndConditionsForm populateForm(CompetitionResource competitionResource) {
         TermsAndConditionsForm termsAndConditionsForm = new TermsAndConditionsForm();
@@ -25,11 +27,8 @@ public class TermsAndConditionsFormPopulator {
                         termsAndConditionsForm.setThirdPartyTermsAndConditionsLabel(competitionThirdPartyConfigResource.getTermsAndConditionsLabel());
                         termsAndConditionsForm.setThirdPartyTermsAndConditionsText(competitionThirdPartyConfigResource.getTermsAndConditionsGuidance());
                         termsAndConditionsForm.setProjectCostGuidanceLink(competitionThirdPartyConfigResource.getProjectCostGuidanceUrl());
-                    } else {
-                        competitionThirdPartyConfigResource.setTermsAndConditionsLabel(null);
-                        competitionThirdPartyConfigResource.setProjectCostGuidanceUrl(null);
-                        competitionThirdPartyConfigResource.setTermsAndConditionsGuidance(null);
                     }
+                    prePopulateWithHttp(termsAndConditionsForm, competitionThirdPartyConfigResource);
                 }
             }
         return termsAndConditionsForm;
@@ -48,10 +47,17 @@ public class TermsAndConditionsFormPopulator {
         competitionThirdPartyConfigResource.setTermsAndConditionsLabel(termsAndConditionsForm.getThirdPartyTermsAndConditionsLabel());
         competitionThirdPartyConfigResource.setTermsAndConditionsGuidance(termsAndConditionsForm.getThirdPartyTermsAndConditionsText());
         competitionThirdPartyConfigResource.setProjectCostGuidanceUrl(termsAndConditionsForm.getProjectCostGuidanceLink());
+        competitionThirdPartyConfigResource.setCompetitionId(competition.getId());
         competition.setCompetitionThirdPartyConfigResource(competitionThirdPartyConfigResource);
     }
 
     private boolean isProcurementThirdParty(long termsAndConditionsId) {
         return termsAndConditionsRestService.getById(termsAndConditionsId).getSuccess().isProcurementThirdParty();
+    }
+
+    private void prePopulateWithHttp(TermsAndConditionsForm termsAndConditionsForm, CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource) {
+        if(competitionThirdPartyConfigResource.getProjectCostGuidanceUrl() == null || competitionThirdPartyConfigResource.getProjectCostGuidanceUrl().isEmpty()) {
+            termsAndConditionsForm.setProjectCostGuidanceLink(PROJECT_COST_GUIDANCE_HTTP);
+        }
     }
 }

@@ -532,11 +532,16 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public CompetitionDataBuilder withThirdPartyConfig(CompetitionLine line) {
         return asCompAdmin(data -> {
-            CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = new CompetitionThirdPartyConfigResource();
-            competitionThirdPartyConfigResource.setTermsAndConditionsLabel(line.getTermsAndConditionsLabel());
-            competitionThirdPartyConfigResource.setTermsAndConditionsGuidance(line.getTermsAndConditionsGuidance());
-            competitionThirdPartyConfigResource.setProjectCostGuidanceUrl(line.getProjectCostGuidanceUrl());
-            competitionThirdPartyConfigService.update(data.getCompetition().getId(), competitionThirdPartyConfigResource);
+            if (line.getTermsAndConditionsLabel() != null
+                    && line.getTermsAndConditionsGuidance() != null
+                    && line.getProjectCostGuidanceUrl() != null) {
+                CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = new CompetitionThirdPartyConfigResource();
+                competitionThirdPartyConfigResource.setTermsAndConditionsLabel(line.getTermsAndConditionsLabel());
+                competitionThirdPartyConfigResource.setTermsAndConditionsGuidance(line.getTermsAndConditionsGuidance());
+                competitionThirdPartyConfigResource.setProjectCostGuidanceUrl(line.getProjectCostGuidanceUrl());
+                competitionThirdPartyConfigResource.setCompetitionId(data.getCompetition().getId());
+                competitionThirdPartyConfigService.create(competitionThirdPartyConfigResource);
+            }
         });
     }
 
