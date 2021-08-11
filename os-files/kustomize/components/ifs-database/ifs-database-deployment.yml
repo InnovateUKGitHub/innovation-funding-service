@@ -20,7 +20,7 @@ spec:
               value: password
           image: mysql:5.7.34
           name: mysql
-          args: [ "--character-set-server=utf8", "--collation-server=utf8_bin", "--sql-mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"]
+          args: []
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3306
@@ -29,6 +29,9 @@ spec:
               mountPath: /var/lib/mysql
             - name: mysql-initdb
               mountPath: /docker-entrypoint-initdb.d
+            - name: mysql-initdb
+              mountPath: /etc/mysql/my.cnf
+              subPath: my.cnf
           resources:
             requests:
               memory: 300M
