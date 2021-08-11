@@ -5,11 +5,19 @@ public class CompetitionThirdPartyConfigResource {
     private String termsAndConditionsLabel;
     private String termsAndConditionsGuidance;
     private String projectCostGuidanceUrl;
+    private Long competitionId;
 
     public CompetitionThirdPartyConfigResource() {
     }
 
     public CompetitionThirdPartyConfigResource(String termsAndConditionsLabel, String termsAndConditionsGuidance, String projectCostGuidanceUrl) {
+        this.termsAndConditionsLabel = termsAndConditionsLabel;
+        this.termsAndConditionsGuidance = termsAndConditionsGuidance;
+        this.projectCostGuidanceUrl = projectCostGuidanceUrl;
+    }
+
+    public CompetitionThirdPartyConfigResource(Long competitionId, String termsAndConditionsLabel, String termsAndConditionsGuidance, String projectCostGuidanceUrl) {
+        this.competitionId = competitionId;
         this.termsAndConditionsLabel = termsAndConditionsLabel;
         this.termsAndConditionsGuidance = termsAndConditionsGuidance;
         this.projectCostGuidanceUrl = projectCostGuidanceUrl;
@@ -45,5 +53,13 @@ public class CompetitionThirdPartyConfigResource {
 
     public void setProjectCostGuidanceUrl(String projectCostGuidanceUrl) {
         this.projectCostGuidanceUrl = projectCostGuidanceUrl;
+    }
+
+    public Long getCompetitionId() {
+        return competitionId;
+    }
+
+    public void setCompetitionId(Long competitionId) {
+        this.competitionId = competitionId;
     }
 }

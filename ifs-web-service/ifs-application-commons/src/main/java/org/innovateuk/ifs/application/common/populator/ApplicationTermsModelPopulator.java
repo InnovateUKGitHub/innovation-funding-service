@@ -8,9 +8,7 @@ import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -43,8 +41,6 @@ public class ApplicationTermsModelPopulator {
     private QuestionRestService questionRestService;
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
-    @Autowired
-    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
 
     public ApplicationTermsViewModel populate(UserResource currentUser,
                                               long applicationId,
@@ -55,7 +51,6 @@ public class ApplicationTermsModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         QuestionResource question = questionRestService.findById(termsQuestionId).getSuccess();
         boolean additionalTerms = competition.getCompetitionTerms() != null;
-        CompetitionThirdPartyConfigResource thirdPartyConfigResource = getCompetitionThirdPartyConfigResource(competition.getId());
 
         if (organisationId != null && !readOnly && !competition.isExpressionOfInterest())  {
             // is the current user a member of this application?
@@ -93,8 +88,7 @@ public class ApplicationTermsModelPopulator {
                         additionalTerms,
                         subsidyBasisUrl.isPresent(),
                         subsidyBasisUrl.orElse(null),
-                        thirdPartyConfigResource.getTermsAndConditionsLabel(),
-                        thirdPartyConfigResource.getTermsAndConditionsGuidance(),
+                        competition.getCompetitionThirdPartyConfigResource(),
                         competition.getTermsAndConditions().isProcurementThirdParty(),
                         competition.getCompetitionTerms());
             }
@@ -109,8 +103,7 @@ public class ApplicationTermsModelPopulator {
                 application.isCollaborativeProject(),
                 isAllOrganisationsTermsAccepted(applicationId, competition.getId()),
                 additionalTerms,
-                thirdPartyConfigResource.getTermsAndConditionsLabel(),
-                thirdPartyConfigResource.getTermsAndConditionsGuidance(),
+                competition.getCompetitionThirdPartyConfigResource(),
                 competition.getTermsAndConditions().isProcurementThirdParty(),
                 competition.getCompetitionTerms());
     }
@@ -164,9 +157,5 @@ public class ApplicationTermsModelPopulator {
                 .values()
                 .stream()
                 .allMatch(completedSections -> completedSections.contains(termsAndConditionsSectionId));
-    }
-
-    private CompetitionThirdPartyConfigResource getCompetitionThirdPartyConfigResource(long competitionId) {
-        return competitionThirdPartyConfigRestService.findOneByCompetitionId(competitionId).getSuccess();
     }
 }
