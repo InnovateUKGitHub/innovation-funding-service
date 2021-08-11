@@ -139,27 +139,50 @@
                                             </th:block>
                                         </div>
 
-                                        <div th:if="${model.isMOJourneyUpdateEnabled and projectView.documentSectionViewModel.hasDocumentSection}"
+                                        <div th:if="${model.isMOJourneyUpdateEnabled and projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.hasDocumentSection}"
                                              class="task govuk-!-margin-bottom-0">
                                             <ul>
                                                 <li>
                                                     <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-4 govuk-!-margin-bottom-3"/>
                                                     <div class="task">
                                             <span class="govuk-heading-s">
-                                                <a th:if="${projectView.documentSectionViewModel.hasDocumentForReview}"
-                                                   th:href="${projectView.documentSectionViewModel.getDocumentLinkUrl}"
+                                                <a th:if="${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.hasDocumentForReview}"
+                                                   th:href="${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.getDocumentLinkUrl}"
                                                    class="govuk-link">Documents</a>
 
-                                                <h5 th:unless="${projectView.documentSectionViewModel.hasDocumentForReview}"
+                                                <h5 th:unless="${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.hasDocumentForReview}"
                                                     class="govuk-!-margin-top-0 govuk-!-margin-bottom-0">Documents</h5>
                                             </span>
                                                     </div>
 
-                                                    <div th:if="${projectView.documentSectionViewModel.hasDocumentSection}"
-                                                         th:insert="project/fragments :: mo-project-setup-status-indicator(${projectView.documentSectionViewModel.documentSectionStatus})"></div>
+                                                    <div th:if="${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.hasDocumentSection}"
+                                                         th:insert="project/fragments :: mo-project-setup-status-indicator(${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.documentSectionStatus})"></div>
                                                 </li>
                                             </ul>
                                         </div>
+
+                                        <div th:if="${model.isMOSpendProfileUpdateEnabled and projectView.monitoringDashboardSectionsViewModel.spendProfileSectionViewModel.hasSpendProfileSection}"
+                                             class="task govuk-!-margin-bottom-0">
+                                            <ul>
+                                                <li>
+                                                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-4 govuk-!-margin-bottom-3"/>
+                                                    <div class="task">
+                                            <span class="govuk-heading-s">
+                                                <a th:if="${projectView.monitoringDashboardSectionsViewModel.spendProfileSectionViewModel.hasSpendProfileForReview}"
+                                                   th:href="${projectView.monitoringDashboardSectionsViewModel.spendProfileSectionViewModel.getSpendProfileLinkUrl}"
+                                                   class="govuk-link">Spend profile</a>
+
+                                                <h5 th:unless="${projectView.monitoringDashboardSectionsViewModel.spendProfileSectionViewModel.hasSpendProfileForReview}"
+                                                    class="govuk-!-margin-top-0 govuk-!-margin-bottom-0">Spend profile</h5>
+                                            </span>
+                                                    </div>
+
+                                                    <div th:if="${projectView.monitoringDashboardSectionsViewModel.spendProfileSectionViewModel.hasSpendProfileSection}"
+                                                         th:insert="project/fragments :: mo-project-setup-status-indicator(${projectView.monitoringDashboardSectionsViewModel.spendProfileSectionViewModel.spendProfileStatus})"></div>
+                                                </li>
+                                            </ul>
+                                        </div>
+
                                     </li>
                                 </ul>
                             </div>

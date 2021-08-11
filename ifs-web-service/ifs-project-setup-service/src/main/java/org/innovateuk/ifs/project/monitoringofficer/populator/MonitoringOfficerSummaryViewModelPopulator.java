@@ -56,4 +56,16 @@ public class MonitoringOfficerSummaryViewModelPopulator {
     public int getDocumentsAwaitingReviewCount(List<ProjectResource> projects) {
         return projectFilterPopulator.getProjectsWithDocumentsAwaitingReview(projects).size();
     }
+
+    public int getSpendProfileCompleteCount(List<ProjectResource> projects) {
+        return projectFilterPopulator.getProjectsWithSpendProfileComplete(projects).size();
+    }
+
+    public int getSpendProfileInCompleteCount(List<ProjectResource> projects) {
+        return projectFilterPopulator.getProjectsWithSpendProfileInComplete(projects).size();
+    }
+
+    public int getSpendProfileAwaitingReviewCount(List<ProjectResource> projects) {
+        return projectFilterPopulator.getProjectsWithSpendProfileAwaitingReview(projects).size();
+    }
 }
