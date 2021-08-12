@@ -451,6 +451,15 @@ IFS Admin is able to Reject Spend Profile
     Then the user selects the radio button     spendProfileApproved  false
     And the user clicks the button/link        jQuery = button.govuk-button:contains("Submit")
 
+Lead Applicant Reassigns Spend Profile once rejected
+    [Documentation]  IFS-9679
+    Given Log in as a different user            &{lead_SP_credentials}
+    When The user navigates to the page         ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile
+    And the user clicks the button/link         jQuery = a:contains("Review and submit project spend profile")
+    And The user clicks the button/link         jQuery = a:contains("Submit project spend profile)
+    And The user clicks the button/link         jQuery = input:contains("Submit")
+    Then the user should see the element        jQuery = a:contains("Spend profile") ~ span:contains("Awaiting review")
+
 Monitoring officer is able to Reject Spend Profile
     [Documentation]    IFS-9677
     [Tags]
@@ -891,7 +900,8 @@ the comp admin should see the SP status updated correctly
     the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(5)           # Bank details
     the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(6)           # Finance checks
     the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(7)           # Spend profile
-    the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action  # GOL
+    Run Keyword If  '${status}' == 'PASS'  the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.ok  # GOL
+    Run Keyword If  '${status}' == 'PASS'  the user should see the element    css = #table-project-status tr:nth-of-type(3) td:nth-of-type(8).status.review
     the user should not see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
 
 the monitoring officer reject the SP
