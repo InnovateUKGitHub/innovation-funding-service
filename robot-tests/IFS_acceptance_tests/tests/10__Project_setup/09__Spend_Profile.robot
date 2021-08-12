@@ -406,14 +406,14 @@ IFS admin can see the approve and reject options for the spend profile
     [Tags]
     [Setup]  Log in as a different user                    &{ifs_admin_user_credentials}
     Given the user navigates to the page                   ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
-    Then the user should see the spend profile details     
+    Then the user should see the spend profile details
 
 Comp admin cannot see the approve and reject options for the spend profile
     [Documentation]    IFS-9679
     [Tags]
-    [Setup]  Log in as a different user                        &{Comp_admin1_credentials} 
+    [Setup]  Log in as a different user                        &{Comp_admin1_credentials}
     Given the user navigates to the page                       ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
-    Then the user should not see the spend profile details     
+    Then the user should not see the spend profile details
 
 Project Finance cannot see the approve and reject options for the spend profile
     [Documentation]    IFS-9679
@@ -450,7 +450,7 @@ IFS Admin is able to Reject Spend Profile
     Given the user navigates to the page       ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
     Then the user selects the radio button     spendProfileApproved  false
     And the user clicks the button/link        jQuery = button.govuk-button:contains("Submit")
-    
+
 Monitoring officer is able to Reject Spend Profile
     [Documentation]    IFS-9677
     [Tags]
@@ -533,7 +533,7 @@ IFS admin is able to Approve Spend Profile
     [Setup]    log in as a different user    &{ifs_admin_user_credentials}
     Given the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
     Then the IFS Admin approves to SP
-    
+
 Monitoring officer is able to Approve Spend Profile
     [Documentation]    IFS-9677
     [Tags]
@@ -855,13 +855,13 @@ the user should see the spend profile details
     the user should see the element                  jQuery = label:contains("Approve")
     the user should see the element                  jQuery = label:contains("Reject")
     the user should not see an error in the page
-    
+
 the user should not see the spend profile details
     the user should see the element                  jQuery = h2:contains("Innovation Lead") ~ p:contains("Peter Freeman")
     the user should not see the element              jQuery = h2:contains("Review spend profile")
     the user should not see the element              jQuery = label:contains("Approve")
     the user should not see the element              jQuery = label:contains("Reject")
-    
+
 the monitoring officer should see the spend profile details
     the element should be disabled       css = #submit-button
     the user should see the element      jQuery = p:contains("Please review the spend profile submitted by the project manager. You must accept or reject it based on Innovate UK's requirements.")
