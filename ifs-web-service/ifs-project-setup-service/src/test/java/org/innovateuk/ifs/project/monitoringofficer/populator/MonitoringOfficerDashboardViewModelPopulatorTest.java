@@ -70,7 +70,7 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
     private UserResource user;
     private CompetitionResource competition;
     private CompetitionDocumentResource competitionDocument;
-    private List<ProjectResource> projectResourceList = new ArrayList<>();
+    private final List<ProjectResource> projectResourceList = new ArrayList<>();
 
     @Before
     public void setUp() {

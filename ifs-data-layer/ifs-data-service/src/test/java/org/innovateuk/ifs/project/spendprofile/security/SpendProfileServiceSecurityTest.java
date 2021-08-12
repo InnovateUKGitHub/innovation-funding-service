@@ -180,6 +180,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
             verify(spendProfilePermissionRules).assignedInnovationLeadCanViewSPStatus(projectResource, getLoggedInUser());
             verify(spendProfilePermissionRules).assignedStakeholderCanViewSPStatus(projectResource, getLoggedInUser());
             verify(spendProfilePermissionRules).auditorCanViewCompetitionStatus(projectResource, getLoggedInUser());
+            verify(spendProfilePermissionRules).monitoringOfficerCanViewCompetitionStatus(projectResource, getLoggedInUser());
             verifyNoMoreInteractions(spendProfilePermissionRules);
         });
     }
