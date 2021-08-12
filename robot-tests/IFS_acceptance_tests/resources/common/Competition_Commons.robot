@@ -88,7 +88,7 @@ the user fills in the CS Initial details
 the user selects procurement Terms and Conditions
     the user clicks the button/link                                     link = Terms and conditions
     the user performs procurement Terms and Conditions validations
-    the user uploads the file                                           css = .inputfile  ${valid_pdf}
+    the user uploads the file                                           name = termsAndConditionsDoc  ${valid_pdf}
     the user clicks the button/link                                     jQuery = button:contains("Done")
     the user should see the element                                     jQuery = a:contains("Procurement (opens in a new window)")
     the user clicks the button/link                                     link = Back to competition details
@@ -97,7 +97,7 @@ the user selects procurement Terms and Conditions
 the user performs procurement Terms and Conditions validations
     the user clicks the button/link                   jQuery = button:contains("Done")
     the user should see a field and summary error     Upload a terms and conditions document.
-    the user uploads the file                         css = .inputfile  ${ods_file}
+    the user uploads the file                         name = termsAndConditionsDoc  ${ods_file}
     the user should see the element                   jQuery = :contains("${wrong_filetype_validation_error}")
 
 the user selects the Terms and Conditions
@@ -127,9 +127,7 @@ the user fills in the CS Funding Information
 the user fills in funding information for the third party procurement comp
     the user clicks the button/link                   link = Funding information
     the user clicks the button/link                   jQuery = button:contains("Generate code")
-    the user clicks the button/link                   id = funders[0].funder
-    the user clicks the button/link                   jQuery = ul li:contains("Office of Gas and Electricity Markets (Ofgem)")
-    mouse out                                         funders[0].funder
+    the user selects option from type ahead           funders[0].funder   ofGem   Office of Gas and Electricity Markets (Ofgem)
     the user enters text to a text field              id = funders[0].funderBudget  142424242
     the user enters text to a text field              id = pafNumber  2424
     the user enters text to a text field              id = budgetCode  Ch0col@73
@@ -138,7 +136,7 @@ the user fills in funding information for the third party procurement comp
     textfield should contain                          css = input[name="competitionCode"]   ${nextYearInTwoDigits}
     the user clicks the button/link                   jQuery = button:contains("Done")
     the user should see the element                   jQuery = td:contains("Office of Gas and Electricity Markets (Ofgem)")
-    then the user should see the element              jQuery = button:contains("Edit")
+    the user should see the element                   jQuery = button:contains("Edit")
     the user clicks the button/link                   link = Back to competition details
     the user should see the element                   jQuery = div:contains("Funding information") ~ .task-status-complete
     the user clicks the button/link                   jQuery = a:contains("Complete")

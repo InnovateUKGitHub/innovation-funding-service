@@ -31,4 +31,8 @@ public class GrantTermsAndConditionsResourceBuilder extends
     public static GrantTermsAndConditionsResourceBuilder newGrantTermsAndConditionsResource() {
         return new GrantTermsAndConditionsResourceBuilder(emptyList()).with(uniqueIds());
     }
+
+    public GrantTermsAndConditionsResourceBuilder withName(String name) {
+        return with(termsAndCondition -> termsAndCondition.setName(name));
+    }
 }

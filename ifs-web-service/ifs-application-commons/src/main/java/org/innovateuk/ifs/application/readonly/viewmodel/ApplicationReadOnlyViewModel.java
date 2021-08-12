@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.readonly.viewmodel;
 
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,6 +17,8 @@ public class ApplicationReadOnlyViewModel {
     private Map<String, List<SupporterAssignmentReadOnlyViewModel>> assignments;
     private boolean shouldDisplayKtpApplicationFeedback;
     private final boolean ktpCompetition;
+    private final boolean thirdPartyProcurement;
+    private final CompetitionThirdPartyConfigResource thirdPartyConfig;
 
     public ApplicationReadOnlyViewModel(ApplicationReadOnlySettings settings,
                                         Set<ApplicationSectionReadOnlyViewModel> sections,
@@ -23,7 +26,9 @@ public class ApplicationReadOnlyViewModel {
                                         List<String> overallFeedbacks,
                                         Map<String, List<SupporterAssignmentReadOnlyViewModel>> assignments,
                                         boolean shouldDisplayKtpApplicationFeedback,
-                                        boolean ktpCompetition) {
+                                        boolean ktpCompetition,
+                                        boolean thirdPartyProcurement,
+                                        CompetitionThirdPartyConfigResource thirdPartyConfig) {
         this.settings = settings;
         this.sections = sections;
         this.applicationScore = applicationScore;
@@ -31,6 +36,8 @@ public class ApplicationReadOnlyViewModel {
         this.assignments = assignments;
         this.shouldDisplayKtpApplicationFeedback = shouldDisplayKtpApplicationFeedback;
         this.ktpCompetition = ktpCompetition;
+        this.thirdPartyProcurement = thirdPartyProcurement;
+        this.thirdPartyConfig = thirdPartyConfig;
     }
 
     public List<String> getOverallFeedbacks() {
@@ -82,4 +89,8 @@ public class ApplicationReadOnlyViewModel {
     public boolean isKtpCompetition() {
         return ktpCompetition;
     }
+
+    public boolean isThirdPartyProcurement() { return thirdPartyProcurement; }
+
+    public CompetitionThirdPartyConfigResource getThirdPartyConfig() { return thirdPartyConfig; }
 }

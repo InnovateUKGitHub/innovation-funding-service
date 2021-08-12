@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
+import org.innovateuk.ifs.competition.populator.CompetitionTermsAndConditionsPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
@@ -46,6 +47,9 @@ public class CompetitionController {
     @Autowired
     private PublicContentItemRestService publicContentItemRestService;
 
+    @Autowired
+    private CompetitionTermsAndConditionsPopulator competitionTermsAndConditionsPopulator;
+
     @GetMapping("overview")
     public String competitionOverview(final Model model,
                                       @PathVariable("competitionId") final long competitionId,
@@ -65,10 +69,11 @@ public class CompetitionController {
 
     @GetMapping("info/terms-and-conditions")
     public String termsAndConditions(@PathVariable("competitionId") final long competitionId, Model model) {
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        GrantTermsAndConditionsResource termsAndConditions = competition.getTermsAndConditions();
-        model.addAttribute("model", new CompetitionTermsViewModel(competitionId));
-        return "competition/info/" + termsAndConditions.getTemplate();
+        CompetitionTermsViewModel competitionTermsViewModel = competitionTermsAndConditionsPopulator.populate(competitionId);
+
+        model.addAttribute("model", competitionTermsViewModel);
+
+        return "competition/info/" + competitionTermsViewModel.getTermsAndConditions().getTemplate();
     }
 
     @GetMapping("info/state-aid-terms-and-conditions")
