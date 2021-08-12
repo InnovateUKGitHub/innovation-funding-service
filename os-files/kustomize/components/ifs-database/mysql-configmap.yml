@@ -37,16 +37,20 @@ data:
     interactive-timeout
   my.sh: |-
     #!/bin/sh
-    mysql -u root -p ifs -ppassword \
-      --execute="CREATE DATABASE ifs_test; \
-        CREATE DATABASE ifs_finance; \
-        CREATE DATABASE ifs_finance_test; \
-        CREATE DATABASE ifs_survey; \
-        CREATE DATABASE ifs_survey_test;"
-    mysql -u root -p ifs -ppassword < /tmp/anonymised-dump.sql
-    mysql -u root -p ifs -ppassword \
-      --execute="update user set uid='c0d02979-e66e-11e7-ac43-0242ac120002' where \
-      email='ifs_web_user@innovateuk.org'"
-    echo "imported dump successfully"
+    mysql -u root -ppassword \
+      --execute=" CREATE DATABASE IF NOT EXISTS ifs ; \
+        CREATE DATABASE IF NOT EXISTS ifs_test; \
+        CREATE DATABASE IF NOT EXISTS ifs_finance; \
+        CREATE DATABASE IF NOT EXISTS ifs_finance_test; \
+        CREATE DATABASE IF NOT EXISTS ifs_survey; \
+        CREATE DATABASE IF NOT EXISTS ifs_survey_test;"
+    if [ -f /tmp/anonymised-dump.sql ]; then
+        mysql -u root -p ifs -ppassword < /tmp/anonymised-dump.sql
+        mysql -u root -p ifs -ppassword \
+          --execute="update user set uid='c0d02979-e66e-11e7-ac43-0242ac120002' where \
+          email='ifs_web_user@innovateuk.org'"
+        echo "imported dump successfully"
+    fi
+    echo "database is ready"
     exit
 
