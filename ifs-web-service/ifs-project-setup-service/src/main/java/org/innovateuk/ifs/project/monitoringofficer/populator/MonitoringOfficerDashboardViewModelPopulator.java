@@ -5,8 +5,6 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
-import org.innovateuk.ifs.project.spendprofile.service.SpendProfileRestService;
 import org.innovateuk.ifs.project.status.populator.SetupSectionStatus;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,8 +28,6 @@ public class MonitoringOfficerDashboardViewModelPopulator {
     private final SetupSectionStatus setupSectionStatus;
     private final CompetitionRestService competitionRestService;
     private final ProjectFilterPopulator projectFilterPopulator;
-    private final SpendProfileRestService spendProfileRestService;
-    private final PartnerOrganisationRestService partnerOrganisationRestService;
 
     @Value("${ifs.monitoringofficer.journey.update.enabled}")
     private boolean isMOJourneyUpdateEnabled;
@@ -43,16 +39,12 @@ public class MonitoringOfficerDashboardViewModelPopulator {
                                                         MonitoringOfficerSummaryViewModelPopulator monitoringOfficerSummaryViewModelPopulator,
                                                         SetupSectionStatus setupSectionStatus,
                                                         CompetitionRestService competitionRestService,
-                                                        ProjectFilterPopulator projectFilterPopulator,
-                                                        SpendProfileRestService spendProfileRestService,
-                                                        PartnerOrganisationRestService partnerOrganisationRestService) {
+                                                        ProjectFilterPopulator projectFilterPopulator) {
         this.monitoringOfficerRestService = monitoringOfficerRestService;
         this.monitoringOfficerSummaryViewModelPopulator = monitoringOfficerSummaryViewModelPopulator;
         this.setupSectionStatus = setupSectionStatus;
         this.competitionRestService = competitionRestService;
         this.projectFilterPopulator = projectFilterPopulator;
-        this.spendProfileRestService = spendProfileRestService;
-        this.partnerOrganisationRestService = partnerOrganisationRestService;
     }
 
     public MonitoringOfficerDashboardViewModel populate(UserResource user) {
