@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.monitoringofficer.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -28,6 +30,7 @@ public class MonitoringOfficerDashboardViewModelPopulator {
     private final SetupSectionStatus setupSectionStatus;
     private final CompetitionRestService competitionRestService;
     private final ProjectFilterPopulator projectFilterPopulator;
+    private final ProjectService projectService;
 
     @Value("${ifs.monitoringofficer.journey.update.enabled}")
     private boolean isMOJourneyUpdateEnabled;
@@ -39,12 +42,14 @@ public class MonitoringOfficerDashboardViewModelPopulator {
                                                         MonitoringOfficerSummaryViewModelPopulator monitoringOfficerSummaryViewModelPopulator,
                                                         SetupSectionStatus setupSectionStatus,
                                                         CompetitionRestService competitionRestService,
-                                                        ProjectFilterPopulator projectFilterPopulator) {
+                                                        ProjectFilterPopulator projectFilterPopulator,
+                                                        ProjectService projectService) {
         this.monitoringOfficerRestService = monitoringOfficerRestService;
         this.monitoringOfficerSummaryViewModelPopulator = monitoringOfficerSummaryViewModelPopulator;
         this.setupSectionStatus = setupSectionStatus;
         this.competitionRestService = competitionRestService;
         this.projectFilterPopulator = projectFilterPopulator;
+        this.projectService = projectService;
     }
 
     public MonitoringOfficerDashboardViewModel populate(UserResource user) {
@@ -124,7 +129,13 @@ public class MonitoringOfficerDashboardViewModelPopulator {
         return new MonitoringOfficerDashboardSpendProfileSectionViewModel(spendProfileStatusMOView(project),
                 projectFilterPopulator.hasSpendProfileSection(project),
                 project.getId(),
-                spendProfileStatusMOView(project).equals(MO_ACTION_REQUIRED.getStatus()));
+                spendProfileStatusMOView(project).equals(MO_ACTION_REQUIRED.getStatus()),
+                getLeadPartnerOrganisationId(project.getId()));
+    }
+
+    private long getLeadPartnerOrganisationId(long projectId) {
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
+        return leadOrganisation.getId();
     }
 
     private List<ProjectResource> sortProjects(List<ProjectResource> projects) {

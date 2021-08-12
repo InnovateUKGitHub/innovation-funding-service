@@ -3,14 +3,13 @@ package org.innovateuk.ifs.project.monitoringofficer.populator;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerDashboardViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerSummaryViewModel;
-import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
-import org.innovateuk.ifs.project.spendprofile.service.SpendProfileRestService;
 import org.innovateuk.ifs.project.status.populator.SetupSectionStatus;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -31,6 +30,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder.newCompetitionDocumentResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.SUBMITTED;
@@ -65,7 +65,7 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
     private ProjectFilterPopulator projectFilterPopulator;
 
     @Mock
-    private SpendProfileRestService spendProfileRestService;
+    private ProjectService projectService;
 
     private UserResource user;
     private CompetitionResource competition;
@@ -161,7 +161,6 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
 
         when(monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(), true, true))
                 .thenReturn(restSuccess(projectResourceList));
-        when(monitoringOfficerRestService.getProjectsForMonitoringOfficer(user.getId())).thenReturn(restSuccess(projectResourceList));
 
         when(competitionRestService.getCompetitionForProject(projectResourceList.get(0).getId())).thenReturn(restSuccess(competition));
         when(setupSectionStatus.documentsSectionStatus(false, projectResourceList.get(0), competition, true)).thenReturn(MO_ACTION_REQUIRED);
@@ -178,11 +177,8 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
         when(projectFilterPopulator.getProjectsWithDocumentsComplete(projectResourceList)).thenReturn(singletonList(projectResourceList.get(1)));
         when(projectFilterPopulator.getProjectsWithDocumentsInComplete(projectResourceList)).thenReturn(null);
         when(projectFilterPopulator.getProjectsWithDocumentsAwaitingReview(projectResourceList)).thenReturn(singletonList(projectResourceList.get(0)));
-        when(projectFilterPopulator.getProjectsWithSpendProfileComplete(projectResourceList)).thenReturn(asList(projectResourceList.get(0), projectResourceList.get(1)));
-        when(projectFilterPopulator.getProjectsWithSpendProfileInComplete(projectResourceList)).thenReturn(null);
-        when(projectFilterPopulator.getProjectsWithSpendProfileAwaitingReview(projectResourceList)).thenReturn(null);
-        when(spendProfileRestService.getSpendProfileStatusByProjectId(projectResourceList.get(0).getId())).thenReturn(restSuccess(ApprovalType.APPROVED));
-        when(spendProfileRestService.getSpendProfileStatusByProjectId(projectResourceList.get(1).getId())).thenReturn(restSuccess(ApprovalType.APPROVED));
+        when(projectService.getLeadOrganisation(projectResourceList.get(0).getId())).thenReturn(newOrganisationResource().build());
+        when(projectService.getLeadOrganisation(projectResourceList.get(1).getId())).thenReturn(newOrganisationResource().build());
 
         MonitoringOfficerSummaryViewModel monitoringOfficerSummaryViewModel = new MonitoringOfficerSummaryViewModel(1, 1, 1, 0, 1, 2, 0, 0);
 
