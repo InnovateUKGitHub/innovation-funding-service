@@ -247,8 +247,9 @@ Status updates for industrial user after spend profile submission
     [Setup]  the user navigates to the page     ${server}/project-setup/project/${PS_SP_Project_Id}
     Given the user should see the element       css = ul li.complete:nth-child(6)
     When the user clicks the button/link        link = View the status of partners
-    Then the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
-    And the user should see the element         css = #table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(7)
+    ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = th:contains("Spend profile")
+    Run Keyword If  '${status}' == 'PASS'   the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
+    Run Keyword If  '${status}' == 'PASS'   the user should see the element        css = #table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(7)
 
 Academic partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-5899
@@ -900,8 +901,23 @@ the comp admin should see the SP status updated correctly
     the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(5)           # Bank details
     the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(6)           # Finance checks
     the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(7)           # Spend profile
-    Run Keyword If  '${status}' == 'PASS'  the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.ok  # GOL
-    Run Keyword If  '${status}' == 'PASS'  the user should see the element    css = #table-project-status tr:nth-of-type(3) td:nth-of-type(8).status.review
+    ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Spend profile")
+    Run Keyword If   '${status}' == 'PASS'     the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action  # GOL
+    Run Keyword If   '${status}' == 'FAIL'  the user should see the element    css = #table-project-status tr:nth-of-type(3) td:nth-of-type(8).status.review
+    the user should see the element        the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action  # GOL
+    the user should not see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
+
+the user should see the SP status updated correctly
+    the user clicks the button/link        link = 2
+    the user should see the element        css = #table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok         # Project details
+    the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(3)           # Documents
+    the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(4)           # Monitoring officer
+    the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(5)           # Bank details
+    the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(6)           # Finance checks
+    the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(7)           # Spend profile
+    ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Spend profile")
+    Run Keyword If   '${status}' == 'PASS'     the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action  # GOL
+    Run Keyword If   '${status}' == 'FAIL'  the user should see the element    css = #table-project-status tr:nth-of-type(3) td:nth-of-type(8).status.review
     the user should not see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
 
 the monitoring officer reject the SP
