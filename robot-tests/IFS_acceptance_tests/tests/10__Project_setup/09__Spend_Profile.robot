@@ -456,7 +456,7 @@ Lead Applicant Reassigns Spend Profile once rejected
     Given Log in as a different user            &{lead_SP_credentials}
     When The user navigates to the page         ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile
     And the user clicks the button/link         jQuery = a:contains("Review and submit project spend profile")
-    And The user clicks the button/link         jQuery = a:contains("Submit project spend profile)
+    And The user clicks the button/link         jQuery = a:contains("Submit project spend profile")
     And The user clicks the button/link         jQuery = input:contains("Submit")
     Then the user should see the element        jQuery = a:contains("Spend profile") ~ span:contains("Awaiting review")
 
