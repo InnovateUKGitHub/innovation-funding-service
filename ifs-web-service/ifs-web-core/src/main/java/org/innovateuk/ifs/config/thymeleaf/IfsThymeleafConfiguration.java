@@ -17,6 +17,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 
 import javax.annotation.PostConstruct;
@@ -30,9 +31,6 @@ import javax.annotation.PostConstruct;
 @EnableScheduling
 @AutoConfigureBefore({ThymeleafAutoConfiguration.class})
 public class IfsThymeleafConfiguration {
-
-    @Autowired
-    private SpringTemplateEngine springTemplateEngine;
 
     private static final Log logger = LogFactory
             .getLog(IfsThymeleafConfiguration.class);
@@ -54,6 +52,14 @@ public class IfsThymeleafConfiguration {
         public IDialect ifsThymeleafPostProcessorDialect() {
             return new IfsThymeleafPostProcessorDialect();
         }
+    }
+
+    @Bean
+    public ThymeleafViewResolver thymeleafViewResolver(SpringTemplateEngine springTemplateEngine) {
+        ThymeleafViewResolver resolver = new ThymeleafViewResolver();
+        resolver.setTemplateEngine(springTemplateEngine);
+        resolver.setCharacterEncoding("UTF-8");
+        return resolver;
     }
 
 }
