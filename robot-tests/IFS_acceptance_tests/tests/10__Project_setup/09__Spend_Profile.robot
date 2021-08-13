@@ -455,8 +455,8 @@ IFS Admin is able to Reject Spend Profile
 
 Lead Applicant Resubmits Spend Profile once rejected
     [Documentation]  IFS-9679
-    Given Requesting Organisation Id of this application
-    Given Log in as a different user            &{lead_SP_credentials}
+    Given Requesting Organisation IDs
+    And Log in as a different user              &{lead_SP_credentials}
     When The user navigates to the page         ${server}/project-setup/project/${PS_SP_Project_Id}/partner-organisation/${ooba_id}/spend-profile
     And The user clicks the button/link         jQuery = a:contains("Review and submit project spend profile")
     And The user clicks the button/link         jQuery = a:contains("Submit project spend profile")
@@ -911,7 +911,7 @@ the comp admin should see the SP status updated correctly
     ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Spend profile")
     Run Keyword If   '${status}' == 'PASS'     the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action  # GOL
     Run Keyword If   '${status}' == 'PASS'  the user should see the element    css = #table-project-status tr:nth-of-type(3) td:nth-of-type(8).status.review
-    the user should see the element        the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action  # GOL
+#    the user should see the element        the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action  # GOL
     the user should not see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
 
 the user should see the SP status updated correctly
