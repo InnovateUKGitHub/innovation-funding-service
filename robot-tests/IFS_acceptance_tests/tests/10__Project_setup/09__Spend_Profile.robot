@@ -92,6 +92,7 @@ ${project_duration}                 48
 &{collaborator1_credentials_sp}     email=${PS_SP_Partner_Email}   password=${short_password}
 &{collaborator2_credentials_sp}     email=${PS_SP_Academic_Partner_Email}  password=${short_password}
 ${MO_EMAIL}                         Orville.Gibbs@gmail.com
+${ooba_org_name}                         Ooba
 
 *** Test Cases ***
 Internal user can not generate SP with pending invites
@@ -454,8 +455,9 @@ IFS Admin is able to Reject Spend Profile
 
 Lead Applicant Resubmits Spend Profile once rejected
     [Documentation]  IFS-9679
+    Given Requesting Organisation Id of this application
     Given Log in as a different user            &{lead_SP_credentials}
-    When The user navigates to the page         ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile
+    When The user navigates to the page         ${server}/project-setup/project/${PS_SP_Project_Id}/partner-organisation/${ooba_id}/spend-profile
     And The user clicks the button/link         jQuery = a:contains("Review and submit project spend profile")
     And The user clicks the button/link         jQuery = a:contains("Submit project spend profile")
     And The user clicks the button/link         jQuery = button.govuk-button:contains("Submit")
@@ -560,7 +562,7 @@ Status updates correctly for internal user's table after approval
     When The user clicks the button/link    link = 2
     ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Spend profile")
     Run Keyword If   '${status}' == 'PASS'     the user should see the element    css = #table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.ok        # Completed Spend profile
-    Run Keyword If   '${status}' == 'PASS'  the user should see the element    css = #table-project-status tr:nth-of-type(3) td:nth-of-type(8).status.ok         # GOL
+    Run Keyword If   '${status}' == 'PASS'     the user should see the element    css = #table-project-status tr:nth-of-type(3) td:nth-of-type(8).status.ok           # GOL
 
 Project Finance still has a link to the spend profile after approval
     [Documentation]    INFUND-6046
@@ -580,6 +582,10 @@ Project finance user cannot access external users' spend profile page
 Custom suite setup
     ${nextYear} =  get next year
     Set suite variable  ${nextYear}
+
+Requesting Organisation IDs
+    ${ooba_id} =    get organisation id by name     ${ooba_org_name}
+    Set suite variable      ${ooba_id}
 
 the sum of tds equals the total
     [Arguments]    ${table}    ${row}    ${duration}    ${total}
