@@ -3,6 +3,9 @@ Documentation     IFS-9576 MO documents: 'Project setup' list - task management 
 ...
 ...               IFS-9941 MO documents: Status, Filter and Link Visibility
 ...
+...               IFS-9676 MO Spend profile: MO projects list update
+...
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -71,6 +74,9 @@ Monitoring officer can filter projects based on complete document status and pro
     And the user clicks the button/link                                     id = update-documents-results-button
     Then check correct number of combined filtering projects displaying
     And check correct total number of projects displaying
+
+
+
 
 *** Keywords ***
 Custom suite setup
