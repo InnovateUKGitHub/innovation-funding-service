@@ -453,24 +453,6 @@ IFS Admin is able to Reject Spend Profile
     Then the user selects the radio button     spendProfileApproved  false
     And the user clicks the button/link        jQuery = button.govuk-button:contains("Submit")
 
-#Lead Applicant Resubmits Spend Profile once rejected
-#    [Documentation]  IFS-9679
-#    Given Requesting Organisation IDs
-#    And Log in as a different user              &{lead_SP_credentials}
-#    When The user navigates to the page         ${server}/project-setup/project/${PS_SP_Project_Id}/partner-organisation/${ooba_id}/spend-profile
-#    And The user clicks the button/link         jQuery = a:contains("Review and submit project spend profile")
-#    And The user clicks the button/link         jQuery = a:contains("Submit project spend profile")
-#    And The user clicks the button/link         jQuery = button.govuk-button:contains("Submit")
-#    Then the user should see the element        jQuery = a:contains("Spend profile") ~ span:contains("Awaiting review")
-
-#Monitoring officer is able to Reject Spend Profile
-#    [Documentation]    IFS-9677
-#    [Tags]
-#    Given Log in as a different user             &{monitoring_officer_one_credentials}
-#    When the user navigates to the page          ${server}/project-setup/project/${PS_SP_Project_Id}
-#    And the user clicks the button/link          link = Spend profile
-#    Then the monitoring officer reject the SP
-
 Status updates to a cross for the internal user's table
     [Documentation]    INFUND-6977
     [Tags]
