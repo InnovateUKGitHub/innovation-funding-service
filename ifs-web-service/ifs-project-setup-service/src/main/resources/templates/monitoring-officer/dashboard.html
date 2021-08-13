@@ -187,14 +187,15 @@
                                                 <li>
                                                     <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-4 govuk-!-margin-bottom-3"/>
                                                     <div class="task">
-                                            <span class="govuk-heading-s">
-                                                <a th:if="${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.hasDocumentForReview}"
-                                                   th:href="${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.getDocumentLinkUrl}"
-                                                   class="govuk-link">Documents</a>
+                                                        <h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+                                                            <a th:if="${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.hasDocumentForReview}"
+                                                               th:href="${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.getDocumentLinkUrl}"
+                                                               class="govuk-link">Documents</a>
 
-                                                <h5 th:unless="${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.hasDocumentForReview}"
-                                                    class="govuk-!-margin-top-0 govuk-!-margin-bottom-0">Documents</h5>
-                                            </span>
+                                                            <p th:unless="${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.hasDocumentForReview}"
+                                                               class="govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+                                                                Documents</p>
+                                                        </h4>
                                                     </div>
 
                                                     <div th:if="${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.hasDocumentSection}"
