@@ -6,8 +6,10 @@ import org.innovateuk.ifs.interceptors.GoogleAnalyticsHandlerInterceptor;
 import org.innovateuk.ifs.interceptors.MenuLinksHandlerInterceptor;
 import org.innovateuk.ifs.invite.formatter.RejectionReasonFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -96,5 +98,13 @@ public class IFSWebConfiguration implements WebMvcConfigurer {
         resolver.setTemplateEngine(springTemplateEngine);
         resolver.setCharacterEncoding("UTF-8");
         return resolver;
+    }
+
+    @Bean
+    public MessageSource messageSource() {
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setBasename("classpath:messages,ValidationMessages");
+        messageSource.setDefaultEncoding("UTF-8");
+        return messageSource;
     }
 }
