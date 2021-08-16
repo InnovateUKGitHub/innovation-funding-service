@@ -67,7 +67,7 @@ public class ProjectFilterPopulatorTest {
                 .withProjectDocument(singletonList(competitionDocument))
                 .build();
         ProjectResource projectResourceInSetup = newProjectResource()
-                .withId(88L)
+                .withId(85L)
                 .withCompetition(competition.getId())
                 .withCompetitionName("Competition name")
                 .withApplication(21L)
@@ -77,14 +77,14 @@ public class ProjectFilterPopulatorTest {
                 .withCollaborativeProject(false)
                 .withMonitoringOfficerUser(user.getId())
                 .withProjectDocuments(singletonList(newProjectDocumentResource()
-                        .withProject(88L)
+                        .withProject(85L)
                         .withCompetitionDocument(competitionDocument)
                         .withStatus(SUBMITTED)
                         .build()))
                 .withSpendProfileGenerated(false)
                 .build();
         ProjectResource projectResourceWithDocumentsComplete = newProjectResource()
-                .withId(89L)
+                .withId(86L)
                 .withCompetition(competition.getId())
                 .withCompetitionName("Competition name")
                 .withApplication(15L)
@@ -94,7 +94,7 @@ public class ProjectFilterPopulatorTest {
                 .withCollaborativeProject(false)
                 .withMonitoringOfficerUser(user.getId())
                 .withProjectDocuments(singletonList(newProjectDocumentResource()
-                        .withProject(88L)
+                        .withProject(86L)
                         .withCompetitionDocument(competitionDocument)
                         .withStatus(APPROVED)
                         .build()))
@@ -112,14 +112,14 @@ public class ProjectFilterPopulatorTest {
                 .withCollaborativeProject(false)
                 .withMonitoringOfficerUser(user.getId())
                 .withProjectDocuments(singletonList(newProjectDocumentResource()
-                        .withProject(88L)
+                        .withProject(87L)
                         .withCompetitionDocument(competitionDocument)
                         .withStatus(UNSET)
                         .build()))
                 .withSpendProfileGenerated(true)
                 .build();
         ProjectResource projectResourceWithDocumentsAwaitingReview = newProjectResource()
-                .withId(86L)
+                .withId(88L)
                 .withCompetition(competition.getId())
                 .withCompetitionName("Competition name")
                 .withApplication(8L)
@@ -137,7 +137,7 @@ public class ProjectFilterPopulatorTest {
                 .withSpendProfileSubmittedDate(now())
                 .build();
         ProjectResource projectResourceInLive = newProjectResource()
-                .withId(53L)
+                .withId(89L)
                 .withCompetition(competition.getId())
                 .withCompetitionName("Competition name")
                 .withApplication(2L)
@@ -147,7 +147,7 @@ public class ProjectFilterPopulatorTest {
                 .withProjectState(ProjectState.LIVE)
                 .withMonitoringOfficerUser(user.getId())
                 .withProjectDocuments(singletonList(newProjectDocumentResource()
-                        .withProject(88L)
+                        .withProject(89L)
                         .withCompetitionDocument(competitionDocument)
                         .withStatus(APPROVED)
                         .build()))
@@ -180,8 +180,8 @@ public class ProjectFilterPopulatorTest {
 
         when(spendProfileRestService.getSpendProfileStatusByProjectId(projectResourceList.get(0).getId())).thenReturn(restSuccess(ApprovalType.EMPTY));
         when(spendProfileRestService.getSpendProfileStatusByProjectId(projectResourceList.get(1).getId())).thenReturn(restSuccess(ApprovalType.APPROVED));
-        when(spendProfileRestService.getSpendProfileStatusByProjectId(projectResourceList.get(2).getId())).thenReturn(restSuccess(ApprovalType.UNSET));
-        when(spendProfileRestService.getSpendProfileStatusByProjectId(projectResourceList.get(3).getId())).thenReturn(restSuccess(ApprovalType.APPROVED));
+        when(spendProfileRestService.getSpendProfileStatusByProjectId(projectResourceList.get(2).getId())).thenReturn(restSuccess(ApprovalType.APPROVED));
+        when(spendProfileRestService.getSpendProfileStatusByProjectId(projectResourceList.get(3).getId())).thenReturn(restSuccess(ApprovalType.UNSET));
         when(spendProfileRestService.getSpendProfileStatusByProjectId(projectResourceList.get(4).getId())).thenReturn(restSuccess(ApprovalType.APPROVED));
 
     }
@@ -236,21 +236,14 @@ public class ProjectFilterPopulatorTest {
     }
 
     @Test
-    public void getProjectsWithSpendProfileComplete() {
-
-        populator.getSpendProfileSectionStatus(projectResourceList.get(0));
-        populator.getSpendProfileSectionStatus(projectResourceList.get(1));
-        populator.getSpendProfileSectionStatus(projectResourceList.get(2));
-        populator.getSpendProfileSectionStatus(projectResourceList.get(3));
-        populator.getSpendProfileSectionStatus(projectResourceList.get(4));
+    public void getSpendProfileSectionStatuses() {
 
         List<ProjectResource> projectWithCompleteSpendProfile = populator.getProjectsWithSpendProfileComplete(projectResourceList);
         List<ProjectResource> projectWithIncompleteSpendProfile = populator.getProjectsWithSpendProfileInComplete(projectResourceList);
         List<ProjectResource> projectWithIncompleteAwaitingReviewSpendProfile = populator.getProjectsWithSpendProfileAwaitingReview(projectResourceList);
 
-        assertEquals(2, projectWithCompleteSpendProfile.size());
+        assertEquals(3, projectWithCompleteSpendProfile.size());
         assertEquals(2, projectWithIncompleteSpendProfile.size());
-        assertEquals(1, projectWithIncompleteAwaitingReviewSpendProfile.size());
-
+        assertEquals(0, projectWithIncompleteAwaitingReviewSpendProfile.size());
     }
 }
