@@ -23,13 +23,18 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "org.innovateuk.ifs.project.resource.ProjectState.ON_HOLD, " +
             "org.innovateuk.ifs.project.resource.ProjectState.HANDLED_OFFLINE)";
 
-    /* Filters competitions to those in live state */
-    String LIVE_QUERY_WHERE_CLAUSE = "WHERE CURRENT_TIMESTAMP >= " +
-            "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND " +
-            "NOT EXISTS (SELECT m.date FROM Milestone m WHERE " +
-                            "(m.type = 'FEEDBACK_RELEASED' OR (m.type = 'FEEDBACK_RELEASED' AND m.competition.completionStage = org.innovateuk.ifs.competition.resource.CompetitionCompletionStage.COMPETITION_CLOSE))" +
-                              "AND m.competition.id = c.id) AND " +
-             "c.setupComplete = TRUE AND c.nonIfs = FALSE";
+    String LIVE_QUERY_WHERE_CLAUSE =
+            "WHERE CURRENT_TIMESTAMP >= " +
+            "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) " +
+            "AND NOT EXISTS " +
+            "(SELECT m.date FROM Milestone m WHERE (m.type = 'FEEDBACK_RELEASED') AND m.competition.id = c.id) " +
+            "AND NOT EXISTS " +
+            "(SELECT m.date FROM Milestone m WHERE m.type = 'SUBMISSION_DATE' " +
+                    "AND c.completionStage = org.innovateuk.ifs.competition.resource.CompetitionCompletionStage.COMPETITION_CLOSE " +
+                    "AND m.date <= CURRENT_TIMESTAMP " +
+                    "AND m.competition.id = c.id) " +
+            "AND " +
+            "c.setupComplete = TRUE AND c.nonIfs = FALSE";
 
 
     /*  Filters competitions to those with at least one in-flight project*/
