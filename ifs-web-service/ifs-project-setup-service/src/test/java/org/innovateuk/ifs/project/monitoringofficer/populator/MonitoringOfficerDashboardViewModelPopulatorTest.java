@@ -10,6 +10,7 @@ import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerD
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerSummaryViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.spendprofile.service.SpendProfileRestService;
 import org.innovateuk.ifs.project.status.populator.SetupSectionStatus;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -26,6 +27,7 @@ import java.util.List;
 
 import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder.newCompetitionDocumentResource;
@@ -66,6 +68,9 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
 
     @Mock
     private ProjectService projectService;
+
+    @Mock
+    private SpendProfileRestService spendProfileRestService;
 
     private UserResource user;
     private CompetitionResource competition;
@@ -161,30 +166,32 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
 
         when(monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(), true, true))
                 .thenReturn(restSuccess(projectResourceList));
+        when(projectFilterPopulator.getProjectsWithDocumentsComplete(projectResourceList)).thenReturn(singletonList(projectResourceList.get(1)));
+        when(projectFilterPopulator.getProjectsWithDocumentsInComplete(projectResourceList)).thenReturn(emptyList());
+        when(projectFilterPopulator.getProjectsWithDocumentsAwaitingReview(projectResourceList)).thenReturn(singletonList(projectResourceList.get(0)));
+        when(projectFilterPopulator.getProjectsWithSpendProfileComplete(anyList())).thenReturn(projectResourceList);
 
-        when(competitionRestService.getCompetitionForProject(projectResourceList.get(0).getId())).thenReturn(restSuccess(competition));
-        when(setupSectionStatus.documentsSectionStatus(false, projectResourceList.get(0), competition, true)).thenReturn(MO_ACTION_REQUIRED);
-
-        when(competitionRestService.getCompetitionForProject(projectResourceList.get(1).getId())).thenReturn(restSuccess(competition));
-        when(setupSectionStatus.documentsSectionStatus(false, projectResourceList.get(1), competition, true)).thenReturn(TICK);
+        MonitoringOfficerSummaryViewModel monitoringOfficerSummaryViewModel = new MonitoringOfficerSummaryViewModel(1, 1, 1, 0, 1, 2, 0, 0);
+        when(monitoringOfficerSummaryViewModelPopulator.populate(user)).thenReturn(monitoringOfficerSummaryViewModel);
 
         when(projectFilterPopulator.hasDocumentSection(projectResourceList.get(1))).thenReturn(true);
         when(projectFilterPopulator.hasDocumentSection(projectResourceList.get(0))).thenReturn(true);
-        when(projectFilterPopulator.hasSpendProfileSection(projectResourceList.get(0))).thenReturn(true);
-        when(projectFilterPopulator.hasSpendProfileSection(projectResourceList.get(1))).thenReturn(true);
+
+        when(competitionRestService.getCompetitionForProject(projectResourceList.get(1).getId())).thenReturn(restSuccess(competition));
+        when(competitionRestService.getCompetitionForProject(projectResourceList.get(0).getId())).thenReturn(restSuccess(competition));
+
+        when(setupSectionStatus.documentsSectionStatus(false, projectResourceList.get(0), competition, true)).thenReturn(MO_ACTION_REQUIRED);
+        when(setupSectionStatus.documentsSectionStatus(false, projectResourceList.get(1), competition, true)).thenReturn(TICK);
+
         when(projectFilterPopulator.getSpendProfileSectionStatus(projectResourceList.get(0))).thenReturn(TICK);
         when(projectFilterPopulator.getSpendProfileSectionStatus(projectResourceList.get(1))).thenReturn(TICK);
-        when(projectFilterPopulator.getProjectsWithDocumentsComplete(projectResourceList)).thenReturn(singletonList(projectResourceList.get(1)));
-        when(projectFilterPopulator.getProjectsWithDocumentsInComplete(projectResourceList)).thenReturn(null);
-        when(projectFilterPopulator.getProjectsWithDocumentsAwaitingReview(projectResourceList)).thenReturn(singletonList(projectResourceList.get(0)));
         when(projectService.getLeadOrganisation(projectResourceList.get(0).getId())).thenReturn(newOrganisationResource().build());
         when(projectService.getLeadOrganisation(projectResourceList.get(1).getId())).thenReturn(newOrganisationResource().build());
 
-        MonitoringOfficerSummaryViewModel monitoringOfficerSummaryViewModel = new MonitoringOfficerSummaryViewModel(1, 1, 1, 0, 1, 2, 0, 0);
+        when(projectFilterPopulator.hasSpendProfileSection(projectResourceList.get(0))).thenReturn(true);
+        when(projectFilterPopulator.hasSpendProfileSection(projectResourceList.get(1))).thenReturn(true);
 
-        when(monitoringOfficerSummaryViewModelPopulator.populate(user)).thenReturn(monitoringOfficerSummaryViewModel);
-
-        MonitoringOfficerDashboardViewModel viewModel = populator.populate(user, true, true, true, false, true, false, false, false);
+        MonitoringOfficerDashboardViewModel viewModel = populator.populate(user, true, true, true, false, true, true, false, false);
 
         assertEquals(2, viewModel.getProjects().size());
 
@@ -205,5 +212,9 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
         assertEquals(ProjectState.LIVE, viewModel.getProjects().get(1).getProjectState());
         assertTrue(viewModel.getProjects().get(1).getMonitoringDashboardSectionsViewModel().getDocumentSectionViewModel().isHasDocumentSection());
         assertEquals("complete", viewModel.getProjects().get(1).getMonitoringDashboardSectionsViewModel().getDocumentSectionViewModel().getDocumentSectionStatus());
-    }
+
+        assertTrue(viewModel.getProjects().get(0).getMonitoringDashboardSectionsViewModel().getSpendProfileSectionViewModel().isHasSpendProfileSection());
+        assertTrue(viewModel.getProjects().get(1).getMonitoringDashboardSectionsViewModel().getSpendProfileSectionViewModel().isHasSpendProfileSection());
+        assertEquals(TICK.getStatus(), viewModel.getProjects().get(0).getMonitoringDashboardSectionsViewModel().getSpendProfileSectionViewModel().getSpendProfileStatus());
+        assertEquals(TICK.getStatus(), viewModel.getProjects().get(1).getMonitoringDashboardSectionsViewModel().getSpendProfileSectionViewModel().getSpendProfileStatus());    }
 }
