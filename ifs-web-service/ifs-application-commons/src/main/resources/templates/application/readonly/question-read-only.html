@@ -337,7 +337,7 @@
     </th:block>
 </th:block>
 
-<th:block th:fragment="terms-and-conditions-partner-table (applicationId, questionId, partners, includeFundingRules, displayCompleteStatus)">
+<th:block th:fragment="terms-and-conditions-partner-table (applicationId, questionId, partners, includeFundingRules, displayCompleteStatus, thirdPartyProcurementCompetition, thirdPartyProcurementHeader)">
     <!--/*@thymesVar id="applicationId" type="java.lang.Long"*/-->
     <!--/*@thymesVar id="questionId" type="java.lang.Long"*/-->
     <!--/*@thymesVar id="partners" type="java.util.List"*/-->
@@ -348,10 +348,17 @@
         <tr class="govuk-table__row">
             <th scope="col" class="govuk-table__header">Partner</th>
             <th scope="col" class="govuk-table__header"
-                th:if="${includeFundingRules}">Funding rules</th>
-            <th scope="col" class="govuk-table__header">Terms and conditions</th>
+                th:if="${includeFundingRules}">Funding rules
+            </th>
             <th scope="col" class="govuk-table__header"
-                th:if="${displayCompleteStatus}">Status</th>
+                th:unless="${thirdPartyProcurementCompetition}">Terms and conditions
+            </th>
+            <th scope="col" class="govuk-table__header"
+                th:if="${thirdPartyProcurementCompetition}" th:text="${thirdPartyProcurementHeader}">
+            </th>
+            <th scope="col" class="govuk-table__header"
+                th:if="${displayCompleteStatus}">Status
+            </th>
         </tr>
         </thead>
         <tbody class="govuk-table__body">
@@ -393,7 +400,7 @@
                 <p class="govuk-body">This application cannot be submitted until all partners accept our terms and conditions.</p>
             </div>
         </th:block>
-        <th:block th:insert="this :: terms-and-conditions-partner-table (${model.applicationId}, ${model.questionId}, ${model.partners}, ${model.includeFundingRules}, ${model.displayCompleteStatus})" />
+        <th:block th:insert="this :: terms-and-conditions-partner-table (${model.applicationId}, ${model.questionId}, ${model.partners}, ${model.includeFundingRules}, ${model.displayCompleteStatus}, ${model.thirdPartyProcurementCompetition}, ${model.thirdPartyProcurementHeader})" />
     </div>
 </th:block>
 

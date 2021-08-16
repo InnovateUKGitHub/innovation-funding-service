@@ -77,6 +77,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...
 ...               IFS-9677 MO Spend profile: approve/reject
 ...
+...               IFS-9711 MO spend profile: Monitor project page status update
+...
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -210,6 +212,11 @@ Lead partner marks spend profile as complete
     [Setup]  Log in as a different user              &{lead_applicant_credentials_sp}
     Given the user navigates to the page             ${external_spendprofile_summary}/review
     Then the user marks spend profile as compelete and check status updated
+
+MO can view the status of the spend profile
+    [Documentation]  IFS-9711
+    Given Log in as a different user                                   &{monitoring_officer_one_credentials}
+    Then the MO can view the correct status on Monitor project page    Incomplete
 
 Non-lead partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899
@@ -406,9 +413,10 @@ Project Finance is able to see Spend Profile approval page
     Then the project finance user should see the spend profile details
 
 Monitoring officer is able to see Spend Profile approval page
-    [Documentation]   IFS-9677
+    [Documentation]   IFS-9677   IFS-9711
     Given Log in as a different user                                     &{monitoring_officer_one_credentials}
     When the user navigates to the page                                  ${server}/project-setup/project/${PS_SP_Project_Id}
+    And the MO can view the correct status on Monitor project page       Awaiting review
     And the user clicks the button/link                                  link = Spend profile
     Then the monitoring officer should see the spend profile details
 
@@ -427,12 +435,13 @@ Status updates correctly for internal user's table
     Then the comp admin should see the SP status updated correctly
 
 Monitoring officer is able to Reject Spend Profile
-    [Documentation]    IFS-9677
+    [Documentation]    IFS-9677   IFS-9711
     [Tags]
-    Given Log in as a different user             &{monitoring_officer_one_credentials}
-    When the user navigates to the page          ${server}/project-setup/project/${PS_SP_Project_Id}
-    And the user clicks the button/link          link = Spend profile
+    Given Log in as a different user                                  &{monitoring_officer_one_credentials}
+    When the user navigates to the page                               ${server}/project-setup/project/${PS_SP_Project_Id}
+    And the user clicks the button/link                               link = Spend profile
     Then the monitoring officer reject the SP
+    And the MO can view the correct status on Monitor project page    Incomplete
 
 Status updates to a cross for the internal user's table
     [Documentation]    INFUND-6977
@@ -503,12 +512,13 @@ Lead partner can send the combined spend profile
     When the user clicks the button/link     id = submit-send-all-spend-profiles
 
 Monitoring officer is able to Approve Spend Profile
-    [Documentation]    IFS-9677
+    [Documentation]    IFS-9677  IFS-9711
     [Tags]
-    Given log in as a different user            &{monitoring_officer_one_credentials}
-    When the user navigates to the page         ${server}/project-setup/project/${PS_SP_Project_Id}
-    And the user clicks the button/link         link = Spend profile
+    Given log in as a different user                                  &{monitoring_officer_one_credentials}
+    When the user navigates to the page                               ${server}/project-setup/project/${PS_SP_Project_Id}
+    And the user clicks the button/link                               link = Spend profile
     Then the monitoring officer approves to SP
+    And the MO can view the correct status on Monitor project page    Complete
 
 Status updates correctly for internal user's table after approval
     [Documentation]    INFUND-5543  IFS-9677
@@ -910,3 +920,8 @@ Assign monitoring officer to project
     search for MO                             Orvill  Orville Gibbs
     the user should see the element           jQuery = span:contains("Assign projects to Monitoring Officer")
     the internal user assign project to MO    ${applicationNumber}   ${applicationTitle}
+
+the MO can view the correct status on Monitor project page
+    [Arguments]  ${status}
+    the user navigates to the page      ${server}/project-setup/project/${PS_SP_Project_Id}
+    the user should see the element     jQuery = li:contains("Spend profile") span:contains("${status}")

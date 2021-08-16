@@ -2057,105 +2057,110 @@
 <th:block th:fragment="vat"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).VAT}">
 <th:block th:if="${model.financeRowTypes.contains(financeRowType)}">
-    <div class="govuk-form-group"
-         th:classappend="${#fields.hasErrors('vatForm.registered')} ? 'govuk-form-group--error'">
-        <fieldset class="govuk-fieldset">
-            <legend id="vatForm.registered" class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                Are you VAT registered?
-            </legend>
-            <th:block th:unless="${model.isReadOnly()}">
-                <span class="govuk-hint">If you are VAT registered, VAT will be calculated at 20%</span>
+    <th:block th:unless="${model.vatHidden}">
+        <div class="govuk-form-group"
+             th:classappend="${#fields.hasErrors('vatForm.registered')} ? 'govuk-form-group--error'">
+            <fieldset class="govuk-fieldset">
+                <legend id="vatForm.registered" class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                    Are you VAT registered?
+                </legend>
+                <th:block th:unless="${model.isReadOnly()}">
+                    <span class="govuk-hint">If you are VAT registered, VAT will be calculated at 20%</span>
 
-                <th:block th:if="${#fields.hasErrors('vatForm.registered')}">
+                    <th:block th:if="${#fields.hasErrors('vatForm.registered')}">
                                     <span class="govuk-error-message" th:each="err : ${#fields.errors('vatForm.registered')}"
                                           th:text="${err}">
                                     </span>
-                </th:block>
+                    </th:block>
 
-                <div class="govuk-radios">
-                    <div class="govuk-radios__item" data-target="vatRegistered-totals"
-                         data-target-clear-validation="true" data-target-clear-form="true">
-                        <input class="govuk-radios__input"
-                               id="vat-registered-yes"
-                               type="radio"
-                               th:checked="${vatForm == null ? false : vatForm.registered}"
-                               th:field="*{vatForm.registered}"
-                               value="true"
-                               required="required"
-                               th:attr="data-required-errormessage=#{validation.yourProjectCostsForm.vatRegistered.required}"/>
-                        <label class="govuk-label govuk-radios__label" for="vat-registered-yes">
-                            Yes
-                        </label>
-                    </div>
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item" data-target="vatRegistered-totals"
+                             data-target-clear-validation="true" data-target-clear-form="true">
+                            <input class="govuk-radios__input"
+                                   id="vat-registered-yes"
+                                   type="radio"
+                                   th:checked="${vatForm == null ? false : vatForm.registered}"
+                                   th:field="*{vatForm.registered}"
+                                   value="true"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.yourProjectCostsForm.vatRegistered.required}"/>
+                            <label class="govuk-label govuk-radios__label" for="vat-registered-yes">
+                                Yes
+                            </label>
+                        </div>
 
-                    <div id="vatRegistered-totals" class="panel">
-                        <div class="govuk-form-group">
-                            <div class="govuk-grid-column-one-half alignleft">
-                                <label for="total-cost" class="govuk-heading-m">Total VAT</label>
-                            </div>
+                        <div id="vatRegistered-totals" class="panel">
+                            <div class="govuk-form-group">
+                                <div class="govuk-grid-column-one-half alignleft">
+                                    <label for="total-cost" class="govuk-heading-m">Total VAT</label>
+                                </div>
 
-                            <div class="govuk-grid-column-one-half alignright">
-                                <label id="vat-total" class="govuk-heading-m"
-                                       data-calculation-fields="#total-cost,0.2"
-                                       data-calculation-operations="*"
-                                       th:text="'£' + ${#ifsUtil.formatInteger(form.getVatTotal())}">£120</label>
-                            </div>
-                            <div class="govuk-grid-column-one-half alignleft">
-                                <label for="total-cost" class="govuk-heading-m">Total project costs inclusive of VAT</label>
-                            </div>
-                            <div class="govuk-grid-column-one-half alignright">
-                                <label for="total-cost" class="govuk-heading-m"
-                                       data-calculation-fields="#vat-total,#total-cost"
-                                       data-calculation-operations="+"
-                                       th:text="'£' + ${#ifsUtil.formatInteger(form.getProjectVatTotal())}">£120</label>
+                                <div class="govuk-grid-column-one-half alignright">
+                                    <label id="vat-total" class="govuk-heading-m"
+                                           data-calculation-fields="#total-cost,0.2"
+                                           data-calculation-operations="*"
+                                           th:text="'£' + ${#ifsUtil.formatInteger(form.getVatTotal())}">£120</label>
+                                </div>
+                                <div class="govuk-grid-column-one-half alignleft">
+                                    <label for="total-cost" class="govuk-heading-m">Total project costs inclusive of VAT</label>
+                                </div>
+                                <div class="govuk-grid-column-one-half alignright">
+                                    <label for="total-cost" class="govuk-heading-m"
+                                           data-calculation-fields="#vat-total,#total-cost"
+                                           data-calculation-operations="+"
+                                           th:text="'£' + ${#ifsUtil.formatInteger(form.getProjectVatTotal())}">£120</label>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="govuk-radios__item"
-                         data-target-clear-validation="true" data-target-clear-form="true">
-                        <input class="govuk-radios__input"
-                               id="vat-registered-no"
-                               th:checked="${vatForm == null ? false : vatForm.registered}"
-                               type="radio"
-                               th:field="*{vatForm.registered}"
-                               value="false"
-                               required="required"
-                               th:attr=
-                                   "data-required-errormessage=#{validation.yourProjectCostsForm.vatRegistered.required}">
-                        <label class="govuk-label govuk-radios__label" for="vat-registered-no">
-                            No
-                        </label>
+                        <div class="govuk-radios__item"
+                             data-target-clear-validation="true" data-target-clear-form="true">
+                            <input class="govuk-radios__input"
+                                   id="vat-registered-no"
+                                   th:checked="${vatForm == null ? false : vatForm.registered}"
+                                   type="radio"
+                                   th:field="*{vatForm.registered}"
+                                   value="false"
+                                   required="required"
+                                   th:attr=
+                                           "data-required-errormessage=#{validation.yourProjectCostsForm.vatRegistered.required}">
+                            <label class="govuk-label govuk-radios__label" for="vat-registered-no">
+                                No
+                            </label>
+                        </div>
                     </div>
-                </div>
-            </th:block>
+                </th:block>
 
-            <th:block th:if="${model.isReadOnly()}">
+                <th:block th:if="${model.isReadOnly()}">
                             <span class="govuk-body"
                                   th:text="${form.vatForm.registered ? 'Yes' : 'No'}">No</span>
-                <div class="govuk-grid-row total-cost" th:if="${form.vatForm.registered}">
-                    <div class="govuk-grid-column-one-half">
-                        <label for="total-cost" class="govuk-heading-m">Total VAT</label>
-                    </div>
+                    <div class="govuk-grid-row total-cost" th:if="${form.vatForm.registered}">
+                        <div class="govuk-grid-column-one-half">
+                            <label for="total-cost" class="govuk-heading-m">Total VAT</label>
+                        </div>
 
-                    <div class="govuk-grid-row govuk-grid-column-one-half alignright">
-                        <label for="total-cost" class="govuk-heading-m"
-                               th:text="'£' + ${#numbers.formatInteger(form.getVatTotal(), 0, 'DEFAULT')}">£120</label>
-                    </div>
+                        <div class="govuk-grid-row govuk-grid-column-one-half alignright">
+                            <label for="total-cost" class="govuk-heading-m"
+                                   th:text="'£' + ${#numbers.formatInteger(form.getVatTotal(), 0, 'DEFAULT')}">£120</label>
+                        </div>
 
-                    <div class="govuk-grid-column-one-half">
-                        <label for="total-cost" class="govuk-heading-m">Total project costs inclusive of VAT</label>
-                    </div>
+                        <div class="govuk-grid-column-one-half">
+                            <label for="total-cost" class="govuk-heading-m">Total project costs inclusive of VAT</label>
+                        </div>
 
-                    <div class="govuk-grid-row govuk-grid-column-one-half alignright">
-                        <label for="total-cost" class="govuk-heading-m"
-                               th:text="'£' + ${#numbers.formatInteger(form.getProjectVatTotal(), 0, 'DEFAULT')}">£120</label>
+                        <div class="govuk-grid-row govuk-grid-column-one-half alignright">
+                            <label for="total-cost" class="govuk-heading-m"
+                                   th:text="'£' + ${#numbers.formatInteger(form.getProjectVatTotal(), 0, 'DEFAULT')}">£120</label>
+                        </div>
                     </div>
-                </div>
-            </th:block>
-        </fieldset>
-    </div>
+                </th:block>
+            </fieldset>
+        </div>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+    </th:block>
+    <th:block th:if="${model.vatHidden}">
+        <input type="hidden" name="vatForm.registered" value="false" />
+    </th:block>
 </th:block>
 </th:block>
 <!--/*</editor-fold>*/-->
@@ -4021,7 +4026,7 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
     <label th:for="stateAidAgreed" class="govuk-label govuk-checkboxes__label">
         By ticking this box you are accepting that the project costs for your organisation are
         eligible as defined in the
-        <th:block th:unless="${model.procurementCompetition or model.showCovidGuidance}"><a target="_blank"
+        <th:block th:unless="${model.procurementCompetition or model.showCovidGuidance or model.thirdPartyProcurementCompetition}"><a target="_blank"
                                                                                 href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance"
                                                                                 class="govuk-link"
                                                                                 aria-describedby="project-costs-hint">project costs guidance (opens in a new window)</a>.</th:block>
@@ -4033,6 +4038,10 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
                                                        href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/small-business-research-initiative-sbri-project-costs-guidance"
                                                        class="govuk-link"
                                                        aria-describedby="project-costs-hint">project costs guidance (opens in a new window)</a>.</th:block>
+        <th:block th:if="${model.thirdPartyProcurementCompetition}"><a target="_blank"
+                                                             th:href="${model.thirdPartyProjectCostGuidanceLink}"
+                                                             class="govuk-link"
+                                                             aria-describedby="project-costs-hint">project costs guidance (opens in a new window)</a>.</th:block>
     </label>
 </th:block>
 

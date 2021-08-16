@@ -7,12 +7,10 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder;
 import org.innovateuk.ifs.competition.builder.CompetitionPostAwardServiceResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
-import org.innovateuk.ifs.competition.resource.CompetitionPostAwardServiceResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.PostAwardService;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupPostAwardServiceRestService;
+import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
@@ -43,13 +41,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -57,6 +55,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder.newCompetitionDocumentResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionThirdPartyConfigResourceBuilder.newCompetitionThirdPartyConfigResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
@@ -77,7 +76,9 @@ import static org.innovateuk.ifs.sections.SectionStatus.MO_ACTION_REQUIRED;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -109,13 +110,16 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     private SetupSectionStatus setupSectionStatus;
 
     @Mock
-    private AsyncFuturesGenerator futuresGeneratorMock;
+    private AsyncFuturesGenerator futuresGenerator;
 
     @Mock
     private NavigationUtils navigationUtils;
 
     @Mock
     private CompetitionSetupPostAwardServiceRestService competitionSetupPostAwardServiceRestService;
+
+    @Mock
+    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
 
     private static final boolean monitoringOfficerExpected = true;
 
@@ -126,7 +130,11 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                     .withTitle("Risk Register", "Plan Document")
                     .build(2);
 
-    private CompetitionResource competition = newCompetitionResource()
+    String termsTemplate = "terms-template";
+    GrantTermsAndConditionsResource grantTermsAndConditions =
+            new GrantTermsAndConditionsResource("name", termsTemplate, 1);
+    CompetitionResource competition = newCompetitionResource()
+            .withTermsAndConditions(grantTermsAndConditions)
             .withProjectDocument(projectDocumentConfig)
             .withProjectSetupStages(new ArrayList<>(EnumSet.allOf(ProjectSetupStage.class)))
             .build();
@@ -148,16 +156,26 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     private RestResult<MonitoringOfficerResource> monitoringOfficerFoundResult = restSuccess(monitoringOfficer);
     private RestResult<MonitoringOfficerResource> monitoringOfficerNotFoundResult = restFailure(HttpStatus.NOT_FOUND);
 
-    private UserResource loggedInUser = newUserResource().withId(1L)
+    private UserResource loggedInUser = newUserResource()
+            .withId(1L)
             .withFirstName("James")
             .withLastName("Watts")
             .withEmail("james.watts@email.co.uk")
             .withRoleGlobal(Role.APPLICANT)
             .withUID("2aerg234-aegaeb-23aer").build();
 
+    String thirdPartyTncLabel = "3rd party tnc label";
+    String thirdPartyTncGuidance = "3rd party tnc guidance";
+    String thirdPartyCostGuidanceUrl = "https://www.google.com";
+    CompetitionThirdPartyConfigResource thirdPartyConfig = newCompetitionThirdPartyConfigResource()
+            .withTermsAndConditionsLabel(thirdPartyTncLabel)
+            .withTermsAndConditionsGuidance(thirdPartyTncGuidance)
+            .withProjectCostGuidanceUrl(thirdPartyCostGuidanceUrl)
+            .build();
+
     @Before
     public void setupExpectations() {
-        setupAsyncExpectations(futuresGeneratorMock);
+        setupAsyncExpectations(futuresGenerator);
     }
 
     @Test
@@ -361,6 +379,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         when(projectService.isProjectManager(loggedInUser.getId(), project.getId())).thenReturn(false);
         when(projectService.isProjectFinanceContact(loggedInUser.getId(), project.getId())).thenReturn(true);
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(thirdPartyConfig));
         setupCompetitionPostAwardServiceExpectations(project, PostAwardService.IFS_POST_AWARD);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
@@ -878,6 +897,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         when(projectService.isProjectManager(loggedInUser.getId(), project.getId())).thenReturn(true);
         when(projectService.isProjectFinanceContact(loggedInUser.getId(), project.getId())).thenReturn(true);
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(thirdPartyConfig));
         setupCompetitionPostAwardServiceExpectations(project, PostAwardService.IFS_POST_AWARD);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
@@ -1505,6 +1525,9 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     }
 
     private SetupStatusViewModel performDocumentsForMOViewTest(DocumentStatus document1Status, DocumentStatus document2Status) {
+
+        CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource = newCompetitionThirdPartyConfigResource().build();
+
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
@@ -1541,6 +1564,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectRestService.getOrganisationByProjectAndUser(project.getId(), monitoringOfficer.getId())).thenReturn(restSuccess(newOrganisationResource().build()));
         when(statusService.getProjectTeamStatus(eq(project.getId()), any(Optional.class))).thenReturn(teamStatus);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(organisationResource);
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionThirdPartyConfigResource));
 
         when(monitoringOfficerService.findMonitoringOfficerForProject(project.getId())).thenReturn(restSuccess(monitoringOfficer));
         setupCompetitionPostAwardServiceExpectations(project, PostAwardService.CONNECT);
@@ -1599,8 +1623,11 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
     @Test
     public void viewFinanceChecksStatusForMo() {
-
+        String termsTemplate = "terms-template";
+        GrantTermsAndConditionsResource grantTermsAndConditions =
+                new GrantTermsAndConditionsResource("name", termsTemplate, 1);
         CompetitionResource sbriCompetition = newCompetitionResource()
+                .withTermsAndConditions(grantTermsAndConditions)
                 .withFundingType(FundingType.PROCUREMENT)
                 .withProjectDocument(projectDocumentConfig)
                 .withProjectSetupStages(new ArrayList<>(EnumSet.allOf(ProjectSetupStage.class)))
@@ -1626,7 +1653,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus, true, sbriCompetition);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-
         assertTrue(viewModel.isMonitoringOfficer());
 
         Optional<SetupStatusStageViewModel> stageViewModel = viewModel.getStages().stream()
@@ -1666,6 +1692,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(monitoringOfficerService.isMonitoringOfficerOnProject(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(isUserMoOnProject));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(organisationResource);
         when(projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competitionResource.getId())).thenReturn(restSuccess(thirdPartyConfig));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().
                 withUser(loggedInUser.getId())
                 .withOrganisation(organisationResource.getId())
@@ -1678,7 +1705,88 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         when(projectService.isProjectManager(loggedInUser.getId(), project.getId())).thenReturn(false);
         when(projectService.isProjectFinanceContact(loggedInUser.getId(), project.getId())).thenReturn(false);
+
         setupCompetitionPostAwardServiceExpectations(project, PostAwardService.CONNECT);
+    }
+
+    @Test
+    public void viewSpendProfileRejectedStatusAsMO() {
+        ReflectionTestUtils.setField(populator, "isMOSpendProfileUpdateEnabled", false);
+        SetupStatusViewModel viewModel = setSpendProfileProjectSetup(LEAD_ACTION_REQUIRED);
+        assertTrue(viewModel.isMonitoringOfficer());
+        assertStageStatus(viewModel, SPEND_PROFILE, LEAD_ACTION_FLAG);
+    }
+
+    @Test
+    public void viewImprovedSpendProfileRejectedStatusAsMO() {
+        ReflectionTestUtils.setField(populator, "isMOSpendProfileUpdateEnabled", true);
+        SetupStatusViewModel viewModel = setSpendProfileProjectSetup(LEAD_ACTION_REQUIRED);
+        assertTrue(viewModel.isMonitoringOfficer());
+        assertStageStatus(viewModel, SPEND_PROFILE, INCOMPLETE);
+    }
+
+    @Test
+    public void viewImprovedSpendProfileApprovedStatusAsMO() {
+        ReflectionTestUtils.setField(populator, "isMOSpendProfileUpdateEnabled", true);
+        SetupStatusViewModel viewModel = setSpendProfileProjectSetup(COMPLETE);
+        assertTrue(viewModel.isMonitoringOfficer());
+        assertStageStatus(viewModel, SPEND_PROFILE, TICK);
+    }
+
+    @Test
+    public void viewImprovedSpendProfileAwaitingReviewStatusAsMO() {
+        ReflectionTestUtils.setField(populator, "isMOSpendProfileUpdateEnabled", true);
+        SetupStatusViewModel viewModel = setSpendProfileProjectSetup(PENDING);
+        assertTrue(viewModel.isMonitoringOfficer());
+        assertStageStatus(viewModel, SPEND_PROFILE, MO_ACTION_REQUIRED);
+    }
+
+    @Test
+    public void viewImprovedSpendProfileNotYetSubmittedStatusAsMO() {
+        ReflectionTestUtils.setField(populator, "isMOSpendProfileUpdateEnabled", true);
+        SetupStatusViewModel viewModel = setSpendProfileProjectSetup(NOT_STARTED);
+        assertTrue(viewModel.isMonitoringOfficer());
+        assertStageStatus(viewModel, SPEND_PROFILE, INCOMPLETE);
+    }
+
+    private SetupStatusViewModel setSpendProfileProjectSetup(ProjectActivityStates projectActivityState) {
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
+                        .withOrganisationId(organisationResource.getId())
+                        .withProjectDetailsStatus(COMPLETE)
+                        .withFinanceContactStatus(NOT_STARTED)
+                        .withSpendProfileStatus(projectActivityState)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
+                        .withIsLeadPartner(true)
+                        .build())
+                .withPartnerStatuses(newProjectPartnerStatusResource()
+                        .withFinanceContactStatus(NOT_STARTED)
+                        .build(1))
+                .withProjectState(LIVE)
+                .withProjectManagerAssigned(true)
+                .build();
+
+        project = newProjectResource()
+                .withProjectState(LIVE)
+                .withApplication(application)
+                .withCompetition(competition.getId())
+                .withMonitoringOfficerUser(monitoringOfficer.getId())
+                .withProjectUsers(singletonList(newProjectUserResource().withRole(ProjectParticipantRole.MONITORING_OFFICER).build().getId()))
+                .build();
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(monitoringOfficerService.isMonitoringOfficerOnProject(project.getId(), monitoringOfficer.getId())).thenReturn(restSuccess(true));
+        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competition));
+        when(projectRestService.getOrganisationByProjectAndUser(project.getId(), monitoringOfficer.getId())).thenReturn(restSuccess(newOrganisationResource().build()));
+        when(statusService.getProjectTeamStatus(eq(project.getId()), any(Optional.class))).thenReturn(teamStatus);
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(organisationResource);
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(thirdPartyConfig));
+        when(monitoringOfficerService.findMonitoringOfficerForProject(project.getId())).thenReturn(restSuccess(monitoringOfficer));
+        setupCompetitionPostAwardServiceExpectations(project, PostAwardService.CONNECT);
+
+        UserResource loggedInMO = newUserResource().withId(monitoringOfficer.getId()).withRoleGlobal(MONITORING_OFFICER).build();
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInMO);
+        return viewModel;
     }
 
     private void setupCompetitionPostAwardServiceExpectations(ProjectResource project, PostAwardService postAwardService) {

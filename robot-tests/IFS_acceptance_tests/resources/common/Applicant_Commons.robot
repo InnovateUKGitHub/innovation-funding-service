@@ -89,6 +89,22 @@ the user fills in the Prince's Trust Application details
     the user can mark the question as complete
     the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
 
+the user fills in third-party Application details
+    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user clicks the button/link                        jQuery = a:contains("Application details")
+    the user enters text to a text field                   css = [id="name"]  ${appTitle}
+    the user enters text to a text field                   id = startDate  ${tomorrowday}
+    the user enters text to a text field                   css = #application_details-startdate_month  ${month}
+    the user enters text to a text field                   css = #application_details-startdate_year  ${nextyear}
+    the user enters text to a text field                   css = [id="durationInMonths"]  24
+    the user selects the value from the drop-down menu     INNOVATE_UK_WEBSITE   id = competitionReferralSource
+    the user selects the radio button                      START_UP_ESTABLISHED_FOR_LESS_THAN_A_YEAR   company-age-less-than-one
+    the user selects the value from the drop-down menu     ENERGY   id = companyPrimaryFocus
+    the user clicks the button twice                       css = label[for="resubmission-no"]
+    the user should not see the element                    link = Choose your innovation area
+    the user can mark the question as complete
+    the user should see the element                        jQuery = li:contains("Application details") > .task-status-complete
+
 the user fills in the Application details with no submit
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user should see the element       jQuery = h1:contains("Application details")
@@ -171,8 +187,8 @@ the user has read only view once section is marked complete
 
 the user fills in Labour
     the user expands the section               Labour
-#   the user should see the element            css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input
-    the user enters text to a text field       id = working-days-per-year  230
+    the user should see the element            css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input
+    the user enters text to a text field       id = working-days-per-year   230
     the user should see the element            jQuery = input[id$="role"]:text[value = ""]:first
     the user enters text to a text field       jQuery = input[id$="role"]:text[value = ""]:first    anotherrole
     the user enters text to a text field       jQuery = input[id$="gross"][value = ""]:first    120000
@@ -646,8 +662,8 @@ the user accept the competition terms and conditions
 
 the user accept the procurement terms and conditions
     the user clicks the button/link    link = Award terms and conditions
-    the user clicks the button/link    link = View full terms and conditions
-    the user goes back to the previous page
+    the user clicks the button/link    link = View full terms and conditions (opens in a new window)
+    the user closes the last opened tab
     the user selects the checkbox      agreed
     the user clicks the button/link    jQuery = button:contains("Agree and continue")
     the user should see the element    jQuery = .form-footer:contains("Terms and conditions accepted")

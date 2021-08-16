@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
+import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -33,7 +34,6 @@ import static org.innovateuk.ifs.commons.rest.RestFailure.error;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.TERMS_AND_CONDITIONS;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 
 @Controller
@@ -44,6 +44,7 @@ public class CompetitionSetupTermsAndConditionsController {
     public static final String COMPETITION_ID_KEY = "competitionId";
     public static final String COMPETITION_SETUP_FORM_KEY = "competitionSetupForm";
     private static final String MODEL = "model";
+    private static final String PROJECT_COST_GUIDANCE_HTTP = "http://";
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -62,6 +63,9 @@ public class CompetitionSetupTermsAndConditionsController {
 
     @Autowired
     private CompetitionSetupService competitionSetupService;
+
+    @Autowired
+    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
 
     @Value("${ifs.subsidy.control.northern.ireland.enabled:false}")
     private boolean subsidyControlNorthernIrelandEnabled;
@@ -88,8 +92,8 @@ public class CompetitionSetupTermsAndConditionsController {
 
     @GetMapping("/{competitionId}/section/state-aid-terms-and-conditions")
     public String editStateAidTermsAndConditions(@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                                       Model model,
-                                                       UserResource loggedInUser) {
+                                                 Model model,
+                                                 UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
@@ -125,26 +129,49 @@ public class CompetitionSetupTermsAndConditionsController {
             return "competition/setup";
         }
 
-        if (isProcurement(termsAndConditionsForm.getTermsAndConditionsId())) {
-            if (competition.getCompetitionTerms() == null) {
-                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "termsAndConditionsDoc", "Upload a terms and conditions document."));
+        boolean isProcurementThirdParty = isProcurementThirdParty(termsAndConditionsForm.getTermsAndConditionsId());
+        boolean isProcurement = isProcurement(termsAndConditionsForm.getTermsAndConditionsId());
+        boolean isCompDataDeleted = false;
+
+        if (isProcurementThirdParty) {
+            termsAndConditionsFormPopulator.populateThirdPartyConfigData(termsAndConditionsForm, competition);
+            validateThirdPartyConfigFields(competition, bindingResult);
+            if (validationHandler.hasErrors()) {
+                model.addAttribute(MODEL, termsAndConditionsModelPopulator.populateModel(competition, loggedInUser, false));
+                return "competition/setup";
             }
-        } else {
+            isCompDataDeleted = deleteDataInTermsSetupswitch(isProcurementThirdParty, isProcurement, competition, bindingResult);
+        }
+
+        if (isProcurement) {
+            isCompDataDeleted = validateUploadFragment(isProcurementThirdParty, isProcurement, competition, bindingResult);
+        }
+
+        if (validationHandler.hasErrors()) {
+            model.addAttribute(MODEL, termsAndConditionsModelPopulator.populateModel(isCompDataDeleted ? competitionRestService.getCompetitionById(competition.getId()).getSuccess() : competition, loggedInUser, false));
+            return "competition/setup";
+        }
+
+        if ( !(isProcurement || isProcurementThirdParty)) {
             competitionSetupRestService.deleteCompetitionTerms(competitionId);
         }
 
         Supplier<ServiceResult<Void>> saveAction = () -> nonStateAidSaveAction(competition, termsAndConditionsForm);
         Supplier<String> postSaveRedirect = () -> postSaveRedirectForSingleTermsAndConditions(competition);
-        return termsAndConditionsSection(validationHandler, competition, loggedInUser, model, saveAction, postSaveRedirect, false);
+
+        if (isProcurementThirdParty(termsAndConditionsForm.getTermsAndConditionsId())) {
+            saveThirdPartyTermsAndConditionsConfigData(isCompDataDeleted ? competitionRestService.getCompetitionById(competition.getId()).getSuccess() : competition);
+        }
+        return termsAndConditionsSection(validationHandler, isCompDataDeleted ? competitionRestService.getCompetitionById(competition.getId()).getSuccess() : competition, loggedInUser, model, saveAction, postSaveRedirect, false);
     }
 
     @PostMapping("/{competitionId}/section/state-aid-terms-and-conditions")
     public String submitStateAidTermsAndConditionsSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm termsAndConditionsForm,
-                                                         @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
-                                                         ValidationHandler validationHandler,
-                                                         @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                                         UserResource loggedInUser,
-                                                         Model model) {
+                                                                 @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
+                                                                 ValidationHandler validationHandler,
+                                                                 @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                                 UserResource loggedInUser,
+                                                                 Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if (!shouldHaveSeparateTerms(competition)) {
@@ -156,7 +183,7 @@ public class CompetitionSetupTermsAndConditionsController {
         return termsAndConditionsSection(validationHandler, competition, loggedInUser, model, saveAction, postSaveRedirect, true);
     }
 
-    @PostMapping(path="/{competitionId}/section/terms-and-conditions", params = "uploadTermsAndConditionsDoc")
+    @PostMapping(path = "/{competitionId}/section/terms-and-conditions", params = "uploadTermsAndConditionsDoc")
     public String uploadTermsAndConditions(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm termsAndConditionsForm,
                                            @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                            ValidationHandler validationHandler,
@@ -170,30 +197,35 @@ public class CompetitionSetupTermsAndConditionsController {
         Supplier<String> postSaveRedirect = () -> postSaveRedirectForSingleTermsAndConditions(competition);
         Supplier<String> failure = () -> termsAndConditionsSection(validationHandler, competition, loggedInUser, model, saveAction, postSaveRedirect, false);
 
-        MultipartFile file = termsAndConditionsForm.getTermsAndConditionsDoc();
+        MultipartFile file = getTermsAndConditionsFile(termsAndConditionsForm);
+
+        boolean isProcurementThirdParty = isProcurementThirdParty(termsAndConditionsForm.getTermsAndConditionsId());
+        boolean isProcurement = isProcurement(termsAndConditionsForm.getTermsAndConditionsId());
+        boolean isCompDataDeleted = deleteDataInTermsSetupswitch(isProcurementThirdParty, isProcurement, competition, bindingResult);
+
         RestResult<FileEntryResource> uploadResult = competitionSetupRestService.uploadCompetitionTerms(competitionId, file.getContentType(), file.getSize(),
                 file.getOriginalFilename(), getMultipartFileBytes(file));
 
         termsAndConditionsForm.setMarkAsCompleteAction(false);
-        saveTermsAndConditions(competition, termsAndConditionsForm);
+        saveTermsAndConditions(isCompDataDeleted ? competitionRestService.getCompetitionById(competition.getId()).getSuccess(): competition , termsAndConditionsForm);
 
-        Supplier<String> success = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", + competition.getId());
-
-        return validationHandler.addAnyErrors(error(uploadResult.getErrors()), fileUploadField("termsAndConditionsDoc"), defaultConverters())
+        Supplier<String> success = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", +competition.getId());
+        return validationHandler.addAnyErrors(error(uploadResult.getErrors()), fileUploadField(getFileUploadedString(isCompDataDeleted ? competitionRestService.getCompetitionById(competition.getId()).getSuccess() :competition )), defaultConverters())
                 .failNowOrSucceedWith(failure, success);
     }
 
-    @PostMapping(path="/{competitionId}/section/terms-and-conditions", params = "deleteTermsAndConditionsDoc")
+
+    @PostMapping(path = "/{competitionId}/section/terms-and-conditions", params = "deleteTermsAndConditionsDoc")
     public String deleteTermsAndConditions(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm termsAndConditionsForm,
                                            @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                            ValidationHandler validationHandler,
                                            @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                            Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        Supplier<String> failureAndSuccessView = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", + competition.getId());
+        Supplier<String> failureAndSuccessView = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", +competition.getId());
 
         RestResult<Void> deleteResult = competitionSetupRestService.deleteCompetitionTerms(competitionId);
-        return validationHandler.addAnyErrors(error(deleteResult.getErrors()), fileUploadField("termsAndConditionsDoc"), defaultConverters())
+        return validationHandler.addAnyErrors(error(deleteResult.getErrors()), fileUploadField(getFileUploadedString(competition)), defaultConverters())
                 .failNowOrSucceedWith(failureAndSuccessView, failureAndSuccessView);
     }
 
@@ -283,4 +315,91 @@ public class CompetitionSetupTermsAndConditionsController {
         return format("redirect:/competition/setup/%d/section/%s", competition.getId(), TERMS_AND_CONDITIONS.getPostMarkCompletePath());
     }
 
+    private boolean isProcurementThirdParty(long termsAndConditionsId) {
+        return termsAndConditionsRestService.getById(termsAndConditionsId).getSuccess().isProcurementThirdParty();
+    }
+
+    private ServiceResult<Void> saveThirdPartyTermsAndConditionsConfigData(CompetitionResource competition) {
+        if (competition.getCompetitionThirdPartyConfigResource().getId() == null) {
+            competitionThirdPartyConfigRestService.create(competition.getCompetitionThirdPartyConfigResource());
+        } else {
+            competitionThirdPartyConfigRestService.update(competition.getId(), competition.getCompetitionThirdPartyConfigResource());
+        }
+
+        return serviceSuccess();
+    }
+
+    private void validateThirdPartyConfigFields(CompetitionResource competition, BindingResult bindingResult) {
+        if (competition.getCompetitionThirdPartyConfigResource() == null) {
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsLabel", "Please enter a label to replace terms and conditions."));
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsText", "Please enter a description text for terms and conditions page."));
+        } else {
+            if (competition.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel().isEmpty()) {
+                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsLabel", "Please enter a label to replace terms and conditions."));
+            }
+            if (competition.getCompetitionThirdPartyConfigResource().getTermsAndConditionsGuidance().isEmpty()) {
+                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "thirdPartyTermsAndConditionsText", "Please enter a description text for terms and conditions page."));
+            }
+        }
+        validateProjectCostGuidanceLink(competition, bindingResult);
+    }
+
+    private boolean validateUploadFragment(boolean isProcurementThirdParty, boolean isProcurement, CompetitionResource competition, BindingResult bindingResult) {
+        boolean isCompDataDeleted = deleteDataInTermsSetupswitch(isProcurementThirdParty, isProcurement, competition, bindingResult);
+        competition = isCompDataDeleted ? competitionRestService.getCompetitionById(competition.getId()).getSuccess() : competition;
+        if (competition.getCompetitionTerms() == null) {
+            if (isProcurement) {
+                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "termsAndConditionsDoc", "Upload a terms and conditions document."));
+            }
+        }
+        return isCompDataDeleted;
+    }
+
+    private boolean deleteDataInTermsSetupswitch(boolean isProcurementThirdParty, boolean isProcurement, CompetitionResource competition, BindingResult bindingResult) {
+        boolean isCompDataDeleted = false;
+
+        if (isProcurement) {
+            if (competition.getCompetitionThirdPartyConfigResource() != null) {
+                competitionSetupRestService.deleteCompetitionThirdPartyConfigData(competition.getId());
+                isCompDataDeleted = true;
+            }
+            if (competition.getCompetitionTerms() != null && competition.getTermsAndConditions() != null && competition.getTermsAndConditions().isProcurementThirdParty()) {
+                competitionSetupRestService.deleteCompetitionTerms(competition.getId());
+                isCompDataDeleted = true;
+            }
+        }
+
+        if (isProcurementThirdParty && !bindingResult.hasErrors()) {
+            if (competition.getTermsAndConditions() != null && competition.getTermsAndConditions().isProcurement()) {
+                competitionSetupRestService.deleteCompetitionTerms(competition.getId());
+                saveThirdPartyTermsAndConditionsConfigData(competition);
+                isCompDataDeleted = true;
+            }
+        }
+        return  isCompDataDeleted;
+    }
+
+    private MultipartFile getTermsAndConditionsFile(TermsAndConditionsForm termsAndConditionsForm) {
+        MultipartFile file = null;
+        if (isProcurement(termsAndConditionsForm.getTermsAndConditionsId())) {
+            file = termsAndConditionsForm.getTermsAndConditionsDoc();
+        }
+        if (isProcurementThirdParty(termsAndConditionsForm.getTermsAndConditionsId())) {
+            file = termsAndConditionsForm.getThirdPartyTermsAndConditionsDoc();
+        }
+        return file;
+    }
+
+    private String getFileUploadedString(CompetitionResource competitionResource) {
+        return competitionResource.getTermsAndConditions().isProcurement() ? "termsAndConditionsDoc"
+                : "thirdPartyTermsAndConditionsDoc";
+    }
+
+    private void validateProjectCostGuidanceLink(CompetitionResource competition, BindingResult bindingResult) {
+        if (competition.getCompetitionThirdPartyConfigResource() == null ||
+                competition.getCompetitionThirdPartyConfigResource().getProjectCostGuidanceUrl().isEmpty() ||
+                competition.getCompetitionThirdPartyConfigResource().getProjectCostGuidanceUrl().equals(PROJECT_COST_GUIDANCE_HTTP)) {
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "projectCostGuidanceLink", "Please enter a project costs guidance link."));
+        }
+    }
 }
