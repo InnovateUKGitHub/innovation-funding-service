@@ -1055,7 +1055,8 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 false,
                 false,
                 monitoringOfficer,
-                true);
+                true,
+                loggedInUser);
     }
 
     private ProjectSpendProfileViewModel buildExpectedProjectSpendProfileViewModel(Long organisationId, ProjectResource projectResource,

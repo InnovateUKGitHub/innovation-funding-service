@@ -379,7 +379,8 @@ public class ProjectSpendProfileController {
                 isApproved(teamStatus),
                 isRejected(teamStatus),
                 isMonitoringOfficer,
-                moSpendProfileJourneyUpdateEnabled);
+                moSpendProfileJourneyUpdateEnabled,
+                loggedInUser);
     }
 
     private boolean isApproved(final Long projectId) {
