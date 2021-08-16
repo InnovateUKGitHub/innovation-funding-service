@@ -29,10 +29,6 @@ spec:
               mountPath: /var/lib/mysql
             - name: mysql-initdb
               mountPath: /docker-entrypoint-initdb.d
-            - name: mysql-initdb
-              mountPath: /etc/mysql/my.cnf
-              subPath: my.cnf
-          resources:
             requests:
               memory: 300M
             limits:
