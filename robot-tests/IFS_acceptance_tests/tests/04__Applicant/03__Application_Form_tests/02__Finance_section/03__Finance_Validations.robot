@@ -252,12 +252,10 @@ Funding level server side
 
 *** Keywords ***
 Custom Suite Setup
-    Connect to database  @{database}
-    Set predefined date variables
-    the user logs-in in new browser       &{lead_applicant_credentials}
-    log in and create new application if there is not one already with complete application details  ${OPEN_COMPETITION_APPLICATION_5_NAME}  ${tomorrowday}  ${month}  ${nextyear}
-    the user selects Research category    Feasibility studies
-    the user fills in the organisation information  ${OPEN_COMPETITION_APPLICATION_5_NAME}  ${SMALL_ORGANISATION_SIZE}
+    the user logs-in in new browser       	           malcom.jones@load.example.com  ${short_password}
+    the user clicks the button/link                    link = New algorithms to improve machine efficiency
+    the user selects Research category                 Feasibility studies
+    the user fills in the organisation information     New algorithms to improve machine efficiency  ${SMALL_ORGANISATION_SIZE}
 
 the user enters invalid inputs in the other funding fields
     [Arguments]    ${SOURCE}    ${DATE}
@@ -278,5 +276,4 @@ the user should see validations on your funding page
     the user should see a field and summary error   ${empty_field_warning_message}
 
 Custom suite teardown
-    Mark application details as incomplete and the user closes the browser  ${OPEN_COMPETITION_APPLICATION_5_NAME}
-    Disconnect from database
+    the user closes the browser

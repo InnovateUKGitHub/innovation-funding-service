@@ -62,9 +62,8 @@ Admin can change email
 User cannot sign in with old email
     [Documentation]  IFS-6380
     [Setup]  Logout as user
-    Given the guest user inserts user email and password     ${adminChangeEmailOld}  ${short_password}
-    When The guest user clicks the log-in button
-    Then the user should see the element                     jQuery = .govuk-error-summary:contains("${unsuccessful_login_message}")
+    Given login to application               ${adminChangeEmailOld}  ${short_password}
+    Then the user should see the element     jQuery = .govuk-error-summary:contains("${unsuccessful_login_message}")
 
 User can sign in with new email
     [Documentation]  IFS-6380

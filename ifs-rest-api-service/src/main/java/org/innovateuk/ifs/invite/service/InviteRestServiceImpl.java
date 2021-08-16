@@ -18,7 +18,6 @@ import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.GET_USER
 
 @Service
 public class InviteRestServiceImpl extends BaseRestService implements InviteRestService {
-
     private String inviteRestUrl = "/invite";
 
     @Override
@@ -81,7 +80,6 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
         String url = inviteRestUrl + String.format("/accept-invite/%s/%s/%s", inviteHash, userId, organisationId);
         return putWithRestResultAnonymous(url, Void.class);
     }
-
     @Override
     public RestResult<Void> removeApplicationInvite(Long inviteId) {
         String url = inviteRestUrl + String.format("/remove-invite/%s", inviteId);

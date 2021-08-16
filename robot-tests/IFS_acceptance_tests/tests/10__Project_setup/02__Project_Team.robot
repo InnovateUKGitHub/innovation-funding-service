@@ -459,6 +459,7 @@ Non lead partners complete the Project team section
     the user clicks the button/link           link = Back to project setup
     the user should see the element           jQuery = .progress-list li:nth-child(2):contains("Completed")
     log in as a different user                &{collaborator1_credentials}
+    the user clicks the application tile if displayed
     the user navigates to the Project team page from the dashboard
     the user selects their finance contact    financeContact2
     the user clicks the button/link           link = Back to project setup

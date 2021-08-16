@@ -10,6 +10,7 @@ ${yourFundingSubTitle}      Are you requesting funding?
 the user should see all the Your-Finances Sections
     the user should see the element  link = Your project costs
     the user should see the element  link = Your organisation
+    the user should see the element  link = Your project location
     the user should see the element  jQuery = h3:contains("Your funding")
     the user should see the element  jQuery = h2:contains("Finance summary")
 
@@ -75,6 +76,34 @@ the user fills in the Application details
     the user should not see the element   link = Choose your innovation area
     the user can mark the question as complete
     the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
+
+the user fills in the Prince's Trust Application details
+    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user should see the element       jQuery = h1:contains("Application details")
+    the user enters text to a text field  id = name  ${appTitle}
+    the user enters text to a text field  id = startDate  ${tomorrowday}
+    the user enters text to a text field  css = #application_details-startdate_month  ${month}
+    the user enters text to a text field  css = #application_details-startdate_year  ${nextyear}
+    the user enters text to a text field  css = [id="durationInMonths"]  24
+    the user should not see the element   link = Choose your innovation area
+    the user can mark the question as complete
+    the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
+
+the user fills in third-party Application details
+    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user clicks the button/link                        jQuery = a:contains("Application details")
+    the user enters text to a text field                   css = [id="name"]  ${appTitle}
+    the user enters text to a text field                   id = startDate  ${tomorrowday}
+    the user enters text to a text field                   css = #application_details-startdate_month  ${month}
+    the user enters text to a text field                   css = #application_details-startdate_year  ${nextyear}
+    the user enters text to a text field                   css = [id="durationInMonths"]  24
+    the user selects the value from the drop-down menu     INNOVATE_UK_WEBSITE   id = competitionReferralSource
+    the user selects the radio button                      START_UP_ESTABLISHED_FOR_LESS_THAN_A_YEAR   company-age-less-than-one
+    the user selects the value from the drop-down menu     ENERGY   id = companyPrimaryFocus
+    the user clicks the button twice                       css = label[for="resubmission-no"]
+    the user should not see the element                    link = Choose your innovation area
+    the user can mark the question as complete
+    the user should see the element                        jQuery = li:contains("Application details") > .task-status-complete
 
 the user fills in the Application details with no submit
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
@@ -209,10 +238,13 @@ the user chooses 20% overheads option
     # overheads option : 20% Labour
     the user clicks the button/link    jQuery = button:contains("Overhead costs")
     the user clicks the button/link    css = [data-target="overhead-default-percentage"] label
+    wait for autosave
     the user clicks the button/link    jQuery = button:contains("Overhead costs")
 
 the user fills in Material
     the user clicks the button/link       jQuery = button:contains("Materials")
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    page should contain element   jQuery = button:contains("Add another materials cost")
+    Run Keyword If    '${status}' == 'FAIL'   the user clicks the button/link     id = accordion-finances-heading-3
     the user should see the element       css = table[id=material-costs-table] tbody tr:nth-of-type(1) td:nth-of-type(2) input
     the user enters text to a text field  css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     the user enters text to a text field  css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
@@ -273,7 +305,7 @@ the academic fills in the project costs
     The user enters text to a text field  css = [name$="exceptionsStaff"]  123
     The user enters text to a text field  css = [name$="exceptionsOtherCosts"]  7890
     The user enters text to a text field  css = input[name$="tsbReference"]  L33t
-    the user should see the element       jQuery = [data-mirror^="#total"]:contains("£32,698")
+    The user should see the element       jQuery = [data-mirror^="#total"]:contains("£32,698")
     the user uploads the file             css = .inputfile  ${5mb_pdf}
     the user should see the element       jQuery = a:contains(${5mb_pdf} (opens in a new window))
     the user clicks the button/link       css = #mark-all-as-complete[type="submit"]
@@ -389,7 +421,7 @@ the user is able to confirm the invite
     [Arguments]  ${email}  ${password}
     the user clicks the button/link                 jQuery = .govuk-button:contains("Continue")
     The guest user inserts user email and password  ${email}  ${password}
-    The guest user clicks the log-in button
+    the user clicks the button/link                 jQuery = button:contains("Sign in")
     ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    the user should see the element   jQuery = h1:contains("Confirm your organisation")
     Run Keyword If    '${status}' == 'PASS'   the user clicks the button/link   jQuery = .govuk-button:contains("Confirm and accept invitation")
     Run Keyword If    '${status}' == 'FAIL'  Run keywords    the user should see the element   jQuery = h1:contains("Your organisation")
@@ -429,6 +461,8 @@ the applicant edits the "economic benefit" question
 logged in user applies to competition
     [Arguments]  ${competition}  ${applicationType}
     the user select the competition and starts application    ${competition}
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  jQuery = label:contains("Empire Ltd")
+    Run Keyword if  '${status}' == 'PASS'    the user clicks the button twice   jQuery = label:contains("Empire Ltd")
     the user clicks the button/link                           jQuery = button:contains("Save and continue")
 
 the user select the competition and starts application
@@ -628,8 +662,8 @@ the user accept the competition terms and conditions
 
 the user accept the procurement terms and conditions
     the user clicks the button/link    link = Award terms and conditions
-    the user clicks the button/link    link = View full terms and conditions
-    the user goes back to the previous page
+    the user clicks the button/link    link = View full terms and conditions (opens in a new window)
+    the user closes the last opened tab
     the user selects the checkbox      agreed
     the user clicks the button/link    jQuery = button:contains("Agree and continue")
     the user should see the element    jQuery = .form-footer:contains("Terms and conditions accepted")
@@ -723,10 +757,10 @@ the user can submit the application
 
 the lead invites already registered user
     [Arguments]   ${partner_email}  ${competition_title}
-    the user fills in the inviting steps                 ${partner_email}
+    the user fills in the inviting steps            ${partner_email}
     Logout as user
-    the user reads his email and clicks the link         ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
-    the user clicks the button/link                      link = Continue
+    the user reads his email and clicks the link    ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
+    the user clicks the button/link                 link = Continue
 
 partner applicant completes the project finances
     [Arguments]   ${application_title}  ${is_KTP}  ${collaboratorEmail}  ${collaboratorPassword}
@@ -824,6 +858,10 @@ the user clicks the assessment tile if displayed
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element  id = dashboard-link-ASSESSOR
     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  id = dashboard-link-ASSESSOR
 
+the user clicks the delivery partner tile if displayed
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element   id = dashboard-link-STAKEHOLDER
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link   id = dashboard-link-STAKEHOLDER
+
 the user selected organisation if available
     [Arguments]   ${organisationID}   ${pageText}
     ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots    page should contain     ${pageText}
@@ -873,7 +911,7 @@ applicant views readonly payment milestones subsections
 
 the user completes the application research category
     [Arguments]   ${res_category}
-    the user clicks the button/link                link = Research category
+    the user clicks the button/link                jQuery = a:contains("Research category")
     the user clicks the button twice               jQuery = label:contains("${res_category}")
     the user can mark the question as complete
     the user should see the element                jQuery = li:contains("Research category") > .task-status-complete

@@ -10,7 +10,7 @@ public class FinanceChecksProjectCostsViewModel extends YourProjectCostsViewMode
     private final boolean canEditProjectCosts;
 
     public FinanceChecksProjectCostsViewModel(long applicationId, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, String competitionName, boolean ktpCompetition, boolean canEditProjectCosts) {
-        super(false, false, false, ktpCompetition, financeRowTypes, overheadAlwaysTwenty, competitionName, applicationId);
+        super(false, false, false, false, ktpCompetition, financeRowTypes, overheadAlwaysTwenty, competitionName, applicationId);
         this.canEditProjectCosts = canEditProjectCosts;
     }
 

@@ -218,29 +218,31 @@ Custom Suite Setup
     Connect to database  @{database}
 
 The user is able to see that the application is now in project setup
-    the user clicks the button/link   jQuery = a:contains("Project setup")
-    the user should see the element   link = H2020 Grant Transfer
+    the user clicks the button/link     jQuery = a:contains("Project setup")
+    the user should see the element     link = H2020 Grant Transfer
 
 The internal user is able to progress an application to project set up
-    the user clicks the button/link       link = H2020 Grant Transfer
-    the user should see the element       jQuery = h1:contains("Open")
-    the user clicks the button/link       link = Input and review funding decision
-    the user selects the checkbox         app-row-1
-    the user clicks the button/link       jQuery = button:contains("Successful")
-    the user clicks the button/link       link = Competition
-    the user clicks the button/link       jQuery = a:contains("Manage funding notifications")
-    ${id} =  get application id by name   Project name
+    the user clicks the button/link                             link = H2020 Grant Transfer
+    the user should see the element                             jQuery = h1:contains("Open")
+    the user clicks the button/link                             link = Input and review funding decision
+    the user selects the checkbox                               app-row-1
+    the user clicks the button/link                             jQuery = button:contains("Successful")
+    the user clicks the button/link                             link = Competition
+    the user clicks the button/link                             jQuery = a:contains("Manage funding notifications")
+    ${id} =  get application id by name                         Project name
     Set suite variable  ${id}
-    the user selects the checkbox         app-row-${id}
-    the user clicks the button/link       jQuery = button:contains("Write and send email")
-    the user clicks the button/link       css = button[data-js-modal="send-to-all-applicants-modal"]
-    the user clicks the button/link       jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
-    the user refreshes until element appears on page         jQuery = td:contains("Project name") ~ td:contains("Sent")
-    the user clicks the button/link       link = Competition
-    the user clicks the button/link       link = Manage funding notifications
+    the user selects the checkbox                               app-row-${id}
+    the user clicks the button/link                             jQuery = button:contains("Write and send email")
+    the user clicks the button/link                             css = button[data-js-modal="send-to-all-applicants-modal"]
+    the user clicks the button/link                             jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
+    #The sleep is necessary as the email is not delivering even after specified time
+    sleep  120s
+    the user refreshes until h2020 element appears on page      jQuery = td:contains("Project name") ~ td:contains("Sent")
+    the user clicks the button/link                             link = Competition
+    the user clicks the button/link                             link = Manage funding notifications
 
 The user starts an H2020 applcation
-   the user navigates to the page                  ${server}/competition/${competitionId}/overview
+   the user navigates to the page                   ${server}/competition/${competitionId}/overview
    the user clicks the button/link                  jQuery = a:contains("Start new application")
    check if there is an existing application in progress for this competition
    the user clicks the button/link                  jQuery=.govuk-button:contains("Save and continue")
@@ -413,8 +415,9 @@ The user is able to complete Application details section
     the user enters text to a text field                 id = endDateYear  ${nextyear}
     the user enters text to a text field                 id = grantAgreementNumber            123456
     the user enters text to a text field                 id = participantId                   123456789
-    input text                                           id = actionType    (CSA) Coordination and Support Actions
-    the user clicks the button/link                      jQuery = ul li:contains("(CSA) Coordination and Support Actions")
+#    Wait Until Keyword Succeeds Without Screenshots      20s    200ms   input text    id = actionType    (CSA) Coordination and Support Actions
+#    the user clicks the button/link                      jQuery = ul li:contains("(CSA) Coordination and Support Actions")
+    enter the type of action in the autocomplete field
     the user enters text to a text field                 id = fundingContribution             123456
     the user clicks the button/link                      jQuery = label:contains("No")
     the user clicks the button/link                      jQuery = label:contains("No")
@@ -554,3 +557,29 @@ the user is able to filter on status
     the user clicks the button/link                      jQuery = button:contains("Filter")
     the user should see the element                      jQuery = td:contains("${id}")
     the user clicks the button/link                      link = Dashboard
+
+the user refreshes until h2020 element appears on page
+    [Arguments]  ${selector}
+    Wait Until Keyword Succeeds Without Screenshots     120s   1s   reload and check if h2020 element appears    ${selector}
+
+reload and check if h2020 element appears
+    [Arguments]  ${selector}
+    the user reloads the page
+    Wait Until Page Contains Element Without Screenshots    ${selector}     30s
+
+enter the type of action in the autocomplete field
+    Wait Until Keyword Succeeds Without Screenshots      20s    200ms   input text    id = actionType    (CSA) Coordination and Support Actions
+    the user selects type of action in type ahead field
+
+the user selects type of action in type ahead field
+    :FOR    ${i}    IN RANGE  10
+    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots   click element    jQuery = ul li:contains("(CSA) Coordination and Support Actions")
+    \  Exit For Loop If  '${status}'=='PASS'
+    \  run keyword if  '${status}'=='FAIL'   the user tries to search the option again
+    \  ${i} =  Set Variable  ${i + 1}
+
+the user tries to search the option again
+   Wait Until Keyword Succeeds Without Screenshots      20s    200ms   input text    id = actionType    (CSA) Coordination and Support Actions
+   wait for autosave
+   click element                                        jQuery = ul li:contains("(CSA) Coordination and Support Actions")
+   wait for autosave

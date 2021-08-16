@@ -87,6 +87,7 @@ Support user is able to search pending external users
 Support user can see the finances as complete
     [Documentation]  IFS-9223
     Given logging in and error checking             jessica.doe@ludlow.co.uk   ${short_password}
+    And the user clicks the application tile if displayed
     And the user clicks the button/link             link = ${supportApplicationName}
     And the user clicks the button/link             link = Your project finances
     And the user marks the finances as complete     ${supportApplicationName}   labour costs   54,000   no

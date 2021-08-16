@@ -174,18 +174,16 @@ Initial Details - User can remove an innovation area
 
 Initial Details - drop down menu is populated with comp admin users
     [Documentation]    INFUND-6905, IFS-6775
-    [Tags]
-    [Setup]    the user clicks the button/link     jQuery = .govuk-button:contains("Edit")
-    When the user sees element in type ahead       executiveUserId  j  John Doe
-    And the user sees element in type ahead        executiveUserId  r  Robert Johnson
+    Given the user clicks the button/link    jQuery = .govuk-button:contains("Edit")
+    When the user clicks the button/link     id = executiveUserId
+    Then the user should see the element     jQuery = ul li:contains("John Doe")
 
 Initial details - Comp Type, funding rule and Date should not be editable
     [Documentation]    INFUND-2985, INFUND-3182, INFUND-4892,  IFS-8779
-    [Tags]
-    And the user should not see the element   id = competitionTypeId
-    And the user should not see the element   id = openingDateDay
-    And the user should not see the element   id = fundingRule
-    And the user clicks the button/link       jQuery = button:contains("Done")
+    Then the user should not see the element    id = competitionTypeId
+    And the user should not see the element     id = openingDateDay
+    And the user should not see the element     id = fundingRule
+    And the user clicks the button/link         jQuery = button:contains("Done")
 
 Initial details - should have a green check
     [Documentation]    INFUND-3002
@@ -746,14 +744,11 @@ Innovation leads can be added to a competition
     Given The user clicks the button/link     link = View and update competition details
     And The user clicks the button/link       link = Innovation leads
     And the user should see the element       jQuery = h1:contains("Manage innovation leads")
-    #And the user should see the element       jQuery=span.lead-count:contains("0")  # Lead count from key statistics
     When the user clicks the button/link      jQuery = td:contains(${peter_freeman}) button:contains("Add")
     Then the user should not see the element  jQuery = td:contains(${peter_freeman})
-    #And the user should not see the element   jQuery=td:contains("Ian Cooper")
     And the user should see the element       jQuery = span.lead-count:contains("1")
     When the user clicks the button/link      jQuery = a:contains("Added to competition")
     Then the user should see the element      jQuery = span.total-count:contains("1")
-    #And the user should not see the element   jQuery=td:contains("Ian Cooper")
     And the user clicks the button/link       jQuery = td:contains(${peter_freeman}) button:contains("Remove")
     And the user should see the element       jQuery = span.lead-count:contains("0")
     And the user should see the element       jQuery = span.total-count:contains("0")
@@ -763,12 +758,12 @@ Innovation leads can be added to a competition
 User deletes the competition
     [Documentation]  IFS-1084
     [Tags]  HappyPath
-    Given the comp admin creates competition
-    And The user clicks the button/link         link = No competition title defined
-    When the user clicks the button/link        link = Delete competition
-    And the user clicks the button/link         css = .delete-modal button[type="submit"]
-    And the user navigates to the page          ${CA_UpcomingComp}
-    Then The user should not see the element    link = No competition title defined
+    Given the user navigates to the page            ${CA_UpcomingComp}
+    And the user clicks the button/link             link = Create competition
+    And Get current url
+    When the user clicks the button/link            link = Delete competition
+    And the user clicks the button/link             css = .delete-modal button[type="submit"]
+    Then the user should see page not found error   ${deletedCompUrl}
 
 User deletes the competition on completing all competition details
     [Documentation]  IFS-8496
@@ -1041,3 +1036,13 @@ the comp admin creates competition with all sections details
     the user clicks the button/link                                                  link = Competition setup
     the user clicks the button/link                                                  link = Documents
     the user clicks the button/link                                                  id = doneButton
+
+Get current url
+    ${deletedCompUrl} =   get location
+    set suite variable  ${deletedCompUrl}
+
+the user should see page not found error
+    [Arguments]  ${compUrl}
+    go to                               ${compUrl}
+    the user should see the element     jQuery = h1:contains("Page not found")
+    the user should see the element     jQUery = span:contains("${compUrl}")

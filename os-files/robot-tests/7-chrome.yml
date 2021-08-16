@@ -31,10 +31,10 @@ items:
           resources:
             limits:
               cpu: 3000m
-              memory: 3000M
+              memory: 6000M
             requests:
               cpu: 400m
-              memory: 400M
+              memory: 800M
           env:
           - name: NODE_MAX_SESSION
             value: "20"

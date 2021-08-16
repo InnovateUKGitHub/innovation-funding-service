@@ -77,18 +77,17 @@ Application has application team details
 
 Comp admin can open the view mode of the application
     [Documentation]    INFUND-2300,INFUND-2304, INFUND-2435, INFUND-7503
-    [Setup]  The user logs-in in new browser                               &{lead_applicant_credentials}
-    When the user can see the option to upload a file on the page          ${APPLICATION_OVERVIEW_URL}
-    Then the user uploads the file                                         css = input.inputfile  ${5mb_pdf}
-    When log in as a different user                                        &{Comp_admin1_credentials}
-    And the user navigates to the page                                     ${applicationsForRTOComp}
-    And the user clicks the button/link                                    link = All applications
-    When the user clicks the button/link                                   link = ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
-    Then the user should be redirected to the correct page                 ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
-    And the user should see the element                                    link = Print application
-    And the user should see the element                                    jQuery = h1 span:contains("Climate science the history of Greenland's ice")
-    And the user should see the element                                    jQuery = h3:contains("Appendix") ~ a:contains("testing_5MB.pdf, 4 MB")
-    And open pdf link                                                      jQuery = a:contains(${5mb_pdf}, 4 MB)
+    [Setup]  The user logs-in in new browser                                &{lead_applicant_credentials}
+    Given the user can see the option to upload a file on the page          ${APPLICATION_OVERVIEW_URL}
+    When the user uploads the file                                          css = input.inputfile  ${5mb_pdf}
+    And log in as a different user                                          &{Comp_admin1_credentials}
+    And the user navigates to the page                                      ${applicationsForRTOComp}
+    And the user clicks the button/link                                     link = All applications
+    And the user clicks the button/link                                     link = ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
+    Then the user should see the element                                    link = Print application
+    And the user should see the element                                     jQuery = h1 span:contains("Climate science the history of Greenland's ice")
+    And the user should see the element                                     jQuery = h3:contains("Appendix") ~ a:contains("testing_5MB.pdf, 4 MB")
+    And open pdf link                                                       jQuery = a:contains(${5mb_pdf}, 4 MB)
 
 Comp admin can link to the comp page from application overview
     [Documentation]  IFS-6060
@@ -130,13 +129,13 @@ the user cannot see this file but gets a quarantined message
     the user should see the text in the page    ${quarantine_warning}
 
 the finance summary calculations should be correct
-    The user should see the element    jQuery = .finance-summary tr:contains("Empire") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}") ~ td:contains("${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}")
+    The user should see the element    jQuery = .finance-summary tr:contains("Empire") td:contains("61,887") + td:contains("${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("16,098") ~ td:contains("43,321")
     The user should see the element    jQuery = .finance-summary tr:contains("HIVE") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}") ~ td:contains("${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}")
     The user should see the element    jQuery = .finance-summary tr:contains("Ludlow") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}") ~ td:contains("${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}")
-    The user should see the element    jQuery = .finance-summary tr:contains("EGGS") td:contains("${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}") ~ td:contains("${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}")
+    The user should see the element    jQuery = .finance-summary tr:contains("EGGS") td:contains("${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}") + td:contains("100.00%") + td:contains("${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}") ~ td:contains("${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}")
 
 the finance Project cost breakdown calculations should be correct
-    The user should see the element    jQuery = .project-cost-breakdown tr:contains("Empire") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}")
+    The user should see the element    jQuery = .project-cost-breakdown tr:contains("Empire") td:contains("61,887")
     The user should see the element    jQuery = .project-cost-breakdown tr:contains("HIVE") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}")
     The user should see the element    jQuery = .project-cost-breakdown tr:contains("Ludlow") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}")
     The user should see the element    jQuery = .project-cost-breakdown tr:contains("EGGS") td:contains("${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}")
@@ -250,7 +249,7 @@ the user should should see lead and partners details
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Type")+td:contains("Business")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Steve Smith")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("${lead_applicant}")
-    the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("46439359578")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("+-0123456789")
     the user should see the element    jQuery = #accordion-questions-content-1-1 h2:contains("EGGS")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Type")+td:contains("Research")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Pete Tom")

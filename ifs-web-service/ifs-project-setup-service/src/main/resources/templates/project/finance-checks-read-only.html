@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head"
+              th:with="pageTitle=|Finance checks - ${model.projectName}|"/>
+</head>
+<body class="govuk-template__body project spend-profile">
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to project setup',linkUrl=@{/project/{id}(id=${model.projectId})}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Finance checks',subTitle=${model.projectName},size='govuk-heading-xl'"/>
+
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header table-header-width-one-third">Organisation</th>
+                <th scope="col" class="govuk-table__header table-header-width-one-third">View details</th>
+                <th scope="col" class="govuk-table__header table-header-width-one-third">Status</th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr th:each="row : ${model.projectOrganisationRows}" class="govuk-table__row">
+                    <td class="govuk-table__cell govuk-!-font-weight-bold">
+                        <th:block th:text="${row.organisationName}"></th:block>
+                        <th:block th:if="${row.lead}">(Lead)</th:block>
+                    </td>
+                    <td class="govuk-table__cell">
+                        <a class="govuk-link" th:if="${model.paymentMilestonesLink}"
+                           th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId}, organisationId=${row.organisationId})}">
+                            Payment milestones</a>
+                    </td>
+                    <td class="govuk-table__cell"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
+
+</body>
+</html>

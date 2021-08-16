@@ -18,7 +18,9 @@
         <th:block th:fragment="terms-and-conditions-content">
 
             <th:block th:unless="${hideProcurementLink}">
-                <p class="govuk-body"><a th:href="@{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.competitionId})}">View full terms and conditions</a></p>
+                <p class="govuk-body"><a
+                        th:href="@{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.competitionId})}"
+                        target="_blank">View full terms and conditions (opens in a new window)</a></p>
             </th:block>
             <h2 class="govuk-heading-m">A summary of the award terms and conditions</h2>
 

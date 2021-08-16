@@ -114,4 +114,9 @@ public class CompetitionSetupRestServiceImpl extends BaseRestService implements 
     public RestResult<Void> deleteCompetitionTerms(long competitionId) {
         return deleteWithRestResult(format("%s/competition-terms?competitionId=%d", competitionSetupRestURL, competitionId));
     }
+
+    @Override
+    public RestResult<Void> deleteCompetitionThirdPartyConfigData(long competitionId) {
+        return deleteWithRestResult(format("%s/competition-third-party-config-data?competitionId=%d", competitionSetupRestURL, competitionId));
+    }
 }
