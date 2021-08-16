@@ -83,7 +83,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
         competition = newCompetition().withLeadTechnologist(innovationLeadUserOnProject1).build();
         Application application1 = newApplication().withCompetition(competition).build();
         ApplicationResource applicationResource1 = newApplicationResource().withId(application1.getId()).withCompetition(competition.getId()).build();
-        projectResource1 = newProjectResource().withApplication(applicationResource1).build();
+        projectResource1 = newProjectResource().withMonitoringOfficerUser(monitoringOfficerUserResourceOnProject1.getId()).withApplication(applicationResource1).build();
         ProjectProcess projectProcess = newProjectProcess().withActivityState(ProjectState.SETUP).build();
 
         Project project = ProjectBuilder.newProject()
@@ -143,6 +143,14 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
 
         assertTrue(rules.assignedStakeholderCanViewSPStatus(projectResource1, stakeholderUserResourceOnCompetition));
         assertFalse(rules.assignedStakeholderCanViewSPStatus(projectResource1, stakeholderUser()));
+    }
+
+    @Test
+    public void assignedMonitoringOfficerCanViewSpendProfileStatus() {
+        when(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(projectResource1.getId(), monitoringOfficerUserResourceOnProject1.getId())).thenReturn(true);
+
+        assertTrue(rules.assignedMonitoringOfficerCanViewSpendProfileStatus(projectResource1, monitoringOfficerUserResourceOnProject1));
+        assertFalse(rules.assignedMonitoringOfficerCanViewSpendProfileStatus(projectResource1, monitoringOfficerUser()));
     }
 
     @Test

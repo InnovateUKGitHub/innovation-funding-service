@@ -48,7 +48,7 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(value = "VIEW_SPEND_PROFILE_STATUS", description = "Monitoring officers can get the approved status of a Spend Profile for any Project")
-    public boolean monitoringOfficerCanViewCompetitionStatus(ProjectResource project, UserResource user){
+    public boolean assignedMonitoringOfficerCanViewSpendProfileStatus(ProjectResource project, UserResource user){
         return isMonitoringOfficer(project.getId(), user.getId());
     }
 
