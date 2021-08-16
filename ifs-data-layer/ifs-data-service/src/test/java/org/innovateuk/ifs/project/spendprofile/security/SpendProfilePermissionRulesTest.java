@@ -29,6 +29,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
@@ -43,6 +44,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Authority.*;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 import static org.junit.Assert.assertTrue;
@@ -365,6 +367,17 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
 
         setupUserNotAsPartner(project, user, org);
         assertFalse(rules.partnersCanMarkSpendProfileAsComplete(projectOrganisationCompositeId, user));
+    }
+
+    @Test
+    public void ifsAdminCanViewandApproveOrRejectSpendProfile() {
+        allGlobalRoleUsers.forEach(user -> {
+            if (hasIFSAdminAuthority(user)  && !user.hasAnyAuthority(asList(AUDITOR, COMP_ADMIN, PROJECT_FINANCE))) {
+                assertTrue(rules.canSpendProfileBeApprovedOrRejected(newProjectResource().build(), user));
+            } else {
+                assertFalse(rules.canSpendProfileBeApprovedOrRejected(newProjectResource().build(), user));
+            }
+        });
     }
 
     @Override
