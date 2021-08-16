@@ -19,6 +19,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.resource.ContentVersionStrategy;
 import org.springframework.web.servlet.resource.VersionResourceResolver;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 import java.util.List;
 import java.util.Locale;
@@ -86,5 +88,13 @@ public class IFSWebConfiguration implements WebMvcConfigurer {
         SessionLocaleResolver slr = new SessionLocaleResolver();
         slr.setDefaultLocale(Locale.UK);
         return slr;
+    }
+
+    @Bean
+    public ThymeleafViewResolver thymeleafViewResolver(SpringTemplateEngine springTemplateEngine) {
+        ThymeleafViewResolver resolver = new ThymeleafViewResolver();
+        resolver.setTemplateEngine(springTemplateEngine);
+        resolver.setCharacterEncoding("UTF-8");
+        return resolver;
     }
 }
