@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.spendprofile.controller;
+package org.innovateuk.ifs.spendprofile;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

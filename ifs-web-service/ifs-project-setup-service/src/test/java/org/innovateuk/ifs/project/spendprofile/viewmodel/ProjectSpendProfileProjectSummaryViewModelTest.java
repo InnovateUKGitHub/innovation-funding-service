@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.spendprofile.viewmodel;
 
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.project.spendprofile.controller.OrganisationReviewDetails;
+import org.innovateuk.ifs.spendprofile.OrganisationReviewDetails;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
