@@ -607,7 +607,7 @@ the user should see total project costs and banner info
 the user should see validation messages
     the user should see a field and summary error     Number of months completed must be selected.
     the user should see a field and summary error     You must state the milestone task or activity.
-    the user should see a field and summary error     You must state the payment requested in pounds (£).
+    the user should see a field and summary error     You must state the payment requested in pounds (GBP).
 
 generate spend profile
     the user clicks the button/link     link = Return to finance checks
