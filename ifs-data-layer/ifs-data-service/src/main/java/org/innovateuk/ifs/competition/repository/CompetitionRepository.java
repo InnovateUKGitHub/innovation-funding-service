@@ -23,10 +23,17 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "org.innovateuk.ifs.project.resource.ProjectState.ON_HOLD, " +
             "org.innovateuk.ifs.project.resource.ProjectState.HANDLED_OFFLINE)";
 
-    /* Filters competitions to those in live state */
-    String LIVE_QUERY_WHERE_CLAUSE = "WHERE CURRENT_TIMESTAMP >= " +
-            "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND " +
-            "NOT EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' AND m.competition.id = c.id) AND " +
+    String LIVE_QUERY_WHERE_CLAUSE =
+            "WHERE CURRENT_TIMESTAMP >= " +
+            "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) " +
+            "AND NOT EXISTS " +
+            "(SELECT m.date FROM Milestone m WHERE (m.type = 'FEEDBACK_RELEASED') AND m.competition.id = c.id) " +
+            "AND NOT EXISTS " +
+            "(SELECT m.date FROM Milestone m WHERE m.type = 'SUBMISSION_DATE' " +
+                    "AND c.completionStage = org.innovateuk.ifs.competition.resource.CompetitionCompletionStage.COMPETITION_CLOSE " +
+                    "AND m.date <= CURRENT_TIMESTAMP " +
+                    "AND m.competition.id = c.id) " +
+            "AND " +
             "c.setupComplete = TRUE AND c.nonIfs = FALSE";
 
 
@@ -71,9 +78,17 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     /* Filters by innovation lead or stakeholder and in live state */
     String INNOVATION_LEAD_STAKEHOLDER_LIVE_WHERE_CLAUSE = "WHERE cp.user.id = :userId " +
             "AND cp.role in ('INNOVATION_LEAD', 'STAKEHOLDER') " +
-            "AND CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = cp.competition.id) " +
-            "AND NOT EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' AND m.competition.id = cp.competition.id) " +
-            "AND cp.competition.setupComplete = TRUE AND cp.competition.nonIfs = FALSE";
+            "AND CURRENT_TIMESTAMP >= " +
+            "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = cp.competition.id) " +
+            "AND NOT EXISTS " +
+            "(SELECT m.date FROM Milestone m WHERE (m.type = 'FEEDBACK_RELEASED') AND m.competition.id = cp.competition.id) " +
+            "AND NOT EXISTS " +
+            "(SELECT m.date FROM Milestone m WHERE m.type = 'SUBMISSION_DATE' " +
+            "AND cp.competition.completionStage = org.innovateuk.ifs.competition.resource.CompetitionCompletionStage.COMPETITION_CLOSE " +
+            "AND m.date <= CURRENT_TIMESTAMP " +
+            "AND m.competition.id = cp.competition.id) " +
+            "AND " +
+            "cp.competition.setupComplete = TRUE AND cp.competition.nonIfs = FALSE";
 
     /* Innovation leads should not access competitions in states: In preparation and Ready to open */
     String SEARCH_QUERY_INNOVATION_LEAD_STAKEHOLDER = "SELECT cp.competition FROM CompetitionParticipant cp LEFT JOIN cp.competition.milestones m LEFT JOIN cp.competition.competitionType ct " +
