@@ -4,8 +4,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.spendprofile.service.SpendProfileRestService;
 import org.innovateuk.ifs.project.status.populator.SetupSectionStatus;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -18,6 +20,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -45,6 +48,9 @@ public class ProjectFilterPopulatorTest {
     @Mock
     private SetupSectionStatus setupSectionStatus;
 
+    @Mock
+    private SpendProfileRestService spendProfileRestService;
+
     private final List<ProjectResource> projectResourceList = new ArrayList<>();
 
     @Before
@@ -61,59 +67,63 @@ public class ProjectFilterPopulatorTest {
                 .withProjectDocument(singletonList(competitionDocument))
                 .build();
         ProjectResource projectResourceInSetup = newProjectResource()
-                .withId(88L)
+                .withId(85L)
                 .withCompetition(competition.getId())
                 .withCompetitionName("Competition name")
                 .withApplication(21L)
-                .withName("Project name")
+                .withName("Project 1")
                 .withMonitoringOfficerUser(user.getId())
                 .withProjectState(ProjectState.SETUP)
                 .withCollaborativeProject(false)
                 .withMonitoringOfficerUser(user.getId())
                 .withProjectDocuments(singletonList(newProjectDocumentResource()
-                        .withProject(88L)
+                        .withProject(85L)
                         .withCompetitionDocument(competitionDocument)
                         .withStatus(SUBMITTED)
                         .build()))
+                .withSpendProfileGenerated(false)
                 .build();
         ProjectResource projectResourceWithDocumentsComplete = newProjectResource()
-                .withId(89L)
+                .withId(86L)
                 .withCompetition(competition.getId())
                 .withCompetitionName("Competition name")
                 .withApplication(15L)
-                .withName("Project name")
+                .withName("Project 2")
                 .withMonitoringOfficerUser(user.getId())
                 .withProjectState(ProjectState.SETUP)
                 .withCollaborativeProject(false)
                 .withMonitoringOfficerUser(user.getId())
                 .withProjectDocuments(singletonList(newProjectDocumentResource()
-                        .withProject(88L)
+                        .withProject(86L)
                         .withCompetitionDocument(competitionDocument)
                         .withStatus(APPROVED)
                         .build()))
+                .withSpendProfileGenerated(true)
+                .withSpendProfileSubmittedDate(now())
                 .build();
         ProjectResource projectResourceWithDocumentsInComplete = newProjectResource()
                 .withId(87L)
                 .withCompetition(competition.getId())
                 .withCompetitionName("Competition name")
                 .withApplication(12L)
-                .withName("Project name")
+                .withName("Project 3")
                 .withMonitoringOfficerUser(user.getId())
                 .withProjectState(ProjectState.SETUP)
                 .withCollaborativeProject(false)
                 .withMonitoringOfficerUser(user.getId())
                 .withProjectDocuments(singletonList(newProjectDocumentResource()
-                        .withProject(88L)
+                        .withProject(87L)
                         .withCompetitionDocument(competitionDocument)
                         .withStatus(UNSET)
                         .build()))
+                .withSpendProfileGenerated(true)
                 .build();
         ProjectResource projectResourceWithDocumentsAwaitingReview = newProjectResource()
-                .withId(86L)
+                .withId(88L)
                 .withCompetition(competition.getId())
                 .withCompetitionName("Competition name")
                 .withApplication(8L)
-                .withName("Project name")
+                .withName("Project 4")
                 .withMonitoringOfficerUser(user.getId())
                 .withProjectState(ProjectState.SETUP)
                 .withCollaborativeProject(false)
@@ -123,22 +133,26 @@ public class ProjectFilterPopulatorTest {
                         .withCompetitionDocument(competitionDocument)
                         .withStatus(SUBMITTED)
                         .build()))
+                .withSpendProfileGenerated(true)
+                .withSpendProfileSubmittedDate(now())
                 .build();
         ProjectResource projectResourceInLive = newProjectResource()
-                .withId(53L)
+                .withId(89L)
                 .withCompetition(competition.getId())
                 .withCompetitionName("Competition name")
                 .withApplication(2L)
-                .withName("Project name")
+                .withName("Project 5")
                 .withMonitoringOfficerUser(user.getId())
                 .withCollaborativeProject(false)
                 .withProjectState(ProjectState.LIVE)
                 .withMonitoringOfficerUser(user.getId())
                 .withProjectDocuments(singletonList(newProjectDocumentResource()
-                        .withProject(88L)
+                        .withProject(89L)
                         .withCompetitionDocument(competitionDocument)
                         .withStatus(APPROVED)
                         .build()))
+                .withSpendProfileGenerated(true)
+                .withSpendProfileSubmittedDate(now())
                 .build();
         projectResourceList.add(projectResourceInSetup);
         projectResourceList.add(projectResourceInLive);
@@ -150,6 +164,7 @@ public class ProjectFilterPopulatorTest {
         when(competitionRestService.getCompetitionById(projectResourceList.get(1).getCompetition())).thenReturn(restSuccess(competition));
         when(competitionRestService.getCompetitionById(projectResourceList.get(2).getCompetition())).thenReturn(restSuccess(competition));
         when(competitionRestService.getCompetitionById(projectResourceList.get(3).getCompetition())).thenReturn(restSuccess(competition));
+        when(competitionRestService.getCompetitionById(projectResourceList.get(4).getCompetition())).thenReturn(restSuccess(competition));
 
         when(setupSectionStatus.documentsSectionStatus(false, projectResourceList.get(0), competition, true)).thenReturn(MO_ACTION_REQUIRED);
         when(setupSectionStatus.documentsSectionStatus(false, projectResourceList.get(3), competition, true)).thenReturn(MO_ACTION_REQUIRED);
@@ -162,6 +177,13 @@ public class ProjectFilterPopulatorTest {
         when(competitionRestService.getCompetitionForProject(projectResourceList.get(2).getId())).thenReturn(restSuccess(competition));
         when(competitionRestService.getCompetitionForProject(projectResourceList.get(3).getId())).thenReturn(restSuccess(competition));
         when(competitionRestService.getCompetitionForProject(projectResourceList.get(4).getId())).thenReturn(restSuccess(competition));
+
+        when(spendProfileRestService.getSpendProfileStatusByProjectId(projectResourceList.get(0).getId())).thenReturn(restSuccess(ApprovalType.EMPTY));
+        when(spendProfileRestService.getSpendProfileStatusByProjectId(projectResourceList.get(1).getId())).thenReturn(restSuccess(ApprovalType.APPROVED));
+        when(spendProfileRestService.getSpendProfileStatusByProjectId(projectResourceList.get(2).getId())).thenReturn(restSuccess(ApprovalType.APPROVED));
+        when(spendProfileRestService.getSpendProfileStatusByProjectId(projectResourceList.get(3).getId())).thenReturn(restSuccess(ApprovalType.UNSET));
+        when(spendProfileRestService.getSpendProfileStatusByProjectId(projectResourceList.get(4).getId())).thenReturn(restSuccess(ApprovalType.APPROVED));
+
     }
 
     @Test
@@ -197,5 +219,31 @@ public class ProjectFilterPopulatorTest {
     @Test
     public void hasDocumentSection() {
         assertTrue(populator.hasDocumentSection(projectResourceList.get(0)));
+        assertTrue(populator.hasDocumentSection(projectResourceList.get(1)));
+        assertTrue(populator.hasDocumentSection(projectResourceList.get(2)));
+        assertTrue(populator.hasDocumentSection(projectResourceList.get(3)));
+        assertTrue(populator.hasDocumentSection(projectResourceList.get(4)));
+
+    }
+
+    @Test
+    public void hasSpendProfileSection() {
+        assertTrue(populator.hasSpendProfileSection(projectResourceList.get(0)));
+        assertTrue(populator.hasSpendProfileSection(projectResourceList.get(1)));
+        assertTrue(populator.hasSpendProfileSection(projectResourceList.get(2)));
+        assertTrue(populator.hasSpendProfileSection(projectResourceList.get(3)));
+        assertTrue(populator.hasSpendProfileSection(projectResourceList.get(4)));
+    }
+
+    @Test
+    public void getSpendProfileSectionStatuses() {
+
+        List<ProjectResource> projectWithCompleteSpendProfile = populator.getProjectsWithSpendProfileComplete(projectResourceList);
+        List<ProjectResource> projectWithIncompleteSpendProfile = populator.getProjectsWithSpendProfileInComplete(projectResourceList);
+        List<ProjectResource> projectWithIncompleteAwaitingReviewSpendProfile = populator.getProjectsWithSpendProfileAwaitingReview(projectResourceList);
+
+        assertEquals(3, projectWithCompleteSpendProfile.size());
+        assertEquals(2, projectWithIncompleteSpendProfile.size());
+        assertEquals(0, projectWithIncompleteAwaitingReviewSpendProfile.size());
     }
 }
