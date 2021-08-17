@@ -170,6 +170,22 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     }
 
     @Test
+    public void approveOrRejectSpendProfileRemovedForPFandCA() {
+
+        List<Role> projectfinanceAndCompAdminRoles = getprojectfinanceAndCompAdminRoles();
+        projectfinanceAndCompAdminRoles.forEach(role -> {
+            setLoggedInUser(
+                    newUserResource().withRoleGlobal(role).build());
+            try {
+                classUnderTest.approveOrRejectSpendProfile(1L, ApprovalType.APPROVED);
+                Assert.fail("Should not have been able to create project from application without the global Comp Admin role");
+            } catch (AccessDeniedException e) {
+                // expected behaviour
+            }
+        });
+    }
+
+    @Test
     public void verifyGetSpendProfileStatusByProjectIdRules() {
         final Long projectId = 1L;
         ProjectResource projectResource = newProjectResource().withId(projectId).build();
@@ -231,6 +247,20 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
                         type != SUPER_ADMIN_USER &&
                         type != MONITORING_OFFICER &&
                         type != KNOWLEDGE_TRANSFER_ADVISER)
+                .collect(toList());
+    }
+
+    private List<Role> getprojectfinanceAndCompAdminRoles() {
+        return Arrays.stream(Role.values())
+                .filter(type -> type == PROJECT_FINANCE &&
+                        type == COMP_ADMIN &&
+                        type == AUDITOR)
+                .collect(toList());
+    }
+
+    private List<Role> getIfsAdmin() {
+        return Arrays.stream(Role.values())
+                .filter(type -> type == IFS_ADMINISTRATOR)
                 .collect(toList());
     }
 }

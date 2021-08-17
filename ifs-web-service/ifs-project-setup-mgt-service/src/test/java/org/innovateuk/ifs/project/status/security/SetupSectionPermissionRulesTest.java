@@ -174,4 +174,20 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
             }
         });
     }
+
+    @Test
+    public void onlyIFSAdminCanApproveSpendProfile() {
+
+        assertTrue(stream(Role.values()).filter(role -> asList(Role.IFS_ADMINISTRATOR).contains(role))
+                .map(this::doTestApproveDocumentsAccess)
+                .filter(Boolean.FALSE::equals)
+                .collect(Collectors.toList())
+                .isEmpty());
+
+        assertTrue(stream(Role.values()).filter(role -> !(asList(Role.COMP_ADMIN, Role.PROJECT_FINANCE, Role.IFS_ADMINISTRATOR, Role.SUPER_ADMIN_USER, Role.SYSTEM_MAINTAINER).contains(role)))
+                .map(this::doTestApproveDocumentsAccess)
+                .filter(Boolean.TRUE::equals)
+                .collect(Collectors.toList())
+                .isEmpty());
+    }
 }

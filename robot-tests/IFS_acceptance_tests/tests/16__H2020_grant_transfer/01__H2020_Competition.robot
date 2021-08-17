@@ -164,10 +164,13 @@ User is able to submit the spend profile
     Then the user should see the element     jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
 
 Internal user is able to approve Spend profile and generates the GOL
-    [Documentation]  IFS-5700
-    Given proj finance approves the spend profiles  ${HProjectID}
-    Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
-    And internal user generates the GOL             ${HProjectID}
+    [Documentation]  IFS-5700  IFS-9679
+    Log in as a different user                 &{ifs_admin_user_credentials}
+    And the user navigates to the page         ${server}/project-setup-management/project/${HProjectID}/spend-profile/approval
+    When the user selects the radio button     spendProfileApproved  true
+    And the user clicks the button/link        jQuery = button.govuk-button:contains("Submit")
+    Then the user should see the element       css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
+    And internal user generates the GOL        ${HProjectID}
 
 Applicant is able to upload the GOL
     [Documentation]  IFS-5700
