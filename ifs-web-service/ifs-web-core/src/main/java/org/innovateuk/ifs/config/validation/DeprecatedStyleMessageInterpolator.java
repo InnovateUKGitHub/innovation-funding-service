@@ -34,7 +34,7 @@ public class DeprecatedStyleMessageInterpolator extends ResourceBundleMessageInt
         String originalMessage = super.interpolate(message, context);
         String interpolatedMessage = originalMessage.replaceAll("''", "'");
 
-        return interpolatedMessage.replaceAll("&pound;", "£");
+        return interpolatedMessage.replaceAll("£", "&pound;");
     }
 
     @Override
@@ -42,7 +42,7 @@ public class DeprecatedStyleMessageInterpolator extends ResourceBundleMessageInt
         String originalMessage = super.interpolate(message, context, locale);
         String interpolatedMessage = originalMessage.replaceAll("''", "'");
 
-        return interpolatedMessage.replaceAll("&pound;", "£");
+        return interpolatedMessage.replaceAll("£", "&pound;");
     }
 
     @Override
