@@ -148,8 +148,8 @@ public class ProjectSpendProfileApprovalController {
 
     private Map<Long, OrganisationReviewDetails> getOrganisationReviewDetails(final Long projectId, List<OrganisationResource> partnerOrganisations, final UserResource loggedInUser) {
         return partnerOrganisations.stream().collect(Collectors.toMap(OrganisationResource::getId,
-                o -> { Optional<SpendProfileResource> spendProfileResource =spendProfileService.getSpendProfile(projectId, o.getId());
-                    return  new OrganisationReviewDetails(o.getId(),
+                o -> { Optional<SpendProfileResource> spendProfileResource = spendProfileService.getSpendProfile(projectId, o.getId());
+                    return new OrganisationReviewDetails(o.getId(),
                             o.getName(),
                             spendProfileResource.map(SpendProfileResource::isMarkedAsComplete).orElse(false),
                             false,

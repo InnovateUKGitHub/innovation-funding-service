@@ -25,6 +25,10 @@ public final class SecurityRuleUtil {
         return user.hasAuthority(Authority.PROJECT_FINANCE);
     }
 
+    public static boolean hasCompAdminAuthority(UserResource user) {
+        return user.hasAuthority(Authority.COMP_ADMIN);
+    }
+
     public static boolean isSystemMaintenanceUser(UserResource user) {
         return user.hasRole(SYSTEM_MAINTAINER);
     }
