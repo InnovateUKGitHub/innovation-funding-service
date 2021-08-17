@@ -111,7 +111,13 @@
 
                 <th:block th:if="${model.rejected}">
                     <div class="message-alert govuk-!-margin-bottom-9">
-                        <p class="govuk-body">You have rejected this spend profile. Please contact the project manager to explain your decision.</p>
+                        <th:block th:if="${model.loggedInUserIsMoOnProject()}">
+                            <p class="govuk-body">You have rejected this spend profile. Please contact the project manager to explain your decision.</p>
+                        </th:block>
+
+                        <th:block th:unless="${model.loggedInUserIsMoOnProject()}">
+                            <p class="govuk-body"><th:block th:text="${model.userWhoApprovedSpendProfile()}"></th:block> has rejected this spend profile. Please contact the project manager to explain the decision.</p>
+                        </th:block>
                     </div>
                 </th:block>
 
