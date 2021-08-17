@@ -31,18 +31,14 @@ public class DeprecatedStyleMessageInterpolator extends ResourceBundleMessageInt
 
     @Override
     public String interpolate(String message, Context context) {
-        String originalMessage = super.interpolate(message, context);
-        String interpolatedMessage = originalMessage.replaceAll("''", "'");
-
-        return interpolatedMessage.replaceAll("£", "&pound;");
+        String interpolatedMessage = super.interpolate(message, context);
+        return interpolatedMessage.replaceAll("''", "'");
     }
 
     @Override
     public String interpolate(String message, Context context, Locale locale) {
-        String originalMessage = super.interpolate(message, context, locale);
-        String interpolatedMessage = originalMessage.replaceAll("''", "'");
-
-        return interpolatedMessage.replaceAll("£", "&pound;");
+        String interpolatedMessage = super.interpolate(message, context, locale);
+        return interpolatedMessage.replaceAll("''", "'");
     }
 
     @Override
