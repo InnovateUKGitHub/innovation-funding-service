@@ -34,6 +34,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -193,6 +194,18 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
         assertTrue(rules.auditorUsersCanDownloadGrantOfferLetter(project, user));
     }
+
+    @Test
+    public void monitoringOfficersCanDownloadGrantOfferLetterDocuments() {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource monitoringOfficer = newUserResource().withRoleGlobal(MONITORING_OFFICER).build();
+
+        setupUserAsMonitoringOfficer(project, monitoringOfficer);
+
+        assertTrue(rules.monitoringOfficerUsersCanDownloadGrantOfferLetter(project, monitoringOfficer));
+    }
+
 
     @Test
     public void nonCompAdminsCannotDownloadGrantOfferLetterDocuments() {

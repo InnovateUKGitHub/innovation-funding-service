@@ -305,8 +305,8 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     @Test
     public void grantOfferLetterSectionAccessMonitoringOfficer() {
         assertMonitoringOfficerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection,
-                () -> rules.partnerCanAccessGrantOfferLetterSection(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
-        verify(projectService).getById(activeProject.getId());
+                () -> rules.monitoringOfficerCanAccessGrantOfferLetterSection(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
+        verify(projectService, times(2)).getById(activeProject.getId());
     }
 
     @Test
