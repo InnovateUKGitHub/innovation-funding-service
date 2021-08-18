@@ -15,6 +15,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     private final boolean leadPartner;
     private final boolean projectManager;
     private final boolean financeContact;
+    private final boolean monitoringOfficer;
     private FileDetailsViewModel grantOfferLetterFile;
     private FileDetailsViewModel signedGrantOfferLetterFile;
     private FileDetailsViewModel additionalContractFile;
@@ -24,10 +25,21 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     private boolean procurement;
     private boolean ktp;
 
-    public GrantOfferLetterModel(String title, Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
-                                 FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
-                                 FileDetailsViewModel signedAdditionalContractFile, boolean projectManager, boolean financeContact,
-                                 GrantOfferLetterStateResource golState, boolean useDocusign, boolean procurement, boolean ktp) {
+    public GrantOfferLetterModel(String title,
+                                 Long projectId,
+                                 String projectName,
+                                 boolean leadPartner,
+                                 FileDetailsViewModel grantOfferLetterFile,
+                                 FileDetailsViewModel signedGrantOfferLetterFile,
+                                 FileDetailsViewModel additionalContractFile,
+                                 FileDetailsViewModel signedAdditionalContractFile,
+                                 boolean projectManager,
+                                 boolean financeContact,
+                                 GrantOfferLetterStateResource golState,
+                                 boolean useDocusign,
+                                 boolean procurement,
+                                 boolean ktp,
+                                 boolean monitoringOfficer) {
         this.title = title;
         this.projectId = projectId;
         this.projectName = projectName;
@@ -42,6 +54,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         this.useDocusign = useDocusign;
         this.procurement = procurement;
         this.ktp = ktp;
+        this.monitoringOfficer = monitoringOfficer;
     }
 
     @Override
@@ -224,4 +237,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         return isGrantOfferLetterApproved();
     }
 
+    public boolean isMonitoringOfficer() {
+        return monitoringOfficer;
+    }
 }
