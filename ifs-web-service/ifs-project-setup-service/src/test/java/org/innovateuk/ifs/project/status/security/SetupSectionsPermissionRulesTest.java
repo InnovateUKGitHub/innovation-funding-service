@@ -317,6 +317,13 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     }
 
     @Test
+    public void signedGrantOfferLetterSuccessfulAccessByMonitoringOfficer() {
+        assertMonitoringOfficerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection,
+                () -> rules.monitoringOfficerAccessToSignedGrantOfferLetter(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
+        verify(projectService, times(2)).getById(activeProject.getId());
+    }
+
+    @Test
     public void signedGrantOfferLetterUnSuccessfulAccessByNonLead() {
         assertNonLeadPartnerUnsuccessfulAccess(SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection,
                 () -> rules.leadPartnerAccessToSignedGrantOfferLetter(ProjectCompositeId.id(activeProject.getId()), user));
