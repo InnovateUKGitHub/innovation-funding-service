@@ -27,6 +27,13 @@
                             </legend>
                             <hr class="govuk-section-break govuk-section-break--visible" />
                             <div class="govuk-form-group govuk-!-margin-top-6">
+                                <label class="govuk-label" for="keywords">Keywords</label>
+                                <th:block th:if="${#fields.hasErrors('keywords')}">
+                                    <span class="govuk-error-message" th:each="err : ${#fields.errors('keywords')}" th:text="${err}"></span>
+                                </th:block>
+                                <input class="govuk-input" id="keywords" th:field="*{keywords}" type="text">
+                            </div>
+                            <div class="govuk-form-group">
                                 <h2 class="govuk-heading-s govuk-!-margin-bottom-2">
                                     Filter projects
                                 </h2>

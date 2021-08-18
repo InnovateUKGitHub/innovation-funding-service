@@ -6,6 +6,7 @@ import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
 public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
 
+    private String keywords;
     private boolean projectInSetup;
     private boolean previousProject;
 
@@ -18,6 +19,14 @@ public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
     private boolean spendProfileAwaitingReview;
 
     public MonitoringOfficerDashboardForm() {
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
     }
 
     public boolean isProjectInSetup() {

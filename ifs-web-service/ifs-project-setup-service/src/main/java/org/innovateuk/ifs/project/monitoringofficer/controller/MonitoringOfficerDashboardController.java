@@ -36,6 +36,7 @@ public class MonitoringOfficerDashboardController {
 
         model.addAttribute(FORM_ATTR_NAME, form);
         model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user
+                , form.getKeywords()
                 , form.isProjectInSetup()
                 , form.isPreviousProject()
                 , form.isDocumentsComplete()
@@ -53,6 +54,7 @@ public class MonitoringOfficerDashboardController {
                                   UserResource user,
                                   @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerDashboardForm form) {
         model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user
+                , form.getKeywords()
                 , form.isProjectInSetup()
                 , form.isPreviousProject()
                 , form.isDocumentsComplete()

@@ -54,15 +54,17 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
     String NOT_KTP = "AND project.application.competition.fundingType != (org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP)";
     String IS_KTP = "AND project.application.competition.fundingType = org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP ";
 
-    String FILTER_PROJECTS = "SELECT monitoringOfficer " +
+    String FILTER_PROJECTS_BY_MO = "SELECT monitoringOfficer " +
             "FROM MonitoringOfficer monitoringOfficer " +
             "JOIN Project project " +
             "   ON monitoringOfficer.project.id = project.id " +
-            "   AND monitoringOfficer.role = org.innovateuk.ifs.project.core.ProjectParticipantRole.MONITORING_OFFICER " +
             "WHERE " +
             "   monitoringOfficer.user.id = :userId " +
-            "   AND project.projectProcess.activityState in :projectStates " +
-            "ORDER BY project.id";
+            "   AND monitoringOfficer.role = org.innovateuk.ifs.project.core.ProjectParticipantRole.MONITORING_OFFICER ";
+
+    String BY_STATES = "   AND project.projectProcess.activityState in :projectStates ";
+
+    String BY_KEYWORDS = " AND (project.name LIKE :keywords OR project.application.id = :keywords OR project.application.competition.name LIKE :keywords) ";
 
     List<MonitoringOfficer> findByUserId(long userId);
 
@@ -106,6 +108,14 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
             "ORDER BY project.application.id")
     List<MonitoringOfficerAssignedProjectResource> findAssignedKTPProjects(Long userId);
 
-    @Query(FILTER_PROJECTS)
-    List<MonitoringOfficer> filterMonitoringOfficerProjects(Long userId, List<ProjectState> projectStates);
+    @Query(FILTER_PROJECTS_BY_MO +
+            BY_STATES +
+            "ORDER BY project.id")
+    List<MonitoringOfficer> filterMonitoringOfficerProjectsByStates(Long userId, List<ProjectState> projectStates);
+
+    @Query(FILTER_PROJECTS_BY_MO +
+            BY_KEYWORDS +
+            BY_STATES +
+            "ORDER BY project.id")
+    List<MonitoringOfficer> filterMonitoringOfficerProjectsByKeywordsByStates(Long userId, String keywords, List<ProjectState> projectStates);
 }
