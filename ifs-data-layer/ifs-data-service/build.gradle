@@ -115,7 +115,7 @@ dependencies {
     compile project(path: ":ifs-data-layer:data-service-notifications", configuration: 'default')
     compile project(path: ":ifs-data-layer:data-service-file", configuration: 'default')
     compile project(":ifs-sil-resources")
-    compile project(":ifs-error-util")
+    compile "org.innovateuk.ifs.libraries:ifs-error-util"
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.boot:spring-boot-starter-validation"
@@ -151,7 +151,7 @@ dependencies {
     compile "com.opencsv:opencsv"
 
     testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
     testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-data-layer:data-service-file", configuration: 'testArtifacts')

@@ -73,7 +73,7 @@ task stopAlerts(type: Exec) {
 createContainer.networkAliases = ["data-service-alerts"]
 
 dependencies {
-    compile project(":ifs-commons")
+    compile "org.innovateuk.ifs.libraries:ifs-commons"
     compile project(":ifs-data-layer:data-service-commons")
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
@@ -82,7 +82,7 @@ dependencies {
     compile "org.mariadb.jdbc:mariadb-java-client"
 
     testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
     testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
 

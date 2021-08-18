@@ -33,7 +33,7 @@ dependencies {
     compile "org.apache.httpcomponents:httpasyncclient"
 
     testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
     testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'

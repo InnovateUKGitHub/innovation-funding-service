@@ -35,11 +35,11 @@ dependencies {
     compile project(':ifs-rest-api-service')
     compile project(":ifs-rest-util")
 
-    compile project(":ifs-commons")
+    compile "org.innovateuk.ifs.libraries:ifs-commons"
     compile project(":ifs-security")
 
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
     testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
 
     testCompile "com.opencsv:opencsv"

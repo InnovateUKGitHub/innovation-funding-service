@@ -13,7 +13,7 @@ processResources.dependsOn applyProfiles
 
 
 dependencies {
-    compile project(":ifs-commons")
+    compile "org.innovateuk.ifs.libraries:ifs-commons"
     compile project(":ifs-sil-resources")
     compile project(":ifs-rest-util")
 
@@ -21,7 +21,7 @@ dependencies {
     compile 'javax.mail:mail'
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc"
 
-    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
     testCompile project (path: ":ifs-sil-resources", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
 }

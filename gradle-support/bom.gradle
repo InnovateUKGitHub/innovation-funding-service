@@ -2,12 +2,25 @@
 ext {
     bomSpringBootVersion = '2.4.1'
     bomSpringCloudVersion = '2020.0.1'
+    ifsLibrariesVersion = '1.1.0-20210818.140515-1'
 }
 
 dependencies {
 
     implementation enforcedPlatform("org.springframework.boot:spring-boot-dependencies:${bomSpringBootVersion}")
     implementation enforcedPlatform("org.springframework.cloud:spring-cloud-dependencies:${bomSpringCloudVersion}")
+
+    implementation ('org.innovateuk.ifs.libraries:ifs-commons') {
+        version {
+            strictly "${ifsLibrariesVersion}"
+        }
+    }
+
+    implementation ('org.innovateuk.ifs.libraries:ifs-error-util') {
+        version {
+            strictly "${ifsLibrariesVersion}"
+        }
+    }
 
     implementation('org.apache.commons:commons-text') {
         version {
