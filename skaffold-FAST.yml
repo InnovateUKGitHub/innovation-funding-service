@@ -248,3 +248,23 @@ profiles:
       kustomize:
         paths:
           - os-files/kustomize/env/stub/local/dev
+
+  - name: anonymised-db-data
+    build:
+      local:
+        useDockerCLI: false
+        useBuildkit: false
+        tryImportMissing: true
+        push: true
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
+      artifacts:
+        - image: anonymised-db-data
+          context: ifs-data-layer/ifs-data-service/src/main/docker
+          docker:
+            dockerfile: Dockerfile-proxysql
+    deploy:
+      kustomize:
+        paths:
+          - os-files/kustomize/components/anonymised-db-data
