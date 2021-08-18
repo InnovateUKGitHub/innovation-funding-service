@@ -28,7 +28,7 @@ public class MonitoringOfficerDashboardControllerTest extends BaseControllerMock
     @Test
     public void viewDashboard() throws Exception {
         MonitoringOfficerDashboardViewModel model = mock(MonitoringOfficerDashboardViewModel.class);
-        when(populator.populate(loggedInUser, true, false, false, false, false)).thenReturn(model);
+        when(populator.populate(loggedInUser, true, false, false, false, false, false, false, false)).thenReturn(model);
 
         mockMvc.perform(get("/monitoring-officer/dashboard"))
                 .andExpect(view().name("monitoring-officer/dashboard"))
@@ -38,7 +38,7 @@ public class MonitoringOfficerDashboardControllerTest extends BaseControllerMock
     @Test
     public void filterDashboard() throws Exception {
         MonitoringOfficerDashboardViewModel model = mock(MonitoringOfficerDashboardViewModel.class);
-        when(populator.populate(loggedInUser, false, false, false, false, false)).thenReturn(model);
+        when(populator.populate(loggedInUser, false, false, false, false, false, false, false, false)).thenReturn(model);
 
         mockMvc.perform(post("/monitoring-officer/dashboard"))
                 .andExpect(view().name("monitoring-officer/dashboard"))

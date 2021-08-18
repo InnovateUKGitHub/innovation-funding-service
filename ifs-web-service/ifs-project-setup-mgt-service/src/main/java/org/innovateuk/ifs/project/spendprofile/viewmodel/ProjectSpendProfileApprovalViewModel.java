@@ -22,6 +22,7 @@ public class ProjectSpendProfileApprovalViewModel {
     private final String projectName;
     private final boolean projectIsActive;
     private final boolean collaborativeProject;
+    private final boolean isMOSpendProfileUpdateEnabled;
     private final boolean isReadOnly;
 
 
@@ -30,6 +31,7 @@ public class ProjectSpendProfileApprovalViewModel {
                                                 ApprovalType approvalType,
                                                 List<OrganisationResource> organisations,
                                                 ProjectResource project,
+                                                boolean isMOSpendProfileUpdateEnabled,
                                                 boolean isReadOnly) {
         this.competitionSummary = competitionSummary;
         this.leadTechnologist = leadTechnologist;
@@ -39,6 +41,7 @@ public class ProjectSpendProfileApprovalViewModel {
         this.projectName = project.getName();
         this.projectIsActive = project.getProjectState().isActive();
         this.collaborativeProject = project.isCollaborativeProject();
+        this.isMOSpendProfileUpdateEnabled = isMOSpendProfileUpdateEnabled;
         this.isReadOnly = isReadOnly;
     }
 
@@ -84,6 +87,10 @@ public class ProjectSpendProfileApprovalViewModel {
 
     public boolean isCollaborativeProject() {
         return collaborativeProject;
+    }
+
+    public boolean isMOSpendProfileUpdateEnabled() {
+        return isMOSpendProfileUpdateEnabled;
     }
 
     public boolean isReadOnly() {

@@ -12,6 +12,9 @@ Documentation     INFUND-3830: As a Competitions team member I want to view all 
 ...               INFUND-2610 As an internal user I want to be able to view and access all projects that have been successful within a competition so that I can track the project setup process
 ...
 ...               IFS-1881 Project Setup internal project dashboard navigation
+...
+...               IFS-10051 Live tab competitions count is displaying worng
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -28,14 +31,13 @@ Sections of Live Competitions
     # this step verifies that the ready to open competitions are not visible in other tabs
 
 Live competition calculations
-    [Documentation]    INFUND-3830
+    [Documentation]    INFUND-3830  IFS-10051
     Then the total calculation in dashboard should be correct    Open    //section[1]/ul/li
     And the total calculation in dashboard should be correct     Closed    //section[2]/ul/li
     And the total calculation in dashboard should be correct     In assessment    //section[3]/ul/li
     And the total calculation in dashboard should be correct     Panel    //section[4]/ul/li
     And the total calculation in dashboard should be correct     Inform    //section[5]/ul/li
-    #below step should be enabled once ifs-10051 is completed
-    #And the total calculation in dashboard should be correct     Live    //section/ul/li
+    And the total calculation in dashboard should be correct     Live    //section/ul/li
 
 Project setup Competitions and Calculations
     [Documentation]    INFUND-3831, INFUND-3003, INFUND-2610 INFUND-5176
@@ -43,9 +45,6 @@ Project setup Competitions and Calculations
     When The user enters text to a text field    id = searchQuery    ${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link          css = #searchsubmit
     Then The Project set up dashboard calculations should be correct   css = li.govuk-grid-row  Project setup   //section[1]/ul/li
-
-#    Then the user should see competitions in project set up
-#    And The Project set up dashboard calculations should be correct   css = li.govuk-grid-row  Project setup   //section[1]/ul/li
 
 PS projects title and lead
     [Documentation]    INFUND-2610, IFS-1881

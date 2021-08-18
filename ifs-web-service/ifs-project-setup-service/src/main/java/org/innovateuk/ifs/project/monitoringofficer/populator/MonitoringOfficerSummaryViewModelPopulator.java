@@ -22,19 +22,41 @@ public class MonitoringOfficerSummaryViewModelPopulator {
     @Value("${ifs.monitoringofficer.journey.update.enabled}")
     private boolean isMOJourneyUpdateEnabled;
 
+    @Value("${ifs.monitoringofficer.spendprofile.update.enabled}")
+    private boolean isMOSpendProfileUpdateEnabled;
+
     public MonitoringOfficerSummaryViewModelPopulator() {
     }
 
     public MonitoringOfficerSummaryViewModel populate(UserResource user) {
         List<ProjectResource> projects = monitoringOfficerRestService.getProjectsForMonitoringOfficer(user.getId()).getSuccess();
-        return isMOJourneyUpdateEnabled ?
-                new MonitoringOfficerSummaryViewModel(getInSetupProjectCount(projects), getPreviousProjectCount(projects), getDocumentsCompleteCount(projects), getDocumentsInCompleteCount(projects), getDocumentsAwaitingReviewCount(projects)) :
+        return isDocumentsOrSpendProfileSectionsEnabled() ?
+                new MonitoringOfficerSummaryViewModel(getInSetupProjectCount(projects)
+                        , getPreviousProjectCount(projects)
+                        , getDocumentsCompleteCount(projects)
+                        , getDocumentsInCompleteCount(projects)
+                        , getDocumentsAwaitingReviewCount(projects)
+                        , getSpendProfileCompleteCount(projects)
+                        , getSpendProfileInCompleteCount(projects)
+                        , getSpendProfileAwaitingReviewCount(projects)) :
                 new MonitoringOfficerSummaryViewModel(getInSetupProjectCount(projects), getPreviousProjectCount(projects));
     }
 
     public MonitoringOfficerSummaryViewModel populate(List<ProjectResource> projects) {
-        return isMOJourneyUpdateEnabled ? new MonitoringOfficerSummaryViewModel(getInSetupProjectCount(projects), getPreviousProjectCount(projects), getDocumentsCompleteCount(projects), getDocumentsInCompleteCount(projects), getDocumentsAwaitingReviewCount(projects)) :
+        return isDocumentsOrSpendProfileSectionsEnabled() ?
+                new MonitoringOfficerSummaryViewModel(getInSetupProjectCount(projects)
+                        , getPreviousProjectCount(projects)
+                        , getDocumentsCompleteCount(projects)
+                        , getDocumentsInCompleteCount(projects)
+                        , getDocumentsAwaitingReviewCount(projects)
+                        , getSpendProfileCompleteCount(projects)
+                        , getSpendProfileInCompleteCount(projects)
+                        , getSpendProfileAwaitingReviewCount(projects)) :
                 new MonitoringOfficerSummaryViewModel(getInSetupProjectCount(projects), getPreviousProjectCount(projects));
+    }
+
+    private boolean isDocumentsOrSpendProfileSectionsEnabled(){
+        return isMOJourneyUpdateEnabled || isMOSpendProfileUpdateEnabled;
     }
 
     public int getInSetupProjectCount(List<ProjectResource> projects) {
@@ -55,5 +77,17 @@ public class MonitoringOfficerSummaryViewModelPopulator {
 
     public int getDocumentsAwaitingReviewCount(List<ProjectResource> projects) {
         return projectFilterPopulator.getProjectsWithDocumentsAwaitingReview(projects).size();
+    }
+
+    public int getSpendProfileCompleteCount(List<ProjectResource> projects) {
+        return projectFilterPopulator.getProjectsWithSpendProfileComplete(projects).size();
+    }
+
+    public int getSpendProfileInCompleteCount(List<ProjectResource> projects) {
+        return projectFilterPopulator.getProjectsWithSpendProfileInComplete(projects).size();
+    }
+
+    public int getSpendProfileAwaitingReviewCount(List<ProjectResource> projects) {
+        return projectFilterPopulator.getProjectsWithSpendProfileAwaitingReview(projects).size();
     }
 }

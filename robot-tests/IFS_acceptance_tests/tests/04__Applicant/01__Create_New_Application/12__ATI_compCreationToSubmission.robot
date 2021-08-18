@@ -108,7 +108,7 @@ Your funding validation when over max funding
     [Documentation]  IFS-7866
     Given update project costs
     When the user edits your funding
-    Then the user should see a field and summary error     Your funding sought exceeds £50,000. You must lower your funding level percentage or your project costs.
+    Then the user should see a field and summary error     Your funding sought exceeds GBP 50,000. You must lower your funding level percentage or your project costs.
 
 Update your funding to be valid
     [Documentation]  IFS-7866

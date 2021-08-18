@@ -33,6 +33,8 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...
 ...             IFS-9484 Loans: Applicant journey
 ...
+...             IFS-9679 MO Spend profile: IFS Admin only to be able to approve or reject spend profiles
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -95,7 +97,7 @@ Max funding sought validation
     [Documentation]  IFS-7866
     Given the user sets max available funding              60000  ${loan_comp_appl_id}
     When the user enters a value over the max funding
-    Then the user should see a field and summary error     Your funding sought exceeds £60,000. You must lower your funding level percentage or your project costs.
+    Then the user should see a field and summary error     Your funding sought exceeds GBP 60,000. You must lower your funding level percentage or your project costs.
 
 Loan application Your funding
     [Documentation]  IFS-6207
@@ -165,12 +167,15 @@ Internal user can see application details in project setup
     Then the user should see the element     jQuery = h2:contains("Applicant details")
     And the user should see the element      jQuery = h2:contains("Project finance")
 
-Internal user can mark project as successful
-    [Documentation]  IFS-6363
-    Given the user approves the spend profile
-    When the user navigates to the page     ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
-    And the user clicks the button/link     jQuery = tr:contains("${loan_PS_application1}") td:contains("Review") a
-    Then the user marks loan as complete    successful  ${loan_PS_application1}
+IFS Admin can mark project as successful
+    [Documentation]  IFS-6363  IFS-9679
+    Given Log in as a different user              &{ifs_admin_user_credentials}
+    And the user navigates to the page            ${spend_profile}
+    When the IFS Admin approves to SP
+    And the user clicks the button/link           jQuery = button.govuk-button:contains("Submit")
+    And the user navigates to the page            ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
+    And the user clicks the button/link           jQuery = tr:contains("${loan_PS_application1}") td:contains("Review") a
+    Then the user marks loan as complete          successful  ${loan_PS_application1}
 
 Internal user can mark project as unsuccessful
     [Documentation]  IFS-6363
