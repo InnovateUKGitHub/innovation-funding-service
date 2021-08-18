@@ -14,6 +14,7 @@ IFS.core.upload = (function () {
       maxSize: 'data-js-max-size',
       enableButtonOnSuccess: 'data-js-enabled-on-file-upload',
       toggleOnSuccess: 'data-js-toggle-on-file-upload',
+      toggleOnBanner: 'data-js-toggle-on-file-upload-banner',
       successRow: '<li class="success">' +
                     '<div class="file-row">' +
                       '<a href="$href" target="_blank" class="govuk-link">$text (Opens in a new window)</a>' +
@@ -56,6 +57,7 @@ IFS.core.upload = (function () {
       var submitButton = IFS.core.upload.getButton(fileInput)
       var file = fileInput.get(0).files[0]
       IFS.core.upload.clearMessages(wrapper, 'li.error')
+      IFS.core.upload.findMatchingDataAttrs(wrapper, s.toggleOnBanner).hide()
       var pendingRow = IFS.core.upload.addMessage(wrapper, IFS.core.template.replaceInTemplate(s.pendingRow, {text: file.name}))
 
       var formData = new window.FormData(wrapper.closest('form').get(0))
@@ -122,6 +124,7 @@ IFS.core.upload = (function () {
         IFS.core.upload.replaceMessageListWithResponse(wrapper, data, file.name)
         IFS.core.upload.findMatchingDataAttrs(wrapper, s.enableButtonOnSuccess).prop('disabled', false)
         IFS.core.upload.findMatchingDataAttrs(wrapper, s.toggleOnSuccess).toggle()
+        IFS.core.upload.findMatchingDataAttrs(wrapper, s.toggleOnBanner).show()
         jQuery.each(successHandlers, function () {
           this(html, wrapper)
         })

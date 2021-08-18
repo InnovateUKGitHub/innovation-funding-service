@@ -10,7 +10,9 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
+import org.innovateuk.ifs.competition.service.CompetitionThirdPartyConfigRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -33,6 +35,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionThirdPartyConfigResourceBuilder.newCompetitionThirdPartyConfigResource;
 import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
@@ -56,6 +59,9 @@ public class TermsAndConditionsReadOnlyPopulatorTest {
     @Mock
     private ApplicationFinanceRestService applicationFinanceRestService;
 
+    @Mock
+    private CompetitionThirdPartyConfigRestService competitionThirdPartyConfigRestService;
+
     @Test
     public void populate() {
         ReflectionTestUtils.setField(populator, "northernIrelandSubsidyControlToggle", true);
@@ -71,6 +77,7 @@ public class TermsAndConditionsReadOnlyPopulatorTest {
                 .withApplicationState(ApplicationState.OPENED)
                 .withLeadOrganisationId(organisations.get(0).getId())
                 .build();
+        CompetitionThirdPartyConfigResource thirdPartyConfigResource = newCompetitionThirdPartyConfigResource().build();
         CompetitionResource competition = newCompetitionResource()
                 .withFundingRules(FundingRules.SUBSIDY_CONTROL)
                 .withNonFinanceType(false)
@@ -93,6 +100,7 @@ public class TermsAndConditionsReadOnlyPopulatorTest {
                 .withOrganisation(organisations.get(0).getId(), organisations.get(1).getId())
                 .withNorthernIrelandDeclaration(false, true)
                 .build(2)));
+        when(competitionThirdPartyConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(thirdPartyConfigResource));
 
         TermsAndConditionsReadOnlyViewModel viewModel = populator.populate(question, data, defaultSettings());
 

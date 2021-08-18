@@ -21,17 +21,14 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
     private final boolean resettableGolState;
     private final boolean showChangesLink;
     private final boolean readOnlyUser;
+    private final String externalUserLinkUrl;
+    private final boolean monitoringOfficer;
 
-    public ProjectProcurementMilestoneViewModel(ProjectResource project,
-                                                ProjectFinanceResource finance,
-                                                String financesUrl,
-                                                boolean readOnly,
-                                                PaymentMilestoneResource paymentMilestoneResource,
-                                                boolean eligibilityAndViabilityApproved,
-                                                boolean externalUser,
-                                                boolean resettableGolState,
-                                                boolean showChangesLink,
-                                                boolean readOnlyUser) {
+    public ProjectProcurementMilestoneViewModel(ProjectResource project, ProjectFinanceResource finance, String financesUrl,
+                                                boolean readOnly, PaymentMilestoneResource paymentMilestoneResource,
+                                                boolean eligibilityAndViabilityApproved, boolean externalUser,
+                                                boolean resettableGolState, boolean showChangesLink, boolean readOnlyUser,
+                                                String externalUserLinkUrl, boolean monitoringOfficer) {
         super(project.getDurationInMonths(), finance);
         this.applicationId = project.getApplication();
         this.organisationId = finance.getOrganisation();
@@ -46,6 +43,8 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
         this.resettableGolState = resettableGolState;
         this.showChangesLink = showChangesLink;
         this.readOnlyUser = readOnlyUser;
+        this.externalUserLinkUrl = externalUserLinkUrl;
+        this.monitoringOfficer = monitoringOfficer;
     }
 
     public long getApplicationId() {
@@ -82,6 +81,14 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
 
     public boolean isExternalUser() {
         return externalUser;
+    }
+
+    public String getExternalUserLinkUrl() {
+        return externalUserLinkUrl;
+    }
+
+    public boolean isMonitoringOfficer() {
+        return monitoringOfficer;
     }
 
     @Override

@@ -60,6 +60,16 @@
                                      class="govuk-link">
                 Terms and conditions</a>
             </p>
+            <th:block th:if="${model.currentTermsAndConditions.procurementThirdParty}" >
+            <p class="govuk-body">This is the project costs guidance link applicants will see in the project costs section.</p>
+
+            <p class="govuk-body"><a th:text="|${model.projectCostGuidanceLink}  (opens in a new window)|"
+                                     th:href="@{${model.projectCostGuidanceLink}}"
+                                     target="_blank"
+                                     class="govuk-link">
+                Project Costs Guidance</a>
+            </p>
+           </th:block>
         </th:block>
     </th:block>
 
@@ -73,8 +83,10 @@
             <div class="govuk-radios">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-visually-hidden">Select the terms and conditions applicants must accept for this competition.</legend>
-                    <div class="govuk-radios__item" th:each="item : ${model.termsAndConditionsList}" th:attr="data-target=${item.procurement ? 'procurement-upload' : null}">
-                        <input type="radio"
+                    <div class="govuk-radios__item" th:each="item : ${model.termsAndConditionsList}"
+                         th:attr="data-target=${item.procurementThirdParty ? 'procurement-thirdparty' :
+                              (item.procurement ?  'procurement-upload' : null) }">
+                       <input type="radio"
                                class="govuk-radios__input"
                                th:field="*{termsAndConditionsId}"
                                required="required"
@@ -87,10 +99,80 @@
                 </fieldset>
             </div>
 
-            <div id="procurement-upload" class="upload-section" th:unless="${model.includeStateAid}">
+           <div id="procurement-thirdparty" class="govuk-form-group" >
+              <th:block id="procurement-thirdparty" class="govuk-form-group" >
+                <div id="procurement-thirdparty-label" class="govuk-form-group govuk-!-margin-top-6"
+                     th:classappend="${#fields.hasErrors('thirdPartyTermsAndConditionsLabel')} ? 'govuk-form-group--error'">
+                     <label class="govuk-label govuk-label--s" for="thirdPartyTermsAndConditionsLabel">
+                        Label to replace terms and conditions
+                     </label>
+                    <span class="govuk-hint">Appears against the applicant terms and conditions.</span>
+                        <th:block th:if="${#fields.hasErrors('thirdPartyTermsAndConditionsLabel')}">
+                           <span class="govuk-error-message" th:each="err : ${#fields.errors('thirdPartyTermsAndConditionsLabel')}" th:text="${err}" />
+                        </th:block>
+                       <input class="govuk-input"
+                           id="thirdPartyTermsAndConditionsLabel"
+                           type="text"
+                           th:errorclass="govuk-input--error"
+                           th:field="${competitionSetupForm.thirdPartyTermsAndConditionsLabel}"
+                           required="required"maxlength="255"
+                           th:attr="data-required-errormessage=#{validation.thirdParty.termsandconditionsform.label.required}" />
+                </div>
+
+                <div id="agreement-content" div class="govuk-form-group" th:classappend="${#fields.hasErrors('thirdPartyTermsAndConditionsText')} ? 'govuk-form-group--error'">
+                   <label class="govuk-label govuk-label--s" for="thirdPartyTermsAndConditionsText">
+                      Description text for terms and conditions page
+                   </label>
+                   <span class="govuk-hint"> Appears against the applicant terms and conditions.</span>
+                   <th:block th:if="${#fields.hasErrors('thirdPartyTermsAndConditionsText')}">
+                       <span class="govuk-error-message" th:each="err : ${#fields.errors('thirdPartyTermsAndConditionsText')}" th:text="${err}" />
+                   </th:block>
+                   <div class="textarea-wrapped">
+                     <textarea data-editor="html"
+                          class="govuk-textarea"
+                          id="thirdPartyTermsAndConditionsText"
+                          ifs:utext="${competitionSetupForm.thirdPartyTermsAndConditionsText}"
+                          th:field="${competitionSetupForm.thirdPartyTermsAndConditionsText}"
+                          required="required"
+                          th:attr="data-required-errormessage=#{validation.thirdParty.termsandconditionsform.text.required}"></textarea>
+                   </div>
+                </div>
+
+                <div id="project-cost-guidance-url" class="govuk-form-group" th:classappend="${#fields.hasErrors('projectCostGuidanceLink')} ? 'govuk-form-group--error'">
+                   <label class="govuk-label govuk-label--s" for="projectCostGuidanceLink">
+                      Project costs guidance link
+                   </label>
+                   <span class="govuk-hint">Appears against the acceptance of an applicant project costs.</span>
+                   <span class="govuk-hint">Insert a link including the full URL http:// or https://</span>
+                   <th:block th:if="${#fields.hasErrors('projectCostGuidanceLink')}">
+                      <span class="govuk-error-message" th:each="err : ${#fields.errors('projectCostGuidanceLink')}" th:text="${err}" />
+                   </th:block>
+                   <input class="govuk-input"
+                       id="projectCostGuidanceLink"
+                       type="text"
+                       th:errorclass="govuk-input--error"
+                       th:field="${model.projectCostGuidanceLink}"
+                       required="required"
+                       maxlength="255"
+                       th:attr="data-required-errormessage=#{validation.thirdParty.termsandconditionsform.projectCostGuidanceLink.required}" />
+                </div>
+
+                <div id="procurement-thirdparty-upload" class="upload-section">
+                    <th:block th:insert="question-type/types :: fileupload-fragment(edit,
+                                @{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.general.competition.id})},
+                                ${model.currentTermsAndConditions.procurementThirdParty} ? ${model.general.competition.competitionTerms?.name} : '',
+                                thirdPartyTermsAndConditionsDoc,
+                                thirdPartyTermsAndConditionsDoc,
+                                true,
+                                deleteTermsAndConditionsDoc,
+                                uploadTermsAndConditionsDoc)"/>
+                </div>
+             </th:block>
+            </div>
+            <div id="procurement-upload" class="upload-section" th:unless="${model.includeStateAid }">
                 <th:block th:insert="question-type/types :: fileupload-fragment(edit,
                                 @{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.general.competition.id})},
-                                ${model.general.competition.competitionTerms?.name},
+                                ${model.currentTermsAndConditions.procurement} ? ${model.general.competition.competitionTerms?.name} : '',
                                 termsAndConditionsDoc,
                                 termsAndConditionsDoc,
                                 true,

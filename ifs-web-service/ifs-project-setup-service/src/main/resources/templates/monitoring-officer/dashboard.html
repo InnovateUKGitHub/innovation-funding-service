@@ -96,6 +96,48 @@
                                     </div>
                                 </div>
                             </div>
+                            <div th:if="${model.isMOSpendProfileUpdateEnabled}"
+                                 class="govuk-form-group govuk-!-margin-top-7">
+                                <h2 class="govuk-heading-s govuk-!-margin-bottom-2">
+                                    Spend profile status
+                                </h2>
+                                <div class="govuk-checkboxes">
+                                    <div class="govuk-checkboxes__item">
+                                        <input id="spendProfileComplete"
+                                               class="govuk-checkboxes__input"
+                                               type="checkbox"
+                                               value="spendProfileComplete"
+                                               th:field="${form.spendProfileComplete}"
+                                        />
+                                        <label for="spendProfileComplete" class="govuk-label govuk-checkboxes__label">
+                                            <span th:text="'Complete (' + ${model.monitoringOfficerSummaryView.spendProfileCompleteCount} + ')'">Complete (7)</span>
+                                        </label>
+                                    </div>
+                                    <div class="govuk-checkboxes__item">
+                                        <input id="spendProfileIncomplete"
+                                               class="govuk-checkboxes__input"
+                                               type="checkbox"
+                                               value="spendProfileIncomplete"
+                                               th:field="${form.spendProfileIncomplete}"
+                                        />
+                                        <label for="spendProfileIncomplete" class="govuk-label govuk-checkboxes__label">
+                                            <span th:text="'Incomplete (' + ${model.monitoringOfficerSummaryView.spendProfileIncompleteCount} + ')'">Incomplete (5)</span>
+                                        </label>
+                                    </div>
+                                    <div class="govuk-checkboxes__item">
+                                        <input id="spendProfileAwaitingReview"
+                                               class="govuk-checkboxes__input"
+                                               type="checkbox"
+                                               value="spendProfileAwaitingReview"
+                                               th:field="${form.spendProfileAwaitingReview}"
+                                        />
+                                        <label for="spendProfileAwaitingReview" class="govuk-label govuk-checkboxes__label">
+                                            <span th:text="'Awaiting review (' + ${model.monitoringOfficerSummaryView.spendProfileAwaitingReviewCount} + ')'">Awaiting review (7)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="govuk-form-group govuk-!-margin-top-9">
                                 <button class="govuk-button" id="update-documents-results-button">Update results</button>
                             </div>
@@ -139,27 +181,52 @@
                                             </th:block>
                                         </div>
 
-                                        <div th:if="${model.isMOJourneyUpdateEnabled and projectView.documentSectionViewModel.hasDocumentSection}"
+                                        <div th:if="${model.isMOJourneyUpdateEnabled and projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.hasDocumentSection}"
                                              class="task govuk-!-margin-bottom-0">
                                             <ul>
                                                 <li>
                                                     <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-4 govuk-!-margin-bottom-3"/>
                                                     <div class="task">
-                                            <span class="govuk-heading-s">
-                                                <a th:if="${projectView.documentSectionViewModel.hasDocumentForReview}"
-                                                   th:href="${projectView.documentSectionViewModel.getDocumentLinkUrl}"
-                                                   class="govuk-link">Documents</a>
+                                                        <h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+                                                            <a th:if="${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.hasDocumentForReview}"
+                                                               th:href="${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.getDocumentLinkUrl}"
+                                                               class="govuk-link">Documents</a>
 
-                                                <h5 th:unless="${projectView.documentSectionViewModel.hasDocumentForReview}"
-                                                    class="govuk-!-margin-top-0 govuk-!-margin-bottom-0">Documents</h5>
-                                            </span>
+                                                            <p th:unless="${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.hasDocumentForReview}"
+                                                               class="govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+                                                                Documents</p>
+                                                        </h4>
                                                     </div>
 
-                                                    <div th:if="${projectView.documentSectionViewModel.hasDocumentSection}"
-                                                         th:insert="project/fragments :: mo-document-status-indicator(${projectView.documentSectionViewModel.documentSectionStatus})"></div>
+                                                    <div th:if="${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.hasDocumentSection}"
+                                                         th:insert="project/fragments :: mo-project-setup-status-indicator(${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.documentSectionStatus})"></div>
                                                 </li>
                                             </ul>
                                         </div>
+
+                                        <div th:if="${model.isMOSpendProfileUpdateEnabled and projectView.monitoringDashboardSectionsViewModel.spendProfileSectionViewModel.hasSpendProfileSection}"
+                                             class="task govuk-!-margin-bottom-0">
+                                            <ul>
+                                                <li>
+                                                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-4 govuk-!-margin-bottom-3"/>
+                                                    <div class="task">
+                                                        <h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+                                                            <a th:if="${projectView.monitoringDashboardSectionsViewModel.spendProfileSectionViewModel.hasSpendProfileForReview}"
+                                                               th:href="${projectView.monitoringDashboardSectionsViewModel.spendProfileSectionViewModel.getSpendProfileLinkUrl}"
+                                                               class="govuk-link">Spend profile</a>
+
+                                                            <p th:unless="${projectView.monitoringDashboardSectionsViewModel.spendProfileSectionViewModel.hasSpendProfileForReview}"
+                                                               class="govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+                                                                Spend profile</p>
+                                                        </h4>
+                                                    </div>
+
+                                                    <div th:if="${projectView.monitoringDashboardSectionsViewModel.spendProfileSectionViewModel.hasSpendProfileSection}"
+                                                         th:insert="project/fragments :: mo-project-setup-status-indicator(${projectView.monitoringDashboardSectionsViewModel.spendProfileSectionViewModel.spendProfileStatus})"></div>
+                                                </li>
+                                            </ul>
+                                        </div>
+
                                     </li>
                                 </ul>
                             </div>

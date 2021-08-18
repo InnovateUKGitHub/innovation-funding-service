@@ -29,6 +29,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
@@ -43,6 +44,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Authority.*;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 import static org.junit.Assert.assertTrue;
@@ -56,6 +58,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     private Competition competition;
     private UserResource innovationLeadUserResourceOnProject1;
     private UserResource stakeholderUserResourceOnCompetition;
+    private UserResource monitoringOfficerUserResourceOnProject1;
 
     @Mock
     private ProjectProcessRepository projectProcessRepository;
@@ -72,15 +75,17 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
         innovationLeadUserResourceOnProject1 = newUserResource().withId(innovationLeadUserOnProject1.getId()).withRoleGlobal(Role.INNOVATION_LEAD).build();
         InnovationLead innovationLead = newInnovationLead().withUser(innovationLeadUserOnProject1).build();
 
-
         User stakeholderUserOnCompetition = newUser().withRoles(singleton(STAKEHOLDER)).build();
         stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRoleGlobal(STAKEHOLDER).build();
         Stakeholder stakeholder = newStakeholder().withUser(stakeholderUserOnCompetition).build();
 
+        User moUserOnProject1 = newUser().withRoles(singleton(Role.MONITORING_OFFICER)).build();
+        monitoringOfficerUserResourceOnProject1 = newUserResource().withId(moUserOnProject1.getId()).withRoleGlobal(Role.MONITORING_OFFICER).build();
+
         competition = newCompetition().withLeadTechnologist(innovationLeadUserOnProject1).build();
         Application application1 = newApplication().withCompetition(competition).build();
         ApplicationResource applicationResource1 = newApplicationResource().withId(application1.getId()).withCompetition(competition.getId()).build();
-        projectResource1 = newProjectResource().withApplication(applicationResource1).build();
+        projectResource1 = newProjectResource().withMonitoringOfficerUser(monitoringOfficerUserResourceOnProject1.getId()).withApplication(applicationResource1).build();
         ProjectProcess projectProcess = newProjectProcess().withActivityState(ProjectState.SETUP).build();
 
         Project project = ProjectBuilder.newProject()
@@ -140,6 +145,14 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
 
         assertTrue(rules.assignedStakeholderCanViewSPStatus(projectResource1, stakeholderUserResourceOnCompetition));
         assertFalse(rules.assignedStakeholderCanViewSPStatus(projectResource1, stakeholderUser()));
+    }
+
+    @Test
+    public void assignedMonitoringOfficerCanViewSpendProfileStatus() {
+        when(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(projectResource1.getId(), monitoringOfficerUserResourceOnProject1.getId())).thenReturn(true);
+
+        assertTrue(rules.assignedMonitoringOfficerCanViewSpendProfileStatus(projectResource1, monitoringOfficerUserResourceOnProject1));
+        assertFalse(rules.assignedMonitoringOfficerCanViewSpendProfileStatus(projectResource1, monitoringOfficerUser()));
     }
 
     @Test
@@ -311,6 +324,16 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
+    public void projectMoCanViewTheirProjectSpendProfileCsv() {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectResource1.getId(), newOrganisation().build().getId());
+
+        when(projectMonitoringOfficerRepository.existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), monitoringOfficerUserResourceOnProject1.getId())).thenReturn(true);
+
+        assertTrue(rules.projectMoCanViewTheirProjectSpendProfileCsv(projectOrganisationCompositeId, monitoringOfficerUserResourceOnProject1));
+        assertFalse(rules.projectMoCanViewTheirProjectSpendProfileCsv(projectOrganisationCompositeId, stakeholderUserResourceOnCompetition));
+    }
+
+    @Test
     public void leadPartnerCanViewAnySpendProfileCsv() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -352,6 +375,17 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
 
         setupUserNotAsPartner(project, user, org);
         assertFalse(rules.partnersCanMarkSpendProfileAsComplete(projectOrganisationCompositeId, user));
+    }
+
+    @Test
+    public void ifsAdminCanViewandApproveOrRejectSpendProfile() {
+        allGlobalRoleUsers.forEach(user -> {
+            if (hasIFSAdminAuthority(user)  && !user.hasAnyAuthority(asList(AUDITOR, COMP_ADMIN, PROJECT_FINANCE))) {
+                assertTrue(rules.canSpendProfileBeApprovedOrRejected(newProjectResource().build(), user));
+            } else {
+                assertFalse(rules.canSpendProfileBeApprovedOrRejected(newProjectResource().build(), user));
+            }
+        });
     }
 
     @Override

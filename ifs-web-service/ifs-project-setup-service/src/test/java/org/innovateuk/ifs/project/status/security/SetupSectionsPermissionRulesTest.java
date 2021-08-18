@@ -42,7 +42,8 @@ import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.sections.SectionAccess.NOT_ACCESSIBLE;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -82,6 +83,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     private ProjectResource activeProject = newProjectResource()
             .withProjectState(ProjectState.SETUP)
             .withApplication(application)
+            .withMonitoringOfficerUser(monitoringOfficer.getId())
             .build();
 
     private ProjectResource withdrawnProject = newProjectResource()
@@ -166,7 +168,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     @Test
     public void spendProfileSectionAccess() {
         assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessSpendProfileSection, () -> rules.partnerCanAccessSpendProfileSection(ProjectCompositeId.id(activeProject.getId()), user));
-        verify(projectService).getById(activeProject.getId());
+        verify(projectService, times(2)).getById(activeProject.getId());
     }
 
     @Test
@@ -182,8 +184,14 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
     @Test
     public void spendProfileSectionAccessMonitoringOfficer() {
-        assertMonitoringOfficerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessSpendProfileSection, () -> rules.partnerCanAccessSpendProfileSection(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
-        verify(projectService).getById(activeProject.getId());
+        assertMonitoringOfficerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessSpendProfileSection, () -> rules.projectMoCanAccessSpendProfileSection(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
+        verify(projectService, times(2)).getById(activeProject.getId());
+    }
+
+    @Test
+    public void reviewSpendProfileSectionAccessMonitoringOfficer() {
+        assertMonitoringOfficerSuccessfulAccess(SetupSectionAccessibilityHelper::canReviewSpendProfileSection, () -> rules.projectMoCanReviewSpendProfileSection(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
+        verify(projectService, times(2)).getById(activeProject.getId());
     }
 
     @Test
@@ -277,7 +285,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     @Test
     public void spendProfileSectionAccessUnavailableForWithdrawnProject() {
         assertNonLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessSpendProfileSection(ProjectCompositeId.id(withdrawnProject.getId()), user));
-        verify(projectService).getById(withdrawnProject.getId());
+        verify(projectService, times(2)).getById(withdrawnProject.getId());
     }
 
     @Test
@@ -432,6 +440,38 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         verify(projectService, times(2)).getById(activeProject.getId());
         verify(projectService).getOrganisationIdFromUser(activeProject.getId(), user);
         verify(statusService).getProjectTeamStatus(activeProject.getId(), Optional.of(user.getId()));
+    }
+
+    @Test
+    public void monitoringOfficerCanAccessFinanceChecksReadOnlySection() {
+        Long projectId = 1L;
+        UserResource userResource = newUserResource().withRoleGlobal(MONITORING_OFFICER).build();
+        ProjectResource projectResource = newProjectResource()
+                .withMonitoringOfficerUser(userResource.getId())
+                .build();
+        UserResource userResourceNotInProject = newUserResource().withRoleGlobal(MONITORING_OFFICER).build();
+        ProjectCompositeId projectCompositeId = ProjectCompositeId.id(projectId);
+
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+
+        assertTrue(rules.monitoringOfficerCanAccessFinanceChecksReadOnlySection(projectCompositeId, userResource));
+        assertFalse(rules.monitoringOfficerCanAccessFinanceChecksReadOnlySection(projectCompositeId, userResourceNotInProject));
+    }
+
+    @Test
+    public void moCanAccessDetailedPaymentMilestones() {
+        Long projectId = 1L;
+        UserResource userResource = newUserResource().withRoleGlobal(MONITORING_OFFICER).build();
+        ProjectResource projectResource = newProjectResource()
+                .withMonitoringOfficerUser(userResource.getId())
+                .build();
+        UserResource userResourceNotInProject = newUserResource().withRoleGlobal(MONITORING_OFFICER).build();
+        ProjectCompositeId projectCompositeId = ProjectCompositeId.id(projectId);
+
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+
+        assertTrue(rules.moCanAccessDetailedPaymentMilestones(projectCompositeId, userResource));
+        assertFalse(rules.moCanAccessDetailedPaymentMilestones(projectCompositeId, userResourceNotInProject));
     }
 
     private void assertLeadPartnerSuccessfulAccess(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> accessorCheck,

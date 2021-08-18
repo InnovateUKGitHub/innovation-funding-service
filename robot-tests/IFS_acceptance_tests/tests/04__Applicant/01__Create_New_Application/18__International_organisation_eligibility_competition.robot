@@ -23,6 +23,8 @@ Documentation     IFS-7195  Organisational eligibility category in Competition s
 ...
 ...               IFS-9579 MO documents: Change of internal approve/reject authority
 ...
+...               IFS-9679 MO Spend profile: IFS Admin only to be able to approve or reject spend profiles
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin Applicant
@@ -211,30 +213,25 @@ Registered users applying for an international competition see no international 
 Registered users applying for an international competition see only UK based organisations if they are UK based
     [Documentation]    IFS-7252
     [Tags]  HappyPath
-     Given the user clicks the button/link              link = Back to tell us where your organisation is based
-     When user selects where is organisation based      isNotInternational
-     Then the user should see the element               jQuery = dt:contains("Empire Ltd")
-     And the user should see the element                link = Apply with a different organisation
+    Given the user clicks the button/link              link = Back to tell us where your organisation is based
+    When user selects where is organisation based      isNotInternational
+    #Then the user should see the element               jQuery = dt:contains("Empire Ltd")
+    Then the user should see only uk based organisations
+    And the user should see the element                link = Apply with a different organisation
 
 Registered UK based user applies for International Competition
     [Documentation]    IFS-7197  IFS-7723
     [Tags]  HappyPath
-    Given the user clicks the button/link                                          link = Apply with a different organisation
-    When the user selects organisation type as business                            radio-1
-# TODO should be implemented on ifs-7224
-#    And the user enters organisation details manually on companies house link      ${ukLeadOrganisationName}
-#   Then the user verifies uk based organisation details
-# TODO Should be removed on completing ifs-7224
-    Then the user search for organisation name on Companies house                   SAGA  ${ukLeadOrganisationName}
-# TODO should be implemented on ifs-7224
-    #And the user clicks the button/link                                           name = save-organisation
+    Given the user clicks the button/link                             link = Apply with a different organisation
+    When the user selects organisation type as business               radio-1
+    Then the user search for organisation name on Companies house     SAGA  ${ukLeadOrganisationName}
 
 Registered UK based lead user invites partner organisation(with registered email/user)
     [Documentation]    IFS-7197
     [Tags]  HappyPath
     Given the user clicks the button/link     link = Application team
     When invite partner organisation          Test Empire  Daniel Tan  ${lead_intl_email_one}
-    Then the user should see the element      jQuery = td:contains("Steve") ~ td:contains("Lead")
+    Then the user should see the element      jQuery = td:contains("steve") ~ td:contains("Lead")
     And the user should see the element       jQuery = td:contains("Daniel Tan (pending for")
 
 Partner organisation(with registered email/user) accepts the invite
@@ -269,7 +266,7 @@ Registered UK based lead user invites partner organisation(with non-registered e
     [Setup]  logout as user
     Given Registered UK based lead user goes to the application team
     When invite partner organisation                                     New Empire  Tim Simpson  ${partner_international_email}
-    Then the user should see the element                                 jQuery = td:contains("Steve") ~ td:contains("Lead")
+    Then the user should see the element                                 jQuery = td:contains("steve") ~ td:contains("Lead")
     And the user should see the element                                  jQuery = td:contains("Tim Simpson (pending for")
 
 Partner organisation(with non-registered email/user) accepts the invite
@@ -596,7 +593,7 @@ Monitoring officer assign link should be displayed on completing correspondence 
 
 Monitoring office can see the correspondence address entered by non uk based lead applicant in project setup dashboard
     [Documentation]     IFS - 7241
-    Given ifs admin assigns MO to the competition in project setup      ${ApplicationID}   ${internationalApplicationTitle}
+    Given ifs admin assigns MO to the competition in project setup      ${ApplicationID}    ${internationalApplicationTitle}
     When the user navigates to the page                                 ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
     Then the user should see the element                                jQuery = p:contains("Argentina")
 
@@ -615,10 +612,27 @@ Uk based lead applicant moves application to project setup and generates GOL
     And Uk lead completes project setup details and generated GOL
 
 GOL template to be updated with country for correspondents address
-    [Documentation]     IFS - 7241  IFS-9579
-    Given the user complete all sections of the project setup and generates GOL
-    When the user navigates to the page                                            ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/template
+    [Documentation]     IFS - 7241  IFS-9579  IFS-9679
+    Given Log in as a different user                                              &{ukLeadOrganisationCredentials}
+    And the user complete all sections of the project setup and generates GOL
+    When Log in as a different user                                               &{ifs_admin_user_credentials}
+    And the user navigates to the page                                            ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
+    And the user selects the radio button                                         spendProfileApproved  true
+    And the user should not see an error in the page
+    And the user clicks the button/link                                           jQuery = button.govuk-button:contains("Submit")
+#    Then Log in as a different user                                               &{ukLeadOrganisationCredentials}
+    And the user navigates to the page                                            ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/template
     Then element should contain                                                    xpath = //p[1]     Argentina
+
+IFS Admin approves the Spend profile
+    [Documentation]  IFS-9679
+    [Tags]  HappyPath
+#    Given Log in as a different user                      &{ifs_admin_user_credentials}
+    Given the user navigates to the page                    ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
+#    When the user selects the radio button                  spendProfileApproved  true
+    Then The user should see the element                    jQuery = h2:contains("The spend profile has been approved.")
+    And the user should not see an error in the page
+#    Then the user clicks the button/link                    jQuery = button.govuk-button:contains("Submit")
 
 *** Keywords ***
 Custom Suite Setup
@@ -791,6 +805,7 @@ the user provides international organisation details
     the user enters text to a text field                               id = addressLine1  ${internationalOrganisationFirstLineAddress}
     the user enters text to a text field                               id = town  ${international_org_town}
     input text                                                         id = country  ${international_org_country}
+    the user should see country in dropdown                            id = country  ${international_org_country_complete}
     the user clicks the button/link                                    jQuery = ul li:contains("${international_org_country_complete}")
     the user clicks the button/link                                    id = ${button_id}
 
@@ -896,6 +911,7 @@ Requesting competition ID of this Project
 Requesting project ID of this Project
     ${ProjectID} =  get project id by name     ${internationalApplicationTitle}
     Set suite variable     ${ProjectID}
+
 Requesting innovate uk organisation ID of this Project
     ${organistaionInnovateID} =  get organisation id by name     ${partnerOrganisationNameUKBased}
     Set suite variable     ${organistaionInnovateID}
@@ -1103,7 +1119,6 @@ the user complete all sections of the project setup and generates GOL
     partner submits the spend profile                                   ${ProjectID}   ${organistaionInnovateID}
     external partner organisation submit the spend profile              ${ProjectID}   ${organistaionTestEmpireID}  ${organisationUiveristyOfLiverPoolId}
     lead organisations submit the spend profile                         ${ProjectID}   ${organisationTestEmpireOneID}   ${lead_international_email}     ${short_password}
-    proj finance approves the spend profiles                            ${ProjectID}
 
 the user approves funding rules of lead and partner organisations
     the user approves funding rules     table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
@@ -1229,7 +1244,6 @@ Uk lead completes project setup details and generated GOL
     the user clicks the button/link                                                     css = #generate-spend-profile-modal-button
     Login and submit partners spend profile                                             ${partner_international_email}         ${organistaionNewEmpireID}     ${ukLeadApplicationProjectID}
     lead organisations submit the spend profile                                         ${ukLeadApplicationProjectID}   ${organistaionOrg2}   ${lead_applicant}      ${short_password}
-    proj finance approves the spend profiles                                            ${ukLeadApplicationProjectID}
 
 the user completes project team and can see international organisation addresses
     the user should not see the element     link = Edit
@@ -1266,3 +1280,8 @@ the lead can see multiple appendices uploaded to the technical approach question
     the user should see the element     jQuery = a:contains("${valid_pdf}")
     the user should see the element     jQuery = a:contains("${ods_file}")
     the user should see the element     jQuery = a:contains("${excel_file}")
+
+the user should see only uk based organisations
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots    page should contain element  jQuery = label:contains("Empire Ltd")
+    Run Keyword If  '${status}' == 'PASS'  the user should see the element     jQuery = label:contains("Empire Ltd")
+    ...                             ELSE   the user should see the element     jQuery = dt:contains("Empire Ltd")

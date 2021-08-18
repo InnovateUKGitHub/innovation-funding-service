@@ -3,6 +3,9 @@ Documentation     IFS-9576 MO documents: 'Project setup' list - task management 
 ...
 ...               IFS-9941 MO documents: Status, Filter and Link Visibility
 ...
+...               IFS-9676 MO Spend profile: MO projects list update
+...
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -25,13 +28,13 @@ Monitoring officer can filter previous projects only
     Given the user unselects the checkbox                       projectInSetup
     When the user selects the checkbox                          previousProject
     And the user clicks the button/link                         id = update-documents-results-button
-    Then Check correct number of previous projects filtered     Previous
+    Then check correct number of previous projects filtered     Previous
 
 Monitoring officer can filter both in-setup and previous projects
     [Documentation]  IFS-9576
     Given the user selects the checkbox                       projectInSetup
     When the user clicks the button/link                      id = update-documents-results-button
-    Then Check correct total number of projects displaying
+    Then check correct total number of projects displaying
 
 Monitoring officer can view no results text when none of the projects been assigned to him
     [Documentation]  IFS-9576
@@ -44,32 +47,83 @@ Monitoring officer can filter projects based on complete document status
     [Documentation]  IFS-9941
     Given assign monitoring officer to the projects
     And the user uploads documents to the project
-    And log in as a different user                       &{monitoringOfficerDashboard}
-    When the user selects the checkbox                   documentsComplete
-    And the user clicks the button/link                  id = update-documents-results-button
-    Then check correct number of projects displaying     Complete  complete
+    And log in as a different user                                       &{monitoringOfficerDashboard}
+    When the user selects the checkbox                                   documentsComplete
+    And the user clicks the button/link                                  id = update-documents-results-button
+    Then check correct number of document status projects displaying     Documents  Complete
 
 Monitoring officer can filter projects based on incomplete document status
     [Documentation]  IFS-9941
-    Given the user unselects the checkbox                documentsComplete
-    When the user selects the checkbox                   documentsIncomplete
-    And the user clicks the button/link                  id = update-documents-results-button
-    Then check correct number of projects displaying     Incomplete   action
+    Given the user unselects the checkbox                                documentsComplete
+    When the user selects the checkbox                                   documentsIncomplete
+    And the user clicks the button/link                                  id = update-documents-results-button
+    Then check correct number of document status projects displaying     Documents  Incomplete
 
 Monitoring officer can filter projects based on awaiting review document status
     [Documentation]  IFS-9941
-    Given the user unselects the checkbox                documentsIncomplete
-    When the user selects the checkbox                   documentsAwaitingReview
-    And the user clicks the button/link                  id = update-documents-results-button
-    Then check correct number of projects displaying     Awaiting review   action-required
+    Given the user unselects the checkbox                                documentsIncomplete
+    When the user selects the checkbox                                   documentsAwaitingReview
+    And the user clicks the button/link                                  id = update-documents-results-button
+    Then check correct number of document status projects displaying     Documents  Awaiting review
 
 Monitoring officer can filter projects based on complete document status and projects in setup
     [Documentation]  IFS-9941
-    Given the user unselects the checkbox                                   documentsAwaitingReview
-    When the user selects the checkbox                                      documentsComplete
-    And the user selects the checkbox                                       projectInSetup
-    And the user clicks the button/link                                     id = update-documents-results-button
-    Then check correct number of combined filtering projects displaying
+    Given the user unselects the checkbox                                                     documentsAwaitingReview
+    When the user selects the checkbox                                                        documentsComplete
+    And the user selects the checkbox                                                         projectInSetup
+    And the user clicks the button/link                                                       id = update-documents-results-button
+    Then check correct number of combined document status and insetup projects displaying     Documents  Complete
+    And check correct total number of projects displaying
+
+Monitoring officer can filter projects based on complete spendprofile status
+    [Documentation]  IFS-9676
+    Given the user unselects the checkbox                             projectInSetup
+    And the user unselects the checkbox                               documentsComplete
+    When the user selects the checkbox                                spendProfileComplete
+    And the user clicks the button/link                               id = update-documents-results-button
+    Then check correct number of spend profile projects displaying    Spend profile  Complete
+
+Monitoring officer can filter projects based on incomplete spendprofile status
+    [Documentation]  IFS-9676
+    Given the user unselects the checkbox                              spendProfileComplete
+    When the user selects the checkbox                                 spendProfileIncomplete
+    And the user clicks the button/link                                id = update-documents-results-button
+    Then check correct number of spend profile projects displaying     Spend profile  Incomplete
+
+Monitoring officer can filter projects based on awaiting review spendprofile status
+    [Documentation]  IFS-9676
+    Given the user unselects the checkbox                              spendProfileIncomplete
+    When the user selects the checkbox                                 spendProfileAwaitingReview
+    And the user clicks the button/link                                id = update-documents-results-button
+    Then check correct number of spend profile projects displaying     Spend profile  Awaiting review
+
+Monitoring officer can filter projects based on complete spendprofile status and projects in setup
+    [Documentation]  IFS-9676
+    Given the user unselects the checkbox                                                   spendProfileAwaitingReview
+    When the user selects the checkbox                                                      spendProfileComplete
+    And the user selects the checkbox                                                       projectInSetup
+    And the user clicks the button/link                                                     id = update-documents-results-button
+    Then check correct number of combined spend profile and in setup projects displaying    Spend profile  Complete
+    And check correct total number of projects displaying
+
+Monitoring officer can filter projects based on complete spendprofile and documents status for projects in setup
+    [Documentation]  IFS-9676
+    Given the user selects the checkbox                                                     documentsComplete
+    When the user selects the checkbox                                                      spendProfileComplete
+    And the user selects the checkbox                                                       projectInSetup
+    And the user clicks the button/link                                                     id = update-documents-results-button
+    Then check correct number of combined spend profile and in setup projects displaying    Spend profile  Complete
+    And check correct total number of projects displaying
+
+Monitoring officer can filter projects based on incomplete spendprofile and documents status for projects in setup
+    [Documentation]  IFS-9676
+    Given the user unselects the checkbox                                                    documentsComplete
+    When the user unselects the checkbox                                                     spendProfileComplete
+    And the user selects the checkbox                                                        spendProfileIncomplete
+    And the user selects the checkbox                                                        documentsIncomplete
+    And the user selects the checkbox                                                        projectInSetup
+    And the user clicks the button/link                                                      id = update-documents-results-button
+    Then check correct number of combined spend profile and in setup projects displaying     Spend profile  Incomplete
     And check correct total number of projects displaying
 
 *** Keywords ***
@@ -125,12 +179,24 @@ The user uploads documents to the project
     The user uploads the exploitation plan
     the user uploads the Collaboration agreement
 
-Check correct number of projects displaying
-    [Arguments]  ${documentStatus}  ${statusAction}
-    ${documentStatusPageCount} =    Get Element Count    jQuery = .status-${statusAction}:contains("${documentStatus}")
-    page should contain element     jQuery = .govuk-checkboxes__label:contains("${documentStatus} (${documentStatusPageCount})")
+Check correct number of document status projects displaying
+    [Arguments]  ${projectSection}  ${status}
+    ${documentStatusPageCount} =    Get Element Count    jQuery = div:nth-child(3):contains("${projectSection}")>ul>li>div>div>div>span:contains("${status}")
+    page should contain element     jQuery = .govuk-checkboxes__label:contains("${status} (${documentStatusPageCount})")
     page should contain element     jQuery = h2:contains("${documentStatusPageCount} project")
 
-Check correct number of combined filtering projects displaying
-    ${documentStatusPageCount} =    Get Element Count    jQuery = .status-complete:contains("Complete")
+Check correct number of combined document status and insetup projects displaying
+    [Arguments]  ${projectSection}  ${status}
+    ${documentStatusPageCount} =    Get Element Count    jQuery = div:nth-child(3):contains("${projectSection}")>ul>li>div>div>div>span:contains("${status}")
+    page should contain element     jQuery = h2:contains("${documentStatusPageCount} project")
+
+Check correct number of spend profile projects displaying
+    [Arguments]  ${projectSection}  ${status}
+    ${documentStatusPageCount} =    Get Element Count    jQuery = div:nth-child(4):contains("${projectSection}")>ul>li>div>div>div>span:contains("${status}")
+    page should contain element     jQuery = .govuk-checkboxes__label:contains("${status} (${documentStatusPageCount})")
+    page should contain element     jQuery = h2:contains("${documentStatusPageCount} project")
+
+Check correct number of combined spend profile and in setup projects displaying
+    [Arguments]  ${projectSection}  ${status}
+    ${documentStatusPageCount} =    Get Element Count    jQuery = div:nth-child(4):contains("${projectSection}")>ul>li>div>div>div>span:contains("${status}")
     page should contain element     jQuery = h2:contains("${documentStatusPageCount} project")

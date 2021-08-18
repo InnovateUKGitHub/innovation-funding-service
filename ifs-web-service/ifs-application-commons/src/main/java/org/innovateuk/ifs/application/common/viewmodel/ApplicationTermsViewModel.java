@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.application.common.viewmodel;
 
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 
 import java.time.ZonedDateTime;
 import java.util.Optional;
@@ -25,6 +27,9 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
     private final boolean additionalTerms;
     private final boolean subsidyBasisRequiredButIncomplete;
     private final String subsidyBasisQuestionUrl;
+    private final CompetitionThirdPartyConfigResource thirdPartyConfig;
+    private final boolean isThirdPartyProcurementCompetition;
+    private FileEntryResource competitionTerms;
 
     public ApplicationTermsViewModel(long applicationId,
                                      String applicationName,
@@ -40,7 +45,10 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
                                      boolean termsAcceptedByAllOrganisations,
                                      boolean additionalTerms,
                                      boolean subsidyBasisRequiredButIncomplete,
-                                     String subsidyBasisQuestionUrl) {
+                                     String subsidyBasisQuestionUrl,
+                                     CompetitionThirdPartyConfigResource thirdPartyConfig,
+                                     boolean isThirdPartyProcurementCompetition,
+                                     FileEntryResource competitionTerms) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.competitionName = competitionName;
@@ -57,6 +65,9 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
         this.showHeaderAndFooter = true;
         this.subsidyBasisRequiredButIncomplete = subsidyBasisRequiredButIncomplete;
         this.subsidyBasisQuestionUrl = subsidyBasisQuestionUrl;
+        this.thirdPartyConfig = thirdPartyConfig;
+        this.isThirdPartyProcurementCompetition = isThirdPartyProcurementCompetition;
+        this.competitionTerms = competitionTerms;
     }
 
     public ApplicationTermsViewModel(long applicationId,
@@ -66,7 +77,10 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
                                      String competitionTermsTemplate,
                                      boolean collaborativeApplication,
                                      boolean termsAcceptedByAllOrganisation,
-                                     boolean additionalTerms) {
+                                     boolean additionalTerms,
+                                     CompetitionThirdPartyConfigResource thirdPartyConfig,
+                                     boolean isThirdPartyProcurementCompetition,
+                                     FileEntryResource competitionTerms) {
         this.applicationId = applicationId;
         this.applicationName = null;
         this.competitionName = competitionName;
@@ -83,6 +97,9 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
         this.showHeaderAndFooter = false;
         this.subsidyBasisRequiredButIncomplete = false;
         this.subsidyBasisQuestionUrl = null;
+        this.thirdPartyConfig = thirdPartyConfig;
+        this.isThirdPartyProcurementCompetition = isThirdPartyProcurementCompetition;
+        this.competitionTerms = competitionTerms;
     }
 
     @Override
@@ -153,5 +170,17 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
 
     public String getSubsidyBasisQuestionUrl() {
         return subsidyBasisQuestionUrl;
+    }
+
+    public CompetitionThirdPartyConfigResource getThirdPartyConfig() {
+        return thirdPartyConfig;
+    }
+
+    public boolean isThirdPartyProcurementCompetition() {
+        return isThirdPartyProcurementCompetition;
+    }
+
+    public boolean isTermsAndConditionsUploaded() {
+        return competitionTerms != null;
     }
 }

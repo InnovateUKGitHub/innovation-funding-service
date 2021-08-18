@@ -1,0 +1,27 @@
+<#ftl output_format="HTML" auto_esc=true>
+<#import "layout/default.html" as layout>
+<@layout.default>
+<p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
+<p style="margin: 0 0 1em 0;">
+    The spend profile for this project is ready for you to review:<br>
+    ${applicationId} : ${applicationName}</br>
+</p>
+
+<p style="margin: 0 0 1em 0;">
+    Please <a href="${dashboardUrl}">sign into your Innovate UK dashboard:</a> and review the<br>
+    spend profile in the project setup section.</br>
+</p>
+
+<p style="margin: 0 0 1em 0;">
+    The project cannot start until you approve the spend profile.
+</p>
+
+<p style="margin: 1em 0 1em 0;">
+    Yours sincerely,
+</p>
+<p style="margin: 1em 0 1em 0;">
+    Innovate UK, part of UK Research and Innovation<br/>
+    Tel: 0300 321 4357<br/>
+    Email: competitions@innovateuk.ukri.org
+</p>
+</@layout.default>

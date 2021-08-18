@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.competition.setup.fundinginformation.secti
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.Funder;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.FunderRowForm;
@@ -50,6 +51,31 @@ public class AdditionalInfoSectionSaverTest {
 		assertEquals("Activity", competition.getActivityCode());
 		assertEquals("BudgetCode", competition.getBudgetCode());
 		assertEquals("PAF", competition.getPafCode());
+
+		verify(competitionSetupRestService).update(competition);
+	}
+
+	@Test
+	public void saveCompetitionSetupSectionForOfGem() {
+		FunderRowForm funderRowForm = new FunderRowForm();
+		funderRowForm.setFunder(Funder.OFFICE_OF_GAS_AND_ELECTRICITY_MARKETS_OFGEM);
+
+		AdditionalInfoForm competitionSetupForm = new AdditionalInfoForm("PAF", "Activity", "BudgetCode", Collections.emptyList());
+		competitionSetupForm.setFunders(Collections.singletonList(funderRowForm));
+
+		CompetitionResource competition = newCompetitionResource()
+				.withId(1L).build();
+
+		when(competitionSetupRestService.update(competition)).thenReturn(RestResult.restSuccess());
+
+		service.saveSection(competition, competitionSetupForm);
+
+		assertEquals("Activity", competition.getActivityCode());
+		assertEquals("BudgetCode", competition.getBudgetCode());
+		assertEquals("PAF", competition.getPafCode());
+
+		assertEquals(1, competition.getFunders().size());
+		assertEquals(Funder.OFFICE_OF_GAS_AND_ELECTRICITY_MARKETS_OFGEM, competition.getFunders().get(0).getFunder());
 
 		verify(competitionSetupRestService).update(competition);
 	}

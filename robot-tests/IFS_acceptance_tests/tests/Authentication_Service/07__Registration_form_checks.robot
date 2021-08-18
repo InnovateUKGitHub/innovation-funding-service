@@ -62,7 +62,6 @@ Your details: server-side password validation
     [Documentation]  IFS-4048
     [Tags]
     Given the user navigates to the page                    ${ACCOUNT_CREATION_FORM_URL}
-    #When the user fills in registration form                Brian  Test  123456789  test@test.com  Brian123
     And the user enters text to a text field                id = firstName   Brian
     And the user enters text to a text field                id = lastName    Test
     And the user enters text to a text field                id = phoneNumber    123456789

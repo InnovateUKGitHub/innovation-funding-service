@@ -41,8 +41,9 @@ Resource          ../../resources/common/Competition_Commons.robot
 Application details are editable (Ready to Open)
     [Documentation]    INFUND-6937
     [Tags]
+    Change the milestone in the database to tomorrow  ${ready_to_open_competition_name2}  OPEN_DATE
     Given the user clicks the button/link    jQuery = a:contains(Upcoming)
-    And the user clicks the button/link      link = ${ready_to_open_competition_name}
+    And the user clicks the button/link      link = ${ready_to_open_competition_name2}
     And the user clicks the button/link      jQuery = a:contains(and update competition details)
     And the user clicks the button/link      link = Application
     When the user clicks the button/link     link = Application details
@@ -123,7 +124,7 @@ Funding Information is editable (Open)
     [Documentation]    INFUND-7083
     [Tags]
     [Setup]    The user clicks the button/link  jQuery = a:contains(Dashboard)
-    Given the user clicks the button/link       link = ${openCompetitionBusinessRTO_name}
+    Given the user clicks the button/link       link = Photonics for All
     And the user clicks the button/link         link = View and update competition details
     When the user clicks the button/link        link = Funding information
     And the user should see the element         jquery = h1:contains("Funding information")
@@ -229,14 +230,14 @@ Initial details editable before notify date (Open)
     And the user clicks the button/link                     jQuery = .govuk-button:contains("Edit")
     And the user should see the element                     jQuery = dt:contains("Funding type") ~ dd:contains("Grant")
     And the user should see the element                     jQuery = dt:contains("Competition type") ~ dd:contains("Programme")
-    And the user should see the element                     jQuery = dt:contains("Opening date") ~ dd:contains("${openCompetitionBusinessRTOOpenDate}")
+    And the user should see the element                     jQuery = dt:contains("Opening date") ~ dd:contains("2019")
     And the user should see that the element is disabled    id = innovationSectorCategoryId
     And the user should see that the element is disabled    name = innovationAreaCategoryIds[0]
-    When the user selects option from type ahead            innovationLeadUserId  i  Ian Cooper
+    When the user selects option from type ahead            innovationLeadUserId  i  Peter Freeman
     And the user selects option from type ahead             executiveUserId  j  John Doe
     And the user clicks the button/link                     jQuery = button:contains("Done")
     Then the user should see the element                    jQuery = .govuk-button:contains("Edit")
-    And The user should see the element                     jQuery = dt:contains("Competition Lead") ~ dd:contains("Ian Cooper")
+    And The user should see the element                     jQuery = dt:contains("Competition Lead") ~ dd:contains("Peter Freeman")
     And The user should see the element                     jQuery = dt:contains("Portfolio Manager") ~ dd:contains("John Doe")
     [Teardown]    the user clicks the button/link           link = Back to competition details
 
@@ -245,15 +246,15 @@ Assessors editable before Notifications Date (Open)
     [Tags]
     Given the user clicks the button/link     link = Assessors
     Then the user should see the element      jQuery = .govuk-button:contains("Edit")
-    And the user should see the element       jQuery = dt:contains("How many assessors") + dd:contains("1")
+    And the user should see the element       jQuery = dt:contains("How many assessors") + dd:contains("5")
     When the user clicks the button/link      jQuery = .govuk-button:contains("Edit")
-    Then the user selects the radio button    assessorCount    5
+    Then the user selects the radio button    assessorCount    3
     And the user selects the radio button     hasAssessmentPanel    0
     And the user selects the radio button     hasInterviewStage    0
     And the user selects the radio button     averageAssessorScore    0
     And the user should see the element       css = #assessorPay[readonly="readonly"]
     When the user clicks the button/link      jQuery = button:contains("Done")
-    And the user should see the element       jQuery = dt:contains("How many assessors") + dd:contains("5")
+    And the user should see the element       jQuery = dt:contains("How many assessors") + dd:contains("3")
     And the user should see the element       jQuery = .govuk-button:contains("Edit")
     [Teardown]    return the database to its previous status
 
@@ -291,14 +292,14 @@ Organisational eligibility is not editable (Open)
 
 *** Keywords ***
 the user can see the open date of the competition belongs to the future
-    the user should see the element    jQuery = h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
-    the user should see the element    jQuery = li div:contains('${READY_TO_OPEN_COMPETITION_NAME}') ~ *:contains(24/02/2018)
+    the user should see the element    jQuery = h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME2}')
+    the user should see the element    jQuery = li div:contains('${READY_TO_OPEN_COMPETITION_NAME2}') ~ *:contains(24/02/2018)
     ${openDate} =    robot.libraries.DateTime.Convert Date    2018-02-24
     ${today} =    get current date
     Should Be True    '${today}'<'${openDate}'
 
 the user is able to change the value of the fields
-    the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/detail/edit
+    the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION2}/section/application/detail/edit
     the user enters text to a text field  id = minProjectDuration  2
     the user enters text to a text field  id = maxProjectDuration  30
     the user selects the radio button  useResubmissionQuestion    use-resubmission-question-no
@@ -324,11 +325,11 @@ return the database to its previous status
     execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE `id`='6';
 
 the user moves the competition back again
-    the user navigates to the page                   ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
-    the user clicks the button/link                  jQuery = button:contains("Done")   # this action  is marking appication section complete
-    the user clicks the button/link                  link = Back to competition details
-    the user clicks the button/link                  jQuery = a:contains("Complete setup")
-    the user clicks the button/link                  css = button[type="submit"]
+    the user navigates to the page       ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
+    the user clicks the button/link      jQuery = button:contains("Done")   # this action  is marking appication section complete
+    the user clicks the button/link      link = Back to competition details
+    the user clicks the button/link      jQuery = a:contains("Complete setup")
+    the user clicks the button/link      css = button[type="submit"]
     the user closes the browser
 
 the user fills in the milestone data with valid information

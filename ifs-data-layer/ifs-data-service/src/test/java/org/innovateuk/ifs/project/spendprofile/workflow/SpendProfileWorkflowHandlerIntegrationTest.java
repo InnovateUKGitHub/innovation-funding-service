@@ -16,6 +16,7 @@ import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileEvent;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileState;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
@@ -24,12 +25,11 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
@@ -37,8 +37,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -174,6 +173,28 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
         when(spendProfileProcessRepository.findOneByTargetId(project.getId())).thenReturn(currentSpendProfileProcess);
 
         assertTrue(spendProfileWorkflowHandler.projectHasNoPendingPartners(project));
+    }
+
+    @Test
+    public void getReviewOutcome() {
+        SpendProfileWorkflowHandlerIntegrationTest.GenerateSpendProfileData generateSpendProfileData = new SpendProfileWorkflowHandlerIntegrationTest.GenerateSpendProfileData().build();
+
+        Project project = generateSpendProfileData.getProject();
+
+        User internalParticipant = newUser()
+                .withFirstName("fname")
+                .withLastName("lname")
+                .withRoles(newHashSet(Role.MONITORING_OFFICER))
+                .build();
+        SpendProfileProcess currentSpendProfileProcess = new SpendProfileProcess(internalParticipant, project, SpendProfileState.APPROVED);
+        when(spendProfileProcessRepository.findOneByTargetId(project.getId())).thenReturn(currentSpendProfileProcess);
+
+        SpendProfileProcess spendProfileProcess = spendProfileWorkflowHandler.getReviewOutcome(project);
+
+        assertNotNull(spendProfileProcess);
+        assertEquals(internalParticipant, spendProfileProcess.getInternalParticipant());
+        assertEquals("fname lname", spendProfileProcess.getInternalParticipant().getName());
+        assertTrue(spendProfileProcess.getInternalParticipant().getRoles().contains(Role.MONITORING_OFFICER));
     }
 
     private void callWorkflowAndCheckTransitionAndEventFiredInternalUser(BiFunction<Project, User, Boolean> workflowMethodToCall, SpendProfileState currentSpendProfileState, SpendProfileState destinationSpendProfileState, SpendProfileEvent expectedEventToBeFired) {

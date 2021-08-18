@@ -68,7 +68,7 @@ the user sees the correct read only view of the question
 
 the user fills in the CS Initial details
     [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}  ${fundingRule}  ${fundingType}
-    the user clicks the button/link                         link = Initial details
+    the user clicks the button/link                         jQuery = a:contains("Initial details")
     the user enters text to a text field                    css = #title  ${compTitle}
     the user selects the radio button                       fundingType  ${fundingType}
     the user selects the option from the drop-down menu     ${compType}  id = competitionTypeId
@@ -81,13 +81,14 @@ the user fills in the CS Initial details
     the user selects option from type ahead                 innovationLeadUserId  i  Ian Cooper
     the user selects option from type ahead                 executiveUserId  r  Robert Johnson
     the user clicks the button/link                         jQuery = button:contains("Done")
+    the user should see the element                         jQuery = button:contains("Edit")
     the user clicks the button/link                         link = Back to competition details
     the user should see the element                         jQuery = div:contains("Initial details") ~ .task-status-complete
 
 the user selects procurement Terms and Conditions
     the user clicks the button/link                                     link = Terms and conditions
     the user performs procurement Terms and Conditions validations
-    the user uploads the file                                           css = .inputfile  ${valid_pdf}
+    the user uploads the file                                           name = termsAndConditionsDoc  ${valid_pdf}
     the user clicks the button/link                                     jQuery = button:contains("Done")
     the user should see the element                                     jQuery = a:contains("Procurement (opens in a new window)")
     the user clicks the button/link                                     link = Back to competition details
@@ -96,7 +97,7 @@ the user selects procurement Terms and Conditions
 the user performs procurement Terms and Conditions validations
     the user clicks the button/link                   jQuery = button:contains("Done")
     the user should see a field and summary error     Upload a terms and conditions document.
-    the user uploads the file                         css = .inputfile  ${ods_file}
+    the user uploads the file                         name = termsAndConditionsDoc  ${ods_file}
     the user should see the element                   jQuery = :contains("${wrong_filetype_validation_error}")
 
 the user selects the Terms and Conditions
@@ -119,8 +120,28 @@ the user fills in the CS Funding Information
     ${nextYearInTwoDigits}=                           get next year in two digits
     textfield should contain                          css = input[name="competitionCode"]   ${nextYearInTwoDigits}
     the user clicks the button/link                   jQuery = button:contains("Done")
+    the user should see the element                   jQuery = button:contains("Edit")
     the user clicks the button/link                   link = Back to competition details
     the user should see the element                   jQuery = div:contains("Funding information") ~ .task-status-complete
+
+the user fills in funding information for the third party procurement comp
+    the user clicks the button/link                   link = Funding information
+    the user clicks the button/link                   jQuery = button:contains("Generate code")
+    the user selects option from type ahead           funders[0].funder   ofGem   Office of Gas and Electricity Markets (Ofgem)
+    the user enters text to a text field              id = funders[0].funderBudget  142424242
+    the user enters text to a text field              id = pafNumber  2424
+    the user enters text to a text field              id = budgetCode  Ch0col@73
+    the user enters text to a text field              id = activityCode  133t
+    ${nextYearInTwoDigits}=                           get next year in two digits
+    textfield should contain                          css = input[name="competitionCode"]   ${nextYearInTwoDigits}
+    the user clicks the button/link                   jQuery = button:contains("Done")
+    the user should see the element                   jQuery = td:contains("Office of Gas and Electricity Markets (Ofgem)")
+    the user should see the element                   jQuery = button:contains("Edit")
+    the user clicks the button/link                   link = Back to competition details
+    the user should see the element                   jQuery = div:contains("Funding information") ~ .task-status-complete
+    the user clicks the button/link                   jQuery = a:contains("Complete")
+    the user clicks the button/link                   jQuery = button:contains('Done')
+    the user clicks the button/link                   jQuery = a:contains("Competition")
 
 the user fills in the CS Project eligibility
     [Arguments]  ${organisationType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
@@ -148,6 +169,8 @@ the user fills in the CS funding eligibility
     ...  ELSE IF   "${fundingRule}" == "STATE_AID" and '${researchCategory}' == 'false'          run keywords                        the user fills in maximum funding level percentage
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
     ...                                     AND              the user should see the element     jQuery = p:contains("Click edit to change the maximum funding level percentage.")
+    ...  ELSE IF   "${fundingRule}" == "NOT_AID" and '${researchCategory}' == 'false'            run keywords        the user fills in maximum funding level percentage
+    ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
     ...  ELSE IF    '${researchCategory}' == 'false'         run keywords                        the user fills in maximum funding level percentage
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
     ...                                     AND              the user fills in maximum funding level percentage for state aid
@@ -572,7 +595,6 @@ the user should be able to see the read only view of question correctly
     the user should see the element  jQuery = dt:contains("Guidance") + dd:contains("Please use Microsoft Word where possible.")
     the user should see the element  jQuery = dt:contains("Max word count") + dd:contains("500")
     the user should see the element  jQuery = dt:contains("Appendix uploads") + dd:contains("1")
-    the user should see the element  jQuery = dt:contains("Accepted appendix file types")
     the user should see the element  jQuery = dt:contains("Accepted appendix file types")
     the user should see the element  jQuery = dt:contains("Appendix guidance") + dd:contains("You may include an appendix of additional information to provide details of the specific expertise and track record of each project partner and each subcontractor.")
     the user should see the element  jQuery = dt:contains("Scored") + dd:contains("Yes")

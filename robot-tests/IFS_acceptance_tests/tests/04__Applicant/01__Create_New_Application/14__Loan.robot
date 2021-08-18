@@ -33,6 +33,8 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...
 ...             IFS-9484 Loans: Applicant journey
 ...
+...             IFS-9679 MO Spend profile: IFS Admin only to be able to approve or reject spend profiles
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -59,15 +61,11 @@ ${spend_profile}                           ${server}/project-setup-management/pr
 
 
 *** Test Cases ***
-The user can see qualtrics survey fields in business and financial information application question
+The user can see qualtrics survey link in business and financial information application question
     [Documentation]    IFS-9484
-    Given the user clicks the button/link                link = Business and financial information
-    And the user clicks the button/link                  id = edit
-    When the user clicks the button/link                 link = Complete the online business survey (opens in a new window)
-    And select window                                    Innovate UK - Innovation Continuity Loans
-#    And the user clicks the button/link                  id = NextButton
-#    Then the user should see qualtrics survey fields
-    [Teardown]  the user closes the last opened tab
+    Given the user clicks the button/link       link = Business and financial information
+    When the user clicks the button/link        id = edit
+    Then the user should see the element        link = Complete the online business survey (opens in a new window)
 
 The user will not be able to mark the application as complete without completing business and financial information
     [Documentation]    IFS-9484
@@ -169,12 +167,15 @@ Internal user can see application details in project setup
     Then the user should see the element     jQuery = h2:contains("Applicant details")
     And the user should see the element      jQuery = h2:contains("Project finance")
 
-Internal user can mark project as successful
-    [Documentation]  IFS-6363
-    Given the user approves the spend profile
-    When the user navigates to the page     ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
-    And the user clicks the button/link     jQuery = tr:contains("${loan_PS_application1}") td:contains("Review") a
-    Then the user marks loan as complete    successful  ${loan_PS_application1}
+IFS Admin can mark project as successful
+    [Documentation]  IFS-6363  IFS-9679
+    Given Log in as a different user              &{ifs_admin_user_credentials}
+    And the user navigates to the page            ${spend_profile}
+    When the IFS Admin approves to SP
+    And the user clicks the button/link           jQuery = button.govuk-button:contains("Submit")
+    And the user navigates to the page            ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
+    And the user clicks the button/link           jQuery = tr:contains("${loan_PS_application1}") td:contains("Review") a
+    Then the user marks loan as complete          successful  ${loan_PS_application1}
 
 Internal user can mark project as unsuccessful
     [Documentation]  IFS-6363
@@ -190,8 +191,9 @@ Applicant checks successful and unsuccessful project status
 
 *** Keywords ***
 Custom suite setup
-    the user logs-in in new browser       &{lead_applicant_credentials}
-    the user clicks the button/link       link = Loan Application
+    the user logs-in in new browser                       &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       link = Loan Application
     Connect to database  @{database}
 
 Custom suite teardown

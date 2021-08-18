@@ -45,11 +45,11 @@
                                class="govuk-link" />
                         </div>
                         <div th:if="${model.userCanApproveOrRejectDocuments}">
-                            <a th:unless="${document.notSubmitted or document.rejected}"
+                            <a th:unless="${document.notSubmitted}"
                                th:href="@{/project/{id}/document/config/{documentConfigId}(id=${model.projectId}, documentConfigId=${document.documentConfigId})}"
                                th:text=${document.title}
                                class="govuk-link" />
-                            <div th:if="${document.notSubmitted or document.rejected}" th:text=${document.title}></div>
+                            <div th:if="${document.notSubmitted}" th:text=${document.title}></div>
                         </div>
                     </span>
                 </div>

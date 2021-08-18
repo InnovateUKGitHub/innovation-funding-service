@@ -17,8 +17,8 @@ Resource          ../../resources/common/Competition_Commons.robot
 *** Test Cases ***
 Competition dashboard Open competition
     [Documentation]    INFUND-7562  INF-2637
-    When The user clicks the button/link   link = ${openCompetitionRTO_name}
-    Then the user should see the element   jQuery = span:contains("Predicting market trends programme")
+    When The user clicks the button/link   link = Performance testing competition
+    Then the user should see the element   jQuery = span:contains("Performance testing competition")
     And the user should see the element    jQuery = h1:contains("Open")
     And the user should see the element    jQuery = dt:contains("Competition type") ~ dd:contains("Programme")
     And the user should see the element    jQuery = dt:contains("Innovation sector") ~ dd:contains("Materials and manufacturing")
@@ -48,7 +48,6 @@ Competition dashboard ready to Open competition
     Given the user navigates to the page    ${CA_UpcomingComp}
     When The user clicks the button/link in the paginated list    link = ${READY_TO_OPEN_COMPETITION_NAME}
     Then the user should see the element    jQuery = span:contains("${READY_TO_OPEN_COMPETITION_NAME}")
-    And the user should see the element     jQuery = h1:contains("Ready to open")
     And the user should see the element     jQuery = h1:contains("Ready to open")
     And the user should see the element     jQuery = dt:contains("Competition type") ~ dd:contains("Programme")
     And the user should see the element     jQuery = dt:contains("Innovation sector") ~ dd:contains("Materials and manufacturing")
@@ -100,12 +99,12 @@ the counts of the open competition should be correct
     Should Be Equal As Integers    ${ACCEPTED_COUNT}    ${Accepted}
     ${STARTED_COUNT} =     Get text    jQuery = .govuk-list:contains("Applications started") .govuk-grid-column-one-third:nth-child(1) .govuk-heading-l
     Should Be Equal As Integers    ${Applications started}    ${STARTED_COUNT}
-    ${BEYOND_50)_COUNT} =     Get text    css = .govuk-grid-column-one-third:nth-child(2) .govuk-heading-l
+    ${BEYOND_50)_COUNT} =     Get text    css = ul ~ ul .govuk-grid-column-one-third:nth-child(2) .govuk-heading-l
     Should Be Equal As Integers    ${Applications_Beyond_50}    ${BEYOND_50)_COUNT}
     ${SUBMITTED_COUNT} =     Get text    jQuery = .govuk-list:contains("Applications submitted") .govuk-grid-column-one-third:nth-child(3) .govuk-heading-l
     Should Be Equal As Integers    ${SUBMITTED_COUNT}    ${Applications submitted}
     ${APPLICATIONS_PER_ASSESSOR} =     Get text    css = ul:nth-child(3) > li:nth-child(3) > div > span
-    Should Be Equal As Integers    ${APPLICATIONS_PER_ASSESSOR}    3
+    Should Be Equal As Integers    ${APPLICATIONS_PER_ASSESSOR}    5
 
 Get the expected values for the Ready to open counts
     The user clicks the button/link    jQuery = a:contains(Invite assessors)
