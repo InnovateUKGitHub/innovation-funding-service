@@ -261,7 +261,7 @@ profiles:
           ignoreChanges: true
       artifacts:
         - image: anonymised-db-data
-          context: ifs-data-layer/ifs-data-service/src/main/docker
+          context: ifs-data-layer/ifs-data-service/src/main/docker/proxysql
           docker:
             dockerfile: Dockerfile-proxysql
     deploy:
