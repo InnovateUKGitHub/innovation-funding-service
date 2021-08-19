@@ -4,13 +4,12 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
 
-    @Min(value = 3, message = "{validation.modashboard.filterprojects.keywords.min.length}")
-    @Max(value = 50, message = "{validation.modashboard.filterprojects.keywords.max.length}")
+    @Size(min = 3, message = "{validation.modashboard.filterprojects.keywords.min.length}")
+    @Size(max = 50, message = "{validation.modashboard.filterprojects.keywords.max.length}")
     private String keywords;
     private boolean projectInSetup;
     private boolean previousProject;

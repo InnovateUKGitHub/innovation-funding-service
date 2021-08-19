@@ -44,10 +44,10 @@
                                        id="keywords"
                                        th:field="*{keywords}"
                                        type="text"
-                                       min="3"
-                                       max="50"
-                                       th:attr="data-min-errormessage=#{validation.modashboard.filterprojects.keywords.min.length},
-                                                data-max-errormessage=#{validation.modashboard.filterprojects.keywords.max.length}">
+                                       minlength="3"
+                                       maxlength="50"
+                                       th:attr="data-minlength-errormessage=#{validation.modashboard.filterprojects.keywords.min.length},
+                                                data-maxlength-errormessage=#{validation.modashboard.filterprojects.keywords.max.length}">
                             </div>
                             <div class="govuk-form-group">
                                 <h2 class="govuk-heading-s govuk-!-margin-bottom-2">
