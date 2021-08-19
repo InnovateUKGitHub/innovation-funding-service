@@ -49,6 +49,11 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
         return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
     }
 
+    @PermissionRule(value = "VIEW_SPEND_PROFILE_STATUS", description = "Monitoring officers can get the approved status of a Spend Profile for any Project")
+    public boolean assignedMonitoringOfficerCanViewSpendProfileStatus(ProjectResource project, UserResource user){
+        return isMonitoringOfficer(project.getId(), user.getId());
+    }
+
     @PermissionRule(
             value = "VIEW_SPEND_PROFILE",
             description = "Partners can view their own Spend Profile data")

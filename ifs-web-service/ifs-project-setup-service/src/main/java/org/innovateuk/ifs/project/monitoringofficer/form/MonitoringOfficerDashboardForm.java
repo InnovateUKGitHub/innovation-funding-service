@@ -13,6 +13,10 @@ public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
     private boolean documentsIncomplete;
     private boolean documentsAwaitingReview;
 
+    private boolean spendProfileComplete;
+    private boolean spendProfileIncomplete;
+    private boolean spendProfileAwaitingReview;
+
     public MonitoringOfficerDashboardForm() {
     }
 
@@ -56,6 +60,30 @@ public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
         this.documentsAwaitingReview = documentsAwaitingReview;
     }
 
+    public boolean isSpendProfileComplete() {
+        return spendProfileComplete;
+    }
+
+    public void setSpendProfileComplete(boolean spendProfileComplete) {
+        this.spendProfileComplete = spendProfileComplete;
+    }
+
+    public boolean isSpendProfileIncomplete() {
+        return spendProfileIncomplete;
+    }
+
+    public void setSpendProfileIncomplete(boolean spendProfileIncomplete) {
+        this.spendProfileIncomplete = spendProfileIncomplete;
+    }
+
+    public boolean isSpendProfileAwaitingReview() {
+        return spendProfileAwaitingReview;
+    }
+
+    public void setSpendProfileAwaitingReview(boolean spendProfileAwaitingReview) {
+        this.spendProfileAwaitingReview = spendProfileAwaitingReview;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -70,6 +98,9 @@ public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
                 .append(documentsComplete, that.documentsComplete)
                 .append(documentsIncomplete, that.documentsIncomplete)
                 .append(documentsAwaitingReview, that.documentsAwaitingReview)
+                .append(spendProfileComplete, that.spendProfileComplete)
+                .append(spendProfileIncomplete, that.spendProfileIncomplete)
+                .append(spendProfileAwaitingReview, that.spendProfileAwaitingReview)
                 .isEquals();
     }
 
@@ -81,6 +112,9 @@ public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
                 .append(documentsComplete)
                 .append(documentsIncomplete)
                 .append(documentsAwaitingReview)
+                .append(spendProfileComplete)
+                .append(spendProfileIncomplete)
+                .append(spendProfileAwaitingReview)
                 .toHashCode();
     }
 }
