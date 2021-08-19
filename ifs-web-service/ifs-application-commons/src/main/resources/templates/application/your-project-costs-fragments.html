@@ -72,10 +72,13 @@
                             </ul>
                             <p class="govuk-body">Enter the total number of working days in the year. List the total
                                 days worked by all categories of staff on your project. Describe their roles.</p>
-                            <p class="govuk-body">We <span
-                                th:if="${!model.isProcurementCompetition()}"> will</span><span
-                                th:if="${model.isProcurementCompetition()}"> may</span> review the total amount of time
-                                and cost of labour before we approve your application.
+                            <p class="govuk-body">
+                                <th:block th:unless="${model.vatHidden}">
+                                    We
+                                    <span th:if="${!model.isProcurementCompetition()}">will</span>
+                                    <span th:if="${model.isProcurementCompetition()}">may</span>
+                                    review the total amount of time and cost of labour before we approve your application.
+                                </th:block>
                                 <span th:if="${!model.isProcurementCompetition()}"> The terms and conditions of the grant include compliance with these points.</span>
                             </p>
                         </div>
