@@ -584,21 +584,21 @@
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
-            <th:block th:unless="${model.ofGemCompetition}">
-                <div class="govuk-accordion__section-header">
-                    <h3 class="govuk-accordion__section-heading">
+            <div class="govuk-accordion__section-header" th:classappend="${model.ofGemCompetition} ? 'govuk-visually-hidden'">
+                <h3 class="govuk-accordion__section-heading">
                     <span class="govuk-accordion__section-button" id="accordion-finances-heading-10">
                     Overhead costs
                     </span>
-                        <span class="finance-total" data-mirror="#section-total-procurement-overheads"></span>
-                        <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                              data-calculation-operations="/,*"
-                              data-calculation-fields="100, #total-cost, #section-total-procurement-overheads"
-                              th:text="${#ifsUtil.calculatePercentage(form.totalProcurementOverheadCosts, form.organisationFinanceTotal) + '%'}"></span>
-                        <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'procurementOverheadRows')}"
-                             class="section-status section-incomplete icon-only error-marker"></div>
-                    </h3>
-                </div>
+                    <span class="finance-total" data-mirror="#section-total-procurement-overheads"></span>
+                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                          data-calculation-operations="/,*"
+                          data-calculation-fields="100, #total-cost, #section-total-procurement-overheads"
+                          th:text="${#ifsUtil.calculatePercentage(form.totalProcurementOverheadCosts, form.organisationFinanceTotal) + '%'}"></span>
+                    <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'procurementOverheadRows')}"
+                         class="section-status section-incomplete icon-only error-marker"></div>
+                </h3>
+            </div>
+            <th:block th:unless="${model.ofGemCompetition}">
                 <div id="accordion-finances-content-10" class="govuk-accordion__section-content"
                      aria-labelledby="accordion-finances-heading-10">
                     <details class="govuk-details" role="group">
@@ -691,16 +691,7 @@
                 </div>
             </th:block>
             <th:block th:if="${model.ofGemCompetition}">
-                <div class="govuk-visually-hidden govuk-accordion__section-header">
-                    <h3 class="govuk-accordion__section-heading">
-                    <span class="govuk-accordion__section-button" id="accordion-finances-heading-10">
-                    Overhead costs
-                    </span>
-                    <span class="finance-total" data-mirror="#section-total-procurement-overheads"></span>
-                    </h3>
-                </div>
-                <h4 class="govuk-visually-hidden govuk-heading-s alignright section-total-summary">
-                    Total overheads
+                <h4 class="govuk-visually-hidden section-total-summary">
                     <span class="govuk-heading-s"
                           data-mirror='#section-total-procurement-overheads'
                           th:text="'£' + ${#numbers.formatInteger(form.totalProcurementOverheadCosts, 0,'DEFAULT')}"></span>
