@@ -860,6 +860,12 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.competitionThirdPartyConfigResource = competitionThirdPartyConfigResource;
     }
 
+    public boolean isOfGemCompetition() {
+        return isProcurement()
+                && funders.stream().anyMatch(CompetitionFunderResource::isOfGem)
+                && termsAndConditions.isProcurementThirdParty();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
