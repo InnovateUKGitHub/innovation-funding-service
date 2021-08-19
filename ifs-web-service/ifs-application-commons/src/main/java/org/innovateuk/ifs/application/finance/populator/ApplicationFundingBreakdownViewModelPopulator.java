@@ -32,6 +32,7 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.CAPITAL_USAGE;
 
 @Component
 public class ApplicationFundingBreakdownViewModelPopulator {
@@ -114,6 +115,10 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         if (competition.isKtp()) {
             financeRowTypes = competition.getFinanceRowTypesByFinance(finance);
         }
+        if (competition.isOfGemCompetition()) {
+            financeRowTypes.remove(CAPITAL_USAGE);
+        }
+
         return financeRowTypes.stream().filter(FinanceRowType::isCost).collect(toList());
     }
 
