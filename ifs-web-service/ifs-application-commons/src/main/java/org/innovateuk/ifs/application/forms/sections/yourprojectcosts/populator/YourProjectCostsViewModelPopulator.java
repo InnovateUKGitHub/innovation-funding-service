@@ -90,8 +90,10 @@ public class YourProjectCostsViewModelPopulator {
                 && isOfGemFunder(competition)
                 && competition.getTermsAndConditions().isProcurementThirdParty();
 
+        boolean hideCapitalUsage = competition.isProcurement() && isOfGemFunder(competition);
+
         if (isUserCanEditFecFinance(competition, section, open)) {
-            return getYourFecProjectCostsViewModel(application, competition, organisation, section, finance, completedSectionIds, open, complete, includeVat, hideVatQuestion);
+            return getYourFecProjectCostsViewModel(application, competition, organisation, section, finance, completedSectionIds, open, complete, includeVat, hideVatQuestion, hideCapitalUsage);
         } else {
             return new YourProjectCostsViewModel(applicationId,
                     competition.getName(),
@@ -114,7 +116,8 @@ public class YourProjectCostsViewModelPopulator {
                     finance.getFecModelEnabled(),
                     getGrantClaimPercentage(application.getId(), organisation.getId()),
                     getThirdPartyProjectCostGuidanceLink(competition),
-                    hideVatQuestion);
+                    hideVatQuestion,
+                    hideCapitalUsage);
         }
     }
 
@@ -134,7 +137,7 @@ public class YourProjectCostsViewModelPopulator {
     private YourProjectCostsViewModel getYourFecProjectCostsViewModel(ApplicationResource application, CompetitionResource competition,
                                                                       OrganisationResource organisation, ApplicantSectionResource section,
                                                                       BaseFinanceResource finance, List<Long> completedSectionIds,
-                                                                      boolean open, boolean complete, boolean includeVat, boolean hideVatQuestion) {
+                                                                      boolean open, boolean complete, boolean includeVat, boolean hideVatQuestion, boolean hideCapitalUsage) {
         Long yourFundingSectionId = getYourFundingSectionId(section);
         boolean yourFundingRequired = !completedSectionIds.contains(yourFundingSectionId);
         Long yourFecCostSectionId = getYourFecCostSectionId(section);
@@ -167,7 +170,8 @@ public class YourProjectCostsViewModelPopulator {
                 finance.getFecModelEnabled(),
                 getGrantClaimPercentage(application.getId(), organisation.getId()),
                 getThirdPartyProjectCostGuidanceLink(competition),
-                hideVatQuestion);
+                hideVatQuestion,
+                hideCapitalUsage);
     }
 
     private boolean isYourFecCostRequired(List<Long> completedSectionIds, Long yourFecCostSectionId) {

@@ -65,6 +65,8 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     private final boolean hideVatQuestion;
 
+    private final boolean hideCapitalUsage;
+
     public YourProjectCostsViewModel(long applicationId,
                                      String competitionName,
                                      long sectionId,
@@ -91,7 +93,8 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      Boolean fecModelEnabled,
                                      BigDecimal grantClaimPercentage,
                                      String thirdPartyProjectCostGuidanceLink,
-                                     boolean hideVatQuestion) {
+                                     boolean hideVatQuestion,
+                                     boolean hideCapitalUsage) {
         this.internal = false;
         this.organisationId = organisationId;
         this.applicationId = applicationId;
@@ -120,6 +123,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.grantClaimPercentage = grantClaimPercentage;
         this.thirdPartyProjectCostGuidanceLink = thirdPartyProjectCostGuidanceLink;
         this.hideVatQuestion = hideVatQuestion;
+        this.hideCapitalUsage = hideCapitalUsage;
     }
 
     public YourProjectCostsViewModel(long applicationId,
@@ -143,12 +147,13 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      Boolean fecModelEnabled,
                                      BigDecimal grantClaimPercentage,
                                      String thirdPartyProjectCostGuidanceLink,
-                                     boolean hideVatQuestion) {
+                                     boolean hideVatQuestion,
+                                     boolean hideCapitalUsage) {
         this(applicationId, competitionName, sectionId, competitionId, organisationId, complete, open,
                 includeVat, applicationName, organisationName, financesUrl, procurementCompetition, thirdPartyProcurementCompetition,
                 ktpCompetition, financeRowTypes, overheadAlwaysTwenty, showCovidGuidance, showJustificationForm, false,
                 false, null, false, null, fecModelEnabled,
-                grantClaimPercentage, thirdPartyProjectCostGuidanceLink, hideVatQuestion);
+                grantClaimPercentage, thirdPartyProjectCostGuidanceLink, hideVatQuestion, hideCapitalUsage);
     }
 
     public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, boolean thirdPartyProcurementCompetition,
@@ -183,6 +188,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.grantClaimPercentage = BigDecimal.ZERO;
         this.thirdPartyProjectCostGuidanceLink = null;
         this.hideVatQuestion = false;
+        this.hideCapitalUsage = false;
     }
 
     @Override
@@ -318,5 +324,9 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     public Boolean isVatHidden() {
         return hideVatQuestion;
+    }
+
+    public boolean isHideCapitalUsage() {
+        return hideCapitalUsage;
     }
 }
