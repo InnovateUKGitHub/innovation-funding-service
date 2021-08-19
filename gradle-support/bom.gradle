@@ -2,7 +2,7 @@
 ext {
     bomSpringBootVersion = '2.4.1'
     bomSpringCloudVersion = '2020.0.1'
-    ifsLibrariesVersion = '1.1.0-20210818.140515-1'
+    ifsLibrariesVersion = '1.1.0-20210819.100218-4'
 }
 
 dependencies {
