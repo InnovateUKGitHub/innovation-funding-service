@@ -2057,7 +2057,7 @@
 <th:block th:fragment="vat"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).VAT}">
 <th:block th:if="${model.financeRowTypes.contains(financeRowType)}">
-    <th:block th:unless="${model.vatHidden}">
+    <th:block th:unless="${model.ofGemCompetition}">
         <div class="govuk-form-group"
              th:classappend="${#fields.hasErrors('vatForm.registered')} ? 'govuk-form-group--error'">
             <fieldset class="govuk-fieldset">
@@ -2158,7 +2158,7 @@
         </div>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
     </th:block>
-    <th:block th:if="${model.vatHidden}">
+    <th:block th:if="${model.ofGemCompetition}">
         <input type="hidden" name="vatForm.registered" value="false" />
     </th:block>
 </th:block>
