@@ -860,12 +860,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.competitionThirdPartyConfigResource = competitionThirdPartyConfigResource;
     }
 
-    public boolean isOfGemCompetition() {
-        return isProcurement()
-                && funders.stream().anyMatch(CompetitionFunderResource::isOfGem)
-                && termsAndConditions.isProcurementThirdParty();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -1021,6 +1015,13 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     @JsonIgnore
     public boolean isCovidCompetition() {
         return covidType != null;
+    }
+
+    @JsonIgnore
+    public boolean isOfGemCompetition() {
+        return isProcurement()
+                && funders.stream().anyMatch(CompetitionFunderResource::isOfGem)
+                && termsAndConditions.isProcurementThirdParty();
     }
 
     @JsonIgnore
