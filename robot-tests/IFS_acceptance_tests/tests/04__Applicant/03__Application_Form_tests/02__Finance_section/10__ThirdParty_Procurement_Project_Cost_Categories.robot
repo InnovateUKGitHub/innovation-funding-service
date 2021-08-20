@@ -1,5 +1,6 @@
 *** Settings ***
 Documentation     IFS-10271: Ofgem critical changes - Content changes
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant
