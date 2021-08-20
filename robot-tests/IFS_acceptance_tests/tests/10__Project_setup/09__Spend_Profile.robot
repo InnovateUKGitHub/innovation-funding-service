@@ -459,7 +459,7 @@ MO can see who rejected the spend profile in the banner
     [Documentation]      IFS-9678
     [Setup]    Log in as a different user      &{monitoring_officer_one_credentials}
     Given The user navigates to the page       ${server}/project-setup/project/${PS_SP_Project_Id}/partner-organisation/${Ooba_Lead_Org_Id}/spend-profile
-    Then The user should see the element       jQuery = p:contains("Innovate UK has rejected this spend profile. Please contact the project manager to explain the decision.")
+    Then The user should see the element       jQuery = p:contains("Innovate UK rejected this spend profile")
 
 Status updates to a cross for the internal user's table
     [Documentation]    INFUND-6977
@@ -567,7 +567,7 @@ Project Finance still has a link to the spend profile after approval
     Then the user clicks the button/link     link = ${Ooba_Lead_Org_Name}-spend-profile.csv
     And the user clicks the button/link      link = ${Wordpedia_Partner_Org_Name}-spend-profile.csv
     And the user clicks the button/link      link = ${Jabbertype_Partner_Org_Name}-spend-profile.csv
-    And the user should see the element      jQuery = h2:contains("Orville Gibbs approved this spend profile ")
+    And the user should see the element      jQuery = p:contains("Orville Gibbs approved this spend profile ")
 
 Project finance user cannot access external users' spend profile page
     [Documentation]    INFUND-5911
