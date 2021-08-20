@@ -15,4 +15,5 @@ dependencies {
     compile "org.springframework.security:spring-security-core"
     compile 'org.innovateuk.ifs.libraries:ifs-commons'
     compile 'org.innovateuk.ifs.libraries:ifs-error-util'
+    testCompile "junit:junit"
 }

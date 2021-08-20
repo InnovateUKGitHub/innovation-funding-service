@@ -80,6 +80,7 @@ dependencies {
     testCompile project(path: ":ifs-web-service:ifs-project-commons", configuration: 'testArtifacts')
 
     testCompile "com.opencsv:opencsv"
+    testCompile "junit:junit"
 }
 
 processResources {
