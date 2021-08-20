@@ -196,6 +196,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).auditorUsersCanDownloadGrantOfferLetter(project,
                     getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).monitoringOfficerUsersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
 
@@ -223,6 +225,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
             verify(projectGrantOfferPermissionRules).stakeholdersCanDownloadGrantOfferLetter(project,
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).auditorUsersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).monitoringOfficerUsersCanDownloadGrantOfferLetter(project,
                     getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -252,6 +256,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).auditorUsersCanDownloadGrantOfferLetter(project,
                     getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).monitoringOfficerUsersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
     }
@@ -279,7 +285,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).auditorUsersCanDownloadGrantOfferLetter(project,
                     getLoggedInUser());
-
+            verify(projectGrantOfferPermissionRules).monitoringOfficerUsersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
 
