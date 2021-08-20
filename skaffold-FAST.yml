@@ -230,11 +230,7 @@ profiles:
       tagPolicy:
         gitCommit:
           ignoreChanges: true
-      artifacts:
-        - image: dbreset
-          context: ifs-data-layer/ifs-data-service/src/main/resources
-          docker:
-            dockerfile: Dockerfile-dbreset
+      artifacts: []
     deploy:
       kustomize:
         paths:
