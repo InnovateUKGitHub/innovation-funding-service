@@ -26,13 +26,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.CAPITAL_USAGE;
 
 @Component
 public class ApplicationFundingBreakdownViewModelPopulator {
@@ -114,9 +116,6 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         List<FinanceRowType> financeRowTypes = competition.getFinanceRowTypes();
         if (competition.isKtp()) {
             financeRowTypes = competition.getFinanceRowTypesByFinance(finance);
-        }
-        if (competition.isOfGemCompetition()) {
-            financeRowTypes.remove(CAPITAL_USAGE);
         }
 
         return financeRowTypes.stream().filter(FinanceRowType::isCost).collect(toList());
