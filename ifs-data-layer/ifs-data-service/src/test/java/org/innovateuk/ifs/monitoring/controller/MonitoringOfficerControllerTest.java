@@ -36,7 +36,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                 .withName("name1", "name2")
                 .build(2);
 
-        when(monitoringOfficerServiceMock.filterMonitoringOfficerProjects(userId, true, true))
+        when(monitoringOfficerServiceMock.filterMonitoringOfficerProjects(userId, "",true, true))
                 .thenReturn(serviceSuccess(projectResources));
 
         mockMvc.perform(get("/monitoring-officer/1/filter-projects?projectInSetup={projectInSetup}&previousProject={previousProject}", userId, true, true))

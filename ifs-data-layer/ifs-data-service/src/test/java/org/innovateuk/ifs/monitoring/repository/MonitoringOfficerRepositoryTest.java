@@ -119,7 +119,7 @@ public class MonitoringOfficerRepositoryTest extends BaseRepositoryIntegrationTe
 
         flushAndClearSession();
 
-        List<MonitoringOfficer> monitoringOfficerOnProjects = repository.filterMonitoringOfficerProjects(monitoringOfficer.getId(),
+        List<MonitoringOfficer> monitoringOfficerOnProjects = repository.filterMonitoringOfficerProjectsByStates(monitoringOfficer.getId(),
                 asList(SETUP, LIVE));
 
         assertEquals(2, monitoringOfficerOnProjects.size());
