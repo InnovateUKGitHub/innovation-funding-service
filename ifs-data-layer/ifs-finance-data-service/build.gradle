@@ -101,6 +101,7 @@ dependencies {
     testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
     testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile "junit:junit"
 }
 
 test {
