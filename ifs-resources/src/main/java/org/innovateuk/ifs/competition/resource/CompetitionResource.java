@@ -1018,6 +1018,13 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     @JsonIgnore
+    public boolean isOfGemCompetition() {
+        return isProcurement()
+                && funders.stream().anyMatch(CompetitionFunderResource::isOfGem)
+                && termsAndConditions.isProcurementThirdParty();
+    }
+
+    @JsonIgnore
     public boolean isOverheadsAlwaysTwenty() {
         return covidType != null && (
                 covidType == CovidType.DE_MINIMIS ||
