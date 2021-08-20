@@ -80,6 +80,7 @@ dependencies {
     testCompile project(path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
 
     testCompile "com.opencsv:opencsv"
+    testCompile "junit:junit"
 }
 
 jar.dependsOn ":ifs-web-service:gulp_default"

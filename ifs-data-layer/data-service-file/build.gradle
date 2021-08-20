@@ -36,4 +36,5 @@ dependencies {
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
 
     testCompile "com.h2database:h2"
+    testCompile "junit:junit"
 }

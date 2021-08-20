@@ -29,5 +29,6 @@ dependencies {
     testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
     testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
+    testCompile "junit:junit"
 
 }

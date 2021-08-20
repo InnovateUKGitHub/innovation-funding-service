@@ -84,6 +84,7 @@ dependencies {
     testCompile "com.opencsv:opencsv"
 
     testCompile 'org.assertj:assertj-core'
+    testCompile 'junit:junit'
 
 }
 
