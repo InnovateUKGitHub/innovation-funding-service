@@ -1106,90 +1106,90 @@
 <th:block th:fragment="capital_usage"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).CAPITAL_USAGE}">
     <th:block th:unless="${model.ofGemCompetition}">
-    <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
-        <div class="govuk-accordion__section-header">
-            <h3 class="govuk-accordion__section-heading">
+        <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
+            <div class="govuk-accordion__section-header">
+                <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-4">
                     Capital usage
                 </span>
-                <span class="finance-total" data-mirror="#section-total-capital-usage"></span>
-                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                      data-calculation-operations="/,*"
-                      data-calculation-fields="100, #total-cost, #section-total-capital-usage"
-                      th:text="${#ifsUtil.calculatePercentage(form.totalCapitalUsageCosts, form.organisationFinanceTotal) + '%'}"></span>
-                <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'capitalUsageRows')}"
-                     class="section-status section-incomplete icon-only error-marker"></div>
-            </h3>
-        </div>
-        <div id="accordion-finances-content-4" class="govuk-accordion__section-content"
-             aria-labelledby="accordion-finances-heading-4">
-            <th:block
-                th:if="${model.isReadOnly()}">
-                <th:block th:insert="application/your-project-costs-fragments :: capital_usage_read_only"/>
-            </th:block>
-            <th:block
-                th:unless="${model.isReadOnly()}">
-                <p class="govuk-body" th:unless="${model.internal}">Please provide a breakdown of the capital items
-                    you
-                    will buy and/or use for the
-                    project.</p>
-
-                <div id="capital-usage">
-                    <th:block th:each="entry : *{capitalUsageRows}">
-                        <th:block
-                            th:insert="application/your-project-costs-fragments :: capital_usage_row (${entry.key}, ${entry.value})"/>
-                    </th:block>
-                </div>
-                <p class="alignright">
-                    <button type="submit"
-                            name="add_row"
-                            data-repeatable-rowcontainer="#capital-usage"
-                            th:value="${financeRowType}"
-                            class="button-clear">Add another asset
-                    </button>
-                </p>
-                <h4 class="govuk-heading-s alignright section-total-summary">
-                    Total capital usage costs
-                    <span class="govuk-heading-s"
-                          data-mirror='#section-total-capital-usage'
-                          th:text="'£' + ${#numbers.formatInteger(form.totalCapitalUsageCosts, 0,'DEFAULT')}"></span>
-                </h4>
-                <input type="hidden"
-                       data-calculation-fields=".capital-usage-totals"
-                       data-calculation-operations="+"
-                       id="section-total-capital-usage"
-                       th:attr="data-calculation-rawvalue=${form.totalCapitalUsageCosts}"
-                       th:value="'£' + ${#numbers.formatInteger(form.totalCapitalUsageCosts, 0,'DEFAULT')}"/>
-
-                <th:block th:unless="${model.internal}">
-                    <div class="govuk-body"><p>You can claim the usage costs of capital assets you will buy for, or
-                        use
-                        on,
-                        your
-                        project.</p></div>
-                    <details class="govuk-details" role="group">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">Capital usage guidance</span>
-                        </summary>
-                        <div class="govuk-details__text"><p>You
-                            will
-                            need
-                            to
-                            calculate a ‘usage’ value for each item. You can do this by deducting its expected value
-                            from
-                            its
-                            original price at the end of your project. If you owned the equipment before the project
-                            started
-                            then you should use its net present value.</p>
-                            <p>This value is then multiplied by the amount, in percentages, that is used during the
-                                project.
-                                This final value represents the eligible cost to your project.</p>
-                        </div>
-                    </details>
+                    <span class="finance-total" data-mirror="#section-total-capital-usage"></span>
+                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                          data-calculation-operations="/,*"
+                          data-calculation-fields="100, #total-cost, #section-total-capital-usage"
+                          th:text="${#ifsUtil.calculatePercentage(form.totalCapitalUsageCosts, form.organisationFinanceTotal) + '%'}"></span>
+                    <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'capitalUsageRows')}"
+                         class="section-status section-incomplete icon-only error-marker"></div>
+                </h3>
+            </div>
+            <div id="accordion-finances-content-4" class="govuk-accordion__section-content"
+                 aria-labelledby="accordion-finances-heading-4">
+                <th:block
+                        th:if="${model.isReadOnly()}">
+                    <th:block th:insert="application/your-project-costs-fragments :: capital_usage_read_only"/>
                 </th:block>
-            </th:block>
+                <th:block
+                        th:unless="${model.isReadOnly()}">
+                    <p class="govuk-body" th:unless="${model.internal}">Please provide a breakdown of the capital items
+                        you
+                        will buy and/or use for the
+                        project.</p>
+
+                    <div id="capital-usage">
+                        <th:block th:each="entry : *{capitalUsageRows}">
+                            <th:block
+                                    th:insert="application/your-project-costs-fragments :: capital_usage_row (${entry.key}, ${entry.value})"/>
+                        </th:block>
+                    </div>
+                    <p class="alignright">
+                        <button type="submit"
+                                name="add_row"
+                                data-repeatable-rowcontainer="#capital-usage"
+                                th:value="${financeRowType}"
+                                class="button-clear">Add another asset
+                        </button>
+                    </p>
+                    <h4 class="govuk-heading-s alignright section-total-summary">
+                        Total capital usage costs
+                        <span class="govuk-heading-s"
+                              data-mirror='#section-total-capital-usage'
+                              th:text="'£' + ${#numbers.formatInteger(form.totalCapitalUsageCosts, 0,'DEFAULT')}"></span>
+                    </h4>
+                    <input type="hidden"
+                           data-calculation-fields=".capital-usage-totals"
+                           data-calculation-operations="+"
+                           id="section-total-capital-usage"
+                           th:attr="data-calculation-rawvalue=${form.totalCapitalUsageCosts}"
+                           th:value="'£' + ${#numbers.formatInteger(form.totalCapitalUsageCosts, 0,'DEFAULT')}"/>
+
+                    <th:block th:unless="${model.internal}">
+                        <div class="govuk-body"><p>You can claim the usage costs of capital assets you will buy for, or
+                            use
+                            on,
+                            your
+                            project.</p></div>
+                        <details class="govuk-details" role="group">
+                            <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text">Capital usage guidance</span>
+                            </summary>
+                            <div class="govuk-details__text"><p>You
+                                will
+                                need
+                                to
+                                calculate a ‘usage’ value for each item. You can do this by deducting its expected value
+                                from
+                                its
+                                original price at the end of your project. If you owned the equipment before the project
+                                started
+                                then you should use its net present value.</p>
+                                <p>This value is then multiplied by the amount, in percentages, that is used during the
+                                    project.
+                                    This final value represents the eligible cost to your project.</p>
+                            </div>
+                        </details>
+                    </th:block>
+                </th:block>
+            </div>
         </div>
-    </div>
     </th:block>
 </th:block>
 
