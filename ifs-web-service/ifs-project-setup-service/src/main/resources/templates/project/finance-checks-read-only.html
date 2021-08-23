@@ -18,6 +18,11 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Finance checks',subTitle=${model.projectName},size='govuk-heading-xl'"/>
 
+        <p class="govuk-body">You can also
+            <a th:href="@{/project/{projectId}/finance-check/overview(projectId=${model.projectId})}">see an overview</a>
+            of the whole project's finances.
+        </p>
+
         <table class="govuk-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
