@@ -236,11 +236,11 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     }
 
     private SectionAccess getMoSectionAccess(CompetitionResource competition) {
-        return competition.isProcurement() ? SectionAccess.ACCESSIBLE : SectionAccess.NOT_ACCESSIBLE;
+        return SectionAccess.ACCESSIBLE;
     }
 
     private String getFinanceChecksUrl(ProjectResource project, CompetitionResource competition, boolean monitoringOfficer) {
-        return monitoringOfficer && competition.isProcurement()
+        return monitoringOfficer
                 ? format("/project/%d/finance-check/read-only", project.getId())
                 : format("/project/%d/finance-check", project.getId());
     }
