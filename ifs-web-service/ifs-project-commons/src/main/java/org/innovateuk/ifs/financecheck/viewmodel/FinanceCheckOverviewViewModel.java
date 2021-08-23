@@ -19,8 +19,19 @@ public class FinanceCheckOverviewViewModel {
 
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
 
+    private final String externalUserLinkUrl;
+
     public FinanceCheckOverviewViewModel(ProjectFinanceOverviewViewModel overview, FinanceCheckSummariesViewModel summaries, ProjectFinanceCostBreakdownViewModel breakdown, long applicationId,
                                          boolean canChangeFundingSought, boolean loanCompetition, boolean ktpCompetition, boolean canChangeFundingLevelPercentages, boolean hasGrantClaimPercentage, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel) {
+        this(overview, summaries, breakdown, applicationId, canChangeFundingSought, loanCompetition, ktpCompetition, canChangeFundingLevelPercentages,
+                hasGrantClaimPercentage, applicationFundingBreakdownViewModel, null);
+    }
+
+    public FinanceCheckOverviewViewModel(ProjectFinanceOverviewViewModel overview, FinanceCheckSummariesViewModel summaries,
+                                         ProjectFinanceCostBreakdownViewModel breakdown, long applicationId, boolean canChangeFundingSought,
+                                         boolean loanCompetition, boolean ktpCompetition, boolean canChangeFundingLevelPercentages,
+                                         boolean hasGrantClaimPercentage, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
+                                         String externalUserLinkUrl) {
         this.overview = overview;
         this.summaries = summaries;
         this.breakdown = breakdown;
@@ -31,6 +42,7 @@ public class FinanceCheckOverviewViewModel {
         this.canChangeFundingLevelPercentages = canChangeFundingLevelPercentages;
         this.hasGrantClaimPercentage = hasGrantClaimPercentage;
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
+        this.externalUserLinkUrl = externalUserLinkUrl;
     }
 
     public ProjectFinanceOverviewViewModel getOverview() {
@@ -71,5 +83,9 @@ public class FinanceCheckOverviewViewModel {
 
     public ApplicationFundingBreakdownViewModel getApplicationFundingBreakdownViewModel() {
         return applicationFundingBreakdownViewModel;
+    }
+
+    public String getExternalUserLinkUrl() {
+        return externalUserLinkUrl;
     }
 }
