@@ -15,7 +15,7 @@ import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
-import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -157,9 +157,11 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     }
 
     public ProjectDataBuilder withMonitoringOfficer(String firstName, String lastName, String email, String phoneNumber) {
-        return with(data -> doAs(compAdmin(), () -> {
-            MonitoringOfficerResource mo = new MonitoringOfficerResource(data.getProject().getMonitoringOfficerUser(), firstName, lastName, email, phoneNumber, data.getProject().getId());
-            monitoringOfficerService.assignProjectToMonitoringOfficer(mo.getId(), data.getProject().getId()).getSuccess();
+        return with(data -> doAs(anyProjectFinanceUser(), () -> {
+            LegacyMonitoringOfficerResource mo = new LegacyMonitoringOfficerResource(firstName, lastName, email, phoneNumber, data.getProject().getId());
+            UserResource moUserResource = userService.findByEmail(mo.getEmail()).getSuccess();
+            legacyMonitoringOfficerService.saveMonitoringOfficer(data.getProject().getId(), mo).getSuccess();
+            monitoringOfficerService.assignProjectToMonitoringOfficer(moUserResource.getId(), data.getProject().getId()).getSuccess();
         }));
     }
 

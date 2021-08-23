@@ -180,6 +180,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ProjectService projectService;
     protected ProjectStateService projectStateService;
     protected ProjectDetailsService projectDetailsService;
+    protected LegacyMonitoringOfficerService legacyMonitoringOfficerService;
     protected MonitoringOfficerService monitoringOfficerService;
     protected ApplicationFinanceRowService financeRowCostsService;
     protected SectionService sectionService;
@@ -302,6 +303,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         projectService = serviceLocator.getBean(ProjectService.class);
         projectStateService = serviceLocator.getBean(ProjectStateService.class);
         projectDetailsService = serviceLocator.getBean(ProjectDetailsService.class);
+        legacyMonitoringOfficerService = serviceLocator.getBean(LegacyMonitoringOfficerService.class);
         monitoringOfficerService = serviceLocator.getBean(MonitoringOfficerService.class);
         financeRowCostsService = serviceLocator.getBean(ApplicationFinanceRowService.class);
         financeService = serviceLocator.getBean(ApplicationFinanceService.class);
