@@ -49,6 +49,7 @@ import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -125,16 +126,16 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         expectedForm.setPhoneNumber(phoneNumber);
         expectedForm.setPassword(password);
 
-        AddressForm addressForm = expectedForm.getAddressForm();
+        AddressResource addressResource = newAddressResource()
+                .withAddressLine1(addressLine1)
+                .withPostcode(postcode)
+                .withTown(town)
+                .build();
 
-        AddressResource addressResource = new AddressResource();
-
-        addressResource.setAddressLine1(addressLine1);
-        addressResource.setPostcode(postcode);
-        addressResource.setTown(town);
-
+        AddressForm addressForm = new AddressForm();
         addressForm.setManualAddress(addressResource);
         addressForm.setAddressType(AddressForm.AddressType.MANUAL_ENTRY);
+        expectedForm.setAddressForm(addressForm);
 
         String inviteHash = "hash";
 
@@ -180,17 +181,16 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         expectedForm.setPhoneNumber(phoneNumber);
         expectedForm.setPassword(password);
 
+        AddressResource addressResource = newAddressResource()
+                .withAddressLine1(addressLine1)
+                .withPostcode(postcode)
+                .withTown(town)
+                .build();
 
-        AddressForm addressForm = expectedForm.getAddressForm();
-
-        AddressResource addressResource = new AddressResource();
-
-        addressResource.setAddressLine1(addressLine1);
-        addressResource.setPostcode(postcode);
-        addressResource.setTown(town);
-
+        AddressForm addressForm = new AddressForm();
         addressForm.setManualAddress(addressResource);
         addressForm.setAddressType(AddressForm.AddressType.MANUAL_ENTRY);
+        expectedForm.setAddressForm(addressForm);
 
         String inviteHash = "hash";
 
