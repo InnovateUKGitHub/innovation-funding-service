@@ -35,8 +35,15 @@ public class MonitoringOfficerDashboardController {
         form.setProjectInSetup(true);
 
         model.addAttribute(FORM_ATTR_NAME, form);
-        model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user, form.isProjectInSetup(),
-                form.isPreviousProject(), form.isDocumentsComplete(), form.isDocumentsIncomplete(), form.isDocumentsAwaitingReview()));
+        model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user
+                , form.isProjectInSetup()
+                , form.isPreviousProject()
+                , form.isDocumentsComplete()
+                , form.isDocumentsIncomplete()
+                , form.isDocumentsAwaitingReview()
+                , form.isSpendProfileComplete()
+                , form.isSpendProfileIncomplete()
+                , form.isSpendProfileAwaitingReview()));
 
         return "monitoring-officer/dashboard";
     }
@@ -45,8 +52,15 @@ public class MonitoringOfficerDashboardController {
     public String filterDashboard(Model model,
                                   UserResource user,
                                   @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerDashboardForm form) {
-        model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user, form.isProjectInSetup(),
-                form.isPreviousProject(), form.isDocumentsComplete(), form.isDocumentsIncomplete(), form.isDocumentsAwaitingReview()));
+        model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user
+                , form.isProjectInSetup()
+                , form.isPreviousProject()
+                , form.isDocumentsComplete()
+                , form.isDocumentsIncomplete()
+                , form.isDocumentsAwaitingReview()
+                , form.isSpendProfileComplete()
+                , form.isSpendProfileIncomplete()
+                , form.isSpendProfileAwaitingReview()));
 
         return "monitoring-officer/dashboard";
     }

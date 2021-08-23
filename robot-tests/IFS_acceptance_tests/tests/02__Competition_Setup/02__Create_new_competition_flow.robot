@@ -112,6 +112,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               IFS-8847 Always open competitions: new comp setup configuration
 ...
+...               IFS-10165 Users can not edit completion stage from release feedback to project setup
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -362,11 +364,21 @@ Milestones: Page should contain the correct fields
     And the user should see the element           jQuery = h1:contains("Completion stage")
     And the user should see the element           jQuery = label:contains("Release feedback")
     And the user should see the element           jQuery = label:contains("Project setup")
-    When the user selects the radio button        selectedCompletionStage  PROJECT_SETUP
+    When the user selects the radio button        selectedCompletionStage  RELEASE_FEEDBACK
     And the user clicks the button/link           jQuery = button:contains("Done")
     And the user clicks the button twice          jQuery = label:contains("No")
     And the user clicks the button/link           jQuery = button:contains("Save and continue")
     Then the pre-field date should be correct
+
+Milestones: Edit completition stage selection
+    [Documentation]   IFS-10165
+    Given the user clicks the button/link         link = Back to competition details
+    And the user clicks the button/link           link = Milestones
+    And the user clicks the button/link           jQuery = button:contains("Edit")
+    When the user selects the radio button        selectedCompletionStage  PROJECT_SETUP
+    And the user clicks the button/link           jQuery = button:contains("Done")
+    And the user navigates to the page            ${server}/management/competition/setup/${competitionId}/section/completion-stage
+    Then the user should see the element          jQuery = p:contains("The completion stage for applications is") strong:contains("Project setup")
 
 Milestones: Correct Weekdays should show
     [Documentation]    INFUND-2993
