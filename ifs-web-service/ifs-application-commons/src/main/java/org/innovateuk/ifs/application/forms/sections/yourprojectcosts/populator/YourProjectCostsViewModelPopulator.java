@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CovidType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -86,9 +85,7 @@ public class YourProjectCostsViewModelPopulator {
 
         boolean includeVat = STANDARD_WITH_VAT.equals(competition.getApplicationFinanceType());
 
-        boolean hideVatQuestion = competition.isProcurement()
-                && isOfGemFunder(competition)
-                && competition.getTermsAndConditions().isProcurementThirdParty();
+        boolean hideVatQuestion = competition.isOfGemCompetition();
 
         if (isUserCanEditFecFinance(competition, section, open)) {
             return getYourFecProjectCostsViewModel(application, competition, organisation, section, finance, completedSectionIds, open, complete, includeVat, hideVatQuestion);
@@ -114,14 +111,9 @@ public class YourProjectCostsViewModelPopulator {
                     finance.getFecModelEnabled(),
                     getGrantClaimPercentage(application.getId(), organisation.getId()),
                     getThirdPartyProjectCostGuidanceLink(competition),
-                    hideVatQuestion);
+                    hideVatQuestion,
+                    competition.isOfGemCompetition());
         }
-    }
-
-    private boolean isOfGemFunder(CompetitionResource competition) {
-        return competition.getFunders()
-                .stream()
-                .anyMatch(CompetitionFunderResource::isOfGem);
     }
 
     private boolean isUserCanEditFecFinance(CompetitionResource competition, ApplicantSectionResource section, boolean open) {
@@ -167,7 +159,8 @@ public class YourProjectCostsViewModelPopulator {
                 finance.getFecModelEnabled(),
                 getGrantClaimPercentage(application.getId(), organisation.getId()),
                 getThirdPartyProjectCostGuidanceLink(competition),
-                hideVatQuestion);
+                hideVatQuestion,
+                competition.isOfGemCompetition());
     }
 
     private boolean isYourFecCostRequired(List<Long> completedSectionIds, Long yourFecCostSectionId) {

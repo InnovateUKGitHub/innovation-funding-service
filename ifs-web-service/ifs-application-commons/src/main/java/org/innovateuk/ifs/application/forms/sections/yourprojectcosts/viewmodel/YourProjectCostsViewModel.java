@@ -65,6 +65,8 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     private final boolean hideVatQuestion;
 
+    private final boolean isOfGemCompetition;
+
     public YourProjectCostsViewModel(long applicationId,
                                      String competitionName,
                                      long sectionId,
@@ -91,7 +93,8 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      Boolean fecModelEnabled,
                                      BigDecimal grantClaimPercentage,
                                      String thirdPartyProjectCostGuidanceLink,
-                                     boolean hideVatQuestion) {
+                                     boolean hideVatQuestion,
+                                     boolean isOfGemCompetition) {
         this.internal = false;
         this.organisationId = organisationId;
         this.applicationId = applicationId;
@@ -120,6 +123,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.grantClaimPercentage = grantClaimPercentage;
         this.thirdPartyProjectCostGuidanceLink = thirdPartyProjectCostGuidanceLink;
         this.hideVatQuestion = hideVatQuestion;
+        this.isOfGemCompetition = isOfGemCompetition;
     }
 
     public YourProjectCostsViewModel(long applicationId,
@@ -143,17 +147,49 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      Boolean fecModelEnabled,
                                      BigDecimal grantClaimPercentage,
                                      String thirdPartyProjectCostGuidanceLink,
-                                     boolean hideVatQuestion) {
-        this(applicationId, competitionName, sectionId, competitionId, organisationId, complete, open,
-                includeVat, applicationName, organisationName, financesUrl, procurementCompetition, thirdPartyProcurementCompetition,
-                ktpCompetition, financeRowTypes, overheadAlwaysTwenty, showCovidGuidance, showJustificationForm, false,
-                false, null, false, null, fecModelEnabled,
-                grantClaimPercentage, thirdPartyProjectCostGuidanceLink, hideVatQuestion);
+                                     boolean hideVatQuestion,
+                                     boolean isOfGemCompetition) {
+        this(
+                applicationId,
+                competitionName,
+                sectionId,
+                competitionId,
+                organisationId,
+                complete,
+                open,
+                includeVat,
+                applicationName,
+                organisationName,
+                financesUrl,
+                procurementCompetition,
+                thirdPartyProcurementCompetition,
+                ktpCompetition,
+                financeRowTypes,
+                overheadAlwaysTwenty,
+                showCovidGuidance,
+                showJustificationForm,
+                false,
+                false,
+                null,
+                false,
+                null,
+                fecModelEnabled,
+                grantClaimPercentage,
+                thirdPartyProjectCostGuidanceLink,
+                hideVatQuestion,
+                isOfGemCompetition);
     }
 
-    public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, boolean thirdPartyProcurementCompetition,
-                                     boolean ktpCompetition, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty,
-                                     String competitionName, long applicationId) {
+    public YourProjectCostsViewModel(boolean open,
+                                     boolean internal,
+                                     boolean procurementCompetition,
+                                     boolean thirdPartyProcurementCompetition,
+                                     boolean ktpCompetition,
+                                     List<FinanceRowType> financeRowTypes,
+                                     boolean overheadAlwaysTwenty,
+                                     String competitionName,
+                                     long applicationId,
+                                     boolean isOfGemCompetition) {
         this.open = open;
         this.internal = internal;
         this.procurementCompetition = procurementCompetition;
@@ -183,6 +219,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.grantClaimPercentage = BigDecimal.ZERO;
         this.thirdPartyProjectCostGuidanceLink = null;
         this.hideVatQuestion = false;
+        this.isOfGemCompetition = isOfGemCompetition;
     }
 
     @Override
@@ -318,5 +355,9 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     public Boolean isVatHidden() {
         return hideVatQuestion;
+    }
+
+    public boolean isOfGemCompetition() {
+        return isOfGemCompetition;
     }
 }
