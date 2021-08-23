@@ -39,6 +39,9 @@ public class NavigationUtils {
     @Value("${ifs.live.projects.landing.page.url}")
     private String liveProjectsLandingPageUrl;
 
+    @Value("${ifs.resources.domain}")
+    private String resourceDomain;
+
     private NavigationUtils() {}
 
     public String getLiveProjectsLandingPageUrl() {
@@ -68,32 +71,18 @@ public class NavigationUtils {
     }
 
     public String getRedirectToLandingPageUrl(HttpServletRequest request) {
-        return String.format("redirect:%s://%s:%s",
-                request.getScheme(),
-                request.getServerName(),
-                request.getServerPort());
+        return String.format("redirect:%s", resourceDomain);
     }
 
     public String getDirectLandingPageUrl(HttpServletRequest request) {
-        return String.format("%s://%s:%s",
-                request.getScheme(),
-                request.getServerName(),
-                request.getServerPort());
+        return resourceDomain;
     }
 
     public String getRedirectToSameDomainUrl(HttpServletRequest request, String url) {
-        return String.format("redirect:%s://%s:%s/%s",
-                request.getScheme(),
-                request.getServerName(),
-                request.getServerPort(),
-                url);
+        return String.format("redirect:%s/%s", resourceDomain, url);
     }
 
     public String getDirectToSameDomainUrl(HttpServletRequest request, String url) {
-        return String.format("%s://%s:%s/%s",
-                request.getScheme(),
-                request.getServerName(),
-                request.getServerPort(),
-                url);
+        return String.format("%s/%s", resourceDomain, url);
     }
 }
