@@ -39,7 +39,7 @@ public class NavigationUtils {
     @Value("${ifs.live.projects.landing.page.url}")
     private String liveProjectsLandingPageUrl;
 
-    @Value("${ifs.web.baseurl}")
+    @Value("${ifs.web.baseURL}")
     private String resourceDomain;
 
     private NavigationUtils() {}
