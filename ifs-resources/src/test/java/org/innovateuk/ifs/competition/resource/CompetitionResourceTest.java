@@ -6,11 +6,14 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.competition.builder.CompetitionFunderResourceBuilder.newCompetitionFunderResource;
 import static  org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.*;
@@ -100,5 +103,28 @@ public class CompetitionResourceTest {
 
         assertNotNull(financeRowTypes);
         assertThat(financeRowTypes, containsInAnyOrder(expectedFinanceRowTypes.toArray()));
+    }
+
+    @Test
+    public void isOfGemCompetition() {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.PROCUREMENT)
+                .build();
+
+        assertFalse(competition.isOfGemCompetition());
+
+        CompetitionFunderResource competitionFunderResource = newCompetitionFunderResource()
+                .withFunder(Funder.OFFICE_OF_GAS_AND_ELECTRICITY_MARKETS_OFGEM)
+                .build();
+        competition.setFunders(Collections.singletonList(competitionFunderResource));
+
+        assertFalse(competition.isOfGemCompetition());
+
+        GrantTermsAndConditionsResource grantTermsAndConditions = newGrantTermsAndConditionsResource()
+                .withName("Procurement Third Party")
+                .build();
+        competition.setTermsAndConditions(grantTermsAndConditions);
+
+        assertTrue(competition.isOfGemCompetition());
     }
 }
