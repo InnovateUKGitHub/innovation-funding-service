@@ -371,6 +371,16 @@ public class CompetitionSetupQuestionResource {
         return QuestionSetupType.KTP_ASSESSMENT != type;
     }
 
+    @JsonIgnore
+    public QuestionSetupType getKTPAssessmentQuestionType() {
+        return QuestionSetupType.KTP_ASSESSMENT;
+    }
+
+    @JsonIgnore
+    public QuestionSetupType getScopeQuestionType() {
+        return QuestionSetupType.SCOPE;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

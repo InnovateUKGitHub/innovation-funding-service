@@ -262,6 +262,7 @@ public class OrganisationCreationForm implements Serializable {
         this.organisationAddress = organisationAddress;
     }
 
+    @JsonIgnore
     public Long getOrganisationResearchId() {
         return OrganisationTypeEnum.RTO.getId();
     }

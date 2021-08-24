@@ -384,7 +384,7 @@
             <div class="govuk-body govuk-!-margin-top-6">
                 <button class="govuk-button govuk-!-margin-right-6">Save and continue</button>
                 <a th:href="@{/dashboard}" class="button-clear">Cancel</a>
-                <a th:unless="${model.competition.competitionStatus.isLaterThan(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN)}"
+                <a th:unless="${model.competition.competitionStatus.isLaterThan(model.competition.competitionStatus.readyToOpen}"
                    data-js-modal="delete-modal" class="button-clear">Delete competition</a>
             </div>
         </form>
