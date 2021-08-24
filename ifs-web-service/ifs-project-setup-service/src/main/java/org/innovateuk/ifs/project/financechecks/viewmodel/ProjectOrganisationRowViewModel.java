@@ -5,11 +5,16 @@ public class ProjectOrganisationRowViewModel {
     private final Long organisationId;
     private final String organisationName;
     private final boolean lead;
+    private final boolean paymentMilestonesLink;
+    private final boolean showChangesLink;
 
-    public ProjectOrganisationRowViewModel(Long organisationId, String organisationName, boolean lead) {
+    public ProjectOrganisationRowViewModel(Long organisationId, String organisationName, boolean lead,
+                                           boolean paymentMilestonesLink, boolean showChangesLink) {
         this.organisationId = organisationId;
         this.organisationName = organisationName;
         this.lead = lead;
+        this.paymentMilestonesLink = paymentMilestonesLink;
+        this.showChangesLink = showChangesLink;
     }
 
     public Long getOrganisationId() {
@@ -22,5 +27,13 @@ public class ProjectOrganisationRowViewModel {
 
     public boolean isLead() {
         return lead;
+    }
+
+    public boolean isPaymentMilestonesLink() {
+        return paymentMilestonesLink;
+    }
+
+    public boolean isShowChangesLink() {
+        return showChangesLink;
     }
 }

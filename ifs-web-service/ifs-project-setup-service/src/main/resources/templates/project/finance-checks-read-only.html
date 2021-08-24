@@ -38,7 +38,13 @@
                         <th:block th:if="${row.lead}">(Lead)</th:block>
                     </td>
                     <td class="govuk-table__cell">
-                        <a class="govuk-link" th:if="${model.paymentMilestonesLink}"
+                        <th:block th:if="${row.showChangesLink}">
+                            <a class="govuk-link"
+                               th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${model.projectId}, organisationId=${row.organisationId})}">
+                                Changes to finances</a>
+                            <br>
+                        </th:block>
+                        <a class="govuk-link" th:if="${row.paymentMilestonesLink}"
                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId}, organisationId=${row.organisationId})}">
                             Payment milestones</a>
                     </td>
