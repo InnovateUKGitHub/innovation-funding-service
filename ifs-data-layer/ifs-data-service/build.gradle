@@ -148,7 +148,7 @@ dependencies {
     compile 'org.jsoup:jsoup'
     compile "com.opencsv:opencsv"
 
-    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
+//    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
     testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')

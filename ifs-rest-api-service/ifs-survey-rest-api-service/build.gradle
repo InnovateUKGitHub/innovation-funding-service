@@ -12,15 +12,15 @@ ext {
 
 dependencies {
     compile project(':ifs-rest-api-service')
-    compile project(':ifs-resources')
-    compile project(':ifs-resources:ifs-survey-resources')
+    compile 'org.innovateuk.ifs.libraries:ifs-resources'
+    compile "org.innovateuk.ifs.libraries:ifs-survey-resources"
     compile project(':ifs-security')
 
     compile "org.springframework:spring-web"
 
     testCompile "junit:junit"
-    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-resources:ifs-survey-resources", configuration: 'testArtifacts')
+    //testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+//    testCompile project (path: ":ifs-resources:ifs-survey-resources", configuration: 'testArtifacts')
 }
 
 ext.ifsSurveyAuthSecretKey="supersecretkey"
