@@ -4,34 +4,25 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import javax.servlet.http.HttpServletRequest;
-
 import static junit.framework.TestCase.assertEquals;
 import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class NavigationUtilsTest {
 
     private static final String landingPageUrl = "https://site/live-projects-landing-page";
 
-    @Mock
-    private HttpServletRequest request;
-
     @InjectMocks
     private NavigationUtils navigationUtils;
 
     @Before
     public void setup() {
+        String ifsWebBaseURL = "https://site:8080";
         ReflectionTestUtils.setField(navigationUtils, "liveProjectsLandingPageUrl", landingPageUrl);
-
-        when(request.getScheme()).thenReturn("https");
-        when(request.getServerName()).thenReturn("site");
-        when(request.getServerPort()).thenReturn(8080);
+        ReflectionTestUtils.setField(navigationUtils, "ifsWebBaseURL", ifsWebBaseURL);
     }
 
     @Test
