@@ -45,7 +45,7 @@ public class MonitoringOfficerDashboardControllerTest extends BaseControllerMock
                 false)).thenReturn(model);
 
         mockMvc.perform(post("/monitoring-officer/dashboard")
-                .param("keywords", "keyword"))
+                .param("keywordSearch", "keyword"))
                 .andExpect(view().name("monitoring-officer/dashboard"))
                 .andExpect(model().attribute("model", model));
     }

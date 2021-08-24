@@ -64,7 +64,7 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
 
     String BY_STATES = "   AND project.projectProcess.activityState in :projectStates ";
 
-    String BY_KEYWORDS = " AND (project.name LIKE :keywords OR project.application.id = :keywords OR project.application.competition.name LIKE :keywords) ";
+    String BY_KEYWORD_SEARCH = " AND (project.name LIKE :keywordSearch OR project.application.id = :keywordSearch OR project.application.competition.name LIKE :keywordSearch) ";
 
     List<MonitoringOfficer> findByUserId(long userId);
 
@@ -114,8 +114,8 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
     List<MonitoringOfficer> filterMonitoringOfficerProjectsByStates(Long userId, List<ProjectState> projectStates);
 
     @Query(FILTER_PROJECTS_BY_MO +
-            BY_KEYWORDS +
+            BY_KEYWORD_SEARCH +
             BY_STATES +
             "ORDER BY project.id")
-    List<MonitoringOfficer> filterMonitoringOfficerProjectsByKeywordsByStates(Long userId, String keywords, List<ProjectState> projectStates);
+    List<MonitoringOfficer> filterMonitoringOfficerProjectsByKeywordsByStates(Long userId, String keywordSearch, List<ProjectState> projectStates);
 }

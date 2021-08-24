@@ -8,9 +8,9 @@ import javax.validation.constraints.Size;
 
 public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
 
-    @Size(min = 3, message = "{validation.modashboard.filterprojects.keywords.min.length}")
-    @Size(max = 50, message = "{validation.modashboard.filterprojects.keywords.max.length}")
-    private String keywords;
+    @Size(min = 3, message = "{validation.modashboard.filterprojects.keywordsearch.min.length}")
+    @Size(max = 100, message = "{validation.modashboard.filterprojects.keywordsearch.max.length}")
+    private String keywordSearch;
     private boolean projectInSetup;
     private boolean previousProject;
 
@@ -25,12 +25,12 @@ public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
     public MonitoringOfficerDashboardForm() {
     }
 
-    public String getKeywords() {
-        return keywords;
+    public String getKeywordSearch() {
+        return keywordSearch;
     }
 
-    public void setKeywords(String keywords) {
-        this.keywords = keywords;
+    public void setKeywordSearch(String keywordSearch) {
+        this.keywordSearch = keywordSearch;
     }
 
     public boolean isProjectInSetup() {
@@ -106,6 +106,7 @@ public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
         MonitoringOfficerDashboardForm that = (MonitoringOfficerDashboardForm) o;
 
         return new EqualsBuilder()
+                .append(keywordSearch, that.keywordSearch)
                 .append(projectInSetup, that.projectInSetup)
                 .append(previousProject, that.previousProject)
                 .append(documentsComplete, that.documentsComplete)
@@ -120,6 +121,7 @@ public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(keywordSearch)
                 .append(projectInSetup)
                 .append(previousProject)
                 .append(documentsComplete)

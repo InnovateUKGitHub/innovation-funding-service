@@ -33,7 +33,7 @@ public interface MonitoringOfficerRestService {
     RestResult<Void> sendDocumentReviewNotification(long projectId, long userId);
 
     RestResult<List<ProjectResource>> filterProjectsForMonitoringOfficer(long projectMonitoringOfficerId,
-                                                                         String keywords,
+                                                                         String keywordSearch,
                                                                          boolean projectInSetup,
                                                                          boolean previousProject);
 }

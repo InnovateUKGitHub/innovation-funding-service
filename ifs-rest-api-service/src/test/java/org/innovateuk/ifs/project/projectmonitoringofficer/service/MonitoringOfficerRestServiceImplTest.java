@@ -46,7 +46,7 @@ public class MonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTes
     public void filterProjectsForMonitoringOfficerByProjectNumber() {
         long userId = 1L;
         List<ProjectResource> expected = newProjectResource().build(1);
-        setupGetWithRestResultExpectations("/monitoring-officer/1/filter-projects?keywords=123&projectInSetup=true&previousProject=true",
+        setupGetWithRestResultExpectations("/monitoring-officer/1/filter-projects?keywordSearch=123&projectInSetup=true&previousProject=true",
                 projectResourceListType(), expected, OK);
 
         RestResult<List<ProjectResource>> result = service.filterProjectsForMonitoringOfficer(userId, "123", true, true);
@@ -59,7 +59,7 @@ public class MonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTes
     public void filterProjectsForMonitoringOfficerByKeyword() {
         long userId = 1L;
         List<ProjectResource> expected = newProjectResource().build(1);
-        setupGetWithRestResultExpectations("/monitoring-officer/1/filter-projects?keywords=%name%&projectInSetup=true&previousProject=true",
+        setupGetWithRestResultExpectations("/monitoring-officer/1/filter-projects?keywordSearch=%name%&projectInSetup=true&previousProject=true",
                 projectResourceListType(), expected, OK);
 
         RestResult<List<ProjectResource>> result = service.filterProjectsForMonitoringOfficer(userId, "name", true, true);

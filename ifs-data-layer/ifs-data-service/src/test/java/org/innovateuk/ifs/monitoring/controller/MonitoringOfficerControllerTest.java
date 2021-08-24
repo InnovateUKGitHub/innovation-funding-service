@@ -39,7 +39,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         when(monitoringOfficerServiceMock.filterMonitoringOfficerProjects(userId, "keyword",true, true))
                 .thenReturn(serviceSuccess(projectResources));
 
-        mockMvc.perform(get("/monitoring-officer/1/filter-projects?keywords=keyword&projectInSetup={projectInSetup}&previousProject={previousProject}", userId, true, true))
+        mockMvc.perform(get("/monitoring-officer/1/filter-projects?keywordSearch=keyword&projectInSetup={projectInSetup}&previousProject={previousProject}", userId, true, true))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(numberOfProjects)));
     }

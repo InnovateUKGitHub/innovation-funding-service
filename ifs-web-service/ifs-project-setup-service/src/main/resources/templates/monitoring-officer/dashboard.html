@@ -24,7 +24,7 @@
         </div>
         <div class="my-applications">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project setup',size='govuk-heading-l'" />
-            <form th:object="${form}" method="post" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <form id="mo-dashboard-form" th:object="${form}" method="post" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-one-third">
                     <form id="filter-projects" method="GET">
@@ -36,18 +36,18 @@
                             </legend>
                             <hr class="govuk-section-break govuk-section-break--visible" />
                             <div class="govuk-form-group govuk-!-margin-top-6">
-                                <label class="govuk-label" for="keywords">Keywords</label>
-                                <th:block th:if="${#fields.hasErrors('keywords')}">
-                                    <span class="govuk-error-message" th:each="err : ${#fields.errors('keywords')}" th:text="${err}"></span>
+                                <label class="govuk-label" for="keywordSearch">Keywords</label>
+                                <th:block th:if="${#fields.hasErrors('keywordSearch')}">
+                                    <span class="govuk-error-message" th:each="err : ${#fields.errors('keywordSearch')}" th:text="${err}"></span>
                                 </th:block>
                                 <input class="govuk-input"
-                                       id="keywords"
-                                       th:field="*{keywords}"
+                                       id="keywordSearch"
+                                       th:field="*{keywordSearch}"
                                        type="text"
                                        minlength="3"
-                                       maxlength="50"
-                                       th:attr="data-minlength-errormessage=#{validation.modashboard.filterprojects.keywords.min.length},
-                                                data-maxlength-errormessage=#{validation.modashboard.filterprojects.keywords.max.length}">
+                                       maxlength="100"
+                                       th:attr="data-minlength-errormessage=#{validation.modashboard.filterprojects.keywordsearch.min.length},
+                                                data-maxlength-errormessage=#{validation.modashboard.filterprojects.keywordsearch.max.length}">
                             </div>
                             <div class="govuk-form-group">
                                 <h2 class="govuk-heading-s govuk-!-margin-bottom-2">

@@ -80,21 +80,21 @@ public class MonitoringOfficerRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<List<ProjectResource>> filterProjectsForMonitoringOfficer(long monitoringOfficerId, String keywords,
+    public RestResult<List<ProjectResource>> filterProjectsForMonitoringOfficer(long monitoringOfficerId, String keywordSearch,
                                                                                 boolean projectInSetup, boolean previousProject) {
         String uriWithParams = buildUri(String.format("%s/{monitoringOfficerId}/filter-projects", PROJECT_MONITORING_OFFICER_REST_URL),
-                keywords, projectInSetup, previousProject, monitoringOfficerId);
+                keywordSearch, projectInSetup, previousProject, monitoringOfficerId);
         return getWithRestResult(uriWithParams, projectResourceListType());
     }
 
-    protected String buildUri(String url, String keywords, boolean projectInSetup, boolean previousProject, Object... uriParameters) {
+    protected String buildUri(String url, String keywordSearch, boolean projectInSetup, boolean previousProject, Object... uriParameters) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
-        if (keywords != null && !keywords.isEmpty() && !NumberUtils.isCreatable(keywords)) {
-            keywords = "%" + keywords + "%";
+        if (keywordSearch != null && !keywordSearch.isEmpty() && !NumberUtils.isCreatable(keywordSearch)) {
+            keywordSearch = "%" + keywordSearch + "%";
         }
 
-        params.put("keywords", singletonList(keywords));
+        params.put("keywordSearch", singletonList(keywordSearch));
 
         if(projectInSetup) {
             params.put("projectInSetup", singletonList("true"));

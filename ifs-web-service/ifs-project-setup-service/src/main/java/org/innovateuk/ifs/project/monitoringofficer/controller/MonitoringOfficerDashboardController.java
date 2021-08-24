@@ -41,7 +41,7 @@ public class MonitoringOfficerDashboardController {
 
         model.addAttribute(FORM_ATTR_NAME, form);
         model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user
-                , form.getKeywords()
+                , form.getKeywordSearch()
                 , form.isProjectInSetup()
                 , form.isPreviousProject()
                 , form.isDocumentsComplete()
@@ -65,7 +65,7 @@ public class MonitoringOfficerDashboardController {
         return validationHandler.failNowOrSucceedWith(failureView,
                 () -> {
                     model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user
-                            , form.getKeywords()
+                            , form.getKeywordSearch()
                             , form.isProjectInSetup()
                             , form.isPreviousProject()
                             , form.isDocumentsComplete()
