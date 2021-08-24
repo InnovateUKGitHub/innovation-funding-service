@@ -55,7 +55,7 @@ public enum CompetitionStatus {
         return this.ordinal() > status.ordinal();
     }
 
-    public CompetitionStatus getReadyToOpen() {
-        return READY_TO_OPEN;
+    public boolean isLaterThan() {
+        return this.ordinal() > CompetitionStatus.READY_TO_OPEN.ordinal();
     }
 }
