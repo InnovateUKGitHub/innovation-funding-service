@@ -52,39 +52,39 @@ public class NavigationUtilsTest {
 
     @Test
     public void getDirectDashboardUrlForApplicantRole() {
-        assertEquals("https://site:8080/applicant/dashboard", navigationUtils.getDirectDashboardUrlForRole(request, APPLICANT));
+        assertEquals("https://site:8080/applicant/dashboard", navigationUtils.getDirectDashboardUrlForRole(APPLICANT));
     }
 
     @Test
     public void getRedirectToLandingPageUrl() {
-        assertEquals("redirect:https://site:8080", navigationUtils.getRedirectToLandingPageUrl(request));
+        assertEquals("redirect:https://site:8080", navigationUtils.getRedirectToLandingPageUrl());
     }
 
     @Test
     public void getDirectLandingPageUrl() {
-        assertEquals("https://site:8080", navigationUtils.getDirectLandingPageUrl(request));
+        assertEquals("https://site:8080", navigationUtils.getDirectLandingPageUrl());
     }
 
     @Test
     public void getDirectDashboardUrlForKnowledgeTransferAdvisor() {
-        assertEquals("https://site:8080/assessment/assessor/dashboard", navigationUtils.getDirectDashboardUrlForRole(request, KNOWLEDGE_TRANSFER_ADVISER));
+        assertEquals("https://site:8080/assessment/assessor/dashboard", navigationUtils.getDirectDashboardUrlForRole(KNOWLEDGE_TRANSFER_ADVISER));
     }
 
     @Test
     public void getDirectDashboardUrlForSupporter() {
-        assertEquals("https://site:8080/assessment/supporter/dashboard", navigationUtils.getDirectDashboardUrlForRole(request, SUPPORTER));
+        assertEquals("https://site:8080/assessment/supporter/dashboard", navigationUtils.getDirectDashboardUrlForRole(SUPPORTER));
     }
 
     @Test
     public void getDirectDashboardUrlForAuditorRole() {
-        System.out.println("Auditor" + navigationUtils.getDirectDashboardUrlForRole(request, AUDITOR));
-        assertEquals("https://site:8080/management/dashboard", navigationUtils.getDirectDashboardUrlForRole(request, AUDITOR));
+        System.out.println("Auditor" + navigationUtils.getDirectDashboardUrlForRole(AUDITOR));
+        assertEquals("https://site:8080/management/dashboard", navigationUtils.getDirectDashboardUrlForRole(AUDITOR));
     }
 
     @Test
     public void getRedirectToSameDomainUrl() {
         String url = "management/dashboard";
-        assertEquals("redirect:https://site:8080/" + url, navigationUtils.getRedirectToSameDomainUrl(request, url));
+        assertEquals("redirect:https://site:8080/" + url, navigationUtils.getRedirectToSameDomainUrl(url));
     }
 
 }

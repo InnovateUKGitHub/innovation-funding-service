@@ -194,7 +194,7 @@ public class QuestionnaireWebController {
             }
             if (link instanceof ProjectOrganisationLinkResource) {
                 String redirectUrl = String.format("project-setup/project/%d/form/organisation/%d/question/%d/questionnaire/questionnaire-complete", ((ProjectOrganisationLinkResource) link).getProjectId(), ((ProjectOrganisationLinkResource) link).getOrganisationId(), ((ProjectOrganisationLinkResource) link).getQuestionId());
-                return navigationUtils.getDirectToSameDomainUrl(request, redirectUrl);
+                return navigationUtils.getDirectToSameDomainUrl(redirectUrl);
             }
         }
         return "/";
