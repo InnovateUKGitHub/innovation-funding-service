@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
-import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationOrganisationAddressRepository;
@@ -18,8 +17,6 @@ import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.file.domain.FileEntry;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.builder.QuestionBuilder;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
@@ -63,10 +60,8 @@ import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERN
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationOrganisationAddressBuilder.newApplicationOrganisationAddress;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
-import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
-import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.application.resource.CompanyAge.PRE_START_UP;
 import static org.innovateuk.ifs.application.resource.CompanyPrimaryFocus.CHEMICALS;
 import static org.innovateuk.ifs.application.resource.CompetitionReferralSource.BUSINESS_CONTACT;
@@ -78,8 +73,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
-import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
-import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
@@ -100,34 +93,35 @@ import static org.mockito.Mockito.*;
  * Tests for {@link ApplicationServiceImpl}
  */
 public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationService> {
+
     @Override
     protected ApplicationService supplyServiceUnderTest() {
         return new ApplicationServiceImpl();
     }
 
     @Mock
-    private ApplicationRepository applicationRepositoryMock;
+    private ApplicationRepository applicationRepository;
 
     @Mock
-    private OrganisationRepository organisationRepositoryMock;
+    private OrganisationRepository organisationRepository;
 
     @Mock
-    private CompetitionRepository competitionRepositoryMock;
+    private CompetitionRepository competitionRepository;
 
     @Mock
-    private UserRepository userRepositoryMock;
+    private UserRepository userRepository;
 
     @Mock
-    private ProcessRoleRepository processRoleRepositoryMock;
+    private ProcessRoleRepository processRoleRepository;
 
     @Mock
-    private ApplicationMapper applicationMapperMock;
+    private ApplicationMapper applicationMapper;
 
     @Mock
-    private CompetitionMapper competitionMapperMock;
+    private CompetitionMapper competitionMapper;
 
     @Mock
-    private ApplicationWorkflowHandler applicationWorkflowHandlerMock;
+    private ApplicationWorkflowHandler applicationWorkflowHandler;
 
     @Mock
     private OrganisationAddressRepository organisationAddressRepository;
@@ -138,80 +132,49 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Mock
     private ApplicationNotificationService applicationNotificationService;
 
-    private FormInput formInput;
-    private FormInputType formInputType;
-    private Question question;
-    private FileEntryResource fileEntryResource;
-    private FormInputResponseFileEntryResource formInputResponseFileEntryResource;
-    private List<FileEntry> existingFileEntry;
-    private FormInputResponse existingFormInputResponse;
-    private List<FormInputResponse> existingFormInputResponses;
-    private FormInputResponse unlinkedFormInputFileEntry;
-    private Long organisationId = 456L;
-
-    private Question multiAnswerQuestion;
-    private Question leadAnswerQuestion;
-
-    private OrganisationType orgType;
-    private Organisation org1;
-    private Organisation org2;
-    private Organisation org3;
-
-    private ProcessRole[] roles;
-    private Section section;
-    private Competition comp;
-    private Application app;
-
-    private Application openApplication;
+    private Competition competition;
 
     @Before
     public void setUp() throws Exception {
-        question = QuestionBuilder.newQuestion().build();
+        Question question = QuestionBuilder.newQuestion().build();
 
-        formInputType = FormInputType.FILEUPLOAD;
+        FormInputType formInputType = FormInputType.FILEUPLOAD;
 
-        formInput = newFormInput().withType(formInputType).build();
+        FormInput formInput = newFormInput().withType(formInputType).build();
         formInput.setId(123L);
         formInput.setQuestion(question);
         question.setFormInputs(singletonList(formInput));
 
-        fileEntryResource = newFileEntryResource().with(id(999L)).build();
-        formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L, 111L);
-
-        existingFileEntry = singletonList(newFileEntry().with(id(999L)).build());
-        existingFormInputResponse = newFormInputResponse().withFileEntries(existingFileEntry).build();
-        existingFormInputResponses = singletonList(existingFormInputResponse);
-        unlinkedFormInputFileEntry = newFormInputResponse().with(id(existingFormInputResponse.getId())).withFileEntries(null).build();
         final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build();
-        openApplication = newApplication().withCompetition(openCompetition).build();
+        Application openApplication = newApplication().withCompetition(openCompetition).build();
 
-        when(applicationRepositoryMock.findById(anyLong())).thenReturn(of(openApplication));
+        when(applicationRepository.findById(anyLong())).thenReturn(of(openApplication));
 
-        multiAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.TRUE).withId(123L).build();
-        leadAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.FALSE).withId(321L).build();
+        Question multiAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.TRUE).withId(123L).build();
+        Question leadAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.FALSE).withId(321L).build();
 
-        orgType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        org1 = newOrganisation().withOrganisationType(orgType).withId(234L).build();
-        org2 = newOrganisation().withId(345L).build();
-        org3 = newOrganisation().withId(456L).build();
+        OrganisationType orgType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
+        Organisation organisation1 = newOrganisation().withOrganisationType(orgType).withId(234L).build();
+        Organisation organisation2 = newOrganisation().withId(345L).build();
+        Organisation organisation3 = newOrganisation().withId(456L).build();
 
-        roles = newProcessRole().withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR, ProcessRoleType.LEADAPPLICANT).withOrganisationId(234L, 345L, 456L).build(3).toArray(new ProcessRole[0]);
-        section = newSection().withQuestions(Arrays.asList(multiAnswerQuestion, leadAnswerQuestion)).build();
-        comp = newCompetition().withSections(singletonList(section)).withMaxResearchRatio(30).build();
-        app = newApplication().withCompetition(comp).withProcessRoles(roles).build();
+        ProcessRole[] roles = newProcessRole().withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR, ProcessRoleType.LEADAPPLICANT).withOrganisationId(234L, 345L, 456L).build(3).toArray(new ProcessRole[0]);
+        Section section = newSection().withQuestions(Arrays.asList(multiAnswerQuestion, leadAnswerQuestion)).build();
+        competition = newCompetition().withSections(singletonList(section)).withMaxResearchRatio(30).build();
+        Application application = newApplication().withCompetition(competition).withProcessRoles(roles).build();
 
-        when(applicationRepositoryMock.findById(app.getId())).thenReturn(of(app));
-        when(organisationRepositoryMock.findById(234L)).thenReturn(of(org1));
-        when(organisationRepositoryMock.findById(345L)).thenReturn(of(org2));
-        when(organisationRepositoryMock.findById(456L)).thenReturn(of(org3));
+        when(applicationRepository.findById(application.getId())).thenReturn(of(application));
+        when(organisationRepository.findById(234L)).thenReturn(of(organisation1));
+        when(organisationRepository.findById(345L)).thenReturn(of(organisation2));
+        when(organisationRepository.findById(456L)).thenReturn(of(organisation3));
     }
-
 
     @Test
     public void createApplicationByApplicationNameForUserIdAndCompetitionId() {
 
         Competition competition = newCompetition().build();
         User user = newUser().build();
+        Long organisationId = 456L;
         Organisation organisation = newOrganisation().with(name("testOrganisation")).withId(organisationId).build();
         ProcessRole processRole = newProcessRole().withUser(user).withRole(ProcessRoleType.LEADAPPLICANT).withOrganisationId(organisation.getId()).build();
         ApplicationState applicationState = CREATED;
@@ -233,12 +196,12 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         ApplicationResource applicationResource = newApplicationResource().build();
 
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(of(competition));
-        when(userRepositoryMock.findById(user.getId())).thenReturn(of(user));
-        when(applicationRepositoryMock.save(any(Application.class))).thenReturn(application);
-        when(processRoleRepositoryMock.findByUser(user)).thenReturn(singletonList(processRole));
-        when(organisationRepositoryMock.findDistinctByProcessRolesUser(user)).thenReturn(singletonList(organisation));
-        when(applicationRepositoryMock.findById(application.getId())).thenReturn(of(application));
+        when(competitionRepository.findById(competition.getId())).thenReturn(of(competition));
+        when(userRepository.findById(user.getId())).thenReturn(of(user));
+        when(applicationRepository.save(any(Application.class))).thenReturn(application);
+        when(processRoleRepository.findByUser(user)).thenReturn(singletonList(processRole));
+        when(organisationRepository.findDistinctByProcessRolesUser(user)).thenReturn(singletonList(organisation));
+        when(applicationRepository.findById(application.getId())).thenReturn(of(application));
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals("testApplication", created.getName());
@@ -262,21 +225,21 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
             return true;
         }));
 
-        when(applicationMapperMock.mapToResource(applicationExpectations.get())).thenReturn(applicationResource);
+        when(applicationMapper.mapToResource(applicationExpectations.get())).thenReturn(applicationResource);
 
         ApplicationResource created =
                 service.createApplicationByApplicationNameForUserIdAndCompetitionId("testApplication",
                         competition.getId(), user.getId(), organisation.getId()).getSuccess();
 
-        verify(applicationRepositoryMock, times(1)).save(isA(Application.class));
+        verify(applicationRepository, times(1)).save(isA(Application.class));
         assertEquals(applicationResource, created);
     }
 
     @Test
-    public void testReopenApplicationCompetitionAlwaysOpen(){
+    public void reopenApplicationCompetitionAlwaysOpen(){
         // Setup
         Application application = newApplication().withCompetition(newCompetition().withAlwaysOpen(true).build()).build();
-        when(applicationRepositoryMock.findById(application.getId())).thenReturn(of(application));
+        when(applicationRepository.findById(application.getId())).thenReturn(of(application));
         // Method under test
         ServiceResult<Void> result = service.reopenApplication(application.getId());
         // Assertions
@@ -285,10 +248,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void testReopenApplicationCompetitionIsClosed(){
+    public void reopenApplicationCompetitionIsClosed(){
         // Setup
         Application application = newApplication().withCompetition(newCompetition().withCompetitionStatus(CLOSED).build()).build();
-        when(applicationRepositoryMock.findById(application.getId())).thenReturn(of(application));
+        when(applicationRepository.findById(application.getId())).thenReturn(of(application));
         // Method under test
         ServiceResult<Void> result = service.reopenApplication(application.getId());
         // Assertions
@@ -297,10 +260,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void testReopenApplicationFundingDecisionSet(){
+    public void reopenApplicationFundingDecisionSet(){
         // Setup
         Application application = newApplication().withFundingDecision(FUNDED).withCompetition(newCompetition().withCompetitionStatus(OPEN).build()).build();
-        when(applicationRepositoryMock.findById(application.getId())).thenReturn(of(application));
+        when(applicationRepository.findById(application.getId())).thenReturn(of(application));
         // Method under test
         ServiceResult<Void> result = service.reopenApplication(application.getId());
         // Assertions
@@ -309,10 +272,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void testReopenApplicationNotSubmitted(){
+    public void reopenApplicationNotSubmitted(){
         // Setup
         Application application = newApplication().withApplicationState(CREATED).withCompetition(newCompetition().withCompetitionStatus(OPEN).build()).build();
-        when(applicationRepositoryMock.findById(application.getId())).thenReturn(of(application));
+        when(applicationRepository.findById(application.getId())).thenReturn(of(application));
         // Method under test
         ServiceResult<Void> result = service.reopenApplication(application.getId());
         // Assertions
@@ -321,10 +284,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void testReopenApplicationSuccess(){
+    public void reopenApplicationSuccess(){
         // Setup
         Application application = newApplication().withApplicationState(SUBMITTED).withCompetition(newCompetition().withCompetitionStatus(OPEN).build()).build();
-        when(applicationRepositoryMock.findById(application.getId())).thenReturn(of(application));
+        when(applicationRepository.findById(application.getId())).thenReturn(of(application));
         when(applicationNotificationService.sendNotificationApplicationReopened(application.getId())).thenReturn(serviceSuccess());
         // Method under test
         ServiceResult<Void> result = service.reopenApplication(application.getId());
@@ -357,26 +320,26 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         ProcessRole testProcessRole3 = newProcessRole().withId(2L).withUser(testUser2).withApplication(testApplication2).withRole(ProcessRoleType.COLLABORATOR).withOrganisationId(organisation2.getId()).build();
         ProcessRole testProcessRole4 = newProcessRole().withId(3L).withUser(testUser2).withApplication(testApplication3).withRole(ProcessRoleType.COLLABORATOR).withOrganisationId(organisation2.getId()).build();
 
-        when(userRepositoryMock.findById(1L)).thenReturn(of(testUser1));
-        when(userRepositoryMock.findById(2L)).thenReturn(of(testUser2));
+        when(userRepository.findById(1L)).thenReturn(of(testUser1));
+        when(userRepository.findById(2L)).thenReturn(of(testUser2));
 
-        when(applicationRepositoryMock.findById(testApplication1.getId())).thenReturn(of(testApplication1));
-        when(applicationRepositoryMock.findById(testApplication2.getId())).thenReturn(of(testApplication2));
-        when(applicationRepositoryMock.findById(testApplication3.getId())).thenReturn(of(testApplication3));
+        when(applicationRepository.findById(testApplication1.getId())).thenReturn(of(testApplication1));
+        when(applicationRepository.findById(testApplication2.getId())).thenReturn(of(testApplication2));
+        when(applicationRepository.findById(testApplication3.getId())).thenReturn(of(testApplication3));
 
-        when(processRoleRepositoryMock.findByUser(testUser1)).thenReturn(new ArrayList<ProcessRole>() {{
+        when(processRoleRepository.findByUser(testUser1)).thenReturn(new ArrayList<ProcessRole>() {{
             add(testProcessRole1);
             add(testProcessRole2);
         }});
 
-        when(processRoleRepositoryMock.findByUser(testUser2)).thenReturn(new ArrayList<ProcessRole>() {{
+        when(processRoleRepository.findByUser(testUser2)).thenReturn(new ArrayList<ProcessRole>() {{
             add(testProcessRole3);
             add(testProcessRole4);
         }});
 
-        when(applicationMapperMock.mapToResource(testApplication1)).thenReturn(testApplication1Resource);
-        when(applicationMapperMock.mapToResource(testApplication2)).thenReturn(testApplication2Resource);
-        when(applicationMapperMock.mapToResource(testApplication3)).thenReturn(testApplication3Resource);
+        when(applicationMapper.mapToResource(testApplication1)).thenReturn(testApplication1Resource);
+        when(applicationMapper.mapToResource(testApplication2)).thenReturn(testApplication2Resource);
+        when(applicationMapper.mapToResource(testApplication3)).thenReturn(testApplication3Resource);
 
         List<ApplicationResource> applicationsForUser1 = service.findByUserId(testUser1.getId()).getSuccess();
         assertEquals(2, applicationsForUser1.size());
@@ -442,6 +405,18 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         assertWildcardSearchById(result, applicationResource, 2, 3, 5);
     }
 
+    @Test
+    public void SearchApplicationAsAuditor() {
+        String searchString = "12";
+        ApplicationResource applicationResource = newApplicationResource().build();
+
+        Pageable pageable = setUpPageable(Role.AUDITOR, searchString, applicationResource, 2);
+
+        ServiceResult<ApplicationPageResource> result = service.wildcardSearchById(searchString, pageable);
+
+        assertWildcardSearchById(result, applicationResource, 2, 3, 5);
+    }
+
     private Pageable setUpPageable(Role role, String searchString, ApplicationResource applicationResource,
                                    int pageSize) {
 
@@ -449,17 +424,18 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         User user = newUser().withId(userResource.getId()).withRoles(singleton(role)).build();
 
         setLoggedInUser(userResource);
-        when(userRepositoryMock.findById(user.getId())).thenReturn(of(user));
+        when(userRepository.findById(user.getId())).thenReturn(of(user));
 
         List<Application> applications = ApplicationBuilder.newApplication().build(5);
 
         Pageable pageable = PageRequest.of(0, pageSize);
         Page<Application> pagedResult = new PageImpl<>(applications, pageable, applications.size());
 
-        when(applicationRepositoryMock.searchByIdLike(searchString, pageable)).thenReturn(pagedResult);
-        when(applicationRepositoryMock.searchApplicationsByUserIdAndInnovationLeadRole(user.getId(), searchString, pageable)).thenReturn(pagedResult);
-        when(applicationRepositoryMock.searchApplicationsByUserIdAndStakeholderRole(user.getId(), searchString, pageable)).thenReturn(pagedResult);
-        when(applicationMapperMock.mapToResource(any(Application.class))).thenReturn(applicationResource);
+        when(applicationRepository.searchByIdLike(searchString, pageable)).thenReturn(pagedResult);
+        when(applicationRepository.searchApplicationsByUserIdAndInnovationLeadRole(user.getId(), searchString, pageable)).thenReturn(pagedResult);
+        when(applicationRepository.searchApplicationsByUserIdAndStakeholderRole(user.getId(), searchString, pageable)).thenReturn(pagedResult);
+        when(applicationRepository.searchApplicationsByLikeAndExcludePreSubmissionStatuses(searchString, pageable)).thenReturn(pagedResult);
+        when(applicationMapper.mapToResource(any(Application.class))).thenReturn(applicationResource);
 
         return pageable;
     }
@@ -479,7 +455,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Test
     public void applicationControllerCanCreateApplication() {
         Long competitionId = 1L;
-        Long organisationId = 2L;
+        long organisationId = 2L;
         Long userId = 3L;
         Competition competition = newCompetition().with(id(1L)).build();
         Organisation organisation = newOrganisation().with(id(organisationId)).build();
@@ -497,14 +473,14 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         ApplicationResource newApplication = newApplicationResource().build();
 
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(of(competition));
-        when(userRepositoryMock.findById(userId)).thenReturn(of(user));
-        when(processRoleRepositoryMock.findByUser(user)).thenReturn(singletonList(
+        when(competitionRepository.findById(competition.getId())).thenReturn(of(competition));
+        when(userRepository.findById(userId)).thenReturn(of(user));
+        when(processRoleRepository.findByUser(user)).thenReturn(singletonList(
                 newProcessRole().withUser(user).withOrganisationId(organisation.getId()).build()
         ));
-        when(organisationRepositoryMock.findDistinctByProcessRolesUser(user)).thenReturn(singletonList(organisation));
-        when(applicationRepositoryMock.save(any(Application.class))).thenReturn(application);
-        when(applicationRepositoryMock.findById(application.getId())).thenReturn(of(application));
+        when(organisationRepository.findDistinctByProcessRolesUser(user)).thenReturn(singletonList(organisation));
+        when(applicationRepository.save(any(Application.class))).thenReturn(application);
+        when(applicationRepository.findById(application.getId())).thenReturn(of(application));
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals(applicationName, created.getName());
@@ -513,7 +489,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
             return true;
         }));
 
-        when(applicationMapperMock.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
+        when(applicationMapper.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
 
         ApplicationResource created = service.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId, organisationId).getSuccess();
         assertEquals(newApplication, created);
@@ -531,7 +507,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
             assertEquals(tomorrow, created.getManageFundingEmailDate());
             return true;
         }));
-        when(applicationMapperMock.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
+        when(applicationMapper.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
 
         ServiceResult<ApplicationResource> result = service.setApplicationFundingEmailDateTime(applicationId, tomorrow);
         assertTrue(result.isSuccess());
@@ -540,7 +516,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Test
     public void setApplicationFundingEmailDateTime_alwaysOpen() {
 
-        comp.setAlwaysOpen(true);
+        competition.setAlwaysOpen(true);
         Long applicationId = 1L;
         ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
         ApplicationResource newApplication = newApplicationResource().build();
@@ -550,11 +526,11 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
             assertNotNull(created.getFeedbackReleased());
             return true;
         }));
-        when(applicationMapperMock.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
+        when(applicationMapper.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
 
         ServiceResult<ApplicationResource> result = service.setApplicationFundingEmailDateTime(applicationId, tomorrow);
 
-        comp.setAlwaysOpen(false);
+        competition.setAlwaysOpen(false);
         assertTrue(result.isSuccess());
 
     }
@@ -570,7 +546,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
             assertEquals(tomorrow, created.getManageFundingEmailDate());
             return true;
         }));
-        when(applicationMapperMock.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
+        when(applicationMapper.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
 
         ServiceResult<ApplicationResource> result = service.setApplicationFundingEmailDateTime(applicationId, tomorrow);
         assertTrue(result.isSuccess());
@@ -590,16 +566,16 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
                 .withReason(reason)
                 .build();
 
-        when(applicationRepositoryMock.findById(applicationId)).thenReturn(of(application));
-        when(applicationWorkflowHandlerMock.markIneligible(application, ineligibleOutcome)).thenReturn(true);
-        when(applicationRepositoryMock.save(application)).thenReturn(application);
+        when(applicationRepository.findById(applicationId)).thenReturn(of(application));
+        when(applicationWorkflowHandler.markIneligible(application, ineligibleOutcome)).thenReturn(true);
+        when(applicationRepository.save(application)).thenReturn(application);
 
         ServiceResult<Void> result = service.markAsIneligible(applicationId, ineligibleOutcome);
 
         assertTrue(result.isSuccess());
 
-        verify(applicationRepositoryMock).findById(applicationId);
-        verify(applicationWorkflowHandlerMock).markIneligible(application, ineligibleOutcome);
+        verify(applicationRepository).findById(applicationId);
+        verify(applicationWorkflowHandler).markIneligible(application, ineligibleOutcome);
     }
 
     @Test
@@ -616,22 +592,22 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
                 .withReason(reason)
                 .build();
 
-        when(applicationRepositoryMock.findById(applicationId)).thenReturn(of(application));
-        when(applicationWorkflowHandlerMock.markIneligible(application, ineligibleOutcome)).thenReturn(false);
+        when(applicationRepository.findById(applicationId)).thenReturn(of(application));
+        when(applicationWorkflowHandler.markIneligible(application, ineligibleOutcome)).thenReturn(false);
 
         ServiceResult<Void> result = service.markAsIneligible(applicationId, ineligibleOutcome);
 
         assertTrue(result.isFailure());
         assertEquals(APPLICATION_MUST_BE_SUBMITTED.getErrorKey(), result.getErrors().get(0).getErrorKey());
 
-        verify(applicationRepositoryMock).findById(applicationId);
-        verify(applicationWorkflowHandlerMock).markIneligible(application, ineligibleOutcome);
+        verify(applicationRepository).findById(applicationId);
+        verify(applicationWorkflowHandler).markIneligible(application, ineligibleOutcome);
     }
 
     @Test
     public void showApplicationTeam() {
         User user = newUser().withRoles(singleton(Role.COMP_ADMIN)).build();
-        when(userRepositoryMock.findById(234L)).thenReturn(of(user));
+        when(userRepository.findById(234L)).thenReturn(of(user));
 
         ServiceResult<Boolean> serviceResult = service.showApplicationTeam(123L, 234L);
 
@@ -642,7 +618,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Test
     public void showApplicationTeamWhenStakeholder() {
         User user = newUser().withRoles(singleton(Role.STAKEHOLDER)).build();
-        when(userRepositoryMock.findById(234L)).thenReturn(of(user));
+        when(userRepository.findById(234L)).thenReturn(of(user));
 
         ServiceResult<Boolean> serviceResult = service.showApplicationTeam(123L, 234L);
 
@@ -652,11 +628,11 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Test
     public void showApplicationTeamNoUser() {
 
-        when(userRepositoryMock.findById(234L)).thenReturn(Optional.empty());
+        when(userRepository.findById(234L)).thenReturn(Optional.empty());
         ServiceResult<Boolean> serviceResult = service.showApplicationTeam(123L, 234L);
 
         assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getErrors().get(0).getErrorKey().equals(GENERAL_NOT_FOUND.getErrorKey()));
+        assertEquals(serviceResult.getErrors().get(0).getErrorKey(), GENERAL_NOT_FOUND.getErrorKey());
     }
 
     @Test
@@ -669,7 +645,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
                 .withManageFundingEmailDate(expectedDateTime)
                 .build();
 
-        when(applicationRepositoryMock.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(competitionId))
+        when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(competitionId))
                 .thenReturn(of(application));
 
         ServiceResult<ZonedDateTime> result = service
@@ -687,15 +663,15 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
                 .withCompetition(competition)
                 .build();
 
-        when(applicationRepositoryMock.findById(application.getId())).thenReturn(of(application));
-        when(competitionMapperMock.mapToResource(competition)).thenReturn(competitionResource);
+        when(applicationRepository.findById(application.getId())).thenReturn(of(application));
+        when(competitionMapper.mapToResource(competition)).thenReturn(competitionResource);
 
         CompetitionResource actual = service.getCompetitionByApplicationId(application.getId()).getSuccess();
 
         assertEquals(competitionResource, actual);
 
-        verify(applicationRepositoryMock, only()).findById(application.getId());
-        verify(competitionMapperMock, only()).mapToResource(competition);
+        verify(applicationRepository, only()).findById(application.getId());
+        verify(competitionMapper, only()).mapToResource(competition);
     }
 
     @Test
@@ -707,8 +683,8 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         OrganisationAddress organisationAddress = newOrganisationAddress()
                 .withApplicationAddresses(emptyList())
                 .build();
-        when(applicationRepositoryMock.findById(application.getId())).thenReturn(of(application));
-        when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(of(organisation));
+        when(applicationRepository.findById(application.getId())).thenReturn(of(application));
+        when(organisationRepository.findById(organisation.getId())).thenReturn(of(organisation));
         when(organisationAddressRepository.findFirstByOrganisationIdAndAddressTypeIdOrderByModifiedOnDesc(organisation.getId(), INTERNATIONAL.getId())).thenReturn(of(organisationAddress));
 
         ServiceResult<Void> result = service.linkAddressesToOrganisation(organisation.getId(), application.getId());
@@ -729,8 +705,8 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
                 .withApplicationAddresses(newApplicationOrganisationAddress().build(1))
                 .withAddress(newAddress().build())
                 .build();
-        when(applicationRepositoryMock.findById(application.getId())).thenReturn(of(application));
-        when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(of(organisation));
+        when(applicationRepository.findById(application.getId())).thenReturn(of(application));
+        when(organisationRepository.findById(organisation.getId())).thenReturn(of(organisation));
         when(organisationAddressRepository.findFirstByOrganisationIdAndAddressTypeIdOrderByModifiedOnDesc(organisation.getId(), INTERNATIONAL.getId())).thenReturn(of(organisationAddress));
         when(organisationAddressRepository.save(any())).thenAnswer((invocation) -> invocation.getArgument(0));
 
@@ -747,7 +723,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Test
     public void showApplicationTeamForAuditor() {
         User user = newUser().withRoles(singleton(Role.AUDITOR)).build();
-        when(userRepositoryMock.findById(234L)).thenReturn(of(user));
+        when(userRepository.findById(234L)).thenReturn(of(user));
 
         ServiceResult<Boolean> serviceResult = service.showApplicationTeam(123L, 234L);
 

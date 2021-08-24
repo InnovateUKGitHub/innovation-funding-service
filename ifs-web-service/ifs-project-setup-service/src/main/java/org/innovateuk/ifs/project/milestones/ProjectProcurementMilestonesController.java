@@ -33,7 +33,7 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
     private ProjectProcurementMilestoneRestService projectProcurementMilestoneRestService;
 
     @GetMapping
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_DETAILED_PAYMENT_MILESTONES')")
     public String viewMilestones(@PathVariable long projectId,
                                  @PathVariable long organisationId,
                                  UserResource userResource,

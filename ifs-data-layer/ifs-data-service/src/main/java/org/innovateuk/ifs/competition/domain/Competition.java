@@ -198,6 +198,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     private Boolean alwaysOpen;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "competitionExternalConfigId", referencedColumnName = "id")
+    private CompetitionExternalConfig competitionExternalConfig;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "competitionThirdPartyConfigId", referencedColumnName = "id")
+    private CompetitionThirdPartyConfig competitionThirdPartyConfig;
+
     public Competition() {
         setupComplete = false;
     }
@@ -1011,6 +1019,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.competitionAssessmentConfig = competitionAssessmentConfig;
     }
 
+    public CompetitionThirdPartyConfig getCompetitionThirdPartyConfig() {
+        return competitionThirdPartyConfig;
+    }
+
+    public void setCompetitionThirdPartyConfig(CompetitionThirdPartyConfig competitionThirdPartyConfig) {
+        this.competitionThirdPartyConfig = competitionThirdPartyConfig;
+    }
+
     public CompetitionTypeEnum getCompetitionTypeEnum() {
         return ofNullable(getCompetitionType()).map(CompetitionType::getCompetitionTypeEnum).orElse(null);
     }
@@ -1071,5 +1087,13 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     public boolean isHasBusinessAndFinancialInformationQuestion() {
         return isLoan()
                 && questions.stream().anyMatch(question -> LOAN_BUSINESS_AND_FINANCIAL_INFORMATION == question.getQuestionSetupType());
+    }
+
+    public CompetitionExternalConfig getCompetitionExternalConfig() {
+        return competitionExternalConfig;
+    }
+
+    public void setCompetitionExternalConfig(CompetitionExternalConfig competitionExternalConfig) {
+        this.competitionExternalConfig = competitionExternalConfig;
     }
 }

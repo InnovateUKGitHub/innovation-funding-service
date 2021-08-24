@@ -28,6 +28,7 @@ Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
+${ktpAssessmentCompetitionName}             KTP assessment
 ${ktpAssessmentCompetitionID}               ${competition_ids['${ktpAssessmentCompetitionName}']}
 ${ktpAssessmentApplicationName}             KTP assessment application
 ${ktpAssessmentApplicationID}               ${application_ids['${ktpAssessmentApplicationName}']}
@@ -76,7 +77,7 @@ Comp admin can see the user who is both applicant and KTA role in the list of as
 
 Invite the KTA to assess the KTP competition
     [Documentation]   IFS-8260
-    Given the user selects the checkbox       assessor-row-1
+    Given the user clicks the button/link     jQuery = tr:contains("Amy Colin") label
     And the user clicks the button/link       id = add-selected-assessors-to-invite-list-button
     When the user clicks the button/link      id = review-and-send-assessor-invites-button
     And the user clicks the button/link       jQuery = button:contains("Send invitation")
@@ -455,7 +456,7 @@ Invite KTA to assess the competition
     the user navigates to the page                           ${server}/management/competition/${competitionID}/assessors/find
     ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery = span:contains("Non KTP competition all finance overview")
     Run Keyword If   '${status}' == 'PASS'    the user selects the checkbox     jQuery = tr:contains("Addison Shannon") :checkbox
-    ...                              ELSE     the user selects the checkbox     assessor-row-1
+    ...                              ELSE     the user selects the checkbox     jQuery = tr:contains("Amy Colin") :checkbox
     the user clicks the button/link                          id = add-selected-assessors-to-invite-list-button
     the user clicks the button/link                          id = review-and-send-assessor-invites-button
     the user clicks the button/link                          jQuery = button:contains("Send invitation")
@@ -507,6 +508,8 @@ MO navigates to application overview page
 the user navigates to application overview
     [Arguments]  ${applicationName}
     the user navigates to the page                       ${server}/project-setup/monitoring-officer/dashboard
+    the user selects the checkbox                        previousProject
+    the user clicks the button/link                      id = update-documents-results-button
     the user refreshes until element appears on page     link = ${applicationName}
     the user clicks the button/link                      link = ${applicationName}
     the user clicks the button/link                      link = view application overview

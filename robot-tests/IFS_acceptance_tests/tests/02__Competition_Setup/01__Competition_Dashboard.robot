@@ -12,6 +12,9 @@ Documentation     INFUND-3830: As a Competitions team member I want to view all 
 ...               INFUND-2610 As an internal user I want to be able to view and access all projects that have been successful within a competition so that I can track the project setup process
 ...
 ...               IFS-1881 Project Setup internal project dashboard navigation
+...
+...               IFS-10051 Live tab competitions count is displaying worng
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -23,15 +26,12 @@ Resource          ../../resources/common/Competition_Commons.robot
 Sections of Live Competitions
     [Documentation]    INFUND-3830 INFUND-3003
     Given the user should see the element      jQuery = h1:contains("All competitions")
-    Then the user should see the element       jQuery = h2:contains("Open")
-    And the user should see the element        jQuery = h2:contains("Closed")
-    And the user should see the element        jQuery = h2:contains("Panel")
-    And the user should see the element        jQuery = h2:contains("Inform")
+    Then the user should see the element       jQuery = section:contains("Open") + section:contains("Closed") + section:contains("In assessment") + section:contains("Panel") + section:contains("Inform")
     And the user should not see the element    link = ${READY_TO_OPEN_COMPETITION_NAME}
     # this step verifies that the ready to open competitions are not visible in other tabs
 
 Live competition calculations
-    [Documentation]    INFUND-3830
+    [Documentation]    INFUND-3830  IFS-10051
     Then the total calculation in dashboard should be correct    Open    //section[1]/ul/li
     And the total calculation in dashboard should be correct     Closed    //section[2]/ul/li
     And the total calculation in dashboard should be correct     In assessment    //section[3]/ul/li
@@ -41,9 +41,10 @@ Live competition calculations
 
 Project setup Competitions and Calculations
     [Documentation]    INFUND-3831, INFUND-3003, INFUND-2610 INFUND-5176
-    Given the user clicks the button/link       jQuery = a:contains(Project setup)
-    Then the user should see competitions in project set up
-    And The Project set up dashboard calculations should be correct   css = li.govuk-grid-row  Project setup   //section[1]/ul/li
+    Given the user clicks the button/link        jQuery = a:contains(Project setup)
+    When The user enters text to a text field    id = searchQuery    ${IN_ASSESSMENT_COMPETITION_NAME}
+    And The user clicks the button/link          css = #searchsubmit
+    Then The Project set up dashboard calculations should be correct   css = li.govuk-grid-row  Project setup   //section[1]/ul/li
 
 PS projects title and lead
     [Documentation]    INFUND-2610, IFS-1881
@@ -115,16 +116,6 @@ Non IFS competitions do not appear in search results
     Then the result should be correct            0 competitions with the term ${NON_IFS_COMPETITION_NAME}
 
 *** Keywords ***
-The user should see competitions in project set up
-    # We have used the JQuery selector for the link because the title will change according to the competitions number
-    the user should see the element        jQuery = .govuk-heading-m:contains("Project setup ")
-    ${status}   ${value} =   Run Keyword And Ignore Error Without Screenshots  page should contain   Project setup loan comp
-    Run Keyword If  '${status}' == 'FAIL'     the user clicks the button/link      jQuery = button:contains("Next")
-    the user should see the element        link = Project setup loan comp
-    the user should see the element        jQuery =.govuk-body:contains("5 projects")
-    the user should not see the element    link = ${READY_TO_OPEN_COMPETITION_NAME}
-    # this step verifies that the ready to open competitions are not visible in other tabs
-
 The Project set up dashboard calculations should be correct
     [Arguments]    ${comp_List_Locator}   ${TEXT}   ${Section_Xpath}
     ${pagination} =   Run Keyword And Ignore Error Without Screenshots  the user clicks the button/link  name = page

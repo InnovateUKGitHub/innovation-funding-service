@@ -110,4 +110,16 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
     public ProjectResourceBuilder withProjectState(ProjectState... projectState) {
         return withArray((state, project) -> project.setProjectState(state), projectState);
     }
+
+    public ProjectResourceBuilder withCollaborativeProject(Boolean... collaborativeProjects) {
+        return withArray((collaborativeProject, project) -> project.setCollaborativeProject(collaborativeProject), collaborativeProjects);
+    }
+
+    public ProjectResourceBuilder withSpendProfileGenerated(Boolean... spendProfilesGenerated) {
+        return withArray((spendProfileGenerated, project) -> project.setSpendProfileGenerated(spendProfileGenerated), spendProfilesGenerated);
+    }
+
+    public ProjectResourceBuilder withSpendProfileSubmittedDate(ZonedDateTime... spendProfileSubmittedDates) {
+        return withArray((spendProfileSubmittedDate, project) -> project.setSpendProfileSubmittedDate(spendProfileSubmittedDate), spendProfileSubmittedDates);
+    }
 }

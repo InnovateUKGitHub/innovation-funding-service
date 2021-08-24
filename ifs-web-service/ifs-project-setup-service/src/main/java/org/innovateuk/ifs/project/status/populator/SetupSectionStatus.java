@@ -75,21 +75,22 @@ public class SetupSectionStatus {
         }
     }
 
-    public SectionStatus spendProfileSectionStatus(final ProjectActivityStates spendProfileState) {
-
-        switch(spendProfileState) {
-            case PENDING:
-                return HOURGLASS;
-            case ACTION_REQUIRED:
-                return FLAG;
-            case LEAD_ACTION_REQUIRED:
-                return LEAD_ACTION_FLAG;
-            case COMPLETE:
-                return TICK;
-            default:
-                return EMPTY;
+    public SectionStatus spendProfileSectionStatus(final ProjectActivityStates spendProfileState, boolean isProjectMO) {
+            switch (spendProfileState) {
+                case NOT_STARTED:
+                    return INCOMPLETE;
+               case PENDING:
+                    return isProjectMO ? MO_ACTION_REQUIRED : HOURGLASS;
+                case ACTION_REQUIRED:
+                    return isProjectMO ? INCOMPLETE : FLAG;
+                case LEAD_ACTION_REQUIRED:
+                    return isProjectMO ? INCOMPLETE : LEAD_ACTION_FLAG;
+                case COMPLETE:
+                    return TICK;
+                default:
+                    return EMPTY;
+            }
         }
-    }
 
     public SectionStatus projectSetupCompleteStatus(final ProjectActivityStates setupSectionState) {
         if (setupSectionState.equals(COMPLETE)) {
@@ -121,38 +122,31 @@ public class SetupSectionStatus {
         boolean allDocumentsAreSubmitted = actualNumberOfDocuments == expectedNumberOfDocuments;
         boolean allDocumentsAreApproved = allDocumentsAreSubmitted && projectDocuments.stream()
                 .allMatch(projectDocumentResource -> DocumentStatus.APPROVED.equals(projectDocumentResource.getStatus()));
-        boolean allDocumentsAreUnset = projectDocuments.stream().allMatch(projectDocumentResource -> DocumentStatus.UNSET.equals(projectDocumentResource.getStatus()));
-        boolean allDocumentsAreRejected = projectDocuments.stream().allMatch(projectDocumentResource -> DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus())
-                        || DocumentStatus.REJECTED_DUE_TO_TEAM_CHANGE.equals(projectDocumentResource.getStatus()));
-        boolean hasRejectedAndApprovedDocuments = projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.APPROVED.equals(projectDocumentResource.getStatus())) &&
-                projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus()));
-        boolean hasDocumentForApproval = allDocumentsAreSubmitted && projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.SUBMITTED.equals(projectDocumentResource.getStatus()));
+        boolean hasDocumentForApproval = projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.SUBMITTED.equals(projectDocumentResource.getStatus()));
         boolean hasAnyDocumentUploadedOrRejected = projectDocuments.stream().anyMatch(projectDocumentResource -> DocumentStatus.UPLOADED.equals(projectDocumentResource.getStatus())
-                        || DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus())
-                        || DocumentStatus.REJECTED_DUE_TO_TEAM_CHANGE.equals(projectDocumentResource.getStatus()));
+                || DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus())
+                || DocumentStatus.REJECTED_DUE_TO_TEAM_CHANGE.equals(projectDocumentResource.getStatus()));
 
         if (allDocumentsAreApproved) {
             return TICK;
         }
 
         if (isProjectMO) {
-            if (allDocumentsAreUnset || allDocumentsAreRejected || (allDocumentsAreSubmitted && hasRejectedAndApprovedDocuments) ) {
-                return INCOMPLETE;
-            }
-
-            if (hasDocumentForApproval || !allDocumentsAreSubmitted) {
+            if (hasDocumentForApproval) {
                 return MO_ACTION_REQUIRED;
             }
+            else {
+                return INCOMPLETE;
+            }
         }
+            if (!allDocumentsAreSubmitted || hasAnyDocumentUploadedOrRejected) {
+                return isProjectManager ? FLAG : EMPTY;
+            }
 
-        if (!allDocumentsAreSubmitted || hasAnyDocumentUploadedOrRejected) {
-            return isProjectManager ? FLAG : EMPTY;
-        }
-
-        return HOURGLASS;
+            return HOURGLASS;
     }
 
-    public SectionStatus grantOfferLetterSectionStatus(final ProjectActivityStates grantOfferLetterState,
+            public SectionStatus grantOfferLetterSectionStatus(final ProjectActivityStates grantOfferLetterState,
                                                        final boolean isLeadPartner) {
         if (grantOfferLetterState == null || NOT_REQUIRED.equals(grantOfferLetterState)) {
             return EMPTY;

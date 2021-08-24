@@ -180,7 +180,7 @@ the internal user navigates to the project setup competition
 
 the user refreshes until element appears on page
     [Arguments]  ${selector}
-    Wait Until Keyword Succeeds Without Screenshots     35s   2s   reload and check if element appears    ${selector}
+    Wait Until Keyword Succeeds Without Screenshots     60s   2s   reload and check if element appears    ${selector}
 
 reload and check if element appears
     [Arguments]  ${selector}
@@ -189,12 +189,22 @@ reload and check if element appears
 
 the user selects option from type ahead
     [Arguments]   ${inputId}  ${searchTerm}  ${optionSelector}
-    input text                          id = ${inputId}  ${searchTerm}
-    the user clicks the button/link     jQuery = ul li:contains("${optionSelector}")
-    mouse out                           ${inputId}
+    the user clicks the button/link                       id = ${inputId}
+    wait for autosave
+    the user should see option in type ahead field        id = ${inputId}  ${optionSelector}
+    wait for autosave
+    mouse out                                             id = ${inputId}
 
-the user sees element in type ahead
-    [Arguments]   ${inputId}  ${searchTerm}  ${optionSelector}
-    input text                          id = ${inputId}  ${searchTerm}
-    the user should see the element     jQuery = ul li:contains("${optionSelector}")
-    mouse out                           ${inputId}
+the user should see option in type ahead field
+    [Arguments]  ${locator}  ${searchWord}
+    :FOR    ${i}    IN RANGE  10
+    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots   click element    jQuery = ul li:contains("${searchWord}")
+    \  Exit For Loop If  '${status}'=='PASS'
+    \  run keyword if  '${status}'=='FAIL'   the user tries to select the option again    ${locator}  ${searchWord}
+    \  ${i} =  Set Variable  ${i + 1}
+
+the user tries to select the option again
+    [Arguments]  ${locator}  ${searchWord}
+    the user clicks the button/link     ${locator}
+    wait for autosave
+    click element                       jQuery = ul li:contains("${searchWord}")

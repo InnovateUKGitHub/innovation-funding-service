@@ -164,10 +164,11 @@ An assessor view application assigned for interview panel
 
 An applicant see the application in interview panel
     [Documentation]  IFS-6416  IFS-8066
-    Given log in as a different user       &{lead_applicant_credentials}
-    When the user clicks the button/link   jQuery = ul li a:contains("${EOI_application1}")
-    Then the user navigates to the page    ${server}/application/${EOI_application_id}/summary
-    And the user should see the element    jQuery = h1:contains("Application overview")
+    Given log in as a different user                          &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
+    When the user clicks the button/link                      jQuery = ul li a:contains("${EOI_application1}")
+    Then the user navigates to the page                       ${server}/application/${EOI_application_id}/summary
+    And the user should see the element                       jQuery = h1:contains("Application overview")
 
 *** Keywords ***
 Custom Suite Setup
@@ -212,7 +213,7 @@ logged in user applies to competition
 the applicant checks for competition terms and conditions
     the user should see the element       jQuery = h2:contains("Terms and conditions") ~ p:contains("You are agreeing to these by submitting your application.")
     the user clicks the button/link       link = Award terms and conditions
-    the user should see the element       jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    the user should see the element       jQuery = h1:contains("Terms and conditions of an Innovate UK Grant Award")
     the user should not see the element   jQuery = button:contains("Agree and continue")
     the user clicks the button/link       link = Back to application overview
 

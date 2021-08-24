@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.project.finance.resource.CostGroupResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 
 public class SpendProfileResource {
@@ -27,6 +28,10 @@ public class SpendProfileResource {
     private UserResource generatedBy;
 
     private Calendar generatedDate;
+
+    private UserResource reviewedBy;
+
+    private ZonedDateTime reviewedOn;
 
     public Long getId() {
         return id;
@@ -100,6 +105,22 @@ public class SpendProfileResource {
         this.markedAsComplete = markedAsComplete;
     }
 
+    public UserResource getReviewedBy() {
+        return reviewedBy;
+    }
+
+    public void setReviewedBy(UserResource reviewedBy) {
+        this.reviewedBy = reviewedBy;
+    }
+
+    public ZonedDateTime getReviewedOn() {
+        return reviewedOn;
+    }
+
+    public void setReviewedOn(ZonedDateTime reviewedOn) {
+        this.reviewedOn = reviewedOn;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -118,6 +139,8 @@ public class SpendProfileResource {
                 .append(spendProfileFigures, that.spendProfileFigures)
                 .append(generatedBy, that.generatedBy)
                 .append(generatedDate, that.generatedDate)
+                .append(reviewedBy, that.reviewedBy)
+                .append(reviewedOn, that.reviewedOn)
                 .isEquals();
     }
 
@@ -133,6 +156,8 @@ public class SpendProfileResource {
                 .append(markedAsComplete)
                 .append(generatedBy)
                 .append(generatedDate)
+                .append(reviewedBy)
+                .append(reviewedOn)
                 .toHashCode();
     }
 
@@ -148,6 +173,8 @@ public class SpendProfileResource {
                 .append("markedAsComplete", markedAsComplete)
                 .append("generatedBy", generatedBy)
                 .append("generatedDate", generatedDate)
+                .append("reviewedBy", reviewedBy)
+                .append("reviewedOn", reviewedOn)
                 .toString();
     }
 }

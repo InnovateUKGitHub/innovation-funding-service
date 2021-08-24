@@ -9,6 +9,14 @@ public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
     private boolean projectInSetup;
     private boolean previousProject;
 
+    private boolean documentsComplete;
+    private boolean documentsIncomplete;
+    private boolean documentsAwaitingReview;
+
+    private boolean spendProfileComplete;
+    private boolean spendProfileIncomplete;
+    private boolean spendProfileAwaitingReview;
+
     public MonitoringOfficerDashboardForm() {
     }
 
@@ -28,6 +36,54 @@ public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
         this.previousProject = previousProject;
     }
 
+    public boolean isDocumentsComplete() {
+        return documentsComplete;
+    }
+
+    public void setDocumentsComplete(boolean documentsComplete) {
+        this.documentsComplete = documentsComplete;
+    }
+
+    public boolean isDocumentsIncomplete() {
+        return documentsIncomplete;
+    }
+
+    public void setDocumentsIncomplete(boolean documentsIncomplete) {
+        this.documentsIncomplete = documentsIncomplete;
+    }
+
+    public boolean isDocumentsAwaitingReview() {
+        return documentsAwaitingReview;
+    }
+
+    public void setDocumentsAwaitingReview(boolean documentsAwaitingReview) {
+        this.documentsAwaitingReview = documentsAwaitingReview;
+    }
+
+    public boolean isSpendProfileComplete() {
+        return spendProfileComplete;
+    }
+
+    public void setSpendProfileComplete(boolean spendProfileComplete) {
+        this.spendProfileComplete = spendProfileComplete;
+    }
+
+    public boolean isSpendProfileIncomplete() {
+        return spendProfileIncomplete;
+    }
+
+    public void setSpendProfileIncomplete(boolean spendProfileIncomplete) {
+        this.spendProfileIncomplete = spendProfileIncomplete;
+    }
+
+    public boolean isSpendProfileAwaitingReview() {
+        return spendProfileAwaitingReview;
+    }
+
+    public void setSpendProfileAwaitingReview(boolean spendProfileAwaitingReview) {
+        this.spendProfileAwaitingReview = spendProfileAwaitingReview;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -39,6 +95,12 @@ public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
         return new EqualsBuilder()
                 .append(projectInSetup, that.projectInSetup)
                 .append(previousProject, that.previousProject)
+                .append(documentsComplete, that.documentsComplete)
+                .append(documentsIncomplete, that.documentsIncomplete)
+                .append(documentsAwaitingReview, that.documentsAwaitingReview)
+                .append(spendProfileComplete, that.spendProfileComplete)
+                .append(spendProfileIncomplete, that.spendProfileIncomplete)
+                .append(spendProfileAwaitingReview, that.spendProfileAwaitingReview)
                 .isEquals();
     }
 
@@ -47,6 +109,12 @@ public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
         return new HashCodeBuilder(17, 37)
                 .append(projectInSetup)
                 .append(previousProject)
+                .append(documentsComplete)
+                .append(documentsIncomplete)
+                .append(documentsAwaitingReview)
+                .append(spendProfileComplete)
+                .append(spendProfileIncomplete)
+                .append(spendProfileAwaitingReview)
                 .toHashCode();
     }
 }

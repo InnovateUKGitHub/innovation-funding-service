@@ -49,7 +49,7 @@ ${proj_app_with_ineligible}      ${application_ids['Application with ineligible'
 Competition Dashboard
     [Documentation]    INFUND-7365  INFUND-7561 INFUND-7950
     [Tags]
-    Given the user should see the competition details  ${INFORM_COMPETITION_NAME}  Inform  Materials and manufacturing  Digital manufacturing  Invite assessors to assess the competition  Input and review funding decision
+    Given the user should see the competition details   ${INFORM_COMPETITION_NAME}  Inform  Materials and manufacturing  Digital manufacturing  Invite assessors to assess the competition  Input and review funding decision  Programme
     Then the user should see milestones for the In inform competition
 
 Filtering on the Manage funding applications page
@@ -126,9 +126,9 @@ Successful applicant see successful alert
 View feedback from each assessor
     [Documentation]    INFUND-8172
     [Tags]  HappyPath
-    Then the user should see the element    jQuery = h3:contains("Assessor 3") ~ .wysiwyg-styles p:contains("I have no problem recommending this application")
-    And the user should see the element     jQuery = h3:contains("Assessor 1") ~ .wysiwyg-styles p:contains("Very good, but could have been better in areas")
-    And the user should see the element     jQuery = h3:contains("Assessor 2") ~ .wysiwyg-styles p:contains("I enjoyed reading this application, well done")
+    Then the user should see the element    jQuery = h3:contains("Assessor 1") ~ .wysiwyg-styles p:contains("I have no problem recommending this application")
+    And the user should see the element     jQuery = h3:contains("Assessor 2") ~ .wysiwyg-styles p:contains("Very good, but could have been better in areas")
+    And the user should see the element     jQuery = h3:contains("Assessor 3") ~ .wysiwyg-styles p:contains("I enjoyed reading this application, well done")
 
 Question scores and application details are correct
     [Documentation]    INFUND-8169 INFUND-7861

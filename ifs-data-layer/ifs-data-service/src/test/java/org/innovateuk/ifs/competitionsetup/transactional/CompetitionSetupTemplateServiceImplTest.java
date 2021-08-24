@@ -16,6 +16,7 @@ import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules.S
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.GrantTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.KtpTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.LoanTemplate;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.ProcurementTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.template.ProgrammeTemplate;
 import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
@@ -23,6 +24,7 @@ import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
 import java.util.Optional;
@@ -33,8 +35,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.PROGRAMME;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder.aSection;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -76,9 +77,14 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     private KtpTemplate ktpTemplate;
 
     @Mock
+    private ProcurementTemplate procurementTemplate;
+
+    @Mock
     private SubsidyControlTemplate subsidyControlTemplate;
     @Mock
     private QuestionPriorityOrderService questionPriorityOrderService;
+
+    private ArgumentCaptor<Competition> competitionArgumentCaptor;
 
     @Before
     public void setup() {
@@ -86,9 +92,10 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         when(loanTemplate.type()).thenReturn(FundingType.LOAN);
         when(grantTemplate.type()).thenReturn(FundingType.GRANT);
         when(ktpTemplate.type()).thenReturn(FundingType.KTP);
+        when(procurementTemplate.type()).thenReturn(FundingType.PROCUREMENT);
         when(subsidyControlTemplate.type()).thenReturn(FundingRules.SUBSIDY_CONTROL);
         service.setCompetitionTemplates(newArrayList(programmeTemplate));
-        service.setFundingTypeTemplates(newArrayList(loanTemplate, grantTemplate, ktpTemplate));
+        service.setFundingTypeTemplates(newArrayList(loanTemplate, grantTemplate, ktpTemplate, procurementTemplate));
         service.setFundingRulesTemplates(newArrayList(subsidyControlTemplate));
     }
 
@@ -203,6 +210,48 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
         verify(programmeTemplate).copyTemplatePropertiesToCompetition(competition);
 //        assertEquals(result.getSuccess().getTermsAndConditions(), fundingTypeTerms);
+    }
+
+    @Test
+    public void initializeCompetitionByCompetitionTemplate_competitionThirdPartyConfig() {
+        competitionArgumentCaptor = ArgumentCaptor.forClass(Competition.class);
+
+        CompetitionType competitionType = newCompetitionType()
+                .withName(PROGRAMME.getText())
+                .withId(1L)
+                .build();
+
+        Competition competition = newCompetition()
+                .withId(3L)
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withFundingType(FundingType.PROCUREMENT)
+                .withFundingRules(FundingRules.NOT_AID)
+                .build();
+
+        when(programmeTemplate.sections()).thenReturn(newArrayList(aSection()));
+        when(procurementTemplate.sections(any())).thenReturn(newArrayList(aSection()));
+        when(procurementTemplate.initialiseFinanceTypes(any())).thenReturn(competition);
+        when(procurementTemplate.initialiseProjectSetupColumns(any())).thenReturn(competition);
+        when(procurementTemplate.overrideTermsAndConditions(any())).thenReturn(competition);
+        when(procurementTemplate.setGolTemplate(any())).thenReturn(competition);
+        when(competitionTypeRepository.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
+                .thenReturn(Optional.empty());
+        when(competitionRepository.save(competition)).thenReturn(competition);
+
+        ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
+
+        assertTrue(result.isSuccess());
+
+        verify(competitionRepository).save(competitionArgumentCaptor.capture());
+
+        Competition toBeCreatedCompetition = competitionArgumentCaptor.getValue();
+
+        assertNotNull(toBeCreatedCompetition);
+        assertNull(toBeCreatedCompetition.getCompetitionThirdPartyConfig());
+
+        verify(programmeTemplate).copyTemplatePropertiesToCompetition(competition);
     }
 
     @Test

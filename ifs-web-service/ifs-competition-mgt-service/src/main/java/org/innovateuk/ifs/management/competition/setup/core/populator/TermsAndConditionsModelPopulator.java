@@ -41,6 +41,8 @@ public class TermsAndConditionsModelPopulator {
 
         boolean termsAndConditionsDocUploaded = competitionResource.isCompetitionTermsUploaded();
 
+        String projectCostGuidanceLink = getProjectCostGuidanceLink(competitionResource, termsAndConditions);
+
         boolean includeStateAid = includeStateAid(competitionResource);
 
         List<GrantTermsAndConditionsResource> termsAndConditionsList = termsAndConditionsRestService
@@ -57,13 +59,23 @@ public class TermsAndConditionsModelPopulator {
         }
 
         return new TermsAndConditionsViewModel(generalViewModel, termsAndConditionsList,
-                termsAndConditions, otherTermsAndConditions, termsAndConditionsDocUploaded, includeStateAid, stateAidPage);
+                termsAndConditions, otherTermsAndConditions, termsAndConditionsDocUploaded, includeStateAid, stateAidPage, projectCostGuidanceLink);
     }
 
     private boolean includeStateAid(CompetitionResource competitionResource) {
         return subsidyControlNorthernIrelandEnabled
                 && FundingRules.SUBSIDY_CONTROL == competitionResource.getFundingRules()
                 && !competitionResource.isExpressionOfInterest();
+    }
+
+    private String getProjectCostGuidanceLink(CompetitionResource competitionResource, GrantTermsAndConditionsResource termsAndConditions) {
+        String projectCostGuidanceLink = "http://";
+        if (competitionResource.getCompetitionThirdPartyConfigResource() != null) {
+            if (competitionResource.getCompetitionThirdPartyConfigResource().getProjectCostGuidanceUrl() !=null) {
+                projectCostGuidanceLink = competitionResource.getCompetitionThirdPartyConfigResource().getProjectCostGuidanceUrl();
+            }
+        }
+        return projectCostGuidanceLink;
     }
 
 }

@@ -15,13 +15,25 @@ public class ProjectDashboardRowViewModel {
     private final long projectId;
     private final String projectTitle;
     private final ProjectState projectState;
+    private MonitoringDashboardSectionsViewModel monitoringDashboardSectionsViewModel;
 
+    // when toggle is off
     public ProjectDashboardRowViewModel(ProjectResource project) {
         this.applicationNumber = project.getApplication();
         this.competitionTitle = project.getCompetitionName();
         this.projectId = project.getId();
         this.projectTitle = project.getName();
         this.projectState = project.getProjectState();
+    }
+
+    public ProjectDashboardRowViewModel(ProjectResource project,
+                                        MonitoringDashboardSectionsViewModel monitoringDashboardSectionsViewModel) {
+        this.applicationNumber = project.getApplication();
+        this.competitionTitle = project.getCompetitionName();
+        this.projectId = project.getId();
+        this.projectTitle = project.getName();
+        this.projectState = project.getProjectState();
+        this.monitoringDashboardSectionsViewModel = monitoringDashboardSectionsViewModel;
     }
 
     public long getProjectId() {
@@ -63,5 +75,9 @@ public class ProjectDashboardRowViewModel {
 
     public boolean isUnsuccessful() {
         return projectState.isUnsuccessful();
+    }
+
+    public MonitoringDashboardSectionsViewModel getMonitoringDashboardSectionsViewModel() {
+        return monitoringDashboardSectionsViewModel;
     }
 }

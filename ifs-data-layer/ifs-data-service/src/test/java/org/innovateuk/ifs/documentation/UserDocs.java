@@ -69,6 +69,7 @@ public class UserDocs {
             fieldWithPath("inviteHash").description("Invite hash if responding to invite"),
             fieldWithPath("organisationId").description("Organisation id to join"),
             fieldWithPath("competitionId").description("Competition id applying to"),
+            fieldWithPath("applicationId").description("Unique application id of the application"),
             fieldWithPath("addLiveProjectUserRole").description("Should add role for IFSPA")
     };
 

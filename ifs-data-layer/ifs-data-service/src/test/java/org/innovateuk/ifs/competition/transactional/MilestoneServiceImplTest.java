@@ -431,6 +431,34 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         assertTrue(result.isSuccess());
     }
 
+    @Test
+    @Rollback
+    public void rebuildMilestones() {
+
+        List<Milestone> milestones = newMilestone().withType(OPEN_DATE, BRIEFING_EVENT, SUBMISSION_DATE,
+                ALLOCATE_ASSESSORS, ASSESSOR_ACCEPTS, ASSESSOR_DEADLINE, ASSESSMENT_PANEL , ASSESSORS_NOTIFIED, ASSESSMENT_CLOSED,
+                LINE_DRAW, NOTIFICATIONS).build(11);
+        Competition competition = newCompetition()
+                .withCompletionStage(CompetitionCompletionStage.COMPETITION_CLOSE)
+                .withMilestones(milestones).build();
+        milestones.stream().filter(milestone -> milestone.getType() == ASSESSOR_ACCEPTS || milestone.getType() == ASSESSOR_DEADLINE)
+                .forEach((milestone) -> {
+                    AssessmentPeriod assessmentPeriod = newAssessmentPeriod().withCompetition(competition).build();
+                    milestone.setAssessmentPeriod(assessmentPeriod);
+                    when(assessmentPeriodRepository.findById(assessmentPeriod.getId())).thenReturn(Optional.of(assessmentPeriod));
+                });
+
+        when(milestoneRepository.findAllByCompetitionId(competition.getId())).thenReturn(milestones);
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(milestoneRepository.save(any(Milestone.class))).thenReturn(newMilestone().build());
+        when(milestoneMapper.mapToResource(any(Milestone.class))).thenReturn(newMilestoneResource().build());
+
+        ServiceResult<Void> result = service.rebuildMilestones(competition.getId());
+
+        assertTrue(result.isSuccess());
+        assertEquals(competition.getMilestones().size(), 3);
+    }
+
     @Override
     protected MilestoneServiceImpl supplyServiceUnderTest() {
         return new MilestoneServiceImpl();

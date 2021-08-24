@@ -7,6 +7,8 @@ Documentation     IFS-747 As a comp exec I am able to select a Competition type 
 ...
 ...               IFS-8847 Always open competitions: new comp setup configuration
 ...
+...               IFS-10172 Third party procurement: applicant-facing content changes
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant
@@ -34,7 +36,7 @@ CompAdmin creates a new Generic competition
     Then get competition id and set open date to yesterday  ${competitionName}
 
 Applicant Applies to Generic competition and is able to see the Ts&Cs
-    [Documentation]  IFS-1012  IFS-2879  IFS-5920
+    [Documentation]  IFS-1012  IFS-2879  IFS-5920  IFS-10172
     [Tags]  HappyPath
     [Setup]  Log in as a different user                          becky.mason@gmail.com  ${short_password}
     Given logged in user applies to competition                  ${competitionName}   4
@@ -42,8 +44,8 @@ Applicant Applies to Generic competition and is able to see the Ts&Cs
     Then the user fills in the Application details               Application Ts&Cs  ${tomorrowday}  ${month}  ${nextyear}
     When the user completes subsidy basis as subsidy control
     And the user clicks the button/link                          link = Award terms and conditions
-    Then the user should see the element                         jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
-    And the user should see the element                          jQuery = .message-alert:contains("You must read these terms and conditions and accept them by ticking the box at the end")
+    Then the user should see the element                         jQuery = h1:contains("Terms and conditions of an Innovate UK Grant Award")
+    And the user should see the element                          jQuery = .message-alert:contains("You must read and agree to the terms and conditions by ticking the box at the end of the page.")
 
 *** Keywords ***
 Custom suite setup
