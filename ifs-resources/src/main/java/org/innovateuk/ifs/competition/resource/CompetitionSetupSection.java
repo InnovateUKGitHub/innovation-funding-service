@@ -99,7 +99,7 @@ public enum CompetitionSetupSection {
         } else if (this == PROJECT_DOCUMENT) {
             return competitionResource.getCompetitionStatus().equals(PROJECT_SETUP);
         } else if (competitionResource.isSetupAndLive()) {
-            if (loggedInUser.hasAuthority(Authority.SUPER_ADMIN_USER)) {
+            if (loggedInUser.hasAuthority(Authority.SUPER_ADMIN_USER) && competitionResource.isOpen()) {
                 return !this.getEditableAfterSetupAndLive();
             }
             return this.getEditableAfterSetupAndLive();
