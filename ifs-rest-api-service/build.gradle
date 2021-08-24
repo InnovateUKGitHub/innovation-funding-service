@@ -33,7 +33,7 @@ dependencies {
 
     compile('org.apache.httpcomponents:httpclient')
     compile('org.springframework:spring-web')
-    compile 'org.innovateuk.ifs.libraries:ifs-resources'
+    implementation 'org.innovateuk.ifs.libraries:ifs-resources'
     compile project(':ifs-rest-util')
     compile 'org.innovateuk.ifs.libraries:ifs-commons'
 
