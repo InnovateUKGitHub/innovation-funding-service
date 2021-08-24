@@ -159,7 +159,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     public ProjectDataBuilder withMonitoringOfficer(String firstName, String lastName, String email, String phoneNumber) {
         return with(data -> doAs(anyProjectFinanceUser(), () -> {
             LegacyMonitoringOfficerResource mo = new LegacyMonitoringOfficerResource(firstName, lastName, email, phoneNumber, data.getProject().getId());
-            UserResource moUserResource = userService.findByEmail(mo.getEmail()).getSuccess();
+            UserResource moUserResource = userService.findByEmail(mo.getEmail()).getOrElse(new UserResource());
             legacyMonitoringOfficerService.saveMonitoringOfficer(data.getProject().getId(), mo).getSuccess();
             monitoringOfficerService.assignProjectToMonitoringOfficer(moUserResource.getId(), data.getProject().getId()).getSuccess();
         }));
