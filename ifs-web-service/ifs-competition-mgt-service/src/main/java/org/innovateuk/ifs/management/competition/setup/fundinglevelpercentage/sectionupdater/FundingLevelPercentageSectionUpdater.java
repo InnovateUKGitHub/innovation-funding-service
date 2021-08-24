@@ -13,6 +13,7 @@ import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetu
 import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupSectionUpdater;
 import org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.form.FundingLevelMaximumForm;
 import org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.form.FundingLevelPercentageForm;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +45,8 @@ public class FundingLevelPercentageSectionUpdater extends AbstractSectionUpdater
     @Override
     protected ServiceResult<Void> doSaveSection(
             CompetitionResource competition,
-            CompetitionSetupForm competitionSetupForm
+            CompetitionSetupForm competitionSetupForm,
+            UserResource loggedInUser
     ) {
         FundingLevelPercentageForm form = (FundingLevelPercentageForm) competitionSetupForm;
         if (competition.isNonFinanceType()) {

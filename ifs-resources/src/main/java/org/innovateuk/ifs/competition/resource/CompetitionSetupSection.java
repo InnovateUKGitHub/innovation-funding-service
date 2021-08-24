@@ -1,11 +1,12 @@
 package org.innovateuk.ifs.competition.resource;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import org.innovateuk.ifs.user.resource.Authority;
+import org.innovateuk.ifs.user.resource.UserResource;
+
+import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.*;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
@@ -26,13 +27,13 @@ public enum CompetitionSetupSection {
     COMPLETION_STAGE(11L, "completion-stage", "Milestones", emptyList(), false, emptyList()),
     APPLICATION_SUBMISSION(15L, "application-submission", "Milestones", emptyList(), false, emptyList()),
     MILESTONES(5L, "milestones", "Milestones", emptyList(), true, asList(COMPLETION_STAGE, APPLICATION_SUBMISSION)),
-    APPLICATION_FORM(6L, "application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES, APPLICATION_DETAILS, KTP_ASSESSMENT), false),
+    APPLICATION_FORM(6L, "application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES, APPLICATION_DETAILS, KTP_ASSESSMENT), true),
     ASSESSORS(7L, "assessors", "Assessors", emptyList(), true),
     CONTENT(8L, "content", "Public content", emptyList(), true),
     PROJECT_DOCUMENT(10L, "project-document", "Documents in project setup", emptyList(), false),
     ORGANISATIONAL_ELIGIBILITY(12L, "organisational-eligibility", "Organisational eligibility", emptyList(), false),
     FUNDING_ELIGIBILITY(13L, "funding-eligibility", "Funding eligibility", emptyList(), false),
-    FUNDING_LEVEL_PERCENTAGE(14L, "funding-level-percentage", "Funding level percentage", emptyList(), false,asList(FUNDING_ELIGIBILITY));
+    FUNDING_LEVEL_PERCENTAGE(14L, "funding-level-percentage", "Funding level percentage", emptyList(), false, singletonList(FUNDING_ELIGIBILITY));
 
     private Long id;
     private String path;
@@ -41,6 +42,8 @@ public enum CompetitionSetupSection {
     private List<CompetitionSetupSection> previousSection;
 
     private boolean editableAfterSetupAndLive;
+
+    private UserResource loggedInUser;
 
     private static Map<String, CompetitionSetupSection> PATH_MAP;
 
@@ -87,7 +90,7 @@ public enum CompetitionSetupSection {
         return editableAfterSetupAndLive;
     }
 
-    public boolean preventEdit(CompetitionResource competitionResource) {
+    public boolean preventEdit(CompetitionResource competitionResource, UserResource loggedInUser) {
         if (competitionResource.isSetupAndAfterNotifications()) {
             return true;
         }
@@ -96,7 +99,10 @@ public enum CompetitionSetupSection {
         } else if (this == PROJECT_DOCUMENT) {
             return competitionResource.getCompetitionStatus().equals(PROJECT_SETUP);
         } else if (competitionResource.isSetupAndLive()) {
-            return !this.getEditableAfterSetupAndLive();
+            if (loggedInUser.hasAuthority(Authority.SUPER_ADMIN_USER)) {
+                return !this.getEditableAfterSetupAndLive();
+            }
+            return this.getEditableAfterSetupAndLive();
         }
 
         return false;

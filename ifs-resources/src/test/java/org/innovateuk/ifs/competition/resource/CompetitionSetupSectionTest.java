@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competition.resource;
 
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
 import java.time.ZonedDateTime;
@@ -7,6 +9,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 
 public class CompetitionSetupSectionTest {
@@ -115,6 +118,8 @@ public class CompetitionSetupSectionTest {
 
 		ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
 
+		UserResource loggedInUser = newUserResource().withRoleGlobal(Role.SUPER_ADMIN_USER).build();
+
 		CompetitionResource competitionResource = newCompetitionResource()
 				.withSetupComplete(true)
 				.withCompetitionStatus(OPEN)
@@ -122,15 +127,15 @@ public class CompetitionSetupSectionTest {
 				.withFundersPanelDate(tomorrow)
 				.build();
 
-		assertFalse(homeSection.preventEdit(competitionResource));
-		assertFalse(projectEligibilitySection.preventEdit(competitionResource));
-		assertFalse(organisationalEligibilitySection.preventEdit(competitionResource));
-		assertFalse(milestonesSection.preventEdit(competitionResource));
-		assertFalse(applicationFormSection.preventEdit(competitionResource));
-		assertFalse(assessorSection.preventEdit(competitionResource));
-		assertFalse(initialDetailsSection.preventEdit(competitionResource));
-		assertFalse(additionalInfoSection.preventEdit(competitionResource));
-		assertFalse(projectDocumentSection.preventEdit(competitionResource));
+		assertFalse(homeSection.preventEdit(competitionResource, loggedInUser));
+		assertFalse(projectEligibilitySection.preventEdit(competitionResource, loggedInUser));
+		assertFalse(organisationalEligibilitySection.preventEdit(competitionResource, loggedInUser));
+		assertFalse(milestonesSection.preventEdit(competitionResource, loggedInUser));
+		assertFalse(applicationFormSection.preventEdit(competitionResource, loggedInUser));
+		assertFalse(assessorSection.preventEdit(competitionResource, loggedInUser));
+		assertFalse(initialDetailsSection.preventEdit(competitionResource, loggedInUser));
+		assertFalse(additionalInfoSection.preventEdit(competitionResource, loggedInUser));
+		assertFalse(projectDocumentSection.preventEdit(competitionResource, loggedInUser));
 	}
 
 	@Test
@@ -141,14 +146,16 @@ public class CompetitionSetupSectionTest {
 		ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
 		ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
 
+		UserResource loggedInUser = newUserResource().withRoleGlobal(Role.SUPER_ADMIN_USER).build();
+
 		CompetitionResource competitionResource = newCompetitionResource()
 				.withSetupComplete(true)
 				.withStartDate(yesterday)
 				.withFundersPanelDate(tomorrow)
 				.build();
 
-		assertFalse(initialDetailsSection.preventEdit(competitionResource));
-		assertFalse(additionalInfoSection.preventEdit(competitionResource));
+		assertFalse(initialDetailsSection.preventEdit(competitionResource, loggedInUser));
+		assertFalse(additionalInfoSection.preventEdit(competitionResource, loggedInUser));
 	}
 
 	@Test
@@ -165,21 +172,23 @@ public class CompetitionSetupSectionTest {
 
 		ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
 
+		UserResource loggedInUser = newUserResource().withRoleGlobal(Role.SUPER_ADMIN_USER).build();
+
 		CompetitionResource competitionResource = newCompetitionResource()
 				.withSetupComplete(true)
 				.withStartDate(yesterday)
 				.withFundersPanelDate(yesterday)
 				.build();
 
-		assertTrue(homeSection.preventEdit(competitionResource));
-		assertTrue(projectEligibilitySection.preventEdit(competitionResource));
-		assertTrue(organisationalEligibilitySection.preventEdit(competitionResource));
-		assertTrue(milestonesSection.preventEdit(competitionResource));
-		assertTrue(applicationFormSection.preventEdit(competitionResource));
-		assertTrue(assessorSection.preventEdit(competitionResource));
-		assertTrue(initialDetailsSection.preventEdit(competitionResource));
-		assertTrue(additionalInfoSection.preventEdit(competitionResource));
-		assertTrue(projectDocumentSection.preventEdit(competitionResource));
+		assertTrue(homeSection.preventEdit(competitionResource, loggedInUser));
+		assertTrue(projectEligibilitySection.preventEdit(competitionResource, loggedInUser));
+		assertTrue(organisationalEligibilitySection.preventEdit(competitionResource, loggedInUser));
+		assertTrue(milestonesSection.preventEdit(competitionResource, loggedInUser));
+		assertTrue(applicationFormSection.preventEdit(competitionResource, loggedInUser));
+		assertTrue(assessorSection.preventEdit(competitionResource, loggedInUser));
+		assertTrue(initialDetailsSection.preventEdit(competitionResource, loggedInUser));
+		assertTrue(additionalInfoSection.preventEdit(competitionResource, loggedInUser));
+		assertTrue(projectDocumentSection.preventEdit(competitionResource, loggedInUser));
 	}
 
 	@Test

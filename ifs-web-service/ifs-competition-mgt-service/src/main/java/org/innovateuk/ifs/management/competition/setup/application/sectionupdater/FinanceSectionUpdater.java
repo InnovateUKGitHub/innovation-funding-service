@@ -3,15 +3,19 @@ package org.innovateuk.ifs.management.competition.setup.application.sectionupdat
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupFinanceRestService;
-import org.innovateuk.ifs.management.competition.setup.application.form.FinanceForm;
-import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
-import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupSubsectionUpdater;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.management.competition.setup.application.form.FinanceForm;
+import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
+import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupSubsectionUpdater;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +52,8 @@ public class FinanceSectionUpdater extends AbstractSectionUpdater implements Com
 
     @Override
     protected ServiceResult<Void> doSaveSection(CompetitionResource competition,
-                                                CompetitionSetupForm competitionSetupForm) {
+                                                CompetitionSetupForm competitionSetupForm,
+                                                UserResource loggedInUser) {
         FinanceForm form = (FinanceForm) competitionSetupForm;
 
         if (competition.isFinanceType()) {
