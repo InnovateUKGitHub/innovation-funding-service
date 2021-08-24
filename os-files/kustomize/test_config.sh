@@ -9,6 +9,7 @@ kustomize build components/mail > /dev/null || echo 'xxx error on base mail'
 kustomize build components/robot > /dev/null || echo 'xxx error on base robot'
 kustomize build components/sil-stub > /dev/null || echo 'xxx error on sil'
 kustomize build components/web-layer > /dev/null || echo 'xxx error on base web'
+kustomize build components/anonymised-db-data > /dev/null || echo 'xxx error on anonymised db dump'
 
 kustomize build patches/new-relic-env-vars-patch > /dev/null || echo 'xxx error on new-relic-env-vars-patc'
 kustomize build patches/pull-secrets-patch > /dev/null || echo 'xxx error on pull-secrets-patch'

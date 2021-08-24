@@ -93,6 +93,14 @@ profiles:
             project: ifs-web-service:ifs-application-service
             args:
               - "-DskipTests"
+        - image: dbreset
+          context: ifs-data-layer/ifs-data-service/src/main/resources
+          docker:
+            dockerfile: Dockerfile-dbreset
+        - image: anonymised-db-data
+          context: ifs-data-layer/ifs-data-service/src/main/docker/proxysql
+          docker:
+            dockerfile: Dockerfile-proxysql
 
   - name: at
     build:
@@ -222,11 +230,7 @@ profiles:
       tagPolicy:
         gitCommit:
           ignoreChanges: true
-      artifacts:
-        - image: dbreset
-          context: ifs-data-layer/ifs-data-service/src/main/resources
-          docker:
-            dockerfile: Dockerfile-dbreset
+      artifacts: []
     deploy:
       kustomize:
         paths:
@@ -248,3 +252,19 @@ profiles:
       kustomize:
         paths:
           - os-files/kustomize/env/stub/local/dev
+
+  - name: anonymised-db-data
+    build:
+      local:
+        useDockerCLI: false
+        useBuildkit: false
+        tryImportMissing: true
+        push: true
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
+      artifacts: []
+    deploy:
+      kustomize:
+        paths:
+          - os-files/kustomize/components/anonymised-db-data
