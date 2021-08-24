@@ -15,6 +15,8 @@ Documentation     IFS-8994  Two new sets of terms & conditions required
 ...
 ...               IFS-9127 View and Change an Organisations NI Declaration determined Funding Rules after Application Submittal
 ...
+...               IFS-10213 Replace T&C -‘Innovate UK - Subsidy control’ Aug 2021
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -91,7 +93,7 @@ Creating a new comp to confirm Innovateuk subsidy control T&C's
     And the user should see the element         jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Innovate UK")
 
 Innovateuk subsidy control t&c's are correct
-    [Documentation]  IFS-8994  IFS-9124
+    [Documentation]  IFS-8994  IFS-9124  IFS-10213
     When the user clicks the button/link                 jQuery = button:contains("Edit")
     And the user clicks the button/link                  link = ${innovateUKSubsidyControl}
     And select window                                    title = Terms and conditions of an Innovate UK Grant Award - Innovation Funding Service
@@ -209,7 +211,7 @@ Partner completes project finances and terms and conditions of state aid applica
     Then the user marks the subsidy contol finances as complete     ${leadStateAidApplication}  labour costs  54,000  yes
 
 Partner applicant can accept subsidy control terms and conditions based on NI declaration
-    [Documentation]  IFS-9233
+    [Documentation]  IFS-9233  IFS-10213
     When the user clicks the button/link         link = Award terms and conditions
     Then the user should see the element         jQuery = h1:contains("Terms and conditions of an Innovate UK Grant Award")
     And the user should see the element          jQuery = li:contains("Subsidy Control/State aid obligations")
@@ -268,7 +270,7 @@ Lead applicant completes subsidy control subsidy basis application
     Then the user marks the subsidy contol finances as complete                         ${leadSubsidyControlApplication}  labour costs  54,000  yes
 
 Lead applicant can accept subsidy control terms and conditions based on NI declaration
-    [Documentation]  IFS-9223
+    [Documentation]  IFS-9223  IFS-10213
     When the user clicks the button/link          link = Award terms and conditions
     Then the user should see the element          jQuery = h1:contains("Terms and conditions of an Innovate UK Grant Award")
     And the user should see the element           jQuery = li:contains("Subsidy Control/State aid obligations")
