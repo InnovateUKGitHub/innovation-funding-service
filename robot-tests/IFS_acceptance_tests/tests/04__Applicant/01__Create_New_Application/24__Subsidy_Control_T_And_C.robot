@@ -96,7 +96,7 @@ Innovateuk subsidy control t&c's are correct
     And the user clicks the button/link                  link = ${innovateUKSubsidyControl}
     And select window                                    title = Terms and conditions of an Innovate UK Grant Award - Innovation Funding Service
     Then the user should see the element                 jQuery = h1:contains("Terms and conditions of an Innovate UK Grant Award")
-    And the user should see the element                  jQuery = li:contains("Subsidy Control/ State aid obligations")
+    And the user should see the element                  jQuery = li:contains("Subsidy Control/State aid obligations")
     [Teardown]   the user closes the last opened tab
 
 Innovateuk State aid t&c's are correct
@@ -212,7 +212,7 @@ Partner applicant can accept subsidy control terms and conditions based on NI de
     [Documentation]  IFS-9233
     When the user clicks the button/link         link = Award terms and conditions
     Then the user should see the element         jQuery = h1:contains("Terms and conditions of an Innovate UK Grant Award")
-    And the user should see the element          jQuery = li:contains("Subsidy Control/ State aid obligations")
+    And the user should see the element          jQuery = li:contains("Subsidy Control/State aid obligations")
     And the user accepts terms and conditions
 
 Lead applicant submits state aid subsidy basis application
@@ -271,7 +271,7 @@ Lead applicant can accept subsidy control terms and conditions based on NI decla
     [Documentation]  IFS-9223
     When the user clicks the button/link          link = Award terms and conditions
     Then the user should see the element          jQuery = h1:contains("Terms and conditions of an Innovate UK Grant Award")
-    And the user should see the element           jQuery = li:contains("Subsidy Control/ State aid obligations")
+    And the user should see the element           jQuery = li:contains("Subsidy Control/State aid obligations")
     And the user accepts terms and conditions
 
 Partner completes project finances and terms and conditions of subsidy control application
