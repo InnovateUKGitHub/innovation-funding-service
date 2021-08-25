@@ -38,6 +38,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     private EncryptedCookieService cookieUtil;
 
     private String liveProjectsUrl = "https://live-projects.example.com";
+    private String ifsWebBaseURL = "http://localhost:80";
 
     @Spy
     @SuppressWarnings("unused")
@@ -126,6 +127,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
 
         // set the Spring @Value for the external Live Projects system URL
         ReflectionTestUtils.setField(navigationUtils, "liveProjectsLandingPageUrl", liveProjectsUrl);
+        ReflectionTestUtils.setField(navigationUtils, "ifsWebBaseURL", ifsWebBaseURL);
 
         setLoggedInUser(liveProjectsAndApplicant);
 
