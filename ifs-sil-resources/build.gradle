@@ -12,8 +12,10 @@ apply plugin: 'idea'
 
 dependencies {
     compile 'org.apache.commons:commons-lang3'
+    compile 'commons-io:commons-io'
     compile "com.fasterxml.jackson.core:jackson-databind"
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile "junit:junit"
 }
 configurations {
     testArtifacts
