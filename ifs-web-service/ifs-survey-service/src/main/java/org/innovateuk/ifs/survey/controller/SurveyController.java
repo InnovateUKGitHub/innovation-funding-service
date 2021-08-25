@@ -56,7 +56,7 @@ public class SurveyController {
                                  Model model) {
 
         Supplier<String> failureView = () -> viewFeedback(feedbackForm, bindingResult, surveyType, competitionId, model);
-        Supplier<String> successView = () -> navigationUtils.getRedirectToLandingPageUrl(request);
+        Supplier<String> successView = () -> navigationUtils.getRedirectToLandingPageUrl();
 
         SurveyResource surveyResource = getSurveyResource(feedbackForm, competitionId, surveyType);
 
