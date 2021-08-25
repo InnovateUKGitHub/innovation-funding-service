@@ -13,6 +13,8 @@ Documentation    IFS-10080 Third party procurement: Comp setup configuration
 ...
 ...              IFS-10151 Include the link to the T&C on the T&C tickbox label
 ...
+...              IFS-10273  Ofgem - Hide Cost Cateogory - Capital usage
+...
 Suite Setup       Custom suite setup
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/Competition_Commons.robot
@@ -73,14 +75,14 @@ User applies to third party competition
     And the third party applicant can view the strategic innovation terms and conditions        Strategic Innovation Fund governance document
 
 Applicant fills in project finances without any VAT validations
-    [Documentation]   IFS-10134
-    Given the user navigates to Your-finances page            ${thirdPartyProcurementApplicationName}
-    And the user fills the procurement project costs          Calculate  52,214
-    When the user clicks the button/link                      css = label[for="stateAidAgreed"]
-    And the user clicks the button/link                       jQuery = button:contains("Mark as complete")
-    And the user should not see a field and summary error     Select if you are VAT registered
+    [Documentation]   IFS-10134   IFS-10273
+    Given the user navigates to Your-finances page                   ${thirdPartyProcurementApplicationName}
+    And the user fills the third party procurement project costs
+    When the user clicks the button/link                             css = label[for="stateAidAgreed"]
+    And the user clicks the button/link                              jQuery = button:contains("Mark as complete")
+    And the user should not see a field and summary error            Select if you are VAT registered
     Then the user enters the project location
-    And the user fills in the organisation information        ${thirdPartyProcurementApplicationName}  ${SMALL_ORGANISATION_SIZE}
+    And the user fills in the organisation information               ${thirdPartyProcurementApplicationName}  ${SMALL_ORGANISATION_SIZE}
     And applicant fills in payment milestones
 
 the user submits the third party procurement application
@@ -225,9 +227,9 @@ the third party applicant can view the strategic innovation terms and conditions
 applicant fills in payment milestones
     the user clicks the button/link                           link = Your payment milestones
     the user clicks the button/link                           jQuery = button:contains("Open all")
-    applicant fills in payment milestone                      accordion-finances-content  2  Milestone 1  £60,699  taskOrActivity 1  deliverable 1  successCriteria 1
+    applicant fills in payment milestone                      accordion-finances-content  2  Milestone 1  £55,224  taskOrActivity 1  deliverable 1  successCriteria 1
     the user clicks the button/link                           id = mark-all-as-complete
-    applicant views saved payment milestones                  2  £60,699  Milestone 1  100%  £60,699  100%
+    applicant views saved payment milestones                  2  £55,224  Milestone 1  100%  £55,224  100%
     applicant views readonly payment milestones subsections   taskOrActivity 1  deliverable 1  successCriteria 1
     the user should see the element                           jQuery = li:contains("Your payment milestones") > .task-status-complete
     the user clicks the button/link                           link = Back to application overview
@@ -259,3 +261,11 @@ assessor should see third party procurement terms and conditions
     the user should see the element    link = View ${title} (opens in a new window)
     the user should see the element    jQuery = p:contains("Summary of ${title}")
     the user clicks the button/link    link = Back to assessment overview
+
+the user fills the third party procurement project costs
+    the user clicks the button/link             link = Your project costs
+    the user fills in Labour
+    the user fills in Material
+    the user fills in Subcontracting costs
+    the user fills in Travel and subsistence
+    the user fills in Other costs
