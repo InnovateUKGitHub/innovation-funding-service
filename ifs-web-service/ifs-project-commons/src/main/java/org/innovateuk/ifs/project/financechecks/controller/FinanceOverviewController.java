@@ -104,6 +104,7 @@ public class FinanceOverviewController {
                 canChangeFundingLevel,
                 competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE),
                 applicationFundingBreakdownViewModel,
+                getExternalUser(loggedInUser),
                 getExternalUserLinkUrl(loggedInUser, projectId));
     }
 
@@ -121,6 +122,10 @@ public class FinanceOverviewController {
     private ProjectFinanceCostBreakdownViewModel getProjectFinanceCostBreakdown(long projectId, List<PartnerOrganisationResource> partnerOrgs, CompetitionResource competition) {
         List<ProjectFinanceResource> finances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
         return new ProjectFinanceCostBreakdownViewModel(finances, partnerOrgs, competition);
+    }
+
+    private boolean getExternalUser(UserResource userResource) {
+        return userResource.hasRole(Role.MONITORING_OFFICER) ? true : false;
     }
 
     private String getExternalUserLinkUrl(UserResource userResource, long projectId) {
