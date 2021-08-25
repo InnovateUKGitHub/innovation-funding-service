@@ -15,15 +15,25 @@ Suite Teardown    The user closes the browser
 Force Tags        Guest
 Resource          ../../resources/defaultResources.robot
 
+*** Variables ***
+${ifs_admin_email}      arden.pimenta@innovateuk.test
+
 *** Test Cases ***
 Invalid Login
     Given the user is not logged-in
     Then the user cannot login with their new details    ${lead_applicant}    ${passw0rd2}
 
+Invalid Login - blank password field
+    Given the user is not logged-in
+    When The user enters text to a text field       id=username    ${ifs_admin_email}
+    And The user clicks the button/link             jQuery = button:contains("Sign in")
+    Then Page Should Contain                        ${unsuccessful_login_message}
+    And Page Should Contain                         Your email/password combination doesn't seem to work.
+
 Valid login with double role as Applicant
     [Documentation]    INFUND-1479
     Given The guest user inserts user email and password      &{Multiple_user_credentials}
-    And the user clicks the button/link                   jQuery = button:contains("Sign in")
+    And the user clicks the button/link                       jQuery = button:contains("Sign in")
     Then the user should see multiple role dashboard view
     And the user goes to applicant dashboard
     [Teardown]    Logout as user
