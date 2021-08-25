@@ -112,7 +112,7 @@ the user is not logged-in
     the user should not see the element  link = Sign out
 
 the user receives a failed login message
-    the user clicks the button/link             css = button[name="_eventId_proceed"]
+    the user clicks the button/link             jQuery = button:contains("Sign in")
     the user should see the element             jQuery = .govuk-error-summary:contains("${unsuccessful_login_message}")
     the user should see the element             jQuery = li:contains("Your email/password combination doesn't seem to work.")
 
