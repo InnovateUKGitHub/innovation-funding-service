@@ -15,9 +15,6 @@ Suite Teardown    The user closes the browser
 Force Tags        Guest
 Resource          ../../resources/defaultResources.robot
 
-*** Variables ***
-${ifs_admin_email}      arden.pimenta@innovateuk.test
-
 *** Test Cases ***
 Invalid Login
     Given the user is not logged-in
@@ -25,18 +22,16 @@ Invalid Login
 
 Invalid Login - blank password field
     Given the user is not logged-in
-    When The user enters text to a text field       id=username    ${ifs_admin_email}
+    When The user enters text to a text field       id=username    ${ifs_admin_user_credentials["email"]}
     And The user clicks the button/link             jQuery = button:contains("Sign in")
-    Then Page Should Contain                        ${unsuccessful_login_message}
-    And Page Should Contain                         Your email/password combination doesn't seem to work.
+    Then the user receives a failed login message
 
 Invalid Login - blank email field
     Given the user is not logged-in
     And The user clears text in the text field      id=username
     When The user enters text to a text field       id=password   ${short_password}
     And The user clicks the button/link             jQuery = button:contains("Sign in")
-    Then Page Should Contain                        ${unsuccessful_login_message}
-    And Page Should Contain                         Your email/password combination doesn't seem to work.
+    Then the user receives a failed login message
 
 Valid login with double role as Applicant
     [Documentation]    INFUND-1479
@@ -117,6 +112,11 @@ Reset password user enters new psw
 the user is not logged-in
     the user should not see the element  link = Dashboard
     the user should not see the element  link = Sign out
+
+the user receives a failed login message
+    the user clicks the button/link             css = button[name="_eventId_proceed"]
+    the user should see the element             jQuery = .govuk-error-summary:contains("${unsuccessful_login_message}")
+    the user should see the element             jQuery = li:contains("Your email/password combination doesn't seem to work.")
 
 Clear the login fields
     the user reloads the page
