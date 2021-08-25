@@ -30,6 +30,14 @@ Invalid Login - blank password field
     Then Page Should Contain                        ${unsuccessful_login_message}
     And Page Should Contain                         Your email/password combination doesn't seem to work.
 
+Invalid Login - blank email field
+    Given the user is not logged-in
+    And The user clears text in the text field      id=username
+    When The user enters text to a text field       id=password   ${short_password}
+    And The user clicks the button/link             jQuery = button:contains("Sign in")
+    Then Page Should Contain                        ${unsuccessful_login_message}
+    And Page Should Contain                         Your email/password combination doesn't seem to work.
+
 Valid login with double role as Applicant
     [Documentation]    INFUND-1479
     Given The guest user inserts user email and password      &{Multiple_user_credentials}
