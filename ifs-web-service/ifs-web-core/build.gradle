@@ -33,7 +33,7 @@ dependencies {
 
     compile "org.innovateuk.ifs.libraries:ifs-resources"
     compile project(':ifs-rest-api-service')
-    compile project(":ifs-rest-util")
+    compile "org.innovateuk.ifs.libraries:ifs-rest-util"
 
     compile "org.innovateuk.ifs.libraries:ifs-commons"
     compile project(":ifs-security")

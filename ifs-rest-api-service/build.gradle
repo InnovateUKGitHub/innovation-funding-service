@@ -34,7 +34,7 @@ dependencies {
     compile('org.apache.httpcomponents:httpclient')
     compile('org.springframework:spring-web')
     implementation 'org.innovateuk.ifs.libraries:ifs-resources'
-    compile project(':ifs-rest-util')
+    compile 'org.innovateuk.ifs.libraries:ifs-rest-util'
     compile 'org.innovateuk.ifs.libraries:ifs-commons'
 
     //testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
