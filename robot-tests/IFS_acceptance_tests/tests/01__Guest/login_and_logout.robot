@@ -23,14 +23,12 @@ Invalid Login
 Invalid Login - blank password field
     Given the user is not logged-in
     When The user enters text to a text field       id=username    ${ifs_admin_user_credentials["email"]}
-    And The user clicks the button/link             jQuery = button:contains("Sign in")
     Then the user receives a failed login message
 
 Invalid Login - blank email field
     Given the user is not logged-in
     And The user clears text in the text field      id=username
     When The user enters text to a text field       id=password   ${short_password}
-    And The user clicks the button/link             jQuery = button:contains("Sign in")
     Then the user receives a failed login message
 
 Valid login with double role as Applicant
