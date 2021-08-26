@@ -19,21 +19,21 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 public enum CompetitionSetupSection {
 
-    HOME(1L, "home", "Home Page", emptyList(), false),
-    INITIAL_DETAILS(2L, "initial", "Initial details", emptyList(), true),
-    TERMS_AND_CONDITIONS(9L, "terms-and-conditions", "Terms and conditions", emptyList(), false),
-    ADDITIONAL_INFO(3L, "additional", "Funding information", emptyList(), true),
-    PROJECT_ELIGIBILITY(4L, "project-eligibility", "Project eligibility", emptyList(), false),
-    COMPLETION_STAGE(11L, "completion-stage", "Milestones", emptyList(), false, emptyList()),
-    APPLICATION_SUBMISSION(15L, "application-submission", "Milestones", emptyList(), false, emptyList()),
-    MILESTONES(5L, "milestones", "Milestones", emptyList(), true, asList(COMPLETION_STAGE, APPLICATION_SUBMISSION)),
-    APPLICATION_FORM(6L, "application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES, APPLICATION_DETAILS, KTP_ASSESSMENT), true),
-    ASSESSORS(7L, "assessors", "Assessors", emptyList(), true),
-    CONTENT(8L, "content", "Public content", emptyList(), true),
-    PROJECT_DOCUMENT(10L, "project-document", "Documents in project setup", emptyList(), false),
-    ORGANISATIONAL_ELIGIBILITY(12L, "organisational-eligibility", "Organisational eligibility", emptyList(), false),
-    FUNDING_ELIGIBILITY(13L, "funding-eligibility", "Funding eligibility", emptyList(), false),
-    FUNDING_LEVEL_PERCENTAGE(14L, "funding-level-percentage", "Funding level percentage", emptyList(), false, singletonList(FUNDING_ELIGIBILITY));
+    HOME(1L, "home", "Home Page", emptyList(), false, false),
+    INITIAL_DETAILS(2L, "initial", "Initial details", emptyList(), true, true),
+    TERMS_AND_CONDITIONS(9L, "terms-and-conditions", "Terms and conditions", emptyList(), false, false),
+    ADDITIONAL_INFO(3L, "additional", "Funding information", emptyList(), true, true),
+    PROJECT_ELIGIBILITY(4L, "project-eligibility", "Project eligibility", emptyList(), false, false),
+    COMPLETION_STAGE(11L, "completion-stage", "Milestones", emptyList(), false, emptyList(), false),
+    APPLICATION_SUBMISSION(15L, "application-submission", "Milestones", emptyList(), false, emptyList(), false),
+    MILESTONES(5L, "milestones", "Milestones", emptyList(), true, asList(COMPLETION_STAGE, APPLICATION_SUBMISSION), true),
+    APPLICATION_FORM(6L, "application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES, APPLICATION_DETAILS, KTP_ASSESSMENT), false, true),
+    ASSESSORS(7L, "assessors", "Assessors", emptyList(), true, true),
+    CONTENT(8L, "content", "Public content", emptyList(), true, true),
+    PROJECT_DOCUMENT(10L, "project-document", "Documents in project setup", emptyList(), false, false),
+    ORGANISATIONAL_ELIGIBILITY(12L, "organisational-eligibility", "Organisational eligibility", emptyList(), false, false),
+    FUNDING_ELIGIBILITY(13L, "funding-eligibility", "Funding eligibility", emptyList(), false, false),
+    FUNDING_LEVEL_PERCENTAGE(14L, "funding-level-percentage", "Funding level percentage", emptyList(), false, singletonList(FUNDING_ELIGIBILITY), false);
 
     private Long id;
     private String path;
@@ -42,8 +42,7 @@ public enum CompetitionSetupSection {
     private List<CompetitionSetupSection> previousSection;
 
     private boolean editableAfterSetupAndLive;
-
-    private UserResource loggedInUser;
+    private boolean editableBySuperAdmin;
 
     private static Map<String, CompetitionSetupSection> PATH_MAP;
 
@@ -54,20 +53,22 @@ public enum CompetitionSetupSection {
         }
     }
 
-    CompetitionSetupSection(Long id, String sectionPath, String sectionName, List<CompetitionSetupSubsection> subsections, boolean editableAfterSetupAndLive) {
-        this(id, sectionPath, sectionName, subsections, editableAfterSetupAndLive, emptyList());
+    CompetitionSetupSection(Long id, String sectionPath, String sectionName, List<CompetitionSetupSubsection> subsections, boolean editableAfterSetupAndLive, boolean editableBySuperAdmin) {
+        this(id, sectionPath, sectionName, subsections, editableAfterSetupAndLive, emptyList(), editableBySuperAdmin);
     }
 
     CompetitionSetupSection(Long id, String sectionPath,
                             String sectionName, List<CompetitionSetupSubsection> subsections,
                             boolean editableAfterSetupAndLive,
-                            List<CompetitionSetupSection> previousSection) {
+                            List<CompetitionSetupSection> previousSection,
+                            boolean editableBySuperAdmin) {
         this.id = id;
         this.path = sectionPath;
         this.name = sectionName;
         this.subsections = subsections;
         this.editableAfterSetupAndLive = editableAfterSetupAndLive;
         this.previousSection = previousSection;
+        this.editableBySuperAdmin = editableBySuperAdmin;
     }
 
     public String getName() {
@@ -90,6 +91,10 @@ public enum CompetitionSetupSection {
         return editableAfterSetupAndLive;
     }
 
+    public boolean isEditableBySuperAdmin() {
+        return editableBySuperAdmin;
+    }
+
     public boolean preventEdit(CompetitionResource competitionResource, UserResource loggedInUser) {
         if (competitionResource.isSetupAndAfterNotifications()) {
             return true;
@@ -100,9 +105,9 @@ public enum CompetitionSetupSection {
             return competitionResource.getCompetitionStatus().equals(PROJECT_SETUP);
         } else if (competitionResource.isSetupAndLive()) {
             if (loggedInUser.hasAuthority(Authority.SUPER_ADMIN_USER) && competitionResource.isOpen()) {
-                return !this.getEditableAfterSetupAndLive();
+                return !this.isEditableBySuperAdmin();
             }
-            return this.getEditableAfterSetupAndLive();
+            return !this.getEditableAfterSetupAndLive();
         }
 
         return false;

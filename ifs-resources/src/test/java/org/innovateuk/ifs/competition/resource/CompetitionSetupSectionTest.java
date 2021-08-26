@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 public class CompetitionSetupSectionTest {
 
 	@Test
-	public void testFromPathNotRecognised() {
+	public void fromPathNotRecognised() {
 		String path = "something";
 		
 		CompetitionSetupSection result = CompetitionSetupSection.fromPath(path);
@@ -24,7 +24,7 @@ public class CompetitionSetupSectionTest {
 	}
 	
 	@Test
-	public void testFromPathInitial() {
+	public void fromPathInitial() {
 		String path = "initial";
 		
 		CompetitionSetupSection result = CompetitionSetupSection.fromPath(path);
@@ -33,7 +33,7 @@ public class CompetitionSetupSectionTest {
 	}
 	
 	@Test
-	public void testFromPathAdditional() {
+	public void fromPathAdditional() {
 		String path = "additional";
 		
 		CompetitionSetupSection result = CompetitionSetupSection.fromPath(path);
@@ -42,7 +42,7 @@ public class CompetitionSetupSectionTest {
 	}
 	
 	@Test
-	public void testFromPathProjectEligibility() {
+	public void fromPathProjectEligibility() {
 		String path = "project-eligibility";
 		
 		CompetitionSetupSection result = CompetitionSetupSection.fromPath(path);
@@ -51,7 +51,7 @@ public class CompetitionSetupSectionTest {
 	}
 
 	@Test
-	public void testFromPathOrganisationalEligibility() {
+	public void fromPathOrganisationalEligibility() {
 		String path = "organisational-eligibility";
 
 		CompetitionSetupSection result = CompetitionSetupSection.fromPath(path);
@@ -60,7 +60,7 @@ public class CompetitionSetupSectionTest {
 	}
 	
 	@Test
-	public void testFromPathMilestones() {
+	public void fromPathMilestones() {
 		String path = "milestones";
 		
 		CompetitionSetupSection result = CompetitionSetupSection.fromPath(path);
@@ -69,7 +69,7 @@ public class CompetitionSetupSectionTest {
 	}
 
 	@Test
-	public void testFromPathCompletionStage() {
+	public void fromPathCompletionStage() {
 		String path = "completion-stage";
 
 		CompetitionSetupSection result = CompetitionSetupSection.fromPath(path);
@@ -78,7 +78,7 @@ public class CompetitionSetupSectionTest {
 	}
 
 	@Test
-	public void testFromPathApplicationSubmission() {
+	public void fromPathApplicationSubmission() {
 		String path = "application-submission";
 
 		CompetitionSetupSection result = CompetitionSetupSection.fromPath(path);
@@ -87,7 +87,7 @@ public class CompetitionSetupSectionTest {
 	}
 
 	@Test
-	public void testFromPathApplication() {
+	public void fromPathApplication() {
 		String path = "application";
 		
 		CompetitionSetupSection result = CompetitionSetupSection.fromPath(path);
@@ -105,7 +105,7 @@ public class CompetitionSetupSectionTest {
 	}
 
 	@Test
-	public void testAllSectionsEditableWhenSetupIsCompleteAndNotYetInAssessment() {
+	public void allSectionsEditableWhenSetupIsCompleteAndNotYetInAssessment() {
 		CompetitionSetupSection homeSection = CompetitionSetupSection.HOME;
 		CompetitionSetupSection projectEligibilitySection = CompetitionSetupSection.PROJECT_ELIGIBILITY;
 		CompetitionSetupSection organisationalEligibilitySection = CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY;
@@ -139,7 +139,7 @@ public class CompetitionSetupSectionTest {
 	}
 
 	@Test
-	public void testSectionsEditableWhenCompetitionStartedAndSetupIsCompleteAndNotYetInAssessment() {
+	public void sectionsEditableWhenCompetitionStartedAndSetupIsCompleteAndNotYetInAssessment() {
 		CompetitionSetupSection initialDetailsSection = CompetitionSetupSection.INITIAL_DETAILS;
 		CompetitionSetupSection additionalInfoSection = CompetitionSetupSection.ADDITIONAL_INFO;
 
@@ -159,7 +159,7 @@ public class CompetitionSetupSectionTest {
 	}
 
 	@Test
-	public void testSectionsNotEditableWhenCompetitionStartedAndSetupIsCompleteAndNotYetInAssessment() {
+	public void sectionsNotEditableWhenCompetitionStartedAndSetupIsCompleteAndNotYetInAssessment() {
 		CompetitionSetupSection homeSection = CompetitionSetupSection.HOME;
 		CompetitionSetupSection projectEligibilitySection = CompetitionSetupSection.PROJECT_ELIGIBILITY;
 		CompetitionSetupSection organisationalEligibilitySection = CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY;
@@ -192,7 +192,7 @@ public class CompetitionSetupSectionTest {
 	}
 
 	@Test
-	public void testGetAllNextSectionsForCompletionStage() {
+	public void getAllNextSectionsForCompletionStage() {
 		List<CompetitionSetupSection> nextSections = CompetitionSetupSection.COMPLETION_STAGE.getAllNextSections();
 
 		assertEquals(1, nextSections.size());
@@ -200,7 +200,7 @@ public class CompetitionSetupSectionTest {
 	}
 
 	@Test
-	public void testGetAllNextSectionsForApplicationSubmission() {
+	public void getAllNextSectionsForApplicationSubmission() {
 		List<CompetitionSetupSection> nextSections = CompetitionSetupSection.APPLICATION_SUBMISSION.getAllNextSections();
 
 		assertEquals(1, nextSections.size());
