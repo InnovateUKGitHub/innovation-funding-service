@@ -157,10 +157,8 @@ public class CompetitionSetupFundingLevelPercentageControllerTest extends BaseCo
                 .withFundingRules(STATE_AID)
                 .build();
 
-        UserResource loggedInUser = newUserResource().build();
-
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(competitionSetupService.saveCompetitionSetupSection(any(), eq(competition), eq(FUNDING_LEVEL_PERCENTAGE), loggedInUser)).thenReturn(serviceSuccess());
+        when(competitionSetupService.saveCompetitionSetupSection(any(), eq(competition), eq(FUNDING_LEVEL_PERCENTAGE), eq(loggedInUser))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(URL, COMPETITION_ID)
                 .param("maximum[0][0].maximum", "50"))
@@ -176,10 +174,8 @@ public class CompetitionSetupFundingLevelPercentageControllerTest extends BaseCo
                 .withFundingRules(SUBSIDY_CONTROL)
                 .build();
 
-        UserResource loggedInUser = newUserResource().build();
-
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(updater.saveSection(eq(competition), any(), loggedInUser)).thenReturn(serviceSuccess());
+        when(updater.saveSection(eq(competition), any(), eq(loggedInUser))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(URL + "/funding-rule/" + SUBSIDY_CONTROL.toUrl(), COMPETITION_ID)
                 .param("maximum[0][0].maximum", "50"))
@@ -195,10 +191,8 @@ public class CompetitionSetupFundingLevelPercentageControllerTest extends BaseCo
                 .withFundingRules(SUBSIDY_CONTROL)
                 .build();
 
-        UserResource loggedInUser = newUserResource().build();
-
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(competitionSetupService.saveCompetitionSetupSection(any(), eq(competition), eq(FUNDING_LEVEL_PERCENTAGE), loggedInUser)).thenReturn(serviceSuccess());
+        when(competitionSetupService.saveCompetitionSetupSection(any(), eq(competition), eq(FUNDING_LEVEL_PERCENTAGE), eq(loggedInUser))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(URL + "/funding-rule/" + STATE_AID.toUrl(), COMPETITION_ID)
                 .param("maximum[0][0].maximum", "50"))
