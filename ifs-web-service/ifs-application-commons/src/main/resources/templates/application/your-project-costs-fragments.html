@@ -1504,7 +1504,7 @@
             <p>You can subcontract work if you don’t have the expertise in your project team.
                 You can also subcontract if it is cheaper than developing your skills in-house.</p>
         </th:block>
-            <details class="govuk-details" role="group">
+        <details class="govuk-details" role="group">
                 <summary class="govuk-details__summary">
                     <span class="govuk-details__summary-text">Subcontracting costs guidance</span>
                 </summary>
@@ -1518,12 +1518,14 @@
                         </p>
                     </th:block>
                     <p>Subcontracting associate companies should be charged at cost.</p>
-                    <p><span th:if="${!model.isProcurementCompetition()}">Where possible you should select a UK based contractor. </span>You
-                        should name the subcontractor (<span th:if="${!model.isProcurementCompetition()}">where</span>
-                        <span th:if="${model.isProcurementCompetition()}">if</span> known) and describe what they will be doing. You should also state where the work will be undertaken.
-                        <span th:unless="${model.isProcurementCompetition() or model.isOfGemCompetition()}">
-                            We will look at the size of this contribution when assessing your eligibility and level of support.</span>
-                    </p>
+                    <th:block th:unless="${model.isOfGemCompetition()}">
+                        <p><span th:if="${!model.isProcurementCompetition()}">Where possible you should select a UK based contractor. </span>You
+                            should name the subcontractor (<span th:if="${!model.isProcurementCompetition()}">where</span>
+                            <span th:if="${model.isProcurementCompetition()}">if</span> known) and describe what they will be doing. You should also state where the work will be undertaken.
+                            <span th:unless="${model.isProcurementCompetition()}">
+                                We will look at the size of this contribution when assessing your eligibility and level of support.</span>
+                        </p>
+                    </th:block>
                 </div>
             </details>
     </div>
