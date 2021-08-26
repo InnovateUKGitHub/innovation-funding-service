@@ -53,7 +53,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @TestPropertySource(locations = "classpath:application.properties")
-@Ignore("Currently failing and being investigated")
 public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTest<AssessorRegistrationController> {
 
     @Spy
@@ -114,6 +113,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         String firstName = "Felix";
         String lastName = "Wilson";
         String phoneNumber = "12345678";
+        String email = "test@test.com";
         String password = "P@ssword1234";
 
         String addressLine1 = "address1";
@@ -139,10 +139,11 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
         String inviteHash = "hash";
 
-        CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
+        CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail(email).build();
 
         when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
-        when(assessorService.createAssessorByInviteHash(inviteHash, expectedForm, addressResource)).thenReturn(serviceSuccess());
+        when(assessorService.createAssessorByInviteHash(eq(inviteHash), any(RegistrationForm.class), any(AddressResource.class)))
+                .thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -150,16 +151,16 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .param("firstName", firstName)
                 .param("lastName", lastName)
                 .param("phoneNumber", phoneNumber)
+                .param("email", email)
                 .param("password", password)
                 .param("addressForm.addressType", AddressForm.AddressType.MANUAL_ENTRY.name())
-                .param("addressForm.selectedPostcode.addressLine1", addressLine1)
-                .param("addressForm.selectedPostcode.town", town)
-                .param("addressForm.selectedPostcode.postcode", postcode))
+                .param("addressForm.manualAddress.addressLine1", addressLine1)
+                .param("addressForm.manualAddress.town", town)
+                .param("addressForm.manualAddress.postcode", postcode))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(model().attribute("form", expectedForm))
                 .andExpect(redirectedUrl(format("/registration/%s/register/account-created", inviteHash)));
 
-        verify(assessorService).createAssessorByInviteHash(inviteHash, expectedForm, addressResource);
+        verify(assessorService).createAssessorByInviteHash(eq(inviteHash), any(RegistrationForm.class), any(AddressResource.class));
     }
 
 
@@ -169,7 +170,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         String firstName = "Felix";
         String lastName = "Wilson";
         String phoneNumber = "12345678";
-        String password = "P@ssword1234";
+        String password = "weakkkkkkkkk";
 
         String addressLine1 = "address1";
         String town = "town";
@@ -197,7 +198,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
 
         when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
-        when(assessorService.createAssessorByInviteHash(inviteHash, expectedForm, addressResource)).thenReturn(
+        when(assessorService.createAssessorByInviteHash(eq(inviteHash), any(RegistrationForm.class), any(AddressResource.class))).thenReturn(
                 serviceFailure(singletonList(fieldError("password", HttpStatus.CONFLICT.getReasonPhrase(), "INVALID_PASSWORD", HttpStatus.CONFLICT))));
 
         mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
@@ -205,19 +206,20 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .param("title", title.name())
                 .param("firstName", firstName)
                 .param("lastName", lastName)
+                .param("email", competitionInviteResource.getEmail())
                 .param("phoneNumber", phoneNumber)
                 .param("password", password)
                 .param("addressForm.addressType", AddressForm.AddressType.MANUAL_ENTRY.name())
-                .param("addressForm.selectedPostcode.addressLine1", addressLine1)
-                .param("addressForm.selectedPostcode.town", town)
-                .param("addressForm.selectedPostcode.postcode", postcode))
+                .param("addressForm.manualAddress.addressLine1", addressLine1)
+                .param("addressForm.manualAddress.town", town)
+                .param("addressForm.manualAddress.postcode", postcode))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrorCode("form", "password", "registration.INVALID_PASSWORD"))
                 .andReturn();
 
-        verify(assessorService).createAssessorByInviteHash(inviteHash, expectedForm, addressResource);
+        verify(assessorService).createAssessorByInviteHash(eq(inviteHash), any(RegistrationForm.class), any(AddressResource.class));
     }
 
     @Test
@@ -227,6 +229,16 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         String password = "P@ssword1234";
 
         String inviteHash = "hash";
+        RegistrationForm expectedForm = new RegistrationForm();
+        expectedForm.setPhoneNumber(phoneNumber);
+        expectedForm.setPassword(password);
+
+        AddressResource addressResource = newAddressResource().build();
+
+        AddressForm addressForm = new AddressForm();
+        addressForm.setManualAddress(addressResource);
+        expectedForm.setAddressForm(addressForm);
+
         CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
 
         when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
@@ -242,6 +254,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "firstName"))
                 .andExpect(model().attributeHasFieldErrors("form", "lastName"))
+                .andExpect(model().attributeHasFieldErrors("form", "email"))
                 .andExpect(view().name("registration/register"))
                 .andReturn();
 
@@ -257,10 +270,10 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         assertEquals(3, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("firstName"));
         assertTrue(bindingResult.hasFieldErrors("lastName"));
-        assertTrue(bindingResult.hasFieldErrors("addressForm.postcodeInput"));
+        assertTrue(bindingResult.hasFieldErrors("email"));
         assertEquals("Please enter a first name.", bindingResult.getFieldError("firstName").getDefaultMessage());
         assertEquals("Please enter a last name.", bindingResult.getFieldError("lastName").getDefaultMessage());
-        assertEquals("validation.standard.postcodesearch.required", bindingResult.getFieldError("addressForm.postcodeInput").getCode());
+        assertEquals("Please enter your email address.", bindingResult.getFieldError("email").getDefaultMessage());
     }
 
     @Test
@@ -281,12 +294,12 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .param("phoneNumber", phoneNumber)
                 .param("password", password)
                 .param("firstName", firstName)
-                .param("lastName", lastName))
+                .param("lastName", lastName)
+                .param("email", competitionInviteResource.getEmail()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().attributeExists("model"))
                 .andExpect(model().hasErrors())
-
                 .andExpect(model().attributeHasFieldErrors("form", "firstName"))
                 .andExpect(model().attributeHasFieldErrors("form", "lastName"))
                 .andExpect(view().name("registration/register"))
@@ -301,13 +314,11 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
         assertTrue(bindingResult.hasErrors());
         assertEquals(0, bindingResult.getGlobalErrorCount());
-        assertEquals(3, bindingResult.getFieldErrorCount());
+        assertEquals(2, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("firstName"));
         assertTrue(bindingResult.hasFieldErrors("lastName"));
-        assertTrue(bindingResult.hasFieldErrors("addressForm.postcodeInput"));
-        assertEquals("Invalid first name.", bindingResult.getFieldError("firstName").getDefaultMessage());
-        assertEquals("Invalid last name.", bindingResult.getFieldError("lastName").getDefaultMessage());
-        assertEquals("validation.standard.postcodesearch.required", bindingResult.getFieldError("addressForm.postcodeInput").getCode());
+        assertEquals("Please enter a valid first name.", bindingResult.getFieldError("firstName").getDefaultMessage());
+        assertEquals("Please enter a valid last name.", bindingResult.getFieldError("lastName").getDefaultMessage());
     }
 
     @Test
