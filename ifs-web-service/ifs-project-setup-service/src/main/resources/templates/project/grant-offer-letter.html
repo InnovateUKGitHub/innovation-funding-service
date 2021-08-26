@@ -22,7 +22,7 @@
         <form id="grant-offer-letter-form" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" enctype="multipart/form-data">
 
             <th:block th:if="${model.showGrantOfferLetterReceivedByInnovateMessage}">
-                <p class="govuk-body" th:unless="${model.ktp or model.monitoringOfficer}" th:text="|We have received the signed ${model.documentName} and it is waiting to be reviewed.|"></p>
+                <p class="govuk-body" th:if="${model.showSignedOfferLetter}" th:text="|We have received the signed ${model.documentName} and it is waiting to be reviewed.|"></p>
                 <p class="govuk-body" th:if="${model.monitoringOfficer and !model.ktp}" th:text="|The signed ${model.documentName} has been received by Innovate UK and is awaiting review.|"></p>
 
                 <p class="govuk-body" th:unless="${model.ktp}" th:text="|The unsigned ${model.documentName} is available for your records.|"></p>

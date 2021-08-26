@@ -240,4 +240,9 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     public boolean isMonitoringOfficer() {
         return monitoringOfficer;
     }
+
+    public boolean showSignedOfferLetter() {
+        return !isMonitoringOfficer() || !isKtp();
+    }
+
 }
