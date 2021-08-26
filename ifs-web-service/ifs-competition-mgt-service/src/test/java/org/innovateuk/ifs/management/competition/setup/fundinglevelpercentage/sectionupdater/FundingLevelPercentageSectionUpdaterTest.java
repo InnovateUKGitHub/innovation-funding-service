@@ -10,6 +10,7 @@ import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.form.FundingLevelMaximumForm;
 import org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.form.FundingLevelPercentageForm;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -25,6 +26,7 @@ import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilde
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.GrantClaimMaximumResourceBuilder.newGrantClaimMaximumResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -54,13 +56,15 @@ public class FundingLevelPercentageSectionUpdaterTest {
         GrantClaimMaximumResource grantClaimMaximumResource1 = newGrantClaimMaximumResource().build();
         GrantClaimMaximumResource grantClaimMaximumResource2 = newGrantClaimMaximumResource().build();
 
+        UserResource loggedInUser = newUserResource().build();
+
         when(grantClaimMaximumRestService.getGrantClaimMaximumByCompetitionId(competition.getId())).thenReturn(
                 restSuccess(asList(grantClaimMaximumResource1, grantClaimMaximumResource2))
         );
         when(grantClaimMaximumRestService.save(grantClaimMaximumResource1)).thenReturn(restSuccess(grantClaimMaximumResource1));
         when(grantClaimMaximumRestService.save(grantClaimMaximumResource2)).thenReturn(restSuccess(grantClaimMaximumResource2));
 
-        ServiceResult<Void> result = updater.doSaveSection(competition, form);
+        ServiceResult<Void> result = updater.doSaveSection(competition, form, loggedInUser);
 
         assertTrue(result.isSuccess());
         assertEquals(100, (int) grantClaimMaximumResource1.getMaximum());
@@ -82,12 +86,14 @@ public class FundingLevelPercentageSectionUpdaterTest {
         GrantClaimMaximumResource grantClaimMaximumResource1 = newGrantClaimMaximumResource().withFundingRules(FundingRules.STATE_AID).build();
         GrantClaimMaximumResource grantClaimMaximumResource2 = newGrantClaimMaximumResource().withFundingRules(FundingRules.SUBSIDY_CONTROL).build();
 
+        UserResource loggedInUser = newUserResource().build();
+
         when(grantClaimMaximumRestService.getGrantClaimMaximumByCompetitionId(competition.getId())).thenReturn(
                 restSuccess(asList(grantClaimMaximumResource1, grantClaimMaximumResource2))
         );
         when(grantClaimMaximumRestService.save(grantClaimMaximumResource1)).thenReturn(restSuccess(grantClaimMaximumResource1));
 
-        ServiceResult<Void> result = updater.doSaveSection(competition, form);
+        ServiceResult<Void> result = updater.doSaveSection(competition, form, loggedInUser);
 
         assertTrue(result.isSuccess());
         assertEquals(100, (int) grantClaimMaximumResource1.getMaximum());
@@ -120,11 +126,13 @@ public class FundingLevelPercentageSectionUpdaterTest {
                 .withResearchCategory(missingResearchCategory)
                 .build();
 
+        UserResource loggedInUser = newUserResource().build();
+
         when(grantClaimMaximumRestService.getGrantClaimMaximumByCompetitionId(competition.getId())).thenReturn(
                 restSuccess(newArrayList(missingGrantClaimMaxmimum))
         );
 
-        ServiceResult<Void> result = updater.doSaveSection(competition, form);
+        ServiceResult<Void> result = updater.doSaveSection(competition, form, loggedInUser);
 
         assertTrue(result.isSuccess());
 
@@ -177,11 +185,13 @@ public class FundingLevelPercentageSectionUpdaterTest {
                 .withFundingRules(FundingRules.SUBSIDY_CONTROL)
                 .build();
 
+        UserResource loggedInUser = newUserResource().build();
+
         when(grantClaimMaximumRestService.getGrantClaimMaximumByCompetitionId(competition.getId())).thenReturn(
                 restSuccess(newArrayList(missingGrantClaimMaxmimum, missingGrantClaimMaxmimumMismatchFundingRule))
         );
 
-        ServiceResult<Void> result = updater.doSaveSection(competition, form);
+        ServiceResult<Void> result = updater.doSaveSection(competition, form, loggedInUser);
 
         assertTrue(result.isSuccess());
 
