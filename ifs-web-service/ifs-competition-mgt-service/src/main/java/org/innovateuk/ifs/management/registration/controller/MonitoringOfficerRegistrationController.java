@@ -68,7 +68,7 @@ public class MonitoringOfficerRegistrationController {
 
 
     private String dashboardRedirect(HttpServletRequest request) {
-        return navigationUtils.getRedirectToLandingPageUrl(request);
+        return navigationUtils.getRedirectToLandingPageUrl();
     }
 
     @PostMapping("/{inviteHash}/register")

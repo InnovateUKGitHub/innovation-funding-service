@@ -156,7 +156,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertEquals(BigDecimal.ZERO, viewModel.getGrantClaimPercentage());
         assertNull(viewModel.getFecModelEnabled());
         assertFalse(viewModel.isFecModelDisabled());
-        assertFalse(viewModel.isVatHidden());
+        assertFalse(viewModel.isOfGemCompetition());
     }
 
     @Test
@@ -199,7 +199,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertFalse(viewModel.isProcurementCompetition());
         assertEquals("state_aid_checkbox_label", viewModel.getStateAidCheckboxLabelFragment());
         assertEquals(BigDecimal.ZERO, viewModel.getGrantClaimPercentage());
-        assertFalse(viewModel.isVatHidden());
+        assertFalse(viewModel.isOfGemCompetition());
     }
 
     @Test
@@ -242,7 +242,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
 
         YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, user);
 
-        assertTrue(viewModel.isVatHidden());
+        assertTrue(viewModel.isOfGemCompetition());
     }
 
     @Test
@@ -285,7 +285,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
 
         YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, user);
 
-        assertFalse(viewModel.isVatHidden());
+        assertFalse(viewModel.isOfGemCompetition());
     }
 
     @Test
@@ -357,7 +357,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertNull(viewModel.getYourFecCostSectionId());
         assertNull(viewModel.getFecModelEnabled());
         assertFalse(viewModel.isFecModelDisabled());
-        assertFalse(viewModel.isVatHidden());
+        assertFalse(viewModel.isOfGemCompetition());
     }
 
     @Test
@@ -436,7 +436,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertNull(viewModel.getFecModelEnabled());
         assertFalse(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
-        assertFalse(viewModel.isVatHidden());
+        assertFalse(viewModel.isOfGemCompetition());
    }
 
     @Test
@@ -522,7 +522,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertTrue(viewModel.getFecModelEnabled());
         assertFalse(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
-        assertFalse(viewModel.isVatHidden());
+        assertFalse(viewModel.isOfGemCompetition());
     }
 
     @Test
@@ -607,7 +607,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertTrue(viewModel.getFecModelEnabled());
         assertFalse(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
-        assertFalse(viewModel.isVatHidden());
+        assertFalse(viewModel.isOfGemCompetition());
     }
 
     @Test
@@ -680,7 +680,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertTrue(viewModel.getFecModelEnabled());
         assertFalse(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
-        assertFalse(viewModel.isVatHidden());
+        assertFalse(viewModel.isOfGemCompetition());
     }
 
     @Test
@@ -767,7 +767,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertTrue(viewModel.getFecModelEnabled());
         assertFalse(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
-        assertFalse(viewModel.isVatHidden());
+        assertFalse(viewModel.isOfGemCompetition());
     }
 
     @Test
@@ -854,7 +854,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertFalse(viewModel.getFecModelEnabled());
         assertTrue(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
-        assertFalse(viewModel.isVatHidden());
+        assertFalse(viewModel.isOfGemCompetition());
     }
 
     @Test
@@ -941,7 +941,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertTrue(viewModel.getFecModelEnabled());
         assertFalse(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
-        assertFalse(viewModel.isVatHidden());
+        assertFalse(viewModel.isOfGemCompetition());
     }
 
     @Test
@@ -1028,7 +1028,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertFalse(viewModel.getFecModelEnabled());
         assertTrue(viewModel.isFecModelDisabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
-        assertFalse(viewModel.isVatHidden());
+        assertFalse(viewModel.isOfGemCompetition());
     }
 
     @Test

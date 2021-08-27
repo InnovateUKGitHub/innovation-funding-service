@@ -22,6 +22,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-security")
     compile("org.springframework.boot:spring-boot-starter-validation")
     testCompile("org.springframework.ldap:spring-ldap-test")
+    testCompile("junit:junit")
 }
 
 

@@ -127,7 +127,7 @@ the user fills in the CS Funding Information
 the user fills in funding information for the third party procurement comp
     the user clicks the button/link                   link = Funding information
     the user clicks the button/link                   jQuery = button:contains("Generate code")
-    the user selects option from type ahead           funders[0].funder   ofGem   Office of Gas and Electricity Markets (Ofgem)
+    the user enters text to an autocomplete field     funders[0].funder  Office of Gas and Electricity Markets (Ofgem)
     the user enters text to a text field              id = funders[0].funderBudget  142424242
     the user enters text to a text field              id = pafNumber  2424
     the user enters text to a text field              id = budgetCode  Ch0col@73
