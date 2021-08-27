@@ -1,6 +1,8 @@
 *** Settings ***
 Documentation     IFS-10271: Ofgem critical changes - Content changes
 ...
+...               IFS-10307: Ofgem programme: pre-live amendments
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant
@@ -43,6 +45,7 @@ the user should see correct cost categories guidance
     the user should not see the element    jQuery = p:contains("Subcontracting is eligible providing it is justified") span:contains("as to why the work cannot be performed by a project partner")
     the user should not see the element    jQuery = span:contains("We will look at the size of this contribution when assessing your eligibility and level of support.")
     the user should not see the element    jQuery = p:contains("Please note that legal or project audit and accountancy fees")
+    the user should not see the element    jQuery = p:contains("Where possible you should select a UK based contractor.")
     the user should see the element        jQuery = p:contains("Please provide estimates of other costs that do not fit within any other cost headings.")
 
 the comp admin edits the funding information
