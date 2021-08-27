@@ -82,5 +82,6 @@ public class ProjectFinanceChecksReadOnlyPopulatorTest {
         assertEquals(organisationId, viewModel.getProjectOrganisationRows().get(0).getOrganisationId().longValue());
         assertTrue(viewModel.getProjectOrganisationRows().get(0).isLead());
         assertTrue(viewModel.getProjectOrganisationRows().get(0).isPaymentMilestonesLink());
+        assertTrue(viewModel.getProjectOrganisationRows().get(0).isShowChangesLink());
     }
 }
