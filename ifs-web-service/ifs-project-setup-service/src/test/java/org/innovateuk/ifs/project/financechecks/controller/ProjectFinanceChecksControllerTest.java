@@ -461,6 +461,18 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
                 .andReturn();
     }
 
+    @Test
+    public void eligibilityChangesForOrganisation() throws Exception {
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
+        ProjectFinanceChangesViewModel viewModel = mock(ProjectFinanceChangesViewModel.class);
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(false, project, industrialOrganisation)).thenReturn(viewModel);
+        mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes", project.getId(), industrialOrganisation.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/financecheck/eligibility-changes"))
+                .andExpect(model().attribute("model", viewModel))
+                .andReturn();
+    }
+
     @Override
     protected ProjectFinanceChecksController supplyControllerUnderTest() {
         return new ProjectFinanceChecksController();
