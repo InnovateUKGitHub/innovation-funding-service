@@ -1628,7 +1628,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 new GrantTermsAndConditionsResource("name", termsTemplate, 1);
         CompetitionResource sbriCompetition = newCompetitionResource()
                 .withTermsAndConditions(grantTermsAndConditions)
-                .withFundingType(FundingType.PROCUREMENT)
+                .withFundingType(FundingType.GRANT)
                 .withProjectDocument(projectDocumentConfig)
                 .withProjectSetupStages(new ArrayList<>(EnumSet.allOf(ProjectSetupStage.class)))
                 .build();
