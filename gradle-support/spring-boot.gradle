@@ -1,5 +1,4 @@
 apply from: rootProject.file("gradle-support/java.gradle")
-
 apply from: rootProject.file("gradle-support/bom.gradle")
 
 apply plugin: 'io.spring.dependency-management'
