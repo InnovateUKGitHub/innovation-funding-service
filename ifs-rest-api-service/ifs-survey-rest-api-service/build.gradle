@@ -18,6 +18,7 @@ dependencies {
 
     compile "org.springframework:spring-web"
 
+    testCompile "junit:junit"
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-resources:ifs-survey-resources", configuration: 'testArtifacts')
 }
