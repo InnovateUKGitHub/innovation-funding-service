@@ -628,7 +628,7 @@ IFS Admin approves the Spend profile
     [Documentation]  IFS-9679
     [Tags]  HappyPath
     Given the user navigates to the page                    ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
-    Then The user should see the element                    jQuery = h2:contains("Innovate UK approved this spend profile")
+    Then The user should see the element                    jQuery = p:contains("Innovate UK approved this spend profile")
     And the user should not see an error in the page
 
 *** Keywords ***
