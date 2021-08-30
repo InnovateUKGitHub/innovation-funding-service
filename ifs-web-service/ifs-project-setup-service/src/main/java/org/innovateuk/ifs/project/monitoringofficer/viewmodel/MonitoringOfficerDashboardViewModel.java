@@ -12,6 +12,11 @@ public class MonitoringOfficerDashboardViewModel {
     private final boolean isMOJourneyUpdateEnabled;
     private final boolean isMOSpendProfileUpdateEnabled;
 
+    private Long totalResults;
+    private Integer pageNumber;
+    private String nextPageLink;
+    private String previousPageLink;
+
     public MonitoringOfficerDashboardViewModel(List<ProjectDashboardRowViewModel> projects,
                                                MonitoringOfficerSummaryViewModel monitoringOfficerSummaryView,
                                                boolean isMOJourneyUpdateEnabled,
@@ -45,4 +50,38 @@ public class MonitoringOfficerDashboardViewModel {
     public boolean isMOSpendProfileUpdateEnabled() {
         return isMOSpendProfileUpdateEnabled;
     }
+
+    public Long getTotalResults() {
+        return totalResults;
+    }
+
+    public void setTotalResults(Long totalResults) {
+        this.totalResults = totalResults;
+    }
+
+    public Integer getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(Integer pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public String getNextPageLink() {
+        return nextPageLink;
+    }
+
+    public void setNextPageLink(String nextPageLink) {
+        this.nextPageLink = nextPageLink;
+    }
+
+    public String getPreviousPageLink() {
+        return previousPageLink;
+    }
+
+    public void setPreviousPageLink(String previousPageLink) {
+        this.previousPageLink = previousPageLink;
+    }
+
+
 }

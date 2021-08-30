@@ -256,7 +256,25 @@
                         </th:block>
                     </div>
                 </div>
+    <!--       <ul class="pagination" th:if="${model.hasPreviousPage() || model.hasNextPage()}">
+       <li th:if="${model.hasPreviousPage()}" class="prev">
+           <a class="govuk-link" th:href="'?' + ${model.previousPageLink}" rel="prev" title="Navigate to previous part">
+               <span class="pagination-label">Previous</span>
+               <span class="pagination-part-title"><th:block th:text="${model.previousPageStart}"/> to <th:block th:text="${model.previousPageEnd}"/></span>
+           </a>
+       </li>
+       <li th:if="${model.hasNextPage()}" class="next">
+           <a class="govuk-link" th:href="'?' + ${model.nextPageLink}" rel="next" title="Navigate to next part">
+               <span class="pagination-label">Next</span>
+               <span class="pagination-part-title"><th:block th:text="${model.nextPageStart}"/> to <th:block th:text="${model.nextPageEnd}"/></span>
+           </a>
+       </li>
+           </ul> -->
+
             </form>
+         <!--   <div class="govuk-!-margin-top-4  govuk-!-margin-bottom-1">
+                <th:block th:insert="fragments/elements :: pagination(pagination=${pagination})"/>
+            </div> -->
         </div>
     </main>
 </div>

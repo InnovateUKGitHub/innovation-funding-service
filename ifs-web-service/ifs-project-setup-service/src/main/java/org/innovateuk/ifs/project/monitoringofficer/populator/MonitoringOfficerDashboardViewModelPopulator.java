@@ -7,14 +7,14 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.status.populator.SetupSectionStatus;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -59,18 +59,21 @@ public class MonitoringOfficerDashboardViewModelPopulator {
         return new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projects, user), monitoringOfficerSummaryViewModel, isMOJourneyUpdateEnabled, isMOSpendProfileUpdateEnabled);
     }
 
-    public MonitoringOfficerDashboardViewModel populate(UserResource user,
-                                                        String keywordSearch,
-                                                        boolean projectInSetup,
-                                                        boolean previousProject,
-                                                        boolean documentsComplete,
-                                                        boolean documentsIncomplete,
-                                                        boolean documentsAwaitingReview,
-                                                        boolean spendProfileComplete,
-                                                        boolean spendProfileIncomplete,
-                                                        boolean spendProfileAwaitingReview) {
+        public MonitoringOfficerDashboardViewModel populate(UserResource user,
+                                                            String keywordSearch,
+                                                            boolean projectInSetup,
+                                                            boolean previousProject,
+                                                            boolean documentsComplete,
+                                                            boolean documentsIncomplete,
+                                                            boolean documentsAwaitingReview,
+                                                            boolean spendProfileComplete,
+                                                            boolean spendProfileIncomplete,
+                                                            boolean spendProfileAwaitingReview,
+                                                            Optional<Integer> pageNumber, Model model) {
+
         List<ProjectResource> projectsFilteredByState = monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(),
                 keywordSearch, projectInSetup, previousProject).getSuccess();
+
         List<ProjectResource> projectsFilteredByDocuments = projectsFilteredByDocuments(projectsFilteredByState
                 , documentsComplete
                 , documentsIncomplete
@@ -82,8 +85,18 @@ public class MonitoringOfficerDashboardViewModelPopulator {
 
         MonitoringOfficerSummaryViewModel monitoringOfficerSummaryViewModel = monitoringOfficerSummaryViewModelPopulator.populate(user);
 
-        return new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projectsFilteredBySpendProfile, user), monitoringOfficerSummaryViewModel, isMOJourneyUpdateEnabled, isMOSpendProfileUpdateEnabled);
+        List<ProjectResource> sortedProjects = sortProjects(projectsFilteredBySpendProfile);
+      //  buildProjectDashboardRows(projectsFilteredBySpendProfile, user);
+        int number = pageNumber.isPresent() ? pageNumber.get() - 1 : 0;
+    //     model.addAttribute("pagination", new PaginationViewModel(new MonitoringOfficerDashboardPageResource(sortedProjects.size(), sortedProjects.size()/10, sortedProjects, number, 10)));
+        List<ProjectResource> first10Elements = sortedProjects.stream().limit(10).collect(Collectors.toList());
+
+        MonitoringOfficerDashboardViewModel monitoringOfficerDashboardViewModel = new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projectsFilteredBySpendProfile, user), monitoringOfficerSummaryViewModel, isMOJourneyUpdateEnabled, isMOSpendProfileUpdateEnabled);
+
+        return monitoringOfficerDashboardViewModel;
     }
+
+
 
     private String documentSectionStatusMOView(ProjectResource project, CompetitionResource competition) {
         return setupSectionStatus.documentsSectionStatus(false, project, competition, true).getStatus();
