@@ -99,7 +99,7 @@
                                     <a th:unless="${model.isTermsAndConditionsUploaded}"
                                        th:href="${model.thirdPartyConfig.projectCostGuidanceUrl}"
                                        th:text="|${thirdPartyLabel} (opens in a new window)|"
-                                       target="_blank"></a> set out by the funding authority. I understand I need to agree to the final contract if my application is successful.
+                                       target="_blank"></a> set out by <th:block th:unless="${model.isOfGemCompetition()}">the funding authority</th:block><th:block th:if="${model.isOfGemCompetition()}">Ofgem</th:block>. I understand I need to agree to the final contract if my application is successful.
                                 </th:label>
                             </div>
                         </div>
