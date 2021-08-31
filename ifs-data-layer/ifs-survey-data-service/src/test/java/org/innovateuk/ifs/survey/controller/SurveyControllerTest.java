@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.survey.builder.SurveyResourceBuilder.newSurveyResource;
+import static org.innovateuk.ifs.survey.SurveyResourceBuilder.newSurveyResource;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
