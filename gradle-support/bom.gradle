@@ -1,11 +1,15 @@
 
 dependencies {
-    implementation enforcedPlatform('org.innovateuk.ifs.libraries:bom:1.3.0')
+    implementation enforcedPlatform('org.innovateuk.ifs.libraries:bom:1.4.0')
 
     implementation("org.apache.commons:commons-collections4") {
         version {
             strictly '4.4'
         }
     }
+
+    // version must match here and in ifs-libraries repo (bom and java.gradle)
+    annotationProcessor "org.projectlombok:lombok:1.18.20"
+    testAnnotationProcessor  "org.projectlombok:lombok:1.18.20"
 
 }
