@@ -205,12 +205,12 @@ IFS.competitionManagement.repeater = (function () {
         // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
         idCount = parseInt(jQuery('.funder-row[id^=funder-row-]').last().attr('id').split('funder-row-')[1], 10) + 1
       }
-      var options = jQuery('#funders\\[0\\]\\.funder-select').clone().end().html()
+      var options = jQuery('#funders').clone().end().html()
       var html = '<div class="govuk-grid-row funder-row" id="funder-row-' + idCount + '">' +
                     '<div class="govuk-grid-column-one-half">' +
                       '<div class="govuk-form-group">' +
                         '<label class="govuk-label govuk-visually-hidden" for="funders[' + idCount + '].funder">Select funder name</label>' +
-                        '<select class="govuk-select funders-' + idCount + '" id="funders[' + idCount + '].funder" name="funders[' + count + '].funder" data-auto-complete="" data-required-errormessage="Please select a funder name.">' +
+                        '<select class="govuk-select funders-' + idCount + '" id="funders[' + idCount + '].funder" name="funders[' + count + '].funder" data-auto-complete="cofunder" data-required-errormessage="Please select a funder name.">' +
                           options +
                         '</select>' +
                       '</div>' +
@@ -225,7 +225,20 @@ IFS.competitionManagement.repeater = (function () {
                   '</div>'
       jQuery('.funder-row').last().after(html)
       jQuery('.funders-' + idCount).val('')
-      IFS.core.autoComplete.initAutoCompletePlugin(jQuery('.funders-' + idCount))
+      IFS.core.autoComplete.initAutoCompletePlugin(jQuery('.funders-' + idCount),
+        IFS.competitionManagement.repeater.populateFunderSource)
+    },
+    populateFunderSource: function (query, populateResults) {
+      var results = jQuery.map(jQuery('#funders').children('option'), function (option) { return option.textContent || option.innerText })
+      jQuery('.govuk-select').each(function () {
+        var element = jQuery(this).children('option:selected')
+        var value = element.val()
+        var text = element.text()
+        if (value != null && value !== '') {
+          results = [].filter.call(results, function (s) { return s !== text })
+        }
+      })
+      populateResults([].filter.call(results, function (s) { return s.includes(query) }))
     },
     addGuidanceRow: function () {
       var table = jQuery('#guidance-table')
