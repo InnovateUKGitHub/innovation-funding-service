@@ -72,7 +72,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         ZonedDateTime termsAcceptedOn = now();
 
         ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(applicationId, "app", "compName", compeitionId, questionId, "question",
-                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), termsAcceptedOn, true, additionalTerms, true, "/blah", null, false, null);
+                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), termsAcceptedOn, true, additionalTerms, true, "/blah", null, true, null, true);
 
         when(applicationTermsModelPopulatorMock.populate(loggedInUser, applicationId, questionId, organisationId, false)).thenReturn(viewModel);
 
@@ -103,7 +103,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         ZonedDateTime termsAcceptedOn = now();
 
         ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(applicationId, "app", "compeName", compeitionId, questionId, "question",
-                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), termsAcceptedOn, true, additionalTerms, true, "/blah", null, false, null);
+                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), termsAcceptedOn, true, additionalTerms, true, "/blah", null, true, null, true);
 
         when(applicationTermsModelPopulatorMock.populate(loggedInUser, applicationId, questionId, organisationId, true)).thenReturn(viewModel);
 
@@ -182,7 +182,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .thenReturn(restFailure(fieldError("agreed", "false", "")));
 
         ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(application.getId(), "app", "compName",competition.getId(), questionId, "question",
-                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), null, true, additionalTerms, true, "/blah", null, false, null);
+                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), null, true, additionalTerms, true, "/blah", null, false, null, true);
 
         when(applicationTermsModelPopulatorMock.populate(loggedInUser, application.getId(), questionId, organisationId, false)).thenReturn(viewModel);
 

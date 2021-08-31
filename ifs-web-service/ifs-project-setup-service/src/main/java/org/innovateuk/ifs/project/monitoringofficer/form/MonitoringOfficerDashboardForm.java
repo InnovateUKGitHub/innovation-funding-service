@@ -2,10 +2,28 @@ package org.innovateuk.ifs.project.monitoringofficer.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.commons.validation.constraints.FieldComparison;
+import org.innovateuk.ifs.commons.validation.predicate.BiPredicateProvider;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
+import java.util.function.BiPredicate;
+
+@FieldComparison(
+        firstField = "keywordSearch",
+        secondField = "keywordSearchMinLength",
+        message = "{validation.modashboard.filterprojects.keywordsearch.min.length}",
+        predicate = MonitoringOfficerDashboardForm.KeywordSearchMinPredicateProvider.class)
+@FieldComparison(
+        firstField = "keywordSearch",
+        secondField = "keywordSearchMaxLength",
+        message = "{validation.modashboard.filterprojects.keywordsearch.max.length}",
+        predicate = MonitoringOfficerDashboardForm.KeywordSearchMaxPredicateProvider.class)
 public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
 
+    private static final Integer KEYWORD_SEARCH_MIN_LENGTH = 3;
+    private static final Integer KEYWORD_SEARCH_MAX_LENGTH = 100;
+
+    private String keywordSearch;
     private boolean projectInSetup;
     private boolean previousProject;
 
@@ -18,6 +36,14 @@ public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
     private boolean spendProfileAwaitingReview;
 
     public MonitoringOfficerDashboardForm() {
+    }
+
+    public String getKeywordSearch() {
+        return keywordSearch;
+    }
+
+    public void setKeywordSearch(String keywordSearch) {
+        this.keywordSearch = keywordSearch;
     }
 
     public boolean isProjectInSetup() {
@@ -84,6 +110,42 @@ public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
         this.spendProfileAwaitingReview = spendProfileAwaitingReview;
     }
 
+    public Integer getKeywordSearchMinLength() {
+        return KEYWORD_SEARCH_MIN_LENGTH;
+    }
+
+    public Integer getKeywordSearchMaxLength() {
+        return KEYWORD_SEARCH_MAX_LENGTH;
+    }
+
+    public static class KeywordSearchMinPredicateProvider implements BiPredicateProvider<String, Integer> {
+        public BiPredicate<String, Integer> predicate() {
+            return (keywordSearch, min) -> isKeywordSearchSatisfiesMin(keywordSearch, min);
+        }
+
+        private boolean isKeywordSearchSatisfiesMin(String keywordSearch, Integer min) {
+            if(keywordSearch != null && !keywordSearch.isEmpty()) {
+                return keywordSearch.length() >= min.intValue();
+            }
+
+            return true;
+        }
+    }
+
+    public static class KeywordSearchMaxPredicateProvider implements BiPredicateProvider<String, Integer> {
+        public BiPredicate<String, Integer> predicate() {
+            return (keywordSearch, max) -> isKeywordSearchSatisfiesMax(keywordSearch, max);
+        }
+
+        private boolean isKeywordSearchSatisfiesMax(String keywordSearch, Integer max) {
+            if(keywordSearch != null && !keywordSearch.isEmpty()) {
+                return keywordSearch.length() <= max.intValue();
+            }
+
+            return true;
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -93,6 +155,7 @@ public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
         MonitoringOfficerDashboardForm that = (MonitoringOfficerDashboardForm) o;
 
         return new EqualsBuilder()
+                .append(keywordSearch, that.keywordSearch)
                 .append(projectInSetup, that.projectInSetup)
                 .append(previousProject, that.previousProject)
                 .append(documentsComplete, that.documentsComplete)
@@ -107,6 +170,7 @@ public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(keywordSearch)
                 .append(projectInSetup)
                 .append(previousProject)
                 .append(documentsComplete)
