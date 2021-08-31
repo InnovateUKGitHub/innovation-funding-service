@@ -25,7 +25,7 @@ dependencies {
     compile "org.innovateuk.ifs.libraries:ifs-resources"
     compile project(":ifs-security")
     compile project(':ifs-rest-api-service')
-    compile project(":ifs-rest-util")
+    compile "org.innovateuk.ifs.libraries:ifs-rest-util"
     compile project(':ifs-web-service:ifs-web-core')
 
 //    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')

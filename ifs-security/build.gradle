@@ -11,9 +11,8 @@ dependencies {
     compile "javax.servlet:javax.servlet-api"
 
     compile "org.innovateuk.ifs.libraries:ifs-resources"
-    compile project(":ifs-rest-util")
+    compile "org.innovateuk.ifs.libraries:ifs-rest-util"
 
-    //testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
     testCompile "com.opencsv:opencsv"
     testCompile 'org.springframework.boot:spring-boot-starter-test'

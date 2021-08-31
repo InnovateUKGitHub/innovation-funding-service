@@ -15,7 +15,7 @@ processResources.dependsOn applyProfiles
 dependencies {
     compile "org.innovateuk.ifs.libraries:ifs-commons"
     compile project(":ifs-sil-resources")
-    compile project(":ifs-rest-util")
+    compile "org.innovateuk.ifs.libraries:ifs-rest-util"
 
     compile "org.springframework.boot:spring-boot-starter-web"
     compile 'javax.mail:mail'
@@ -23,7 +23,6 @@ dependencies {
 
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
     testCompile project (path: ":ifs-sil-resources", configuration: 'testArtifacts')
-    //testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile "junit:junit"
 }
 
