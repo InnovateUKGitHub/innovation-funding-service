@@ -148,7 +148,7 @@ dependencies {
 
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
     testCompile "org.innovateuk.ifs.libraries:ifs-resources"
-    testCompile "org.innovateuk.ifs.libraries:ifs-security"
+    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
     //testCompile project(path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-data-layer:data-service-file", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-data-layer:data-service-notifications", configuration: 'testArtifacts')

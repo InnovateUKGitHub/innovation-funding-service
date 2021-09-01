@@ -81,9 +81,8 @@ dependencies {
     compile "org.apache.httpcomponents:httpasyncclient"
     compile "org.mariadb.jdbc:mariadb-java-client"
 
-    compile "org.innovateuk.ifs.libraries:ifs-security"
-
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
+    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
     //testCompile project(path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
 
     testCompile "com.h2database:h2"
