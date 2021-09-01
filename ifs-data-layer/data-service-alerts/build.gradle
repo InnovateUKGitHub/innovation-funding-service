@@ -75,6 +75,7 @@ createContainer.networkAliases = ["data-service-alerts"]
 dependencies {
     compile "org.innovateuk.ifs.libraries:ifs-commons"
     compile "org.innovateuk.ifs.libraries:ifs-data-service-commons"
+    compile "org.innovateuk.ifs.libraries:ifs-data-service-commons-test"
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.boot:spring-boot-starter-security"
