@@ -71,7 +71,7 @@ buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
 prepareDockerBaseInput {
-    inputs.dir file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
+    //inputs.dir file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
 }
 
 dependencies {
