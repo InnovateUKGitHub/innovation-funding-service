@@ -32,7 +32,7 @@ dependencies {
         force = true
     }
 
-    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+    //testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
 
     testCompile "com.h2database:h2"

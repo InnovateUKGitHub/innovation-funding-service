@@ -30,6 +30,7 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
     private final CompetitionThirdPartyConfigResource thirdPartyConfig;
     private final boolean isThirdPartyProcurementCompetition;
     private FileEntryResource competitionTerms;
+    private final boolean ofGemCompetition;
 
     public ApplicationTermsViewModel(long applicationId,
                                      String applicationName,
@@ -48,7 +49,8 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
                                      String subsidyBasisQuestionUrl,
                                      CompetitionThirdPartyConfigResource thirdPartyConfig,
                                      boolean isThirdPartyProcurementCompetition,
-                                     FileEntryResource competitionTerms) {
+                                     FileEntryResource competitionTerms,
+                                     boolean ofGemCompetition) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.competitionName = competitionName;
@@ -68,6 +70,7 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
         this.thirdPartyConfig = thirdPartyConfig;
         this.isThirdPartyProcurementCompetition = isThirdPartyProcurementCompetition;
         this.competitionTerms = competitionTerms;
+        this.ofGemCompetition = ofGemCompetition;
     }
 
     public ApplicationTermsViewModel(long applicationId,
@@ -80,7 +83,8 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
                                      boolean additionalTerms,
                                      CompetitionThirdPartyConfigResource thirdPartyConfig,
                                      boolean isThirdPartyProcurementCompetition,
-                                     FileEntryResource competitionTerms) {
+                                     FileEntryResource competitionTerms,
+                                     boolean ofGemCompetition) {
         this.applicationId = applicationId;
         this.applicationName = null;
         this.competitionName = competitionName;
@@ -100,6 +104,7 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
         this.thirdPartyConfig = thirdPartyConfig;
         this.isThirdPartyProcurementCompetition = isThirdPartyProcurementCompetition;
         this.competitionTerms = competitionTerms;
+        this.ofGemCompetition = ofGemCompetition;
     }
 
     @Override
@@ -182,5 +187,9 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
 
     public boolean isTermsAndConditionsUploaded() {
         return competitionTerms != null;
+    }
+
+    public boolean isOfGemCompetition() {
+        return ofGemCompetition;
     }
 }

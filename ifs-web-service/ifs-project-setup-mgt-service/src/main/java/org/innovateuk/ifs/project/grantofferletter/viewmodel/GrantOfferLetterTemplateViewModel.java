@@ -1,11 +1,15 @@
 package org.innovateuk.ifs.project.grantofferletter.viewmodel;
 
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * View model backing the internal users' view of the Grant Offer Letter template page
@@ -24,6 +28,8 @@ public class GrantOfferLetterTemplateViewModel {
     private final IndustrialFinanceTableModel industrialFinanceTable;
     private final AcademicFinanceTableModel academicFinanceTable;
     private final SummaryFinanceTableModel summaryFinanceTable;
+    private final boolean subsidyControlGOLEnabled;
+    private final SubsidyControlModel subsidyControlModel;
     private final boolean isProcurement;
 
     public GrantOfferLetterTemplateViewModel(long applicationId,
@@ -38,6 +44,8 @@ public class GrantOfferLetterTemplateViewModel {
                                              IndustrialFinanceTableModel industrialFinanceTable,
                                              AcademicFinanceTableModel academicFinanceTable,
                                              SummaryFinanceTableModel summaryFinanceTable,
+                                             boolean subsidyControlGOLEnabled,
+                                             SubsidyControlModel subsidyControlModel,
                                              boolean isProcurement) {
         this.applicationId = applicationId;
         this.projectManagerFirstName = projectManagerFirstName;
@@ -51,6 +59,8 @@ public class GrantOfferLetterTemplateViewModel {
         this.industrialFinanceTable = industrialFinanceTable;
         this.academicFinanceTable = academicFinanceTable;
         this.summaryFinanceTable = summaryFinanceTable;
+        this.subsidyControlGOLEnabled = subsidyControlGOLEnabled;
+        this.subsidyControlModel = subsidyControlModel;
         this.isProcurement = isProcurement;
     }
 
@@ -114,6 +124,9 @@ public class GrantOfferLetterTemplateViewModel {
         return summaryFinanceTable;
     }
 
+    public boolean isSubsidyControlGOLEnabled() { return subsidyControlGOLEnabled; }
+
+    public SubsidyControlModel getSubsidyControlModel() { return subsidyControlModel; }
 
     public boolean isProcurement() {
         return isProcurement;

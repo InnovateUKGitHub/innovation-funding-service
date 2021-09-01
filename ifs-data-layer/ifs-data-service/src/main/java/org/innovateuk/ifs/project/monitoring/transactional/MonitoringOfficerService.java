@@ -50,7 +50,7 @@ public interface MonitoringOfficerService {
     ServiceResult<List<ProjectResource>> getMonitoringOfficerProjects(long userId);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'GET_MONITORING_OFFICER_PROJECTS')")
-    ServiceResult<List<ProjectResource>> filterMonitoringOfficerProjects(long userId, boolean projectInSetup, boolean previousProject);
+    ServiceResult<List<ProjectResource>> filterMonitoringOfficerProjects(long userId, String keywordSearch, boolean projectInSetup, boolean previousProject);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_MONITORING_OFFICER')")
     ServiceResult<MonitoringOfficerResource> findMonitoringOfficerForProject(long projectId);

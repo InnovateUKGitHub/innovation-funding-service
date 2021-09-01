@@ -554,8 +554,8 @@ the project finance user post another new query
     the user should not see an error in the page
 
 the user should see list of posted queries
-    the user should see the element      jQuery = #accordion-queries-heading-1:contains("a viability query's title")
-    the user should see the element      jQuery = #accordion-queries-heading-2:contains("an eligibility query's title")
+    the user should see the element          jQuery = #accordion-queries-heading-1:contains("a viability query's title")
+    the user should see the element          jQuery = #accordion-queries-heading-2:contains("an eligibility query's title")
     # Query responses tab
     the user navigates to the page       ${server}/project-setup-management/competition/${PS_Competition_Id}/status/queries
     the user should see the element      jQuery = p:contains("There are no outstanding queries.")
