@@ -82,7 +82,7 @@ dependencies {
     compile "org.mariadb.jdbc:mariadb-java-client"
 
     compile "org.innovateuk.ifs.libraries:ifs-security"
-
+    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
     testCompile project(path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
 
