@@ -85,7 +85,7 @@ dependencies {
 
     compile "org.innovateuk.ifs.libraries:ifs-commons"
     compile 'org.innovateuk.ifs.libraries:ifs-resources'
-    compile 'org.innovateuk.ifs.libraries:fs-security'
+    compile 'org.innovateuk.ifs.libraries:ifs-security'
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
