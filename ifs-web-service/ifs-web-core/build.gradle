@@ -39,6 +39,7 @@ dependencies {
     compile "org.innovateuk.ifs.libraries:ifs-security"
 
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
+    testCompile "org.innovateuk.ifs.libraries:ifs-data-service-commons"
 
     testCompile "com.opencsv:opencsv"
     testCompile 'com.jayway.awaitility:awaitility'
