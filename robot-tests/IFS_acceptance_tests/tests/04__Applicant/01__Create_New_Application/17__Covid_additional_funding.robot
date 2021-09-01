@@ -13,6 +13,8 @@ Documentation     IFS-7365 DocuSign Integration
 ...
 ...               IFS-7552 Provide External Finance user with access to download appendix
 ...
+...               IFS-9679 MO Spend profile: IFS Admin only to be able to approve or reject spend profiles
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -177,13 +179,16 @@ External project finance can generate spend profile
     And the user clicks the button/link    css = #generate-spend-profile-modal-button
     Then the internal user can complete PS
 
-Internal user is able to approve Spend profile and generates the GOL
-    [Documentation]  IFS-7365
+IFS Admin is able to approve Spend profile and generates the GOL
+    [Documentation]  IFS-7365  IFS-9679
     [Setup]  Requesting Project ID of this Project
-    Given proj finance approves the spend profiles  ${ProjectID}
-    Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
+    Given log in as a different user           &{ifs_admin_user_credentials}
+    And the user navigates to the page         ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
+    When the user selects the radio button     spendProfileApproved  true
+    And the user clicks the button/link        jQuery = button.govuk-button:contains("Submit")
+    Then the user should see the element       css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
     And check activity log
-    And internal user generates the GOL             ${ProjectID}
+    And internal user generates the GOL        ${ProjectID}
 
 Applicant is able to upload the GOL
     [Documentation]  IFS-7365

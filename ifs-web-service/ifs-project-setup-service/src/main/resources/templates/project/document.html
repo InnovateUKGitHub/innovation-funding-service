@@ -39,7 +39,7 @@
         <div th:if="${model.status.name() == 'REJECTED'}" class="warning-alert">
             <!-- participants will see the same text regardless who rejected the document-->
             <h2 class="govuk-heading-s govuk-!-margin-0"
-                th:text="|We will contact you to discuss this document.|"></h2>
+                th:text="|This document is rejected. We will contact you to discuss this document.|"></h2>
         </div>
 
         <div th:if="${model.status.name() == 'REJECTED_DUE_TO_TEAM_CHANGE'}" class="message-alert">

@@ -22,7 +22,7 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuild
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
 import static org.innovateuk.ifs.finance.builder.OtherCostBuilder.newOtherCost;
-import static org.innovateuk.ifs.finance.builder.sync.FinanceCostTotalResourceBuilder.newFinanceCostTotalResource;
+import static org.innovateuk.ifs.finance.builder.FinanceCostTotalResourceBuilder.newFinanceCostTotalResource;
 
 public class FinanceCostTotalResourceMapperTest {
 

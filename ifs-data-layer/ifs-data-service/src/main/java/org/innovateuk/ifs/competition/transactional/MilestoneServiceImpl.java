@@ -227,7 +227,9 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
             competition.getMilestones().removeAll(milestonesToDelete);
             milestoneRepository.deleteAll(milestonesToDelete);
-            assessmentPeriodRepository.deleteByCompetitionId(competition.getId());
+            milestonesToDelete.stream()
+                    .filter(milestone -> milestone.getAssessmentPeriod() != null)
+                    .forEach(milestone -> assessmentPeriodRepository.delete(milestone.getAssessmentPeriod()));
             List<MilestoneType> currentMilestoneTypes = currentMilestones.stream()
                     .map(Milestone::getType)
                     .collect(toList());

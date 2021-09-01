@@ -11,6 +11,8 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.user.resource.Authority.*;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
@@ -45,6 +47,11 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
     public boolean assignedStakeholderCanViewSPStatus(ProjectResource project, UserResource user){
         Application application = applicationRepository.findById(project.getApplication()).get();
         return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
+    }
+
+    @PermissionRule(value = "VIEW_SPEND_PROFILE_STATUS", description = "Monitoring officers can get the approved status of a Spend Profile for any Project")
+    public boolean assignedMonitoringOfficerCanViewSpendProfileStatus(ProjectResource project, UserResource user){
+        return isMonitoringOfficer(project.getId(), user.getId());
     }
 
     @PermissionRule(
@@ -160,6 +167,12 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
                 isProjectActive(projectCompositeId.id());
     }
 
+    @PermissionRule(value = "APPROVE_REJECT_SPEND_PROFILE", description = "Internal admin team (comp admin and project finance) users can't approve or reject spend profile")
+    public boolean canSpendProfileBeApprovedOrRejected(ProjectResource project, UserResource user){
+       return (user.hasAuthority(IFS_ADMINISTRATOR) &&
+               !user.hasAnyAuthority(asList(AUDITOR, COMP_ADMIN, PROJECT_FINANCE)));
+    }
+    
     @PermissionRule(value = "READ_SPEND_PROFILE_REVIEW", description = "Project mo can read the project's spend profiles review")
     public boolean projectMoCanCompleteSpendProfile(ProjectCompositeId projectCompositeId, UserResource user) {
         return isMonitoringOfficer(projectCompositeId.id(), user.getId());

@@ -75,6 +75,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...
 ...               IFS-9774 Investigate if its possible to fix AT's failure due to IDP upgrade
 ...
+...               IFS-9679 MO Spend profile: IFS Admin only to be able to approve or reject spend profiles
+...
 ...               IFS-9677 MO Spend profile: approve/reject
 ...
 Suite Setup       Custom suite setup
@@ -89,6 +91,8 @@ ${project_duration}                 48
 &{lead_applicant_credentials_sp}    email=${PS_SP_Lead_PM_Email}  password=${short_password}
 &{collaborator1_credentials_sp}     email=${PS_SP_Partner_Email}   password=${short_password}
 &{collaborator2_credentials_sp}     email=${PS_SP_Academic_Partner_Email}  password=${short_password}
+${MO_EMAIL}                         Orville.Gibbs@gmail.com
+${ooba_org_name}                    Ooba
 
 *** Test Cases ***
 Internal user can not generate SP with pending invites
@@ -244,8 +248,9 @@ Status updates for industrial user after spend profile submission
     [Setup]  the user navigates to the page     ${server}/project-setup/project/${PS_SP_Project_Id}
     Given the user should see the element       css = ul li.complete:nth-child(6)
     When the user clicks the button/link        link = View the status of partners
-    Then the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
-    And the user should see the element         css = #table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(7)
+    ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = th:contains("Spend profile")
+    Run Keyword If  '${status}' == 'PASS'   the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
+    Run Keyword If  '${status}' == 'PASS'   the user should see the element        css = #table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(7)
 
 Academic partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-5899
@@ -398,12 +403,26 @@ MO receives an email notification and status updated after spend profile submitt
     Then partners can see the Spend Profile section completed
     And the user reads his email            ${monitoring_officer_one_credentials["email"]}    You need to review the spend profile for project ${PS_SP_Application_Title}     The spend profile for this project is ready for you to review:
 
-Project Finance is able to see Spend Profile approval page
-    [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973, INFUND-5942 IFS-1871 IFS-9774
+IFS admin can see the approve and reject options for the spend profile
+    [Documentation]    IFS-9679
     [Tags]
-    [Setup]  Log in as a different user              &{internal_finance_credentials}
-    Given the user navigates to the page             ${server}/project-setup-management/competition/${PS_Competition_Id}/status
-    Then the project finance user should see the spend profile details
+    [Setup]  Log in as a different user                    &{ifs_admin_user_credentials}
+    Given the user navigates to the page                   ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
+    Then the user should see the spend profile details
+
+Comp admin cannot see the approve and reject options for the spend profile
+    [Documentation]    IFS-9679
+    [Tags]
+    [Setup]  Log in as a different user                        &{Comp_admin1_credentials}
+    Given the user navigates to the page                       ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
+    Then the user should not see the spend profile details
+
+Project Finance cannot see the approve and reject options for the spend profile
+    [Documentation]    IFS-9679
+    [Tags]
+    [Setup]  Log in as a different user                        &{internal_finance_credentials}
+    Given the user navigates to the page                       ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
+    Then the user should not see the spend profile details
 
 Monitoring officer is able to see Spend Profile approval page
     [Documentation]   IFS-9677
@@ -426,13 +445,13 @@ Status updates correctly for internal user's table
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     Then the comp admin should see the SP status updated correctly
 
-Monitoring officer is able to Reject Spend Profile
-    [Documentation]    IFS-9677
+IFS Admin is able to Reject Spend Profile
+    [Documentation]    INFUND-2638, INFUND-5617 IFS-9679
     [Tags]
-    Given Log in as a different user             &{monitoring_officer_one_credentials}
-    When the user navigates to the page          ${server}/project-setup/project/${PS_SP_Project_Id}
-    And the user clicks the button/link          link = Spend profile
-    Then the monitoring officer reject the SP
+    [Setup]    Log in as a different user      &{ifs_admin_user_credentials}
+    Given the user navigates to the page       ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
+    Then the user selects the radio button     spendProfileApproved  false
+    And the user clicks the button/link        jQuery = button.govuk-button:contains("Submit")
 
 Status updates to a cross for the internal user's table
     [Documentation]    INFUND-6977
@@ -502,6 +521,13 @@ Lead partner can send the combined spend profile
     And the user should see the element      jQuery = button:contains("Cancel")
     When the user clicks the button/link     id = submit-send-all-spend-profiles
 
+IFS admin is able to Approve Spend Profile
+    [Documentation]    INFUND-2638, INFUND-5617, INFUND-5507, INFUND-5549  IFS-9679
+    [Tags]
+    [Setup]    log in as a different user    &{ifs_admin_user_credentials}
+    Given the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
+    Then the IFS Admin approves to SP
+
 Monitoring officer is able to Approve Spend Profile
     [Documentation]    IFS-9677
     [Tags]
@@ -516,8 +542,9 @@ Status updates correctly for internal user's table after approval
     Given log in as a different user        &{internal_finance_credentials}
     And the user navigates to the page      ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     When The user clicks the button/link    link = 2
-    Then the user should see the element    css = #table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.ok        # Completed Spend profile
-    And the user should see the element     css =#table-project-status tr:nth-of-type(3) td:nth-of-type(8).status.ok         # GOL
+    ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Spend profile")
+    Run Keyword If   '${status}' == 'PASS'     the user should see the element    css = #table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.ok        # Completed Spend profile
+    Run Keyword If   '${status}' == 'PASS'     the user should see the element    css = #table-project-status tr:nth-of-type(3) td:nth-of-type(8).status.ok           # GOL
 
 Project Finance still has a link to the spend profile after approval
     [Documentation]    INFUND-6046
@@ -537,6 +564,10 @@ Project finance user cannot access external users' spend profile page
 Custom suite setup
     ${nextYear} =  get next year
     Set suite variable  ${nextYear}
+
+Requesting Organisation IDs
+    ${ooba_id} =    get organisation id by name     ${ooba_org_name}
+    Set suite variable      ${ooba_id}
 
 the sum of tds equals the total
     [Arguments]    ${table}    ${row}    ${duration}    ${total}
@@ -817,6 +848,19 @@ the project finance user should see the spend profile details
     the user should see the element              css = #accept-profile
     the user should see the element              jQuery = #main-content button:contains("Reject")
 
+the user should see the spend profile details
+    the user should see the element                  jQuery = h2:contains("Innovation Lead") ~ p:contains("Peter Freeman")
+    the user should see the element                  jQuery = h2:contains("Review spend profile")
+    the user should see the element                  jQuery = label:contains("Approve")
+    the user should see the element                  jQuery = label:contains("Reject")
+    the user should not see an error in the page
+
+the user should not see the spend profile details
+    the user should see the element                  jQuery = h2:contains("Innovation Lead") ~ p:contains("Peter Freeman")
+    the user should not see the element              jQuery = h2:contains("Review spend profile")
+    the user should not see the element              jQuery = label:contains("Approve")
+    the user should not see the element              jQuery = label:contains("Reject")
+
 the monitoring officer should see the spend profile details
     the element should be disabled       css = #submit-button
     the user should see the element      jQuery = p:contains("Please review the spend profile submitted by the project manager. You must accept or reject it based on Innovate UK's requirements.")
@@ -846,7 +890,23 @@ the comp admin should see the SP status updated correctly
     the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(5)           # Bank details
     the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(6)           # Finance checks
     the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(7)           # Spend profile
-    the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action  # GOL
+    ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Spend profile")
+    Run Keyword If   '${status}' == 'PASS'     the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action  # GOL
+    Run Keyword If   '${status}' == 'PASS'  the user should see the element    css = #table-project-status tr:nth-of-type(3) td:nth-of-type(8).status.review
+#    the user should see the element        the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action  # GOL
+    the user should not see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
+
+the user should see the SP status updated correctly
+    the user clicks the button/link        link = 2
+    the user should see the element        css = #table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok         # Project details
+    the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(3)           # Documents
+    the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(4)           # Monitoring officer
+    the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(5)           # Bank details
+    the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(6)           # Finance checks
+    the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(7)           # Spend profile
+    ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Spend profile")
+    Run Keyword If   '${status}' == 'PASS'     the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action  # GOL
+    Run Keyword If   '${status}' == 'FAIL'  the user should see the element    css = #table-project-status tr:nth-of-type(3) td:nth-of-type(8).status.review
     the user should not see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
 
 the monitoring officer reject the SP

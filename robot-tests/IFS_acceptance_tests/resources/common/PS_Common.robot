@@ -564,9 +564,9 @@ the user approves project costs
     the user clicks the button/link    jQuery = .govuk-button:contains("Approve eligible costs")
     the user clicks the button/link    name = confirm-eligibility
 
-proj finance approves the spend profiles
+IFS admin approves the spend profiles
     [Arguments]  ${project}
-    log in as a different user       &{internal_finance_credentials}
+    log in as a different user       &{ifs_admin_user_credentials}
     the user navigates to the page   ${server}/project-setup-management/project/${project}/spend-profile/approval
     the user selects the checkbox    approvedByLeadTechnologist
     the user clicks the button/link  jQuery = .govuk-button:contains("Approved")
@@ -960,3 +960,8 @@ the user adopts initial details if exist
 the user adopts signature details if exist
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   The user should see the element   css = button[data-group-item="signature"]
     Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link     css = button[data-group-item="signature"]
+
+the IFS Admin approves to SP
+    the user should see the element                  jQuery = h2:contains("Innovation Lead") ~ p:contains("Peter Freeman")
+    the user selects the radio button                spendProfileApproved  true
+    the user should not see an error in the page

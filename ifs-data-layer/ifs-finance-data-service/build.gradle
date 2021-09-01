@@ -74,14 +74,12 @@ buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
 prepareDockerBaseInput {
-    inputs.dir file("$rootProject.projectDir/ifs-commons/build/classes")
-    inputs.dir file("$rootProject.projectDir/ifs-resources/build/classes")
+//    inputs.dir file("$rootProject.projectDir/ifs-resources/build/classes")
     inputs.dir file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
     inputs.dir file("$rootProject.projectDir/ifs-security/build/classes")
 
 
-    dependsOn ":ifs-commons:build"
-    dependsOn ":ifs-resources:build"
+//    dependsOn ":ifs-resources:build"
     dependsOn ":ifs-data-layer:data-service-commons:build"
     dependsOn ":ifs-security:build"
 
@@ -92,15 +90,16 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-security"
     compile 'commons-codec:commons-codec'
 
-    compile project(':ifs-commons')
-    compile project(':ifs-resources')
+    compile "org.innovateuk.ifs.libraries:ifs-commons"
+    compile 'org.innovateuk.ifs.libraries:ifs-resources'
     compile project(':ifs-security')
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
-    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
+//    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
     testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile "junit:junit"
 }
 
 test {

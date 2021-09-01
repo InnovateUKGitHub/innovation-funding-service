@@ -2,7 +2,7 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Dashboard'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Dashboard',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
 <body class="govuk-template__body app-dashboard">
@@ -13,9 +13,18 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <div class="govuk-error-summary__body">
+                <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
+            </div>
+        </div>
         <div class="my-applications">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project setup',size='govuk-heading-l'" />
-            <form th:object="${form}" method="post" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <form id="mo-dashboard-form" th:object="${form}" method="post" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-one-third">
                     <form id="filter-projects" method="GET">
@@ -27,6 +36,20 @@
                             </legend>
                             <hr class="govuk-section-break govuk-section-break--visible" />
                             <div class="govuk-form-group govuk-!-margin-top-6">
+                                <label class="govuk-label" for="keywordSearch">Keywords</label>
+                                <th:block th:if="${#fields.hasErrors('keywordSearch')}">
+                                    <span class="govuk-error-message" th:each="err : ${#fields.errors('keywordSearch')}" th:text="${err}"></span>
+                                </th:block>
+                                <input class="govuk-input"
+                                       id="keywordSearch"
+                                       th:field="*{keywordSearch}"
+                                       type="text"
+                                       minlength="3"
+                                       maxlength="100"
+                                       th:attr="data-minlength-errormessage=#{validation.modashboard.filterprojects.keywordsearch.min.length},
+                                                data-maxlength-errormessage=#{validation.modashboard.filterprojects.keywordsearch.max.length}">
+                            </div>
+                            <div class="govuk-form-group">
                                 <h2 class="govuk-heading-s govuk-!-margin-bottom-2">
                                     Filter projects
                                 </h2>
@@ -96,6 +119,48 @@
                                     </div>
                                 </div>
                             </div>
+                            <div th:if="${model.isMOSpendProfileUpdateEnabled}"
+                                 class="govuk-form-group govuk-!-margin-top-7">
+                                <h2 class="govuk-heading-s govuk-!-margin-bottom-2">
+                                    Spend profile status
+                                </h2>
+                                <div class="govuk-checkboxes">
+                                    <div class="govuk-checkboxes__item">
+                                        <input id="spendProfileComplete"
+                                               class="govuk-checkboxes__input"
+                                               type="checkbox"
+                                               value="spendProfileComplete"
+                                               th:field="${form.spendProfileComplete}"
+                                        />
+                                        <label for="spendProfileComplete" class="govuk-label govuk-checkboxes__label">
+                                            <span th:text="'Complete (' + ${model.monitoringOfficerSummaryView.spendProfileCompleteCount} + ')'">Complete (7)</span>
+                                        </label>
+                                    </div>
+                                    <div class="govuk-checkboxes__item">
+                                        <input id="spendProfileIncomplete"
+                                               class="govuk-checkboxes__input"
+                                               type="checkbox"
+                                               value="spendProfileIncomplete"
+                                               th:field="${form.spendProfileIncomplete}"
+                                        />
+                                        <label for="spendProfileIncomplete" class="govuk-label govuk-checkboxes__label">
+                                            <span th:text="'Incomplete (' + ${model.monitoringOfficerSummaryView.spendProfileIncompleteCount} + ')'">Incomplete (5)</span>
+                                        </label>
+                                    </div>
+                                    <div class="govuk-checkboxes__item">
+                                        <input id="spendProfileAwaitingReview"
+                                               class="govuk-checkboxes__input"
+                                               type="checkbox"
+                                               value="spendProfileAwaitingReview"
+                                               th:field="${form.spendProfileAwaitingReview}"
+                                        />
+                                        <label for="spendProfileAwaitingReview" class="govuk-label govuk-checkboxes__label">
+                                            <span th:text="'Awaiting review (' + ${model.monitoringOfficerSummaryView.spendProfileAwaitingReviewCount} + ')'">Awaiting review (7)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="govuk-form-group govuk-!-margin-top-9">
                                 <button class="govuk-button" id="update-documents-results-button">Update results</button>
                             </div>
@@ -139,27 +204,52 @@
                                             </th:block>
                                         </div>
 
-                                        <div th:if="${model.isMOJourneyUpdateEnabled and projectView.documentSectionViewModel.hasDocumentSection}"
+                                        <div th:if="${model.isMOJourneyUpdateEnabled and projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.hasDocumentSection}"
                                              class="task govuk-!-margin-bottom-0">
                                             <ul>
                                                 <li>
                                                     <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-4 govuk-!-margin-bottom-3"/>
                                                     <div class="task">
-                                            <span class="govuk-heading-s">
-                                                <a th:if="${projectView.documentSectionViewModel.hasDocumentForReview}"
-                                                   th:href="${projectView.documentSectionViewModel.getDocumentLinkUrl}"
-                                                   class="govuk-link">Documents</a>
+                                                        <h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+                                                            <a th:if="${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.hasDocumentForReview}"
+                                                               th:href="${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.getDocumentLinkUrl}"
+                                                               class="govuk-link">Documents</a>
 
-                                                <h5 th:unless="${projectView.documentSectionViewModel.hasDocumentForReview}"
-                                                    class="govuk-!-margin-top-0 govuk-!-margin-bottom-0">Documents</h5>
-                                            </span>
+                                                            <p th:unless="${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.hasDocumentForReview}"
+                                                               class="govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+                                                                Documents</p>
+                                                        </h4>
                                                     </div>
 
-                                                    <div th:if="${projectView.documentSectionViewModel.hasDocumentSection}"
-                                                         th:insert="project/fragments :: mo-project-setup-status-indicator(${projectView.documentSectionViewModel.documentSectionStatus})"></div>
+                                                    <div th:if="${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.hasDocumentSection}"
+                                                         th:insert="project/fragments :: mo-project-setup-status-indicator(${projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.documentSectionStatus})"></div>
                                                 </li>
                                             </ul>
                                         </div>
+
+                                        <div th:if="${model.isMOSpendProfileUpdateEnabled and projectView.monitoringDashboardSectionsViewModel.spendProfileSectionViewModel.hasSpendProfileSection}"
+                                             class="task govuk-!-margin-bottom-0">
+                                            <ul>
+                                                <li>
+                                                    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-4 govuk-!-margin-bottom-3"/>
+                                                    <div class="task">
+                                                        <h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+                                                            <a th:if="${projectView.monitoringDashboardSectionsViewModel.spendProfileSectionViewModel.hasSpendProfileForReview}"
+                                                               th:href="${projectView.monitoringDashboardSectionsViewModel.spendProfileSectionViewModel.getSpendProfileLinkUrl}"
+                                                               class="govuk-link">Spend profile</a>
+
+                                                            <p th:unless="${projectView.monitoringDashboardSectionsViewModel.spendProfileSectionViewModel.hasSpendProfileForReview}"
+                                                               class="govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+                                                                Spend profile</p>
+                                                        </h4>
+                                                    </div>
+
+                                                    <div th:if="${projectView.monitoringDashboardSectionsViewModel.spendProfileSectionViewModel.hasSpendProfileSection}"
+                                                         th:insert="project/fragments :: mo-project-setup-status-indicator(${projectView.monitoringDashboardSectionsViewModel.spendProfileSectionViewModel.spendProfileStatus})"></div>
+                                                </li>
+                                            </ul>
+                                        </div>
+
                                     </li>
                                 </ul>
                             </div>
