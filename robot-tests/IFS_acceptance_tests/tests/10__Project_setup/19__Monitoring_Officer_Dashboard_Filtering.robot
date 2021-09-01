@@ -5,6 +5,7 @@ Documentation     IFS-9576 MO documents: 'Project setup' list - task management 
 ...
 ...               IFS-9676 MO Spend profile: MO projects list update
 ...
+...               IFS-10027 MO documents: 'Keyword' filtering
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -125,6 +126,20 @@ Monitoring officer can filter projects based on incomplete spendprofile and docu
     And the user clicks the button/link                                                      id = update-documents-results-button
     Then check correct number of combined spend profile and in setup projects displaying     Spend profile  Incomplete
     And check correct total number of projects displaying
+
+Monitoring officer can filter based on keywords only
+    [Documentation]  IFS-10027
+    Given the user unselects the checkbox                      projectInSetup
+    And the user unselects the checkbox                        documentsIncomplete
+    And the user unselects the checkbox                        spendProfileIncomplete
+    When the user enters text to a text field                  keywordSearch     document
+    Then Check correct total number of projects displaying
+
+Monitoring officer can filter based on both keywords and spendprofile status
+    [Documentation]  IFS-10027
+    Given the user selects the checkbox                        spendProfileIncomplete
+    When the user enters text to a text field                  keywordSearch     Incomplete
+    Then Check correct total number of projects displaying
 
 *** Keywords ***
 Custom suite setup

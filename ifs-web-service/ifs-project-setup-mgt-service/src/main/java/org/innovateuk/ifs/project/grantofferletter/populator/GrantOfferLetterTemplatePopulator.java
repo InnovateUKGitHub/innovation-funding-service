@@ -8,10 +8,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceNotesRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
-import org.innovateuk.ifs.project.grantofferletter.viewmodel.AcademicFinanceTableModel;
-import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterTemplateViewModel;
-import org.innovateuk.ifs.project.grantofferletter.viewmodel.IndustrialFinanceTableModel;
-import org.innovateuk.ifs.project.grantofferletter.viewmodel.SummaryFinanceTableModel;
+import org.innovateuk.ifs.project.grantofferletter.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.threads.resource.NoteResource;
@@ -19,6 +16,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -53,6 +51,12 @@ public class GrantOfferLetterTemplatePopulator {
     @Autowired
     private SummaryFinanceTableModelPopulator summaryFinanceTableModelPopulator;
 
+    @Autowired
+    private SubsidyControlModelPopulator subsidyControlModelPopulator;
+
+    @Value("${ifs.subsidy.control.gol.enabled}")
+    private boolean subsidyControlGOLEnabled;
+
     public GrantOfferLetterTemplateViewModel populate(ProjectResource project, CompetitionResource competition) {
         String projectName = project.getName();
         long applicationId = project.getApplication();
@@ -73,6 +77,7 @@ public class GrantOfferLetterTemplatePopulator {
         IndustrialFinanceTableModel industrialFinanceTableModel = industrialFinanceTableModelPopulator.createTable(financesForOrgs, competition);
         AcademicFinanceTableModel academicFinanceTableModel = academicFinanceTableModelPopulator.createTable(financesForOrgs, competition);
         SummaryFinanceTableModel summaryFinanceTableModel = summaryFinanceTableModelPopulator.createTable(financesForOrgs, competition);
+        SubsidyControlModel subsidyControlModel = subsidyControlModelPopulator.populate(financesForOrgs);
 
         Map<String, String> termsAndConditions = termsAndConditions(competition, allProjectFinances);
 
@@ -88,6 +93,8 @@ public class GrantOfferLetterTemplatePopulator {
                                                      industrialFinanceTableModel,
                                                      academicFinanceTableModel,
                                                      summaryFinanceTableModel,
+                                                     subsidyControlGOLEnabled,
+                                                     subsidyControlModel,
                                                      competition.isProcurement());
     }
 

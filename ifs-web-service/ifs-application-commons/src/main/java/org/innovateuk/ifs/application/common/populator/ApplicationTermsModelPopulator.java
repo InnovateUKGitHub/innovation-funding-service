@@ -90,7 +90,8 @@ public class ApplicationTermsModelPopulator {
                         subsidyBasisUrl.orElse(null),
                         competition.getCompetitionThirdPartyConfigResource(),
                         competition.getTermsAndConditions().isProcurementThirdParty(),
-                        competition.getCompetitionTerms());
+                        competition.getCompetitionTerms(),
+                        competition.isOfGemCompetition());
             }
         }
 
@@ -105,7 +106,8 @@ public class ApplicationTermsModelPopulator {
                 additionalTerms,
                 competition.getCompetitionThirdPartyConfigResource(),
                 competition.getTermsAndConditions().isProcurementThirdParty(),
-                competition.getCompetitionTerms());
+                competition.getCompetitionTerms(),
+                competition.isOfGemCompetition());
     }
 
     private Optional<String> subsidyBasisUrl(ApplicationResource application, CompetitionResource competition, OrganisationResource organisation) {

@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.documentation;
 
-import org.innovateuk.ifs.finance.builder.sync.FinanceCostTotalResourceBuilder;
+import org.innovateuk.ifs.finance.builder.FinanceCostTotalResourceBuilder;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.totals.FinanceType;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.math.BigDecimal;
 
-import static org.innovateuk.ifs.finance.builder.sync.FinanceCostTotalResourceBuilder.newFinanceCostTotalResource;
+import static org.innovateuk.ifs.finance.builder.FinanceCostTotalResourceBuilder.newFinanceCostTotalResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class CostTotalDocs {

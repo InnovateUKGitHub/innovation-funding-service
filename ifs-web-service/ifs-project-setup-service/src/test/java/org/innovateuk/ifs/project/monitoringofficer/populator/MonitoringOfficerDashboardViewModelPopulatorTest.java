@@ -130,7 +130,7 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
                 .withCompetition(competition.getId())
                 .withCompetitionName("Competition name")
                 .withApplication(2L)
-                .withName("Project name")
+                .withName("Project name 1")
                 .withMonitoringOfficerUser(user.getId())
                 .withProjectState(ProjectState.SETUP)
                 .withCollaborativeProject(false)
@@ -148,7 +148,7 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
                 .withCompetition(competition.getId())
                 .withCompetitionName("Competition name")
                 .withApplication(2L)
-                .withName("Project name")
+                .withName("Project name 2")
                 .withMonitoringOfficerUser(user.getId())
                 .withCollaborativeProject(false)
                 .withProjectState(ProjectState.LIVE)
@@ -164,7 +164,7 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
         projectResourceList.add(projectResourceInSetup);
         projectResourceList.add(projectResourceInLive);
 
-        when(monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(), true, true))
+        when(monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(), "Competition name", true, true))
                 .thenReturn(restSuccess(projectResourceList));
         when(projectFilterPopulator.getProjectsWithDocumentsComplete(projectResourceList)).thenReturn(singletonList(projectResourceList.get(1)));
         when(projectFilterPopulator.getProjectsWithDocumentsInComplete(projectResourceList)).thenReturn(emptyList());
@@ -191,7 +191,7 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
         when(projectFilterPopulator.hasSpendProfileSection(projectResourceList.get(0))).thenReturn(true);
         when(projectFilterPopulator.hasSpendProfileSection(projectResourceList.get(1))).thenReturn(true);
 
-        MonitoringOfficerDashboardViewModel viewModel = populator.populate(user, true, true, true, false, true, true, false, false);
+        MonitoringOfficerDashboardViewModel viewModel = populator.populate(user, "Competition name", true, true, true, false, true, true, false, false);
 
         assertEquals(2, viewModel.getProjects().size());
 
@@ -199,7 +199,7 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
         assertEquals(projectResourceInSetup.getApplication(), viewModel.getProjects().get(0).getApplicationNumber());
         assertEquals("Competition name", viewModel.getProjects().get(0).getCompetitionTitle());
         assertEquals(String.format("/project-setup/project/%d", projectResourceInSetup.getId()), viewModel.getProjects().get(0).getLinkUrl());
-        assertEquals("Project name", viewModel.getProjects().get(0).getProjectTitle());
+        assertEquals("Project name 1", viewModel.getProjects().get(0).getProjectTitle());
         assertEquals(ProjectState.SETUP, viewModel.getProjects().get(0).getProjectState());
         assertTrue(viewModel.getProjects().get(0).getMonitoringDashboardSectionsViewModel().getDocumentSectionViewModel().isHasDocumentSection());
         assertEquals("mo-action-required", viewModel.getProjects().get(0).getMonitoringDashboardSectionsViewModel().getDocumentSectionViewModel().getDocumentSectionStatus());
@@ -208,7 +208,7 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
         assertEquals(projectResourceInLive.getApplication(), viewModel.getProjects().get(1).getApplicationNumber());
         assertEquals("Competition name", viewModel.getProjects().get(1).getCompetitionTitle());
         assertEquals(String.format("/project-setup/project/%d", projectResourceInLive.getId()), viewModel.getProjects().get(1).getLinkUrl());
-        assertEquals("Project name", viewModel.getProjects().get(1).getProjectTitle());
+        assertEquals("Project name 2", viewModel.getProjects().get(1).getProjectTitle());
         assertEquals(ProjectState.LIVE, viewModel.getProjects().get(1).getProjectState());
         assertTrue(viewModel.getProjects().get(1).getMonitoringDashboardSectionsViewModel().getDocumentSectionViewModel().isHasDocumentSection());
         assertEquals("complete", viewModel.getProjects().get(1).getMonitoringDashboardSectionsViewModel().getDocumentSectionViewModel().getDocumentSectionStatus());

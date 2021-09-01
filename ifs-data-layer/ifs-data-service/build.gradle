@@ -97,13 +97,11 @@ prepareDockerBaseInput {
     inputs.dir file("$rootProject.projectDir/ifs-data-layer/data-service-notifications/build/classes")
     inputs.dir file("$rootProject.projectDir/ifs-data-layer/data-service-file/build/classes")
     inputs.dir file("$rootProject.projectDir/ifs-data-layer/data-service-alerts/build/classes")
-    inputs.dir file("$rootProject.projectDir/ifs-sil-resources/build/classes")
 
     dependsOn ":ifs-data-layer:data-service-commons:build"
     dependsOn ":ifs-data-layer:data-service-notifications:build"
     dependsOn ":ifs-data-layer:data-service-file:build"
     dependsOn ":ifs-data-layer:data-service-alerts:build"
-    dependsOn ":ifs-sil-resources:build"
 
 }
 
@@ -112,7 +110,7 @@ dependencies {
     compile project(":ifs-data-layer:data-service-commons")
     compile project(path: ":ifs-data-layer:data-service-notifications", configuration: 'default')
     compile project(path: ":ifs-data-layer:data-service-file", configuration: 'default')
-    compile project(":ifs-sil-resources")
+    compile "org.innovateuk.ifs.libraries:ifs-sil-resources"
     compile "org.innovateuk.ifs.libraries:ifs-error-util"
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
@@ -148,13 +146,12 @@ dependencies {
     compile 'org.jsoup:jsoup'
     compile "com.opencsv:opencsv"
 
-    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
+    testCompile "org.innovateuk.ifs.libraries:ifs-resources"
     testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-data-layer:data-service-file", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-data-layer:data-service-notifications", configuration: 'testArtifacts')
-    testCompile project(path: ":ifs-sil-resources", configuration: 'testArtifacts')
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile "com.openpojo:openpojo:0.8.4"
