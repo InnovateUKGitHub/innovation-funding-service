@@ -43,13 +43,26 @@ public class MonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTes
     }
 
     @Test
-    public void filterProjectsForMonitoringOfficer() {
+    public void filterProjectsForMonitoringOfficerByProjectNumber() {
         long userId = 1L;
         List<ProjectResource> expected = newProjectResource().build(1);
-        setupGetWithRestResultExpectations("/monitoring-officer/1/filter-projects?projectInSetup=true&previousProject=true",
+        setupGetWithRestResultExpectations("/monitoring-officer/1/filter-projects?keywordSearch=123&projectInSetup=true&previousProject=true",
                 projectResourceListType(), expected, OK);
 
-        RestResult<List<ProjectResource>> result = service.filterProjectsForMonitoringOfficer(userId, true, true);
+        RestResult<List<ProjectResource>> result = service.filterProjectsForMonitoringOfficer(userId, "123", true, true);
+
+        assertTrue(result.isSuccess());
+        assertEquals(result.getSuccess(), expected);
+    }
+
+    @Test
+    public void filterProjectsForMonitoringOfficerByKeyword() {
+        long userId = 1L;
+        List<ProjectResource> expected = newProjectResource().build(1);
+        setupGetWithRestResultExpectations("/monitoring-officer/1/filter-projects?keywordSearch=%name%&projectInSetup=true&previousProject=true",
+                projectResourceListType(), expected, OK);
+
+        RestResult<List<ProjectResource>> result = service.filterProjectsForMonitoringOfficer(userId, "name", true, true);
 
         assertTrue(result.isSuccess());
         assertEquals(result.getSuccess(), expected);

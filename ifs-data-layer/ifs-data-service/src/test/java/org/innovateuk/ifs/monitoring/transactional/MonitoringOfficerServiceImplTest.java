@@ -103,15 +103,31 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
     }
 
     @Test
-    public void filterMonitoringOfficerProjectsAppliesFilter() {
+    public void filterMonitoringOfficerProjectsByStates() {
         projectStates = asList(ProjectState.LIVE, ProjectState.WITHDRAWN, ProjectState.COMPLETED_OFFLINE,
                 ProjectState.UNSUCCESSFUL, ProjectState.SETUP, ProjectState.HANDLED_OFFLINE, ProjectState.ON_HOLD);
 
-        when(monitoringOfficerRepository.filterMonitoringOfficerProjects(userId, projectStates)).thenReturn(projectMonitoringOfficers);
+        when(monitoringOfficerRepository.filterMonitoringOfficerProjectsByStates(userId, projectStates)).thenReturn(projectMonitoringOfficers);
         when(projectMapper.mapToResource(projectInSetup)).thenReturn(projectResourceInSetup);
         when(projectMapper.mapToResource(projectLive)).thenReturn(projectResourceLive);
 
-        ServiceResult<List<ProjectResource>> result = service.filterMonitoringOfficerProjects(userId, true, true);
+        ServiceResult<List<ProjectResource>> result = service.filterMonitoringOfficerProjects(userId, null,true, true);
+
+        assertTrue(result.isSuccess());
+        assertEquals(2, result.getSuccess().size());
+        assertThat(result.getSuccess(), containsInAnyOrder(projectResourceInSetup, projectResourceLive));
+    }
+
+    @Test
+    public void filterMonitoringOfficerProjectsByKeywordsByStates() {
+        projectStates = asList(ProjectState.LIVE, ProjectState.WITHDRAWN, ProjectState.COMPLETED_OFFLINE,
+                ProjectState.UNSUCCESSFUL, ProjectState.SETUP, ProjectState.HANDLED_OFFLINE, ProjectState.ON_HOLD);
+
+        when(monitoringOfficerRepository.filterMonitoringOfficerProjectsByKeywordsByStates(userId, "keyword", projectStates)).thenReturn(projectMonitoringOfficers);
+        when(projectMapper.mapToResource(projectInSetup)).thenReturn(projectResourceInSetup);
+        when(projectMapper.mapToResource(projectLive)).thenReturn(projectResourceLive);
+
+        ServiceResult<List<ProjectResource>> result = service.filterMonitoringOfficerProjects(userId, "keyword",true, true);
 
         assertTrue(result.isSuccess());
         assertEquals(2, result.getSuccess().size());
@@ -123,11 +139,11 @@ public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<Monito
         projectStates = asList(ProjectState.SETUP, ProjectState.LIVE, ProjectState.WITHDRAWN, ProjectState.HANDLED_OFFLINE,
                 ProjectState.COMPLETED_OFFLINE, ProjectState.ON_HOLD, ProjectState.UNSUCCESSFUL);
 
-        when(monitoringOfficerRepository.filterMonitoringOfficerProjects(userId, projectStates)).thenReturn(projectMonitoringOfficers);
+        when(monitoringOfficerRepository.filterMonitoringOfficerProjectsByStates(userId, projectStates)).thenReturn(projectMonitoringOfficers);
         when(projectMapper.mapToResource(projectInSetup)).thenReturn(projectResourceInSetup);
         when(projectMapper.mapToResource(projectLive)).thenReturn(projectResourceLive);
 
-        ServiceResult<List<ProjectResource>> result = service.filterMonitoringOfficerProjects(userId, false, false);
+        ServiceResult<List<ProjectResource>> result = service.filterMonitoringOfficerProjects(userId, null, false, false);
 
         assertTrue(result.isSuccess());
         assertEquals(2, result.getSuccess().size());
