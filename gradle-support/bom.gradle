@@ -1,6 +1,6 @@
 
 dependencies {
-    implementation enforcedPlatform('org.innovateuk.ifs.libraries:bom:1.5.100-SNAPSHOT')
+    implementation enforcedPlatform('org.innovateuk.ifs.libraries:bom:1.5.100')
 
     implementation("org.apache.commons:commons-collections4") {
         version {
