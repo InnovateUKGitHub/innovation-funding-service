@@ -102,7 +102,7 @@ public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<Fin
     }
 
     @Test
-    public void externalViews() throws Exception {
+    public void externalViewsMo() throws Exception {
         long projectId = 123L;
         long organisationId = 456L;
         CompetitionResource competition = newCompetitionResource()
@@ -117,11 +117,38 @@ public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<Fin
                 .andExpect(view().name("project/financecheck/overview"))
                 .andReturn();
 
+        assertExternalUserExpectation(result);
+
+        verify(financeCheckServiceMock).getFinanceCheckOverview(projectId);
+        verify(financeCheckServiceMock, times(3)).getFinanceCheckEligibilityDetails(anyLong(), isNull());
+        verify(projectFinanceService).getProjectFinances(projectId);
+    }
+
+    private void assertExternalUserExpectation(MvcResult result) {
         FinanceCheckOverviewViewModel financeCheckOverviewViewModel = (FinanceCheckOverviewViewModel) result.getModelAndView().getModel().get("model");
         assertEquals(LocalDate.of(2016, 1, 1), financeCheckOverviewViewModel.getOverview().getProjectStartDate());
         assertEquals("test-project", financeCheckOverviewViewModel.getOverview().getProjectName());
         assertTrue(financeCheckOverviewViewModel.isExternalUser());
         assertEquals("/project/123/finance-check/read-only", financeCheckOverviewViewModel.getExternalUserLinkUrl());
+    }
+
+    @Test
+    public void externalViewsKta() throws Exception {
+        long projectId = 123L;
+        long organisationId = 456L;
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.LOAN)
+                .withFinanceRowTypes(singletonList(FinanceRowType.GRANT_CLAIM_AMOUNT))
+                .build();
+
+        setLoggedInUser(kta);
+
+        setExpectedMocks(projectId, organisationId, competition);
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check-overview", projectId))
+                .andExpect(view().name("project/financecheck/overview"))
+                .andReturn();
+
+        assertExternalUserExpectation(result);
 
         verify(financeCheckServiceMock).getFinanceCheckOverview(projectId);
         verify(financeCheckServiceMock, times(3)).getFinanceCheckEligibilityDetails(anyLong(), isNull());

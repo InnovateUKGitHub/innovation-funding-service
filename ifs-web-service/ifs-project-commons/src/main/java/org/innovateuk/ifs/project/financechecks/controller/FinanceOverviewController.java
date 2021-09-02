@@ -125,11 +125,13 @@ public class FinanceOverviewController {
     }
 
     private boolean getExternalUser(UserResource userResource) {
-        return userResource.hasRole(Role.MONITORING_OFFICER) ? true : false;
+        return userResource.hasAnyRoles(Role.MONITORING_OFFICER, Role.KNOWLEDGE_TRANSFER_ADVISER)
+                ? true
+                : false;
     }
 
     private String getExternalUserLinkUrl(UserResource userResource, long projectId) {
-        return userResource.hasRole(Role.MONITORING_OFFICER)
+        return userResource.hasAnyRoles(Role.MONITORING_OFFICER, Role.KNOWLEDGE_TRANSFER_ADVISER)
                 ? String.format("/project/%d/finance-check/read-only", projectId)
                 : String.format("/project/%d/finance-check", projectId);
     }
