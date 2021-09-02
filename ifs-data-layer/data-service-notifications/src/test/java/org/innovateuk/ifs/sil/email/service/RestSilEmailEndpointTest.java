@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.sil.email.service;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.sil.email.resource.SilEmailAddress;
@@ -9,6 +10,7 @@ import org.innovateuk.ifs.sil.email.resource.SilEmailMessage;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -30,7 +32,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 /**
  *
  */
-public class RestSilEmailEndpointTest extends BaseUnitTestMocksTest {
+public class RestSilEmailEndpointTest {
 
 
     @Mock
@@ -45,6 +47,8 @@ public class RestSilEmailEndpointTest extends BaseUnitTestMocksTest {
 
     @Before
     public void setupServiceWithMockTemplate() {
+        MockitoAnnotations.initMocks(this);
+        BaseBuilderAmendFunctions.clearUniqueIds();
         service = new RestSilEmailEndpoint();
         adaptor = new AbstractRestTemplateAdaptor() {
             @Override

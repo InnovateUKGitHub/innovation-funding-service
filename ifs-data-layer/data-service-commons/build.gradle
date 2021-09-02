@@ -27,15 +27,14 @@ artifacts {
 
 dependencies {
     compile "org.innovateuk.ifs.libraries:ifs-resources"
-    compile project(":ifs-security")
+    compile "org.innovateuk.ifs.libraries:ifs-security"
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.apache.httpcomponents:httpasyncclient"
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
 
-//    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile 'org.springframework:spring-webmvc'
