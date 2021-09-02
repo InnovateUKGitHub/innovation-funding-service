@@ -204,6 +204,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
     private List<CsvUtils.QuestionnaireResponseLine> questionnaireResponseLines;
+    private List<CsvUtils.MonitoringOfficerUserLine> monitoringOfficerUserLines;
 
     @Value("${ifs.generate.test.data.competition.filter.name:Subsidy control comp in assessment}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
@@ -234,6 +235,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         applicationFinanceLines = readApplicationFinances();
         competitionLines = buildCompetitionLines();
         questionnaireResponseLines = readQuestionnaireResponseLines();
+        monitoringOfficerUserLines = readMonitoringOfficers();
     }
 
     @PostConstruct
@@ -346,6 +348,22 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private void createProjects(List<ApplicationData> applications) {
         projectDataBuilderService.createProjects(applications);
+    }
+
+    private void createMonitoringOfficerUsers(List<CompletableFuture<List<ProjectData>>> createProjectsFutures) {
+        List<ProjectData> projects = flattenLists(simpleMap(createProjectsFutures, CompletableFuture::join));
+
+        List<String> projectTitles = simpleMap(projects, p -> p.getProject().getName());
+        List<Long> applicationNumbers = simpleMap(projects, p -> p.getApplication().getId());
+
+        List<String> competitionNames = simpleMap(projects, p -> p.getApplication().getCompetitionName());
+
+        List<MonitoringOfficerUserLine> filteredProjectTitles = simpleFilter(this.monitoringOfficerUserLines, l -> projectTitles.contains(l.projectTitle));
+        List<MonitoringOfficerUserLine> filteredApplicationNumbers = simpleFilter(this.monitoringOfficerUserLines, l -> applicationNumbers.contains(l.applicationNumber));
+        List<MonitoringOfficerUserLine> filteredCompetitionNames = simpleFilter(this.monitoringOfficerUserLines, l -> competitionNames.contains(l.competitionName));
+
+
+
     }
 
     private void createFundingDecisions(List<CompetitionData> competitions) {

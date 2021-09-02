@@ -71,6 +71,7 @@ import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository
 import org.innovateuk.ifs.project.documents.transactional.DocumentsService;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
+import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.LegacyMonitoringOfficerService;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
@@ -179,7 +180,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ProjectService projectService;
     protected ProjectStateService projectStateService;
     protected ProjectDetailsService projectDetailsService;
-    protected LegacyMonitoringOfficerService monitoringOfficerService;
+    protected LegacyMonitoringOfficerService legacyMonitoringOfficerService;
+    protected MonitoringOfficerService monitoringOfficerService;
     protected ApplicationFinanceRowService financeRowCostsService;
     protected SectionService sectionService;
     protected SectionStatusService sectionStatusService;
@@ -301,7 +303,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         projectService = serviceLocator.getBean(ProjectService.class);
         projectStateService = serviceLocator.getBean(ProjectStateService.class);
         projectDetailsService = serviceLocator.getBean(ProjectDetailsService.class);
-        monitoringOfficerService = serviceLocator.getBean(LegacyMonitoringOfficerService.class);
+        legacyMonitoringOfficerService = serviceLocator.getBean(LegacyMonitoringOfficerService.class);
+        monitoringOfficerService = serviceLocator.getBean(MonitoringOfficerService.class);
         financeRowCostsService = serviceLocator.getBean(ApplicationFinanceRowService.class);
         financeService = serviceLocator.getBean(ApplicationFinanceService.class);
         sectionService = serviceLocator.getBean(SectionService.class);
