@@ -65,15 +65,13 @@ ${Assign_Project_ID}                      ${application_ids["${Assign_Project}"]
 ${Assign_Project2}                        High Performance Gasoline Stratified
 ${sbri_applicaton_name}                   SBRI application
 ${sbri_application_id}                    ${application_ids["${sbri_applicaton_name}"]}
+${sbri_project_id}                        ${project_ids["${sbri_applicaton_name}"]}
 ${Assign_Project2_ID}                     ${application_ids["${Assign_Project2}"]}
 ${New_Mo}                                 tom@poly.io
 ${PSCapplicationTitle}                    PSC application 15
 ${PSCapplicationID}                       ${application_ids["${PSCapplicationTitle}"]}
 ${PSC_Competition_Name}                   Project Setup Comp 15
 ${PSC_Competition_Id}                     ${competition_ids["${PSC_Competition_Name}"]}
-${totalProjectCostsUpdated}               243,484
-
-
 
 *** Test Cases ***
 Before Monitoring Officer is assigned
@@ -336,6 +334,13 @@ MO can view project finance changes
     And the user clicks the project setup tile if displayed
     When Monitoring officer clicks on changes to finances link
     Then Monitoring officer views updated values in changes to finances
+
+MO can view summary of the project finances
+    [Documentation]   IFS-9673
+    Given The user navigates to the page      ${server}/project-setup/project/${sbri_project_id}/finance-check/read-only
+    And the user clicks the button/link       link = see an overview
+    Then The user should see the element      jQuery = h1:contains("Finance overview")
+    And The user should see the element       jQuery = h3:contains("Overview") ~ h3:contains("Project cost breakdown")
 
 
 *** Keywords ***
