@@ -51,6 +51,8 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...
 ...               IFS-9925 MO view of SBRI milestones in project setup
 ...
+...               IFS-9673 MO improvements: visibility of project eligible costs
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -69,6 +71,9 @@ ${PSCapplicationTitle}                    PSC application 15
 ${PSCapplicationID}                       ${application_ids["${PSCapplicationTitle}"]}
 ${PSC_Competition_Name}                   Project Setup Comp 15
 ${PSC_Competition_Id}                     ${competition_ids["${PSC_Competition_Name}"]}
+${totalProjectCostsUpdated}               243,484
+
+
 
 *** Test Cases ***
 Before Monitoring Officer is assigned
@@ -325,6 +330,13 @@ MO can view payment milestones
     And monitoring officer clicks on payment milestones link
     Then monitoring officer views detailed payment milestones
 
+MO can view project finance changes
+    [Documentation]   IFS-9673
+    Given log in as a different user                               &{monitoring_officer_one_credentials}
+    And the user clicks the project setup tile if displayed
+    When Monitoring officer clicks on changes to finances link
+    Then Monitoring officer views updated values in changes to finances
+
 
 *** Keywords ***
 The MO user is able to access all of the links
@@ -541,3 +553,14 @@ Monitoring officer views detailed payment milestones
     the user should see the element     jQuery = h3:contains("Total payment requested") + h3:contains("100%")+h3:contains("£243,484")
     the user should see the element     css = [aria-controls="accordion-finances-content-1"]
     the user should see the element     jQuery = dt:contains("Total project costs") + dd:contains("£243,484")
+
+Monitoring officer clicks on changes to finances link
+    the user clicks the button/link     jQuery = a:contains('${sbri_applicaton_name}')
+    the user clicks the button/link     jQuery = a:contains("Finance checks")
+    the user clicks the button/link     jQuery = td:contains("Dreambit") + td:contains("Changes to finances")
+
+Monitoring officer views updated values in changes to finances
+    the user should see the element     jQuery = th:contains("Subcontracting") ~ td:contains("80,000")
+    the user should see the element     jQuery = th:contains("Other costs") ~ td:contains("11,100")
+    the user should see the element     jQuery = th:contains("Overhead costs") ~ td:contains("2,000")
+    the user should see the element     jQuery = th:contains("Total project costs inclusive of VAT") ~ td:contains("£243,484")
