@@ -22,12 +22,13 @@ artifacts {
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-freemarker"
 
-    compile project(":ifs-data-layer:data-service-commons")
+    compile "org.innovateuk.ifs.libraries:ifs-data-service-commons"
     compile "org.innovateuk.ifs.libraries:ifs-sil-resources"
 
-    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
+    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
+    testCompile "org.innovateuk.ifs.libraries:ifs-data-service-commons-test"
+
     testCompile "junit:junit"
 
 }
