@@ -90,10 +90,11 @@ public class MonitoringOfficerDashboardViewModelPopulator {
         MonitoringOfficerSummaryViewModel monitoringOfficerSummaryViewModel = monitoringOfficerSummaryViewModelPopulator.populate(user);
 
         List<ProjectResource> sortedProjects = sortProjects(projectsFilteredBySpendProfile);
+       List<ProjectResource> first10Elements = sortedProjects.stream().limit(10).collect(Collectors.toList());
         buildProjectDashboardRows(projectsFilteredBySpendProfile, user);
         int number = pageNumber.isPresent() ? pageNumber.get() - 1 : 0;
         model.addAttribute("pagination", new PaginationViewModel(new MonitoringOfficerDashboardPageResource(sortedProjects.size(), sortedProjects.size()/10, sortedProjects, number, 10)));
-    //    List<ProjectResource> first10Elements = sortedProjects.stream().limit(10).collect(Collectors.toList());
+
 
         MonitoringOfficerDashboardViewModel monitoringOfficerDashboardViewModel = new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projectsFilteredBySpendProfile, user), monitoringOfficerSummaryViewModel, isMOJourneyUpdateEnabled, isMOSpendProfileUpdateEnabled);
 

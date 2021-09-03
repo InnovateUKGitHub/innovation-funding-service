@@ -5,6 +5,8 @@ import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -111,11 +113,11 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
     @Query(FILTER_PROJECTS_BY_MO +
             BY_STATES +
             "ORDER BY project.id")
-    List<MonitoringOfficer> filterMonitoringOfficerProjectsByStates(Long userId, List<ProjectState> projectStates);
+    Page<MonitoringOfficer> filterMonitoringOfficerProjectsByStates(Long userId, List<ProjectState> projectStates, Pageable pageable);
 
     @Query(FILTER_PROJECTS_BY_MO +
             BY_KEYWORD_SEARCH +
             BY_STATES +
             "ORDER BY project.id")
-    List<MonitoringOfficer> filterMonitoringOfficerProjectsByKeywordsByStates(Long userId, String keywordSearch, List<ProjectState> projectStates);
+    Page<MonitoringOfficer> filterMonitoringOfficerProjectsByKeywordsByStates(Long userId, String keywordSearch, List<ProjectState> projectStates, Pageable pageable);
 }
