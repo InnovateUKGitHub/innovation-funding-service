@@ -422,7 +422,7 @@ The user should see the project set view
     the user should see the element    jQuery = a:contains("Project details")
     the user should see the element    jQuery = a:contains("Documents")
     the user should see the element    jQuery = .progress-list .read-only h2:contains("Bank details")
-    the user should see the element    jQuery = .progress-list .read-only h2:contains("Finance checks")
+    the user should see the element    jQuery = a:contains("Finance checks")
     the user should see the element    jQuery = .progress-list h2:contains("Spend profile")
     the user should see the element    jQuery = .progress-list h2:contains("Grant offer letter")
 
@@ -551,7 +551,8 @@ Internal user removes a partner organisation
 Monitoring officer clicks on payment milestones link
     the user clicks the button/link     jQuery = a:contains('${sbri_applicaton_name}')
     the user clicks the button/link     jQuery = a:contains("Finance checks")
-    the user clicks the button/link     jQuery = td:contains("Dreambit") + td:contains("Payment milestones")
+#    the user clicks the button/link     jQuery = td:contains("Dreambit") + td:contains("Payment milestones")
+    the user clicks the button/link     jQuery = a:contains("Payment milestones")
 
 Monitoring officer views detailed payment milestones
     the user should see the element     jQuery = h1:contains("Payment milestones")
@@ -562,7 +563,8 @@ Monitoring officer views detailed payment milestones
 Monitoring officer clicks on changes to finances link
     the user clicks the button/link     jQuery = a:contains('${sbri_applicaton_name}')
     the user clicks the button/link     jQuery = a:contains("Finance checks")
-    the user clicks the button/link     jQuery = td:contains("Dreambit") + td:contains("Changes to finances")
+#    the user clicks the button/link     jQuery = td:contains("Dreambit") + td:contains("Changes to finances")
+    the user clicks the button/link     jQuery = a:contains("Changes to finances")
 
 Monitoring officer views updated values in changes to finances
     the user should see the element     jQuery = th:contains("Subcontracting") ~ td:contains("80,000")
