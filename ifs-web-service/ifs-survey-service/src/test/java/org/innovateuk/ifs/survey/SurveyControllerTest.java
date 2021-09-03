@@ -3,6 +3,7 @@ package org.innovateuk.ifs.survey;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.survey.controller.SurveyController;
 import org.innovateuk.ifs.util.NavigationUtils;
+import org.innovateuk.ifs.survey.service.SurveyRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Spy;
