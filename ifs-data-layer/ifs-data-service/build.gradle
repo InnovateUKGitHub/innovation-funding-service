@@ -93,18 +93,15 @@ ext {
 }
 
 prepareDockerBaseInput {
-    inputs.dir file("$rootProject.projectDir/ifs-data-layer/data-service-notifications/build/classes")
     inputs.dir file("$rootProject.projectDir/ifs-data-layer/data-service-alerts/build/classes")
 
-    dependsOn ":ifs-data-layer:data-service-commons:build"
-    dependsOn ":ifs-data-layer:data-service-file:build"
     dependsOn ":ifs-data-layer:data-service-alerts:build"
 }
 
 
 dependencies {
-    compile project(":ifs-data-layer:data-service-commons")
     compile "org.innovateuk.ifs.libraries:ifs-data-service-file"
+    compile "org.innovateuk.ifs.libraries:ifs-data-service-commons"
     compile "org.innovateuk.ifs.libraries:data-service-notifications"
     compile "org.innovateuk.ifs.libraries:ifs-sil-resources"
     compile "org.innovateuk.ifs.libraries:ifs-error-util"
