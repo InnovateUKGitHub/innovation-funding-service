@@ -102,7 +102,7 @@ prepareDockerBaseInput {
 dependencies {
     compile "org.innovateuk.ifs.libraries:ifs-data-service-file"
     compile "org.innovateuk.ifs.libraries:ifs-data-service-commons"
-    compile "org.innovateuk.ifs.libraries:data-service-notifications"
+    compile "org.innovateuk.ifs.libraries:ifs-data-service-notifications"
     compile "org.innovateuk.ifs.libraries:ifs-sil-resources"
     compile "org.innovateuk.ifs.libraries:ifs-error-util"
 
