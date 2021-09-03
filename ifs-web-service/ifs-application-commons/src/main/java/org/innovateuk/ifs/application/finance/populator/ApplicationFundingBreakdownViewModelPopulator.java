@@ -26,7 +26,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 
@@ -114,6 +117,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         if (competition.isKtp()) {
             financeRowTypes = competition.getFinanceRowTypesByFinance(finance);
         }
+
         return financeRowTypes.stream().filter(FinanceRowType::isCost).collect(toList());
     }
 

@@ -8,7 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.innovateuk.ifs.survey.builder.SurveyResourceBuilder.newSurveyResource;
+import static org.innovateuk.ifs.survey.SurveyResourceBuilder.newSurveyResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

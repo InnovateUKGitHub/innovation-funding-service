@@ -62,7 +62,7 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     }
 
     private void addUserDashboardLink(HttpServletRequest request, ModelAndView modelAndView) {
-        String dashboardUrl = navigationUtils.getDirectLandingPageUrl(request);
+        String dashboardUrl = navigationUtils.getDirectLandingPageUrl();
         modelAndView.getModelMap().addAttribute(USER_DASHBOARD_LINK, dashboardUrl);
     }
 

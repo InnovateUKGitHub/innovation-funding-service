@@ -97,7 +97,7 @@ public class AcceptGrantsInviteController {
                     }
                     // Accept the invite - adding the user to the project
                     return grantsInviteRestService.acceptInvite(projectId, invite.getId()).andOnSuccessReturn(() ->
-                            navigationUtils.getRedirectToLandingPageUrl(request));
+                            navigationUtils.getRedirectToLandingPageUrl());
                 }
         ).getSuccess();
     }
