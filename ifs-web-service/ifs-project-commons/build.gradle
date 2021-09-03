@@ -31,6 +31,8 @@ dependencies {
 
 //    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
+    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
+
     testCompile project(path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'

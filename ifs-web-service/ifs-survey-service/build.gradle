@@ -75,7 +75,7 @@ dependencies {
     compile 'org.innovateuk.ifs.libraries:ifs-rest-api-service'
 
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile "org.innovateuk.ifs.libraries:ifs-security"
+    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
     testCompile project(path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
 
     testCompile "com.opencsv:opencsv"
