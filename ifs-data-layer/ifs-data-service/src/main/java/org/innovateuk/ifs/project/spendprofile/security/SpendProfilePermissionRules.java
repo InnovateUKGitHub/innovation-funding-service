@@ -72,7 +72,7 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
             value = "VIEW_SPEND_PROFILE",
             description = "Competition Administrator Users can view the Spend Profile data")
     public boolean compAdminUserCanViewAnySpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-        return hasCompAdminAuthority(user);
+        return isInternalAdmin(user);
     }
 
     @PermissionRule(
