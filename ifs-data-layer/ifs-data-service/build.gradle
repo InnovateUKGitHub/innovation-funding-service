@@ -144,7 +144,6 @@ dependencies {
     testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
     testCompile "org.innovateuk.ifs.libraries:ifs-data-service-commons-test"
 
-    testCompile "org.innovateuk.ifs.libraries:ifs-data-service-file"
     testCompile "org.innovateuk.ifs.libraries:ifs-data-service-notifications-test"
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
