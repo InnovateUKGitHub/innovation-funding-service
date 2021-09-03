@@ -18,5 +18,5 @@ components:
 resources:
   - config-maps/web-config.yml
 
-#patchesStrategicMerge:
-#  - config-maps/feature-toggle-config.yml
+patchesStrategicMerge:
+  - data-layer/data-service/data-service-deployment.yml
