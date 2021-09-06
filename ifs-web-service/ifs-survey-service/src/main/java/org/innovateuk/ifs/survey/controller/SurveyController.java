@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.survey.*;
 import org.innovateuk.ifs.survey.form.FeedbackForm;
-import org.innovateuk.ifs.survey.service.SurveyRestService;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
