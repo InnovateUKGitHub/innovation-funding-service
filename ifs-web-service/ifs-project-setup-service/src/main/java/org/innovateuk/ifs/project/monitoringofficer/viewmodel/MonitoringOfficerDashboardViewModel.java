@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.project.monitoringofficer.viewmodel;
 
+
+import org.innovateuk.ifs.project.navigation.Pagination;
+
 import java.util.List;
 
 /**
@@ -11,20 +14,18 @@ public class MonitoringOfficerDashboardViewModel {
     private final MonitoringOfficerSummaryViewModel monitoringOfficerSummaryView;
     private final boolean isMOJourneyUpdateEnabled;
     private final boolean isMOSpendProfileUpdateEnabled;
+    private Pagination pagination;
 
-    private Long totalResults;
-    private Integer pageNumber;
-    private String nextPageLink;
-    private String previousPageLink;
-
-    public MonitoringOfficerDashboardViewModel(List<ProjectDashboardRowViewModel> projects,
+    public MonitoringOfficerDashboardViewModel( List<ProjectDashboardRowViewModel> projects,
                                                MonitoringOfficerSummaryViewModel monitoringOfficerSummaryView,
                                                boolean isMOJourneyUpdateEnabled,
-                                               boolean isMOSpendProfileUpdateEnabled) {
+                                               boolean isMOSpendProfileUpdateEnabled,
+                                               Pagination pagination) {
         this.projects = projects;
         this.monitoringOfficerSummaryView = monitoringOfficerSummaryView;
         this.isMOJourneyUpdateEnabled = isMOJourneyUpdateEnabled;
         this.isMOSpendProfileUpdateEnabled = isMOSpendProfileUpdateEnabled;
+        this.pagination = pagination;
     }
 
     public List<ProjectDashboardRowViewModel> getProjects() {
@@ -35,12 +36,12 @@ public class MonitoringOfficerDashboardViewModel {
         return monitoringOfficerSummaryView;
     }
 
-    public int projectCount() {
-        return projects.size();
+    public long projectCount() {
+        return pagination.getTotalCount();
     }
 
     public boolean isEmptyResults() {
-        return projects.size() == 0;
+        return pagination.getTotalCount() == 0;
     }
 
     public boolean isMOJourneyUpdateEnabled() {
@@ -51,37 +52,11 @@ public class MonitoringOfficerDashboardViewModel {
         return isMOSpendProfileUpdateEnabled;
     }
 
-    public Long getTotalResults() {
-        return totalResults;
+    public Pagination getPagination() {
+        return pagination;
     }
 
-    public void setTotalResults(Long totalResults) {
-        this.totalResults = totalResults;
+    public void setPagination(Pagination pagination) {
+        this.pagination = pagination;
     }
-
-    public Integer getPageNumber() {
-        return pageNumber;
-    }
-
-    public void setPageNumber(Integer pageNumber) {
-        this.pageNumber = pageNumber;
-    }
-
-    public String getNextPageLink() {
-        return nextPageLink;
-    }
-
-    public void setNextPageLink(String nextPageLink) {
-        this.nextPageLink = nextPageLink;
-    }
-
-    public String getPreviousPageLink() {
-        return previousPageLink;
-    }
-
-    public void setPreviousPageLink(String previousPageLink) {
-        this.previousPageLink = previousPageLink;
-    }
-
-
 }

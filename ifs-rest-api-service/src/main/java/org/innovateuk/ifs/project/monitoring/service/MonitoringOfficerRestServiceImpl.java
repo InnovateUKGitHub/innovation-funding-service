@@ -4,6 +4,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerDashboardPageResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.SimpleUserResource;
@@ -12,6 +13,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Collections;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -80,15 +82,22 @@ public class MonitoringOfficerRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<List<ProjectResource>> filterProjectsForMonitoringOfficer(long monitoringOfficerId, String keywordSearch,
-                                                                                boolean projectInSetup, boolean previousProject) {
+    public RestResult<MonitoringOfficerDashboardPageResource> filterProjectsForMonitoringOfficer(long monitoringOfficerId, int pageNumber, int pageSize,  String keywordSearch,
+                                                                                                 boolean projectInSetup, boolean previousProject) {
         String uriWithParams = buildUri(String.format("%s/{monitoringOfficerId}/filter-projects", PROJECT_MONITORING_OFFICER_REST_URL),
-                keywordSearch, projectInSetup, previousProject, monitoringOfficerId);
-        return getWithRestResult(uriWithParams, projectResourceListType());
+                pageNumber, pageSize, keywordSearch, projectInSetup, previousProject, monitoringOfficerId);
+        return getWithRestResult(uriWithParams, MonitoringOfficerDashboardPageResource.class);
     }
 
-    protected String buildUri(String url, String keywordSearch, boolean projectInSetup, boolean previousProject, Object... uriParameters) {
+    protected String buildUri(String url,  Integer pageNumber, Integer pageSize, String keywordSearch, boolean projectInSetup, boolean previousProject, Object... uriParameters) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+        if (pageNumber != null) {
+            params.put("page", Collections.singletonList(pageNumber.toString()));
+        }
+        if (pageNumber != null) {
+            params.put("size", Collections.singletonList(pageSize.toString()));
+        }
 
         if (keywordSearch != null && !keywordSearch.isEmpty() && !NumberUtils.isCreatable(keywordSearch)) {
             keywordSearch = "%" + keywordSearch + "%";

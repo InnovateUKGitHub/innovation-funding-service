@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.monitoring.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerDashboardPageResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.SimpleUserResource;
@@ -32,8 +33,10 @@ public interface MonitoringOfficerRestService {
 
     RestResult<Void> sendDocumentReviewNotification(long projectId, long userId);
 
-    RestResult<List<ProjectResource>> filterProjectsForMonitoringOfficer(long projectMonitoringOfficerId,
-                                                                         String keywordSearch,
-                                                                         boolean projectInSetup,
-                                                                         boolean previousProject);
+    RestResult<MonitoringOfficerDashboardPageResource> filterProjectsForMonitoringOfficer(long projectMonitoringOfficerId,
+                                                                                          int pageNumber,
+                                                                                          int pageSize,
+                                                                                          String keywordSearch,
+                                                                                          boolean projectInSetup,
+                                                                                          boolean previousProject);
 }

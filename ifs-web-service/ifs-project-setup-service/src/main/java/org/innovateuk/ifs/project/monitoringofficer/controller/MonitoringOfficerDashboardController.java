@@ -10,8 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RequestMapping("/monitoring-officer/dashboard")
 @Controller
 @SecuredBySpring(value = "Controller", description = "Each monitoring officer has permission to view their own dashboard",
@@ -20,10 +18,11 @@ import java.util.Optional;
 public class MonitoringOfficerDashboardController {
 
     private static final String FORM_ATTR_NAME = "form";
-
     private MonitoringOfficerDashboardViewModelPopulator monitoringOfficerDashboardViewModelPopulator;
-
     private static final String PAGE_NUMBER_KEY = "page";
+    private static final String PAGE_SIZE_KEY = "size";
+    private static final String DEFAULT_PAGE_NUMBER = "0";
+    private static final String DEFAULT_PAGE_SIZE = "10";
 
     MonitoringOfficerDashboardController() {}
 
@@ -36,8 +35,8 @@ public class MonitoringOfficerDashboardController {
     public String viewDashboard(Model model,
                                 UserResource user,
                                 @ModelAttribute(name = FORM_ATTR_NAME, binding = false) MonitoringOfficerDashboardForm form,
-                                @RequestParam(value = PAGE_NUMBER_KEY, required = false) Optional<Integer> pageNumber) {
-
+                                @RequestParam(value = PAGE_NUMBER_KEY, defaultValue = DEFAULT_PAGE_NUMBER) int pageNumber,
+                                @RequestParam(value = PAGE_SIZE_KEY, defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
         form.setProjectInSetup(true);
 
         model.addAttribute(FORM_ATTR_NAME, form);
@@ -50,9 +49,7 @@ public class MonitoringOfficerDashboardController {
                 , form.isDocumentsAwaitingReview()
                 , form.isSpendProfileComplete()
                 , form.isSpendProfileIncomplete()
-                , form.isSpendProfileAwaitingReview() , pageNumber, model));
-     //   model.addAttribute("pagination", new PaginationViewModel(new MonitoringOfficerDashboardPageResource(totalElements, totalPages, content, number, 10)));
-
+                , form.isSpendProfileAwaitingReview() , pageNumber, pageSize ));
         return "monitoring-officer/dashboard";
     }
 
@@ -60,7 +57,8 @@ public class MonitoringOfficerDashboardController {
     public String filterDashboard(Model model,
                                   UserResource user,
                                   @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerDashboardForm form,
-                                  @RequestParam(value = PAGE_NUMBER_KEY, required = false) Optional<Integer> pageNumber) {
+                                  @RequestParam(value = PAGE_NUMBER_KEY, defaultValue = DEFAULT_PAGE_NUMBER) int pageNumber,
+                                  @RequestParam(value = PAGE_SIZE_KEY, defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
 
         model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user
                 , form.getKeywordSearch()
@@ -71,7 +69,7 @@ public class MonitoringOfficerDashboardController {
                 , form.isDocumentsAwaitingReview()
                 , form.isSpendProfileComplete()
                 , form.isSpendProfileIncomplete()
-                , form.isSpendProfileAwaitingReview(), pageNumber, model));
+                , form.isSpendProfileAwaitingReview(), pageNumber, pageSize));
 
         return "monitoring-officer/dashboard";
 

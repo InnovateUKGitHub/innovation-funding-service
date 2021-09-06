@@ -112,12 +112,12 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
 
     @Query(FILTER_PROJECTS_BY_MO +
             BY_STATES +
-            "ORDER BY project.id")
+            "ORDER BY project.application.id")
     Page<MonitoringOfficer> filterMonitoringOfficerProjectsByStates(Long userId, List<ProjectState> projectStates, Pageable pageable);
 
     @Query(FILTER_PROJECTS_BY_MO +
             BY_KEYWORD_SEARCH +
             BY_STATES +
-            "ORDER BY project.id")
+            "ORDER BY project.application.id")
     Page<MonitoringOfficer> filterMonitoringOfficerProjectsByKeywordsByStates(Long userId, String keywordSearch, List<ProjectState> projectStates, Pageable pageable);
 }

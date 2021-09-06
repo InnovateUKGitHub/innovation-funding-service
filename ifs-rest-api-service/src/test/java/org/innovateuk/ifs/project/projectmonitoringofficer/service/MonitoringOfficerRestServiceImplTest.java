@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.projectmonitoringofficer.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerDashboardPageResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestServiceImpl;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.SimpleUserResource;
@@ -49,10 +50,10 @@ public class MonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTes
         setupGetWithRestResultExpectations("/monitoring-officer/1/filter-projects?keywordSearch=123&projectInSetup=true&previousProject=true",
                 projectResourceListType(), expected, OK);
 
-        RestResult<List<ProjectResource>> result = service.filterProjectsForMonitoringOfficer(userId, "123", true, true);
+       RestResult<MonitoringOfficerDashboardPageResource> result = service.filterProjectsForMonitoringOfficer(userId, 0, 10, "123", true, true);
 
         assertTrue(result.isSuccess());
-        assertEquals(result.getSuccess(), expected);
+        assertEquals(result.getSuccess().getContent(), expected);
     }
 
     @Test
@@ -62,10 +63,10 @@ public class MonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTes
         setupGetWithRestResultExpectations("/monitoring-officer/1/filter-projects?keywordSearch=%name%&projectInSetup=true&previousProject=true",
                 projectResourceListType(), expected, OK);
 
-        RestResult<List<ProjectResource>> result = service.filterProjectsForMonitoringOfficer(userId, "name", true, true);
+       RestResult<MonitoringOfficerDashboardPageResource> result = service.filterProjectsForMonitoringOfficer(userId, 0, 10, "name", true, true);
 
         assertTrue(result.isSuccess());
-        assertEquals(result.getSuccess(), expected);
+        assertEquals(result.getSuccess().getContent(), expected);
     }
 
     @Override
