@@ -146,7 +146,6 @@ dependencies {
     testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
     testCompile "org.innovateuk.ifs.libraries:ifs-data-service-commons-test"
 
-    testCompile "org.innovateuk.ifs.libraries:ifs-data-service-file"
     testCompile project(path: ":ifs-data-layer:data-service-notifications", configuration: 'testArtifacts')
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
