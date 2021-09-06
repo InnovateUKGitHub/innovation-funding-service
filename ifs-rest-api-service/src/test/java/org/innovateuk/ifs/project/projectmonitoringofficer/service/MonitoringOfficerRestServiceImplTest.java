@@ -47,10 +47,19 @@ public class MonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTes
     public void filterProjectsForMonitoringOfficerByProjectNumber() {
         long userId = 1L;
         List<ProjectResource> expected = newProjectResource().build(1);
-        setupGetWithRestResultExpectations("/monitoring-officer/1/filter-projects?keywordSearch=123&projectInSetup=true&previousProject=true",
-                projectResourceListType(), expected, OK);
 
-       RestResult<MonitoringOfficerDashboardPageResource> result = service.filterProjectsForMonitoringOfficer(userId, 0, 10, "123", true, true);
+        String expectedURL = "/monitoring-officer/1/filter-projects?pageNumber=0&pageSize=10&keywordSearch=123&projectInSetup=true&previousProject=true";
+
+        MonitoringOfficerDashboardPageResource monitoringOfficerDashboardPageResource = new MonitoringOfficerDashboardPageResource();
+        monitoringOfficerDashboardPageResource.setContent(expected);
+        monitoringOfficerDashboardPageResource.setNumber(0);
+        monitoringOfficerDashboardPageResource.setSize(10);
+        monitoringOfficerDashboardPageResource.setTotalElements(expected.size());
+        monitoringOfficerDashboardPageResource.setTotalPages(1);
+
+        setupGetWithRestResultExpectations(expectedURL,MonitoringOfficerDashboardPageResource.class, monitoringOfficerDashboardPageResource);
+
+        RestResult<MonitoringOfficerDashboardPageResource> result = service.filterProjectsForMonitoringOfficer(userId, 0, 10, "123", true, true);
 
         assertTrue(result.isSuccess());
         assertEquals(result.getSuccess().getContent(), expected);
@@ -60,8 +69,16 @@ public class MonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTes
     public void filterProjectsForMonitoringOfficerByKeyword() {
         long userId = 1L;
         List<ProjectResource> expected = newProjectResource().build(1);
-        setupGetWithRestResultExpectations("/monitoring-officer/1/filter-projects?keywordSearch=%name%&projectInSetup=true&previousProject=true",
-                projectResourceListType(), expected, OK);
+
+        MonitoringOfficerDashboardPageResource monitoringOfficerDashboardPageResource = new MonitoringOfficerDashboardPageResource();
+        monitoringOfficerDashboardPageResource.setContent(expected);
+        monitoringOfficerDashboardPageResource.setNumber(0);
+        monitoringOfficerDashboardPageResource.setSize(10);
+        monitoringOfficerDashboardPageResource.setTotalElements(expected.size());
+        monitoringOfficerDashboardPageResource.setTotalPages(1);
+
+        setupGetWithRestResultExpectations("/monitoring-officer/1/filter-projects?pageNumber=0&pageSize=10&keywordSearch=%name%&projectInSetup=true&previousProject=true",
+                MonitoringOfficerDashboardPageResource.class, monitoringOfficerDashboardPageResource);
 
        RestResult<MonitoringOfficerDashboardPageResource> result = service.filterProjectsForMonitoringOfficer(userId, 0, 10, "name", true, true);
 
