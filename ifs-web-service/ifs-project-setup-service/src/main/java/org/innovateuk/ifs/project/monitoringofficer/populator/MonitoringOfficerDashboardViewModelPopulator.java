@@ -78,7 +78,7 @@ public class MonitoringOfficerDashboardViewModelPopulator {
 
         List<ProjectResource> projectsFilteredByState = monitoringOfficerDashboardPageResource.getContent();
         List<ProjectResource> projectsFilteredByDocuments = projectsFilteredByState;
-        List<ProjectResource> projectsFilteredBySpendProfile = projectsFilteredByDocuments;
+
 
         if (documentsComplete || documentsIncomplete || documentsAwaitingReview) {
             projectsFilteredByDocuments = projectsFilteredByDocuments(projectsFilteredByState
@@ -86,7 +86,7 @@ public class MonitoringOfficerDashboardViewModelPopulator {
                     , documentsIncomplete
                     , documentsAwaitingReview);
         }
-
+        List<ProjectResource> projectsFilteredBySpendProfile = projectsFilteredByDocuments;
         if (spendProfileComplete || spendProfileIncomplete || spendProfileAwaitingReview) {
             projectsFilteredBySpendProfile = projectsFilteredBySpendProfile(projectsFilteredByDocuments
                     , spendProfileComplete
