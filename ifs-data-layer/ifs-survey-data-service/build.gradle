@@ -84,7 +84,6 @@ dependencies {
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
-    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
     testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
 

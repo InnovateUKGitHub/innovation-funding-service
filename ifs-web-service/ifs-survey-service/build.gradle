@@ -72,7 +72,7 @@ prepareDockerBaseInput {
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
     compile "org.innovateuk.ifs.libraries:ifs-survey-resources"
-    compile project(':ifs-rest-api-service:ifs-survey-rest-api-service')
+    compile "org.innovateuk.ifs.libraries:ifs-survey-rest-api-service"
 
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
     testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
