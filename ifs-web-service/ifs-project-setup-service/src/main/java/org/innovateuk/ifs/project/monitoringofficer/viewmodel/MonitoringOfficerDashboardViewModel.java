@@ -14,17 +14,20 @@ public class MonitoringOfficerDashboardViewModel {
     private final MonitoringOfficerSummaryViewModel monitoringOfficerSummaryView;
     private final boolean isMOJourneyUpdateEnabled;
     private final boolean isMOSpendProfileUpdateEnabled;
+    private final boolean moDashboardFilterEnabled;
     private Pagination pagination;
 
     public MonitoringOfficerDashboardViewModel( List<ProjectDashboardRowViewModel> projects,
                                                MonitoringOfficerSummaryViewModel monitoringOfficerSummaryView,
                                                boolean isMOJourneyUpdateEnabled,
                                                boolean isMOSpendProfileUpdateEnabled,
+                                               boolean moDashboardFilterEnabled,
                                                Pagination pagination) {
         this.projects = projects;
         this.monitoringOfficerSummaryView = monitoringOfficerSummaryView;
         this.isMOJourneyUpdateEnabled = isMOJourneyUpdateEnabled;
         this.isMOSpendProfileUpdateEnabled = isMOSpendProfileUpdateEnabled;
+        this.moDashboardFilterEnabled = moDashboardFilterEnabled;
         this.pagination = pagination;
     }
 
@@ -50,6 +53,10 @@ public class MonitoringOfficerDashboardViewModel {
 
     public boolean isMOSpendProfileUpdateEnabled() {
         return isMOSpendProfileUpdateEnabled;
+    }
+
+    public boolean isMoDashboardFilterEnabled() {
+        return moDashboardFilterEnabled;
     }
 
     public Pagination getPagination() {

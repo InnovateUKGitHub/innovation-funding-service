@@ -125,6 +125,7 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
     public void populateApplyFilterAndSorting() {
         ReflectionTestUtils.setField(populator, "isMOJourneyUpdateEnabled", true);
         ReflectionTestUtils.setField(populator, "isMOSpendProfileUpdateEnabled", true);
+        ReflectionTestUtils.setField(populator, "moDashboardFilterEnabled", true);
 
         ProjectResource projectResourceInSetup = newProjectResource()
                 .withId(88L)
