@@ -149,9 +149,15 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
     }
 
     @Override
-    public ServiceResult<List<ProjectResource>> filterMonitoringOfficerProjects(long userId, boolean projectInSetup, boolean previousProject) {
+    public ServiceResult<List<ProjectResource>> filterMonitoringOfficerProjects(long userId, String keywordSearch, boolean projectInSetup, boolean previousProject) {
         List<ProjectState> projectStates = applyProjectStatesFilter(projectInSetup, previousProject);
-        List<MonitoringOfficer> monitoringOfficers = monitoringOfficerRepository.filterMonitoringOfficerProjects(userId, projectStates);
+
+        List<MonitoringOfficer> monitoringOfficers;
+        if (keywordSearch != null && !keywordSearch.isEmpty()) {
+            monitoringOfficers = monitoringOfficerRepository.filterMonitoringOfficerProjectsByKeywordsByStates(userId, keywordSearch, projectStates);
+        } else {
+            monitoringOfficers = monitoringOfficerRepository.filterMonitoringOfficerProjectsByStates(userId, projectStates);
+        }
 
         return serviceSuccess(monitoringOfficers.stream()
                 .map(MonitoringOfficer::getProcess)

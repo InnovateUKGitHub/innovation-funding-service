@@ -31,16 +31,14 @@ dependencies {
     compile "org.apache.httpcomponents:httpasyncclient"
     compile 'org.jsoup:jsoup'
 
-    compile project(":ifs-resources")
+    compile "org.innovateuk.ifs.libraries:ifs-resources"
     compile project(':ifs-rest-api-service')
-    compile project(":ifs-rest-util")
+    compile "org.innovateuk.ifs.libraries:ifs-rest-util"
 
     compile "org.innovateuk.ifs.libraries:ifs-commons"
-    compile project(":ifs-security")
+    compile "org.innovateuk.ifs.libraries:ifs-security"
 
-    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
 
     testCompile "com.opencsv:opencsv"
     testCompile 'com.jayway.awaitility:awaitility'

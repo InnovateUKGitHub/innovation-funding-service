@@ -33,11 +33,11 @@ dependencies {
 
     compile('org.apache.httpcomponents:httpclient')
     compile('org.springframework:spring-web')
-    compile project(':ifs-resources')
-    compile project(':ifs-rest-util')
+    implementation 'org.innovateuk.ifs.libraries:ifs-resources'
+    compile 'org.innovateuk.ifs.libraries:ifs-rest-util'
     compile 'org.innovateuk.ifs.libraries:ifs-commons'
 
-    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+    //testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile "junit:junit"
 
