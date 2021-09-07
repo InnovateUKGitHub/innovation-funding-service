@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -61,12 +62,21 @@ public class MonitoringOfficerRepositoryTest extends BaseRepositoryIntegrationTe
         this.repository = repository;
     }
 
-    @Rollback
-    @Test
-    public void filterMonitoringOfficerProjects() {
+    private User monitoringOfficer;
+
+    private Project project1;
+
+    private Project project2;
+
+    private MonitoringOfficer monitoringOfficerProject1;
+
+    private MonitoringOfficer monitoringOfficerProject2;
+
+    @Before
+    public void setup() {
         loginCompAdmin();
 
-        User monitoringOfficer = userRepository.save(newUser()
+        monitoringOfficer = userRepository.save(newUser()
                 .with(id(null))
                 .withCreatedBy(newUser().with(id(null)).build())
                 .withUid("uid-1")
@@ -91,20 +101,20 @@ public class MonitoringOfficerRepositoryTest extends BaseRepositoryIntegrationTe
                 .withCompetition(competition)
                 .build());
 
-        Project project1 = projectRepository.save(newProject()
+        project1 = projectRepository.save(newProject()
                 .with(id(null))
                 .withName("project1")
                 .withApplication(application1)
                 .build());
 
-        Project project2 = projectRepository.save(newProject()
+        project2 = projectRepository.save(newProject()
                 .with(id(null))
                 .withName("project2")
                 .withApplication(application2)
                 .build());
 
-        MonitoringOfficer monitoringOfficerProject1 = new MonitoringOfficer(monitoringOfficer, project1, ProjectParticipantRole.MONITORING_OFFICER);
-        MonitoringOfficer monitoringOfficerProject2 = new MonitoringOfficer(monitoringOfficer, project2, ProjectParticipantRole.MONITORING_OFFICER);
+        monitoringOfficerProject1 = new MonitoringOfficer(monitoringOfficer, project1, ProjectParticipantRole.MONITORING_OFFICER);
+        monitoringOfficerProject2 = new MonitoringOfficer(monitoringOfficer, project2, ProjectParticipantRole.MONITORING_OFFICER);
         monitoringOfficerRepository.saveAll(asList(monitoringOfficerProject1, monitoringOfficerProject2));
 
         ProjectUser projectUser = newProjectUser()
@@ -118,9 +128,52 @@ public class MonitoringOfficerRepositoryTest extends BaseRepositoryIntegrationTe
         projectProcessRepository.saveAll(asList(projectProcess1, projectProcess2));
 
         flushAndClearSession();
+    }
 
-        List<MonitoringOfficer> monitoringOfficerOnProjects = repository.filterMonitoringOfficerProjects(monitoringOfficer.getId(),
+    @Rollback
+    @Test
+    public void filterMonitoringOfficerProjectsByStates() {
+        List<MonitoringOfficer> monitoringOfficerOnProjects = repository.filterMonitoringOfficerProjectsByStates(monitoringOfficer.getId(),
                 asList(SETUP, LIVE));
+
+        assertEquals(2, monitoringOfficerOnProjects.size());
+
+        assertTrue(monitoringOfficerOnProjects.stream()
+                .anyMatch(mp -> mp.getUser().getId().equals(monitoringOfficer.getId())
+                        && mp.getProject().getId().equals(project1.getId())
+                        && mp.getProject().getProjectState().equals(SETUP)));
+        assertTrue(monitoringOfficerOnProjects.stream()
+                .anyMatch(mp -> mp.getUser().getId().equals(monitoringOfficer.getId())
+                        && mp.getProject().getId().equals(project2.getId())
+                        && mp.getProject().getProjectState().equals(LIVE)));
+
+        assertTrue(monitoringOfficerOnProjects.get(0).getProject().getId() <  monitoringOfficerOnProjects.get(1).getProject().getId());
+        assertThat(monitoringOfficerOnProjects).containsExactlyInAnyOrder(monitoringOfficerProject1, monitoringOfficerProject2);
+    }
+
+    @Rollback
+    @Test
+    public void filterMonitoringOfficerProjectsByProjectId() {
+        Long project1DisplayId =  project1.getApplication().getId();
+
+        List<MonitoringOfficer> monitoringOfficerOnProjects = repository.filterMonitoringOfficerProjectsByKeywordsByStates(monitoringOfficer.getId(),
+                project1DisplayId.toString(), asList(SETUP, LIVE));
+
+        assertEquals(1, monitoringOfficerOnProjects.size());
+
+        assertTrue(monitoringOfficerOnProjects.stream()
+                .anyMatch(mp -> mp.getUser().getId().equals(monitoringOfficer.getId())
+                        && mp.getProject().getId().equals(project1.getId())
+                        && mp.getProject().getProjectState().equals(SETUP)));
+
+        assertThat(monitoringOfficerOnProjects).contains(monitoringOfficerProject1);
+    }
+
+    @Rollback
+    @Test
+    public void filterMonitoringOfficerProjectsByKeyword() {
+        List<MonitoringOfficer> monitoringOfficerOnProjects = repository.filterMonitoringOfficerProjectsByKeywordsByStates(monitoringOfficer.getId(),
+                "%competition%", asList(SETUP, LIVE));
 
         assertEquals(2, monitoringOfficerOnProjects.size());
 

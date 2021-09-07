@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.monitoring.service;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
@@ -79,14 +80,21 @@ public class MonitoringOfficerRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<List<ProjectResource>> filterProjectsForMonitoringOfficer(long monitoringOfficerId, boolean projectInSetup, boolean previousProject) {
+    public RestResult<List<ProjectResource>> filterProjectsForMonitoringOfficer(long monitoringOfficerId, String keywordSearch,
+                                                                                boolean projectInSetup, boolean previousProject) {
         String uriWithParams = buildUri(String.format("%s/{monitoringOfficerId}/filter-projects", PROJECT_MONITORING_OFFICER_REST_URL),
-                projectInSetup, previousProject, monitoringOfficerId);
+                keywordSearch, projectInSetup, previousProject, monitoringOfficerId);
         return getWithRestResult(uriWithParams, projectResourceListType());
     }
 
-    protected String buildUri(String url, boolean projectInSetup, boolean previousProject, Object... uriParameters) {
+    protected String buildUri(String url, String keywordSearch, boolean projectInSetup, boolean previousProject, Object... uriParameters) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+        if (keywordSearch != null && !keywordSearch.isEmpty() && !NumberUtils.isCreatable(keywordSearch)) {
+            keywordSearch = "%" + keywordSearch + "%";
+        }
+
+        params.put("keywordSearch", singletonList(keywordSearch));
 
         if(projectInSetup) {
             params.put("projectInSetup", singletonList("true"));

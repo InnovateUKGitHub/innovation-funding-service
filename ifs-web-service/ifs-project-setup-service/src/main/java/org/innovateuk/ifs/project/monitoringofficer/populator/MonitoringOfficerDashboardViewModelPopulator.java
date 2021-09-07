@@ -60,6 +60,7 @@ public class MonitoringOfficerDashboardViewModelPopulator {
     }
 
     public MonitoringOfficerDashboardViewModel populate(UserResource user,
+                                                        String keywordSearch,
                                                         boolean projectInSetup,
                                                         boolean previousProject,
                                                         boolean documentsComplete,
@@ -69,7 +70,7 @@ public class MonitoringOfficerDashboardViewModelPopulator {
                                                         boolean spendProfileIncomplete,
                                                         boolean spendProfileAwaitingReview) {
         List<ProjectResource> projectsFilteredByState = monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(),
-                projectInSetup, previousProject).getSuccess();
+                keywordSearch, projectInSetup, previousProject).getSuccess();
         List<ProjectResource> projectsFilteredByDocuments = projectsFilteredByDocuments(projectsFilteredByState
                 , documentsComplete
                 , documentsIncomplete
