@@ -40,6 +40,9 @@ public class MonitoringOfficerDashboardViewModelPopulator {
     @Value("${ifs.monitoringofficer.spendprofile.update.enabled}")
     private boolean isMOSpendProfileUpdateEnabled;
 
+    @Value("${ifs.monitoringofficer.dashboard.filter.enabled}")
+    private boolean moDashboardFilterEnabled;
+
     public MonitoringOfficerDashboardViewModelPopulator(MonitoringOfficerRestService monitoringOfficerRestService,
                                                         MonitoringOfficerSummaryViewModelPopulator monitoringOfficerSummaryViewModelPopulator,
                                                         SetupSectionStatus setupSectionStatus,
@@ -58,7 +61,8 @@ public class MonitoringOfficerDashboardViewModelPopulator {
         List<ProjectResource> projects = monitoringOfficerRestService.getProjectsForMonitoringOfficer(user.getId()).getSuccess();
         MonitoringOfficerSummaryViewModel monitoringOfficerSummaryViewModel = monitoringOfficerSummaryViewModelPopulator.populate(projects);
 
-        return new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projects, user), monitoringOfficerSummaryViewModel, isMOJourneyUpdateEnabled, isMOSpendProfileUpdateEnabled, null);
+        return new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projects, user), monitoringOfficerSummaryViewModel,
+                isMOJourneyUpdateEnabled, isMOSpendProfileUpdateEnabled, moDashboardFilterEnabled, null);
     }
 
     public MonitoringOfficerDashboardViewModel populate(UserResource user,
@@ -78,21 +82,26 @@ public class MonitoringOfficerDashboardViewModelPopulator {
 
         List<ProjectResource> projectsFilteredByState = monitoringOfficerDashboardPageResource.getContent();
 
-        if (documentsComplete || documentsIncomplete || documentsAwaitingReview) {
-            projectsFilteredByState = projectsFilteredByDocuments(projectsFilteredByState
-                    , documentsComplete
-                    , documentsIncomplete
-                    , documentsAwaitingReview);
+        if (moDashboardFilterEnabled) {
+            if (documentsComplete || documentsIncomplete || documentsAwaitingReview) {
+                projectsFilteredByState = projectsFilteredByDocuments(projectsFilteredByState
+                        , documentsComplete
+                        , documentsIncomplete
+                        , documentsAwaitingReview);
+            }
+
+            if (spendProfileComplete || spendProfileIncomplete || spendProfileAwaitingReview) {
+                projectsFilteredByState = projectsFilteredBySpendProfile(projectsFilteredByState
+                        , spendProfileComplete
+                        , spendProfileIncomplete
+                        , spendProfileAwaitingReview);
+            }
         }
-        if (spendProfileComplete || spendProfileIncomplete || spendProfileAwaitingReview) {
-            projectsFilteredByState = projectsFilteredBySpendProfile(projectsFilteredByState
-                    , spendProfileComplete
-                    , spendProfileIncomplete
-                    , spendProfileAwaitingReview);
-        }
+
         MonitoringOfficerSummaryViewModel monitoringOfficerSummaryViewModel = monitoringOfficerSummaryViewModelPopulator.populate(user);
-        MonitoringOfficerDashboardViewModel monitoringOfficerDashboardViewModel = new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projectsFilteredByState, user), monitoringOfficerSummaryViewModel, isMOJourneyUpdateEnabled, isMOSpendProfileUpdateEnabled,
-                new Pagination(monitoringOfficerDashboardPageResource));
+        MonitoringOfficerDashboardViewModel monitoringOfficerDashboardViewModel = new MonitoringOfficerDashboardViewModel(
+                buildProjectDashboardRows(projectsFilteredByState, user), monitoringOfficerSummaryViewModel, isMOJourneyUpdateEnabled,
+                isMOSpendProfileUpdateEnabled, moDashboardFilterEnabled, new Pagination(monitoringOfficerDashboardPageResource));
 
         return monitoringOfficerDashboardViewModel;
     }
