@@ -25,7 +25,7 @@
         <ul class="task-list">
             <li>
                 <th:block
-                    th:if="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).APPLICATION_DETAILS)}">
+                    th:if="${model.getApplicationDetailsSubSectionStatus()}">
                     <div class="task">
                         <h4 class="govuk-heading-s">
                             <a th:href="@{/competition/setup/{competitionId}/section/application/detail(competitionId=${model.general.competition.id})}"

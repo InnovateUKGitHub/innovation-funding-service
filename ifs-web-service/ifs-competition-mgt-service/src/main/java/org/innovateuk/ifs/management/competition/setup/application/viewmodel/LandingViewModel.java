@@ -59,4 +59,9 @@ public class LandingViewModel extends CompetitionSetupViewModel {
     public Boolean getAllComplete() {
         return allComplete;
     }
+
+   public Boolean getApplicationDetailsSubSectionStatus() {
+       return subsectionStatuses.get(CompetitionSetupSubsection.APPLICATION_DETAILS);
+   }
+
 }
