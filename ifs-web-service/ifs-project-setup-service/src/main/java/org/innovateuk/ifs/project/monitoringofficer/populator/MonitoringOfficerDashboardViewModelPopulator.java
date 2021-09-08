@@ -77,24 +77,21 @@ public class MonitoringOfficerDashboardViewModelPopulator {
                 pageNumber, pageSize, keywordSearch, projectInSetup, previousProject).getSuccess();
 
         List<ProjectResource> projectsFilteredByState = monitoringOfficerDashboardPageResource.getContent();
-        List<ProjectResource> projectsFilteredByDocuments = projectsFilteredByState;
-
 
         if (documentsComplete || documentsIncomplete || documentsAwaitingReview) {
-            projectsFilteredByDocuments = projectsFilteredByDocuments(projectsFilteredByState
+            projectsFilteredByState = projectsFilteredByDocuments(projectsFilteredByState
                     , documentsComplete
                     , documentsIncomplete
                     , documentsAwaitingReview);
         }
-        List<ProjectResource> projectsFilteredBySpendProfile = projectsFilteredByDocuments;
         if (spendProfileComplete || spendProfileIncomplete || spendProfileAwaitingReview) {
-            projectsFilteredBySpendProfile = projectsFilteredBySpendProfile(projectsFilteredByDocuments
+            projectsFilteredByState = projectsFilteredBySpendProfile(projectsFilteredByState
                     , spendProfileComplete
                     , spendProfileIncomplete
                     , spendProfileAwaitingReview);
         }
         MonitoringOfficerSummaryViewModel monitoringOfficerSummaryViewModel = monitoringOfficerSummaryViewModelPopulator.populate(user);
-        MonitoringOfficerDashboardViewModel monitoringOfficerDashboardViewModel = new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projectsFilteredBySpendProfile, user), monitoringOfficerSummaryViewModel, isMOJourneyUpdateEnabled, isMOSpendProfileUpdateEnabled,
+        MonitoringOfficerDashboardViewModel monitoringOfficerDashboardViewModel = new MonitoringOfficerDashboardViewModel(buildProjectDashboardRows(projectsFilteredByState, user), monitoringOfficerSummaryViewModel, isMOJourneyUpdateEnabled, isMOSpendProfileUpdateEnabled,
                 new Pagination(monitoringOfficerDashboardPageResource));
 
         return monitoringOfficerDashboardViewModel;
