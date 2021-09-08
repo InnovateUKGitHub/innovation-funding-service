@@ -31,7 +31,7 @@ Monitoring officer can filter previous projects only
     And the user clicks the button/link                         id = update-documents-results-button
     Then check correct number of previous projects filtered     Previous
 
-#  revisit thsi when working on IFS-10409
+#  revisit this when working on IFS-10409
 #Monitoring officer can filter both in-setup and previous projects
 #    [Documentation]  IFS-9576
 #    Given the user selects the checkbox                       projectInSetup
@@ -45,6 +45,7 @@ Monitoring officer can view no results text when none of the projects been assig
     And the user should see the element      jQuery = h2:contains("No results found")
     And page should contain element          jQuery = h2:contains("0 projects")
 
+#  revisit this when working on IFS-10409
 #Monitoring officer can filter projects based on complete document status
 #    [Documentation]  IFS-9941
 #    Given assign monitoring officer to the projects
