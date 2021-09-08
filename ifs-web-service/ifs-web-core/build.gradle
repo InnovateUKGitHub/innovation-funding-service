@@ -32,15 +32,13 @@ dependencies {
     compile 'org.jsoup:jsoup'
 
     compile "org.innovateuk.ifs.libraries:ifs-resources"
-    compile project(':ifs-rest-api-service')
+    compile 'org.innovateuk.ifs.libraries:ifs-rest-api-service'
     compile "org.innovateuk.ifs.libraries:ifs-rest-util"
 
     compile "org.innovateuk.ifs.libraries:ifs-commons"
-    compile project(":ifs-security")
+    compile "org.innovateuk.ifs.libraries:ifs-security"
 
-    //testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
 
     testCompile "com.opencsv:opencsv"
     testCompile 'com.jayway.awaitility:awaitility'
