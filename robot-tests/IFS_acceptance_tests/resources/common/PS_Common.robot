@@ -253,8 +253,8 @@ the internal user approve the GOL
     log in as a different user          &{internal_finance_credentials}
     the user navigates to the page      ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
     the user selects the radio button   APPROVED  acceptGOL
-    the user clicks the button/link     id = submit-button
-    the user clicks the button/link     id = accept-signed-gol
+    the user clicks the button/link     jQuery = button:contains("Submit")
+    the user clicks the button/link     jQuery = button:contains("Accept signed grant offer letter")
     the user should see the element     jQuery = .success-alert h2:contains("These documents have been approved.")
 
 the internal user rejects the GOL
