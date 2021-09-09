@@ -69,3 +69,8 @@ the email address should persist
 the user tries to log in
     the user clicks the button/link             css = button[name="_eventId_proceed"]
     the user should see the element             jQuery = .govuk-error-summary:contains("${unsuccessful_login_message}")
+
+the user receives a failed login message
+    the user clicks the button/link             css = button[name="_eventId_proceed"]
+    the user should see the element             jQuery = .govuk-error-summary:contains("${unsuccessful_login_message}")
+    the user should see the element             jQuery = li:contains("Your email/password combination doesn't seem to work.")

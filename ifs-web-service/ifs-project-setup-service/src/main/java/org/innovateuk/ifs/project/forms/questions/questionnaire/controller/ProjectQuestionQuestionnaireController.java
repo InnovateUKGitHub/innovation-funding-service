@@ -58,7 +58,7 @@ public class ProjectQuestionQuestionnaireController {
         ProjectQuestionQuestionnaireViewModel viewModel = populator.populate(user, projectId, questionId, organisationId);
 
         if (viewModel.navigateStraightToQuestionnaireWelcome()) {
-            return navigationUtils.getRedirectToSameDomainUrl(request, String.format("questionnaire/%s", viewModel.getQuestionnaireResponseId()));
+            return navigationUtils.getRedirectToSameDomainUrl(String.format("questionnaire/%s", viewModel.getQuestionnaireResponseId()));
         }
         model.addAttribute("model", viewModel);
         return "project/questions/questionnaire";

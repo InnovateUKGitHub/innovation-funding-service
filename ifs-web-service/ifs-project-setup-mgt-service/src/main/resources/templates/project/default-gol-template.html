@@ -144,11 +144,20 @@
             <br>
             <strong>Project title:</strong> <th:block th:text="${model.projectName}" />
         </p>
-        <p>
-            We are pleased to confirm your award. It is subject to the terms and conditions you agreed to by submitting your application in the Innovation Funding Service.
-            This award is given under Article 25/26, De Minimis or a No Aid basis.
-            <br/> By accepting your award you agree to these additional terms and conditions:
-        </p>
+
+        <th:block th:unless="${model.subsidyControlGOLEnabled}">
+            <p>
+                We are pleased to confirm your award. It is subject to the terms and conditions you agreed to by submitting your application in the Innovation Funding Service. This award is given under Article 25/26, De Minimis or a No Aid basis.
+                <br/>By accepting your award you agree to these additional terms and conditions:
+            </p>
+        </th:block>
+        <th:block th:if="${model.subsidyControlGOLEnabled}">
+            <p>
+                We are pleased to confirm your award. It is subject to the terms and conditions detailed within this letter in addition to those you agreed to by submitting your application in the Innovation Funding Service and the terms set out in the Subsidy Control section of this letter.
+            </p>
+            <p>By accepting your award you agree to these additional terms and conditions:</p>
+            <p>[insert additional terms and conditions]</p>
+        </th:block>
 
         <table th:if="${not #lists.isEmpty(model.notes)}">
             <tr>
@@ -184,6 +193,29 @@
             </strong>
 
         </p>
+
+        <th:block th:if="${model.subsidyControlGOLEnabled}">
+            <h2 class="heading-medium">Subsidy Control</h2>
+            <p>The award must remain compliant with the UK International Obligations for Subsidy Control on the following basis:<br/>[Guidance Note: Please choose one or more of the following six options depending on the parties involved in the consortium and if the Article 10 of the Withdrawal Agreement is applicable.]</p>
+            <h2 class="heading-medium">Subsidy</h2>
+            <p>The funding awarded to [insert names of the relevant consortium members] <strong>is a “subsidy”</strong> under the UK International Obligations for Subsidy Control but can be lawfully granted as it respects the principles in Article 3.4 of Chapter 3 (Subsidy Control), Title XI, Part 2 of the Trade and Cooperation Agreement between the European Union and the United Kingdom and is not a prohibited subsidy falling within Article 3.5.</p>
+            <p>AND/OR</p>
+            <h2 class="heading-medium">Special Drawing Rights</h2>
+            <p>The funding awarded to [insert names of the relevant consortium members] <strong>is a “subsidy”</strong> under the UK International Obligations for Subsidy Control but can be lawfully granted as it falls within the exception in Article 3.2 (4) (below 325,000 SDR units) of Chapter 3 (Subsidy Control), Title XI, Part 2 of the Trade and Cooperation Agreement between the European Union and the United Kingdom.</p>
+            <p>AND/OR</p>
+            <h2 class="heading-medium">No Subsidy</h2>
+            <p>The funding awarded to [insert names of the research organisations in the consortium] is <strong>“not a subsidy”</strong> under the UK International Obligations for Subsidy Control as the organisation is a “research organisation” as defined in the European Commission’s Framework for State Aid for Research and Development and Innovation (2014C 198/01) <strong>(“R&D&I Framework”)</strong> and operates in accordance with sections 2.1 and 2.2 of the R&D&I Framework.</p>
+            <p>AND/OR</p>
+            <h2 class="heading-medium">State aid</h2>
+            <p>The funding awarded to [insert names of the consortium members falling within Article 10 of the Withdrawal Agreement] <strong>is “State aid”</strong> under the provisions set out in Annex 5 of the Protocol on Ireland/Northern Ireland but can be lawfully granted in compliance with the GBER.</p>
+            <p>AND/OR</p>
+            <h2 class="heading-medium">De minimis</h2>
+            <p>The funding awarded to [insert names of the consortium members falling within Article 10 of the Withdrawal Agreement] can be lawfully granted in compliance with De Minimis Aid Regulation ((EU) No 1407/2013).</p>
+            <p>AND/OR</p>
+            <h2 class="heading-medium">Non aid</h2>
+            <p>The funding awarded to [insert names of the research organisations falling within Article 10 of the Withdrawal Agreement] <strong>is not State aid</strong> under the provisions set out in Annex 5 of the Protocol on Ireland/Northern Ireland as the organisation is a “research organisation” as defined in the European Commission’s Framework for State Aid for Research and Development and Innovation (2014C 198/01) <strong>(“R&D&I Framework”)</strong> and operates in accordance with sections 2.1 and 2.2 of the R&D&I Framework.</p>
+        </th:block>
+
         <h2 class="heading-medium">Annex 1: acceptance of award</h2>
         <p>
             <strong>File reference:</strong> [file_reference]<br>
