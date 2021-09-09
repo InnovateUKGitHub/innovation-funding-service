@@ -213,6 +213,12 @@ public class SetupSectionsPermissionRules {
                 projectService.isUserLeadPartner(projectCompositeId.id(), user.getId());
     }
 
+    @PermissionRule(value = "ACCESS_SIGNED_GRANT_OFFER_LETTER", description = "A monitoring officer can view and download signed grant offer letter document")
+    public boolean monitoringOfficerAccessToSignedGrantOfferLetter(ProjectCompositeId projectCompositeId, UserResource user) {
+        return isMonitoringOfficerOnProject(projectCompositeId.id(), user.getId()) &&
+                doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection);
+    }
+
     @PermissionRule(value = "MARK_SPEND_PROFILE_INCOMPLETE", description = "All lead partners can mark partners spend profiles as incomplete")
     public boolean userCanMarkSpendProfileIncomplete(ProjectCompositeId projectCompositeId, UserResource user) {
         List<ProjectUserResource> projectLeadPartners = projectService.getLeadPartners(projectCompositeId.id());
