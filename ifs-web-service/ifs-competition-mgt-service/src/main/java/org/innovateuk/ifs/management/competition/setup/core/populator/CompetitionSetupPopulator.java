@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionStateSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,8 @@ public class CompetitionSetupPopulator {
     }
 
     private CompetitionStateSetupViewModel populateCompetitionStateModelAttributes(CompetitionResource competitionResource, CompetitionSetupSection section, UserResource loggedInUser) {
-        return new CompetitionStateSetupViewModel(section.preventEdit(competitionResource, loggedInUser),
+        return new CompetitionStateSetupViewModel(
+                section.preventEdit(competitionResource, loggedInUser),
                 competitionResource.isSetupAndLive(),
                 competitionResource.getSetupComplete(),
                 competitionResource.getCompetitionStatus());
