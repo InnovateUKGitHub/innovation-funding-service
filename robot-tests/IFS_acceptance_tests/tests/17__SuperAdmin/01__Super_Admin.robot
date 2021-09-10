@@ -88,7 +88,7 @@ Super admin can edit application questions when the competition is open
     Given the user navigates to the page                      ${SERVER}/management/competition/setup/${liveCompetitionID}/section/application/landing-page
     And the user clicks the button/link                       jQuery = a:contains("Adding value")
     When the user clicks the button/link                      jQuery = a:contains("Edit this question")
-    Then the user enters text to a text field                 id = question.subTitle      Business opportunity guidance
+    Then the user enters text to a text field                 jQuery = label[for="question.subTitle"] +* .editor       Business opportunity guidance
     And the user clicks the button/link                       jQuery = button:contains("Done")
 
 *** Keywords ***
