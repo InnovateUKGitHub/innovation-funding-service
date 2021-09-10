@@ -32,7 +32,7 @@ dependencies {
     compile 'org.jsoup:jsoup'
 
     compile "org.innovateuk.ifs.libraries:ifs-resources"
-    compile project(':ifs-rest-api-service')
+    compile 'org.innovateuk.ifs.libraries:ifs-rest-api-service'
     compile "org.innovateuk.ifs.libraries:ifs-rest-util"
 
     compile "org.innovateuk.ifs.libraries:ifs-commons"

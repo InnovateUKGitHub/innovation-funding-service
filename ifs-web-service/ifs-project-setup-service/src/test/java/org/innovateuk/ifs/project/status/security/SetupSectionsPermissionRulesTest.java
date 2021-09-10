@@ -303,17 +303,17 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     }
 
     @Test
-    public void grantOfferLetterSectionAccessMonitoringOfficer() {
-        assertMonitoringOfficerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection,
-                () -> rules.partnerCanAccessGrantOfferLetterSection(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
-        verify(projectService).getById(activeProject.getId());
-    }
-
-    @Test
     public void signedGrantOfferLetterSuccessfulAccessByLead() {
         assertLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection,
                 () -> rules.leadPartnerAccessToSignedGrantOfferLetter(ProjectCompositeId.id(activeProject.getId()), user));
         verify(projectService).getById(activeProject.getId());
+    }
+
+    @Test
+    public void signedGrantOfferLetterSuccessfulAccessByMonitoringOfficer() {
+        assertMonitoringOfficerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection,
+                () -> rules.monitoringOfficerAccessToSignedGrantOfferLetter(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
+        verify(projectService, times(2)).getById(activeProject.getId());
     }
 
     @Test
