@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.overview.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
@@ -82,6 +83,11 @@ public class AssessmentFinancesSummaryViewModel {
 
     public boolean isProcurementMilestones() {
         return procurementMilestones;
+    }
+
+    @JsonIgnore
+    public boolean isProcurement() {
+        return fundingType == FundingType.PROCUREMENT;
     }
 
     @Override

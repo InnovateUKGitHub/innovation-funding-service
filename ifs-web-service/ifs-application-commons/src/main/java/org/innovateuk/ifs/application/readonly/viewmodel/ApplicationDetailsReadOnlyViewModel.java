@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.readonly.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.resource.CompanyAge;
 import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
@@ -93,8 +94,18 @@ public class ApplicationDetailsReadOnlyViewModel extends AbstractQuestionReadOnl
         return companyPrimaryFocus;
     }
 
+    @JsonIgnore
+    public CompanyPrimaryFocus[] getAllCompanyPrimaryFocuses() {
+        return CompanyPrimaryFocus.values();
+    }
+
     @Override
     public String getFragment() {
         return "application-details";
+    }
+
+    @JsonIgnore
+    public CompetitionReferralSource[] getCompetitionReferralSourceValues() {
+        return CompetitionReferralSource.values();
     }
 }

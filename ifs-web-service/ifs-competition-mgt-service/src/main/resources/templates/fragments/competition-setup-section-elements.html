@@ -1,7 +1,7 @@
 <!-- =================Application question=========================== -->
 <div th:fragment="application-question(question, editable)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:unless="${editable}">
-        <th:block th:if="${competitionSetupForm.question.type != T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}">
+        <th:block th:if="${competitionSetupForm.question.type != competitionSetupForm.question.getKTPAssessmentQuestionType()}">
             <fieldset class="govuk-fieldset">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-6">
                     <h2 class="govuk-fieldset__heading">Application question</h2>
@@ -304,7 +304,7 @@
             <input type="hidden" th:field="*{question.textArea}">
             <input type="hidden" th:field="*{question.multipleChoice}">
             <input type="hidden"
-                   th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}"
+                   th:if="${competitionSetupForm.question.type == competitionSetupForm.question.getKTPAssessmentQuestionType()}"
                    th:name="question.shortTitle"
                    th:value="${question.shortTitle}"/>
 

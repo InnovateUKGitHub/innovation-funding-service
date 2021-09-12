@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.admin.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
@@ -33,6 +34,11 @@ public class SearchExternalUsersForm extends BaseBindingResultTarget {
 
     public void setSearchCategory(SearchCategory searchCategory) {
         this.searchCategory = searchCategory;
+    }
+
+    @JsonIgnore
+    public SearchCategory[] getAllSearchCategories() {
+        return SearchCategory.values();
     }
 
     @Override

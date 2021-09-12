@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.interview.viewmodel;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.interview.resource.InterviewStatisticsResource;
 
@@ -34,5 +35,10 @@ public class InterviewViewModel {
 
     public InterviewStatisticsResource getKeyStats() {
         return keyStats;
+    }
+
+    @JsonIgnore
+    public boolean isFundersPanelCompetitionStatus() {
+        return competitionStatus == CompetitionStatus.FUNDERS_PANEL;
     }
 }

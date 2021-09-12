@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.questions.generic.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
@@ -566,6 +567,11 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                     templateDocumentResponseFilename, templateDocumentResponseFileEntryId, lastUpdated, lastUpdatedByName, lastUpdatedBy,
                     open, complete, leadApplicant, assignButtonsViewModel, multipleChoiceFormInputId, multipleChoiceOptions, selectedMultipleChoiceOption,
                     leadOrganisationName, leadOrganisationCompaniesHouseNumber);
+        }
+
+        @JsonIgnore
+        public QuestionSetupType getLoansBusinessAndFinancialInformation() {
+            return QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
         }
     }
 }

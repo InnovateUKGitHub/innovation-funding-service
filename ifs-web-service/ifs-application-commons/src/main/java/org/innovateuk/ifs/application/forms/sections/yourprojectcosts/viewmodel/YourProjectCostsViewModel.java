@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -318,5 +319,15 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     public Boolean isOfGemCompetition() {
         return ofGemCompetition;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getLabourFinanceRowType() {
+        return FinanceRowType.LABOUR;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getOverheadsFinanceRowType() {
+        return FinanceRowType.OVERHEADS;
     }
 }

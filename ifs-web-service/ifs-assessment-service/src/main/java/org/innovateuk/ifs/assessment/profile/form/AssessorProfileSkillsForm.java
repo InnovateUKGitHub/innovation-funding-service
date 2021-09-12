@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.profile.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
@@ -35,6 +36,11 @@ public class AssessorProfileSkillsForm extends BaseBindingResultTarget {
 
     public void setAssessorType(BusinessType assessorType) {
         this.assessorType = assessorType;
+    }
+
+    @JsonIgnore
+    public BusinessType[] getAllAssessorTypes() {
+        return BusinessType.values();
     }
 
     @Override

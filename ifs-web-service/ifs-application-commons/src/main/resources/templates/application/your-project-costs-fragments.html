@@ -11,7 +11,7 @@
 
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="labour"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR}">
+          th:with="financeRowType=${model.getLabourFinanceRowType()}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
@@ -302,7 +302,7 @@
 
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="overheads"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS}">
+          th:with="financeRowType=${model.getOverheadsFinanceRowType()}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
@@ -337,7 +337,7 @@
                                            type="radio"
                                            required="required"
                                            th:field="*{overhead.rateType}"
-                                           th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE}"/>
+                                           th:value="${getNoneOverheadRateType()}"/>
                                     <label th:for="overhead-rate-type-none"
                                            class="govuk-label govuk-radios__label">
                                         No overhead costs
@@ -350,7 +350,7 @@
                                            type="radio"
                                            required="required"
                                            th:field="*{overhead.rateType}"
-                                           th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE}"/>
+                                           th:value="${getDefaultPercentageOverheadRateType()}"/>
                                     <label for="overhead-rate-type-default-percentage"
                                            class="govuk-label govuk-radios__label">
                                         20% of labour costs
@@ -363,7 +363,7 @@
                                            type="radio"
                                            required="required"
                                            th:field="*{overhead.rateType}"
-                                           th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL}"/>
+                                           th:value="${getTotalOverheadRateType()}"/>
                                     <label for="overhead-rate-type-total"
                                            class="govuk-label govuk-radios__label">
                                         Calculate overheads

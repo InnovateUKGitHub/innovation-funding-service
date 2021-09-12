@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="labour">
     <th:block th:if="${typeOfChange == 'Change'}">
-        <th:block th:unless="${changePair.submitted.name == T(org.innovateuk.ifs.finance.resource.category.LabourCostCategory).WORKING_DAYS_KEY}">
+        <th:block th:unless="${changePair.submitted.name == 'working-days-per-year'}">
             <tr th:class="${changePair.submitted.role != changePair.changed.role} ? 'govuk-table\_\_row item-changed' : 'govuk-table\_\_row'">
                 <td class="govuk-table__cell" rowspan="3" th:text="${typeOfChange}"></td>
                 <td class="govuk-table__cell" rowspan="3" th:text="${rowTypeName}"></td>
