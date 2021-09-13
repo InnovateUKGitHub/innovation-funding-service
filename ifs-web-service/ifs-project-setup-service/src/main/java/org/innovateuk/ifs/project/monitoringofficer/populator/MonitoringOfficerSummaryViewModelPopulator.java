@@ -25,12 +25,15 @@ public class MonitoringOfficerSummaryViewModelPopulator {
     @Value("${ifs.monitoringofficer.spendprofile.update.enabled}")
     private boolean isMOSpendProfileUpdateEnabled;
 
+    @Value("${ifs.monitoringofficer.dashboard.filter.enabled}")
+    private boolean moDashboardFilterEnabled;
+
     public MonitoringOfficerSummaryViewModelPopulator() {
     }
 
     public MonitoringOfficerSummaryViewModel populate(UserResource user) {
         List<ProjectResource> projects = monitoringOfficerRestService.getProjectsForMonitoringOfficer(user.getId()).getSuccess();
-        return isDocumentsOrSpendProfileSectionsEnabled() ?
+        return moDashboardFilterEnabled ?
                 new MonitoringOfficerSummaryViewModel(getInSetupProjectCount(projects)
                         , getPreviousProjectCount(projects)
                         , getDocumentsCompleteCount(projects)
@@ -39,11 +42,11 @@ public class MonitoringOfficerSummaryViewModelPopulator {
                         , getSpendProfileCompleteCount(projects)
                         , getSpendProfileInCompleteCount(projects)
                         , getSpendProfileAwaitingReviewCount(projects)) :
-                new MonitoringOfficerSummaryViewModel(getInSetupProjectCount(projects), getPreviousProjectCount(projects));
+                new MonitoringOfficerSummaryViewModel();
     }
 
     public MonitoringOfficerSummaryViewModel populate(List<ProjectResource> projects) {
-        return isDocumentsOrSpendProfileSectionsEnabled() ?
+        return moDashboardFilterEnabled ?
                 new MonitoringOfficerSummaryViewModel(getInSetupProjectCount(projects)
                         , getPreviousProjectCount(projects)
                         , getDocumentsCompleteCount(projects)
@@ -52,11 +55,7 @@ public class MonitoringOfficerSummaryViewModelPopulator {
                         , getSpendProfileCompleteCount(projects)
                         , getSpendProfileInCompleteCount(projects)
                         , getSpendProfileAwaitingReviewCount(projects)) :
-                new MonitoringOfficerSummaryViewModel(getInSetupProjectCount(projects), getPreviousProjectCount(projects));
-    }
-
-    private boolean isDocumentsOrSpendProfileSectionsEnabled(){
-        return isMOJourneyUpdateEnabled || isMOSpendProfileUpdateEnabled;
+                new MonitoringOfficerSummaryViewModel();
     }
 
     public int getInSetupProjectCount(List<ProjectResource> projects) {

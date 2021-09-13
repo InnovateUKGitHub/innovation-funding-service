@@ -118,19 +118,15 @@ public class MonitoringOfficerDashboardViewModelPopulator {
     }
 
     private List<ProjectDashboardRowViewModel> buildProjectDashboardRows(List<ProjectResource> projects, UserResource user) {
-         if (isDocumentsOrSpendProfileSectionsEnabled()) {
+         if (moDashboardFilterEnabled) {
             return projects.stream()
                     .map(project -> new ProjectDashboardRowViewModel(project,
                                             getMonitoringDashboardSectionsViewModel(project)))
                     .collect(toList());
         }
         return projects.stream()
-                .map(project -> new ProjectDashboardRowViewModel(project))
+                .map(ProjectDashboardRowViewModel::new)
                 .collect(toList());
-    }
-
-    private boolean isDocumentsOrSpendProfileSectionsEnabled() {
-        return isMOJourneyUpdateEnabled || isMOSpendProfileUpdateEnabled;
     }
 
     private MonitoringDashboardSectionsViewModel getMonitoringDashboardSectionsViewModel(ProjectResource project) {
@@ -158,12 +154,6 @@ public class MonitoringOfficerDashboardViewModelPopulator {
     private long getLeadPartnerOrganisationId(long projectId) {
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         return leadOrganisation.getId();
-    }
-
-    private List<ProjectResource> sortProjects(List<ProjectResource> projects) {
-        return projects.stream()
-                .sorted(Comparator.comparing(projectResource -> projectResource.getProjectState().getMoDisplayOrder()))
-                .collect(toList());
     }
 
     private List<ProjectResource> projectsFilteredByDocuments(List<ProjectResource> projects
