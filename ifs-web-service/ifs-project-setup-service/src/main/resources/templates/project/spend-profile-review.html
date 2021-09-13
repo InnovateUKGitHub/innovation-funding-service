@@ -32,7 +32,23 @@
 
             <th:block th:if="${model.submitted and model.approved}">
                 <div class="success-alert govuk-!-margin-bottom-6">
-                    <p class="govuk-body"><strong>All project spend profiles have been accepted by Innovate UK.</strong></p>
+                    <th:block th:if="${model.isMoSpendProfileJourneyUpdateEnabled()}">
+                        <th:block th:if="${model.isSpendProfileReviewedByIfsAdmin()}">
+                            <p class="govuk-body"><strong>Innovate UK approved this spend profile on <th:block th:text="${model.spendProfileReviewedOn() != null ? #temporals.format(model.spendProfileReviewedOn(), 'd MMM yyyy') : ''}"></th:block>.</strong></p>
+                        </th:block>
+                        <th:block th:if="${model.isSpendProfileReviewedByMO()}">
+                            <th:block th:if="${model.loggedInUserIsMoOnProject()}">
+                                <p class="govuk-body"><strong>You approved this spend profile on <th:block th:text="${model.spendProfileReviewedOn() != null ? #temporals.format(model.spendProfileReviewedOn(), 'd MMM yyyy') : ''}"></th:block>.</strong></p>
+                            </th:block>
+                            <th:block th:unless="${model.loggedInUserIsMoOnProject()}">
+                                <p class="govuk-body"><strong><th:block th:text="${model.userWhoApprovedSpendProfile()}"></th:block> approved this spend profile on <th:block th:text="${model.spendProfileReviewedOn() != null ? #temporals.format(model.spendProfileReviewedOn(), 'd MMM yyyy') : ''}"></th:block>.</strong></p>
+                            </th:block>
+                        </th:block>
+
+                    </th:block>
+                    <th:block th:unless="${model.isMoSpendProfileJourneyUpdateEnabled()}">
+                        <p class="govuk-body"><strong>All project spend profiles have been accepted by Innovate UK.</strong></p>
+                    </th:block>
                 </div>
             </th:block>
 
@@ -76,18 +92,36 @@
 
         <th:block th:if="${model.showMoSpendProfileJourney()}">
             <div class="govuk-!-margin-top-0">
-                <th:block th:if="${model.isSpendProfileReviewedByMO()}">
-                    <th:block th:if="${model.approved}">
-                        <div class="success-alert govuk-!-margin-bottom-9">
-                            <p class="govuk-body"><strong>You approved this spend profile on <th:block th:text="${model.spendProfileReviewedOn() != null ? #temporals.format(model.spendProfileReviewedOn(), 'd MMM yyyy') : ''}"></th:block>.</strong></p>
-                        </div>
-                    </th:block>
+                <th:block th:if="${model.approved}">
+                    <div class="success-alert govuk-!-margin-bottom-9">
+                        <th:block th:if="${model.isSpendProfileReviewedByIfsAdmin()}">
+                            <p class="govuk-body"><strong>Innovate UK approved this spend profile on <th:block th:text="${model.spendProfileReviewedOn() != null ? #temporals.format(model.spendProfileReviewedOn(), 'd MMM yyyy') : ''}"></th:block>.</strong></p>
+                        </th:block>
+                        <th:block th:if="${model.isSpendProfileReviewedByMO()}">
+                            <th:block th:if="${model.loggedInUserIsMoOnProject()}">
+                                <p class="govuk-body"><strong>You approved this spend profile on <th:block th:text="${model.spendProfileReviewedOn() != null ? #temporals.format(model.spendProfileReviewedOn(), 'd MMM yyyy') : ''}"></th:block>.</strong></p>
+                            </th:block>
+                            <th:block th:unless="${model.loggedInUserIsMoOnProject()}">
+                                <p class="govuk-body"><strong><th:block th:text="${model.userWhoApprovedSpendProfile()}"></th:block> approved this spend profile on <th:block th:text="${model.spendProfileReviewedOn() != null ? #temporals.format(model.spendProfileReviewedOn(), 'd MMM yyyy') : ''}"></th:block>.</strong></p>
+                            </th:block>
+                        </th:block>
+                    </div>
+                </th:block>
 
-                    <th:block th:if="${model.rejected}">
-                        <div class="message-alert govuk-!-margin-bottom-9">
-                            <p class="govuk-body">You have rejected this spend profile. Please contact the project manager to explain your decision.</p>
-                        </div>
-                    </th:block>
+                <th:block th:if="${model.rejected}">
+                    <div class="message-alert govuk-!-margin-bottom-9">
+                        <th:block th:if="${model.isSpendProfileReviewedByIfsAdmin()}">
+                            <p class="govuk-body">Innovate UK rejected this spend profile on <th:block th:text="${model.spendProfileReviewedOn() != null ? #temporals.format(model.spendProfileReviewedOn(), 'd MMM yyyy') : ''}"></th:block>.</p>
+                        </th:block>
+                        <th:block th:if="${model.isSpendProfileReviewedByMO()}">
+                            <th:block th:if="${model.loggedInUserIsMoOnProject()}">
+                                <p class="govuk-body">You have rejected this spend profile. Please contact the project manager to explain your decision.</p>
+                            </th:block>
+                            <th:block th:unless="${model.loggedInUserIsMoOnProject()}">
+                                <p class="govuk-body"><th:block th:text="${model.userWhoApprovedSpendProfile()}"></th:block> has rejected this spend profile. Please contact the project manager to explain the decision.</p>
+                            </th:block>
+                        </th:block>
+                    </div>
                 </th:block>
 
                 <p class="govuk-body">Please review the spend profile submitted by the project manager. You must accept or reject it based on Innovate UK's requirements.</p>

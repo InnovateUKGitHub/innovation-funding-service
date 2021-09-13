@@ -627,12 +627,9 @@ GOL template to be updated with country for correspondents address
 IFS Admin approves the Spend profile
     [Documentation]  IFS-9679
     [Tags]  HappyPath
-#    Given Log in as a different user                      &{ifs_admin_user_credentials}
     Given the user navigates to the page                    ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
-#    When the user selects the radio button                  spendProfileApproved  true
-    Then The user should see the element                    jQuery = h2:contains("The spend profile has been approved.")
+    Then The user should see the element                    jQuery = p:contains("Innovate UK approved this spend profile")
     And the user should not see an error in the page
-#    Then the user clicks the button/link                    jQuery = button.govuk-button:contains("Submit")
 
 *** Keywords ***
 Custom Suite Setup
