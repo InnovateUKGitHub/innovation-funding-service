@@ -48,7 +48,12 @@
                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId}, organisationId=${row.organisationId})}">
                             Payment milestones</a>
                     </td>
-                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell">
+                        <strong th:if="${row.isFinanceChecksApproved}"
+                                class="complete-status">Complete</strong>
+                        <strong th:unless="${row.isFinanceChecksApproved}"
+                                class="incomplete-status">Awaiting review</strong>
+                    </td>
                 </tr>
             </tbody>
         </table>
