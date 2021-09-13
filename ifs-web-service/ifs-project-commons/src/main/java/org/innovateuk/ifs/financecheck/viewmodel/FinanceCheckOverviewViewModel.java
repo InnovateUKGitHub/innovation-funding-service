@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.financecheck.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 
 /**
  * View model for the finance checks overview page.
@@ -71,5 +73,10 @@ public class FinanceCheckOverviewViewModel {
 
     public ApplicationFundingBreakdownViewModel getApplicationFundingBreakdownViewModel() {
         return applicationFundingBreakdownViewModel;
+    }
+
+    @JsonIgnore
+    public boolean isProcurement() {
+        return summaries.getFundingType().equals(FundingType.PROCUREMENT);
     }
 }
