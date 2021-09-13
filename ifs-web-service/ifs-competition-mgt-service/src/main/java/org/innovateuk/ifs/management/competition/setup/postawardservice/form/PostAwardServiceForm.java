@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.postawardservice.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.resource.PostAwardService;
@@ -18,6 +19,11 @@ public class PostAwardServiceForm extends BaseBindingResultTarget {
 
     public void setPostAwardService(PostAwardService postAwardService) {
         this.postAwardService = postAwardService;
+    }
+
+    @JsonIgnore
+    public PostAwardService[] getPostAwardServiceValues() {
+        return PostAwardService.values();
     }
 
     @Override
