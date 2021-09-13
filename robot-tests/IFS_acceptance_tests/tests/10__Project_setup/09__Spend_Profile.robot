@@ -79,6 +79,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...
 ...               IFS-9677 MO Spend profile: approve/reject
 ...
+...               IFS-9678 MO Spend profile: banner updates for all roles
+...
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -453,6 +455,12 @@ IFS Admin is able to Reject Spend Profile
     Then the user selects the radio button     spendProfileApproved  false
     And the user clicks the button/link        jQuery = button.govuk-button:contains("Submit")
 
+MO can see who rejected the spend profile in the banner
+    [Documentation]      IFS-9678
+    [Setup]    Log in as a different user      &{monitoring_officer_one_credentials}
+    Given The user navigates to the page       ${server}/project-setup/project/${PS_SP_Project_Id}/partner-organisation/${Ooba_Lead_Org_Id}/spend-profile
+    Then The user should see the element       jQuery = p:contains("Innovate UK rejected this spend profile")
+
 Status updates to a cross for the internal user's table
     [Documentation]    INFUND-6977
     [Tags]
@@ -536,6 +544,12 @@ Monitoring officer is able to Approve Spend Profile
     And the user clicks the button/link         link = Spend profile
     Then the monitoring officer approves to SP
 
+Internal user can see who approved the spend profile in the banner
+    [Documentation]      IFS-9678
+    [Setup]    Log in as a different user      &{Comp_admin1_credentials}
+    Given The user navigates to the page       ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
+    Then The user should see the element       jQuery = p:contains("Orville Gibbs approved this spend profile")
+
 Status updates correctly for internal user's table after approval
     [Documentation]    INFUND-5543  IFS-9677
     [Tags]
@@ -547,13 +561,13 @@ Status updates correctly for internal user's table after approval
     Run Keyword If   '${status}' == 'PASS'     the user should see the element    css = #table-project-status tr:nth-of-type(3) td:nth-of-type(8).status.ok           # GOL
 
 Project Finance still has a link to the spend profile after approval
-    [Documentation]    INFUND-6046
+    [Documentation]    INFUND-6046   IFS-9678
     [Tags]
     When the user clicks the button/link     jQuery = th:contains("${PS_SP_Application_Title}") ~ td:nth-child(8) a
     Then the user clicks the button/link     link = ${Ooba_Lead_Org_Name}-spend-profile.csv
     And the user clicks the button/link      link = ${Wordpedia_Partner_Org_Name}-spend-profile.csv
     And the user clicks the button/link      link = ${Jabbertype_Partner_Org_Name}-spend-profile.csv
-    And the user should see the element      jQuery = h2:contains("The spend profile has been approved.")
+    And the user should see the element      jQuery = p:contains("Orville Gibbs approved this spend profile ")
 
 Project finance user cannot access external users' spend profile page
     [Documentation]    INFUND-5911

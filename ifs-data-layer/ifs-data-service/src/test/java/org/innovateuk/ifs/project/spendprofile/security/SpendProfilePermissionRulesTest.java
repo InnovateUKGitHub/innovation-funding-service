@@ -257,6 +257,34 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
+    public void compAdminUserCanViewAnySpendProfileData() {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId =
+                new ProjectOrganisationCompositeId(1L, newOrganisation().build().getId());
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasAuthority(COMP_ADMIN)) {
+                assertTrue(rules.compAdminUserCanViewAnySpendProfileData(projectOrganisationCompositeId, user));
+            } else {
+                assertFalse(rules.compAdminUserCanViewAnySpendProfileData(projectOrganisationCompositeId, user));
+            }
+        });
+    }
+
+    @Test
+    public void stakeholderUserCanViewAnySpendProfileData() {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId =
+                new ProjectOrganisationCompositeId(1L, newOrganisation().build().getId());
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasAuthority(Authority.STAKEHOLDER)) {
+                assertTrue(rules.stakeholderUserCanViewAnySpendProfileData(projectOrganisationCompositeId, user));
+            } else {
+                assertFalse(rules.stakeholderUserCanViewAnySpendProfileData(projectOrganisationCompositeId, user));
+            }
+        });
+    }
+
+    @Test
     public void partnersCanViewTheirOwnSpendProfileCsv() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();

@@ -22,6 +22,7 @@ import org.innovateuk.ifs.project.spendprofile.validation.SpendProfileCostValida
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileProjectSummaryViewModel;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileViewModel;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.spendprofile.OrganisationReviewDetails;
 import org.innovateuk.ifs.spendprofile.SpendProfileService;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -379,7 +380,8 @@ public class ProjectSpendProfileController {
                 isApproved(teamStatus),
                 isRejected(teamStatus),
                 isMonitoringOfficer,
-                moSpendProfileJourneyUpdateEnabled);
+                moSpendProfileJourneyUpdateEnabled,
+                loggedInUser);
     }
 
     private boolean isApproved(final Long projectId) {
@@ -397,8 +399,8 @@ public class ProjectSpendProfileController {
 
     private Map<Long, OrganisationReviewDetails> getOrganisationReviewDetails(final Long projectId, List<OrganisationResource> partnerOrganisations, final UserResource loggedInUser) {
         return partnerOrganisations.stream().collect(Collectors.toMap(OrganisationResource::getId,
-                o -> { Optional<SpendProfileResource> spendProfileResource =spendProfileService.getSpendProfile(projectId, o.getId());
-                       return  new OrganisationReviewDetails(o.getId(),
+                o -> { Optional<SpendProfileResource> spendProfileResource = spendProfileService.getSpendProfile(projectId, o.getId());
+                       return new OrganisationReviewDetails(o.getId(),
                                o.getName(),
                                spendProfileResource.map(SpendProfileResource::isMarkedAsComplete).orElse(false),
                                isUserPartOfThisOrganisation(projectId, o.getId(), loggedInUser),

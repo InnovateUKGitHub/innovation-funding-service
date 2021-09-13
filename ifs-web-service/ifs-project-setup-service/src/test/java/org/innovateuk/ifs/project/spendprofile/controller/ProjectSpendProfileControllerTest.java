@@ -27,6 +27,7 @@ import org.innovateuk.ifs.project.spendprofile.validation.SpendProfileCostValida
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileProjectSummaryViewModel;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileViewModel;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.spendprofile.OrganisationReviewDetails;
 import org.innovateuk.ifs.spendprofile.SpendProfileService;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.Role;
@@ -1055,7 +1056,8 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 false,
                 false,
                 monitoringOfficer,
-                true);
+                true,
+                loggedInUser);
     }
 
     private ProjectSpendProfileViewModel buildExpectedProjectSpendProfileViewModel(Long organisationId, ProjectResource projectResource,
