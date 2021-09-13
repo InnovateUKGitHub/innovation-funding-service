@@ -38,7 +38,7 @@
 
                     <div class="govuk-radios">
 
-                        <div class="govuk-radios__item" th:each="postAwardServ : ${T(org.innovateuk.ifs.competition.resource.PostAwardService).values()}">
+                        <div class="govuk-radios__item" th:each="postAwardServ : ${form.getPostAwardServiceValues()}">
 
                             <input type="radio"
                                    class="govuk-radios__input"

@@ -2923,7 +2923,7 @@
 
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="ktp_travel"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).KTP_TRAVEL}">
+          th:with="financeRowType=${model.getKTPTravelFinanceRowType()}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
@@ -3075,7 +3075,7 @@
                     th:name="__${path}__.type">
                 <option disabled="disabled" value="" th:selected="${row.type == null}">Select</option>
                 <option
-                    th:each="type : ${T(org.innovateuk.ifs.finance.resource.cost.KtpTravelCost.KtpTravelCostType).values()}"
+                    th:each="type : ${model.getAllKTPTravelCostTypes()}"
                     th:text="${type.text}" th:value="${type}" th:selected="${row.type == type}"></option>
             </select>
         </td>
@@ -3224,7 +3224,7 @@
 *********************************/-->
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="consumables"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).CONSUMABLES}">
+          th:with="financeRowType=${getConsumabledFinanceRowType()}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
@@ -3454,7 +3454,7 @@
 *********************************/-->
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="knowledge_base"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).KNOWLEDGE_BASE}">
+          th:with="financeRowType=${model.getKnowledgeBaseFinanceRowType()}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
@@ -3723,7 +3723,7 @@
 *********************************/-->
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="additional_company_costs"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).ADDITIONAL_COMPANY_COSTS}">
+          th:with="financeRowType=${model.getAdditionalCompanyCostsFinanceRowType()}">
     <th:block th:if="${model.financeRowTypes.contains(financeRowType)}">
         <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Additional costs</h2>
         <p class="govuk-body">These are not part of the proposed project’s eligible costs. Additional costs must be provided on behalf of the business partner.</p>
@@ -3889,7 +3889,7 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
 *********************************/-->
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="academic_and_secretarial_support"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).ACADEMIC_AND_SECRETARIAL_SUPPORT}">
+          th:with="financeRowType=${model.getAcademicAndSecretarialSupportFinanceRowType()}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
@@ -3992,7 +3992,7 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
 *********************************/-->
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="indirect_costs"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).INDIRECT_COSTS}">
+          th:with="financeRowType=${model.getIndirectCostsFinanceRowType()}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">

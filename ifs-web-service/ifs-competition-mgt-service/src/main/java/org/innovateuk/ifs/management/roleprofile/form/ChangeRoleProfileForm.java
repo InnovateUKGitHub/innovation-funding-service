@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.management.roleprofile.form;
 
-import javax.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.user.resource.RoleProfileState;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class ChangeRoleProfileForm {
 
@@ -38,5 +39,20 @@ public class ChangeRoleProfileForm {
 
     public void setRoleProfileState(RoleProfileState roleProfileState) {
         this.roleProfileState = roleProfileState;
+    }
+
+    @JsonIgnore
+    public RoleProfileState getActiveRoleProfileState() {
+        return RoleProfileState.ACTIVE;
+    }
+
+    @JsonIgnore
+    public RoleProfileState getUnavailableRoleProfileState() {
+        return RoleProfileState.UNAVAILABLE;
+    }
+
+    @JsonIgnore
+    public RoleProfileState getDisabledRoleProfileState() {
+        return RoleProfileState.DISABLED;
     }
 }
