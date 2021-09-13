@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,7 +11,7 @@ import java.math.BigDecimal;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.*;
-import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.*;
+import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.TOTAL;
 
 public class OverheadForm {
 
@@ -105,20 +104,5 @@ public class OverheadForm {
                 return ofNullable(getTotalSpreadsheet()).map(BigDecimal::new).orElse(BigDecimal.ZERO);
         }
         return BigDecimal.ZERO;
-    }
-
-    @JsonIgnore
-    public OverheadRateType getNoneOverheadRateType() {
-        return NONE;
-    }
-
-    @JsonIgnore
-    public OverheadRateType getDefaultPercentageOverheadRateType() {
-        return DEFAULT_PERCENTAGE;
-    }
-
-    @JsonIgnore
-    public OverheadRateType getTotalOverheadRateType() {
-        return TOTAL;
     }
 }

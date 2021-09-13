@@ -4,10 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.*;
 
 public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
     private final Long applicationId;
@@ -329,5 +332,20 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
     @JsonIgnore
     public FinanceRowType getOverheadsFinanceRowType() {
         return FinanceRowType.OVERHEADS;
+    }
+
+    @JsonIgnore
+    public OverheadRateType getNoneOverheadRateType() {
+        return NONE;
+    }
+
+    @JsonIgnore
+    public OverheadRateType getDefaultPercentageOverheadRateType() {
+        return DEFAULT_PERCENTAGE;
+    }
+
+    @JsonIgnore
+    public OverheadRateType getTotalOverheadRateType() {
+        return TOTAL;
     }
 }

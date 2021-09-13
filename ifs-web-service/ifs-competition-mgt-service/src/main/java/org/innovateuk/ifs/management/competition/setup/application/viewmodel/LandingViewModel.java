@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.application.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
@@ -60,8 +61,13 @@ public class LandingViewModel extends CompetitionSetupViewModel {
         return allComplete;
     }
 
-   public Boolean getApplicationDetailsSubSectionStatus() {
+    @JsonIgnore
+   public Boolean isApplicationDetailsCompSetupSubSection() {
        return subsectionStatuses.get(CompetitionSetupSubsection.APPLICATION_DETAILS);
    }
 
+    @JsonIgnore
+    public Boolean isFinancesDetailsCompSetupSubSection() {
+        return subsectionStatuses.get(CompetitionSetupSubsection.FINANCES);
+    }
 }

@@ -337,7 +337,7 @@
                                            type="radio"
                                            required="required"
                                            th:field="*{overhead.rateType}"
-                                           th:value="${getNoneOverheadRateType()}"/>
+                                           th:value="${model.getNoneOverheadRateType()}"/>
                                     <label th:for="overhead-rate-type-none"
                                            class="govuk-label govuk-radios__label">
                                         No overhead costs
@@ -350,7 +350,7 @@
                                            type="radio"
                                            required="required"
                                            th:field="*{overhead.rateType}"
-                                           th:value="${getDefaultPercentageOverheadRateType()}"/>
+                                           th:value="${model.getDefaultPercentageOverheadRateType()}"/>
                                     <label for="overhead-rate-type-default-percentage"
                                            class="govuk-label govuk-radios__label">
                                         20% of labour costs
@@ -363,7 +363,7 @@
                                            type="radio"
                                            required="required"
                                            th:field="*{overhead.rateType}"
-                                           th:value="${getTotalOverheadRateType()}"/>
+                                           th:value="${model.getTotalOverheadRateType()}"/>
                                     <label for="overhead-rate-type-total"
                                            class="govuk-label govuk-radios__label">
                                         Calculate overheads

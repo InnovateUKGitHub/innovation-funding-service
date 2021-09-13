@@ -316,6 +316,11 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         return leadOrganisationCompaniesHouseNumber;
     }
 
+    @JsonIgnore
+    public QuestionSetupType getLoansBusinessAndFinancialInformation() {
+        return QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
+    }
+
     public static final class GenericQuestionApplicationViewModelBuilder {
         private long questionId;
         private long currentUser;
@@ -569,9 +574,5 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                     leadOrganisationName, leadOrganisationCompaniesHouseNumber);
         }
 
-        @JsonIgnore
-        public QuestionSetupType getLoansBusinessAndFinancialInformation() {
-            return QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
-        }
     }
 }

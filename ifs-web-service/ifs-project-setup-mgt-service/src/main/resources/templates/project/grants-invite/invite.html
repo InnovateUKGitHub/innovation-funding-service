@@ -99,7 +99,7 @@
                         required="required"
                         data-required-errormessage="Please select a role.">
                     <option value="" disabled="disabled" th:selected="${form.role == null}">Please select...</option>
-                    <option th:each="inviteRole : ${getAllGrantsInviteRoles()}"
+                    <option th:each="inviteRole : ${form.getAllGrantsInviteRoles()}"
                             th:value="${inviteRole}"
                             th:selected="${inviteRole == form.role}"
                             th:text="${inviteRole.displayName}"
