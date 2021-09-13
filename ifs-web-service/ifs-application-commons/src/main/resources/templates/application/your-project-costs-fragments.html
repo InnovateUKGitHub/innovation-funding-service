@@ -472,7 +472,7 @@
                         </div>
                     </th:block>
                 <th:block th:if="${model.overheadAlwaysTwenty}">
-                    <th:block th:with="unused=*{overhead.setRateType(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)}"></th:block>
+                    <th:block th:with="unused=*{overhead.setRateType(model.getDefaultPercentageOverheadRateType())}"></th:block>
                     <input type="hidden" name="overhead.rateType" value="DEFAULT_PERCENTAGE"/>
                     <p class="govuk-body">Overheads are calculated as 20% of labour costs</p>
                     <h4 class="govuk-heading-s alignright section-total-summary">
@@ -584,7 +584,7 @@
 
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="procurement_overheads"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS}">
+          th:with="financeRowType=${model.getProcurementOverheadsFinanceRowType()}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
             <div class="govuk-accordion__section-header" th:classappend="${model.ofGemCompetition} ? 'govuk-visually-hidden'">
@@ -849,7 +849,7 @@
 
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="materials"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).MATERIALS}">
+          th:with="financeRowType=${model.getMaterialsFinanceRowType()}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
@@ -1104,7 +1104,7 @@
 
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="capital_usage"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).CAPITAL_USAGE}">
+          th:with="financeRowType=${model.getCapitalUsageFinanceRowType()}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section-header" th:classappend="${model.ofGemCompetition} ? 'govuk-visually-hidden'">
             <h3 class="govuk-accordion__section-heading">
@@ -1429,7 +1429,7 @@
 
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="subcontracting_costs"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).SUBCONTRACTING_COSTS}">
+          th:with="financeRowType=${model.getSubContractingCostsFinanceRowType()}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
@@ -1663,7 +1663,7 @@
 
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="travel"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).TRAVEL}">
+          th:with="financeRowType=${model.getTravelFinanceRowType()}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
@@ -1907,7 +1907,7 @@
 
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="other_costs"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OTHER_COSTS}">
+          th:with="financeRowType=${model.getOtherCostsFinanceRowType()}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
@@ -2096,7 +2096,7 @@
 
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="vat"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).VAT}">
+          th:with="financeRowType=${model.getVATFinanceRowType()}">
 <th:block th:if="${model.financeRowTypes.contains(financeRowType)}">
     <th:block th:unless="${model.ofGemCompetition}">
         <div class="govuk-form-group"
@@ -2214,7 +2214,7 @@
 
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="associate_salary_costs"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).ASSOCIATE_SALARY_COSTS}">
+          th:with="financeRowType=${model.getAssociateSalaryCostsFinanceRowType()}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
@@ -2399,7 +2399,7 @@
 
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="associate_development_costs"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).ASSOCIATE_DEVELOPMENT_COSTS}">
+          th:with="financeRowType=${model.getAssociateDevelopmentCostsFinanceRowType()}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
@@ -2565,7 +2565,7 @@
 
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="associate_support"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).ASSOCIATE_SUPPORT}">
+          th:with="financeRowType=${model.getAssociateSupportFinanceRowType()}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
@@ -2741,7 +2741,7 @@
 
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="estate_costs"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).ESTATE_COSTS}">
+          th:with="financeRowType=${model.getEstateCostsFinanceRowType()}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">

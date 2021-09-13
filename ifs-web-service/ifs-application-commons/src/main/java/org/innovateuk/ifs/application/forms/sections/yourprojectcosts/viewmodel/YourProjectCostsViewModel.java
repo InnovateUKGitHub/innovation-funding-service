@@ -335,6 +335,59 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
     }
 
     @JsonIgnore
+    public FinanceRowType getProcurementOverheadsFinanceRowType() {
+        return FinanceRowType.PROCUREMENT_OVERHEADS;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getMaterialsFinanceRowType() {
+        return FinanceRowType.MATERIALS;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getCapitalUsageFinanceRowType() {
+        return FinanceRowType.CAPITAL_USAGE;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getSubContractingCostsFinanceRowType() {
+        return FinanceRowType.SUBCONTRACTING_COSTS;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getTravelFinanceRowType() {
+        return FinanceRowType.TRAVEL;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getOtherCostsFinanceRowType() {
+        return FinanceRowType.OTHER_COSTS;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getVATFinanceRowType() {
+        return FinanceRowType.VAT;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getAssociateSalaryCostsFinanceRowType() {
+        return FinanceRowType.ASSOCIATE_SALARY_COSTS;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getAssociateDevelopmentCostsFinanceRowType() {
+        return FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS;
+    }
+    @JsonIgnore
+    public FinanceRowType getEstateCostsFinanceRowType() {
+        return FinanceRowType.ESTATE_COSTS;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getAssociateSupportFinanceRowType() {
+        return FinanceRowType.ASSOCIATE_SUPPORT;
+    }
+    @JsonIgnore
     public OverheadRateType getNoneOverheadRateType() {
         return NONE;
     }
