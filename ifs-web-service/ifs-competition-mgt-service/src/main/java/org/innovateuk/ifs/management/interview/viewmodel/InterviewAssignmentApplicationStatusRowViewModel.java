@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.interview.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
@@ -41,6 +42,11 @@ public class InterviewAssignmentApplicationStatusRowViewModel {
 
     public InterviewAssignmentState getStatus() {
         return status;
+    }
+
+    @JsonIgnore
+    public InterviewAssignmentState getSubmittedFeedbackResponseState() {
+        return InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE;
     }
 
     @Override

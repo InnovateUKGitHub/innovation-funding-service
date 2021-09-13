@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.application.review.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
@@ -77,5 +79,10 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
         return currentCompetition.isProcurement() ||
                 (currentCompetition.getCompletionStage() == CompetitionCompletionStage.COMPETITION_CLOSE
                         && !currentCompetition.isKtp());
+    }
+
+    @JsonIgnore
+    public FundingType getProcurementFundingType() {
+        return FundingType.PROCUREMENT;
     }
 }

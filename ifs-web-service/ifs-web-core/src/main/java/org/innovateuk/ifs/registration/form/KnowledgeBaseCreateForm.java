@@ -117,4 +117,8 @@ public class KnowledgeBaseCreateForm implements Serializable {
                 break;
         }
     }
+    @JsonIgnore
+    public KnowledgeBaseType getUniversity() {
+        return KnowledgeBaseType.UNIVERSITY;
+    }
 }

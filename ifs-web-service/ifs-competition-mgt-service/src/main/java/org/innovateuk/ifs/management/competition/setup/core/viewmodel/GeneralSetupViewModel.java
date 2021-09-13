@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.management.competition.setup.core.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.util.List;
 
@@ -107,4 +109,10 @@ public class GeneralSetupViewModel {
     public static List<CompetitionSetupSection> getAssessmentSections() {
         return ASSESSMENT_SECTIONS;
     }
+
+    @JsonIgnore
+    public CompetitionStatus getCompetitionSetupStatus() {
+        return CompetitionStatus.COMPETITION_SETUP;
+    }
+
 }

@@ -53,7 +53,7 @@ public class AssessmentAssignmentForm extends BaseBindingResultTarget {
     }
 
     @JsonIgnore
-    public AssessmentRejectOutcomeValue[] getAssessmentRejectOutcomeValue() {
+    public AssessmentRejectOutcomeValue[] getAssessmentRejectOutcomeValues() {
         return AssessmentRejectOutcomeValue.values();
     }
 
