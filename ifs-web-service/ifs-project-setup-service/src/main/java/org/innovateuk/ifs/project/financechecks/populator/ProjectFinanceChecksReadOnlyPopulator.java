@@ -16,9 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
 @Component
@@ -44,7 +42,7 @@ public class ProjectFinanceChecksReadOnlyPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         FinanceCheckSummaryResource financeCheckSummaryResource = financeCheckService.getFinanceCheckSummary(projectId).getSuccess();
 
-        Map<Long, Boolean> organisationStatuses = getOrganisationStatusu(competition, financeCheckSummaryResource);
+        Map<Long, Boolean> organisationStatuses = getOrganisationStatus(competition, financeCheckSummaryResource);
 
         List<ProjectOrganisationRowViewModel> projectOrganisationRows = projectOrganisations.stream()
                 .map(org -> new ProjectOrganisationRowViewModel(
@@ -60,7 +58,7 @@ public class ProjectFinanceChecksReadOnlyPopulator {
         return new ProjectFinanceChecksReadOnlyViewModel(project.getId(), project.getName(), projectOrganisationRows);
     }
 
-    private Map<Long, Boolean> getOrganisationStatusu(CompetitionResource competitionResource, FinanceCheckSummaryResource financeCheckSummaryResource) {
+    private Map<Long, Boolean> getOrganisationStatus(CompetitionResource competitionResource, FinanceCheckSummaryResource financeCheckSummaryResource) {
         if (competitionResource.isProcurement()) {
             return financeCheckSummaryResource.getPartnerStatusResources()
                     .stream()
