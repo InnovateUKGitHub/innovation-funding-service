@@ -44,6 +44,4 @@ public class AssessorProfileSkillsViewModel {
     public boolean isCompAdminUser() {
         return compAdminUser;
     }
-
-
 }
