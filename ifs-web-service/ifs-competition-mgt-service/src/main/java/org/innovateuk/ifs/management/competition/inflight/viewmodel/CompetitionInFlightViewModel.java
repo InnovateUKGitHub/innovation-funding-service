@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.competition.inflight.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
@@ -195,5 +196,74 @@ public class CompetitionInFlightViewModel {
     public boolean isManageAssessmentLinkEnabled() {
         return competitionStatus != READY_TO_OPEN
                 && (competitionStatus != OPEN || alwaysOpen);
+    }
+
+    @JsonIgnore
+    public Boolean isReadOnlyCompStatuses() {
+        return competitionStatus == OPEN ||
+                isReadyToOpenCompStatus() ||
+                isClosedCompStatus() ||
+                isInAssessmentCompStatus();
+    }
+    @JsonIgnore
+    public Boolean isInAssessmentCompStatus() {
+        return competitionStatus == IN_ASSESSMENT;
+    }
+    @JsonIgnore
+    public Boolean isReadyToOpenCompStatus() {
+        return competitionStatus == READY_TO_OPEN;
+    }
+
+    @JsonIgnore
+    public Boolean isClosedCompStatus() {
+        return competitionStatus == CLOSED;
+    }
+
+    @JsonIgnore
+    public Boolean isFundersPanelCompStatus() {
+        return competitionStatus == FUNDERS_PANEL;
+    }
+
+    @JsonIgnore
+    public Boolean isAssessorFeedBackCompStatus() {
+        return competitionStatus == ASSESSOR_FEEDBACK;
+    }
+    @JsonIgnore
+    public Boolean isCloseCompCompletionStage() {
+        return competitionCompletionStage == CompetitionCompletionStage.COMPETITION_CLOSE;
+    }
+    @JsonIgnore
+    public MilestoneType getAssessorBriefingMilestoneType() {
+        return MilestoneType.ASSESSOR_BRIEFING;
+    }
+
+    @JsonIgnore
+    public MilestoneType getAssessorDeadLineMilestoneType() {
+        return MilestoneType.ASSESSOR_DEADLINE;
+    }
+
+    @JsonIgnore
+    public MilestoneType getAssessorLineDrawMilestoneType() {
+        return MilestoneType.LINE_DRAW;
+    }
+    @JsonIgnore
+    public MilestoneType getAssessorFundersPanelMilestoneType() {
+        return MilestoneType.FUNDERS_PANEL;
+    }
+
+    @JsonIgnore
+    public MilestoneType getAssessorReleaseFeedbackMilestoneType() {
+        return MilestoneType.RELEASE_FEEDBACK;
+    }
+
+
+    @JsonIgnore
+    public MilestoneType getOpenDataMilestoneType() {
+        return MilestoneType.OPEN_DATE;
+    }
+
+    @JsonIgnore
+    public MilestoneType getSubmissionDateMilestoneType() {
+        return MilestoneType.SUBMISSION_DATE;
     }
 }

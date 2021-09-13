@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 
 import java.math.BigDecimal;
@@ -384,6 +385,36 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
     }
 
     @JsonIgnore
+    public FinanceRowType getKTPTravelFinanceRowType() {
+        return FinanceRowType.KTP_TRAVEL;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getConsumabledFinanceRowType() {
+        return FinanceRowType.CONSUMABLES;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getKnowledgeBaseFinanceRowType() {
+        return FinanceRowType.KNOWLEDGE_BASE;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getAdditionalCompanyCostsFinanceRowType() {
+        return FinanceRowType.ADDITIONAL_COMPANY_COSTS;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getIndirectCostsFinanceRowType() {
+        return FinanceRowType.INDIRECT_COSTS;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getAcademicAndSecretarialSupportFinanceRowType() {
+        return FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT;
+    }
+
+    @JsonIgnore
     public FinanceRowType getAssociateSupportFinanceRowType() {
         return FinanceRowType.ASSOCIATE_SUPPORT;
     }
@@ -400,5 +431,10 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
     @JsonIgnore
     public OverheadRateType getTotalOverheadRateType() {
         return TOTAL;
+    }
+
+    @JsonIgnore
+    public KtpTravelCost.KtpTravelCostType[] getAllKTPTravelCostTypes() {
+        return KtpTravelCost.KtpTravelCostType.values();
     }
 }
