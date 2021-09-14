@@ -29,7 +29,7 @@
                        data-js-modal="complete-modal"
                        th:disabled="${!setupReady}"
                        class="govuk-button govuk-!-margin-right-0" id="compCTA">Complete setup</a>
-                    <a th:unless="${model.general.competition.competitionStatus.isLaterThan(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN)}"
+                    <a th:unless="${model.general.competitionOpen}"
                        data-js-modal="delete-modal" class="button-clear">Delete competition</a>
                 </div>
             </div>
@@ -89,7 +89,7 @@
                                 </h3>
                             </div>
                         </li>
-                        <li th:if="${model.general.ifsAdmin && model.general.competition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).GRANT}">
+                        <li th:if="${model.general.ifsAdmin && model.general.grantCompetition}">
                             <div class="task">
                                 <h3 class="govuk-heading-s">
                                     <th:block th:if="${model.general.initialComplete}">
