@@ -13,6 +13,7 @@ import org.innovateuk.ifs.management.competition.setup.application.sectionupdate
 import org.innovateuk.ifs.management.competition.setup.assessor.form.AssessorsForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupSectionUpdater;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -45,11 +46,12 @@ public class AssessorsSectionUpdater extends AbstractSectionUpdater implements C
 
     @Override
     protected ServiceResult<Void> doSaveSection(CompetitionResource competition,
-                                                CompetitionSetupForm competitionSetupForm) {
+                                                CompetitionSetupForm competitionSetupForm,
+                                                UserResource loggedInUser) {
 
         AssessorsForm assessorsForm = (AssessorsForm) competitionSetupForm;
 
-        if (!sectionToSave().preventEdit(competition)) {
+        if (!sectionToSave().preventEdit(competition, loggedInUser)) {
 
             List<AssessorCountOptionResource> assessorCountOptions = assessorCountOptionsRestService.findAllByCompetitionType(competition.getCompetitionType()).getSuccess();
             if (assessorCountOptions.stream().anyMatch(assessorOption -> assessorsForm.getAssessorCount().equals(assessorOption.getOptionValue()))) {

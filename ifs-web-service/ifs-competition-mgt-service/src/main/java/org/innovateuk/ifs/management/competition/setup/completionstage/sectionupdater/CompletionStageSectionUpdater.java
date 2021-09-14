@@ -9,6 +9,7 @@ import org.innovateuk.ifs.management.competition.setup.completionstage.form.Comp
 import org.innovateuk.ifs.management.competition.setup.completionstage.util.CompletionStageUtils;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupSectionUpdater;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,7 @@ public class CompletionStageSectionUpdater extends AbstractSectionUpdater implem
     }
 
     @Override
-    protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+    protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm, UserResource loggedInUser) {
         return milestoneRestService.updateCompletionStage(competition.getId(),
                 ((CompletionStageForm)competitionSetupForm).getSelectedCompletionStage()).toServiceResult();
     }

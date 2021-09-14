@@ -62,8 +62,8 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     @Test
     public void getSpendProfileTable() {
 
-        Long projectId = 1L;
-        Long organisationId = 1L;
+        long projectId = 1L;
+        long organisationId = 1L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -74,6 +74,8 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
                     verify(spendProfilePermissionRules).projectFinanceUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verify(spendProfilePermissionRules).leadPartnerCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verify(spendProfilePermissionRules).monitoringOfficerCanViewProjectsSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(spendProfilePermissionRules).compAdminUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(spendProfilePermissionRules).stakeholderUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(spendProfilePermissionRules);
                 });
     }
@@ -81,8 +83,8 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     @Test
     public void getSpendProfileCSV() {
 
-        Long projectId = 1L;
-        Long organisationId = 1L;
+        long projectId = 1L;
+        long organisationId = 1L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -103,8 +105,8 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     @Test
     public void getSpendProfile() {
 
-        Long projectId = 1L;
-        Long organisationId = 1L;
+        long projectId = 1L;
+        long organisationId = 1L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -115,6 +117,8 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
                     verify(spendProfilePermissionRules).projectFinanceUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verify(spendProfilePermissionRules).leadPartnerCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verify(spendProfilePermissionRules).monitoringOfficerCanViewProjectsSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(spendProfilePermissionRules).compAdminUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(spendProfilePermissionRules).stakeholderUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(spendProfilePermissionRules);
                 });
     }
@@ -122,8 +126,8 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     @Test
     public void saveSpendProfile() {
 
-        Long projectId = 1L;
-        Long organisationId = 1L;
+        long projectId = 1L;
+        long organisationId = 1L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 

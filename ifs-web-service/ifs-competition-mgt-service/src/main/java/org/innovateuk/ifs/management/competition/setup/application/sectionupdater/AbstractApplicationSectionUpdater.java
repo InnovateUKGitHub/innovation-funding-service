@@ -7,6 +7,7 @@ import org.innovateuk.ifs.management.competition.setup.application.form.Abstract
 import org.innovateuk.ifs.management.competition.setup.application.form.AbstractQuestionForm.TypeOfQuestion;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
@@ -23,7 +24,7 @@ public abstract class AbstractApplicationSectionUpdater<T extends AbstractQuesti
     }
 
     @Override
-    protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+    protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm, UserResource loggedInUser) {
         T form = (T) competitionSetupForm;
         mapGuidanceRows(form);
         mapAppendix(form);

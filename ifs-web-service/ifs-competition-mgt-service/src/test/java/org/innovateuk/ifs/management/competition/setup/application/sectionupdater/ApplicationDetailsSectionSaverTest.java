@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.competition.setup.application.form.DetailsForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +21,7 @@ import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -30,7 +32,7 @@ public class ApplicationDetailsSectionSaverTest {
     private DetailsSectionUpdater service;
 
     @Mock
-    private CompetitionSetupRestService competitionSetupRestServiceMock;
+    private CompetitionSetupRestService competitionSetupRestService;
 
     @Before
     public void setup() {
@@ -58,9 +60,11 @@ public class ApplicationDetailsSectionSaverTest {
         detailsForm.setMaxProjectDuration(new BigDecimal(10));
         detailsForm.setUseResubmissionQuestion(true);
 
-        when(competitionSetupRestServiceMock.update(any())).thenReturn(RestResult.restSuccess());
+        UserResource loggedInUser = newUserResource().build();
 
-        ServiceResult<Void> result = service.doSaveSection(competitionResource, detailsForm);
+        when(competitionSetupRestService.update(any())).thenReturn(RestResult.restSuccess());
+
+        ServiceResult<Void> result = service.doSaveSection(competitionResource, detailsForm, loggedInUser);
 
         CompetitionResource expectedCompetitionResource = newCompetitionResource().build();
         expectedCompetitionResource.setId(1L);
@@ -69,7 +73,7 @@ public class ApplicationDetailsSectionSaverTest {
         expectedCompetitionResource.setUseResubmissionQuestion(true);
 
         assertThat(result.isSuccess()).isTrue();
-        verify(competitionSetupRestServiceMock, times(1)).update(expectedCompetitionResource);
+        verify(competitionSetupRestService, times(1)).update(expectedCompetitionResource);
     }
 
     @Test
@@ -77,7 +81,9 @@ public class ApplicationDetailsSectionSaverTest {
         CompetitionResource competitionResource = newCompetitionResource().build();
         DetailsForm detailsForm = new DetailsForm();
 
-        ServiceResult<Void> result = service.doSaveSection(competitionResource, detailsForm);
+        UserResource loggedInUser = newUserResource().build();
+
+        ServiceResult<Void> result = service.doSaveSection(competitionResource, detailsForm, loggedInUser);
 
         assertThat(result.isFailure()).isTrue();
         assertThat(result.getErrors().size()).isEqualTo(3);
@@ -94,7 +100,7 @@ public class ApplicationDetailsSectionSaverTest {
                         error.getErrorKey().equals("validation.application.must.indicate.resubmission.or.not"))
                 .isNotEmpty();
 
-        verifyZeroInteractions(competitionSetupRestServiceMock);
+        verifyZeroInteractions(competitionSetupRestService);
     }
 
     @Test
@@ -105,7 +111,9 @@ public class ApplicationDetailsSectionSaverTest {
         detailsForm.setMaxProjectDuration(new BigDecimal(0));
         detailsForm.setMinProjectDuration(new BigDecimal(0));
 
-        ServiceResult<Void> result = service.doSaveSection(competitionResource, detailsForm);
+        UserResource loggedInUser = newUserResource().build();
+
+        ServiceResult<Void> result = service.doSaveSection(competitionResource, detailsForm, loggedInUser);
 
         assertThat(result.isFailure()).isTrue();
         assertThat(result.getErrors().size()).isEqualTo(2);
@@ -118,7 +126,7 @@ public class ApplicationDetailsSectionSaverTest {
                         error.getErrorKey().equals("competition.setup.applicationdetails.projectduration.min"))
                 .isNotEmpty();
 
-        verifyZeroInteractions(competitionSetupRestServiceMock);
+        verifyZeroInteractions(competitionSetupRestService);
     }
 
     @Test
@@ -129,7 +137,9 @@ public class ApplicationDetailsSectionSaverTest {
         detailsForm.setMaxProjectDuration(new BigDecimal(-1));
         detailsForm.setMinProjectDuration(new BigDecimal(-1));
 
-        ServiceResult<Void> result = service.doSaveSection(competitionResource, detailsForm);
+        UserResource loggedInUser = newUserResource().build();
+
+        ServiceResult<Void> result = service.doSaveSection(competitionResource, detailsForm, loggedInUser);
 
         assertThat(result.isFailure()).isTrue();
         assertThat(result.getErrors().size()).isEqualTo(2);
@@ -142,7 +152,7 @@ public class ApplicationDetailsSectionSaverTest {
                         error.getErrorKey().equals("competition.setup.applicationdetails.projectduration.min"))
                 .isNotEmpty();
 
-        verifyZeroInteractions(competitionSetupRestServiceMock);
+        verifyZeroInteractions(competitionSetupRestService);
     }
 
     @Test
@@ -153,7 +163,9 @@ public class ApplicationDetailsSectionSaverTest {
         detailsForm.setMinProjectDuration(new BigDecimal(3.5));
         detailsForm.setMaxProjectDuration(new BigDecimal(3.5));
 
-        ServiceResult<Void> result = service.doSaveSection(competitionResource, detailsForm);
+        UserResource loggedInUser = newUserResource().build();
+
+        ServiceResult<Void> result = service.doSaveSection(competitionResource, detailsForm, loggedInUser);
 
         assertThat(result.isFailure()).isTrue();
         assertThat(result.getErrors().size()).isEqualTo(2);
@@ -166,7 +178,7 @@ public class ApplicationDetailsSectionSaverTest {
                         error.getErrorKey().equals("validation.standard.integer.non.decimal.format"))
                 .isNotEmpty();
 
-        verifyZeroInteractions(competitionSetupRestServiceMock);
+        verifyZeroInteractions(competitionSetupRestService);
     }
 
     @Test
@@ -178,13 +190,15 @@ public class ApplicationDetailsSectionSaverTest {
         detailsForm.setMaxProjectDuration(new BigDecimal(10));
         detailsForm.setUseResubmissionQuestion(true);
 
-        when(competitionSetupRestServiceMock.update(any())).thenReturn(RestResult.restSuccess());
+        UserResource loggedInUser = newUserResource().build();
 
-        ServiceResult<Void> result = service.doSaveSection(competitionResource, detailsForm);
+        when(competitionSetupRestService.update(any())).thenReturn(RestResult.restSuccess());
+
+        ServiceResult<Void> result = service.doSaveSection(competitionResource, detailsForm, loggedInUser);
 
         assertThat(result.isSuccess()).isTrue();
 
-        verify(competitionSetupRestServiceMock, times(1)).update(any());
+        verify(competitionSetupRestService, times(1)).update(any());
     }
 
     @Test
@@ -196,7 +210,9 @@ public class ApplicationDetailsSectionSaverTest {
         detailsForm.setMaxProjectDuration(new BigDecimal(10));
         detailsForm.setUseResubmissionQuestion(false);
 
-        ServiceResult<Void> result = service.doSaveSection(competitionResource, detailsForm);
+        UserResource loggedInUser = newUserResource().build();
+
+        ServiceResult<Void> result = service.doSaveSection(competitionResource, detailsForm, loggedInUser);
 
         assertThat(result.isFailure()).isTrue();
         assertThat(result.getErrors().size()).isEqualTo(2);
@@ -209,7 +225,7 @@ public class ApplicationDetailsSectionSaverTest {
                         error.getErrorKey().equals("competition.setup.applicationdetails.max.projectduration.beneathmin"))
                 .isNotEmpty();
 
-        verifyZeroInteractions(competitionSetupRestServiceMock);
+        verifyZeroInteractions(competitionSetupRestService);
     }
 
     @Test
@@ -220,7 +236,9 @@ public class ApplicationDetailsSectionSaverTest {
         detailsForm.setMaxProjectDuration(new BigDecimal(85));
         detailsForm.setUseResubmissionQuestion(false);
 
-        ServiceResult<Void> result = service.doSaveSection(competitionResource, detailsForm);
+        UserResource loggedInUser = newUserResource().build();
+
+        ServiceResult<Void> result = service.doSaveSection(competitionResource, detailsForm, loggedInUser);
 
         assertThat(result.isFailure()).isTrue();
         assertThat(result.getErrors().size()).isEqualTo(2);
@@ -233,6 +251,6 @@ public class ApplicationDetailsSectionSaverTest {
                         error.getErrorKey().equals("competition.setup.applicationdetails.projectduration.max"))
                 .isNotEmpty();
 
-        verifyZeroInteractions(competitionSetupRestServiceMock);
+        verifyZeroInteractions(competitionSetupRestService);
     }
 }

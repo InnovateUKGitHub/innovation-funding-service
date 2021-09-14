@@ -155,7 +155,8 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     @Override
     public ServiceResult<Void> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
                                                            CompetitionResource competitionResource,
-                                                           CompetitionSetupSection section) {
+                                                           CompetitionSetupSection section,
+                                                           UserResource loggedInUser) {
         checkCompetitionInitialDetailsComplete(competitionResource, section);
 
         CompetitionSetupSectionUpdater saver = sectionSavers.get(section);
@@ -164,7 +165,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
             throw new IllegalArgumentException();
         }
 
-        return saver.saveSection(competitionResource, competitionSetupForm).andOnSuccess(() -> {
+        return saver.saveSection(competitionResource, competitionSetupForm, loggedInUser).andOnSuccess(() -> {
             if (competitionSetupForm.isMarkAsCompleteAction()) {
                 return competitionSetupRestService.markSectionComplete(competitionResource.getId(), section).toServiceResult();
             }
@@ -184,7 +185,8 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     public ServiceResult<Void> saveCompetitionSetupSubsection(CompetitionSetupForm competitionSetupForm,
                                                               CompetitionResource competitionResource,
                                                               CompetitionSetupSection section,
-                                                              CompetitionSetupSubsection subsection) {
+                                                              CompetitionSetupSubsection subsection,
+                                                              UserResource loggedInUser) {
 
         checkCompetitionInitialDetailsComplete(competitionResource, section);
         checkIfSubsectionIsInSection(section, subsection);
@@ -195,7 +197,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
             throw new IllegalArgumentException();
         }
 
-        ServiceResult<Void> result = saver.saveSection(competitionResource, competitionSetupForm);
+        ServiceResult<Void> result = saver.saveSection(competitionResource, competitionSetupForm, loggedInUser);
         result.andOnSuccess(() -> {
             markQuestionAsComplete(subsection, competitionSetupForm, competitionResource.getId());
             markSubSectionAsComplete(subsection, competitionResource.getId());

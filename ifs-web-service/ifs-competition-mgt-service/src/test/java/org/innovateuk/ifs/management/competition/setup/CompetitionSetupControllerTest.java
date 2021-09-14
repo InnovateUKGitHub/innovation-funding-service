@@ -64,7 +64,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -559,20 +560,11 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .build();
 
         when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(Boolean.FALSE);
-
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+        when(competitionSetupService.getNextSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(CompetitionSetupSection.INITIAL_DETAILS)))
+                .thenReturn(serviceSuccess(String.format("redirect:%s", redirectUrl)));
 
-        when(competitionSetupService.getNextSetupSection(
-                isA(CompetitionSetupForm.class),
-                eq(competition),
-                eq(CompetitionSetupSection.INITIAL_DETAILS))
-        ).thenReturn(serviceSuccess(String.format("redirect:%s", redirectUrl)));
-
-        when(competitionSetupService.saveCompetitionSetupSection(
-                isA(CompetitionSetupForm.class),
-                eq(competition),
-                eq(CompetitionSetupSection.INITIAL_DETAILS))
-        )
+        when(competitionSetupService.saveCompetitionSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(CompetitionSetupSection.INITIAL_DETAILS), eq(loggedInUser)))
                 .thenReturn(serviceSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial")
@@ -596,7 +588,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         verify(competitionSetupService).saveCompetitionSetupSection(isA(CompetitionSetupForm.class),
                 eq(competition),
-                eq(CompetitionSetupSection.INITIAL_DETAILS));
+                eq(CompetitionSetupSection.INITIAL_DETAILS),
+                eq(loggedInUser));
     }
 
     @Test
@@ -660,7 +653,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         when(competitionSetupService.saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
                 eq(competition),
-                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY))
+                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY),
+                eq(loggedInUser))
         )
                 .thenReturn(serviceSuccess());
 
@@ -683,7 +677,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         verify(competitionSetupService).saveCompetitionSetupSection(isA(CompetitionSetupForm.class),
                 eq(competition),
-                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY));
+                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY),
+                eq(loggedInUser));
     }
 
     @Test
@@ -711,7 +706,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         verify(competitionSetupService, never()).saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
                 eq(competition),
-                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY)
+                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY),
+                eq(loggedInUser)
         );
     }
 
@@ -740,7 +736,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         verify(competitionSetupService, never()).saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
                 eq(competition),
-                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY)
+                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY),
+                eq(loggedInUser)
         );
     }
 
@@ -764,7 +761,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         when(competitionSetupService.saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
                 eq(competition),
-                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY))
+                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY),
+                eq(loggedInUser))
         )
                 .thenReturn(serviceSuccess());
 
@@ -789,7 +787,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         verify(competitionSetupService).saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
                 eq(competition),
-                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY)
+                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY),
+                eq(loggedInUser)
         );
     }
 
@@ -815,7 +814,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         when(competitionSetupService.saveCompetitionSetupSection(
                 any(AdditionalInfoForm.class),
-                any(CompetitionResource.class), any(CompetitionSetupSection.class))
+                any(CompetitionResource.class), any(CompetitionSetupSection.class),
+                eq(loggedInUser))
         )
                 .thenReturn(serviceSuccess());
 
@@ -839,7 +839,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         verify(competitionSetupService, atLeastOnce()).saveCompetitionSetupSection(
                 any(AdditionalInfoForm.class),
                 any(CompetitionResource.class),
-                any(CompetitionSetupSection.class)
+                any(CompetitionSetupSection.class),
+                eq(loggedInUser)
         );
 
         verify(validator).validate(any(AdditionalInfoForm.class), any(BindingResult.class));
@@ -864,7 +865,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         when(competitionSetupService.saveCompetitionSetupSection(
                 any(CompletionStageForm.class),
                 eq(competition),
-                eq(CompetitionSetupSection.COMPLETION_STAGE))).thenReturn(serviceSuccess());
+                eq(CompetitionSetupSection.COMPLETION_STAGE),
+                eq(loggedInUser))).thenReturn(serviceSuccess());
 
         // assert that after a successful submission, the view moves on to the Milestones page
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/completion-stage")
@@ -882,7 +884,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                     assertThat(((CompletionStageForm) form).getSelectedCompletionStage()).isEqualTo(CompetitionCompletionStage.COMPETITION_CLOSE);
                 }),
                 eq(competition),
-                eq(CompetitionSetupSection.COMPLETION_STAGE));
+                eq(CompetitionSetupSection.COMPLETION_STAGE),
+                eq(loggedInUser));
     }
 
     @Test
@@ -901,7 +904,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                         "selectedCompletionStage", "NotNull"))
                 .andExpect(view().name("competition/setup"));
 
-        verify(competitionSetupService, never()).saveCompetitionSetupSection(any(), any(), any());
+        verify(competitionSetupService, never()).saveCompetitionSetupSection(any(), any(), any(), eq(loggedInUser));
     }
 
     @Test
@@ -943,7 +946,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         when(competitionSetupService.saveCompetitionSetupSection(
                 any(ApplicationSubmissionForm.class),
                 eq(competition),
-                eq(CompetitionSetupSection.APPLICATION_SUBMISSION))).thenReturn(serviceSuccess());
+                eq(CompetitionSetupSection.APPLICATION_SUBMISSION),
+                eq(loggedInUser))).thenReturn(serviceSuccess());
 
         // assert that after a successful submission, the view moves on to the Milestones page
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/application-submission")
@@ -961,7 +965,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                     assertThat(((ApplicationSubmissionForm) form).getAlwaysOpen()).isEqualTo(true);
                 }),
                 eq(competition),
-                eq(CompetitionSetupSection.APPLICATION_SUBMISSION));
+                eq(CompetitionSetupSection.APPLICATION_SUBMISSION),
+                eq(loggedInUser));
     }
 
     @Test
@@ -980,7 +985,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                         "alwaysOpen", "NotNull"))
                 .andExpect(view().name("competition/setup"));
 
-        verify(competitionSetupService, never()).saveCompetitionSetupSection(any(), any(), any());
+        verify(competitionSetupService, never()).saveCompetitionSetupSection(any(), any(), any(), eq(loggedInUser));
     }
 
     @Test
@@ -1017,7 +1022,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         when(competitionSetupService.saveCompetitionSetupSection(
                 any(MilestonesForm.class),
                 eq(competition),
-                eq(CompetitionSetupSection.MILESTONES))).thenReturn(serviceSuccess());
+                eq(CompetitionSetupSection.MILESTONES),
+                eq(loggedInUser))).thenReturn(serviceSuccess());
 
         when(competitionSetupService.getNextSetupSection(
                 any(MilestonesForm.class),
@@ -1037,7 +1043,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         verify(competitionSetupService, times(1)).saveCompetitionSetupSection(
                 any(MilestonesForm.class),
                 eq(competition),
-                eq(CompetitionSetupSection.MILESTONES));
+                eq(CompetitionSetupSection.MILESTONES),
+                eq(loggedInUser));
     }
 
     @Test
@@ -1134,7 +1141,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         when(competitionSetupService.saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
                 eq(competition),
-                eq(CompetitionSetupSection.ASSESSORS))).thenReturn(serviceSuccess()
+                eq(CompetitionSetupSection.ASSESSORS),
+                eq(loggedInUser))).thenReturn(serviceSuccess()
         );
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/assessors")
@@ -1154,7 +1162,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         verify(competitionSetupService).saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
                 eq(competition),
-                eq(CompetitionSetupSection.ASSESSORS));
+                eq(CompetitionSetupSection.ASSESSORS),
+                eq(loggedInUser));
     }
 
     @Test
