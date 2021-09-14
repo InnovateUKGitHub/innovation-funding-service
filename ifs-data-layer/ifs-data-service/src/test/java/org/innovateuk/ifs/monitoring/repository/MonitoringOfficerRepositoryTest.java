@@ -18,12 +18,15 @@ import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.Rollback;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -32,9 +35,8 @@ import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProj
 import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class MonitoringOfficerRepositoryTest extends BaseRepositoryIntegrationTest<MonitoringOfficerRepository> {
 
@@ -133,9 +135,10 @@ public class MonitoringOfficerRepositoryTest extends BaseRepositoryIntegrationTe
     @Rollback
     @Test
     public void filterMonitoringOfficerProjectsByStates() {
-        List<MonitoringOfficer> monitoringOfficerOnProjects = repository.filterMonitoringOfficerProjectsByStates(monitoringOfficer.getId(),
-                asList(SETUP, LIVE));
+        Page<MonitoringOfficer> monitoringOfficerPages = repository.filterMonitoringOfficerProjectsByStates(monitoringOfficer.getId(),
+                asList(SETUP, LIVE), PageRequest.of(0, 10) );
 
+        List<MonitoringOfficer> monitoringOfficerOnProjects = monitoringOfficerPages.getContent();
         assertEquals(2, monitoringOfficerOnProjects.size());
 
         assertTrue(monitoringOfficerOnProjects.stream()
@@ -156,9 +159,10 @@ public class MonitoringOfficerRepositoryTest extends BaseRepositoryIntegrationTe
     public void filterMonitoringOfficerProjectsByProjectId() {
         Long project1DisplayId =  project1.getApplication().getId();
 
-        List<MonitoringOfficer> monitoringOfficerOnProjects = repository.filterMonitoringOfficerProjectsByKeywordsByStates(monitoringOfficer.getId(),
-                project1DisplayId.toString(), asList(SETUP, LIVE));
+        Page<MonitoringOfficer> monitoringOfficerPages = repository.filterMonitoringOfficerProjectsByKeywordsByStates(monitoringOfficer.getId(),
+                project1DisplayId.toString(), asList(SETUP, LIVE), PageRequest.of(0, 10));
 
+        List<MonitoringOfficer> monitoringOfficerOnProjects = monitoringOfficerPages.getContent();
         assertEquals(1, monitoringOfficerOnProjects.size());
 
         assertTrue(monitoringOfficerOnProjects.stream()
@@ -172,21 +176,24 @@ public class MonitoringOfficerRepositoryTest extends BaseRepositoryIntegrationTe
     @Rollback
     @Test
     public void filterMonitoringOfficerProjectsByKeyword() {
-        List<MonitoringOfficer> monitoringOfficerOnProjects = repository.filterMonitoringOfficerProjectsByKeywordsByStates(monitoringOfficer.getId(),
-                "%competition%", asList(SETUP, LIVE));
+        Page<MonitoringOfficer> monitoringOfficerPages = repository.filterMonitoringOfficerProjectsByKeywordsByStates(monitoringOfficer.getId(),
+                "%competition%", asList(SETUP, LIVE), PageRequest.of(0, 10));
 
-        assertEquals(2, monitoringOfficerOnProjects.size());
+        List<MonitoringOfficer> monitoringOfficersContent = monitoringOfficerPages.getContent();
 
-        assertTrue(monitoringOfficerOnProjects.stream()
+        assertEquals(2, monitoringOfficersContent.size());
+
+        assertTrue(monitoringOfficersContent.stream()
                 .anyMatch(mp -> mp.getUser().getId().equals(monitoringOfficer.getId())
                         && mp.getProject().getId().equals(project1.getId())
                         && mp.getProject().getProjectState().equals(SETUP)));
-        assertTrue(monitoringOfficerOnProjects.stream()
+        assertTrue(monitoringOfficersContent.stream()
                 .anyMatch(mp -> mp.getUser().getId().equals(monitoringOfficer.getId())
                         && mp.getProject().getId().equals(project2.getId())
                         && mp.getProject().getProjectState().equals(LIVE)));
 
-        assertTrue(monitoringOfficerOnProjects.get(0).getProject().getId() <  monitoringOfficerOnProjects.get(1).getProject().getId());
-        assertThat(monitoringOfficerOnProjects).containsExactlyInAnyOrder(monitoringOfficerProject1, monitoringOfficerProject2);
+
+        assertTrue(monitoringOfficersContent.get(0).getProject().getId() <  monitoringOfficersContent.get(1).getProject().getId());
+        assertThat(monitoringOfficersContent).containsExactlyInAnyOrder(monitoringOfficerProject1, monitoringOfficerProject2);
     }
 }

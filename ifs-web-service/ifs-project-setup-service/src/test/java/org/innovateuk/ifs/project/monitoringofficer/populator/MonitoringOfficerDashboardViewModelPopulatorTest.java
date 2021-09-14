@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerDashboardPageResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerDashboardViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerSummaryViewModel;
@@ -124,6 +125,7 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
     public void populateApplyFilterAndSorting() {
         ReflectionTestUtils.setField(populator, "isMOJourneyUpdateEnabled", true);
         ReflectionTestUtils.setField(populator, "isMOSpendProfileUpdateEnabled", true);
+        ReflectionTestUtils.setField(populator, "moDashboardFilterEnabled", true);
 
         ProjectResource projectResourceInSetup = newProjectResource()
                 .withId(88L)
@@ -164,8 +166,15 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
         projectResourceList.add(projectResourceInSetup);
         projectResourceList.add(projectResourceInLive);
 
-        when(monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(), "Competition name", true, true))
-                .thenReturn(restSuccess(projectResourceList));
+        MonitoringOfficerDashboardPageResource monitoringOfficerDashboardPageResource = new MonitoringOfficerDashboardPageResource();
+        monitoringOfficerDashboardPageResource.setContent(projectResourceList);
+        monitoringOfficerDashboardPageResource.setNumber(0);
+        monitoringOfficerDashboardPageResource.setSize(10);
+        monitoringOfficerDashboardPageResource.setTotalElements(projectResourceList.size());
+        monitoringOfficerDashboardPageResource.setTotalPages(1);
+
+        when(monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(), 0, 10, "Competition name", true, true))
+                .thenReturn(restSuccess(monitoringOfficerDashboardPageResource));
         when(projectFilterPopulator.getProjectsWithDocumentsComplete(projectResourceList)).thenReturn(singletonList(projectResourceList.get(1)));
         when(projectFilterPopulator.getProjectsWithDocumentsInComplete(projectResourceList)).thenReturn(emptyList());
         when(projectFilterPopulator.getProjectsWithDocumentsAwaitingReview(projectResourceList)).thenReturn(singletonList(projectResourceList.get(0)));
@@ -191,7 +200,7 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
         when(projectFilterPopulator.hasSpendProfileSection(projectResourceList.get(0))).thenReturn(true);
         when(projectFilterPopulator.hasSpendProfileSection(projectResourceList.get(1))).thenReturn(true);
 
-        MonitoringOfficerDashboardViewModel viewModel = populator.populate(user, "Competition name", true, true, true, false, true, true, false, false);
+        MonitoringOfficerDashboardViewModel viewModel = populator.populate(user, "Competition name", true, true, true, false, true, true, false, false, 0, 10);
 
         assertEquals(2, viewModel.getProjects().size());
 

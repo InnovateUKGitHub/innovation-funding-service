@@ -44,22 +44,19 @@ public class ProjectFilterPopulator {
 
     public List<ProjectResource> getProjectsWithDocumentsComplete(List<ProjectResource> projects) {
         return projects.stream()
-                .filter(project -> hasDocumentSection(project)
-                        && sectionStatus.documentsSectionStatus(false, project, competitionRestService.getCompetitionForProject(project.getId()).getSuccess(), true).equals(TICK))
+                .filter(project -> sectionStatus.documentsSectionStatus(false, project, competitionRestService.getCompetitionForProject(project.getId()).getSuccess(), true).equals(TICK))
                 .collect(Collectors.toList());
     }
 
     public List<ProjectResource> getProjectsWithDocumentsInComplete(List<ProjectResource> projects) {
         return projects.stream()
-                .filter(project -> hasDocumentSection(project)
-                        && sectionStatus.documentsSectionStatus(false, project, competitionRestService.getCompetitionForProject(project.getId()).getSuccess(), true).equals(INCOMPLETE))
+                .filter(project -> sectionStatus.documentsSectionStatus(false, project, competitionRestService.getCompetitionForProject(project.getId()).getSuccess(), true).equals(INCOMPLETE))
                 .collect(Collectors.toList());
     }
 
     public List<ProjectResource> getProjectsWithDocumentsAwaitingReview(List<ProjectResource> projects) {
         return projects.stream()
-                .filter(project -> hasDocumentSection(project)
-                        && sectionStatus.documentsSectionStatus(false, project, competitionRestService.getCompetitionForProject(project.getId()).getSuccess(), true).equals(MO_ACTION_REQUIRED))
+                .filter(project -> sectionStatus.documentsSectionStatus(false, project, competitionRestService.getCompetitionForProject(project.getId()).getSuccess(), true).equals(MO_ACTION_REQUIRED))
                 .collect(Collectors.toList());
     }
 
@@ -76,19 +73,19 @@ public class ProjectFilterPopulator {
 
     public List<ProjectResource> getProjectsWithSpendProfileComplete(List<ProjectResource> projects) {
         return projects.stream()
-                .filter(project -> hasSpendProfileSection(project) && getSpendProfileSectionStatus(project).equals(TICK))
+                .filter(project -> getSpendProfileSectionStatus(project).equals(TICK))
                 .collect(Collectors.toList());
     }
 
     public List<ProjectResource> getProjectsWithSpendProfileInComplete(List<ProjectResource> projects) {
         return projects.stream()
-                .filter(project -> hasSpendProfileSection(project) && getSpendProfileSectionStatus(project).equals(INCOMPLETE))
+                .filter(project -> getSpendProfileSectionStatus(project).equals(INCOMPLETE))
                 .collect(Collectors.toList());
     }
 
     public List<ProjectResource> getProjectsWithSpendProfileAwaitingReview(List<ProjectResource> projects) {
         return projects.stream()
-                .filter(project -> hasSpendProfileSection(project) && getSpendProfileSectionStatus(project).equals(MO_ACTION_REQUIRED))
+                .filter(project -> getSpendProfileSectionStatus(project).equals(MO_ACTION_REQUIRED))
                 .collect(Collectors.toList());
     }
 
