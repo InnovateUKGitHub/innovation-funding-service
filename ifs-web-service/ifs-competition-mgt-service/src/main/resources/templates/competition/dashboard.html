@@ -81,12 +81,12 @@
                     </th:block>
                     <th:block th:unless="${projectSetup}">
                         <a th:href="@{/competition/setup/{competitionId}(competitionId=${competition.id})}"
-                           th:if="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}"
+                           th:if="${competition.competitionStatus == model.getSetupCompetitionStatus()}"
                            class="govuk-link">
                             <th:block th:insert="competition/dashboard :: competition-name"/>
                         </a>
                         <a th:href="@{/competition/{competitionId}/previous(competitionId=${competition.id})}"
-                           th:if="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PREVIOUS}"
+                           th:if="${competition.competitionStatus == model.getPreviousCompetitionStatus()}"
                            class="govuk-link">
                             <th:block th:insert="competition/dashboard :: competition-name"/>
                         </a>

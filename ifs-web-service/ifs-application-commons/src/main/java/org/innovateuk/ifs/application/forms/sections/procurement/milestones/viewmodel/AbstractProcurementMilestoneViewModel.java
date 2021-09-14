@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.application.forms.sections.procurement.milestones.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
+import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 
 import java.math.BigInteger;
 import java.math.RoundingMode;
@@ -32,4 +34,9 @@ public abstract class AbstractProcurementMilestoneViewModel {
     }
 
     public abstract boolean isReadOnly();
+
+    @JsonIgnore
+    public String getEligibilityFinanceCheckName() {
+        return FinanceChecksSectionType.ELIGIBILITY.name();
+    }
 }
