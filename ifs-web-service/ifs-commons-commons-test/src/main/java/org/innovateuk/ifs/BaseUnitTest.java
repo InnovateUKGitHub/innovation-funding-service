@@ -1,9 +1,8 @@
 package org.innovateuk.ifs;
 
+import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.junit.Before;
 import org.mockito.MockitoAnnotations;
-
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.clearUniqueIds;
 
 public abstract class BaseUnitTest {
 
@@ -13,6 +12,6 @@ public abstract class BaseUnitTest {
         MockitoAnnotations.initMocks(this);
 
         // start with fresh ids when using builders
-        clearUniqueIds();
+        BaseBuilderAmendFunctions.clearUniqueIds();
     }
 }

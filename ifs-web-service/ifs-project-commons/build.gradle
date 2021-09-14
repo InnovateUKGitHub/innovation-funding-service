@@ -29,6 +29,7 @@ dependencies {
     compile 'org.innovateuk.ifs.libraries:ifs-rest-api-service'
     compile "org.innovateuk.ifs.libraries:ifs-rest-util"
 
+    testCompile project(":ifs-web-service:ifs-commons-commons-test")
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
     testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
 

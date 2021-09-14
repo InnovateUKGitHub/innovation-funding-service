@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.analytics.GoogleAnalyticsUtil;
 import org.innovateuk.ifs.commons.exception.*;
 import org.innovateuk.ifs.interceptors.MenuLinksHandlerInterceptor;
 import org.innovateuk.ifs.util.MessageUtil;
@@ -29,8 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.analytics.GoogleAnalyticsUtil.EMPTY_VALUE;
-import static org.innovateuk.ifs.analytics.GoogleAnalyticsUtil.addGoogleAnalytics;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
@@ -53,7 +52,7 @@ public class ErrorControllerAdvice {
     @Value("${logout.url}")
     private String logoutUrl;
 
-    @Value("${ifs.web.googleanalytics.trackingid:" + EMPTY_VALUE + "}")
+    @Value("${ifs.web.googleanalytics.trackingid:" + GoogleAnalyticsUtil.EMPTY_VALUE + "}")
     private String googleAnalyticsKeys;
 
     public ErrorControllerAdvice() {
@@ -323,7 +322,7 @@ public class ErrorControllerAdvice {
         if (showUrl) {
             mav.addObject("url", req.getRequestURL().toString());
         }
-        addGoogleAnalytics(mav, googleAnalyticsKeys);
+        GoogleAnalyticsUtil.addGoogleAnalytics(mav, googleAnalyticsKeys);
         mav.addAllObjects(populateExceptionMap(e, req, arguments));
         LOG.error(String.format("Error caught and returning error page. url: %s Original error:", req.getRequestURI()), e);
         return mav;
