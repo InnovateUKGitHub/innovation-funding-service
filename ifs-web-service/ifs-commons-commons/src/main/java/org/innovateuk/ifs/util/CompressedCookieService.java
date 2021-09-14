@@ -13,11 +13,11 @@ public class CompressedCookieService extends AbstractCookieService {
 
     @Override
     protected String getValueToSave(String value) {
-        return getCompressedString(value);
+        return CompressionUtil.getCompressedString(value);
     }
 
     @Override
     protected String getValueFromCookie(String value) {
-        return getDecompressedString(value);
+        return CompressionUtil.getDecompressedString(value);
     }
 }

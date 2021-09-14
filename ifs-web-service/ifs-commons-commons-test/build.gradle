@@ -24,6 +24,7 @@ dependencies {
     compile 'org.innovateuk.ifs.libraries:ifs-resources'
     compile 'org.innovateuk.ifs.libraries:ifs-rest-util'
     compile 'org.innovateuk.ifs.libraries:ifs-rest-api-service'
+    compile 'org.innovateuk.ifs.libraries:ifs-security-test'
     compile "junit:junit"
     compile "org.mockito:mockito-core"
 }

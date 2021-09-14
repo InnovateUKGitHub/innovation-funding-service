@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.util;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,8 +12,6 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import static java.nio.charset.Charset.defaultCharset;
-import static org.apache.commons.codec.binary.Base64.decodeBase64;
-import static org.apache.commons.codec.binary.Base64.encodeBase64String;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 
 public final class CompressionUtil {
@@ -29,7 +28,7 @@ public final class CompressionUtil {
             GZIPOutputStream zos = new GZIPOutputStream(baos);
             zos.write(rawString.getBytes());
             closeQuietly(zos);
-            compressedString = encodeBase64String(baos.toByteArray());
+            compressedString = Base64.encodeBase64String(baos.toByteArray());
         } catch (IOException e) {
             LOG.error(e);
         }
@@ -39,7 +38,7 @@ public final class CompressionUtil {
     public static String getDecompressedString(String compressedString) {
         String decompressedString = "";
 
-        byte[] bytes = decodeBase64(compressedString);
+        byte[] bytes = Base64.decodeBase64(compressedString);
 
         try (GZIPInputStream zis = new GZIPInputStream(new ByteArrayInputStream(bytes))) {
             decompressedString = IOUtils.toString(zis, defaultCharset());

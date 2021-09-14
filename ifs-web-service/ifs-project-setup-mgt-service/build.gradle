@@ -72,13 +72,10 @@ dependencies {
     compile project(':ifs-web-service:ifs-project-commons')
     compile project(':ifs-web-service:ifs-application-commons')
 
-//    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
     testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
 
-    testCompile project(path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
-    testCompile project(path: ":ifs-web-service:ifs-application-commons", configuration: 'testArtifacts')
-    testCompile project(path: ":ifs-web-service:ifs-project-commons", configuration: 'testArtifacts')
+    testCompile project(":ifs-web-service:ifs-commons-commons-test")
 
     testCompile "com.opencsv:opencsv"
     testCompile "junit:junit"

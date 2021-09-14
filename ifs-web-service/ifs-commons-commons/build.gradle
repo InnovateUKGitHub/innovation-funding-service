@@ -26,5 +26,6 @@ dependencies {
     compile "org.innovateuk.ifs.libraries:ifs-security"
 
     compile "org.springframework.security:spring-security-web"
+    compile "commons-codec:commons-codec"
 
 }
