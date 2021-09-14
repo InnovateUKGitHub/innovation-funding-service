@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.review.viewmodel;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 /**
@@ -52,4 +53,10 @@ public class ReviewViewModel {
     public boolean isPendingReviewNotifications() {
         return pendingReviewNotifications;
     }
+
+    @JsonIgnore
+    public CompetitionStatus getFundersPanelCompStatus() {
+        return CompetitionStatus.FUNDERS_PANEL;
+    }
+
 }

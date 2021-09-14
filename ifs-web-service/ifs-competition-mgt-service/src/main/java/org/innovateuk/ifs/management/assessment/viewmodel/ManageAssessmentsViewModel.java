@@ -1,11 +1,13 @@
 package org.innovateuk.ifs.management.assessment.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.commons.resource.PageResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.management.assessmentperiod.model.AssessmentPeriodViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
 
@@ -94,6 +96,16 @@ public class ManageAssessmentsViewModel {
 
     public Pagination getPagination() {
         return pagination;
+    }
+
+    @JsonIgnore
+    public MilestoneType getAssessorBriefingMilestoneType() {
+        return MilestoneType.ASSESSOR_BRIEFING;
+    }
+
+    @JsonIgnore
+    public MilestoneType getAssessorDeadLineMilestoneType() {
+        return MilestoneType.ASSESSOR_DEADLINE;
     }
 
     @Override

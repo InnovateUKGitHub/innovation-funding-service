@@ -152,7 +152,7 @@
                                 </td>
                                 <td class="govuk-table__cell">
                                     <th:block th:if="${assessmentPeriod.valid}">
-                                        <th:block th:if="${milestone.milestoneType == T(org.innovateuk.ifs.competition.resource.MilestoneType).ASSESSOR_BRIEFING}">
+                                        <th:block th:if="${milestone.milestoneType == model.getAssessorBriefingMilestoneType()}">
                                             <button th:if="${!assessmentPeriod.hasAssessmentClosedMilestone}"
                                                     th:disabled="${!assessmentPeriod.canNotifyAssessors()}"
                                                     type="submit"
@@ -160,7 +160,7 @@
                                                     class="govuk-button">Notify assessors
                                             </button>
                                         </th:block>
-                                        <th:block th:if="${milestone.milestoneType == T(org.innovateuk.ifs.competition.resource.MilestoneType).ASSESSOR_DEADLINE}">
+                                        <th:block th:if="${milestone.milestoneType == model.getAssessorDeadLineMilestoneType()}">
                                             <button th:if="${assessmentPeriod.canCloseAssessment()}"
                                                     type="submit"
                                                     th:formaction="@{/assessment/competition/{competitionId}/assessment-period/{assessmentPeriodId}/close-assessment/(competitionId=${model.competitionId}, assessmentPeriodId=${assessmentPeriod.assessmentPeriodId}, page=${model.pagination.currentPage})}"

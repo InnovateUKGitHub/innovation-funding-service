@@ -65,4 +65,14 @@ public abstract class DashboardViewModel {
     public CompetitionStatus getReadyToOpenCompetitionStatus() {
         return CompetitionStatus.READY_TO_OPEN;
     }
+
+    @JsonIgnore
+    public CompetitionStatus getProjectSetupCompetitionStatus() {
+        return CompetitionStatus.PROJECT_SETUP;
+    }
+
+    @JsonIgnore
+    public CompetitionStatus getPreviousCompetitionStatus() {
+        return CompetitionStatus.PREVIOUS;
+    }
 }
