@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.competition.setup.core.viewmodel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -125,5 +126,15 @@ public class GeneralSetupViewModel {
     @JsonIgnore
     public boolean grantCompetition() {
         return competition.getFundingType() == FundingType.GRANT;
+    }
+
+    @JsonIgnore
+    public boolean competitionIsInAssessmentStatus() {
+        return state.getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT;
+    }
+
+    @JsonIgnore
+    public AssessorFinanceView[] assessorFinanceView() {
+        return AssessorFinanceView.values();
     }
 }
