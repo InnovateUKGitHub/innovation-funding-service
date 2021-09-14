@@ -1,15 +1,12 @@
 package org.innovateuk.ifs.project.grantofferletter.viewmodel;
 
-import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 
 import java.time.ZonedDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * View model backing the internal users' view of the Grant Offer Letter template page
@@ -130,6 +127,55 @@ public class GrantOfferLetterTemplateViewModel {
 
     public boolean isProcurement() {
         return isProcurement;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getLabourFinanceRowType() {
+        return FinanceRowType.LABOUR;
+    }
+    @JsonIgnore
+    public FinanceRowType getProcurementOverheadsFinanceRowType() {
+        return FinanceRowType.PROCUREMENT_OVERHEADS;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getOverheadsFinanceRowType() {
+        return FinanceRowType.OVERHEADS;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getMaterialsFinanceRowType() {
+        return FinanceRowType.MATERIALS;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getCapitalUsageFinanceRowType() {
+        return FinanceRowType.CAPITAL_USAGE;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getSubContractingCostsFinanceRowType() {
+        return FinanceRowType.SUBCONTRACTING_COSTS;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getTravelFinanceRowType() {
+        return FinanceRowType.TRAVEL;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getOtherCostsFinanceRowType() {
+        return FinanceRowType.OTHER_COSTS;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getVATFinanceRowType() {
+        return FinanceRowType.VAT;
+    }
+
+    @JsonIgnore
+    public FinanceRowType getOtherFundingFinanceRowType() {
+        return FinanceRowType.OTHER_FUNDING;
     }
 }
 
