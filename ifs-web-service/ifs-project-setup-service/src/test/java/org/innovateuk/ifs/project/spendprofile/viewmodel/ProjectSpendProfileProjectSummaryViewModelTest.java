@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.spendprofile.viewmodel;
 
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.project.spendprofile.controller.OrganisationReviewDetails;
+import org.innovateuk.ifs.spendprofile.OrganisationReviewDetails;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -23,25 +23,25 @@ public class ProjectSpendProfileProjectSummaryViewModelTest {
 
         viewModel = new ProjectSpendProfileProjectSummaryViewModel(null,
                 null, null, null, null, false, Collections.emptyMap(),
-                false, false, false, false);
+                false, false, false, false, null);
 
         assertFalse(viewModel.showMoSpendProfileJourney());
 
         viewModel = new ProjectSpendProfileProjectSummaryViewModel(null,
                 null, null, null, null, false, Collections.emptyMap(),
-                false, false, false, true);
+                false, false, false, true, null);
 
         assertFalse(viewModel.showMoSpendProfileJourney());
 
         viewModel = new ProjectSpendProfileProjectSummaryViewModel(null,
                 null, null, null, null, false, Collections.emptyMap(),
-                false, false, true, false);
+                false, false, true, false, null);
 
         assertFalse(viewModel.showMoSpendProfileJourney());
 
         viewModel = new ProjectSpendProfileProjectSummaryViewModel(null,
                 null, null, null, null, false, Collections.emptyMap(),
-                false, false, true, true);
+                false, false, true, true, null);
 
         assertTrue(viewModel.showMoSpendProfileJourney());
     }
@@ -52,25 +52,25 @@ public class ProjectSpendProfileProjectSummaryViewModelTest {
 
         viewModel = new ProjectSpendProfileProjectSummaryViewModel(null,
                 null, null, null, null, true, Collections.emptyMap(),
-                false, false, false, false);
+                false, false, false, false, null);
 
         assertTrue(viewModel.userCanReviewSpendProfile());
 
         viewModel = new ProjectSpendProfileProjectSummaryViewModel(null,
                 null, null, null, null, true, Collections.emptyMap(),
-                true, false, false, true);
+                true, false, false, true, null);
 
         assertFalse(viewModel.userCanReviewSpendProfile());
 
         viewModel = new ProjectSpendProfileProjectSummaryViewModel(null,
                 null, null, null, null, true, Collections.emptyMap(),
-                false, true, true, false);
+                false, true, true, false, null);
 
         assertFalse(viewModel.userCanReviewSpendProfile());
 
         viewModel = new ProjectSpendProfileProjectSummaryViewModel(null,
                 null, null, null, null, false, Collections.emptyMap(),
-                false, false, true, true);
+                false, false, true, true, null);
 
         assertFalse(viewModel.userCanReviewSpendProfile());
     }
@@ -91,7 +91,7 @@ public class ProjectSpendProfileProjectSummaryViewModelTest {
 
         viewModel = new ProjectSpendProfileProjectSummaryViewModel(null,
                 null, null, null, null, true, Collections.emptyMap(),
-                false, false, false, false);
+                false, false, false, false, null);
 
         assertFalse(viewModel.isSpendProfileReviewedByMO());
         assertNull(viewModel.spendProfileReviewedOn());
@@ -108,7 +108,7 @@ public class ProjectSpendProfileProjectSummaryViewModelTest {
 
         viewModel = new ProjectSpendProfileProjectSummaryViewModel(null,
                 null, null, null, leadOrganisation, true, editablePartnersWithMo,
-                true, false, false, true);
+                true, false, false, true, null);
 
         assertTrue(viewModel.isSpendProfileReviewedByMO());
         assertEquals(reviewedOn, viewModel.spendProfileReviewedOn());
@@ -125,7 +125,7 @@ public class ProjectSpendProfileProjectSummaryViewModelTest {
 
         viewModel = new ProjectSpendProfileProjectSummaryViewModel(null,
                 null, null, null, leadOrganisation, true, editablePartnersWithoutMo,
-                false, true, true, false);
+                false, true, true, false, null);
 
         assertFalse(viewModel.isSpendProfileReviewedByMO());
         assertNull(viewModel.spendProfileReviewedOn());

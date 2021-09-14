@@ -93,21 +93,16 @@ ext {
 }
 
 prepareDockerBaseInput {
-    inputs.dir file("$rootProject.projectDir/ifs-data-layer/data-service-notifications/build/classes")
-    inputs.dir file("$rootProject.projectDir/ifs-data-layer/data-service-file/build/classes")
     inputs.dir file("$rootProject.projectDir/ifs-data-layer/data-service-alerts/build/classes")
 
-    dependsOn ":ifs-data-layer:data-service-notifications:build"
-    dependsOn ":ifs-data-layer:data-service-file:build"
     dependsOn ":ifs-data-layer:data-service-alerts:build"
-
 }
 
 
 dependencies {
+    compile "org.innovateuk.ifs.libraries:ifs-data-service-file"
     compile "org.innovateuk.ifs.libraries:ifs-data-service-commons"
-    compile project(path: ":ifs-data-layer:data-service-notifications", configuration: 'default')
-    compile project(path: ":ifs-data-layer:data-service-file", configuration: 'default')
+    compile "org.innovateuk.ifs.libraries:ifs-data-service-notifications"
     compile "org.innovateuk.ifs.libraries:ifs-sil-resources"
     compile "org.innovateuk.ifs.libraries:ifs-error-util"
 
@@ -149,8 +144,7 @@ dependencies {
     testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
     testCompile "org.innovateuk.ifs.libraries:ifs-data-service-commons-test"
 
-    testCompile project(path: ":ifs-data-layer:data-service-file", configuration: 'testArtifacts')
-    testCompile project(path: ":ifs-data-layer:data-service-notifications", configuration: 'testArtifacts')
+    testCompile "org.innovateuk.ifs.libraries:ifs-data-service-notifications-test"
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile "com.openpojo:openpojo:0.8.4"
