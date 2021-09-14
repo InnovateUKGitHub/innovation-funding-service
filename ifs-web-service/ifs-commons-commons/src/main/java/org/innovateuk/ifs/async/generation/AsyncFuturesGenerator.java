@@ -2,6 +2,7 @@ package org.innovateuk.ifs.async.generation;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.async.exceptions.AsyncException;
 import org.innovateuk.ifs.async.executor.AsyncExecutorFactory;
 import org.innovateuk.ifs.async.generation.handler.*;
 import org.innovateuk.ifs.async.util.AsyncAllowedThreadLocal;
@@ -122,7 +123,7 @@ public class AsyncFuturesGenerator {
                 return null;
             } catch (Exception e) {
                 LOG.error("Error whilst processing Runnable Future", e);
-                throw getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst processing Runnable Future");
+                throw AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst processing Runnable Future");
             }
         };
 
@@ -139,7 +140,7 @@ public class AsyncFuturesGenerator {
             return CompletableFuture.completedFuture(value);
         } catch (Exception e) {
             LOG.error("Error whilst processing Supplier Future", e);
-            throw getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst processing Supplier Future");
+            throw AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst processing Supplier Future");
         }
     }
 
@@ -149,7 +150,7 @@ public class AsyncFuturesGenerator {
             return CompletableFuture.completedFuture(value);
         } catch (Exception e) {
             LOG.error("Error whilst processing Supplier Future", e);
-            throw getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst processing Supplier Future");
+            throw AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst processing Supplier Future");
         }
     }
 

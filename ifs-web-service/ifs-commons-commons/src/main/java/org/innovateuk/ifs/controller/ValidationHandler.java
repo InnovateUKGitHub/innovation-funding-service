@@ -3,6 +3,7 @@ package org.innovateuk.ifs.controller;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ErrorHolder;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -34,7 +35,7 @@ public class ValidationHandler {
     }
 
     public ValidationHandler addAnyErrors(List<Error> errors) {
-        return addAnyErrors(errors, fieldErrorsToFieldErrors(), asGlobalErrors());
+        return addAnyErrors(errors, ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors(), ErrorToObjectErrorConverterFactory.asGlobalErrors());
     }
     public ValidationHandler addError(Error error) {
         return addAnyErrors(newArrayList(error));
@@ -46,7 +47,7 @@ public class ValidationHandler {
 
     private ValidationHandler addAnyErrors(List<Error> errors, ErrorToObjectErrorConverter converter, ErrorToObjectErrorConverter... otherConverters) {
         errors.forEach(e -> {
-            List<Optional<ObjectError>> optionalConversionsForThisError = simpleMap(combineLists(converter, otherConverters), fn -> fn.apply(e));
+            List<Optional<ObjectError>> optionalConversionsForThisError = simpleMap(CollectionFunctions.combineLists(converter, otherConverters), fn -> fn.apply(e));
             Optional<Optional<ObjectError>> successfullyConvertedErrorList = simpleFindFirst(optionalConversionsForThisError, Optional::isPresent);
 
             if (successfullyConvertedErrorList.isPresent()) {
@@ -137,7 +138,7 @@ public class ValidationHandler {
 
             FailingOrSucceedingResult<?, ?> result = action.get();
 
-            return addAnyErrors(result, toField(field)).
+            return addAnyErrors(result, ErrorToObjectErrorConverterFactory.toField(field)).
                    failNowOrSucceedWith(failureView, successView);
         });
     }
@@ -147,7 +148,7 @@ public class ValidationHandler {
 
             FailingOrSucceedingResult<?, ?> result = action.get();
 
-            return addAnyErrors(result, fileUploadField(field), defaultConverters()).
+            return addAnyErrors(result, ErrorToObjectErrorConverterFactory.fileUploadField(field), ErrorToObjectErrorConverterFactory.defaultConverters()).
                     failNowOrSucceedWith(view, view);
         });
     }

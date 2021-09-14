@@ -2,7 +2,9 @@ package org.innovateuk.ifs.async.generation;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.async.exceptions.AsyncException;
 import org.innovateuk.ifs.async.util.AsyncAllowedThreadLocal;
+import org.innovateuk.ifs.util.CollectionFunctions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,8 +78,8 @@ public final class AsyncFuturesHolder {
     }
 
     static void addCurrentFutureBeingProcessed(String futureName, AsyncFutureDetails parentFuture) {
-        List<String> newThreadAncestry = combineLists(parentFuture.getThreadAncestry(), parentFuture.getThreadName());
-        List<String> newFutureAncestry = combineLists(parentFuture.getFutureAncestry(), parentFuture.getFutureName());
+        List<String> newThreadAncestry = CollectionFunctions.combineLists(parentFuture.getThreadAncestry(), parentFuture.getThreadName());
+        List<String> newFutureAncestry = CollectionFunctions.combineLists(parentFuture.getFutureAncestry(), parentFuture.getFutureName());
         AsyncFutureDetails thisFutureInformation = new AsyncFutureDetails(futureName, Thread.currentThread().getName(), newThreadAncestry, newFutureAncestry);
         CURRENTLY_EXECUTING_ASYNC_FUTURE.set(thisFutureInformation);
     }
@@ -166,7 +168,7 @@ public final class AsyncFuturesHolder {
             return;
         }
 
-        List<RegisteredAsyncFutureDetails> futureDetails = simpleFilter(futures, f -> futuresToBlockOn.contains(f.getFuture()));
+        List<RegisteredAsyncFutureDetails> futureDetails = CollectionFunctions.simpleFilter(futures, f -> futuresToBlockOn.contains(f.getFuture()));
 
         if (futureDetails.size() != futuresToBlockOn.size()) {
 
@@ -175,7 +177,7 @@ public final class AsyncFuturesHolder {
                     " futures but were they registered via AsyncFuturesHolder.registerFuture()?");
         }
 
-        waitForFuturesAndChildFuturesToCompleteByFutureName(simpleMap(futureDetails, RegisteredAsyncFutureDetails::getFutureName), timeoutValue);
+        waitForFuturesAndChildFuturesToCompleteByFutureName(CollectionFunctions.simpleMap(futureDetails, RegisteredAsyncFutureDetails::getFutureName), timeoutValue);
     }
 
     /**
@@ -195,15 +197,15 @@ public final class AsyncFuturesHolder {
 
         do {
 
-            futuresSpawnedFromTheseProcesses = simpleFilter(futures,
-                    f -> simpleAnyMatch(f.getFutureAncestry(), futureNames::contains));
+            futuresSpawnedFromTheseProcesses = CollectionFunctions.simpleFilter(futures,
+                    f -> CollectionFunctions.simpleAnyMatch(f.getFutureAncestry(), futureNames::contains));
 
             futuresSpawnedFromTheseProcesses.removeAll(completedFutures);
 
             if (!futuresSpawnedFromTheseProcesses.isEmpty()) {
 
                 List<CompletableFuture<?>> actualFutures =
-                        simpleMap(futuresSpawnedFromTheseProcesses, RegisteredAsyncFutureDetails::getFuture);
+                        CollectionFunctions.simpleMap(futuresSpawnedFromTheseProcesses, RegisteredAsyncFutureDetails::getFuture);
 
                 CompletableFuture<Void> futureBatch =
                         CompletableFuture.allOf(actualFutures.toArray(new CompletableFuture<?>[futuresSpawnedFromTheseProcesses.size()]));
@@ -213,7 +215,7 @@ public final class AsyncFuturesHolder {
                 } catch (Exception e) {
                     LOG.error("Exception caught whilst waiting for all futures to complete on main thread", e);
 
-                    throw getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Exception caught whilst waiting for all futures " +
+                    throw AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Exception caught whilst waiting for all futures " +
                             "to complete on main thread - wrapping in AsyncException");
                 }
 
