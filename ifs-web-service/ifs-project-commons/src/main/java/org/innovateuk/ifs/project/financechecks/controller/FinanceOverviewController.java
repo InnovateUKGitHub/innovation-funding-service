@@ -21,6 +21,7 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.user.resource.Authority;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +66,7 @@ public class FinanceOverviewController {
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'external_finance', 'auditor')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'external_finance', 'auditor', 'monitoring_officer')")
     public String view(@PathVariable("projectId") Long projectId,
                        @RequestParam(required = false, defaultValue = "false") boolean showFundingLevelMessage,
                        @RequestParam(required = false, defaultValue = "false") boolean showFundingAmountMessage,
@@ -93,16 +94,18 @@ public class FinanceOverviewController {
         ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populateFromProject(project, loggedInUser);
 
         return new FinanceCheckOverviewViewModel(
-                        getProjectFinanceOverviewViewModel(projectId),
-                        getProjectFinanceSummaries(project, sortedOrganisations, competition),
-                        getProjectFinanceCostBreakdown(projectId, sortedOrganisations, competition),
-                        applicationId,
-                        canChangeFundingSought,
-                        competition.isLoan(),
-                        competition.isKtp(),
-                        canChangeFundingLevel,
-                        competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE),
-                        applicationFundingBreakdownViewModel);
+                getProjectFinanceOverviewViewModel(projectId),
+                getProjectFinanceSummaries(project, sortedOrganisations, competition),
+                getProjectFinanceCostBreakdown(projectId, sortedOrganisations, competition),
+                applicationId,
+                canChangeFundingSought,
+                competition.isLoan(),
+                competition.isKtp(),
+                canChangeFundingLevel,
+                competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE),
+                applicationFundingBreakdownViewModel,
+                getExternalUser(loggedInUser),
+                getExternalUserLinkUrl(loggedInUser, projectId));
     }
 
     private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(long projectId) {
@@ -119,5 +122,17 @@ public class FinanceOverviewController {
     private ProjectFinanceCostBreakdownViewModel getProjectFinanceCostBreakdown(long projectId, List<PartnerOrganisationResource> partnerOrgs, CompetitionResource competition) {
         List<ProjectFinanceResource> finances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
         return new ProjectFinanceCostBreakdownViewModel(finances, partnerOrgs, competition);
+    }
+
+    private boolean getExternalUser(UserResource userResource) {
+        return userResource.hasAnyRoles(Role.MONITORING_OFFICER, Role.KNOWLEDGE_TRANSFER_ADVISER)
+                ? true
+                : false;
+    }
+
+    private String getExternalUserLinkUrl(UserResource userResource, long projectId) {
+        return userResource.hasAnyRoles(Role.MONITORING_OFFICER, Role.KNOWLEDGE_TRANSFER_ADVISER)
+                ? String.format("/project/%d/finance-check/read-only", projectId)
+                : String.format("/project/%d/finance-check", projectId);
     }
 }

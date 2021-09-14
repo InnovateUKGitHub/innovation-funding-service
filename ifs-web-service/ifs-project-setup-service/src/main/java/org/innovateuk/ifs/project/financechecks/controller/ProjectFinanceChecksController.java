@@ -374,6 +374,16 @@ public class ProjectFinanceChecksController {
         return doViewEligibilityChanges(project, organisation, model);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_READ_ONLY')")
+    @GetMapping("/organisation/{organisationId}/eligibility/changes")
+    public String viewExternalEligibilityChangesForOrganisation(@PathVariable final long projectId,
+                                                                @PathVariable final long organisationId,
+                                                                Model model) {
+        ProjectResource project = projectService.getById(projectId);
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        return doViewEligibilityChanges(project, organisation, model);
+    }
+
     private ProjectFinanceChecksViewModel buildFinanceChecksLandingPage(final ProjectOrganisationCompositeId compositeId, List<Long> attachments, Long queryId) {
 
         Long projectId = compositeId.getProjectId();

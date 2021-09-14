@@ -18,6 +18,11 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Finance checks',subTitle=${model.projectName},size='govuk-heading-xl'"/>
 
+        <p class="govuk-body">You can also
+            <a th:href="@{/project/{projectId}/finance-check-overview(projectId=${model.projectId})}">see an overview</a>
+            of the whole project's finances.
+        </p>
+
         <table class="govuk-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
@@ -33,7 +38,13 @@
                         <th:block th:if="${row.lead}">(Lead)</th:block>
                     </td>
                     <td class="govuk-table__cell">
-                        <a class="govuk-link" th:if="${model.paymentMilestonesLink}"
+                        <th:block th:if="${row.showChangesLink}">
+                            <a class="govuk-link"
+                               th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${model.projectId}, organisationId=${row.organisationId})}">
+                                Changes to finances</a>
+                            <br>
+                        </th:block>
+                        <a class="govuk-link" th:if="${row.paymentMilestonesLink}"
                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId}, organisationId=${row.organisationId})}">
                             Payment milestones</a>
                     </td>

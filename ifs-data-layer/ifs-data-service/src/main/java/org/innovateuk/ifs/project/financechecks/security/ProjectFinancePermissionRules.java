@@ -317,6 +317,11 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
         return userIsExternalFinanceOnCompetitionForProject(financeCheckEligibilityResource.getProjectId(), user.getId());
     }
 
+    @PermissionRule(value = "READ_ELIGIBILITY", description = "mo users can see the project finances eligibility of their own project")
+    public boolean moUserCanSeeTheProjectFinancesForTheOrganisationsBelongsToTheirProject(final FinanceCheckEligibilityResource financeCheckEligibilityResource, final UserResource user) {
+        return isMonitoringOfficer(financeCheckEligibilityResource.getProjectId(), user.getId());
+    }
+
     @PermissionRule(value = "READ_OVERVIEW", description = "Internal users can see the project finance overview")
     public boolean internalUsersCanSeeTheProjectFinanceOverviewsForAllProjects(final ProjectCompositeId projectCompositeId, final UserResource user) {
         return isInternal(user);

@@ -1037,7 +1037,7 @@ the user fills correspondence address data
     the user enters text to a text field            id = addressLine1       ${addresLine1}
     the user enters text to a text field            id = addressLine2       ${addresLine2}
     the user enters text to a text field            id = town               ${town}
-    enter the country in the autocomplete field     Argent                  ${country}
+    enter the country in the autocomplete field     Argentina               ${country}
     the user enters text to a text field            id = zipCode            ${zipCode}
 
 the user should see read only view of completed correspondence address details
