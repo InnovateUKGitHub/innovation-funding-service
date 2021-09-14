@@ -84,4 +84,9 @@ public class GrantsSendInviteForm {
     public GrantsInviteRole[] getAllGrantsInviteRoles() {
         return GrantsInviteRole.values();
     }
+
+    @JsonIgnore
+    public GrantsInviteRole getGrantsProjectFinanceContactRole() {
+        return GrantsInviteRole.GRANTS_PROJECT_FINANCE_CONTACT;
+    }
 }
