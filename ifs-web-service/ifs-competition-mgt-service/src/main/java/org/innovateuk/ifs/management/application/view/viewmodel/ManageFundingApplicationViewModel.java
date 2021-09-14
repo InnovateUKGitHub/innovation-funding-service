@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.management.application.view.viewmodel;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
 
@@ -76,5 +78,23 @@ public class ManageFundingApplicationViewModel {
 
     public void setSelectAllDisabled(boolean selectAllDisabled) {
         this.selectAllDisabled = selectAllDisabled;
+    }
+
+    @JsonIgnore
+    public FundingDecision getFundedFundingDecision() {
+        return FundingDecision.FUNDED;
+    }
+
+    @JsonIgnore
+    public FundingDecision getUnFundedFundingDecision() {
+        return FundingDecision.UNFUNDED;
+    }
+    @JsonIgnore
+    public FundingDecision getUnDecidedFundingDecision() {
+        return FundingDecision.UNDECIDED;
+    }
+    @JsonIgnore
+    public FundingDecision getOnHoldFundingDecision() {
+        return FundingDecision.ON_HOLD;
     }
 }

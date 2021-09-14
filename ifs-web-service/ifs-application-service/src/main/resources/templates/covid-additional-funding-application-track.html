@@ -42,7 +42,7 @@
 
         <h2 class="govuk-heading-l">What happens next?</h2>
 
-        <th:block th:with="procurementCompetition=${model.currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
+        <th:block th:with="procurementCompetition=${model.currentCompetition.fundingType == model.getProcurementFundingType()}">
             <th:block th:unless="${procurementCompetition}">
                 <h3 class="govuk-heading-m">Assessment process</h3>
                 <p class="govuk-body">Your application will be assessed, if it meets our eligibility requirements. We will then make a funding

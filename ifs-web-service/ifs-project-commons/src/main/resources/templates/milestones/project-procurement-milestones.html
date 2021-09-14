@@ -188,7 +188,7 @@
                     Return to finance checks</a>
 
                 <div class="govuk-!-margin-top-6">
-                    <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).ELIGIBILITY.name()})}"
+                    <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${model.getEligibilityFinanceCheckName()})}"
                        class="govuk-button govuk-button--secondary govuk-!-margin-right-4">Queries</a>
                     <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.projectId},organisationId=${model.organisationId})}"
                        class="govuk-button govuk-button--secondary">Notes</a>
