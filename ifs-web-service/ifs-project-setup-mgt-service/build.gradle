@@ -79,6 +79,7 @@ dependencies {
 
     testCompile "com.opencsv:opencsv"
     testCompile "junit:junit"
+    testCompile 'com.jayway.awaitility:awaitility'
 }
 
 processResources {

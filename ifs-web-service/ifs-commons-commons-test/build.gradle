@@ -27,4 +27,5 @@ dependencies {
     compile 'org.innovateuk.ifs.libraries:ifs-security-test'
     compile "junit:junit"
     compile "org.mockito:mockito-core"
+    compile 'com.jayway.awaitility:awaitility'
 }
