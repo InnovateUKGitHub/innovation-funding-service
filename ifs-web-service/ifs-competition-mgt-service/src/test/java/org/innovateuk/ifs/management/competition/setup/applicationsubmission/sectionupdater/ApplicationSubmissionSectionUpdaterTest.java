@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.competition.setup.applicationsubmission.form.ApplicationSubmissionForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,8 +16,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicationSubmissionSectionUpdaterTest {
@@ -35,9 +36,11 @@ public class ApplicationSubmissionSectionUpdaterTest {
                 .build();
         ApplicationSubmissionForm form = new ApplicationSubmissionForm(true);
 
+        UserResource loggedInUser = newUserResource().build();
+
         when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
 
-        ServiceResult<Void> updateResult = updater.doSaveSection(competition, form);
+        ServiceResult<Void> updateResult = updater.doSaveSection(competition, form, loggedInUser);
 
         assertThat(updateResult.isSuccess()).isTrue();
 

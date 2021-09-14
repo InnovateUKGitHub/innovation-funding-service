@@ -188,7 +188,7 @@ public class CompetitionSetupApplicationController {
 
         return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource,
                 () -> getFinancePage(model, competitionResource, loggedInUser, true, null),
-                Optional.of(FINANCES), Optional.empty());
+                Optional.of(FINANCES), Optional.empty(), loggedInUser);
     }
 
     @PostMapping("/question/finance/edit")
@@ -213,7 +213,7 @@ public class CompetitionSetupApplicationController {
         Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
-                () -> competitionSetupService.saveCompetitionSetupSubsection(form, competitionResource, APPLICATION_FORM, FINANCES));
+                () -> competitionSetupService.saveCompetitionSetupSubsection(form, competitionResource, APPLICATION_FORM, FINANCES, loggedInUser));
     }
 
     @GetMapping("/question/{questionId}")
@@ -246,7 +246,8 @@ public class CompetitionSetupApplicationController {
         return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource,
                 () -> getQuestionPage(model, competitionResource, loggedInUser, questionId, true, null),
                 Optional.empty(),
-                Optional.ofNullable(questionId));
+                Optional.ofNullable(questionId),
+                loggedInUser);
     }
 
     @PostMapping(value = "/question/{questionId}/edit", params = {"!uploadTemplateDocumentFile", "!removeTemplateDocumentFile", "question.type=ASSESSED_QUESTION"})
@@ -268,7 +269,7 @@ public class CompetitionSetupApplicationController {
         Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
-                () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, QUESTIONS));
+                () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, QUESTIONS, loggedInUser));
     }
 
     @PostMapping(value = "/question/{questionId}/edit", params = {"!uploadTemplateDocumentFile", "!removeTemplateDocumentFile","question.type=KTP_ASSESSMENT"})
@@ -290,7 +291,7 @@ public class CompetitionSetupApplicationController {
         Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
-                () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, KTP_ASSESSMENT));
+                () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, KTP_ASSESSMENT, loggedInUser));
     }
 
 
@@ -360,7 +361,7 @@ public class CompetitionSetupApplicationController {
         Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
-                () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, PROJECT_DETAILS));
+                () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, PROJECT_DETAILS, loggedInUser));
     }
 
     @GetMapping(value = "/detail")
@@ -397,7 +398,8 @@ public class CompetitionSetupApplicationController {
         return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource,
                 () -> getDetailsPage(model, competitionResource, loggedInUser, true, null),
                 Optional.of(APPLICATION_DETAILS),
-                Optional.empty());
+                Optional.empty(),
+                loggedInUser);
 
     }
 
@@ -422,7 +424,8 @@ public class CompetitionSetupApplicationController {
                 competitionSetupService.saveCompetitionSetupSubsection(form,
                         competitionResource,
                         APPLICATION_FORM,
-                        APPLICATION_DETAILS),
+                        APPLICATION_DETAILS,
+                        loggedInUser),
                 fieldErrorsToFieldErrors(),
                 asGlobalErrors())
                 .failNowOrSucceedWith(
@@ -509,8 +512,9 @@ public class CompetitionSetupApplicationController {
 
     private String ifUserCanAccessEditPageMarkSectionAsIncomplete(CompetitionResource competition, Supplier<String> successAction,
                                                                   Optional<CompetitionSetupSubsection> subsectionOpt,
-                                                                  Optional<Long> questionIdOpt) {
-        if (CompetitionSetupSection.APPLICATION_FORM.preventEdit(competition)) {
+                                                                  Optional<Long> questionIdOpt,
+                                                                  UserResource loggedInUser) {
+        if (CompetitionSetupSection.APPLICATION_FORM.preventEdit(competition, loggedInUser)) {
             LOG.error(String.format("Competition with id %1$d cannot edit section %2$s: ", competition.getId(), CompetitionSetupSection.APPLICATION_FORM));
             return "redirect:/dashboard";
         } else {

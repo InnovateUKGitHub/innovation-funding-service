@@ -101,7 +101,7 @@ public class CompetitionSetupOrganisationalEligibilityControllerTest extends Bas
         OrganisationalEligibilityForm organisationalEligibilityForm = new OrganisationalEligibilityForm();
         organisationalEligibilityForm.setInternationalOrganisationsApplicable(false);
 
-        when(competitionSetupService.saveCompetitionSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(ORGANISATIONAL_ELIGIBILITY))).thenReturn(serviceSuccess());
+        when(competitionSetupService.saveCompetitionSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(ORGANISATIONAL_ELIGIBILITY), eq(loggedInUser))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(URL, competitionId)
                 .param("internationalOrganisationsApplicable", "false"))
@@ -139,7 +139,7 @@ public class CompetitionSetupOrganisationalEligibilityControllerTest extends Bas
                 .build();
 
         when(competitionOrganisationConfigRestService.findByCompetitionId(competitionId)).thenReturn(restSuccess(configResource));
-        when(competitionSetupService.saveCompetitionSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(ORGANISATIONAL_ELIGIBILITY))).thenReturn(serviceSuccess());
+        when(competitionSetupService.saveCompetitionSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(ORGANISATIONAL_ELIGIBILITY), eq(loggedInUser))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(URL + "/lead-international-organisation", competitionId)
                 .param("leadInternationalOrganisationsApplicable", "true"))

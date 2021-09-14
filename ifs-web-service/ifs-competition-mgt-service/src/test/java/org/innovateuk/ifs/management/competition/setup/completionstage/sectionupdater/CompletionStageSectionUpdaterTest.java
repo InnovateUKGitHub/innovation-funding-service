@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.management.competition.setup.completionstage.sectionupdater;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.competition.setup.completionstage.form.CompletionStageForm;
 import org.innovateuk.ifs.management.competition.setup.completionstage.util.CompletionStageUtils;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,6 +19,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionCompletionStage.COMPETITION_CLOSE;
 import static org.innovateuk.ifs.competition.resource.CompetitionCompletionStage.PROJECT_SETUP;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -39,10 +40,12 @@ public class CompletionStageSectionUpdaterTest {
         CompetitionResource competition = newCompetitionResource().build();
         CompletionStageForm form = new CompletionStageForm(PROJECT_SETUP);
 
+        UserResource loggedInUser = newUserResource().build();
+
         when(milestoneRestServiceMock.updateCompletionStage(competition.getId(), PROJECT_SETUP)).
                 thenReturn(restSuccess());
 
-        ServiceResult<Void> updateResult = updater.doSaveSection(competition, form);
+        ServiceResult<Void> updateResult = updater.doSaveSection(competition, form, loggedInUser);
 
         assertThat(updateResult.isSuccess()).isTrue();
 

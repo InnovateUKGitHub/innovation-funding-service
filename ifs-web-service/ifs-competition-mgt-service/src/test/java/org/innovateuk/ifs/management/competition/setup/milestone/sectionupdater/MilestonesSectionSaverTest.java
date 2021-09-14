@@ -10,6 +10,7 @@ import org.innovateuk.ifs.management.competition.setup.core.form.GenericMileston
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestoneRowForm;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -31,6 +32,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -66,17 +68,19 @@ public class MilestonesSectionSaverTest {
         List<MilestoneResource> resourceList = new ArrayList<>();
         resourceList.add(milestoneresource);
 
+        UserResource loggedInUser = newUserResource().build();
+
         competitionSetupForm.setMilestoneEntries(populateMilestoneFormEntry(resourceList));
 
         when(competitionSetupMilestoneService.updateMilestonesForCompetition(anyList(), anyMap(), anyLong())).thenReturn(serviceSuccess());
         when(milestoneRestService.getAllMilestonesByCompetitionId(anyLong())).thenReturn(restSuccess(resourceList));
-        service.saveSection(competition, competitionSetupForm);
+        service.saveSection(competition, competitionSetupForm, loggedInUser);
         List<Long> milestones = competition.getMilestones();
 
         assertEquals(1L, milestones.get(0).longValue());
-        assertTrue(resourceList.get(0).getCompetitionId() == 1L);
+        assertEquals(1L, (long) resourceList.get(0).getCompetitionId());
         assertNotNull(resourceList.get(0).getDate());
-        assertTrue(resourceList.get(0).getType().equals(MilestoneType.OPEN_DATE));
+        assertEquals(resourceList.get(0).getType(), MilestoneType.OPEN_DATE);
     }
 
 
@@ -105,13 +109,15 @@ public class MilestonesSectionSaverTest {
                 .withDate(futureDate)
                 .withCompetitionId(1L).build();
 
+        UserResource loggedInUser = newUserResource().build();
+
         List<MilestoneResource> resourceList = asList(milestonePast, milestoneFuture);
 
         competitionSetupForm.setMilestoneEntries(populateMilestoneFormEntry(resourceList));
         when(competitionSetupMilestoneService.updateMilestonesForCompetition(anyList(), anyMap(), anyLong())).thenReturn(serviceSuccess());
         when(milestoneRestService.getAllMilestonesByCompetitionId(anyLong())).thenReturn(restSuccess(resourceList));
 
-        service.saveSection(competition, competitionSetupForm);
+        service.saveSection(competition, competitionSetupForm, loggedInUser);
 
         //verify update was only called once (for the future date)
         ArgumentCaptor<Map> argumentCaptor = ArgumentCaptor.forClass(Map.class);

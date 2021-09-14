@@ -3,6 +3,8 @@ Documentation     IFS-9604 IFS Expert user can return assessment to assessor
 ...
 ...               IFS-9692 IFS Expert User can change status of approved documents to rejected
 ...
+...               IFS-9996 Super Admin can update application questions when the competition is open.
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Administrator  CompAdmin
@@ -19,6 +21,8 @@ ${assessmentResetApplicationName}     ${application_ids["${assessmentResetApplic
 ${projectName}                        Energy efficient home device
 ${projectID}                          ${project_ids["${projectName}"]}
 &{leadApplicantCredentials}           email=ron.spencer@gmail.com     password=${short_password}
+${liveCompetitionName}                Predicting market trends programme
+${liveCompetitionID}                  ${competition_ids["${liveCompetitionName}"]}
 
 *** Test Cases ***
 Super admin can unsubmit assessment of an application already submitted
@@ -78,6 +82,14 @@ Super admin user cannot reject a document once the project is completed
     And the user navigates to the page                ${SERVER}/project-setup-management/project/${projectID}/document/all
     And the user clicks the button/link               link = Exploitation plan
     Then the user should not see the element          jQuery = .govuk-heading-m:contains("Reject document") + div:contains("Reject")
+
+Super admin can edit application questions when the competition is open
+    [Documentation]  IFS-9996
+    Given the user navigates to the page                      ${SERVER}/management/competition/setup/${liveCompetitionID}/section/application/landing-page
+    And the user clicks the button/link                       jQuery = a:contains("Adding value")
+    When the user clicks the button/link                      jQuery = a:contains("Edit this question")
+    Then the user enters text to a text field                 jQuery = label[for="question.subTitle"] +* .editor       Business opportunity guidance
+    And the user clicks the button/link                       jQuery = button:contains("Done")
 
 *** Keywords ***
 Custom Suite Setup

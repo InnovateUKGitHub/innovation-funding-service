@@ -6,19 +6,20 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupFinanceRestService;
-import org.innovateuk.ifs.management.competition.setup.application.form.FinanceForm;
-import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.management.competition.setup.application.form.FinanceForm;
+import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionSetupFinanceResourceBuilder.newCompetitionSetupFinanceResource;
@@ -26,9 +27,9 @@ import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.NO_
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -72,9 +73,11 @@ public class ApplicationFinanceSectionSaverTest {
                 .withIncludeYourOrganisationSection(isIncludeYourOrganisationSection)
                 .build();
 
+        UserResource loggedInUser = newUserResource().build();
+
         when(competitionSetupFinanceRestService.save(competitionSetupFinanceResource)).thenReturn(restSuccess());
         when(sectionService.getSectionsForCompetitionByType(competition.getId(), SectionType.OVERVIEW_FINANCES))
-                .thenReturn(asList(overviewFinanceSection));
+                .thenReturn(singletonList(overviewFinanceSection));
         when(questionRestService.getQuestionsBySectionIdAndType(overviewFinanceSection.getId(), QuestionType.GENERAL))
                 .thenReturn(
                         restSuccess(newQuestionResource()
@@ -88,7 +91,7 @@ public class ApplicationFinanceSectionSaverTest {
         competitionSetupForm.setIncludeGrowthTable(isIncludeGrowthTable);
         competitionSetupForm.setIncludeYourOrganisationSection(isIncludeYourOrganisationSection);
 
-        service.saveSection(competition, competitionSetupForm);
+        service.saveSection(competition, competitionSetupForm, loggedInUser);
 
         verify(competitionSetupFinanceRestService).save(competitionSetupFinanceResource);
         verify(questionRestService, times(1)).save(any(QuestionResource.class));
@@ -107,12 +110,14 @@ public class ApplicationFinanceSectionSaverTest {
                 .withApplicationFinanceType(NO_FINANCES)
                 .build();
 
+        UserResource loggedInUser = newUserResource().build();
+
         when(competitionSetupFinanceRestService.save(competitionSetupFinanceResource)).thenReturn(restSuccess());
 
         FinanceForm competitionSetupForm = new FinanceForm();
         competitionSetupForm.setApplicationFinanceType(NO_FINANCES);
 
-        service.saveSection(competition, competitionSetupForm);
+        service.saveSection(competition, competitionSetupForm, loggedInUser);
 
         verify(competitionSetupFinanceRestService).save(competitionSetupFinanceResource);
         verify(questionRestService, never()).save(any(QuestionResource.class));

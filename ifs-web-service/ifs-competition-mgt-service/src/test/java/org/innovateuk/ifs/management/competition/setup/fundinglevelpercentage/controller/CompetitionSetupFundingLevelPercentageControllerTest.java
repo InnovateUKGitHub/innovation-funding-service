@@ -11,6 +11,7 @@ import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSet
 import org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.populator.FundingLevelPercentageFormPopulator;
 import org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.sectionupdater.FundingLevelPercentageSectionUpdater;
 import org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.validator.FundingLevelPercentageValidator;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +28,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.FUNDING_LEVEL_PERCENTAGE;
 import static org.innovateuk.ifs.competition.resource.FundingRules.STATE_AID;
 import static org.innovateuk.ifs.competition.resource.FundingRules.SUBSIDY_CONTROL;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -154,8 +156,9 @@ public class CompetitionSetupFundingLevelPercentageControllerTest extends BaseCo
         CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID)
                 .withFundingRules(STATE_AID)
                 .build();
+
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(competitionSetupService.saveCompetitionSetupSection(any(), eq(competition), eq(FUNDING_LEVEL_PERCENTAGE))).thenReturn(serviceSuccess());
+        when(competitionSetupService.saveCompetitionSetupSection(any(), eq(competition), eq(FUNDING_LEVEL_PERCENTAGE), eq(loggedInUser))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(URL, COMPETITION_ID)
                 .param("maximum[0][0].maximum", "50"))
@@ -170,8 +173,9 @@ public class CompetitionSetupFundingLevelPercentageControllerTest extends BaseCo
         CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID)
                 .withFundingRules(SUBSIDY_CONTROL)
                 .build();
+
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(updater.saveSection(eq(competition), any())).thenReturn(serviceSuccess());
+        when(updater.saveSection(eq(competition), any(), eq(loggedInUser))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(URL + "/funding-rule/" + SUBSIDY_CONTROL.toUrl(), COMPETITION_ID)
                 .param("maximum[0][0].maximum", "50"))
@@ -186,8 +190,9 @@ public class CompetitionSetupFundingLevelPercentageControllerTest extends BaseCo
         CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID)
                 .withFundingRules(SUBSIDY_CONTROL)
                 .build();
+
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(competitionSetupService.saveCompetitionSetupSection(any(), eq(competition), eq(FUNDING_LEVEL_PERCENTAGE))).thenReturn(serviceSuccess());
+        when(competitionSetupService.saveCompetitionSetupSection(any(), eq(competition), eq(FUNDING_LEVEL_PERCENTAGE), eq(loggedInUser))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(URL + "/funding-rule/" + STATE_AID.toUrl(), COMPETITION_ID)
                 .param("maximum[0][0].maximum", "50"))

@@ -8,7 +8,10 @@ public class CompetitionStateSetupViewModel {
     private boolean setupComplete;
     private CompetitionStatus competitionStatus;
 
-    public CompetitionStateSetupViewModel(boolean preventEdit, boolean isSetupAndLive, boolean setupComplete, CompetitionStatus competitionStatus) {
+    public CompetitionStateSetupViewModel(boolean preventEdit,
+                                          boolean isSetupAndLive,
+                                          boolean setupComplete,
+                                          CompetitionStatus competitionStatus) {
         this.preventEdit = preventEdit;
         this.isSetupAndLive = isSetupAndLive;
         this.setupComplete = setupComplete;

@@ -8,7 +8,10 @@ import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,10 +48,13 @@ public class QuestionSetupAddAndRemoveServiceImpl implements QuestionSetupAddAnd
     @Autowired
     private SetupStatusRepository setupStatusRepository;
 
+    @Autowired
+    private LoggedInUserSupplier loggedInUserSupplier;
+
     @Override
     public ServiceResult<Question> addDefaultAssessedQuestionToCompetition(Competition competition) {
         //todo replace without template
-        if (competition == null || competitionIsNotInSetupOrReadyToOpenState(competition)) {
+        if (competition == null || competitionIsNotInSetupOrReadyToOpenState(competition) ) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
@@ -95,11 +101,20 @@ public class QuestionSetupAddAndRemoveServiceImpl implements QuestionSetupAddAnd
     }
 
     private boolean competitionIsNotInSetupOrReadyToOpenState(Competition competition) {
+        if (loggedInUserIsSuperAdmin()) {
+            return false;
+        }
+
         return !(competition.getCompetitionStatus().equals(COMPETITION_SETUP)
                 || competition.getCompetitionStatus().equals(READY_TO_OPEN));
     }
 
     private boolean sectionIsValidForDeletion(SectionType sectionType) {
         return sectionType == SectionType.PROJECT_DETAILS || sectionType == SectionType.APPLICATION_QUESTIONS;
+    }
+
+    private boolean loggedInUserIsSuperAdmin() {
+        User loggedInUser = loggedInUserSupplier.get();
+        return loggedInUser.hasAuthority(Authority.SUPER_ADMIN_USER);
     }
 }
