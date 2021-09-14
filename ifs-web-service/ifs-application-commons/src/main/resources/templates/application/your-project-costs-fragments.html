@@ -3224,7 +3224,7 @@
 *********************************/-->
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="consumables"
-          th:with="financeRowType=${getConsumabledFinanceRowType()}">
+          th:with="financeRowType=${model.getConsumabledFinanceRowType()}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
