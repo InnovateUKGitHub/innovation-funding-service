@@ -124,6 +124,6 @@ public class GeneralSetupViewModel {
 
     @JsonIgnore
     public boolean grantCompetition() {
-        return competition.getFundingType().equals(FundingType.GRANT);
+        return competition.getFundingType() == FundingType.GRANT;
     }
 }
