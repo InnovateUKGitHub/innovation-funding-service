@@ -77,6 +77,6 @@ public class FinanceCheckOverviewViewModel {
 
     @JsonIgnore
     public boolean isProcurement() {
-        return summaries.getFundingType().equals(FundingType.PROCUREMENT);
+        return summaries.getFundingType() == FundingType.PROCUREMENT;
     }
 }
