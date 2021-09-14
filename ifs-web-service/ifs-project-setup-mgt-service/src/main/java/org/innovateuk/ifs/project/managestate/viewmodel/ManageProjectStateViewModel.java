@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.managestate.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 
@@ -84,9 +85,31 @@ public class ManageProjectStateViewModel {
         return isInSetup() || isHandledOffline() || isOnHold();
     }
 
-    public boolean isEndState() { return isCompletedOffline() || isLive() || isWithdrawn(); }
+    public boolean isEndState() {
+        return isCompletedOffline() || isLive() || isWithdrawn();
+    }
 
     public boolean cantChangeState() {
         return isEndState() || (!ifsAdmin && isOnHold());
+    }
+
+    @JsonIgnore
+    public String getHandledOfflineStateName() {
+        return HANDLED_OFFLINE.name();
+    }
+
+    @JsonIgnore
+    public String getOnHoldStateName() {
+        return ON_HOLD.name();
+    }
+
+    @JsonIgnore
+    public String getWithdrawnStateName() {
+        return WITHDRAWN.name();
+    }
+
+    @JsonIgnore
+    public String getCompletedOfflineStateName() {
+        return COMPLETED_OFFLINE.name();
     }
 }
