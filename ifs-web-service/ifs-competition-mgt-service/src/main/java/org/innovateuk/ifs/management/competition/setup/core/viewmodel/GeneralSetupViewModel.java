@@ -2,10 +2,8 @@ package org.innovateuk.ifs.management.competition.setup.core.viewmodel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.management.competition.setup.core.form.MilestoneTime;
 
 import java.util.List;
 
@@ -136,5 +134,25 @@ public class GeneralSetupViewModel {
     @JsonIgnore
     public AssessorFinanceView[] assessorFinanceView() {
         return AssessorFinanceView.values();
+    }
+
+    @JsonIgnore
+    public MilestoneType getSubmissionDateMilestoneType() {
+        return MilestoneType.SUBMISSION_DATE;
+    }
+
+    @JsonIgnore
+    public MilestoneTime[] getMilestoneTimeValues() {
+        return MilestoneTime.values();
+    }
+
+    @JsonIgnore
+    public MilestoneTime getTwlevePMMilestoneTime() {
+        return MilestoneTime.TWELVE_PM;
+    }
+
+    @JsonIgnore
+    public Funder[] getFunderValues() {
+        return Funder.values();
     }
 }

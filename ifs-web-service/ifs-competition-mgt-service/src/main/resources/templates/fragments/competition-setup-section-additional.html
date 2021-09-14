@@ -30,7 +30,7 @@
                                 data-required-errormessage="Please select a funder name."
                                 data-auto-complete="">
                             <option value="" >Please Select</option>
-                            <option th:each="funder : ${T(org.innovateuk.ifs.competition.resource.Funder).values()}" th:value="${funder}" th:text="${funder.displayName}"></option>
+                            <option th:each="funder : ${model.general.getFunderValues()}" th:value="${funder}" th:text="${funder.displayName}"></option>
                         </select>
                     </div>
                 </div>
