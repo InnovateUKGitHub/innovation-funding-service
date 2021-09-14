@@ -39,7 +39,7 @@
                         </ul>
                     </section>
 
-                    <section th:with="closedComps=${model.competitions.get(model.getCompetitionClosedStatus())}">
+                    <section th:with="closedComps=${model.competitions.get(model.getClosedCompetitionStatus())}">
                         <h2 class="govuk-heading-m"
                             th:text="'Closed ('+${closedComps == null ? '0' : closedComps.size()}+')'"></h2>
                         <ul class="govuk-list list-overview">
