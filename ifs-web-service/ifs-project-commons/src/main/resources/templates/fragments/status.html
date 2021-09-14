@@ -14,10 +14,10 @@
                     <th class="govuk-table__header" scope="col">Project</th>
                     <th:block th:each="column : ${model.columns}">
                         <th class="govuk-table__header status" scope="col">
-                            <th:block th:if="${model.isLoan && column == T(org.innovateuk.ifs.project.internal.ProjectSetupStage).PROJECT_SETUP_COMPLETE}">Complete project setup</th:block>
-                            <th:block th:if="${model.procurement && column == T(org.innovateuk.ifs.project.internal.ProjectSetupStage).GRANT_OFFER_LETTER}">Contract</th:block>
-                            <th:block th:unless="${(model.procurement && column == T(org.innovateuk.ifs.project.internal.ProjectSetupStage).GRANT_OFFER_LETTER) or
-                            (model.isLoan && column == T(org.innovateuk.ifs.project.internal.ProjectSetupStage).PROJECT_SETUP_COMPLETE)}"
+                            <th:block th:if="${model.isLoan && column == model.projectSetupCompleteStage}">Complete project setup</th:block>
+                            <th:block th:if="${model.procurement && column == model.grantOfferLetterStage}">Contract</th:block>
+                            <th:block th:unless="${(model.procurement && column == model.grantOfferLetterStage) or
+                            (model.isLoan && column == model.projectSetupCompleteStage)}"
                                       th:text="${column.shortName}"></th:block>
 
                         </th>

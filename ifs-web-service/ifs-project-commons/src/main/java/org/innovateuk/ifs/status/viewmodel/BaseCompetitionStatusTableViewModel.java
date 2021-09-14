@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.status.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.internal.InternalProjectSetupRow;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
@@ -93,5 +94,15 @@ public abstract class BaseCompetitionStatusTableViewModel {
 
     public int getColumnsAfterBankDetails() {
         return columnsAfterBankDetails;
+    }
+
+    @JsonIgnore
+    public ProjectSetupStage projectSetupCompleteStage() {
+        return ProjectSetupStage.PROJECT_SETUP_COMPLETE;
+    }
+
+    @JsonIgnore
+    public ProjectSetupStage grantOfferLetterStage() {
+        return ProjectSetupStage.GRANT_OFFER_LETTER;
     }
 }
