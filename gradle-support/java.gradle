@@ -58,27 +58,10 @@ repositories {
             password project.findProperty("nexus_password")
         }
     }
-//    exclusiveContent {
-//        forRepository {
-//            maven {
-//                url "https://devops.innovateuk.org/binaries/repository/ifs-libraries/"
-//            }
-//        }
-//        filter {
-//            includeGroup "org.innovateuk.ifs.libraries"
-//        }
-//    }
-//    exclusiveContent {
-//        forRepository {
-//            maven {
-//                url "https://devops.innovateuk.org/binaries/repository/ifs-libraries-snapshots/"
-//            }
-//        }
-//        filter {
-//            includeGroup "org.innovateuk.ifs.libraries"
-//        }
-//    }
-
+    maven {
+        name 'local'
+        url project.findProperty("maven_local" ?: "~/.m2/repository")
+    }
 }
 
 jar {
