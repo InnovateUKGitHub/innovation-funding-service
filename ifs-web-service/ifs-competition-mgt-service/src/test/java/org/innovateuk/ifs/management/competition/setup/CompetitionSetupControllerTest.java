@@ -21,6 +21,7 @@ import org.innovateuk.ifs.management.competition.setup.initialdetail.form.Initia
 import org.innovateuk.ifs.management.competition.setup.initialdetail.populator.ManageInnovationLeadsModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
 import org.innovateuk.ifs.management.fixtures.CompetitionFundersFixture;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
@@ -869,7 +870,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         when(competitionSetupService.saveCompetitionSetupSection(
                 any(AdditionalInfoForm.class),
-                any(CompetitionResource.class), any(CompetitionSetupSection.class))
+                any(CompetitionResource.class), any(CompetitionSetupSection.class), any(UserResource.class))
         ).thenReturn(serviceFailure(new Error(COMPETITION_DUPLICATE_FUNDERS, HttpStatus.BAD_REQUEST)));
 
         MvcResult result = mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/additional")
