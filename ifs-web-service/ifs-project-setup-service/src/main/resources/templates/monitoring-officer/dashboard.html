@@ -62,7 +62,8 @@
                                                th:field="${form.projectInSetup}"
                                         />
                                         <label for="projectInSetup" class="govuk-label govuk-checkboxes__label">
-                                            <span th:text="'In setup (' + ${model.monitoringOfficerSummaryView.inSetupProjectCount} + ')'">In setup (18)</span>
+                                            <span th:unless="${model.isMoDashboardFilterEnabled()}">In setup</span>
+                                            <span th:if="${model.isMoDashboardFilterEnabled()}" th:text="'In setup (' + ${model.monitoringOfficerSummaryView.inSetupProjectCount} + ')'">In setup (18)</span>
                                         </label>
                                     </div>
                                     <div class="govuk-checkboxes__item">
@@ -73,12 +74,13 @@
                                                th:field="${form.previousProject}"
                                         />
                                         <label for="previousProject" class="govuk-label govuk-checkboxes__label">
-                                            <span th:text="'Previous (' + ${model.monitoringOfficerSummaryView.previousProjectCount} + ')'">Previous (5)</span>
+                                            <span th:unless="${model.isMoDashboardFilterEnabled()}">Previous</span>
+                                            <span th:if="${model.isMoDashboardFilterEnabled()}" th:text="'Previous (' + ${model.monitoringOfficerSummaryView.previousProjectCount} + ')'">Previous (5)</span>
                                         </label>
                                     </div>
                                 </div>
                             </div>
-                            <div th:if="${model.isMOJourneyUpdateEnabled}"
+                            <div th:if="${model.isMoDashboardFilterEnabled()}"
                                  class="govuk-form-group govuk-!-margin-top-7">
                                 <h2 class="govuk-heading-s govuk-!-margin-bottom-2">
                                     Documents status
@@ -119,7 +121,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div th:if="${model.isMOSpendProfileUpdateEnabled}"
+                            <div th:if="${model.isMoDashboardFilterEnabled()}"
                                  class="govuk-form-group govuk-!-margin-top-7">
                                 <h2 class="govuk-heading-s govuk-!-margin-bottom-2">
                                     Spend profile status
@@ -204,7 +206,7 @@
                                             </th:block>
                                         </div>
 
-                                        <div th:if="${model.isMOJourneyUpdateEnabled and projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.hasDocumentSection}"
+                                        <div th:if="${model.isMoDashboardFilterEnabled() and projectView.monitoringDashboardSectionsViewModel.documentSectionViewModel.hasDocumentSection}"
                                              class="task govuk-!-margin-bottom-0">
                                             <ul>
                                                 <li>
@@ -227,7 +229,7 @@
                                             </ul>
                                         </div>
 
-                                        <div th:if="${model.isMOSpendProfileUpdateEnabled and projectView.monitoringDashboardSectionsViewModel.spendProfileSectionViewModel.hasSpendProfileSection}"
+                                        <div th:if="${model.isMoDashboardFilterEnabled() and projectView.monitoringDashboardSectionsViewModel.spendProfileSectionViewModel.hasSpendProfileSection}"
                                              class="task govuk-!-margin-bottom-0">
                                             <ul>
                                                 <li>
@@ -256,7 +258,8 @@
                         </th:block>
                     </div>
                 </div>
-            </form>
+              </form>
+            <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
         </div>
     </main>
 </div>

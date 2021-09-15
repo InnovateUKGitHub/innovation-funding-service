@@ -14,6 +14,7 @@ import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetu
 import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupSectionUpdater;
 import org.innovateuk.ifs.management.competition.setup.fundingeligibility.form.FundingEligibilityResearchCategoryForm;
 import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,7 +52,8 @@ public class FundingEligibilitySectionUpdater extends AbstractSectionUpdater imp
     @Override
     protected ServiceResult<Void> doSaveSection(
             CompetitionResource competition,
-            CompetitionSetupForm competitionSetupForm
+            CompetitionSetupForm competitionSetupForm,
+            UserResource loggedInUser
     ) {
         FundingEligibilityResearchCategoryForm projectEligibilityForm = (FundingEligibilityResearchCategoryForm) competitionSetupForm;
         if (!projectEligibilityForm.getResearchCategoriesApplicable()) {

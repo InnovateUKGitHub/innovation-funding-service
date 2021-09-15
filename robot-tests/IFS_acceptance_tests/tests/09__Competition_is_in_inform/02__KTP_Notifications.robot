@@ -5,6 +5,8 @@ Documentation     IFS-8549 KTP - Notification: unsuccessful and successful
 ...
 ...               IFS-9576 MO documents: 'Project setup' list - task management and filtering
 ...
+...               IFS-10236 MO view- Improve results loading time - Step 1
+...
 Suite Setup       Custom Suite Setup
 Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Applicant_Commons.robot
@@ -13,6 +15,7 @@ Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${KTP_application}  	               KTP notifications application
+${KTP_application2}                    KTP assessment detailed finances application
 ${ktp_ProjectID}                       ${project_ids["${KTP_application}"]}
 ${KTP_applicationId}                   ${application_ids["${KTP_application}"]}
 ${KTP_competiton}                      KTP notifications
@@ -72,10 +75,11 @@ The partner checks the status of the application
     And the user is able to view the application overview page
 
 The KTA checks the status of the application
-    [Documentation]  IFS-8549  IFS-9576
+    [Documentation]  IFS-8549  IFS-9576  IFS-10236
     Given Log in as a different user                              &{ktp_KTA_Credentials}
     When the user clicks the button/link                          jQuery = h2:contains("Project setup")
     And the user selects the checkbox                             previousProject
+    And The user enters text to a text field                      id = keywordSearch   KTP notifications application
     And the user clicks the button/link                           id = update-documents-results-button
     Then the user should see the element                          jQuery = .task:contains("${KTP_application}") + .status:contains("Unsuccessful")
     And the project user is unable to make any changes

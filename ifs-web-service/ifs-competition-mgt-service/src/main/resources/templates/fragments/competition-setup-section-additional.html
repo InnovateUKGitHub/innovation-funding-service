@@ -17,6 +17,10 @@
                   class="govuk-fieldset">
             <legend class="govuk-visually-hidden">Funding information</legend>
 
+            <select th:id="funders" style="display:none;">
+                <option th:each="funder : ${T(org.innovateuk.ifs.competition.resource.Funder).values()}" th:value="${funder}" th:text="${funder.displayName}"></option>
+            </select>
+
             <div th:each="(funder, iteration : ${competitionSetupForm.funders})" class="govuk-grid-row funder-row" th:id="'funder-row-'+${iteration.index}">
                 <div class="govuk-grid-column-one-half">
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funder')} ? 'govuk-form-group--error'">
@@ -28,7 +32,7 @@
                                 th:id="funders[__${iteration.index}__].funder"
                                 th:field="${competitionSetupForm.funders[__${iteration.index}__].funder}"
                                 data-required-errormessage="Please select a funder name."
-                                data-auto-complete="">
+                                data-auto-complete="cofunder">
                             <option value="" >Please Select</option>
                             <option th:each="funder : ${model.general.getFunderValues()}" th:value="${funder}" th:text="${funder.displayName}"></option>
                         </select>
