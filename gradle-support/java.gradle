@@ -60,7 +60,8 @@ repositories {
     }
     maven {
         name 'local'
-        url project.findProperty("maven_local" ?: "~/.m2/repository")
+        // Users can specify maven_local in ~/.gradle/gradle.properties or let it default to $HOME/.m2/repository
+        url project.findProperty("maven_local") ?: System.getenv('HOME') + "/.m2/repository"
     }
 }
 
