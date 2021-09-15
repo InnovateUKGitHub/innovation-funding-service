@@ -102,8 +102,8 @@ public class ViewUserViewModel {
     }
 
     @JsonIgnore
-    public UserStatus getInActiveUserStatus() {
-        return UserStatus.INACTIVE;
+    public Boolean isInactiveUser() {
+        return user.getStatus().equals(UserStatus.INACTIVE);
     }
 
     @Override

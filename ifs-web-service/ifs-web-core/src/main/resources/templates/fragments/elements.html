@@ -167,7 +167,7 @@
     </div>
     <th:block th:unless="${projectWithdrawn || competition.isKtp()}">
         <div class="success-alert"
-             th:if="${competition.isApprovedApplicationState()}">
+             th:if="${competition.isApprovedApplicationState(applicationState)}">
             <th:block th:unless="${competition.isLoan()}">
                 <h2 class="govuk-heading-s govuk-!-margin-0">Congratulations, your application has been successful</h2>
             </th:block>
@@ -186,7 +186,7 @@
             </p>
         </div>
         <div class="warning-alert"
-             th:if="${competition.isRejectedApplicationState()}">
+             th:if="${competition.isRejectedApplicationState(applicationState)}">
             <h2 class="govuk-heading-s govuk-!-margin-0">Your application has not been successful in this competition.</h2>
 
             <p class="govuk-body">
@@ -205,7 +205,7 @@
 <th:block th:fragment="ktp-competition-status-message (applicationState, competition, displayFeedback)">
     <th:block th:if="${displayFeedback}">
         <div class="success-alert"
-             th:if="${competition.isApprovedApplicationState()}">
+             th:if="${competition.isApprovedApplicationState(applicationState)}">
             <h2 class="govuk-heading-s govuk-!-margin-0">This application was successful.</h2>
             <p class="govuk-body">
                 <th:block th:unless="${competition.competitionStatus.isFeedbackReleased()}"
@@ -214,7 +214,7 @@
             </p>
         </div>
         <div class="warning-alert"
-             th:if="${competition.isRejectedApplicationState()}">
+             th:if="${competition.isRejectedApplicationState(applicationState)}">
             <h2 class="govuk-heading-s govuk-!-margin-0">This application was unsuccessful.</h2>
 
             <p class="govuk-body">

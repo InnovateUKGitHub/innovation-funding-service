@@ -669,7 +669,10 @@
 
             <!--/* ASSESSMENT */-->
             <th:block
-                th:if="${model.displayAssessmentOptions AND (competitionSetupForm.question.type == competitionSetupForm.question.getAssessedQuestionType() or competitionSetupForm.question.type == competitionSetupForm.question.getKTPAssessmentQuestionType() or competitionSetupForm.question.type == competitionSetupForm.question.getScopeQuestionType()}">
+                th:if="${model.displayAssessmentOptions AND
+                (competitionSetupForm.question.type == competitionSetupForm.question.getAssessedQuestionType() or
+                competitionSetupForm.question.type == competitionSetupForm.question.getKTPAssessmentQuestionType() or
+                competitionSetupForm.question.type == competitionSetupForm.question.getScopeQuestionType())}">
 
                 <input type="hidden" name="competitionSetupForm.question.type" th:field="*{question.type}"/>
 
