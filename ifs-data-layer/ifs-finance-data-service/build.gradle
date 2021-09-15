@@ -74,14 +74,6 @@ buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
 prepareDockerBaseInput {
-//    inputs.dir file("$rootProject.projectDir/ifs-resources/build/classes")
-    inputs.dir file("$rootProject.projectDir/ifs-data-layer/data-service-commons/build/classes")
-    inputs.dir file("$rootProject.projectDir/ifs-security/build/classes")
-
-
-//    dependsOn ":ifs-resources:build"
-    dependsOn ":ifs-data-layer:data-service-commons:build"
-    dependsOn ":ifs-security:build"
 
 }
 
@@ -92,13 +84,13 @@ dependencies {
 
     compile "org.innovateuk.ifs.libraries:ifs-commons"
     compile 'org.innovateuk.ifs.libraries:ifs-resources'
-    compile project(':ifs-security')
+    compile 'org.innovateuk.ifs.libraries:ifs-security'
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
-//    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
+
     testCompile "junit:junit"
 }
 

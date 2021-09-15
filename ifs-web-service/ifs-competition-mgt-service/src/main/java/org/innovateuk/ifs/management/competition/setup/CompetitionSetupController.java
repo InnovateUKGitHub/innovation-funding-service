@@ -123,7 +123,8 @@ public class CompetitionSetupController {
 
     @PostMapping("/{competitionId}/section/{sectionPath}/edit")
     public String setSectionAsIncomplete(@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                         @PathVariable(SECTION_PATH_KEY) String sectionPath) {
+                                         @PathVariable(SECTION_PATH_KEY) String sectionPath,
+                                         UserResource loggedInUser) {
         CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
         if (section == null) {
             LOG.error("Invalid section path specified: " + sectionPath);
@@ -132,7 +133,7 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        if (section.preventEdit(competition)) {
+        if (section.preventEdit(competition, loggedInUser)) {
             return DASHBOARD_REDIRECT;
         }
 
@@ -413,7 +414,7 @@ public class CompetitionSetupController {
         };
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> saveResult = competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);
+            ServiceResult<Void> saveResult = competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section, loggedInUser);
             return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, successView);
         });

@@ -38,7 +38,7 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
     @Test
     public void getFinanceCheckSummary() {
-        assertRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L), PROJECT_FINANCE, IFS_ADMINISTRATOR, SUPER_ADMIN_USER, SYSTEM_MAINTAINER, EXTERNAL_FINANCE, AUDITOR);
+        assertRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L), PROJECT_FINANCE, IFS_ADMINISTRATOR, SUPER_ADMIN_USER, SYSTEM_MAINTAINER, EXTERNAL_FINANCE, AUDITOR, MONITORING_OFFICER, KNOWLEDGE_TRANSFER_ADVISER);
     }
 
     @Test

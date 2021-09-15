@@ -36,9 +36,6 @@ test {
 }
 
 prepareDockerBaseInput {
-    inputs.dir file("$rootProject.projectDir/ifs-security/build/classes")
-
-    dependsOn ":ifs-security:build"
 }
 
 buildDocker.dependsOn prepareDockerBaseInput

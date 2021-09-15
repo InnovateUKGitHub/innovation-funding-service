@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.address.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.validation.ValidAddressForm;
 import org.springframework.validation.BindingResult;
@@ -123,5 +125,33 @@ public class AddressForm {
     public void editAddress(AddressResource address) {
         addressType = AddressType.MANUAL_ENTRY;
         manualAddress = address;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AddressForm that = (AddressForm) o;
+
+        return new EqualsBuilder()
+                .append(action, that.action)
+                .append(addressType, that.addressType)
+                .append(postcodeInput, that.postcodeInput)
+                .append(selectedPostcodeIndex, that.selectedPostcodeIndex)
+                .append(manualAddress, that.manualAddress)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(action)
+                .append(addressType)
+                .append(postcodeInput)
+                .append(selectedPostcodeIndex)
+                .append(manualAddress)
+                .toHashCode();
     }
 }

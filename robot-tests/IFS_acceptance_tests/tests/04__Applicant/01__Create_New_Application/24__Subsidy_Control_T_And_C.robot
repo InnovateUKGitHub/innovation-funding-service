@@ -63,7 +63,7 @@ ATI subsidy control t&c's are correct
     When the user clicks the button/link                 link = ${atiSubsidyControl}
     And select window                                    title = Terms and conditions of an ATI Programme grant - Innovation Funding Service
     Then the user should see the element                 jQuery = h1:contains("Terms and conditions of an ATI Programme grant")
-    And the user should see the element                  jQuery = li:contains("State Aid and Subsidy Control obligations")
+    And the user should see the element                  jQuery = li:contains("Subsidy Control/State aid obligations")
     [Teardown]   the user closes the last opened tab
 
 ATI State aid t&c's are correct
@@ -87,7 +87,7 @@ Creating a new comp to confirm Innovateuk subsidy control T&C's
     When the user clicks the button/link        link = Terms and conditions
     And the user clicks the button twice        jQuery = label:contains("Innovate UK - Subsidy control")
     And the user clicks the button/link         jQuery = button:contains("Done")
-    And the user selects the radio button       termsAndConditionsId    termsAndConditionsId8
+    And the user selects the radio button       termsAndConditionsId    termsAndConditionsId9
     Then the user clicks the button/link        jQuery = button:contains("Done")
     And the user should see the element         jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Innovate UK - Subsidy control")
     And the user should see the element         jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Innovate UK")

@@ -250,7 +250,7 @@ PS partner checks funding level guidance after completing subsidy basis
 PS partner should see correct terms and conditions after completing subsidy basis
     [Documentation]  IFS-9297
      When the user clicks the button/link     link = Award terms and conditions
-     Then the user should see the element     jQuery = li:contains("Unless clause 11.5 applies")
+     Then the user should see the element     jQuery = a:contains("pressoffice@innovateuk.ukri.org")
 
 PS partner sucessfully joins the project after completing subsidy basis
     [Documentation]  IFS-9289  IFS-6725

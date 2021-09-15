@@ -70,14 +70,11 @@ prepareDockerBaseInput {
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
     compile project(':ifs-web-service:ifs-application-commons')
-    compile project(':ifs-web-service:ifs-assessment-commons')
-
-//    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
     testCompile project(path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-web-service:ifs-application-commons", configuration: 'testArtifacts')
-
+    implementation 'org.innovateuk.ifs.libraries:ifs-assessment-commons'
     testCompile "com.opencsv:opencsv"
     testCompile "junit:junit"
 }

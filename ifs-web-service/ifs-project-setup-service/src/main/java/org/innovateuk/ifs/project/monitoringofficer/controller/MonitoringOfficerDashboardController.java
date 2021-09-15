@@ -23,8 +23,11 @@ import java.util.function.Supplier;
 public class MonitoringOfficerDashboardController {
 
     private static final String FORM_ATTR_NAME = "form";
-
     private MonitoringOfficerDashboardViewModelPopulator monitoringOfficerDashboardViewModelPopulator;
+    private static final String PAGE_NUMBER_KEY = "page";
+    private static final String PAGE_SIZE_KEY = "size";
+    private static final String DEFAULT_PAGE_NUMBER = "0";
+    private static final String DEFAULT_PAGE_SIZE = "10";
 
     MonitoringOfficerDashboardController() {}
 
@@ -36,7 +39,9 @@ public class MonitoringOfficerDashboardController {
     @GetMapping
     public String viewDashboard(Model model,
                                 @ModelAttribute(name = FORM_ATTR_NAME, binding = false) MonitoringOfficerDashboardForm form,
-                                UserResource user) {
+                                UserResource user,
+                                @RequestParam(value = PAGE_NUMBER_KEY, defaultValue = DEFAULT_PAGE_NUMBER) int pageNumber,
+                                @RequestParam(value = PAGE_SIZE_KEY, defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
         form.setProjectInSetup(true);
 
         model.addAttribute(FORM_ATTR_NAME, form);
@@ -49,8 +54,7 @@ public class MonitoringOfficerDashboardController {
                 , form.isDocumentsAwaitingReview()
                 , form.isSpendProfileComplete()
                 , form.isSpendProfileIncomplete()
-                , form.isSpendProfileAwaitingReview()));
-
+                , form.isSpendProfileAwaitingReview() , pageNumber, pageSize ));
         return "monitoring-officer/dashboard";
     }
 
@@ -59,8 +63,10 @@ public class MonitoringOfficerDashboardController {
                                   @Valid @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerDashboardForm form,
                                   @SuppressWarnings("unused") BindingResult bindingResult,
                                   ValidationHandler validationHandler,
-                                  UserResource user) {
-        final Supplier<String> failureView = () -> viewDashboard(model, form, user);
+                                  UserResource user,
+                                  @RequestParam(value = PAGE_NUMBER_KEY, defaultValue = DEFAULT_PAGE_NUMBER) int pageNumber,
+                                  @RequestParam(value = PAGE_SIZE_KEY, defaultValue = DEFAULT_PAGE_SIZE) int pageSize)  {
+        final Supplier<String> failureView = () -> viewDashboard(model, form, user,pageNumber, pageSize);
 
         return validationHandler.failNowOrSucceedWith(failureView,
                 () -> {
@@ -73,7 +79,7 @@ public class MonitoringOfficerDashboardController {
                             , form.isDocumentsAwaitingReview()
                             , form.isSpendProfileComplete()
                             , form.isSpendProfileIncomplete()
-                            , form.isSpendProfileAwaitingReview()));
+                            , form.isSpendProfileAwaitingReview(), pageNumber, pageSize));
 
                     return "monitoring-officer/dashboard";
                 });

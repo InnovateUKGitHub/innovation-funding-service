@@ -12,6 +12,7 @@ import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterForm;
 import org.innovateuk.ifs.project.grantofferletter.populator.GrantOfferLetterModelPopulator;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
+import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
@@ -68,6 +69,9 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
     @Mock
     private CompetitionRestService competitionRestService;
+
+    @Mock
+    private MonitoringOfficerRestService monitoringOfficerRestService;
 
     @Test
     public void testViewGrantOfferLetterPageWithSignedOfferAsProjectManager() throws Exception {
@@ -331,6 +335,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                 thenReturn(serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_SENT_BEFORE_UPLOADING_SIGNED_COPY));
         when(grantOfferLetterService.getGrantOfferLetterState(123L)).thenReturn(serviceSuccess(stateInformationForNonPartnersView(READY_TO_APPROVE, GOL_SIGNED)));
         when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(newCompetitionResource().withFundingType(FundingType.GRANT).build()));
+        when(monitoringOfficerRestService.isMonitoringOfficerOnProject(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(false));
 
         MvcResult mvcResult = mockMvc.perform(
                 fileUpload("/project/123/offer").
@@ -368,6 +373,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                 thenReturn(serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_SENT_BEFORE_UPLOADING_SIGNED_COPY));
         when(grantOfferLetterService.getGrantOfferLetterState(123L)).thenReturn(serviceSuccess(stateInformationForNonPartnersView(SENT, SIGNED_GOL_REJECTED)));
         when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(newCompetitionResource().withFundingType(FundingType.GRANT).build()));
+        when(monitoringOfficerRestService.isMonitoringOfficerOnProject(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(false));
 
         MvcResult mvcResult = mockMvc.perform(
                 fileUpload("/project/123/offer").
@@ -472,6 +478,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.of(grantOfferLetter));
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.of(additionalContractFile));
         when(grantOfferLetterService.getGrantOfferLetterState(projectId)).thenReturn(serviceSuccess(state));
+        when(monitoringOfficerRestService.isMonitoringOfficerOnProject(projectId, userId)).thenReturn(restSuccess(false));
     }
 
     private void verifySignedSentGrantOfferLetterExpectations(long projectId, long userId) {

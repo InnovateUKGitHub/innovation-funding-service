@@ -2,8 +2,8 @@ package org.innovateuk.ifs.project.monitoringofficer.viewmodel;
 
 public class MonitoringOfficerSummaryViewModel {
 
-    private final int inSetupProjectCount;
-    private final int previousProjectCount;
+    private int inSetupProjectCount;
+    private int previousProjectCount;
 
     private int documentsCompleteCount;
     private int documentsIncompleteCount;
@@ -13,10 +13,7 @@ public class MonitoringOfficerSummaryViewModel {
     private int spendProfileIncompleteCount;
     private int spendProfileAwaitingReviewCount;
 
-    // when toggle is false
-    public MonitoringOfficerSummaryViewModel(int inSetupProjectCount, int previousProjectCount) {
-        this.inSetupProjectCount = inSetupProjectCount;
-        this.previousProjectCount = previousProjectCount;
+    public MonitoringOfficerSummaryViewModel() {
     }
 
     public MonitoringOfficerSummaryViewModel(int inSetupProjectCount

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.activitylog.advice.Activity;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerDashboardPageResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.SimpleUserResource;
@@ -50,7 +51,7 @@ public interface MonitoringOfficerService {
     ServiceResult<List<ProjectResource>> getMonitoringOfficerProjects(long userId);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'GET_MONITORING_OFFICER_PROJECTS')")
-    ServiceResult<List<ProjectResource>> filterMonitoringOfficerProjects(long userId, String keywordSearch, boolean projectInSetup, boolean previousProject);
+    ServiceResult<MonitoringOfficerDashboardPageResource> filterMonitoringOfficerProjects(long userId, String keywordSearch, boolean projectInSetup, boolean previousProject, int pageIndex, int pageSize);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_MONITORING_OFFICER')")
     ServiceResult<MonitoringOfficerResource> findMonitoringOfficerForProject(long projectId);

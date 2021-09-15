@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.registration.form;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
@@ -148,5 +150,39 @@ public class RegistrationForm extends BaseBindingResultTarget {
                 .withPhoneNumber(phoneNumber)
                 .withAllowMarketingEmails(allowMarketingEmails == null ? false : allowMarketingEmails)
                 .withAgreedTerms("1".equals(termsAndConditions)); // this is weird.
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RegistrationForm that = (RegistrationForm) o;
+
+        return new EqualsBuilder()
+                .append(email, that.email)
+                .append(addressForm, that.addressForm)
+                .append(firstName, that.firstName)
+                .append(lastName, that.lastName)
+                .append(phoneNumber, that.phoneNumber)
+                .append(termsAndConditions, that.termsAndConditions)
+                .append(allowMarketingEmails, that.allowMarketingEmails)
+                .append(password, that.password)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(email)
+                .append(addressForm)
+                .append(firstName)
+                .append(lastName)
+                .append(phoneNumber)
+                .append(termsAndConditions)
+                .append(allowMarketingEmails)
+                .append(password)
+                .toHashCode();
     }
 }

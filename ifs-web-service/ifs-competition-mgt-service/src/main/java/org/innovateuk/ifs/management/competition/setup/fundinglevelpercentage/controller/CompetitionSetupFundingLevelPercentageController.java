@@ -110,7 +110,7 @@ public class CompetitionSetupFundingLevelPercentageController {
 
         Supplier<String> failureView = () -> view(model, competition, loggedInUser, null, competitionSetupForm);
         Supplier<String> successView = () ->
-                validationHandler.addAnyErrors(competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, FUNDING_LEVEL_PERCENTAGE))
+                validationHandler.addAnyErrors(competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, FUNDING_LEVEL_PERCENTAGE, loggedInUser))
                         .failNowOrSucceedWith(failureView, () ->
                                 format("redirect:/competition/setup/%d/section/%s", competition.getId(), FUNDING_LEVEL_PERCENTAGE.getPostMarkCompletePath()));
         return validationHandler.failNowOrSucceedWith(failureView, successView);
@@ -130,11 +130,11 @@ public class CompetitionSetupFundingLevelPercentageController {
         Supplier<String> failureView = () -> view(model, competition, loggedInUser, fundingRules, competitionSetupForm);
         Supplier<String> successView = () ->
                 fundingRules == FundingRules.STATE_AID ?
-                        validationHandler.addAnyErrors(competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, FUNDING_LEVEL_PERCENTAGE))
+                        validationHandler.addAnyErrors(competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, FUNDING_LEVEL_PERCENTAGE, loggedInUser))
                                 .failNowOrSucceedWith(failureView, () ->
                                         format("redirect:/competition/setup/%d/section/%s", competition.getId(), FUNDING_LEVEL_PERCENTAGE.getPostMarkCompletePath()))
                         :
-                        validationHandler.addAnyErrors(updater.saveSection(competition, competitionSetupForm))
+                        validationHandler.addAnyErrors(updater.saveSection(competition, competitionSetupForm, loggedInUser))
                                 .failNowOrSucceedWith(failureView, () ->
                                         format("redirect:/competition/setup/%d/section/%s/funding-rule/%s", competition.getId(), FUNDING_LEVEL_PERCENTAGE.getPath(), STATE_AID.toUrl()));
 
