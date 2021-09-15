@@ -48,6 +48,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_DUPLICATE_FUNDERS;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -844,6 +845,55 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         );
 
         verify(validator).validate(any(AdditionalInfoForm.class), any(BindingResult.class));
+    }
+
+    @Test
+    public void duplicateFundersForCompetition() throws Exception {
+        String redirectUrl = String.format("%s/%s/section/additional", URL_PREFIX, COMPETITION_ID);
+        CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .withActivityCode("Activity Code")
+                .withCompetitionCode("c123")
+                .withPafCode("p123")
+                .withBudgetCode("b123")
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withFunders(CompetitionFundersFixture.getTestCoFunders())
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+
+        when(competitionSetupService.getNextSetupSection(
+                any(AdditionalInfoForm.class),
+                any(CompetitionResource.class), any(CompetitionSetupSection.class))
+        ).thenReturn(serviceSuccess(String.format("redirect:%s", redirectUrl)));
+
+        when(competitionSetupService.saveCompetitionSetupSection(
+                any(AdditionalInfoForm.class),
+                any(CompetitionResource.class), any(CompetitionSetupSection.class))
+        ).thenReturn(serviceFailure(new Error(COMPETITION_DUPLICATE_FUNDERS, HttpStatus.BAD_REQUEST)));
+
+        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/additional")
+                .param("activityCode", "a123")
+                .param("pafNumber", "p123")
+                .param("competitionCode", "c123")
+                .param("funders[0].funder", Funder.ADVANCED_PROPULSION_CENTRE_APC.name())
+                .param("funders[0].funderBudget", "1")
+                .param("funders[0].coFunder", "false")
+                .param("funders[1].funder", Funder.ADVANCED_PROPULSION_CENTRE_APC.name())
+                .param("funders[1].funderBudget", "1")
+                .param("funders[1].coFunder", "true")
+                .param("budgetCode", "b123"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().errorCount(1))
+                .andExpect(view().name("competition/setup"))
+                .andReturn();
+
+        CompetitionSetupForm form = (CompetitionSetupForm) result.getModelAndView().getModel()
+                .get(COMPETITION_SETUP_FORM_KEY);
+        BindingResult bindingResult = form.getBindingResult();
+        assertEquals(1, bindingResult.getGlobalErrorCount());
+        assertEquals("COMPETITION_DUPLICATE_FUNDERS", bindingResult.getGlobalErrors().get(0).getCode());
     }
 
     @Test
