@@ -99,6 +99,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8847 Always open competitions: new comp setup configuration
 ...
+...            IFS-10325 Update Ts&Cs -‘Knowledge Transfer Partnership (KTP) - Subsidy control'
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -199,11 +201,11 @@ Comp Admin is able to see KTP funding type has been selected
     [Teardown]  the user clicks the button/link     link = Back to competition details
 
 Creating a new KTP comp points to the correct T&C
-    [Documentation]  IFS-7894
-    When the user clicks the button/link                     link = Terms and conditions
-    And the user clicks the button/link                      jQuery = button:contains("Edit")
-    Then the user sees that the radio button is selected     termsAndConditionsId  48
-    And the user should see the element                      link = Knowledge Transfer Partnership (KTP) - Subsidy control (opens in a new window)
+    [Documentation]  IFS-7894  IFS-10325
+    When the user clicks the button/link        link = Terms and conditions
+    And the user clicks the button/link         jQuery = button:contains("Edit")
+    Then the user clicks the button twice       jQuery = label:contains("Knowledge Transfer Partnership (KTP) - Subsidy control")
+    And the user should see the element         link = Knowledge Transfer Partnership (KTP) - Subsidy control (opens in a new window)
 
 The knowledge transfer partnership t&c's are correct
     [Documentation]  IFS-7894
