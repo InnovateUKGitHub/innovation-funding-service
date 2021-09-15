@@ -101,7 +101,7 @@ public class CompetitionSetupOrganisationalEligibilityController {
                                 .failNowOrSucceedWith(failureView, () ->
                                         format("redirect:/competition/setup/%d/section/%s/lead-international-organisation", competition.getId(), ORGANISATIONAL_ELIGIBILITY.getPostMarkCompletePath())) :
 
-                        validationHandler.addAnyErrors(saveResult(organisationalEligibilityForm, competition), fieldErrorsToFieldErrors(), asGlobalErrors())
+                        validationHandler.addAnyErrors(saveResult(organisationalEligibilityForm, competition, loggedInUser), fieldErrorsToFieldErrors(), asGlobalErrors())
                                 .failNowOrSucceedWith(failureView, () ->
                                         format("redirect:/competition/setup/%d/section/%s", competition.getId(), ORGANISATIONAL_ELIGIBILITY.getPostMarkCompletePath()));
 
@@ -125,7 +125,8 @@ public class CompetitionSetupOrganisationalEligibilityController {
                                                              @Valid @ModelAttribute LeadInternationalOrganisationForm leadInternationalOrganisationForm,
                                                              BindingResult bindingResult,
                                                              ValidationHandler validationHandler,
-                                                             Model model) {
+                                                             Model model,
+                                                             UserResource loggedInUser) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         CompetitionOrganisationConfigResource configResource = competitionOrganisationConfigRestService.findByCompetitionId(competitionId).getSuccess();
@@ -136,7 +137,7 @@ public class CompetitionSetupOrganisationalEligibilityController {
         };
 
         Supplier<String> successView = () -> {
-            return validationHandler.addAnyErrors(saveOrganisationConfig(competition, leadInternationalOrganisationForm), fieldErrorsToFieldErrors(), asGlobalErrors())
+            return validationHandler.addAnyErrors(saveOrganisationConfig(competition, leadInternationalOrganisationForm, loggedInUser), fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, () ->
                             format("redirect:/competition/setup/%d/section/%s", competition.getId(), ORGANISATIONAL_ELIGIBILITY.getPostMarkCompletePath()));
         };
@@ -144,7 +145,7 @@ public class CompetitionSetupOrganisationalEligibilityController {
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
-    private ServiceResult<Void> saveOrganisationConfig(CompetitionResource competition, LeadInternationalOrganisationForm leadInternationalOrganisationForm) {
+    private ServiceResult<Void> saveOrganisationConfig(CompetitionResource competition, LeadInternationalOrganisationForm leadInternationalOrganisationForm, UserResource loggedInUser) {
 
         CompetitionOrganisationConfigResource competitionOrganisationConfigResource = competitionOrganisationConfigRestService.findByCompetitionId(competition.getId()).getSuccess();
         competitionOrganisationConfigResource.setInternationalLeadOrganisationAllowed(leadInternationalOrganisationForm.getLeadInternationalOrganisationsApplicable());
@@ -153,7 +154,7 @@ public class CompetitionSetupOrganisationalEligibilityController {
         form.setInternationalOrganisationsApplicable(competitionOrganisationConfigResource.getInternationalOrganisationsAllowed());
         form.setLeadInternationalOrganisationsApplicable(competitionOrganisationConfigResource.getInternationalLeadOrganisationAllowed());
 
-        return competitionSetupService.saveCompetitionSetupSection(form, competition, ORGANISATIONAL_ELIGIBILITY);
+        return competitionSetupService.saveCompetitionSetupSection(form, competition, ORGANISATIONAL_ELIGIBILITY, loggedInUser);
     }
 
     private ServiceResult<Void> saveOrganisationEligibility(OrganisationalEligibilityForm organisationalEligibilityForm, CompetitionResource competition) {
@@ -163,7 +164,7 @@ public class CompetitionSetupOrganisationalEligibilityController {
         return competitionOrganisationConfigRestService.update(competition.getId(), competitionOrganisationConfigResource).toServiceResult().andOnSuccessReturnVoid();
     }
 
-    private ServiceResult<Void> saveResult(OrganisationalEligibilityForm organisationalEligibilityForm, CompetitionResource competition) {
-        return competitionSetupService.saveCompetitionSetupSection(organisationalEligibilityForm, competition, ORGANISATIONAL_ELIGIBILITY);
+    private ServiceResult<Void> saveResult(OrganisationalEligibilityForm organisationalEligibilityForm, CompetitionResource competition, UserResource loggedInUser) {
+        return competitionSetupService.saveCompetitionSetupSection(organisationalEligibilityForm, competition, ORGANISATIONAL_ELIGIBILITY, loggedInUser);
     }
 }

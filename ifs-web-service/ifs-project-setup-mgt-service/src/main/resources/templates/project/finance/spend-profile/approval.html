@@ -24,7 +24,18 @@
 
         <th:block th:if="${model.approved}">
             <div class="success-alert govuk-!-margin-bottom-6">
-                <h2 class="govuk-heading-s govuk-!-margin-top-0">The spend profile has been approved.</h2>
+                <th:block th:if="${model.isMOSpendProfileUpdateEnabled}">
+                    <th:block th:if="${model.isSpendProfileReviewedByIfsAdmin()}">
+                        <p class="govuk-body"><strong>Innovate UK approved this spend profile on <th:block th:text="${model.spendProfileReviewedOn() != null ? #temporals.format(model.spendProfileReviewedOn(), 'd MMM yyyy') : ''}"></th:block>.</strong></p>
+                    </th:block>
+                    <th:block th:if="${model.isSpendProfileReviewedByMO()}">
+                        <p class="govuk-body"><strong><th:block th:text="${model.userWhoApprovedSpendProfile()}"></th:block> approved this spend profile on <th:block th:text="${model.spendProfileReviewedOn() != null ? #temporals.format(model.spendProfileReviewedOn(), 'd MMM yyyy') : ''}"></th:block>.</strong></p>
+                    </th:block>
+                </th:block>
+
+                <th:block th:unless="${model.isMOSpendProfileUpdateEnabled}">
+                    <h2 class="govuk-heading-s govuk-!-margin-top-0">The spend profile has been approved.</h2>
+                </th:block>
             </div>
         </th:block>
 
