@@ -43,7 +43,6 @@ buildscript {
     }
 
     repositories {
-        maven { url "http://dl.bintray.com/robfletcher/gradle-plugins" }
         maven { url "https://repo.spring.io/milestone" }
         maven { url "https://plugins.gradle.org/m2/" }
         mavenCentral()
