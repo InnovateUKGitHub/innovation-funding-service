@@ -16,6 +16,7 @@ import org.innovateuk.ifs.management.competition.setup.core.form.GenericMileston
 import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupSectionUpdater;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,7 +51,7 @@ public class MilestonesSectionUpdater extends AbstractSectionUpdater implements 
     }
 
     @Override
-    protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+    protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm, UserResource loggedInUser) {
         MilestonesForm milestonesForm = (MilestonesForm) competitionSetupForm;
         LinkedMap<String, GenericMilestoneRowForm> milestoneEntries = milestonesForm.getMilestoneEntries();
 

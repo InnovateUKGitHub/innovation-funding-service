@@ -70,6 +70,20 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_SPEND_PROFILE",
+            description = "Competition Administrator Users can view the Spend Profile data")
+    public boolean compAdminUserCanViewAnySpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return isInternalAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_SPEND_PROFILE",
+            description = "Stakeholder Users can view the Spend Profile data")
+    public boolean stakeholderUserCanViewAnySpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return hasStakeholderAuthority(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_SPEND_PROFILE",
             description = "Lead partner view Spend Profile data")
     public boolean leadPartnerCanViewAnySpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
         return isLeadPartner(projectOrganisationCompositeId.getProjectId(), user.getId());

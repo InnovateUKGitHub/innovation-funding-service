@@ -8,6 +8,7 @@ import org.innovateuk.ifs.management.competition.setup.application.sectionupdate
 import org.innovateuk.ifs.management.competition.setup.applicationsubmission.form.ApplicationSubmissionForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupSectionUpdater;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,7 @@ public class ApplicationSubmissionSectionUpdater extends AbstractSectionUpdater 
     }
 
     @Override
-    protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+    protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm, UserResource loggedInUser) {
         ApplicationSubmissionForm form = (ApplicationSubmissionForm) competitionSetupForm;
         competition.setAlwaysOpen(form.getAlwaysOpen());
         return competitionSetupRestService.update(competition).toServiceResult();

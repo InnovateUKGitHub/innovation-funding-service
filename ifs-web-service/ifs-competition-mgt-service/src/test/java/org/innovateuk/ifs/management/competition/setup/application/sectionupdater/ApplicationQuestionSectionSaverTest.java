@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.management.competition.setup.application.form.QuestionForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -14,6 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -44,10 +46,12 @@ public class ApplicationQuestionSectionSaverTest {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionCode("compcode").build();
 
+        UserResource loggedInUser = newUserResource().build();
+
         when(questionSetupCompetitionRestService.getByQuestionId(1L)).thenReturn(restSuccess(question));
         when(questionSetupCompetitionRestService.save(question)).thenReturn(restSuccess());
 
-        assertTrue(service.saveSection(competition, competitionSetupForm).isSuccess());
+        assertTrue(service.saveSection(competition, competitionSetupForm, loggedInUser).isSuccess());
         verify(questionSetupCompetitionRestService).save(question);
     }
 

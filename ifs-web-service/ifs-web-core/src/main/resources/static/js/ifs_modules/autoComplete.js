@@ -14,7 +14,8 @@ IFS.core.autoComplete = (function () {
       var autoCompleteElement = jQuery(s.autoCompleteElement)
       if (autoCompleteElement.length > 0) {
         autoCompleteElement.each(function () {
-          IFS.core.autoComplete.initAutoCompletePlugin(jQuery(this))
+          IFS.core.autoComplete.initAutoCompletePlugin(jQuery(this),
+            IFS.core.autoComplete.populateDataSource(jQuery(this).data('auto-complete')))
         })
         autoCompleteElement.closest('form').submit(function () {
           autoCompleteElement.each(function () {
@@ -26,7 +27,7 @@ IFS.core.autoComplete = (function () {
         })
       }
     },
-    initAutoCompletePlugin: function (element) {
+    initAutoCompletePlugin: function (element, source) {
       var autoCompleteSubmitElement = jQuery(s.autoCompleteSubmitElement)
       if (element.length > 0) {
         autoCompleteSubmitElement.prop('disabled', true)
@@ -40,6 +41,7 @@ IFS.core.autoComplete = (function () {
         s.autoCompletePlugin.enhanceSelectElement({
           autoselect: false,
           selectElement: element[0],
+          source: source,
           showAllValues: showAllValues,
           defaultValue: '',
           confirmOnBlur: true,
@@ -68,6 +70,14 @@ IFS.core.autoComplete = (function () {
         if (element.hasClass('govuk-input--error')) {
           element.parent().find('.autocomplete__input').addClass('govuk-input--error')
         }
+      }
+    },
+    populateDataSource: function (type) {
+      switch (type) {
+        case 'cofunder':
+          return IFS.competitionManagement.repeater.populateFunderSource
+        default:
+          return null
       }
     }
   }
