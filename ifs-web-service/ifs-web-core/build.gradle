@@ -20,7 +20,7 @@ artifacts {
 }
 
 dependencies {
-    compile "org.springframework.boot:spring-boot-starter-thymeleaf:2.4.1"
+    compile "org.springframework.boot:spring-boot-starter-thymeleaf"
     compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity5"
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.springframework.boot:spring-boot-starter-validation"
