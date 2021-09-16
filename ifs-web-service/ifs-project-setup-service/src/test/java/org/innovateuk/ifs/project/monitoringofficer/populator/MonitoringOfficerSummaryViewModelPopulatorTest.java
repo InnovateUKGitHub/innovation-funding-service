@@ -21,7 +21,6 @@ import java.util.List;
 
 import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder.newCompetitionDocumentResource;
@@ -101,16 +100,11 @@ public class MonitoringOfficerSummaryViewModelPopulatorTest {
         projectResourceList.add(projectResourceInSetup);
         projectResourceList.add(projectResourceInLive);
 
-        ReflectionTestUtils.setField(populator, "isMOJourneyUpdateEnabled", true);
+        ReflectionTestUtils.setField(populator, "moDashboardFilterEnabled", true);
         when(monitoringOfficerRestService.getProjectsForMonitoringOfficer(user.getId())).thenReturn(restSuccess(projectResourceList));
 
         when(projectFilterPopulator.getInSetupProjects(projectResourceList)).thenReturn(singletonList(projectResourceList.get(0)));
         when(projectFilterPopulator.getPreviousProject(projectResourceList)).thenReturn(singletonList(projectResourceList.get(1)));
-        when(projectFilterPopulator.getProjectsWithDocumentsComplete(projectResourceList)).thenReturn(singletonList(projectResourceList.get(1)));
-        when(projectFilterPopulator.getProjectsWithDocumentsInComplete(projectResourceList)).thenReturn(emptyList());
-        when(projectFilterPopulator.getProjectsWithDocumentsAwaitingReview(projectResourceList)).thenReturn(singletonList(projectResourceList.get(0)));
-        when(projectFilterPopulator.getProjectsWithSpendProfileComplete(projectResourceList)).thenReturn(projectResourceList);
-        when(projectFilterPopulator.getProjectsWithSpendProfileComplete(projectResourceList)).thenReturn(projectResourceList);
     }
 
     @Test
@@ -120,10 +114,10 @@ public class MonitoringOfficerSummaryViewModelPopulatorTest {
 
         assertEquals(1, viewModel.getInSetupProjectCount());
         assertEquals(1, viewModel.getPreviousProjectCount());
-        assertEquals(1, viewModel.getDocumentsAwaitingReviewCount());
-        assertEquals(1, viewModel.getDocumentsCompleteCount());
+        assertEquals(0, viewModel.getDocumentsAwaitingReviewCount());
+        assertEquals(0, viewModel.getDocumentsCompleteCount());
         assertEquals(0, viewModel.getDocumentsIncompleteCount());
-        assertEquals(2, viewModel.getSpendProfileCompleteCount());
+        assertEquals(0, viewModel.getSpendProfileCompleteCount());
         assertEquals(0, viewModel.getSpendProfileIncompleteCount());
         assertEquals(0, viewModel.getSpendProfileAwaitingReviewCount());
     }
@@ -138,10 +132,10 @@ public class MonitoringOfficerSummaryViewModelPopulatorTest {
 
         assertEquals(1, viewModel.getInSetupProjectCount());
         assertEquals(1, viewModel.getPreviousProjectCount());
-        assertEquals(1, viewModel.getDocumentsAwaitingReviewCount());
-        assertEquals(1, viewModel.getDocumentsCompleteCount());
+        assertEquals(0, viewModel.getDocumentsAwaitingReviewCount());
+        assertEquals(0, viewModel.getDocumentsCompleteCount());
         assertEquals(0, viewModel.getDocumentsIncompleteCount());
-        assertEquals(2, viewModel.getSpendProfileCompleteCount());
+        assertEquals(0, viewModel.getSpendProfileCompleteCount());
         assertEquals(0, viewModel.getSpendProfileIncompleteCount());
         assertEquals(0, viewModel.getSpendProfileAwaitingReviewCount());
     }

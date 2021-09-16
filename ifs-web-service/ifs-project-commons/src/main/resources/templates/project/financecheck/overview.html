@@ -10,7 +10,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.overview.projectId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to finance checks',linkUrl=@{${model.externalUserLinkUrl}}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="govuk-grid-row">
@@ -35,17 +35,19 @@
         </th:block>
 
 
-        <div th:if="${model.canChangeFundingLevelPercentages}" class="govuk-!-margin-top-0">
-            <p class="govuk-body"><a class="govuk-link" th:href="@{/project/{projectId}/funding-level(projectId=${model.overview.projectId})}">Change funding level percentages</a></p>
-        </div>
+        <th:block th:unless="${model.externalUser}">
+            <div th:if="${model.canChangeFundingLevelPercentages}" class="govuk-!-margin-top-0">
+                <p class="govuk-body"><a class="govuk-link" th:href="@{/project/{projectId}/funding-level(projectId=${model.overview.projectId})}">Change funding level percentages</a></p>
+            </div>
 
-        <p class="govuk-body govuk-!-margin-bottom-6">
-            <a class="govuk-link"
-               th:if="${model.canChangeFundingSought}"
-               th:href="@{/project/{projectId}/funding-sought(projectId=${model.overview.projectId})}">Change funding sought</a>
-        </p>
+            <p class="govuk-body govuk-!-margin-bottom-6">
+                <a class="govuk-link"
+                   th:if="${model.canChangeFundingSought}"
+                   th:href="@{/project/{projectId}/funding-sought(projectId=${model.overview.projectId})}">Change funding sought</a>
+            </p>
+        </th:block>
 
-        <div th:unless="${model.ktpCompetition}" class="govuk-!-margin-top-6">
+        <div th:unless="${model.ktpCompetition || model.externalUser}" class="govuk-!-margin-top-6">
             <th:block th:insert="project/financecheck/fragments/finance :: research_participation(researchParticipationPercentage=${model.overview.researchParticipationPercentage},maxResearchPercentage=${model.overview.competitionMaximumResearchPercentage})"/>
         </div>
 

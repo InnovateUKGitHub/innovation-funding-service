@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.Funder;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
+import java.util.Objects;
 
 /**
  * Form representing a row in the funders table.
@@ -53,5 +54,18 @@ public class FunderRowForm {
 
     public void setCoFunder(Boolean coFunder) {
         this.coFunder = coFunder;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FunderRowForm)) return false;
+        FunderRowForm that = (FunderRowForm) o;
+        return funder == that.funder;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(funder);
     }
 }
