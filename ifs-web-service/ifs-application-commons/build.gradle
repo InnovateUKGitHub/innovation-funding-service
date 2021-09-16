@@ -36,6 +36,7 @@ dependencies {
     testCompile "com.opencsv:opencsv"
     testCompile "junit:junit"
     testCompile group: 'com.jayway.awaitility', name: 'awaitility'
+    testCompile "org.springframework.boot:spring-boot-starter-validation"
 
 }
 
