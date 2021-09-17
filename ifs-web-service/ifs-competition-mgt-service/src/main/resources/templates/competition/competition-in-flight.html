@@ -229,7 +229,7 @@
                                        class="govuk-link">See public dates</a>
                                 </p>
                             </li>
-                            <li th:with="milestone=${model.findMilestoneByType(model.getSubmissionDateMilestoneType()}"
+                            <li th:with="milestone=${model.findMilestoneByType(model.getSubmissionDateMilestoneType())}"
                                 th:class="${(milestone.passed ? 'done' : '')}">
                                 <h3 class="govuk-heading-s">Submission date</h3>
                                 <p class="govuk-body"

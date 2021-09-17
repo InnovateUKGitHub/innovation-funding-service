@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.application.finance.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -100,6 +102,11 @@ public class ApplicationFinanceSummaryViewModel implements BaseAnalyticsViewMode
     private boolean atLeastTwoCompleteOrganisationFinances() {
         return financeSummaryTableViewModel.getRows().stream().filter(FinanceSummaryTableRow::isComplete)
                 .count() > 1;
+    }
+
+    @JsonIgnore
+    public SectionType getFinanceSectionType() {
+        return SectionType.FINANCE;
     }
 
 }

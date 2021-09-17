@@ -42,7 +42,7 @@
                                         class="govuk-select"
                                         id="searchCategory"
                                         name="searchCategory">
-                                    <option th:each="category : ${getAllSearchCategories()}"
+                                    <option th:each="category : ${form.getAllSearchCategories()}"
                                             th:value="${category}"
                                             th:text="${category.displayName}"
                                             th:selected="${form.searchCategory == null && category.selectedByDefault}"></option>

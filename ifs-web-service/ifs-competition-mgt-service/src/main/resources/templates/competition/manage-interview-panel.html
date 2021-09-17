@@ -40,12 +40,12 @@
 
         <ul class="govuk-list link-list govuk-!-margin-top-6">
 
-            <li><a th:if="${isFundersPanelCompetitionStatus()}"
+            <li><a th:if="${model.isFundersPanelCompetitionStatus()}"
                    th:href="@{/assessment/interview/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}"
                    class="govuk-link">
                 Assign applications
             </a>
-                <a th:unless="${isFundersPanelCompetitionStatus()}"
+                <a th:unless="${model.isFundersPanelCompetitionStatus()}"
                    class="govuk-link disabled" aria-disabled="true" >
                     Assign applications
                 </a>
@@ -55,12 +55,12 @@
 
             <li><p class="govuk-body govuk-!-margin-top-6">You can allocate applications to assessors once they have responded.</p></li>
 
-            <li><a th:if="${isFundersPanelCompetitionStatus()}"
+            <li><a th:if="${model.isFundersPanelCompetitionStatus()}"
                    th:href="@{/assessment/interview/competition/{competitionId}/assessors/allocate-assessors(competitionId=${model.competitionId})}"
                    class="govuk-link">
                 Allocate applications to assessors
             </a>
-                <a th:unless="${isFundersPanelCompetitionStatus()}"
+                <a th:unless="${model.isFundersPanelCompetitionStatus()}"
                    class="govuk-link disabled" aria-disabled="true" >
                     Allocate applications to assessors
                 </a>
