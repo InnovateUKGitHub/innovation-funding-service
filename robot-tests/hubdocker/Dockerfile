@@ -2,3 +2,4 @@
 FROM selenium/hub:3.14.0-arsenic
 
 EXPOSE 3000
+EXPOSE 4444

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Define some functions for later use
+DATASERVICE_POD=$(kubectl get pod -l app=data-service -o jsonpath="{.items[0].metadata.name}")
 
 function coloredEcho() {
     local exp=$1;
@@ -31,19 +32,19 @@ function section() {
 function clearDownFileRepository() {
     echo "***********Deleting any uploaded files***************"
     echo "storedFileFolder:   ${storedFileFolder}"
-    docker exec -d data-service  rm -rf ${storedFileFolder}
+    kubectl exec $DATASERVICE_POD -- rm -rf ${storedFileFolder}
 
     echo "***********Deleting any holding for scan files***************"
     echo "virusScanHoldingFolder: ${virusScanHoldingFolder}"
-    docker exec -d data-service  rm -rf ${virusScanHoldingFolder}
+    kubectl exec $DATASERVICE_POD -- rm -rf ${virusScanHoldingFolder}
 
     echo "***********Deleting any quarantined files***************"
     echo "virusScanQuarantinedFolder: ${virusScanQuarantinedFolder}"
-    docker exec -d data-service  rm -rf ${virusScanQuarantinedFolder}
+    kubectl exec $DATASERVICE_POD -- rm -rf ${virusScanQuarantinedFolder}
 
     echo "***********Deleting any scanned files***************"
     echo "virusScanScannedFolder: ${virusScanScannedFolder}"
-    docker exec -d data-service  rm -rf ${virusScanScannedFolder}
+    kubectl exec $DATASERVICE_POD -- rm -rf ${virusScanScannedFolder}
 }
 
 function addTestFiles() {
@@ -51,23 +52,24 @@ function addTestFiles() {
 
     clearDownFileRepository
     echo "***********Adding test files***************"
-    docker exec -d data-service  cp ${uploadFileDir}/testing.pdf /tmp/testing.pdf
+    kubectl cp ${uploadFileDir}/testing.pdf $DATASERVICE_POD:/tmp/
 
     echo "***********Making the quarantined directory ***************"
-    docker exec -d data-service mkdir -p ${virusScanQuarantinedFolder}
+    kubectl exec $DATASERVICE_POD -- mkdir -p ${virusScanQuarantinedFolder}
     echo "***********Adding pretend quarantined file ***************"
-    docker exec -d data-service cp /tmp/testing.pdf ${virusScanQuarantinedFolder}/8
+    kubectl exec $DATASERVICE_POD -- cp /tmp/testing.pdf ${virusScanQuarantinedFolder}/8
 
     echo "***********Adding standard file upload location ***********"
-    docker exec -d data-service mkdir -p ${storedFileFolder}/000000000_999999999/000000_999999/000_999
+    kubectl exec $DATASERVICE_POD -- mkdir -p ${storedFileFolder}/000000000_999999999/000000_999999/000_999
 
     echo "***********Creating file entry for each db entry***********"
-    max_file_entry_id=$(docker exec ifs-database mysql ifs -uroot -ppassword -hifs-database -s -e 'select max(id) from file_entry;')
+    MYSQL_POD=$(kubectl get pod -l app=ifs-database -o jsonpath="{.items[0].metadata.name}")
+    max_file_entry_id=$(kubectl exec $MYSQL_POD -- mysql ifs -uroot -ppassword -hifs-database -s -e 'select max(id) from file_entry;')
     for i in `seq 1 ${max_file_entry_id}`;
     do
       if [ "${i}" != "8" ]
       then
-        docker exec -d data-service cp /tmp/testing.pdf ${storedFileFolder}/000000000_999999999/000000_999999/000_999/${i}
+        kubectl exec $DATASERVICE_POD -- cp /tmp/testing.pdf ${storedFileFolder}/000000000_999999999/000000_999999/000_999/${i}
       fi
     done
 }
@@ -79,14 +81,15 @@ function initialiseTestEnvironment() {
     if [[ ${quickTest} -eq 1 ]]
       then
         section "=> STARTING SELENIUM GRID and INJECTING ENVIRONMENT PARAMETERS"
-        ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robotTestsFilter --configure-on-demand
+        ./gradlew :robotTestsFilter --configure-on-demand
 
         echo "=> Waiting 5 seconds for the grid to be properly started"
         sleep 5
       else
         section "=> STARTING SELENIUM GRID, INJECTING ENVIRONMENT PARAMETERS, RESETTING DATABASE STATE"
-        ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robotTestsFilter :ifs-data-layer:ifs-data-service:flywayClean :ifs-data-layer:ifs-data-service:flywayMigrate :docker:cache-provider:deploy -Pinitialise=true --configure-on-demand
+        ./gradlew :robotTestsFilter :ifs-data-layer:ifs-data-service:flywayClean :ifs-data-layer:ifs-data-service:flywayMigrate -Pinitialise=true --configure-on-demand
         section "=> SYNCING SHIBBOLETH USERS"
+
         ./gradlew :ifs-data-layer:ifs-data-service:syncShib 2>&1 >/dev/null
     fi
 
@@ -96,7 +99,7 @@ function stopSeleniumGrid() {
     section "=> STOPPING SELENIUM GRID"
 
     cd ${rootDir}
-    ./gradlew :robot-tests:removeHub :robot-tests:removeChrome --configure-on-demand
+#    ./gradlew :robot-tests:removeHub :robot-tests:removeChrome --configure-on-demand
 }
 
 function startPybot() {
@@ -167,7 +170,7 @@ function startPybot() {
     -v BROWSER=chrome \
     -v REMOTE_URL:'http://ifs.local-dev:4444/wd/hub' \
     -v SAUCELABS_RUN:0 \
-    -v local_imap:'ifs.local-dev' \
+    -v local_imap:'ifs.local-dev:8443' \
     -v local_imap_port:9876 \
     $includeHappyPath \
     $includeBespokeTags \
@@ -206,7 +209,7 @@ function deleteEmails() {
     cd ${scriptDir}
     python3 -m robot --outputdir target/set_up_steps --pythonpath IFS_acceptance_tests/libs \
     -v docker:1 \
-    -v local_imap:'ifs.local-dev' \
+    -v local_imap:'ifs.local-dev:8443' \
     -v local_imap_port:9876  \
     IFS_acceptance_tests/tests/00__Set_Up_Tests/delete_emails.robot 2>&1 >/dev/null
     echo "...done"
@@ -271,7 +274,7 @@ rootDir=`pwd`
 
 dataServiceCodeDir="${rootDir}/ifs-data-layer/ifs-data-service"
 webServiceCodeDir="${rootDir}/ifs-web-service"
-webBase="ifs.local-dev"
+webBase="ifs.local-dev:8443"
 
 uploadFileDir="${scriptDir}/upload_files"
 baseFileStorage="/tmp"

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hub
+  annotations:
+    pullSecrets: pullSecrets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hub
+  template:
+    metadata:
+      labels:
+        app: hub
+    spec:
+      hostname: hub
+      containers:
+      - image: seleniumhub:1.1.152-1420-g5befe8352fb
+        name: hub
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: GRID_BROWSER_TIMEOUT
+          value: "90000"
+        - name: GRID_TIMEOUT
+          value: "100000"
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 2000M
+          requests:
+            cpu: 100m
+            memory: 400M

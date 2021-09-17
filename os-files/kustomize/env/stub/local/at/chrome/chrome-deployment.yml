@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chrome
+  annotations:
+    pullSecrets: pullSecrets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chrome
+  template:
+    metadata:
+      labels:
+        app: chrome
+    spec:
+      hostname: chrome
+      volumes:
+      - name: dshm
+        emptyDir:
+          medium: Memory
+      containers:
+      - image: chrome:1.1.152-1420-g5befe8352fb
+        name: chrome
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - mountPath: /dev/shm
+          name: dshm
+        env:
+        - name: NODE_MAX_SESSION
+          value: "20"
+        - name: NODE_MAX_INSTANCES
+          value: "20"
+        - name: NODE_REGISTER_CYCLE
+          value: "600"
+        - name: HUB_PORT_4444_TCP_ADDR
+          value: "hub"
+        - name: HUB_PORT_4444_TCP_PORT
+          value: "4444"
+        - name: DBUS_SESSION_BUS_ADDRESS
+          value: "/dev/null"
+        - name: no_proxy
+          value: "localhost"
+        - name: HUB_ENV_no_proxy
+          value: "localhost"
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 2000M
+          requests:
+            cpu: 100m
+            memory: 400M
