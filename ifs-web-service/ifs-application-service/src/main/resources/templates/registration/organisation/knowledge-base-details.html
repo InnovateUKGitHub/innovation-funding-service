@@ -78,7 +78,7 @@
                                 <div class="govuk-form-group">
                                     <div class="govuk-grid-column">
                                         <label th:for="${fieldName}" class="govuk-heading-s"
-                                               th:text="${getUniversity() == type ? 'UKPRN number' : 'Registration number'}">Registration number</label>
+                                               th:text="${form.getUniversity() == type ? 'UKPRN number' : 'Registration number'}">Registration number</label>
                                     </div>
                                     <input class="govuk-input govuk-input--width-10"
                                            th:field="*{__${fieldName}__}"
