@@ -21,7 +21,7 @@
             <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|Interested (${model.AcceptedCount})|">Interested</h2>
 
             <ul class="govuk-list">
-                <li th:each="assignment : ${model.assignments.get(model.getAcceptedSupporterState()}">
+                <li th:each="assignment : ${model.assignments.get(model.getAcceptedSupporterState())}">
                     <dl class="govuk-list govuk-!-font-size-16">
                         <dt th:text="${assignment.userName}">name</dt>
                         <dt th:text="${assignment.userSimpleOrganisation}">org</dt>
@@ -36,7 +36,7 @@
             <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|Declined (${model.DeclinedCount})|">Declined</h2>
 
             <ul class="govuk-list">
-                <li th:each="assignment : ${model.assignments.get(model.getRejectedSupporterState()}">
+                <li th:each="assignment : ${model.assignments.get(model.getRejectedSupporterState())}">
                     <dl class="govuk-list govuk-!-font-size-16">
                         <dt th:text="${assignment.userName}">name</dt>
                         <dt th:text="${assignment.userSimpleOrganisation}">org</dt>

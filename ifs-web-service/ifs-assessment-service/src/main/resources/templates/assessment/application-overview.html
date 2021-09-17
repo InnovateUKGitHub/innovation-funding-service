@@ -120,13 +120,13 @@
                                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
                                     </th:block>
                                     <select id="rejectReasonValid"
-                                            class="govuk-select"assessmentRejectOutcome
-                                            th:attr="data-required-errormessage=#{validation..rejectReason.required}"
+                                            class="govuk-select"
+                                            th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}"
                                             th:errorclass="govuk-select--error"
                                             required="required"
                                             th:field="*{rejectReason}">
                                         <option value="">Select a reason</option>
-                                        <option th:each="reason : ${getAssessmentRejectOutcomeValue()}"
+                                        <option th:each="reason : ${T(org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue).values()}"
                                                 th:value="${reason}"
                                                 th:text="${reason.displayLabel}"
                                                 value="1">Not available</option>
