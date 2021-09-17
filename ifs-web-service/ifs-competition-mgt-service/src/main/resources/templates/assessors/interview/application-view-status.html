@@ -87,8 +87,8 @@
                             <td class="govuk-table__cell" th:text="${app.applicationName}">Application name</td>
                             <td class="govuk-table__cell" th:text="${app.leadOrganisation}">Lead organisation</td>
 
-                            <td class="govuk-table__cell" th:if="${app.status == app.getSubmittedFeedbackResponseState()"><span class="yes"></span>Responded to feedback</td>
-                            <td class="govuk-table__cell" th:unless="${app.status == app.getSubmittedFeedbackResponseState()">Awaiting response</td>
+                            <td class="govuk-table__cell" th:if="${app.status == app.getSubmittedFeedbackResponseState()}"><span class="yes"></span>Responded to feedback</td>
+                            <td class="govuk-table__cell" th:unless="${app.status == app.getSubmittedFeedbackResponseState()}">Awaiting response</td>
                             <td class="govuk-table__cell">
                                 <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/view(competitionId=${model.competitionId},applicationId=${app.applicationId})}"
                                    class="govuk-button govuk-button--secondary">View invite</a>

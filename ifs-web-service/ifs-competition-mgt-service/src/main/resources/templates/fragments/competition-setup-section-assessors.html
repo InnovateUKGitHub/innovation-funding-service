@@ -195,7 +195,7 @@
                     </th:block>
                     <div th:if="${model.general.competitionIsInAssessmentStatus}"
                          class="govuk-radios">
-                        <div class="govuk-radios__item" th:each="assessorFinanceView : ${model.assessorFinanceView}">
+                        <div class="govuk-radios__item" th:each="assessorFinanceView : ${model.general.assessorFinanceView}">
                             <input type="radio"
                                    class="govuk-radios__input"
                                    th:id="${'assessorFinanceView-' + assessorFinanceView.name()}"
