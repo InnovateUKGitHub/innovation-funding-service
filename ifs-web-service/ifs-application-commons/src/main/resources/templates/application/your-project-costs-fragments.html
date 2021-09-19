@@ -3075,7 +3075,7 @@
                     th:name="__${path}__.type">
                 <option disabled="disabled" value="" th:selected="${row.type == null}">Select</option>
                 <option
-                    th:each="type : ${model.getAllKTPTravelCostTypes()}"
+                    th:each="type : ${form.getAllKTPTravelCostTypes()}"
                     th:text="${type.text}" th:value="${type}" th:selected="${row.type == type}"></option>
             </select>
         </td>

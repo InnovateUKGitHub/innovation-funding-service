@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost;
 import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost.KtpTravelCostType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 
@@ -453,5 +455,9 @@ public class YourProjectCostsForm {
 
     public void setAcademicAndSecretarialSupportForm(AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportForm) {
         this.academicAndSecretarialSupportForm = academicAndSecretarialSupportForm;
+    }
+    @JsonIgnore
+    public KtpTravelCost.KtpTravelCostType[] getAllKTPTravelCostTypes() {
+        return KtpTravelCost.KtpTravelCostType.values();
     }
 }
