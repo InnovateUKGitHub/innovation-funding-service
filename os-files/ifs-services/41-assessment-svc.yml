@@ -82,6 +82,11 @@ items:
                     configMapKeyRef:
                       name: spring-config
                       key: SPRING_PROFILES_ACTIVE
+                - name: IFS_WEB_BASEURL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_WEB_BASEURL
                 - name: JAVA_OPTS
                   value: -Xms1000m -Xmx1000m -javaagent:/newrelic.jar
                 - name: NEW_RELIC_APP_NAME

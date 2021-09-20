@@ -122,17 +122,17 @@ public class AcceptProjectPartnerInviteController {
                     boolean international = organisationConfigResource.areInternationalApplicantsAllowed();
 
                     if (international) {
-                        return navigationUtils.getRedirectToSameDomainUrl(request, "organisation/create/international-organisation");
+                        return navigationUtils.getRedirectToSameDomainUrl("organisation/create/international-organisation");
                     }
 
-                    return navigationUtils.getRedirectToSameDomainUrl(request, "organisation/select");
+                    return navigationUtils.getRedirectToSameDomainUrl("organisation/select");
                 }).getSuccess()
         ).orElseThrow(ObjectNotFoundException::new);
     }
 
     private String alreadyAcceptedView(HttpServletResponse response, HttpServletRequest request) {
         cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
-        return navigationUtils.getRedirectToSameDomainUrl(request, "not-found");
+        return navigationUtils.getRedirectToSameDomainUrl("not-found");
     }
 
     private boolean loggedInAsNonInviteUser(SentProjectPartnerInviteResource invite, UserResource loggedInUser) {

@@ -92,11 +92,21 @@ items:
                     configMapKeyRef:
                       name: feature-toggle-config
                       key: IFS_MONITORINGOFFICER_SPENDPROFILE_UPDATE_ENABLED
+                - name: IFS_MONITORINGOFFICER_DASHBOARD_FILTER_ENABLED
+                  valueFrom:
+                    configMapKeyRef:
+                      name: feature-toggle-config
+                      key: IFS_MONITORINGOFFICER_DASHBOARD_FILTER_ENABLED
                 - name: SPRING_PROFILES_ACTIVE
                   valueFrom:
                     configMapKeyRef:
                       name: spring-config
                       key: SPRING_PROFILES_ACTIVE
+                - name: IFS_WEB_BASEURL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_WEB_BASEURL
                 - name: JAVA_OPTS
                   value: -Xms1000m -Xmx1000m -javaagent:/newrelic.jar
                 - name: NEW_RELIC_APP_NAME

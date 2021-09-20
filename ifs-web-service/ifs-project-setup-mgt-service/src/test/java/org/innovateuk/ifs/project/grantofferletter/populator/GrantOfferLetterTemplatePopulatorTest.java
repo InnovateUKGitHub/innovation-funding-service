@@ -9,10 +9,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceNotesRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
-import org.innovateuk.ifs.project.grantofferletter.viewmodel.AcademicFinanceTableModel;
-import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterTemplateViewModel;
-import org.innovateuk.ifs.project.grantofferletter.viewmodel.IndustrialFinanceTableModel;
-import org.innovateuk.ifs.project.grantofferletter.viewmodel.SummaryFinanceTableModel;
+import org.innovateuk.ifs.project.grantofferletter.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.threads.resource.NoteResource;
@@ -26,10 +23,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -77,7 +71,11 @@ public class GrantOfferLetterTemplatePopulatorTest {
     @Mock
     private SummaryFinanceTableModelPopulator summaryFinanceTableModelPopulator;
 
+    @Mock
+    private SubsidyControlModelPopulator subsidyControlModelPopulator;
+
     private static final long APPLICATION_ID = 123L;
+    private final String ORGANISATION_NAME = "Organisation name";
 
     @Test
     public void populate() {
@@ -109,6 +107,7 @@ public class GrantOfferLetterTemplatePopulatorTest {
         IndustrialFinanceTableModel industrialFinanceTable = industrialFinanceTable(leadOrg, finances);
         AcademicFinanceTableModel academicFinanceTable = academicFinanceTable(leadOrg, finances);
         SummaryFinanceTableModel summaryFinanceTable = summaryFinanceTable();
+        SubsidyControlModel subsidyControlModel = subsidyControlModel();
 
         when(organisationRestService.getOrganisationById(leadOrg.getId())).thenReturn(restSuccess(leadOrg));
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(projectManagerProjectUser));
@@ -119,6 +118,7 @@ public class GrantOfferLetterTemplatePopulatorTest {
         when(industrialFinanceTableModelPopulator.createTable(any(), any())).thenReturn(industrialFinanceTable);
         when(academicFinanceTableModelPopulator.createTable(any(), any())).thenReturn(academicFinanceTable);
         when(summaryFinanceTableModelPopulator.createTable(any(), any())).thenReturn(summaryFinanceTable);
+        when(subsidyControlModelPopulator.populate(any())).thenReturn(subsidyControlModel);
 
         GrantOfferLetterTemplateViewModel model = populator.populate(project, competition);
 
@@ -137,6 +137,7 @@ public class GrantOfferLetterTemplatePopulatorTest {
         assertEquals(industrialFinanceTable, model.getIndustrialFinanceTable());
         assertEquals(academicFinanceTable, model.getAcademicFinanceTable());
         assertEquals(summaryFinanceTable, model.getSummaryFinanceTable());
+        assertEquals(subsidyControlModel, model.getSubsidyControlModel());
     }
 
     @Test
@@ -176,6 +177,7 @@ public class GrantOfferLetterTemplatePopulatorTest {
         IndustrialFinanceTableModel industrialFinanceTable = industrialFinanceTable(leadOrg, finances);
         AcademicFinanceTableModel academicFinanceTable = academicFinanceTable(leadOrg, finances);
         SummaryFinanceTableModel summaryFinanceTable = summaryFinanceTable();
+        SubsidyControlModel subsidyControlModel = subsidyControlModel();
 
         when(organisationRestService.getOrganisationById(leadOrg.getId())).thenReturn(restSuccess(leadOrg));
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(projectManagerProjectUser));
@@ -187,6 +189,7 @@ public class GrantOfferLetterTemplatePopulatorTest {
         when(industrialFinanceTableModelPopulator.createTable(any(), any())).thenReturn(industrialFinanceTable);
         when(academicFinanceTableModelPopulator.createTable(any(), any())).thenReturn(academicFinanceTable);
         when(summaryFinanceTableModelPopulator.createTable(any(), any())).thenReturn(summaryFinanceTable);
+        when(subsidyControlModelPopulator.populate(any())).thenReturn(subsidyControlModel);
 
         GrantOfferLetterTemplateViewModel model = populator.populate(project, competition);
 
@@ -207,6 +210,7 @@ public class GrantOfferLetterTemplatePopulatorTest {
         assertEquals(industrialFinanceTable, model.getIndustrialFinanceTable());
         assertEquals(academicFinanceTable, model.getAcademicFinanceTable());
         assertEquals(summaryFinanceTable, model.getSummaryFinanceTable());
+        assertEquals(subsidyControlModel, model.getSubsidyControlModel());
     }
 
     @Test
@@ -247,6 +251,7 @@ public class GrantOfferLetterTemplatePopulatorTest {
         IndustrialFinanceTableModel industrialFinanceTable = industrialFinanceTable(leadOrg, finances);
         AcademicFinanceTableModel academicFinanceTable = academicFinanceTable(leadOrg, finances);
         SummaryFinanceTableModel summaryFinanceTable = summaryFinanceTable();
+        SubsidyControlModel subsidyControlModel = subsidyControlModel();
 
         when(organisationRestService.getOrganisationById(leadOrg.getId())).thenReturn(restSuccess(leadOrg));
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(projectManagerProjectUser));
@@ -258,6 +263,7 @@ public class GrantOfferLetterTemplatePopulatorTest {
         when(industrialFinanceTableModelPopulator.createTable(any(), any())).thenReturn(industrialFinanceTable);
         when(academicFinanceTableModelPopulator.createTable(any(), any())).thenReturn(academicFinanceTable);
         when(summaryFinanceTableModelPopulator.createTable(any(), any())).thenReturn(summaryFinanceTable);
+        when(subsidyControlModelPopulator.populate(any())).thenReturn(subsidyControlModel);
 
         GrantOfferLetterTemplateViewModel model = populator.populate(project, competition);
 
@@ -276,6 +282,7 @@ public class GrantOfferLetterTemplatePopulatorTest {
         assertEquals(industrialFinanceTable, model.getIndustrialFinanceTable());
         assertEquals(academicFinanceTable, model.getAcademicFinanceTable());
         assertEquals(summaryFinanceTable, model.getSummaryFinanceTable());
+        assertEquals(subsidyControlModel, model.getSubsidyControlModel());
     }
 
     private AcademicFinanceTableModel academicFinanceTable(OrganisationResource leadOrg, Map<String, ProjectFinanceResource> finances) {
@@ -295,7 +302,7 @@ public class GrantOfferLetterTemplatePopulatorTest {
 
     private OrganisationResource leadOrg() {
         return newOrganisationResource().
-                withName("Organisation name")
+                withName(ORGANISATION_NAME)
                 .build();
     }
 
@@ -319,6 +326,15 @@ public class GrantOfferLetterTemplatePopulatorTest {
                 singletonList(leadOrg.getName()),
                 BigDecimal.TEN,
                 BigDecimal.ONE);
+    }
+
+    private SubsidyControlModel subsidyControlModel() {
+        return new SubsidyControlModel(
+                Collections.singletonList(ORGANISATION_NAME),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                Collections.emptyList()
+        );
     }
 
     private UserResource projectManager() {

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.monitoring.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerDashboardPageResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -18,6 +19,9 @@ import java.util.List;
 public class MonitoringOfficerController {
 
     private MonitoringOfficerService monitoringOfficerService;
+    private static final String DEFAULT_PAGE_NUMBER = "0";
+    private static final String DEFAULT_PAGE_SIZE = "10";
+
 
     public MonitoringOfficerController(MonitoringOfficerService monitoringOfficerService) {
         this.monitoringOfficerService = monitoringOfficerService;
@@ -59,10 +63,13 @@ public class MonitoringOfficerController {
     }
 
     @GetMapping("{userId}/filter-projects")
-    public RestResult<List<ProjectResource>> filterMonitoringOfficerProjects(@PathVariable final long userId,
-                                                                             @RequestParam(value = "projectInSetup", required = false, defaultValue = "false") boolean projectInSetup,
-                                                                             @RequestParam(value = "previousProject", required = false, defaultValue = "false") boolean previousProject) {
-        return monitoringOfficerService.filterMonitoringOfficerProjects(userId, projectInSetup, previousProject).toGetResponse();
+    public RestResult<MonitoringOfficerDashboardPageResource> filterMonitoringOfficerProjects(@PathVariable final long userId,
+                                                                                              @RequestParam(value = "keywordSearch", required = false, defaultValue = "") String keywordSearch,
+                                                                                              @RequestParam(value = "projectInSetup", required = false, defaultValue = "false") boolean projectInSetup,
+                                                                                              @RequestParam(value = "previousProject", required = false, defaultValue = "false") boolean previousProject,
+                                                                                              @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageNumber,
+                                                                                              @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
+        return monitoringOfficerService.filterMonitoringOfficerProjects(userId, keywordSearch, projectInSetup, previousProject,pageNumber,pageSize).toGetResponse();
     }
 
     @GetMapping("/project/{projectId}")

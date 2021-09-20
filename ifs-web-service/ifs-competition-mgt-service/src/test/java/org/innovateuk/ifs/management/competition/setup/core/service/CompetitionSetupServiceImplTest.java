@@ -17,12 +17,13 @@ import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.Compe
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionStateSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
-import org.innovateuk.ifs.management.competition.setup.projecteligibility.viewmodel.ProjectEligibilityViewModel;
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.AdditionalInfoForm;
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.viewmodel.AdditionalModelViewModel;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.populator.InitialDetailsModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.viewmodel.InitialDetailsViewModel;
+import org.innovateuk.ifs.management.competition.setup.projecteligibility.viewmodel.ProjectEligibilityViewModel;
 import org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,14 +38,14 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singleton;
+import static java.util.Collections.*;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.INITIAL_DETAILS;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -171,6 +172,8 @@ public class CompetitionSetupServiceImplTest {
                 .withId(COMPETITION_ID)
                 .build();
 
+        UserResource loggedInUser = newUserResource().build();
+
         when(competitionSetupRestService.getSectionStatuses(competitionResource.getId())).thenReturn(restSuccess(asMap(
                 INITIAL_DETAILS, Optional.of(true),
                 CompetitionSetupSection.ADDITIONAL_INFO, Optional.of(false))));
@@ -183,43 +186,47 @@ public class CompetitionSetupServiceImplTest {
         when(otherSaver.sectionToSave()).thenReturn(CompetitionSetupSection.APPLICATION_FORM);
         when(otherSaver.supportsForm(AdditionalInfoForm.class)).thenReturn(false);
 
-        when(matchingSaver.saveSection(competitionResource, competitionSetupForm)).thenReturn(serviceSuccess());
+        when(matchingSaver.saveSection(competitionResource, competitionSetupForm, loggedInUser)).thenReturn(serviceSuccess());
 
         when(competitionSetupRestService.markSectionComplete(competitionResource.getId(), CompetitionSetupSection.ADDITIONAL_INFO))
                 .thenReturn(restSuccess());
 
         service.setCompetitionSetupSectionSavers(asList(matchingSaver, otherSaver));
 
-        service.saveCompetitionSetupSection(competitionSetupForm, competitionResource, CompetitionSetupSection.ADDITIONAL_INFO);
+        service.saveCompetitionSetupSection(competitionSetupForm, competitionResource, CompetitionSetupSection.ADDITIONAL_INFO, loggedInUser);
 
-        verify(matchingSaver).saveSection(competitionResource, competitionSetupForm);
-        verify(otherSaver, never()).saveSection(competitionResource, competitionSetupForm);
+        verify(matchingSaver).saveSection(competitionResource, competitionSetupForm, loggedInUser);
+        verify(otherSaver, never()).saveSection(competitionResource, competitionSetupForm, loggedInUser);
     }
 
     @Test(expected = IllegalStateException.class)
-    public void saveCompetitionSetupSection_initialDetailsMustBeComplete() throws Exception {
+    public void saveCompetitionSetupSection_initialDetailsMustBeComplete() {
         CompetitionSetupForm competitionSetupForm = new AdditionalInfoForm();
         CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).build();
         CompetitionSetupSection section = CompetitionSetupSection.ADDITIONAL_INFO;
 
+        UserResource loggedInUser = newUserResource().build();
+
         when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID))
                 .thenReturn(restSuccess(asMap(CompetitionSetupSection.INITIAL_DETAILS, Optional.empty())));
 
-        service.saveCompetitionSetupSection(competitionSetupForm, competition, section);
+        service.saveCompetitionSetupSection(competitionSetupForm, competition, section, loggedInUser);
     }
 
 
     @Test(expected = IllegalStateException.class)
-    public void saveCompetitionSetupSubsection_initialDetailsMustBeComplete() throws Exception {
+    public void saveCompetitionSetupSubsection_initialDetailsMustBeComplete() {
         CompetitionSetupForm competitionSetupForm = new DetailsForm();
         CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).build();
         CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
         CompetitionSetupSubsection subsection = CompetitionSetupSubsection.APPLICATION_DETAILS;
 
+        UserResource loggedInUser = newUserResource().build();
+
         when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID))
                 .thenReturn(restSuccess(asMap(CompetitionSetupSection.INITIAL_DETAILS, Optional.empty())));
 
-        service.saveCompetitionSetupSubsection(competitionSetupForm, competition, section, subsection);
+        service.saveCompetitionSetupSubsection(competitionSetupForm, competition, section, subsection, loggedInUser);
     }
 
     @Test
@@ -357,13 +364,13 @@ public class CompetitionSetupServiceImplTest {
         when(matchingPopulator.populateModel(nullable(GeneralSetupViewModel.class), nullable(CompetitionResource.class)))
                 .thenReturn(new AdditionalModelViewModel(getBasicGeneralSetupView(competitionSetupSection, competition)));
 
-        service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
+        service.setCompetitionSetupSectionModelPopulators(singletonList(matchingPopulator));
 
         CompetitionSetupViewModel viewModel = service.populateCompetitionSectionModelAttributes(competition, null, competitionSetupSection);
 
-        assertEquals(false, viewModel.getGeneral().getState().isPreventEdit());
-        assertEquals(false, viewModel.getGeneral().getState().isSetupAndLive());
-        assertEquals(false, viewModel.getGeneral().getState().isSetupComplete());
+        assertFalse(viewModel.getGeneral().getState().isPreventEdit());
+        assertFalse(viewModel.getGeneral().getState().isSetupAndLive());
+        assertFalse(viewModel.getGeneral().getState().isSetupComplete());
         assertEquals(CompetitionStatus.COMPETITION_SETUP, viewModel.getGeneral().getState().getCompetitionStatus());
     }
 
@@ -389,9 +396,9 @@ public class CompetitionSetupServiceImplTest {
 
         CompetitionSetupViewModel viewModel = service.populateCompetitionSectionModelAttributes(competition, null, competitionSetupSection);
 
-        assertEquals(false, viewModel.getGeneral().getState().isPreventEdit());
-        assertEquals(false, viewModel.getGeneral().getState().isSetupAndLive());
-        assertEquals(false, viewModel.getGeneral().getState().isSetupComplete());
+        assertFalse(viewModel.getGeneral().getState().isPreventEdit());
+        assertFalse(viewModel.getGeneral().getState().isSetupAndLive());
+        assertFalse(viewModel.getGeneral().getState().isSetupComplete());
         assertEquals(CompetitionStatus.COMPETITION_SETUP, viewModel.getGeneral().getState().getCompetitionStatus());
     }
 

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/project")
 @SecuredBySpring(value = "Controller", description = "Applicants can view the status of their projects",
         securedType = SetupCompleteController.class)
-@PreAuthorize("hasAuthority('applicant')")
+@PreAuthorize("hasAnyAuthority('applicant', 'monitoring_officer')")
 public class SetupCompleteController {
 
     @Autowired

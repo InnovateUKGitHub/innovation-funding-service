@@ -72,11 +72,14 @@
                             </ul>
                             <p class="govuk-body">Enter the total number of working days in the year. List the total
                                 days worked by all categories of staff on your project. Describe their roles.</p>
-                            <p class="govuk-body">We <span
-                                th:if="${!model.isProcurementCompetition()}"> will</span><span
-                                th:if="${model.isProcurementCompetition()}"> may</span> review the total amount of time
-                                and cost of labour before we approve your application.
-                                <span th:if="${!model.isProcurementCompetition()}"> The terms and conditions of the grant include compliance with these points.</span>
+                            <p class="govuk-body">
+                                <th:block th:unless="${model.isOfGemCompetition()}">
+                                    We
+                                    <span th:if="${!model.isProcurementCompetition()}">will</span>
+                                    <span th:if="${model.isProcurementCompetition()}">may</span>
+                                    review the total amount of time and cost of labour before we approve your application.
+                                    <span th:if="${!model.isProcurementCompetition()}"> The terms and conditions of the grant include compliance with these points.</span>
+                                </th:block>
                             </p>
                         </div>
                     </details>
@@ -584,7 +587,7 @@
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
-            <div class="govuk-accordion__section-header">
+            <div class="govuk-accordion__section-header" th:classappend="${model.ofGemCompetition} ? 'govuk-visually-hidden'">
                 <h3 class="govuk-accordion__section-heading">
                     <span class="govuk-accordion__section-button" id="accordion-finances-heading-10">
                     Overhead costs
@@ -598,96 +601,109 @@
                          class="section-status section-incomplete icon-only error-marker"></div>
                 </h3>
             </div>
-            <div id="accordion-finances-content-10" class="govuk-accordion__section-content"
-                 aria-labelledby="accordion-finances-heading-10">
-                <details class="govuk-details" role="group">
-                    <summary class="govuk-details__summary">
-                        <span class="govuk-details__summary-text">Overheads costs guidance</span>
-                    </summary>
-                    <div class="govuk-details__text">
-                        <p class="govuk-body">Overhead costs should be charged in proportion to the amount of effort
-                            deployed on the project. Calculate them using your own cost rates. They can include:</p>
-                        <ul class="govuk-list govuk-list--bullet">
-                            <li>general office and basic laboratory consumables</li>
-                            <li>library services or learning resources</li>
-                            <li>administrative tasks</li>
-                            <li>finance, personnel, public relations and departmental services</li>
-                            <li>central and distributed computing</li>
-                            <li>cost of capital employed</li>
-                        </ul>
-                        <p class="govuk-body">An element of overheads can be included in your project costs but this
-                            must be
-                            realistic. Costs that are considered unreasonable may be rejected.</p>
-                        <p class="govuk-body">You could be asked to provide an itemisation of costs and methods of
-                            calculation to support your application.</p>
-                    </div>
-                </details>
-                <th:block th:if="${model.isReadOnly()}">
-                    <th:block th:insert="application/your-project-costs-fragments :: procurement-overheads_read_only"/>
-                </th:block>
-                <th:block
-                    th:unless="${model.isReadOnly()}">
-                    <p class="govuk-body" th:unless="${model.internal}">Please provide a breakdown of the overheads you
-                        expect to occur during the
-                        project.
-                    </p>
-                    <p class="govuk-body" th:unless="${model.internal}">
-                        The cost to project is the percentage of the total company cost resulting from this project.
-                    </p>
-
-                    <div class="govuk-form-group table-overflow">
-                        <table class="govuk-table" id="procurement-overheads-costs-table">
-                            <thead class="govuk-table__head">
-                            <tr class="govuk-table__row">
-                                <th id="procurement-overheads-item" scope="col" class="govuk-table__header">Item</th>
-                                <th id="procurement-overheads-quantity" scope="col"
-                                    class="govuk-table__header govuk-table__header--numeric width-150">Total company
-                                    cost (&pound;)
-                                </th>
-                                <th id="procurement-overheads-cost" scope="col"
-                                    class="govuk-table__header govuk-table__header--numeric width-150">Cost to project
-                                    (%)
-                                </th>
-                                <th id="procurement-overheads-total" scope="col"
-                                    class="govuk-table__header govuk-table__header--numeric width-150">Total claimed
-                                </th>
-                                <th class="govuk-table__header alignright" scope="col">
-                                    <span class="govuk-visually-hidden">Actions</span>
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody class="govuk-table__body">
-                            <th:block
-                                th:each="entry : *{procurementOverheadRows}">
-                                <th:block
-                                    th:insert="application/your-project-costs-fragments :: procurement-overheads_row (${entry.key}, ${entry.value})"/>
-                            </th:block>
-                            </tbody>
-                        </table>
-
-                        <p class="alignright">
-                            <button type="submit"
-                                    data-repeatable-rowcontainer="#procurement-overheads-costs-table tbody"
-                                    name="add_row"
-                                    th:value="${financeRowType}"
-                                    class="button-clear">Add another overhead
-                            </button>
+            <th:block th:unless="${model.ofGemCompetition}">
+                <div id="accordion-finances-content-10" class="govuk-accordion__section-content"
+                     aria-labelledby="accordion-finances-heading-10">
+                    <details class="govuk-details" role="group">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">Overheads costs guidance</span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p class="govuk-body">Overhead costs should be charged in proportion to the amount of effort
+                                deployed on the project. Calculate them using your own cost rates. They can include:</p>
+                            <ul class="govuk-list govuk-list--bullet">
+                                <li>general office and basic laboratory consumables</li>
+                                <li>library services or learning resources</li>
+                                <li>administrative tasks</li>
+                                <li>finance, personnel, public relations and departmental services</li>
+                                <li>central and distributed computing</li>
+                                <li>cost of capital employed</li>
+                            </ul>
+                            <p class="govuk-body">An element of overheads can be included in your project costs but this
+                                must be
+                                realistic. Costs that are considered unreasonable may be rejected.</p>
+                            <p class="govuk-body">You could be asked to provide an itemisation of costs and methods of
+                                calculation to support your application.</p>
+                        </div>
+                    </details>
+                    <th:block th:if="${model.isReadOnly()}">
+                        <th:block th:insert="application/your-project-costs-fragments :: procurement-overheads_read_only"/>
+                    </th:block>
+                    <th:block
+                            th:unless="${model.isReadOnly()}">
+                        <p class="govuk-body" th:unless="${model.internal}">Please provide a breakdown of the overheads you
+                            expect to occur during the
+                            project.
                         </p>
-                    </div>
-                    <h4 class="govuk-heading-s alignright section-total-summary">
-                        Total overheads
-                        <span class="govuk-heading-s"
-                              data-mirror='#section-total-procurement-overheads'
-                              th:text="'£' + ${#numbers.formatInteger(form.totalProcurementOverheadCosts, 0,'DEFAULT')}"></span>
-                    </h4>
-                    <input type="hidden"
-                           data-calculation-fields=".procurement-overheads-totals"
-                           data-calculation-operations="+"
-                           id="section-total-procurement-overheads"
-                           th:attr="data-calculation-rawvalue=${form.totalProcurementOverheadCosts}"
-                           th:value="'£' + ${#numbers.formatInteger(form.totalProcurementOverheadCosts, 0,'DEFAULT')}"/>
-                </th:block>
-            </div>
+                        <p class="govuk-body" th:unless="${model.internal}">
+                            The cost to project is the percentage of the total company cost resulting from this project.
+                        </p>
+
+                        <div class="govuk-form-group table-overflow">
+                            <table class="govuk-table" id="procurement-overheads-costs-table">
+                                <thead class="govuk-table__head">
+                                <tr class="govuk-table__row">
+                                    <th id="procurement-overheads-item" scope="col" class="govuk-table__header">Item</th>
+                                    <th id="procurement-overheads-quantity" scope="col"
+                                        class="govuk-table__header govuk-table__header--numeric width-150">Total company
+                                        cost (&pound;)
+                                    </th>
+                                    <th id="procurement-overheads-cost" scope="col"
+                                        class="govuk-table__header govuk-table__header--numeric width-150">Cost to project
+                                        (%)
+                                    </th>
+                                    <th id="procurement-overheads-total" scope="col"
+                                        class="govuk-table__header govuk-table__header--numeric width-150">Total claimed
+                                    </th>
+                                    <th class="govuk-table__header alignright" scope="col">
+                                        <span class="govuk-visually-hidden">Actions</span>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody class="govuk-table__body">
+                                <th:block
+                                        th:each="entry : *{procurementOverheadRows}">
+                                    <th:block
+                                            th:insert="application/your-project-costs-fragments :: procurement-overheads_row (${entry.key}, ${entry.value})"/>
+                                </th:block>
+                                </tbody>
+                            </table>
+
+                            <p class="alignright">
+                                <button type="submit"
+                                        data-repeatable-rowcontainer="#procurement-overheads-costs-table tbody"
+                                        name="add_row"
+                                        th:value="${financeRowType}"
+                                        class="button-clear">Add another overhead
+                                </button>
+                            </p>
+                        </div>
+                        <h4 class="govuk-heading-s alignright section-total-summary">
+                            Total overheads
+                            <span class="govuk-heading-s"
+                                  data-mirror='#section-total-procurement-overheads'
+                                  th:text="'£' + ${#numbers.formatInteger(form.totalProcurementOverheadCosts, 0,'DEFAULT')}"></span>
+                        </h4>
+                        <input type="hidden"
+                               data-calculation-fields=".procurement-overheads-totals"
+                               data-calculation-operations="+"
+                               id="section-total-procurement-overheads"
+                               th:attr="data-calculation-rawvalue=${form.totalProcurementOverheadCosts}"
+                               th:value="'£' + ${#numbers.formatInteger(form.totalProcurementOverheadCosts, 0,'DEFAULT')}"/>
+                    </th:block>
+                </div>
+            </th:block>
+            <th:block th:if="${model.ofGemCompetition}">
+                <h4 class="govuk-visually-hidden section-total-summary">
+                    <span class="govuk-heading-s"
+                          data-mirror='#section-total-procurement-overheads'
+                          th:text="'£' + ${#numbers.formatInteger(form.totalProcurementOverheadCosts, 0,'DEFAULT')}"></span>
+                </h4>
+                <input type="hidden"
+                       id="section-total-procurement-overheads"
+                       th:attr="data-calculation-rawvalue=${form.totalProcurementOverheadCosts}"
+                       th:value="'£' + ${#numbers.formatInteger(form.totalProcurementOverheadCosts, 0,'DEFAULT')}"/>
+            </th:block>
         </div>
     </div>
 </th:block>
@@ -856,6 +872,7 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly()}">
+                <th:block th:if="${model.isOfGemCompetition()}" th:insert="application/your-project-costs-fragments :: materials_guidance"/>
                 <p class="govuk-body" th:unless="${model.internal}">Please provide a breakdown of the materials you
                     expect to use during the
                     project</p>
@@ -909,44 +926,45 @@
                        th:value="'£' + ${#numbers.formatInteger(form.totalMaterialCosts, 0,'DEFAULT')}"/>
 
                 <th:block th:unless="${model.internal}">
-                    <div class="govuk-body"><p>You can claim the costs of materials used on your project
-                        providing:</p>
-                        <ul class="govuk-list govuk-list--bullet">
-                            <li>they are not already purchased or included in the overheads</li>
-                            <li>they are purchased from third parties</li>
-                            <li>they won’t have a residual/resale value at the end of your project. If they do you
-                                can
-                                claim
-                                the
-                                costs minus this value
-                            </li>
-                        </ul>
+                    <div class="govuk-body">
+                            <p>You can claim the costs of materials used on your project providing:</p>
+                            <ul class="govuk-list govuk-list--bullet">
+                                <li>they are not already purchased or included in the overheads</li>
+                                <li>they are purchased from third parties</li>
+                                <th:block th:unless="${model.isOfGemCompetition()}">
+                                    <li>they won’t have a residual/resale value at the end of your project. If they do you can claim the costs minus this value</li>
+                                </th:block>
+                            </ul>
                         <p><a
                             href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">Please
                             refer to our guide to project costs for further information.</a></p>
                     </div>
-                    <details class="govuk-details" role="group">
-                        <summary class="govuk-details__summary" role="group">
-                            <span class="govuk-details__summary-text">Materials costs guidance</span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            <p>Materials
-                            supplied
-                            by associated companies or project partners should be charged at cost.</p>
-                            <p>Software that you have purchased specifically for use during your project may be
-                                included. If
-                                you
-                                already own the software then only additional costs which are incurred and paid
-                                during
-                                your
-                                project, will be eligible. For example, installation, training or customisation.</p>
-                            <p>Material costs must be itemised to justify that they are eligible.</p>
-                        </div>
-                    </details>
+                    <th:block th:unless="${model.isOfGemCompetition()}" th:insert="application/your-project-costs-fragments :: materials_guidance"/>
                 </th:block>
             </th:block>
         </div>
     </div>
+</th:block>
+
+<th:block th:fragment="materials_guidance">
+    <details class="govuk-details" role="group">
+        <summary class="govuk-details__summary" role="group">
+            <span class="govuk-details__summary-text">Materials costs guidance</span>
+        </summary>
+        <div class="govuk-details__text">
+            <p>Materials
+                supplied
+                by associated companies or project partners should be charged at cost.</p>
+            <p>Software that you have purchased specifically for use during your project may be
+                included. If
+                you
+                already own the software then only additional costs which are incurred and paid
+                during
+                your
+                project, will be eligible. For example, installation, training or customisation.</p>
+            <p>Material costs must be itemised to justify that they are eligible.</p>
+        </div>
+    </details>
 </th:block>
 
 <th:block th:fragment="ajax_materials_row">
@@ -1088,7 +1106,7 @@
 <th:block th:fragment="capital_usage"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).CAPITAL_USAGE}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
-        <div class="govuk-accordion__section-header">
+        <div class="govuk-accordion__section-header" th:classappend="${model.ofGemCompetition} ? 'govuk-visually-hidden'">
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-4">
                     Capital usage
@@ -1102,74 +1120,87 @@
                      class="section-status section-incomplete icon-only error-marker"></div>
             </h3>
         </div>
-        <div id="accordion-finances-content-4" class="govuk-accordion__section-content"
-             aria-labelledby="accordion-finances-heading-4">
-            <th:block
-                th:if="${model.isReadOnly()}">
-                <th:block th:insert="application/your-project-costs-fragments :: capital_usage_read_only"/>
-            </th:block>
-            <th:block
-                th:unless="${model.isReadOnly()}">
-                <p class="govuk-body" th:unless="${model.internal}">Please provide a breakdown of the capital items
-                    you
-                    will buy and/or use for the
-                    project.</p>
+        <th:block th:unless="${model.ofGemCompetition}">
+            <div id="accordion-finances-content-4" class="govuk-accordion__section-content"
+                 aria-labelledby="accordion-finances-heading-4">
+                <th:block
+                        th:if="${model.isReadOnly()}">
+                    <th:block th:insert="application/your-project-costs-fragments :: capital_usage_read_only"/>
+                </th:block>
+                <th:block
+                        th:unless="${model.isReadOnly()}">
+                    <p class="govuk-body" th:unless="${model.internal}">Please provide a breakdown of the capital items
+                        you
+                        will buy and/or use for the
+                        project.</p>
 
-                <div id="capital-usage">
-                    <th:block th:each="entry : *{capitalUsageRows}">
-                        <th:block
-                            th:insert="application/your-project-costs-fragments :: capital_usage_row (${entry.key}, ${entry.value})"/>
+                    <div id="capital-usage">
+                        <th:block th:each="entry : *{capitalUsageRows}">
+                            <th:block
+                                    th:insert="application/your-project-costs-fragments :: capital_usage_row (${entry.key}, ${entry.value})"/>
+                        </th:block>
+                    </div>
+                    <p class="alignright">
+                        <button type="submit"
+                                name="add_row"
+                                data-repeatable-rowcontainer="#capital-usage"
+                                th:value="${financeRowType}"
+                                class="button-clear">Add another asset
+                        </button>
+                    </p>
+                    <h4 class="govuk-heading-s alignright section-total-summary">
+                        Total capital usage costs
+                        <span class="govuk-heading-s"
+                              data-mirror='#section-total-capital-usage'
+                              th:text="'£' + ${#numbers.formatInteger(form.totalCapitalUsageCosts, 0,'DEFAULT')}"></span>
+                    </h4>
+                    <input type="hidden"
+                           data-calculation-fields=".capital-usage-totals"
+                           data-calculation-operations="+"
+                           id="section-total-capital-usage"
+                           th:attr="data-calculation-rawvalue=${form.totalCapitalUsageCosts}"
+                           th:value="'£' + ${#numbers.formatInteger(form.totalCapitalUsageCosts, 0,'DEFAULT')}"/>
+
+                    <th:block th:unless="${model.internal}">
+                        <div class="govuk-body"><p>You can claim the usage costs of capital assets you will buy for, or
+                            use
+                            on,
+                            your
+                            project.</p></div>
+                        <details class="govuk-details" role="group">
+                            <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text">Capital usage guidance</span>
+                            </summary>
+                            <div class="govuk-details__text"><p>You
+                                will
+                                need
+                                to
+                                calculate a ‘usage’ value for each item. You can do this by deducting its expected value
+                                from
+                                its
+                                original price at the end of your project. If you owned the equipment before the project
+                                started
+                                then you should use its net present value.</p>
+                                <p>This value is then multiplied by the amount, in percentages, that is used during the
+                                    project.
+                                    This final value represents the eligible cost to your project.</p>
+                            </div>
+                        </details>
                     </th:block>
-                </div>
-                <p class="alignright">
-                    <button type="submit"
-                            name="add_row"
-                            data-repeatable-rowcontainer="#capital-usage"
-                            th:value="${financeRowType}"
-                            class="button-clear">Add another asset
-                    </button>
-                </p>
-                <h4 class="govuk-heading-s alignright section-total-summary">
-                    Total capital usage costs
+                </th:block>
+            </div>
+        </th:block>
+        <th:block th:if="${model.ofGemCompetition}">
+            <h4 class="govuk-visually-hidden section-total-summary">
                     <span class="govuk-heading-s"
                           data-mirror='#section-total-capital-usage'
                           th:text="'£' + ${#numbers.formatInteger(form.totalCapitalUsageCosts, 0,'DEFAULT')}"></span>
-                </h4>
-                <input type="hidden"
-                       data-calculation-fields=".capital-usage-totals"
-                       data-calculation-operations="+"
-                       id="section-total-capital-usage"
-                       th:attr="data-calculation-rawvalue=${form.totalCapitalUsageCosts}"
-                       th:value="'£' + ${#numbers.formatInteger(form.totalCapitalUsageCosts, 0,'DEFAULT')}"/>
-
-                <th:block th:unless="${model.internal}">
-                    <div class="govuk-body"><p>You can claim the usage costs of capital assets you will buy for, or
-                        use
-                        on,
-                        your
-                        project.</p></div>
-                    <details class="govuk-details" role="group">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">Capital usage guidance</span>
-                        </summary>
-                        <div class="govuk-details__text"><p>You
-                            will
-                            need
-                            to
-                            calculate a ‘usage’ value for each item. You can do this by deducting its expected value
-                            from
-                            its
-                            original price at the end of your project. If you owned the equipment before the project
-                            started
-                            then you should use its net present value.</p>
-                            <p>This value is then multiplied by the amount, in percentages, that is used during the
-                                project.
-                                This final value represents the eligible cost to your project.</p>
-                        </div>
-                    </details>
-                </th:block>
-            </th:block>
-        </div>
+            </h4>
+            <input type="hidden"
+                   id="section-total-capital-usage"
+                   th:attr="data-calculation-rawvalue=${form.totalCapitalUsageCosts}"
+                   th:value="'£' + ${#numbers.formatInteger(form.totalCapitalUsageCosts, 0,'DEFAULT')}"/>
+        </th:block>
     </div>
 </th:block>
 
@@ -1469,28 +1500,34 @@
 
 <th:block th:fragment="subcontracting_guidance">
     <div class="govuk-body">
-        <p>You can subcontract work if you don’t have the expertise in your
-            project
-            team.
-            You can also subcontract if it is cheaper than developing your skills in-house.</p>
+        <th:block th:unless="${model.isOfGemCompetition()}">
+            <p>You can subcontract work if you don’t have the expertise in your project team.
+                You can also subcontract if it is cheaper than developing your skills in-house.</p>
+        </th:block>
         <details class="govuk-details" role="group">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">Subcontracting costs guidance</span>
-            </summary>
-            <div class="govuk-details__text">
-                <p>Subcontracting costs relate to work carried out by third party organisations. These
-                    organisations are not part of your project.</p>
-                <p>Subcontracting is eligible providing it is justified
-                    <span th:if="${!model.isProcurementCompetition()}"> as to why the work cannot be performed by a project partner</span>.
-                </p>
-                <p>Subcontracting associate companies should be charged at cost.</p>
-                <p><span th:if="${!model.isProcurementCompetition()}">Where possible you should select a UK based contractor. </span>You
-                    should name the subcontractor (<span th:if="${!model.isProcurementCompetition()}">where</span>
-                    <span th:if="${model.isProcurementCompetition()}">if</span> known) and describe what they will be doing. You should also state where the work will be undertaken.
-                    <span th:if="${!model.isProcurementCompetition()}"> We will look at the size of this contribution when assessing your eligibility and level of support.</span>
-                </p>
-            </div>
-        </details>
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">Subcontracting costs guidance</span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p>Subcontracting costs relate to work carried out by third party organisations.
+                        <span th:unless="${model.isOfGemCompetition()}">These organisations are not part of your project.</span>
+                    </p>
+                    <th:block th:unless="${model.isOfGemCompetition()}">
+                        <p>Subcontracting is eligible providing it is justified
+                            <span th:if="${!model.isProcurementCompetition()}"> as to why the work cannot be performed by a project partner</span>.
+                        </p>
+                    </th:block>
+                    <p>Subcontracting associate companies should be charged at cost.</p>
+                    <th:block th:unless="${model.isOfGemCompetition()}">
+                        <p><span th:if="${!model.isProcurementCompetition()}">Where possible you should select a UK based contractor. </span>You
+                            should name the subcontractor (<span th:if="${!model.isProcurementCompetition()}">where</span>
+                            <span th:if="${model.isProcurementCompetition()}">if</span> known) and describe what they will be doing. You should also state where the work will be undertaken.
+                            <span th:unless="${model.isProcurementCompetition()}">
+                                We will look at the size of this contribution when assessing your eligibility and level of support.</span>
+                        </p>
+                    </th:block>
+                </div>
+            </details>
     </div>
 </th:block>
 
@@ -1894,10 +1931,14 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly()}">
-                <p class="govuk-body" th:unless="${model.internal or model.isProcurementCompetition() or model.isKtpCompetition()}">Please note that legal or project audit and accountancy fees are not eligible and
-                    should not be included as an 'other cost’. Patent filing costs of new IP relating to the project are
-                    limited to £7,500 for SME applicants only. Please provide estimates of other costs that do not fit
-                    within any other cost headings.</p>
+                <p class="govuk-body" th:unless="${model.internal or model.isProcurementCompetition() or model.isKtpCompetition()}">
+                    <th:block th:unless="${model.isOfGemCompetition()}">
+                        Please note that legal or project audit and accountancy fees are not eligible and
+                        should not be included as an 'other cost’. Patent filing costs of new IP relating to the project are
+                        limited to £7,500 for SME applicants only.
+                    </th:block>
+                    Please provide estimates of other costs that do not fit within any other cost headings.
+                </p>
                 <p class="govuk-body" th:if="${model.isProcurementCompetition()}">Provide estimates of other costs that do not fall under our standard cost headings.</p>
                 <p class="govuk-body" th:if="${model.isKtpCompetition()}">Do not complete this section unless your request has been approved by the programme manager.</p>
                 <div class="govuk-form-group table-overflow">
@@ -2057,7 +2098,7 @@
 <th:block th:fragment="vat"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).VAT}">
 <th:block th:if="${model.financeRowTypes.contains(financeRowType)}">
-    <th:block th:unless="${model.vatHidden}">
+    <th:block th:unless="${model.ofGemCompetition}">
         <div class="govuk-form-group"
              th:classappend="${#fields.hasErrors('vatForm.registered')} ? 'govuk-form-group--error'">
             <fieldset class="govuk-fieldset">
@@ -2158,7 +2199,7 @@
         </div>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
     </th:block>
-    <th:block th:if="${model.vatHidden}">
+    <th:block th:if="${model.ofGemCompetition}">
         <input type="hidden" name="vatForm.registered" value="false" />
     </th:block>
 </th:block>

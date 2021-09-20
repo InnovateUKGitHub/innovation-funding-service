@@ -15,6 +15,8 @@ Documentation     IFS-7365 DocuSign Integration
 ...
 ...               IFS-9679 MO Spend profile: IFS Admin only to be able to approve or reject spend profiles
 ...
+...               IFS-9514 Monitoring officer: View signed GOL
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -202,6 +204,16 @@ Internal user is able to reject the GOL and applicant can re-upload
     Then the applicant is able to see the rejected GOL  ${ProjectID}
     And applicant uploads the GOL using Docusign        ${ProjectID}  ${tomorrowday}/${nextmonth}/${nextyear}
 
+Monitoring officer can view and download the signed GOL
+    [Documentation]  IFS-9514
+    Given log in as a different user            &{monitoring_officer_one_credentials}
+    When the user navigates to the page         ${server}/project-setup/project/${ProjectID}/offer
+    And the user clicks the button/link         link = SignedGrantOfferLetter.pdf (opens in a new window)
+    And Select Window                           NEW
+    Then the user should not see internal server and forbidden errors
+    And the user closes the last opened tab
+    And the user should see the element         jQuery = h2:contains("Signed grant offer letter")
+
 Internal user is able to approve the GOL and the project is now Live
     [Documentation]  IFS-7365
     Given the internal user approve the GOL                                    ${ProjectID}
@@ -209,13 +221,23 @@ Internal user is able to approve the GOL and the project is now Live
     And the user navigates to the page                                         ${server}/project-setup/project/${ProjectID}
     Then the user should see project is live with review its progress link
 
+Monitoring officer can see GOL is approved
+    [Documentation]  IFS-9514
+    Given log in as a different user            &{monitoring_officer_one_credentials}
+    When the user navigates to the page         ${server}/project-setup/project/${ProjectID}/offer
+    And the user clicks the button/link         link = SignedGrantOfferLetter.pdf (opens in a new window)
+    And Select Window                           NEW
+    Then the user should not see internal server and forbidden errors
+    And the user closes the last opened tab
+    And the user should see the element         jQuery = p:contains("Your signed grant offer letter has been received and accepted by Innovate UK.")
+
 Competition goes into previous
     [Documentation]   IFS-7441
-    [Setup]  log in as a different user  &{Comp_admin1_credentials}
-    Given the user clicks the button/link    jQuery = a:contains("Project setup (")
-    And The user should not see the element  link = ${COVIDcompetitionTitle}
-    When the user clicks the button/link     jQuery = a:contains("Previous (")
-    Then The user should see the element in the paginated list       link = ${COVIDcompetitionTitle}
+    [Setup]  log in as a different user                         &{Comp_admin1_credentials}
+    Given the user clicks the button/link                       jQuery = a:contains("Project setup (")
+    And The user should not see the element                     link = ${COVIDcompetitionTitle}
+    When the user clicks the button/link                        jQuery = a:contains("Previous (")
+    Then The user should see the element in the paginated list  link = ${COVIDcompetitionTitle}
 
 *** Keywords ***
 Custom Suite Setup

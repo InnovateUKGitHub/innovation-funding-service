@@ -5,6 +5,8 @@ import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -54,15 +56,17 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
     String NOT_KTP = "AND project.application.competition.fundingType != (org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP)";
     String IS_KTP = "AND project.application.competition.fundingType = org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP ";
 
-    String FILTER_PROJECTS = "SELECT monitoringOfficer " +
+    String FILTER_PROJECTS_BY_MO = "SELECT monitoringOfficer " +
             "FROM MonitoringOfficer monitoringOfficer " +
             "JOIN Project project " +
             "   ON monitoringOfficer.project.id = project.id " +
-            "   AND monitoringOfficer.role = org.innovateuk.ifs.project.core.ProjectParticipantRole.MONITORING_OFFICER " +
             "WHERE " +
             "   monitoringOfficer.user.id = :userId " +
-            "   AND project.projectProcess.activityState in :projectStates " +
-            "ORDER BY project.id";
+            "   AND monitoringOfficer.role = org.innovateuk.ifs.project.core.ProjectParticipantRole.MONITORING_OFFICER ";
+
+    String BY_STATES = "   AND project.projectProcess.activityState in :projectStates ";
+
+    String BY_KEYWORD_SEARCH = " AND (project.name LIKE :keywordSearch OR project.application.id = :keywordSearch OR project.application.competition.name LIKE :keywordSearch) ";
 
     List<MonitoringOfficer> findByUserId(long userId);
 
@@ -106,6 +110,14 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
             "ORDER BY project.application.id")
     List<MonitoringOfficerAssignedProjectResource> findAssignedKTPProjects(Long userId);
 
-    @Query(FILTER_PROJECTS)
-    List<MonitoringOfficer> filterMonitoringOfficerProjects(Long userId, List<ProjectState> projectStates);
+    @Query(FILTER_PROJECTS_BY_MO +
+            BY_STATES +
+            "ORDER BY project.application.id")
+    Page<MonitoringOfficer> filterMonitoringOfficerProjectsByStates(Long userId, List<ProjectState> projectStates, Pageable pageable);
+
+    @Query(FILTER_PROJECTS_BY_MO +
+            BY_KEYWORD_SEARCH +
+            BY_STATES +
+            "ORDER BY project.application.id")
+    Page<MonitoringOfficer> filterMonitoringOfficerProjectsByKeywordsByStates(Long userId, String keywordSearch, List<ProjectState> projectStates, Pageable pageable);
 }

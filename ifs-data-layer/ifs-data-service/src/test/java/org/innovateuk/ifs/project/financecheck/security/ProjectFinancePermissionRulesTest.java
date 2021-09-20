@@ -9,6 +9,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.financechecks.security.ProjectFinancePermissionRules;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -26,6 +27,7 @@ import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
@@ -37,7 +39,9 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
+import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.project.resource.ProjectState.*;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
@@ -660,6 +664,47 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         setupUserAsPartner(project, user);
         assertTrue(rules.competitionFinanceUsersCanSeeTheProjectFinancesForTheirOrganisation(financeCheckEligibilityResource, user));
         assertFalse(rules.competitionFinanceUsersCanSeeTheProjectFinancesForTheirOrganisation(financeCheckEligibilityResource, userNotInCompetition));
+    }
+
+    @Test
+    public void moUserCanSeeTheProjectFinancesForTheOrganisationsBelongsToTheirProject() {
+
+        UserResource user = newUserResource()
+                .withRoleGlobal(MONITORING_OFFICER)
+                .build();
+        MonitoringOfficer mo = newMonitoringOfficer()
+                .withUser(newUser()
+                        .withId(user.getId())
+                        .withRoles(asSet(MONITORING_OFFICER))
+                        .build())
+                .build();
+        UserResource userNotInCompetition = newUserResource()
+                .withRoleGlobal(MONITORING_OFFICER)
+                .build();
+        MonitoringOfficer moNotInCompetition  = newMonitoringOfficer()
+                .withUser(newUser()
+                        .withId(userNotInCompetition.getId())
+                        .withRoles(asSet(MONITORING_OFFICER))
+                        .build())
+                .build();
+        FinanceCheckEligibilityResource financeCheckEligibilityResource = newFinanceCheckEligibilityResource()
+                .withProjectId(project.getId())
+                .build();
+        Competition competition = newCompetition().build();
+        Project competitionFinanceProject = newProject()
+                .withId(project.getId())
+                .withProjectMonitoringOfficer(mo)
+                .withApplication(newApplication()
+                        .withCompetition(competition)
+                        .build())
+                .build();
+
+        when(projectRepository.findById(competitionFinanceProject.getId())).thenReturn(Optional.of(competitionFinanceProject));
+        when(monitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), mo.getUser().getId())).thenReturn(true);
+        when(monitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), moNotInCompetition.getUser().getId())).thenReturn(false);
+
+        assertTrue(rules.moUserCanSeeTheProjectFinancesForTheOrganisationsBelongsToTheirProject(financeCheckEligibilityResource, user));
+        assertFalse(rules.moUserCanSeeTheProjectFinancesForTheOrganisationsBelongsToTheirProject(financeCheckEligibilityResource, userNotInCompetition));
     }
 
     @Test

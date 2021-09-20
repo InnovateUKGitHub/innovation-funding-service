@@ -4,7 +4,6 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 import static java.lang.String.format;
@@ -39,6 +38,9 @@ public class NavigationUtils {
     @Value("${ifs.live.projects.landing.page.url}")
     private String liveProjectsLandingPageUrl;
 
+    @Value("${ifs.web.baseURL}")
+    private String ifsWebBaseURL;
+
     private NavigationUtils() {}
 
     public String getLiveProjectsLandingPageUrl() {
@@ -56,7 +58,7 @@ public class NavigationUtils {
         return format("redirect:/%s", hasText(roleUrl) ? roleUrl : "dashboard");
     }
 
-    public String getDirectDashboardUrlForRole(HttpServletRequest request, Role role) {
+    public String getDirectDashboardUrlForRole(Role role) {
 
         if (LIVE_PROJECTS_USER.equals(role)) {
             return liveProjectsLandingPageUrl;
@@ -64,36 +66,22 @@ public class NavigationUtils {
 
         String roleUrl = DEFAULT_LANDING_PAGE_URLS_FOR_ROLES.get(role);
 
-        return getDirectToSameDomainUrl(request, roleUrl);
+        return getDirectToSameDomainUrl(roleUrl);
     }
 
-    public String getRedirectToLandingPageUrl(HttpServletRequest request) {
-        return String.format("redirect:%s://%s:%s",
-                request.getScheme(),
-                request.getServerName(),
-                request.getServerPort());
+    public String getRedirectToLandingPageUrl() {
+        return String.format("redirect:%s", ifsWebBaseURL);
     }
 
-    public String getDirectLandingPageUrl(HttpServletRequest request) {
-        return String.format("%s://%s:%s",
-                request.getScheme(),
-                request.getServerName(),
-                request.getServerPort());
+    public String getDirectLandingPageUrl() {
+        return ifsWebBaseURL;
     }
 
-    public String getRedirectToSameDomainUrl(HttpServletRequest request, String url) {
-        return String.format("redirect:%s://%s:%s/%s",
-                request.getScheme(),
-                request.getServerName(),
-                request.getServerPort(),
-                url);
+    public String getRedirectToSameDomainUrl(String url) {
+        return String.format("redirect:%s/%s", ifsWebBaseURL, url);
     }
 
-    public String getDirectToSameDomainUrl(HttpServletRequest request, String url) {
-        return String.format("%s://%s:%s/%s",
-                request.getScheme(),
-                request.getServerName(),
-                request.getServerPort(),
-                url);
+    public String getDirectToSameDomainUrl(String url) {
+        return String.format("%s/%s", ifsWebBaseURL, url);
     }
 }

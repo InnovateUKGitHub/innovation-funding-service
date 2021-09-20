@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.innovateuk.ifs.finance.builder.sync.FinanceCostTotalResourceBuilder.newFinanceCostTotalResource;
+import static org.innovateuk.ifs.finance.builder.FinanceCostTotalResourceBuilder.newFinanceCostTotalResource;
 
 public class SpendProfileCostFilterTest {
 

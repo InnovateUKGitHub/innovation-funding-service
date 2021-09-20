@@ -49,6 +49,8 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...
 ...               IFS-9965 Enable document link when the MO rejects the document 
 ...
+...               IFS-10239 Rejected document is visible in PM view throws upload error
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -342,14 +344,14 @@ MO can view Incomplete status on rejected document
     And the user should see the element      jQuery = div:contains("Exploitation plan") ~ div span:contains("Incomplete")
 
 Partners can see the documents rejected
-    [Documentation]    INFUND-5559, INFUND-5424, INFUND-7342, IFS-218
+    [Documentation]    INFUND-5559, INFUND-5424, INFUND-7342, IFS-218  IFS-10239
     [Tags]  HappyPath
     When log in as a different user                &{lead_applicant_credentials_bd}
-    Then Partners can see both documents rejected  We will contact you to discuss this document.
+    Then Partners can see both documents rejected  This document is rejected. We will contact you to discuss this document.
     When log in as a different user                &{collaborator1_credentials_bd}
-    Then Partners can see both documents rejected  We will contact you to discuss this document.
+    Then Partners can see both documents rejected  This document is rejected. We will contact you to discuss this document.
     When log in as a different user                &{collaborator2_credentials_bd}
-    Then Partners can see both documents rejected  We will contact you to discuss this document.
+    Then Partners can see both documents rejected  This document is rejected. We will contact you to discuss this document.
 
 After rejection, status in the dashboard remains action required after uploads
     [Documentation]    INFUND-3011, INFUND-7342

@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.FunderRowForm;
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.AdditionalInfoForm;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -25,6 +26,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionFunderResourceBu
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.Funder.ADVANCED_PROPULSION_CENTRE_APC;
 import static org.innovateuk.ifs.competition.resource.Funder.AEROSPACE_TECHNOLOGY_INSTITUTE_ATI;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -44,9 +46,11 @@ public class AdditionalInfoSectionSaverTest {
 		CompetitionResource competition = newCompetitionResource()
 				.withId(1L).build();
 
+		UserResource loggedInUser = newUserResource().build();
+
 		when(competitionSetupRestService.update(competition)).thenReturn(RestResult.restSuccess());
 
-		service.saveSection(competition, competitionSetupForm);
+		service.saveSection(competition, competitionSetupForm, loggedInUser);
 
 		assertEquals("Activity", competition.getActivityCode());
 		assertEquals("BudgetCode", competition.getBudgetCode());
@@ -66,9 +70,11 @@ public class AdditionalInfoSectionSaverTest {
 		CompetitionResource competition = newCompetitionResource()
 				.withId(1L).build();
 
+		UserResource loggedInUser = newUserResource().build();
+
 		when(competitionSetupRestService.update(competition)).thenReturn(RestResult.restSuccess());
 
-		service.saveSection(competition, competitionSetupForm);
+		service.saveSection(competition, competitionSetupForm, loggedInUser);
 
 		assertEquals("Activity", competition.getActivityCode());
 		assertEquals("BudgetCode", competition.getBudgetCode());
@@ -124,9 +130,11 @@ public class AdditionalInfoSectionSaverTest {
 				.withFundersPanelDate(tomorrow)
 				.build();
 
+		UserResource loggedInUser = newUserResource().build();
+
 		when(competitionSetupRestService.update(competition)).thenReturn(RestResult.restSuccess());
 
-		service.saveSection(competition, competitionSetupForm);
+		service.saveSection(competition, competitionSetupForm, loggedInUser);
 
 		ArgumentCaptor<CompetitionResource> argumentCaptor = ArgumentCaptor.forClass(CompetitionResource.class);
 		verify(competitionSetupRestService).update(argumentCaptor.capture());
@@ -164,7 +172,9 @@ public class AdditionalInfoSectionSaverTest {
 				.withFundersPanelDate(yesterday)
 				.build();
 
-		assertTrue(service.saveSection(competition, competitionSetupForm).isFailure());
+		UserResource loggedInUser = newUserResource().build();
+
+		assertTrue(service.saveSection(competition, competitionSetupForm, loggedInUser).isFailure());
 
 		verify(competitionSetupRestService, never()).update(competition);
 	}

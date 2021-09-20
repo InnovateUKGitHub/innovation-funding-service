@@ -33,13 +33,18 @@ public interface CompetitionSetupService {
                                                Optional<Long> objectId);
 
     ServiceResult<Void> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
-                                                    CompetitionResource competitionResource, CompetitionSetupSection section);
+                                                    CompetitionResource competitionResource,
+                                                    CompetitionSetupSection section,
+                                                    UserResource loggedInUser);
 
     ServiceResult<String> getNextSetupSection(CompetitionSetupForm competitionSetupForm,
                                               CompetitionResource competitionResource, CompetitionSetupSection section);
 
     ServiceResult<Void> saveCompetitionSetupSubsection(CompetitionSetupForm competitionSetupForm,
-                                                       CompetitionResource competitionResource, CompetitionSetupSection section, CompetitionSetupSubsection subsection);
+                                                       CompetitionResource competitionResource,
+                                                       CompetitionSetupSection section,
+                                                       CompetitionSetupSubsection subsection,
+                                                       UserResource loggedInUser);
 
     boolean hasInitialDetailsBeenPreviouslySubmitted(Long competitionId);
 

@@ -3,16 +3,13 @@ package org.innovateuk.ifs.project.monitoring.transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
-import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
-import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
-import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
-import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
+import org.innovateuk.ifs.project.monitoring.resource.*;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.LegacyMonitoringOfficerService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -21,6 +18,9 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.SimpleUserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +34,8 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.PENDING;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -149,14 +150,40 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
     }
 
     @Override
-    public ServiceResult<List<ProjectResource>> filterMonitoringOfficerProjects(long userId, boolean projectInSetup, boolean previousProject) {
+    public ServiceResult<MonitoringOfficerDashboardPageResource> filterMonitoringOfficerProjects(long userId, String keywordSearch, boolean projectInSetup, boolean previousProject, int pageIndex, int pageSize) {
         List<ProjectState> projectStates = applyProjectStatesFilter(projectInSetup, previousProject);
-        List<MonitoringOfficer> monitoringOfficers = monitoringOfficerRepository.filterMonitoringOfficerProjects(userId, projectStates);
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
 
-        return serviceSuccess(monitoringOfficers.stream()
+        Page<MonitoringOfficer> pagedMonitoringOfficers = getMonitoringOfficersFilteredProjects(userId, keywordSearch, projectStates, pageable);
+        Page<MonitoringOfficer> NonPagedMonitoringOfficers = getMonitoringOfficersFilteredProjects(userId, keywordSearch, projectStates, null);
+
+        List<ProjectResource> pagedProjectResourcesList =  pagedMonitoringOfficers.stream()
                 .map(MonitoringOfficer::getProcess)
                 .map(projectMapper::mapToResource)
-                .collect(toList()));
+                .collect(toList());
+
+        List<ProjectResource> nonPagedProjectResourcesList =  NonPagedMonitoringOfficers.stream()
+                .map(MonitoringOfficer::getProcess)
+                .map(projectMapper::mapToResource)
+                .collect(toList());
+
+        MonitoringOfficerDashboardPageResource monitoringOfficerDashboardPageResource = new MonitoringOfficerDashboardPageResource();
+        monitoringOfficerDashboardPageResource.setContent(pagedProjectResourcesList);
+        monitoringOfficerDashboardPageResource.setNumber(pageable.getPageNumber());
+        monitoringOfficerDashboardPageResource.setSize(pageable.getPageSize());
+        monitoringOfficerDashboardPageResource.setTotalElements(nonPagedProjectResourcesList.size());
+        monitoringOfficerDashboardPageResource.setTotalPages((nonPagedProjectResourcesList.size() + pageable.getPageSize() - 1) / pageable.getPageSize());
+        return find(monitoringOfficerDashboardPageResource, notFoundError(MonitoringOfficerDashboardPageResource.class));
+    }
+
+    private Page<MonitoringOfficer> getMonitoringOfficersFilteredProjects(long userId, String keywordSearch, List<ProjectState> projectStates, Pageable pageable) {
+        Page<MonitoringOfficer> monitoringOfficers;
+        if (keywordSearch != null && !keywordSearch.isEmpty()) {
+            monitoringOfficers = monitoringOfficerRepository.filterMonitoringOfficerProjectsByKeywordsByStates(userId, keywordSearch, projectStates, pageable);
+        } else {
+            monitoringOfficers = monitoringOfficerRepository.filterMonitoringOfficerProjectsByStates(userId, projectStates, pageable);
+        }
+        return monitoringOfficers;
     }
 
     private List<ProjectState> applyProjectStatesFilter(boolean projectInSetup, boolean previousProject) {

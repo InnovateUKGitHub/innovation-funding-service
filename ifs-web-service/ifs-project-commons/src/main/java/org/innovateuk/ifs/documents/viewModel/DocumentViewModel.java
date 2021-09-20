@@ -146,7 +146,7 @@ public class DocumentViewModel {
     }
 
     public boolean isShowDisabledSubmitDocumentsButton() {
-        return projectManager && status == DocumentStatus.UNSET;
+        return projectManager && (status == DocumentStatus.UNSET  || status == DocumentStatus.REJECTED);
     }
 
     public boolean isShowRejectDocumentButtonWhenDocumentIsApproved() {

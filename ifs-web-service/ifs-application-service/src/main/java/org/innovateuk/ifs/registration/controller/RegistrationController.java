@@ -137,11 +137,11 @@ public class RegistrationController {
                                HttpServletRequest request,
                                HttpServletResponse response) {
         if (user != null) {
-            return navigationUtils.getRedirectToLandingPageUrl(request);
+            return navigationUtils.getRedirectToLandingPageUrl();
         }
 
         if (getOrganisationId(request) == null) {
-            return navigationUtils.getRedirectToLandingPageUrl(request);
+            return navigationUtils.getRedirectToLandingPageUrl();
         }
 
         try {

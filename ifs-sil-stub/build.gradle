@@ -14,17 +14,16 @@ processResources.dependsOn applyProfiles
 
 
 dependencies {
-    compile project(":ifs-commons")
-    compile project(":ifs-sil-resources")
-    compile project(":ifs-rest-util")
+    compile "org.innovateuk.ifs.libraries:ifs-commons"
+    compile "org.innovateuk.ifs.libraries:ifs-sil-resources"
+    compile "org.innovateuk.ifs.libraries:ifs-rest-util"
 
     compile "org.springframework.boot:spring-boot-starter-web"
     compile 'javax.mail:mail'
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc"
 
-    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-sil-resources", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
+    testCompile "junit:junit"
 }
 
 test {
@@ -38,13 +37,6 @@ test {
 }
 
 prepareDockerBaseInput {
-    inputs.dir file("$rootProject.projectDir/ifs-commons/build/classes")
-    inputs.dir file("$rootProject.projectDir/ifs-sil-resources/build/classes")
-    inputs.dir file("$rootProject.projectDir/ifs-security/build/classes")
-
-    dependsOn ":ifs-commons:build"
-    dependsOn ":ifs-sil-resources:build"
-    dependsOn ":ifs-security:build"
 }
 
 buildDocker.dependsOn prepareDockerBaseInput

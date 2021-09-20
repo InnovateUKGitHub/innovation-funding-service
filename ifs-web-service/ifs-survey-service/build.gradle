@@ -21,15 +21,15 @@ project.version = nexusVersion
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
-    compile project(':ifs-resources:ifs-survey-resources')
-    compile project(':ifs-rest-api-service:ifs-survey-rest-api-service')
+    compile "org.innovateuk.ifs.libraries:ifs-survey-resources"
+    compile "org.innovateuk.ifs.libraries:ifs-survey-rest-api-service"
 
-    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
-    testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
+    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
     testCompile project(path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
 
     testCompile "com.opencsv:opencsv"
+    testCompile "junit:junit"
 }
 
 jar.dependsOn ":ifs-web-service:gulp_default"

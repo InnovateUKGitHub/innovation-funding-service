@@ -61,7 +61,7 @@ public class CompetitionManagementCompetitionController {
         }
         if (competition.getCompetitionStatus().equals(CompetitionStatus.PROJECT_SETUP)) {
             String url = format("project-setup-management/competition/%s/status/all", competition.getId());
-            return navigationUtils.getRedirectToSameDomainUrl(request, url);
+            return navigationUtils.getRedirectToSameDomainUrl(url);
         }
         if (competition.getCompletionStage().equals(CompetitionCompletionStage.COMPETITION_CLOSE)) {
             return String.format("redirect:/competition/%d/previous", competitionId);

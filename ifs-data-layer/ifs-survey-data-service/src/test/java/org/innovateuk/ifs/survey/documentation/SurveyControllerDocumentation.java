@@ -13,7 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.survey.builder.SurveyResourceBuilder.newSurveyResource;
+import static org.innovateuk.ifs.survey.SurveyResourceBuilder.newSurveyResource;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
