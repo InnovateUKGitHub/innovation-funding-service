@@ -1,6 +1,6 @@
 
 dependencies {
-    implementation enforcedPlatform('org.innovateuk.ifs.libraries:bom:1.14.IFS-10298.msd1-SNAPSHOT')
+    implementation enforcedPlatform('org.innovateuk.ifs.libraries:bom:1.14.IFS-10298.pr1-SNAPSHOT')
 
     // version must match here and in ifs-libraries repo (bom and java.gradle)
     annotationProcessor "org.projectlombok:lombok:1.18.20"
