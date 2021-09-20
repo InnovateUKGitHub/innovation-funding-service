@@ -193,7 +193,7 @@
                     <th:block th:if="${#fields.hasErrors('assessorFinanceView')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('assessorFinanceView')}" th:text="${err}" />
                     </th:block>
-                    <div th:if="${model.general.competitionIsInAssessmentStatus}"
+                    <div th:if="${model.general.competitionIsNotInAssessmentStatus}"
                          class="govuk-radios">
                         <div class="govuk-radios__item" th:each="assessorFinanceView : ${competitionSetupForm.getAssessorFinanceViewValues()}">
                             <input type="radio"
@@ -214,7 +214,7 @@
                     </div>
                 </fieldset>
 
-                <div th:unless="${model.general.competitionIsInAssessmentStatus}">
+                <div th:unless="${model.general.competitionIsNotInAssessmentStatus}">
                         <input type="hidden" th:field="${competitionSetupForm.assessorFinanceView}" value="${competitionSetupForm.assessorFinanceView}"/>
                         <span class="govuk-body" th:text="${#strings.capitalize(#strings.toLowerCase(competitionSetupForm.assessorFinanceView))}">Assessor Finance View</span>
                 </div>

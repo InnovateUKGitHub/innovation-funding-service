@@ -127,13 +127,8 @@ public class GeneralSetupViewModel {
     }
 
     @JsonIgnore
-    public boolean competitionIsInAssessmentStatus() {
-        return state.getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT;
-    }
-
-    @JsonIgnore
-    public AssessorFinanceView[] assessorFinanceView() {
-        return AssessorFinanceView.values();
+    public boolean competitionIsNotInAssessmentStatus() {
+        return state.getCompetitionStatus() != CompetitionStatus.IN_ASSESSMENT;
     }
 
     @JsonIgnore
