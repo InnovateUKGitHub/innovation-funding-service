@@ -15,15 +15,15 @@ project.version = nexusVersion
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
-    compile project(':ifs-web-service:ifs-application-commons')
+    compile "org.innovateuk.ifs.libraries:ifs-application-commons"
 
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
     testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
-    testCompile project(path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
-    testCompile project(path: ":ifs-web-service:ifs-application-commons", configuration: 'testArtifacts')
+    testCompile "org.innovateuk.ifs.libraries:ifs-web-commons-test"
 
     testCompile "com.opencsv:opencsv"
     testCompile "junit:junit"
+    testCompile "org.mockito:mockito-core"
 }
 
 jar.dependsOn ":ifs-web-service:gulp_default"

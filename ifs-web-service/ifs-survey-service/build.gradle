@@ -26,7 +26,7 @@ dependencies {
 
     testCompile "org.innovateuk.ifs.libraries:ifs-commons"
     testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
-    testCompile project(path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
+    testCompile "org.innovateuk.ifs.libraries:ifs-web-commons-test"
 
     testCompile "com.opencsv:opencsv"
     testCompile "junit:junit"
