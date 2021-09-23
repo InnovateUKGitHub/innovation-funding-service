@@ -1980,7 +1980,7 @@
           <stringProp name="HTTPSampler.port">443</stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/application/${application_id}/form/question/${edi}</stringProp>
+          <stringProp name="HTTPSampler.path">/application/${application_id}/form/question/${edi}/generic</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -2030,7 +2030,7 @@
               </elementProp>
               <elementProp name="multipleChoiceOptionId" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">75</stringProp>
+                <stringProp name="Argument.value">59</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">multipleChoiceOptionId</stringProp>
@@ -4151,7 +4151,7 @@
           <stringProp name="HTTPSampler.port">443</stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/application/${application_id}/form/question/${terms}/terms-and-conditions</stringProp>
+          <stringProp name="HTTPSampler.path">/application/${application_id}/form/terms-and-conditions/organisation/${org_id}/question/${terms}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -4187,19 +4187,19 @@
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">_csrf</stringProp>
               </elementProp>
-              <elementProp name="mark_as_complete" elementType="HTTPArgument">
+              <elementProp name="agreed" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">${terms}</stringProp>
+                <stringProp name="Argument.value">true</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">mark_as_complete</stringProp>
+                <stringProp name="Argument.name">agreed</stringProp>
               </elementProp>
-              <elementProp name="formInput[${formid}]" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">junk</stringProp>
+              <elementProp name="_agreed" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">on</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">formInput[${formid}]</stringProp>
+                <stringProp name="Argument.name">_agreed</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -4207,7 +4207,7 @@
           <stringProp name="HTTPSampler.port">443</stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/application/${application_id}/form/question/${terms}/terms-and-conditions</stringProp>
+          <stringProp name="HTTPSampler.path">/application/${application_id}/form/terms-and-conditions/organisation/${org_id}/question/${terms}/terms-and-conditions</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
