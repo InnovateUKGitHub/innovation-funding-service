@@ -33,6 +33,9 @@ resources:
   - config-maps/ldap-config.yml
   - config-maps/shibboleth-config.yml
   - config-maps/web-config.yml
+  - mail/mail-config.yml
+  - mail/mail.yml
+  - mail/mail-deployment.yml
 
 patchesStrategicMerge:
   - auth/registration-service/registration-deployment.yml
