@@ -7,7 +7,6 @@ commonAnnotations:
 
 resources:
   - chrome/chrome-deployment.yml
-  - chrome/chrome-service.yml
   - seleniumhub/selenium-deployment.yml
   - seleniumhub/selenium-service.yml
 

@@ -1,33 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hub
-  annotations:
-    pullSecrets: pullSecrets
+  name: selenium-hub
+  labels:
+    app: selenium-hub
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: hub
+      app: selenium-hub
   template:
     metadata:
       labels:
-        app: hub
+        app: selenium-hub
     spec:
-      hostname: hub
       containers:
-      - image: seleniumhub:1.1.152-1420-g5befe8352fb
-        name: hub
-        imagePullPolicy: IfNotPresent
-        env:
-        - name: GRID_BROWSER_TIMEOUT
-          value: "90000"
-        - name: GRID_TIMEOUT
-          value: "100000"
-        resources:
-          limits:
-            cpu: 2000m
-            memory: 2000M
-          requests:
-            cpu: 100m
-            memory: 400M
+        - name: selenium-hub
+          image: selenium/hub:3.141
+          ports:
+            - containerPort: 4444
+          resources:
+            limits:
+              memory: "1000Mi"
+              cpu: ".5"
+          livenessProbe:
+            httpGet:
+              path: /wd/hub/status
+              port: 4444
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /wd/hub/status
+              port: 4444
+            initialDelaySeconds: 30
+            timeoutSeconds: 5

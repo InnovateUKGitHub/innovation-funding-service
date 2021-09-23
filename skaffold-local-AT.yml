@@ -3,32 +3,13 @@ kind: Config
 metadata:
   name: innovation-funding-service
 profiles:
-  - name: buildonly
+  - name: at
     build:
       local:
         useDockerCLI: false
         useBuildkit: false
         tryImportMissing: false
         push: false
-      tagPolicy:
-        gitCommit:
-          ignoreChanges: true
-      artifacts:
-        - image: seleniumhub
-          context: robot-tests/hubdocker
-        - image: chrome
-          context: robot-tests/chrome
-
-  - name: at
-    build:
-      local:
-        useDockerCLI: false
-        useBuildkit: false
-        tryImportMissing: true
-        push: false
-#      tagPolicy:
-#        gitCommit:
-#          ignoreChanges: true
       artifacts: []
     deploy:
       kubeContext: at

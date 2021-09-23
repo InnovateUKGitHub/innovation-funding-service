@@ -34,9 +34,9 @@ spec:
               subPath: my.cnf
           resources:
             requests:
-              memory: 300M
-            limits:
               memory: 600M
+            limits:
+              memory: 1500M
       volumes:
         - name: mysql-tmp-storage
           emptyDir: {}

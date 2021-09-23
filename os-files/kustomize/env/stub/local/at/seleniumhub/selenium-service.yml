@@ -1,18 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: hub
+  name: selenium-hub
   labels:
-    app: hub
+    app: selenium-hub
 spec:
   ports:
-    - protocol: TCP
-      port: 4444
-      name: 4444-tcp
+    - port: 4444
       targetPort: 4444
-    - protocol: TCP
-      port: 3000
-      name: 3000-tcp
-      targetPort: 3000
+      name: port0
   selector:
-    app: hub
+    app: selenium-hub
+  type: LoadBalancer
+  sessionAffinity: None
