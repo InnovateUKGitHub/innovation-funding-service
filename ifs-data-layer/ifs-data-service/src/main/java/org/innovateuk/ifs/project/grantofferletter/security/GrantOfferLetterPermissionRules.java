@@ -60,6 +60,13 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "DOWNLOAD_GRANT_OFFER",
+            description = "Monitoring officers can download grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
+    public boolean monitoringOfficerUsersCanDownloadGrantOfferLetter(ProjectResource project, UserResource user) {
+        return isMonitoringOfficer(project.getId(), user.getId());
+    }
+
+    @PermissionRule(
             value = "VIEW_GRANT_OFFER",
             description = "Partners can view grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
 

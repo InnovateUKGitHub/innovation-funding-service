@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestSer
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.competition.setup.assessor.form.AssessorsForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -27,6 +28,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfig
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.ALL;
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.OVERVIEW;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -74,12 +76,14 @@ public class AssessorSectionSaverTest {
                 .withAssessorOptionValue(1, 3, 5)
                 .build(3);
 
+		UserResource loggedInUser = newUserResource().build();
+
 		when(assessorCountOptionsRestService.findAllByCompetitionType(competition.getCompetitionType()))
 				.thenReturn(restSuccess(assessorCounts));
         when(competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionAssessmentConfigResource));
         when(competitionAssessmentConfigRestService.update(competition.getId(), competitionAssessmentConfigResource)).thenReturn(restSuccess(competitionAssessmentConfigResource));
 
-        saver.saveSection(competition, competitionSetupForm);
+        saver.saveSection(competition, competitionSetupForm, loggedInUser);
 
 		assertEquals(Integer.valueOf(1), competitionAssessmentConfigResource.getAssessorCount());
 		assertEquals(BigDecimal.TEN, competitionAssessmentConfigResource.getAssessorPay());
@@ -137,13 +141,15 @@ public class AssessorSectionSaverTest {
                 .withAssessorOptionValue(1, 3, 5)
                 .build(3);
 
+		UserResource loggedInUser = newUserResource().build();
+
 		when(competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionAssessmentConfigResource));
 
 		when(assessorCountOptionsRestService.findAllByCompetitionType(competition.getCompetitionType()))
 				.thenReturn(restSuccess(assessorCounts));
 		when(competitionAssessmentConfigRestService.update(competition.getId(), competitionAssessmentConfigResource)).thenReturn(restSuccess(competitionAssessmentConfigResource));
 
-		saver.saveSection(competition, assessorsForm);
+		saver.saveSection(competition, assessorsForm, loggedInUser);
 
 		ArgumentCaptor<CompetitionAssessmentConfigResource> argumentCaptor = ArgumentCaptor.forClass(CompetitionAssessmentConfigResource.class);
 		verify(assessorCountOptionsRestService).findAllByCompetitionType(competition.getCompetitionType());
@@ -175,7 +181,9 @@ public class AssessorSectionSaverTest {
 				.withFundersPanelDate(yesterday)
 				.build();
 
-		assertTrue(saver.saveSection(competition, assessorsForm).isFailure());
+		UserResource loggedInUser = newUserResource().build();
+
+		assertTrue(saver.saveSection(competition, assessorsForm, loggedInUser).isFailure());
 
 		verify(competitionSetupRestService, never()).update(competition);
 	}
@@ -201,12 +209,14 @@ public class AssessorSectionSaverTest {
 				.withAssessorOptionValue(1, 3, 5)
 				.build(3);
 
+		UserResource loggedInUser = newUserResource().build();
+
 		when(assessorCountOptionsRestService.findAllByCompetitionType(competition.getCompetitionType()))
 				.thenReturn(restSuccess(assessorCounts));
 		when(competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionAssessmentConfigResource));
 		when(competitionAssessmentConfigRestService.update(anyLong(), any(CompetitionAssessmentConfigResource.class))).thenReturn(restSuccess(competitionAssessmentConfigResource));
 
-		saver.saveSection(competition, competitionSetupForm);
+		saver.saveSection(competition, competitionSetupForm, loggedInUser);
 
 		verify(assessorCountOptionsRestService).findAllByCompetitionType(competition.getCompetitionType());
 		verify(competitionAssessmentConfigRestService).update(eq(competition.getId()), assessmentConfigArgumentCaptor.capture());

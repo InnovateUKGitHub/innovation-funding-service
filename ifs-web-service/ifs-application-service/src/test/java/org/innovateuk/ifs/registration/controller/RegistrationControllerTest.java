@@ -29,6 +29,7 @@ import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -98,6 +99,8 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     private Cookie inviteHashCookie;
     private Cookie usedInviteHashCookie;
     private Cookie organisationCookie;
+
+    private String ifsWebBaseURL = "http://localhost:80";
 
     @Override
     protected RegistrationController supplyControllerUnderTest() {
@@ -563,6 +566,8 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     @Test
     public void gettingRegistrationPageWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
 
+        ReflectionTestUtils.setField(navigationUtils, "ifsWebBaseURL", ifsWebBaseURL);
+
         setLoggedInUser(newUserResource().withRoleGlobal(Role.APPLICANT).build());
 
         mockMvc.perform(get("/registration/register")
@@ -574,6 +579,8 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
 
     @Test
     public void postingRegistrationWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
+        ReflectionTestUtils.setField(navigationUtils, "ifsWebBaseURL", ifsWebBaseURL);
+
         setLoggedInUser(newUserResource().withRoleGlobal(Role.APPLICANT).build());
 
         mockMvc.perform(post("/registration/register")

@@ -6,13 +6,11 @@ public class ProjectFinanceChecksReadOnlyViewModel {
 
     private final Long projectId;
     private final String projectName;
-    private final boolean paymentMilestonesLink;
     private final List<ProjectOrganisationRowViewModel> projectOrganisationRows;
 
-    public ProjectFinanceChecksReadOnlyViewModel(Long projectId, String projectName, boolean paymentMilestonesLink, List<ProjectOrganisationRowViewModel> projectOrganisationRows) {
+    public ProjectFinanceChecksReadOnlyViewModel(Long projectId, String projectName,List<ProjectOrganisationRowViewModel> projectOrganisationRows) {
         this.projectId = projectId;
         this.projectName = projectName;
-        this.paymentMilestonesLink = paymentMilestonesLink;
         this.projectOrganisationRows = projectOrganisationRows;
     }
 
@@ -22,10 +20,6 @@ public class ProjectFinanceChecksReadOnlyViewModel {
 
     public String getProjectName() {
         return projectName;
-    }
-
-    public boolean isPaymentMilestonesLink() {
-        return paymentMilestonesLink;
     }
 
     public List<ProjectOrganisationRowViewModel> getProjectOrganisationRows() {

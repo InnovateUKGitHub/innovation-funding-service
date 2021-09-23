@@ -26,7 +26,7 @@ public interface FinanceCheckService {
     @SecuredBySpring(value = "VIEW", securedType = FinanceCheck.class, description = "Project finance user should be able to view any finance check")
     ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key);
 
-    @PreAuthorize("hasAnyAuthority('project_finance', 'external_finance', 'auditor')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'external_finance', 'auditor', 'monitoring_officer')")
     @SecuredBySpring(value = "VIEW", securedType = FinanceCheckSummaryResource.class, description = "Project finance users have the ability to view a summary of finance checks status for all partners" )
     ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(long projectId);
 

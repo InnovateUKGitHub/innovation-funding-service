@@ -20,10 +20,21 @@ Invalid Login
     Given the user is not logged-in
     Then the user cannot login with their new details    ${lead_applicant}    ${passw0rd2}
 
+Invalid Login - blank password field
+    Given the user is not logged-in
+    When The user enters text to a text field       id=username    ${ifs_admin_user_credentials["email"]}
+    Then the user receives a failed login message
+
+Invalid Login - blank email field
+    Given the user is not logged-in
+    And The user clears text in the text field      id=username
+    When The user enters text to a text field       id=password   ${short_password}
+    Then the user receives a failed login message
+
 Valid login with double role as Applicant
     [Documentation]    INFUND-1479
     Given The guest user inserts user email and password      &{Multiple_user_credentials}
-    And the user clicks the button/link                   jQuery = button:contains("Sign in")
+    And the user clicks the button/link                       jQuery = button:contains("Sign in")
     Then the user should see multiple role dashboard view
     And the user goes to applicant dashboard
     [Teardown]    Logout as user
@@ -99,6 +110,11 @@ Reset password user enters new psw
 the user is not logged-in
     the user should not see the element  link = Dashboard
     the user should not see the element  link = Sign out
+
+the user receives a failed login message
+    the user clicks the button/link             jQuery = button:contains("Sign in")
+    the user should see the element             jQuery = .govuk-error-summary:contains("${unsuccessful_login_message}")
+    the user should see the element             jQuery = li:contains("Your email/password combination doesn't seem to work.")
 
 Clear the login fields
     the user reloads the page

@@ -142,7 +142,7 @@ public class AcceptProjectInviteController {
                     }
                     // Accept the invite - adding the user to the project
                     return projectInviteRestService.acceptInvite(hash, userExists.getId()).andOnSuccessReturn(() ->
-                            navigationUtils.getRedirectToLandingPageUrl(request));
+                            navigationUtils.getRedirectToLandingPageUrl());
                 }
         ).getSuccess();
     }

@@ -80,7 +80,7 @@ public class HomeController {
         Set<Role> roles = getMultiDashboardRoles(user);
 
         if (roles.size() < 1) {
-            return navigationUtils.getRedirectToLandingPageUrl(request);
+            return navigationUtils.getRedirectToLandingPageUrl();
         }
 
         return viewDashboardSelection(request, model, roles);
@@ -126,7 +126,7 @@ public class HomeController {
     }
 
     private DashboardPanel createDashboardPanelForRole(HttpServletRequest request, Role role) {
-        return new DashboardPanel(role, navigationUtils.getDirectDashboardUrlForRole(request, role));
+        return new DashboardPanel(role, navigationUtils.getDirectDashboardUrlForRole(role));
     }
 
     private String getRedirectUrlForUser(UserResource user) {

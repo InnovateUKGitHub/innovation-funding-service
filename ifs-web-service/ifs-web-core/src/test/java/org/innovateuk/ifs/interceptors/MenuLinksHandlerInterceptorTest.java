@@ -80,14 +80,14 @@ public class MenuLinksHandlerInterceptorTest extends BaseUnitTest {
         modelMap.addAttribute(USER_PROFILE_LINK, ASSESSOR_PROFILE_URL);
 
         when(userAuthenticationService.getAuthentication(request)).thenReturn(authentication);
-        when(navigationUtils.getDirectLandingPageUrl(request)).thenReturn(ASSESSOR_DIRECT_LANDING_PAGE_URL);
+        when(navigationUtils.getDirectLandingPageUrl()).thenReturn(ASSESSOR_DIRECT_LANDING_PAGE_URL);
 
         menuLinksHandlerInterceptor.postHandle(request, response, handler, mav);
 
         assertEquals(ASSESSOR_DIRECT_LANDING_PAGE_URL, mav.getModelMap().get(USER_DASHBOARD_LINK));
         assertEquals(ASSESSOR_PROFILE_URL, mav.getModelMap().get(USER_PROFILE_LINK));
         verify(userAuthenticationService, times(1)).getAuthenticatedUser(request);
-        verify(navigationUtils, times(1)).getDirectLandingPageUrl(request);
+        verify(navigationUtils, times(1)).getDirectLandingPageUrl();
     }
 
     @Test
@@ -99,14 +99,14 @@ public class MenuLinksHandlerInterceptorTest extends BaseUnitTest {
         modelMap.addAttribute(USER_PROFILE_LINK, USER_PROFILE_URL);
 
         when(userAuthenticationService.getAuthentication(request)).thenReturn(authentication);
-        when(navigationUtils.getDirectLandingPageUrl(request)).thenReturn(APPLICANT_DIRECT_LANDING_PAGE_URL);
+        when(navigationUtils.getDirectLandingPageUrl()).thenReturn(APPLICANT_DIRECT_LANDING_PAGE_URL);
 
         menuLinksHandlerInterceptor.postHandle(request, response, handler, mav);
 
         assertEquals(APPLICANT_DIRECT_LANDING_PAGE_URL, mav.getModelMap().get(USER_DASHBOARD_LINK));
         assertEquals(USER_PROFILE_URL, mav.getModelMap().get(USER_PROFILE_LINK));
         verify(userAuthenticationService, times(1)).getAuthenticatedUser(request);
-        verify(navigationUtils, times(1)).getDirectLandingPageUrl(request);
+        verify(navigationUtils, times(1)).getDirectLandingPageUrl();
     }
 
     @Test
@@ -118,13 +118,13 @@ public class MenuLinksHandlerInterceptorTest extends BaseUnitTest {
         modelMap.addAttribute(USER_PROFILE_LINK, ASSESSOR_PROFILE_URL);
 
         when(userAuthenticationService.getAuthentication(request)).thenReturn(authentication);
-        when(navigationUtils.getDirectLandingPageUrl(request)).thenReturn(ASSESSOR_DIRECT_LANDING_PAGE_URL);
+        when(navigationUtils.getDirectLandingPageUrl()).thenReturn(ASSESSOR_DIRECT_LANDING_PAGE_URL);
 
         menuLinksHandlerInterceptor.postHandle(request, response, handler, mav);
 
         assertEquals(ASSESSOR_DIRECT_LANDING_PAGE_URL, mav.getModelMap().get(USER_DASHBOARD_LINK));
         assertEquals(ASSESSOR_PROFILE_URL, mav.getModelMap().get(USER_PROFILE_LINK));
         verify(userAuthenticationService, times(1)).getAuthenticatedUser(request);
-        verify(navigationUtils, times(1)).getDirectLandingPageUrl(request);
+        verify(navigationUtils, times(1)).getDirectLandingPageUrl();
     }
 }

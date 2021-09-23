@@ -12,10 +12,13 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.spendprofile.form.ProjectSpendProfileApprovalForm;
+import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileApprovalViewModel;
+import org.innovateuk.ifs.spendprofile.OrganisationReviewDetails;
 import org.innovateuk.ifs.spendprofile.SpendProfileService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,8 +29,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.user.resource.Authority.*;
@@ -119,6 +126,13 @@ public class ProjectSpendProfileApprovalController {
         ApprovalType approvalType = spendProfileService.getSpendProfileStatusByProjectId(projectId);
         boolean isReadOnly = userCannotApproveOrReject(loggedInUser);
 
+        final OrganisationResource leadOrganisation = projectService.getLeadOrganisation(project.getId());
+
+        List<OrganisationResource> organisations = new PrioritySorting<>(projectService.getPartnerOrganisationsForProject(project.getId()),
+                leadOrganisation, OrganisationResource::getName).unwrap();
+
+        Map<Long, OrganisationReviewDetails> editablePartners = getOrganisationReviewDetails(project.getId(), organisations, loggedInUser);
+
         List<OrganisationResource> organisationResources = projectService.getPartnerOrganisationsForProject(projectId);
 
         return new ProjectSpendProfileApprovalViewModel(competitionSummary,
@@ -126,8 +140,23 @@ public class ProjectSpendProfileApprovalController {
                                                         approvalType,
                                                         organisationResources,
                                                         project,
+                                                        editablePartners,
+                                                        leadOrganisation,
                                                         isMOSpendProfileUpdateEnabled,
                                                         isReadOnly);
+    }
+
+    private Map<Long, OrganisationReviewDetails> getOrganisationReviewDetails(final Long projectId, List<OrganisationResource> partnerOrganisations, final UserResource loggedInUser) {
+        return partnerOrganisations.stream().collect(Collectors.toMap(OrganisationResource::getId,
+                o -> { Optional<SpendProfileResource> spendProfileResource = spendProfileService.getSpendProfile(projectId, o.getId());
+                    return new OrganisationReviewDetails(o.getId(),
+                            o.getName(),
+                            spendProfileResource.map(SpendProfileResource::isMarkedAsComplete).orElse(false),
+                            false,
+                            true,
+                            spendProfileResource.map(SpendProfileResource::getReviewedBy).orElse(null),
+                            spendProfileResource.map(SpendProfileResource::getReviewedOn).orElse(null));
+                }, (v1, v2) -> v1, LinkedHashMap::new));
     }
 
     private String redirectToCompetitionSummaryPage(Long projectId) {

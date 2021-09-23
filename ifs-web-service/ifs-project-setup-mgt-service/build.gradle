@@ -18,17 +18,17 @@ project.version = nexusVersion
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
-    compile project(':ifs-web-service:ifs-project-commons')
-    compile project(':ifs-web-service:ifs-application-commons')
+    compile "org.innovateuk.ifs.libraries:ifs-project-commons"
+    compile "org.innovateuk.ifs.libraries:ifs-application-commons"
 
-    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
-    testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
-    testCompile project(path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
-    testCompile project(path: ":ifs-web-service:ifs-application-commons", configuration: 'testArtifacts')
-    testCompile project(path: ":ifs-web-service:ifs-project-commons", configuration: 'testArtifacts')
+    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
+    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
+
+    testCompile "org.innovateuk.ifs.libraries:ifs-web-commons-test"
 
     testCompile "com.opencsv:opencsv"
+    testCompile "junit:junit"
+    testCompile 'com.jayway.awaitility:awaitility'
 }
 
 processResources {

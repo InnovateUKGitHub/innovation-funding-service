@@ -6,6 +6,7 @@ import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Mockito.when;
@@ -22,6 +23,8 @@ public class SurveyControllerTest extends BaseControllerMockMVCTest<SurveyContro
     @Spy
     @SuppressWarnings("unused")
     private NavigationUtils navigationUtils;
+
+    private String ifsWebBaseURL = "http://localhost:80";
 
     @Override
     protected SurveyController supplyControllerUnderTest() {
@@ -62,6 +65,8 @@ public class SurveyControllerTest extends BaseControllerMockMVCTest<SurveyContro
 
     @Test
     public void submitFeedbackValid() throws Exception {
+
+        ReflectionTestUtils.setField(navigationUtils, "ifsWebBaseURL", ifsWebBaseURL);
 
         long competitionId = 1L;
 
