@@ -102,6 +102,7 @@ k8s_clean() {
   kubectl delete svc sil-stub
   kubectl delete svc survey-data-svc
   kubectl delete svc survey-svc
+  kubectl delete svc selenium-hub
   kubectl delete configmap cache-config
   kubectl delete configmap data-service-config
   kubectl delete configmap db-config
