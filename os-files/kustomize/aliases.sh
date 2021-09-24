@@ -7,7 +7,8 @@ alias skaffold_c="skaffold dev -f skaffold-CUSTOM.yml --auto-build=false --auto-
 # Use sensible defaults to deploy dev and custom builds in a faster mode (use one at a time)
 alias skaffold_dx="skaffold dev --watch-image='[]' --cache-artifacts=false --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true --tail=false"
 alias skaffold_cx="skaffold dev -f skaffold-CUSTOM.yml --cache-artifacts=false --watch-image='[]' --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true --tail=false"
-
+# Deploy selenium hub and chrome for local AT
+alias skaffold_at="skaffold dev -f skaffold-LOCAL-AT.yml --auto-build=false --auto-sync=false --auto-deploy=false --status-check=true --wait-for-deletions=true --tail=false"
 # View state/events for dev/custom in firefox
 alias skaffold_state="open -a Firefox http://localhost:50052/v1/state"
 alias skaffold_events="open -a Firefox http://localhost:50052/v1/events"
