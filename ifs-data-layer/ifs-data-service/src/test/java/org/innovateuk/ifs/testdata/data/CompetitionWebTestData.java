@@ -323,7 +323,7 @@ public class CompetitionWebTestData {
                         .withName("Reusability of waste material rocketry components")
                         .withCompetitionType(AEROSPACE_TECHNOLOGY_INSTITUTE),
                 grantCompetition()
-                        .withName("performance of waste material rocketry components")
+                        .withName("Mathematics: the analytical theory of numbers")
                         .withCompetitionType(AEROSPACE_TECHNOLOGY_INSTITUTE),
                 investorPartnershipCompetition()
                         .withName("Investor")
