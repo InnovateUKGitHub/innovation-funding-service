@@ -30,3 +30,8 @@ portForward:
     namespace: default
     port: 3306
     localPort: 3306
+  - resourceType: Service
+    resourceName: mail
+    namespace: default
+    port: 443
+    localPort: 4443

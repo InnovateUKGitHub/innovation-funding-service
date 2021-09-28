@@ -90,7 +90,9 @@ function initialiseTestEnvironment() {
         ./gradlew :robotTestsFilter :ifs-data-layer:ifs-data-service:flywayClean :ifs-data-layer:ifs-data-service:flywayMigrate -Pinitialise=true --configure-on-demand
         section "=> SYNCING SHIBBOLETH USERS"
 
-        ./gradlew :ifs-data-layer:ifs-data-service:syncShib 2>&1 >/dev/null
+        POD=$(kubectl get pod -l app=ldap -o jsonpath="{.items[0].metadata.name}")
+        kubectl exec $POD  -- env IFS_TEST_USER_PASSWORD="e1NTSEF9eVNIdk1KSGFleUZCYkZ3dk5KZ0tIRzIzNjgzcDNZQXgK" /usr/local/bin/ldap-sync-from-ifs-db.sh
+
     fi
 
   }
@@ -99,7 +101,7 @@ function stopSeleniumGrid() {
     section "=> STOPPING SELENIUM GRID"
 
     cd ${rootDir}
-#    ./gradlew :robot-tests:removeHub :robot-tests:removeChrome --configure-on-demand
+    ./gradlew :robot-tests:removeHub :robot-tests:removeChrome --configure-on-demand
 }
 
 function startPybot() {

@@ -65,8 +65,8 @@ task createHub(type: DockerCreateContainer, dependsOn: [buildHubDocker, removeHu
     env = ["GRID_BROWSER_TIMEOUT=90000", "GRID_TIMEOUT=100000"]
 }
 
-task deployHub(dependsOn: buildHubDocker) {
-    //targetContainerId { createHub.getContainerId() }
+task deployHub(type: DockerStartContainer, dependsOn: createHub) {
+    targetContainerId { createHub.getContainerId() }
 }
 
 
