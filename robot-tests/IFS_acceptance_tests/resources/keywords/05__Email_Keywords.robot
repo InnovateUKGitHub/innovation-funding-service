@@ -35,9 +35,9 @@ get email
 email contains pattern
     [Arguments]    ${email}    ${pattern}
     ${html}=    get email body    ${email}
-    #log    ${html}
+    log    ${html}
     ${matches}=    Get Matches From Email    ${email}    ${pattern}
-    #log    ${matches}
+    log    ${matches}
     Should Not Be Empty    ${MATCHES}
 
 click the email link

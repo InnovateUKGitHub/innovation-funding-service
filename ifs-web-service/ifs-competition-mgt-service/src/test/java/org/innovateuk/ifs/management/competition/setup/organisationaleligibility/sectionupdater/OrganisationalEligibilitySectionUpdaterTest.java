@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.form.OrganisationalEligibilityForm;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,6 +16,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionOrganisationConfigResourceBuilder.newCompetitionOrganisationConfigResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -39,10 +41,12 @@ public class OrganisationalEligibilitySectionUpdaterTest {
                 .withInternationalOrganisationsAllowed(form.getInternationalOrganisationsApplicable())
                 .build();
 
+        UserResource loggedInUser = newUserResource().build();
+
         when(competitionOrganisationConfigRestService.findByCompetitionId(competitionId)).thenReturn(restSuccess(configResource));
         when(competitionOrganisationConfigRestService.update(competitionId,configResource)).thenReturn(restSuccess(configResource));
 
-        ServiceResult<Void> updateResult = updater.doSaveSection(competition, form);
+        ServiceResult<Void> updateResult = updater.doSaveSection(competition, form, loggedInUser);
 
         assertTrue(updateResult.isSuccess());
         verify(competitionOrganisationConfigRestService).findByCompetitionId(competitionId);

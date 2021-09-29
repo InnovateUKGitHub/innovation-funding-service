@@ -9,10 +9,15 @@ import org.innovateuk.ifs.management.competition.setup.application.sectionupdate
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupSectionUpdater;
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.AdditionalInfoForm;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_DUPLICATE_FUNDERS;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 
 /**
  * Competition setup section saver for the additional info section.
@@ -30,11 +35,14 @@ public class AdditionalInfoSectionUpdater extends AbstractSectionUpdater impleme
 	}
 
 	@Override
-	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm, UserResource loggedInUser) {
 		AdditionalInfoForm additionalInfoForm = (AdditionalInfoForm) competitionSetupForm;
-		setFieldsAllowedFromChangeAfterSetupAndLive(competition, additionalInfoForm);
-
-		return competitionSetupRestService.update(competition).toServiceResult();
+		if(additionalInfoForm.getFunders().stream().allMatch(new HashSet<>()::add)) {
+			setFieldsAllowedFromChangeAfterSetupAndLive(competition, additionalInfoForm);
+			return competitionSetupRestService.update(competition).toServiceResult();
+		} else {
+			return serviceFailure(COMPETITION_DUPLICATE_FUNDERS);
+		}
 	}
 
 	private void setFieldsAllowedFromChangeAfterSetupAndLive(CompetitionResource competition, AdditionalInfoForm additionalInfoForm) {

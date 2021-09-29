@@ -8,6 +8,7 @@ import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetu
 import org.innovateuk.ifs.management.competition.setup.projecteligibility.form.ProjectEligibilityForm;
 import org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -22,6 +23,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.finance.builder.GrantClaimMaximumResourceBuilder.newGrantClaimMaximumResource;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
@@ -53,9 +55,11 @@ public class ProjectEligibilitySectionSaverTest {
                 .withApplicationFinanceType(STANDARD)
                 .build();
 
+        UserResource loggedInUser = newUserResource().build();
+
         when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
 
-        service.saveSection(competition, competitionSetupForm).getSuccess();
+        service.saveSection(competition, competitionSetupForm, loggedInUser).getSuccess();
 
         assertEquals(asList(BUSINESS.getId(), OrganisationTypeEnum.RESEARCH.getId()), competition.getLeadApplicantTypes());
         assertTrue(competition.isMultiStream());
@@ -77,9 +81,11 @@ public class ProjectEligibilitySectionSaverTest {
                 .withGrantClaimMaximums(asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
                 .build();
 
+        UserResource loggedInUser = newUserResource().build();
+
         when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
 
-        service.saveSection(competition, competitionSetupForm).getSuccess();
+        service.saveSection(competition, competitionSetupForm, loggedInUser).getSuccess();
 
         assertEquals(ResearchParticipationAmount.NONE.getAmount(), competition.getMaxResearchRatio());
 
@@ -97,9 +103,11 @@ public class ProjectEligibilitySectionSaverTest {
                 .withGrantClaimMaximums(asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
                 .build();
 
+        UserResource loggedInUser = newUserResource().build();
+
         when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
 
-        service.saveSection(competition, competitionSetupForm).getSuccess();
+        service.saveSection(competition, competitionSetupForm, loggedInUser).getSuccess();
 
         verify(competitionSetupRestService).update(competition);
     }
@@ -116,9 +124,11 @@ public class ProjectEligibilitySectionSaverTest {
                 .withGrantClaimMaximums(asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
                 .build();
 
+        UserResource loggedInUser = newUserResource().build();
+
         when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
 
-        service.saveSection(competition, competitionSetupForm).getSuccess();
+        service.saveSection(competition, competitionSetupForm, loggedInUser).getSuccess();
 
         assertEquals(0, competition.getMaxResearchRatio().intValue());
 
