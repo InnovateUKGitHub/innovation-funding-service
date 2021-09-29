@@ -92,6 +92,11 @@ items:
                     configMapKeyRef:
                       name: feature-toggle-config
                       key: IFS_MONITORINGOFFICER_SPENDPROFILE_UPDATE_ENABLED
+                - name: IFS_MONITORINGOFFICER_DASHBOARD_FILTER_ENABLED
+                  valueFrom:
+                    configMapKeyRef:
+                      name: feature-toggle-config
+                      key: IFS_MONITORINGOFFICER_DASHBOARD_FILTER_ENABLED
                 - name: SPRING_PROFILES_ACTIVE
                   valueFrom:
                     configMapKeyRef:

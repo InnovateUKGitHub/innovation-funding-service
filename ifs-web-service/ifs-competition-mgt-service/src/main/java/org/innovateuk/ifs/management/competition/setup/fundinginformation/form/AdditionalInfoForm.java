@@ -2,6 +2,8 @@ package org.innovateuk.ifs.management.competition.setup.fundinginformation.form;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.UniqueElements;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.FunderRowForm;
 
@@ -26,7 +28,8 @@ public class AdditionalInfoForm extends CompetitionSetupForm {
     private String budgetCode;
 
     @Valid
-    @NotEmpty(message = "Please enter a funder")
+    @NotEmpty(message = "{validation.additionalinfoform.funders.required}")
+    @UniqueElements(message = "{validation.additionalinfoform.funders.unique}")
     private List<FunderRowForm> funders = new ArrayList<>();
 
     public AdditionalInfoForm() {

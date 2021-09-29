@@ -30,7 +30,7 @@ public class MonitoringOfficerDashboardControllerTest extends BaseControllerMock
         MonitoringOfficerDashboardViewModel model = mock(MonitoringOfficerDashboardViewModel.class);
         when(populator.populate(loggedInUser, null, true, false, false,
                 false, false, false, false,
-                false)).thenReturn(model);
+                false,0, 10)).thenReturn(model);
 
         mockMvc.perform(get("/monitoring-officer/dashboard"))
                 .andExpect(view().name("monitoring-officer/dashboard"))
@@ -42,7 +42,7 @@ public class MonitoringOfficerDashboardControllerTest extends BaseControllerMock
         MonitoringOfficerDashboardViewModel model = mock(MonitoringOfficerDashboardViewModel.class);
         when(populator.populate(loggedInUser, "keyword", false, false, false,
                 false, false, false, false,
-                false)).thenReturn(model);
+                false,0, 10)).thenReturn(model);
 
         mockMvc.perform(post("/monitoring-officer/dashboard")
                 .param("keywordSearch", "keyword"))

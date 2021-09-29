@@ -209,7 +209,9 @@ Monitoring officer can view and download the signed GOL
     Given log in as a different user            &{monitoring_officer_one_credentials}
     When the user navigates to the page         ${server}/project-setup/project/${ProjectID}/offer
     And the user clicks the button/link         link = SignedGrantOfferLetter.pdf (opens in a new window)
+    And Select Window                           NEW
     Then the user should not see internal server and forbidden errors
+    And the user closes the last opened tab
     And the user should see the element         jQuery = h2:contains("Signed grant offer letter")
 
 Internal user is able to approve the GOL and the project is now Live
@@ -224,7 +226,9 @@ Monitoring officer can see GOL is approved
     Given log in as a different user            &{monitoring_officer_one_credentials}
     When the user navigates to the page         ${server}/project-setup/project/${ProjectID}/offer
     And the user clicks the button/link         link = SignedGrantOfferLetter.pdf (opens in a new window)
+    And Select Window                           NEW
     Then the user should not see internal server and forbidden errors
+    And the user closes the last opened tab
     And the user should see the element         jQuery = p:contains("Your signed grant offer letter has been received and accepted by Innovate UK.")
 
 Competition goes into previous

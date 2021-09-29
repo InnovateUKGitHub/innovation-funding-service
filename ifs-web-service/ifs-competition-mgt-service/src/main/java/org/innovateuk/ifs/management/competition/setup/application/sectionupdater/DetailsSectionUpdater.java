@@ -10,6 +10,7 @@ import org.innovateuk.ifs.management.competition.setup.application.form.DetailsF
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupSubsectionUpdater;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupQuestionService;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +47,7 @@ public class DetailsSectionUpdater extends AbstractSectionUpdater implements Com
 	}
 
 	@Override
-	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm, UserResource loggedInUser) {
 		DetailsForm form = (DetailsForm) competitionSetupForm;
 		Set<ConstraintViolation<CompetitionSetupForm>> violations = validator.validate(competitionSetupForm);
 

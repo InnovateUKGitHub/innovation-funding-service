@@ -387,7 +387,7 @@
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://ifs.local-dev/management/dashboard/live</stringProp>
+                <stringProp name="Header.value">https://${__P(server_url)}/management/dashboard/live</stringProp>
               </elementProp>
               <elementProp name="Accept-Language" elementType="Header">
                 <stringProp name="Header.name">Accept-Language</stringProp>
@@ -599,7 +599,7 @@
           </RegexExtractor>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Save initial section" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Save initial section Test" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="_csrf" elementType="HTTPArgument">
@@ -633,13 +633,6 @@
               <elementProp name="innovationAreaCategoryIds[0]" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.name">innovationAreaCategoryIds[0]</stringProp>
-                <stringProp name="Argument.value">59</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-              </elementProp>
-              <elementProp name="autosaveInnovationAreaIds" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">autosaveInnovationAreaIds</stringProp>
                 <stringProp name="Argument.value">59</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
@@ -693,19 +686,19 @@
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
-              <elementProp name="stateAid" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.value">no</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">stateAid</stringProp>
-              </elementProp>
               <elementProp name="fundingType" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.value">GRANT</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">fundingType</stringProp>
+              </elementProp>
+              <elementProp name="fundingRule" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">NOT_AID</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">fundingRule</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -894,9 +887,44 @@
               <elementProp name="termsAndConditionsId" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.name">termsAndConditionsId</stringProp>
-                <stringProp name="Argument.value">5</stringProp>
+                <stringProp name="Argument.value">34</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
+              </elementProp>
+              <elementProp name="thirdPartyTermsAndConditionsLabel" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value"></stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">thirdPartyTermsAndConditionsLabel</stringProp>
+              </elementProp>
+              <elementProp name="thirdPartyTermsAndConditionsText" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value"></stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">thirdPartyTermsAndConditionsText</stringProp>
+              </elementProp>
+              <elementProp name="projectCostGuidanceLink" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">http://</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">projectCostGuidanceLink</stringProp>
+              </elementProp>
+              <elementProp name="thirdPartyTermsAndConditionsDoc" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">(binary)</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">thirdPartyTermsAndConditionsDoc</stringProp>
+              </elementProp>
+              <elementProp name="termsAndConditionsDoc" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">(binary)</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">termsAndConditionsDoc</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -1390,27 +1418,6 @@
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
-              <elementProp name="researchCategoryId" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">33</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">researchCategoryId</stringProp>
-              </elementProp>
-              <elementProp name="researchCategoryId" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">34</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">researchCategoryId</stringProp>
-              </elementProp>
-              <elementProp name="researchCategoryId" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">researchCategoryId</stringProp>
-                <stringProp name="Argument.value">35</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-              </elementProp>
               <elementProp name="leadApplicantTypes" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">1</stringProp>
@@ -1439,19 +1446,12 @@
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
-              <elementProp name="overrideFundingRules" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.value">no</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">overrideFundingRules</stringProp>
-              </elementProp>
-              <elementProp name="researchCategoriesApplicable" elementType="HTTPArgument">
+              <elementProp name="ktpCompetition" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">yes</stringProp>
+                <stringProp name="Argument.value">false</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">researchCategoriesApplicable</stringProp>
+                <stringProp name="Argument.name">ktpCompetition</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -1518,7 +1518,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol">https</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/management/competition/setup/${created_comp_id}/section/project-eligibility</stringProp>
+          <stringProp name="HTTPSampler.path">/management/competition/setup/${created_comp_id}/section/organisational-eligibility</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -1612,7 +1612,7 @@
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">https://ifs.local-dev/management/competition/setup/${created_comp_id}/section/eligibility</stringProp>
+                <stringProp name="Header.value">https://${__P(server_url)}/management/competition/setup/${created_comp_id}/section/eligibility</stringProp>
               </elementProp>
               <elementProp name="Accept-Language" elementType="Header">
                 <stringProp name="Header.name">Accept-Language</stringProp>
@@ -10313,6 +10313,12 @@ Does it meet the scope of the competition as defined in the competition brief?</
           </GaussianRandomTimer>
           <hashTree/>
         </hashTree>
+        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="true">
+          <boolProp name="displayJMeterProperties">false</boolProp>
+          <boolProp name="displayJMeterVariables">true</boolProp>
+          <boolProp name="displaySystemProperties">false</boolProp>
+        </DebugSampler>
+        <hashTree/>
       </hashTree>
     </hashTree>
   </hashTree>

@@ -9,6 +9,8 @@ import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
+import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -17,6 +19,7 @@ import java.util.Optional;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -30,6 +33,9 @@ public class QuestionSetupAddAndRemoveServiceImplTest extends BaseServiceUnitTes
 
     @Mock
     private QuestionPriorityOrderService questionPriorityOrderServiceMock;
+
+    @Mock
+    private LoggedInUserSupplier loggedInUserSupplier;
 
     @Override
     protected QuestionSetupAddAndRemoveService supplyServiceUnderTest() {
@@ -58,9 +64,10 @@ public class QuestionSetupAddAndRemoveServiceImplTest extends BaseServiceUnitTes
     public void deleteQuestionInCompetition_competitionNotInSetupOrReadyStateShouldResultInFailure() {
         Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build();
         Question question = newQuestion().withCompetition(competition).build();
-
+        User loggedInUser = newUser().build();
 
         when(questionRepositoryMock.findFirstById(question.getId())).thenReturn(question);
+        when(loggedInUserSupplier.get()).thenReturn(loggedInUser);
         ServiceResult<Void> resultAssessedQuestion = service.deleteQuestionInCompetition(question.getId());
         assertTrue(resultAssessedQuestion.isFailure());
     }
@@ -71,8 +78,12 @@ public class QuestionSetupAddAndRemoveServiceImplTest extends BaseServiceUnitTes
         Section section = newSection().withSectionType(SectionType.APPLICATION_QUESTIONS).build();
         Question question = newQuestion().withCompetition(readyToOpenCompetition).withSection(section).build();
 
+        User loggedInUser = newUser().build();
+        when(loggedInUserSupplier.get()).thenReturn(loggedInUser);
+
         when(questionRepositoryMock.findFirstById(question.getId())).thenReturn(question);
         when(questionRepositoryMock.countByCompetitionId(readyToOpenCompetition.getId())).thenReturn(1L);
+        when(loggedInUserSupplier.get()).thenReturn(loggedInUser);
         ServiceResult<Void> resultAssessedQuestion = service.deleteQuestionInCompetition(question.getId());
         assertTrue(resultAssessedQuestion.isFailure());
     }
@@ -99,8 +110,11 @@ public class QuestionSetupAddAndRemoveServiceImplTest extends BaseServiceUnitTes
     @Test
     public void addDefaultAssessedQuestionToCompetition_competitionIsNotInReadyOrSetupStateShouldResultInFailure() {
         Competition competitionInWrongState = newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build();
+        User loggedInUser = newUser().build();
 
+        when(loggedInUserSupplier.get()).thenReturn(loggedInUser);
         ServiceResult<Question> result = service.addDefaultAssessedQuestionToCompetition(competitionInWrongState);
+
 
         assertTrue(result.isFailure());
     }
@@ -108,8 +122,10 @@ public class QuestionSetupAddAndRemoveServiceImplTest extends BaseServiceUnitTes
     @Test
     public void addDefaultAssessedQuestionToCompetition_sectionCannotBeFoundShouldResultInServiceFailure() {
         Competition competitionInWrongState = newCompetition().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build();
+        User loggedInUser = newUser().build();
 
         when(sectionRepositoryMock.findByTypeAndCompetitionId(SectionType.APPLICATION_QUESTIONS, competitionInWrongState.getId())).thenReturn(Optional.empty());
+        when(loggedInUserSupplier.get()).thenReturn(loggedInUser);
 
         ServiceResult<Question> result = service.addDefaultAssessedQuestionToCompetition(competitionInWrongState);
 
