@@ -7,7 +7,7 @@ bases:
 
 components:
   # Ordering is important in components
-  - ../../../../components/data-layer/data-service
+  - ../../../../components/web-layer/project-setup-mgt-service
 #  - ../../../../components/web-layer/application-service
 
   - ../../../../patches/new-relic-env-vars-patch
@@ -17,6 +17,3 @@ components:
 
 resources:
   - config-maps/web-config.yml
-
-patchesStrategicMerge:
-  - data-layer/data-service/data-service-deployment.yml
