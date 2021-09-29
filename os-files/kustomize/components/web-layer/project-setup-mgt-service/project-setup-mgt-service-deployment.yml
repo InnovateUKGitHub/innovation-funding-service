@@ -94,6 +94,7 @@ spec:
               value: "ifs-project-setup-mgt-service (${openshiftEnv})"
           ports:
             - containerPort: 8080
+            - containerPort: 8001
           resources:
             limits:
               cpu: 1000m
