@@ -27,6 +27,11 @@ k8s_log() {
     kubectl logs -f $pod
 }
 
+k8s_describe() {
+    pod=$(kubectl get pod -l app="$1" -o name)
+    kubectl describe $pod
+}
+
 # Use k8s_dep alias then the name is the first arg here e.g. 'k8s_exec application-svc'
 k8s_exec() {
   pod=$(kubectl get pod -l app="$1" -o name)
