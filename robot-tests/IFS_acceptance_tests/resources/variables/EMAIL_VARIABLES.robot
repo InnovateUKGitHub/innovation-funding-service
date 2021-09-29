@@ -13,8 +13,8 @@ ${test_mailbox_two}             worth.email.test.two
 ${unique_email_number}          1
 ${submit_bus_email}             ${test_mailbox_one}+submitbus@gmail.com
 ${submit_rto_email}             ${test_mailbox_one}+submitrto@gmail.com
-${local_imap}                   mail
-${local_imap_port}              8143
+${local_imap}                   host.docker.internal
+${local_imap_port}              4443
 ${invite_email}                 ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
 ${international_invite_email}   international@example.com
 ${lead_applicant}               steve.smith@empire.com
