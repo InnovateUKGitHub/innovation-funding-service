@@ -1,24 +1,38 @@
 package org.innovateuk.ifs.testdata.builders;
 
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
-
-import static java.util.Collections.emptyList;
 
 /**
  * Generates data for Monitoring officer on the platform
  */
 public class MonitoringOfficerDataBuilder extends BaseDataBuilder<Void, MonitoringOfficerDataBuilder> {
 
-    public static MonitoringOfficerDataBuilder newMonitoringOfficerData(ServiceLocator serviceLocator) {
+    private static final Logger LOG = LoggerFactory.getLogger(MonitoringOfficerDataBuilder.class);
 
-        return new MonitoringOfficerDataBuilder(emptyList(), serviceLocator);
+    public MonitoringOfficerDataBuilder assignProject(String email, long applicationId) {
+        return with(data ->
+                doAs(ifsAdmin(), () -> {
+                    ProjectResource project = projectService.getByApplicationId(applicationId).getSuccess();
+                    if (project != null) {
+                        UserResource user = userService.findByEmail(email).getSuccess();
+                        monitoringOfficerService.assignProjectToMonitoringOfficer(project.getId(), user.getId()).getSuccess();
+                    }
+                }));
     }
 
-    private MonitoringOfficerDataBuilder(List<BiConsumer<Integer, Void>> multiActions,
-                                         ServiceLocator serviceLocator) {
-        super(multiActions, serviceLocator);
+    public MonitoringOfficerDataBuilder(List<BiConsumer<Integer, Void>> newActions, ServiceLocator serviceLocator) {
+        super(newActions, serviceLocator);
+    }
 
+    public static MonitoringOfficerDataBuilder newMonitoringOfficerData(ServiceLocator serviceLocator) {
+        return new MonitoringOfficerDataBuilder(Collections.emptyList(), serviceLocator);
     }
 
     @Override
@@ -29,5 +43,11 @@ public class MonitoringOfficerDataBuilder extends BaseDataBuilder<Void, Monitori
     @Override
     protected Void createInitial() {
         return null;
+    }
+
+    @Override
+    protected void postProcess(int index, Void instance) {
+        super.postProcess(index, instance);
+        LOG.info("Project assigned to MO");
     }
 }

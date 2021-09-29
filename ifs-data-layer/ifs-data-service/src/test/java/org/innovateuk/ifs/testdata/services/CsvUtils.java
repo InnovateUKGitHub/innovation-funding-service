@@ -117,7 +117,7 @@ public class CsvUtils {
         return simpleMap(readCsvLines("projects"), ProjectLine::new);
     }
 
-    public static List<MonitoringOfficerUserLine> readMonitoringOfficers() {
+    public static List<MonitoringOfficerUserLine> readMonitoringOfficerLines() {
         return simpleMap(readCsvLines("monitoring-officers"), MonitoringOfficerUserLine::new);
     }
 
@@ -699,6 +699,7 @@ public class CsvUtils {
 
     public static class MonitoringOfficerUserLine extends UserLine {
 
+        public String email;
         public String projectTitle;
         public Long applicationNumber;
         public String competitionName;
@@ -709,6 +710,7 @@ public class CsvUtils {
 
         @Override
         protected void processLine(List<String> line, int i) {
+            email = line.get(i++);
             projectTitle = line.get(i++);
             applicationNumber = Long.valueOf(line.get(i++));
             competitionName = line.get(i++);
