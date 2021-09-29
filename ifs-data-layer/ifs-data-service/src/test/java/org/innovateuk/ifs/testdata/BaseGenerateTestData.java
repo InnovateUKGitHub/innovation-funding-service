@@ -13,7 +13,6 @@ import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
-import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.core.transactional.ProjectToBeCreatedService;
 import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
 import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
