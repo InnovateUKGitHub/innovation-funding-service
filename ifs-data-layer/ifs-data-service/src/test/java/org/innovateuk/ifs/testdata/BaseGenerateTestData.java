@@ -13,7 +13,9 @@ import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
+import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.core.transactional.ProjectToBeCreatedService;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
 import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
 import org.innovateuk.ifs.sil.experian.resource.ValidationResult;
@@ -192,6 +194,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @Autowired
     private MonitoringOfficerDataService monitoringOfficerDataService;
 
+    @Autowired
+    private ProjectService projectService;
+
     private List<OrganisationLine> organisationLines;
     private List<CompetitionLine> competitionLines;
     private List<CsvUtils.ApplicationLine> applicationLines;
@@ -340,7 +345,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         projectToBeCreatedService.createAllPendingProjects();
 
-        createMonitoringOfficers();
+        List<ProjectResource> projectList = projectService.findAll().getSuccess();
+
+        createMonitoringOfficers(projectList);
 
         long after = System.currentTimeMillis();
 
@@ -384,12 +391,16 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     }
 
-    private void createMonitoringOfficers() {
-        List<ExternalUserLine> filteredMonitoringOfficers = simpleFilter(this.externalUserLines, l -> l.role == Role.MONITORING_OFFICER);
+    private void createMonitoringOfficers(List<ProjectResource> projects) {
+        List<ExternalUserLine> filteredExternalUsers = simpleFilter(this.externalUserLines, l -> l.role == Role.MONITORING_OFFICER);
+        List<MonitoringOfficerUserLine> filteredMonitoringOfficers = simpleFilter(this.monitoringOfficerUserLines,
+                l -> filteredExternalUsers.contains(l.emailAddress));
 
-        filteredMonitoringOfficers.forEach( filteredMonitoringOfficer -> {
-            monitoringOfficerDataService.buildMonitoringOfficersWithProject(filteredMonitoringOfficer,this.monitoringOfficerUserLines);
-        });
+//        List<MonitoringOfficerUserLine> filteredMonitoringOfficers = filteredExternalUsers.stream()
+//                .filter(user -> user.emailAddress == )
+
+                monitoringOfficerDataService.buildMonitoringOfficersWithProject(projects, filteredMonitoringOfficers);
+
 
 
 //        List<String> projectTitles = simpleMap(projects, p -> p.getProject().getName());
