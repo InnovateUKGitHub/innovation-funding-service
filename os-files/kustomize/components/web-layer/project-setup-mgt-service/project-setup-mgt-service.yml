@@ -4,6 +4,8 @@ metadata:
   name: project-setup-mgt-svc
   labels:
     app: project-setup-mgt-svc
+  annotations:
+    javaDebug: javaDebug
 spec:
   ports:
     - name: 8080-tcp
@@ -12,11 +14,5 @@ spec:
     - name: 8009-tcp
       port: 8009
       targetPort: 8009
-    - name: 5005-tcp
-      port: 5005
-      targetPort: 5005
-    - name: 1099-tcp
-      port: 1099
-      targetPort: 1099
   selector:
     app: project-setup-mgt-svc
