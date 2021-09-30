@@ -44,7 +44,7 @@ IFS.core.formValidation = (function () {
         messageInvalid: {
           invalid: 'Please enter a valid email address.',
           ktpInvalid: 'You must enter a valid Knowledge Transfer Network email address.',
-          duplicate: 'The email address is already registered with us. Please sign into your account.'
+          duplicate: 'This email address cannot be used to register a new account.'
         }
       },
       required: {
