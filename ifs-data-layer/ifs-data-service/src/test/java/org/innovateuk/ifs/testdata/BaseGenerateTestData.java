@@ -13,9 +13,7 @@ import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
-import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.core.transactional.ProjectToBeCreatedService;
-import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
 import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
 import org.innovateuk.ifs.sil.experian.resource.ValidationResult;
@@ -190,12 +188,12 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     @Autowired
     private ProjectToBeCreatedService projectToBeCreatedService;
-
-    @Autowired
-    private MonitoringOfficerDataService monitoringOfficerDataService;
-
-    @Autowired
-    private ProjectService projectService;
+//
+//    @Autowired
+//    private MonitoringOfficerDataService monitoringOfficerDataService;
+//
+//    @Autowired
+//    private ProjectService projectService;
 
     private List<OrganisationLine> organisationLines;
     private List<CompetitionLine> competitionLines;
@@ -211,8 +209,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
     private List<CsvUtils.QuestionnaireResponseLine> questionnaireResponseLines;
-    private List<CsvUtils.ProjectLine> projectLines;
-    private List<CsvUtils.MonitoringOfficerUserLine> monitoringOfficerUserLines;
+//    private List<CsvUtils.ProjectLine> projectLines;
+//    private List<CsvUtils.MonitoringOfficerUserLine> monitoringOfficerUserLines;
 
     @Value("${ifs.generate.test.data.competition.filter.name:Subsidy control comp in assessment}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
@@ -243,8 +241,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         applicationFinanceLines = readApplicationFinances();
         competitionLines = buildCompetitionLines();
         questionnaireResponseLines = readQuestionnaireResponseLines();
-        projectLines = readProjects();
-        monitoringOfficerUserLines = readMonitoringOfficerLines();
+//        projectLines = readProjects();
+//        monitoringOfficerUserLines = readMonitoringOfficerLines();
     }
 
     @PostConstruct
@@ -344,10 +342,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         setLoggedInUser(user);
 
         projectToBeCreatedService.createAllPendingProjects();
-
-        List<ProjectResource> projectList = projectService.findAll().getSuccess();
-
-        createMonitoringOfficers(projectList);
+//
+//        List<ProjectResource> projectList = projectService.findAll().getSuccess();
+//
+//        createMonitoringOfficers(projectList);
 
         long after = System.currentTimeMillis();
 
@@ -391,27 +389,13 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     }
 
-    private void createMonitoringOfficers(List<ProjectResource> projects) {
-        List<ExternalUserLine> filteredExternalUsers = simpleFilter(this.externalUserLines, l -> l.role == Role.MONITORING_OFFICER);
-        List<MonitoringOfficerUserLine> filteredMonitoringOfficers = simpleFilter(this.monitoringOfficerUserLines,
-                l -> filteredExternalUsers.contains(l.emailAddress));
-
-//        List<MonitoringOfficerUserLine> filteredMonitoringOfficers = filteredExternalUsers.stream()
-//                .filter(user -> user.emailAddress == )
-
-                monitoringOfficerDataService.buildMonitoringOfficersWithProject(projects, filteredMonitoringOfficers);
-
-
-
-//        List<String> projectTitles = simpleMap(projects, p -> p.getProject().getName());
-//        List<Long> applicationNumbers = simpleMap(projects, p -> p.getApplication().getId());
-//        List<String> competitionNames = simpleMap(projects, p -> p.getApplication().getCompetitionName());
+//    private void createMonitoringOfficers(List<ProjectResource> projects) {
+//        List<ExternalUserLine> filteredExternalUsers = simpleFilter(this.externalUserLines, l -> l.role == Role.MONITORING_OFFICER);
+//        List<MonitoringOfficerUserLine> filteredMonitoringOfficers = simpleFilter(this.monitoringOfficerUserLines,
+//                l -> filteredExternalUsers.contains(l.emailAddress));
 //
-//        List<MonitoringOfficerUserLine> filteredProjectTitles = simpleFilter(this.monitoringOfficerUserLines, l -> projectTitles.contains(l.projectTitle));
-//        List<MonitoringOfficerUserLine> filteredApplicationNumbers = simpleFilter(this.monitoringOfficerUserLines, l -> applicationNumbers.contains(l.applicationNumber));
-//        List<MonitoringOfficerUserLine> filteredCompetitionNames = simpleFilter(this.monitoringOfficerUserLines, l -> competitionNames.contains(l.competitionName));
-//
-    }
+//                monitoringOfficerDataService.buildMonitoringOfficersWithProject(projects, filteredMonitoringOfficers);
+//    }
 
     private void createSupporters(List<CompletableFuture<CompetitionData>> createCompetitionFutures, List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures) {
         simpleMap(createCompetitionFutures, CompletableFuture::join);
