@@ -20,3 +20,14 @@ deploy:
   kustomize:
     paths:
       - os-files/kustomize/env/stub/local/custom
+portForward:
+  - resourceType: Service
+    resourceName: project-setup-mgt-svc
+    namespace: default
+    port: 5005
+    localPort: 5005
+  - resourceType: Service
+    resourceName: project-setup-mgt-svc
+    namespace: default
+    port: 1099
+    localPort: 1099
