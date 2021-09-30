@@ -89,7 +89,7 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
 
         UnaryOperator<ProjectDataBuilder> setMonitoringOfficerIfNecessary =
                 builder -> !isBlank(line.moFirstName) ?
-                        builder.withMonitoringOfficer(line.moFirstName, line.moLastName, line.moEmail, line.moPhoneNumber, line.name) : builder;
+                        builder.withMonitoringOfficer(line.moFirstName, line.moLastName, line.moEmail, line.moPhoneNumber) : builder;
 
         UnaryOperator<ProjectDataBuilder> selectFinanceContactsIfNecessary = builder -> {
 

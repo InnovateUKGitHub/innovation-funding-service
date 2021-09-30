@@ -188,12 +188,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     @Autowired
     private ProjectToBeCreatedService projectToBeCreatedService;
-//
-//    @Autowired
-//    private MonitoringOfficerDataService monitoringOfficerDataService;
-//
-//    @Autowired
-//    private ProjectService projectService;
 
     private List<OrganisationLine> organisationLines;
     private List<CompetitionLine> competitionLines;
@@ -209,8 +203,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
     private List<CsvUtils.QuestionnaireResponseLine> questionnaireResponseLines;
-//    private List<CsvUtils.ProjectLine> projectLines;
-//    private List<CsvUtils.MonitoringOfficerUserLine> monitoringOfficerUserLines;
 
     @Value("${ifs.generate.test.data.competition.filter.name:Subsidy control comp in assessment}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
@@ -241,8 +233,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         applicationFinanceLines = readApplicationFinances();
         competitionLines = buildCompetitionLines();
         questionnaireResponseLines = readQuestionnaireResponseLines();
-//        projectLines = readProjects();
-//        monitoringOfficerUserLines = readMonitoringOfficerLines();
     }
 
     @PostConstruct
@@ -342,10 +332,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         setLoggedInUser(user);
 
         projectToBeCreatedService.createAllPendingProjects();
-//
-//        List<ProjectResource> projectList = projectService.findAll().getSuccess();
-//
-//        createMonitoringOfficers(projectList);
 
         long after = System.currentTimeMillis();
 
@@ -388,14 +374,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         assessmentDataBuilderService.createAssessments(applications, filteredAssessmentLines, filteredAssessorResponseLines, this.competitionLines);
 
     }
-
-//    private void createMonitoringOfficers(List<ProjectResource> projects) {
-//        List<ExternalUserLine> filteredExternalUsers = simpleFilter(this.externalUserLines, l -> l.role == Role.MONITORING_OFFICER);
-//        List<MonitoringOfficerUserLine> filteredMonitoringOfficers = simpleFilter(this.monitoringOfficerUserLines,
-//                l -> filteredExternalUsers.contains(l.emailAddress));
-//
-//                monitoringOfficerDataService.buildMonitoringOfficersWithProject(projects, filteredMonitoringOfficers);
-//    }
 
     private void createSupporters(List<CompletableFuture<CompetitionData>> createCompetitionFutures, List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures) {
         simpleMap(createCompetitionFutures, CompletableFuture::join);
