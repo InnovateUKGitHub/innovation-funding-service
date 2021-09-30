@@ -24,6 +24,14 @@ spec:
                 configMapKeyRef:
                   key: SP_DOMAIN
                   name: shibboleth-config
+            - name: BAMBOO_CREDS
+              value: "${BAMBOO_CREDS}"
+            - name: BAMBOO_URL
+              value: "${BAMBOO_URL}"
+            - name: BAMBOO_PLAN_PROJ
+              value: "${BAMBOO_PLAN_PROJ}"
+            - name: BAMBOO_BUILD_NO
+              value: "${BAMBOO_BUILD_NO}"
           resources:
             limits:
               cpu: 2000m
