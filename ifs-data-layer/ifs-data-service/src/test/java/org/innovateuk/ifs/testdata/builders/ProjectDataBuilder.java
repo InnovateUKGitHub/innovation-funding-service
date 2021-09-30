@@ -161,6 +161,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
             LegacyMonitoringOfficerResource mo = new LegacyMonitoringOfficerResource(firstName, lastName, email, phoneNumber, data.getProject().getId());
             long userId = userRepository.findByEmail(mo.getEmail()).get().getId();
             legacyMonitoringOfficerService.saveMonitoringOfficer(data.getProject().getId(), mo).getSuccess();
+            monitoringOfficerService.getProjectMonitoringOfficer(userId);
             monitoringOfficerService.assignProjectToMonitoringOfficer(userId, data.getProject().getId()).getSuccess();
         }));
     }
