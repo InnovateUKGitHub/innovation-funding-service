@@ -12,8 +12,11 @@ spec:
     - name: 8009-tcp
       port: 8009
       targetPort: 8009
-    - name: 8001-tcp
-      port: 8001
-      targetPort: 8001
+    - name: 5005-tcp
+      port: 5005
+      targetPort: 5005
+    - name: 1099-tcp
+      port: 1099
+      targetPort: 1099
   selector:
     app: project-setup-mgt-svc
