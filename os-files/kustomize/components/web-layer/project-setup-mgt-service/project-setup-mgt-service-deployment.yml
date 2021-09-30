@@ -4,6 +4,7 @@ metadata:
   name: project-setup-mgt-svc
   annotations:
     monitor: monitor
+    javaDebug: javaDebug
     pullSecrets: pullSecrets
 spec:
   replicas: 1
@@ -28,8 +29,8 @@ spec:
             httpGet:
               path: /project-setup-management/monitoring/health
               port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 10
+            initialDelaySeconds: 180
+            periodSeconds: 31
             timeoutSeconds: 5
             successThreshold: 1
             failureThreshold: 3
@@ -37,7 +38,7 @@ spec:
             httpGet:
               path: /project-setup-management/monitoring/health
               port: 8080
-            initialDelaySeconds: 10
+            initialDelaySeconds: 180
             periodSeconds: 5
             timeoutSeconds: 5
             successThreshold: 1
@@ -90,14 +91,10 @@ spec:
                   key: IFS_WEB_BASEURL
             - name: JAVA_OPTS
               value: -Xms1000m -Xmx1000m -javaagent:/newrelic.jar
-            - name: JAVA_TOOL_OPTIONS
-              value: -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.rmi.port=1099 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.local.only=false -Djava.rmi.server.hostname=127.0.0.1 -agentlib:jdwp=transport=dt_socket,server=y,address=5005,suspend=n,quiet=y
             - name: NEW_RELIC_APP_NAME
               value: "ifs-project-setup-mgt-service (${openshiftEnv})"
           ports:
             - containerPort: 8080
-            - containerPort: 5005
-            - containerPort: 1099
           resources:
             limits:
               cpu: 1000m
