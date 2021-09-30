@@ -4,6 +4,8 @@ metadata:
   name: assessment-svc
   labels:
     app: assessment-svc
+  annotations:
+    javaDebug: javaDebug
 spec:
   ports:
     - name: 8080-tcp

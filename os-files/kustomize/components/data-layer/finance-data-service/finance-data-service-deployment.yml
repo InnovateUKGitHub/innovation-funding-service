@@ -5,6 +5,7 @@ metadata:
   annotations:
     monitor: monitor
     waitForDb: waitForDb
+    javaDebug: javaDebug
     pullSecrets: pullSecrets
 spec:
   replicas: 1

@@ -4,6 +4,8 @@ metadata:
   name: front-door-svc
   labels:
     app: front-door-svc
+  annotations:
+    javaDebug: javaDebug
 spec:
   ports:
     - name: 8080-tcp

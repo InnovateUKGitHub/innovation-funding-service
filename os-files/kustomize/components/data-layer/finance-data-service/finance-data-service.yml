@@ -4,6 +4,8 @@ metadata:
   name: finance-data-service
   labels:
     app: finance-data-service
+  annotations:
+    javaDebug: javaDebug
 spec:
   ports:
     - name: 8080-tcp
