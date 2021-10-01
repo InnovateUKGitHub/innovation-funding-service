@@ -18,7 +18,7 @@
             <legend class="govuk-visually-hidden">Funding information</legend>
 
             <select th:id="funders" style="display:none;">
-                <option th:each="funder : ${T(org.innovateuk.ifs.competition.resource.Funder).values()}" th:value="${funder}" th:text="${funder.displayName}"></option>
+                <option th:each="funder : ${model.general.getFunderValues()}" th:value="${funder}" th:text="${funder.displayName}"></option>
             </select>
 
             <div th:each="(funder, iteration : ${competitionSetupForm.funders})" class="govuk-grid-row funder-row" th:id="'funder-row-'+${iteration.index}">
