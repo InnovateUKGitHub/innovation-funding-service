@@ -126,7 +126,7 @@
                                             required="required"
                                             th:field="*{rejectReason}">
                                         <option value="">Select a reason</option>
-                                        <option th:each="reason : ${getAssessmentRejectOutcomeValue()}"
+                                        <option th:each="reason : ${form.getAssessmentRejectOutcomeValues()}"
                                                 th:value="${reason}"
                                                 th:text="${reason.displayLabel}"
                                                 value="1">Not available</option>
