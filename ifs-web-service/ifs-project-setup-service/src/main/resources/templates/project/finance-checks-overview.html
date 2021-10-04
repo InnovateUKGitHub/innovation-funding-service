@@ -17,7 +17,7 @@
         <p class="govuk-body" th:unless="${model.ktpCompetition}">This is the financial overview of all partners in this collaboration, each partner will be going through finance checks. The overview provides the progress of all partners through this section, as well as a view of their finances during review.</p>
         <p class="govuk-body" th:if="${model.ktpCompetition}">This overview shows the financial information entered in the 'Your project finances' section by the knowledge base partner.</p>
 
-        <th:block th:unless="${model.summaries.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
+        <th:block th:unless="${model.procurement}">
             <h3 class="govuk-heading-m">Finance summary</h3>
             <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})" />
         </th:block>

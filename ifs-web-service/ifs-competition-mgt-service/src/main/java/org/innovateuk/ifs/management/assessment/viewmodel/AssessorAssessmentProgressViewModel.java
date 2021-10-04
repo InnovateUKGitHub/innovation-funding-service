@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.management.assessment.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.util.EnumSet;
@@ -151,5 +153,10 @@ public class AssessorAssessmentProgressViewModel {
 
     public boolean isAssessmentClosed() {
         return competitionStatus.isLaterThan(CompetitionStatus.IN_ASSESSMENT);
+    }
+
+    @JsonIgnore
+    public ApplicationCountSummaryResource.Sort[] getAllApplicationCountSummaryResource() {
+        return ApplicationCountSummaryResource.Sort.values();
     }
 }
