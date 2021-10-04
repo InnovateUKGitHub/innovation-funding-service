@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.grants.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole;
@@ -77,5 +78,15 @@ public class GrantsSendInviteForm {
 
     public boolean isFinanceContact() {
         return role == GrantsInviteRole.GRANTS_PROJECT_FINANCE_CONTACT;
+    }
+
+    @JsonIgnore
+    public GrantsInviteRole[] getAllGrantsInviteRoles() {
+        return GrantsInviteRole.values();
+    }
+
+    @JsonIgnore
+    public GrantsInviteRole getGrantsProjectFinanceContactRole() {
+        return GrantsInviteRole.GRANTS_PROJECT_FINANCE_CONTACT;
     }
 }

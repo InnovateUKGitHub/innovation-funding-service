@@ -99,11 +99,11 @@
                         required="required"
                         data-required-errormessage="Please select a role.">
                     <option value="" disabled="disabled" th:selected="${form.role == null}">Please select...</option>
-                    <option th:each="inviteRole : ${T(org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole).values()}"
+                    <option th:each="inviteRole : ${form.getAllGrantsInviteRoles()}"
                             th:value="${inviteRole}"
                             th:selected="${inviteRole == form.role}"
                             th:text="${inviteRole.displayName}"
-                            th:attr="data-target=${inviteRole == T(org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole).GRANTS_PROJECT_FINANCE_CONTACT ? 'organisation-id-form-group' : null}"></option>
+                            th:attr="data-target=${inviteRole == form.getGrantsProjectFinanceContactRole() ? 'organisation-id-form-group' : null}"></option>
                 </select>
             </div>
 
