@@ -26,14 +26,14 @@ the error should not be visible when the text area is not empty
 
 the "Project Summary" question is empty
     the user enters text to a text field    css = .textarea-wrapped .editor    ${empty}
-    mouse out                               css = .textarea-wrapped .editor
+    #mouse out                               css = .textarea-wrapped .editor
     wait for autosave
     Set Focus To Element                    link = Contact us
     the user reloads the page
 
 the applicant inserts some text again in the "Project Summary" question
     The user enters text to a text field    css = .textarea-wrapped .editor    test if the applicant can mark the question as complete
-    mouse out    css = .textarea-wrapped .editor
+    #mouse out    css = .textarea-wrapped .editor
     wait for autosave
 
 the applicant should be able to mark the question as complete

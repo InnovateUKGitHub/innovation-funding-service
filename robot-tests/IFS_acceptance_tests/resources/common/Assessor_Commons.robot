@@ -32,14 +32,14 @@ the assessor adds score and feedback for every question
     The user clicks the button/link                       jQuery = label:contains("Yes")
     The user enters text to a text field                  css = .editor    Testing scope feedback text
     Wait for autosave
-    mouse out  css = .editor
+    #mouse out  css = .editor
     Wait Until Page Contains Without Screenshots          Saved!
     :FOR  ${INDEX}  IN RANGE  1  ${no_of_questions}
       \    the user clicks the button/link    css = .next
       \    The user selects the option from the drop-down menu    10    css = .assessor-question-score
       \    The user enters text to a text field    css = .editor    Testing feedback text
       \    Wait for autosave
-      \    mouse out  css = .editor
+      #\    mouse out  css = .editor
       \    Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button with resubmission              jquery = button:contains("Save and return to assessment overview")
     #clicking too fast as part of AT run so as  a turn around added this line

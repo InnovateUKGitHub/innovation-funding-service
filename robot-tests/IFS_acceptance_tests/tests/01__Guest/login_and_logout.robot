@@ -119,7 +119,7 @@ the user receives a failed login message
 Clear the login fields
     the user reloads the page
     the user enters text to a text field       id = password    ${EMPTY}
-    Mouse Out                                  id = password
+    #Mouse Out                                  id = password
     wait for autosave
 
 the user goes to applicant dashboard

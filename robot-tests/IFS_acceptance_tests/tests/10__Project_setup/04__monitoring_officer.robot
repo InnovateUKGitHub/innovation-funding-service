@@ -393,7 +393,7 @@ Standard verification for email address follows
 
 The user should not see the validation error
     [Arguments]    ${ERROR_TEXT}
-    Run Keyword And Ignore Error Without Screenshots    mouse out    css = input
+    #Run Keyword And Ignore Error Without Screenshots    mouse out    css = input
     Set Focus To Element      jQuery = .govuk-button:contains("Assign Monitoring Officer")
     Wait for autosave
     ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    Wait Until Element Does Not Contain Without Screenshots    css = .govuk-error-message    ${ERROR_TEXT}

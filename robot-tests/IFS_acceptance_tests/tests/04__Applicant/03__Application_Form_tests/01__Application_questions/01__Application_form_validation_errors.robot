@@ -120,7 +120,7 @@ Custom Suite Setup
     Applicant goes to the application details page of the Robot application
 
 the applicant should not see the validation error any more
-    Run Keyword And Ignore Error Without Screenshots    Mouse Out    css = input
+    #Run Keyword And Ignore Error Without Screenshots    Mouse Out    css = input
     Run Keyword And Ignore Error Without Screenshots    Set Focus To Element    id = application-question-complete
     wait for autosave
     the user should not see the element    css = .govuk-error-message
@@ -148,8 +148,8 @@ Applicant goes to the application details page of the Robot application
 
 the applicant should not see the validation error of the duration any more
     Set Focus To Element      jQuery = button:contains("Save and return to application overview")
-    Run Keyword And Ignore Error Without Screenshots    mouse out    css = input
-    Run Keyword And Ignore Error Without Screenshots    mouse out    css = .editor
+    #Run Keyword And Ignore Error Without Screenshots    mouse out    css = input
+    #Run Keyword And Ignore Error Without Screenshots    mouse out    css = .editor
     Set Focus To Element      jQuery = button:contains("Save and return to application overview")
     wait for autosave
     The user should not see the element   jQuery = .govuk-error-message:contains("Enter the total number of months between 1 and 84")

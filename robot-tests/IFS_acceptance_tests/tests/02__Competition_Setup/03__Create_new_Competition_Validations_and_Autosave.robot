@@ -368,7 +368,7 @@ the user should see the correct details in the project eligibility form
 
 The user should not see the error text in the page
     [Arguments]    ${ERROR_TEXT}
-    Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
+    #Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
     Set Focus To Element    jQuery=button:contains("Done")
     Wait Until Page Does Not Contain Without Screenshots    ${ERROR_TEXT}
 
@@ -402,7 +402,7 @@ The user navigates to the Validation competition
 
 the user should not see the error any more
     [Arguments]    ${ERROR_TEXT}
-    Mouse out    css = input
+    #Mouse out    css = input
     Set Focus To Element    jQuery = button:contains("Done")
     Wait Until Element Does Not Contain Without Screenshots    css = .govuk-error-message    ${ERROR_TEXT}
 
