@@ -17,7 +17,7 @@ spec:
           emptyDir:
             medium: Memory
       containers:
-        - image: selenium/standalone-chrome:3.14.0-arsenic
+        - image: selenium/standalone-chrome:93.0
           name: chrome
           imagePullPolicy: IfNotPresent
           volumeMounts:
