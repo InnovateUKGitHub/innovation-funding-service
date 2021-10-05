@@ -173,7 +173,7 @@ function startPybot() {
     -v REMOTE_URL:'http://ifs.local-dev:4444/wd/hub' \
     -v SAUCELABS_RUN:0 \
     -v local_imap:'host.docker.internal' \
-    -v local_imap_port:4443 \
+    -v local_imap_port:8143 \
     $includeHappyPath \
     $includeBespokeTags \
     $excludeBespokeTags \
@@ -212,7 +212,7 @@ function deleteEmails() {
     python3 -m robot --outputdir target/set_up_steps --pythonpath IFS_acceptance_tests/libs \
     -v docker:1 \
     -v local_imap:'host.docker.internal' \
-    -v local_imap_port:4443  \
+    -v local_imap_port:8143  \
     IFS_acceptance_tests/tests/00__Set_Up_Tests/delete_emails.robot 2>&1 >/dev/null
     echo "...done"
 }
