@@ -76,6 +76,8 @@ function addTestFiles() {
 
 function initialiseTestEnvironment() {
 
+    skaffold dev -f ./skaffold-LOCAL-AT.yml --auto-build=false --auto-sync=false --auto-deploy=false --status-check=true --wait-for-deletions=true --tail=false
+
     cd ${rootDir}
 
     if [[ ${quickTest} -eq 1 ]]
@@ -260,6 +262,12 @@ else
 fi
 }
 
+function deleteTestContainers() {
+   kubectl delete deployment selenium-hub
+   kubectl delete deployment selenium-node-chrome
+   kubectl delete svc selenium-hub
+}
+
 
 # ====================================
 # The actual start point of our script
@@ -442,3 +450,5 @@ if [[ ${compress} -eq 1 ]]
 then
   saveResultsToCompressedFolder
 fi
+
+deleteTestContainers
