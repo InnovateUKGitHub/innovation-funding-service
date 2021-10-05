@@ -2,35 +2,49 @@ package org.innovateuk.ifs.crm.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.type.ZonedDateTimeType;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationAddressService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.sil.crm.resource.SilAddress;
+import org.innovateuk.ifs.sil.crm.resource.SilApplication;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.innovateuk.ifs.sil.crm.resource.SilOrganisation;
 import org.innovateuk.ifs.sil.crm.service.SilCrmEndpoint;
 import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.Date;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 
@@ -61,6 +75,9 @@ public class CrmServiceImpl implements CrmService {
 
     @Value("${ifs.new.organisation.search.enabled:false}")
     private Boolean newOrganisationSearchEnabled;
+
+    @Value("${sil.rest.crmApplications.eligibilityStatusChangeSource}")
+    private String eligibilityStatusChangeSource;
 
     @Override
     public ServiceResult<Void> syncCrmContact(long userId) {
@@ -133,6 +150,19 @@ public class CrmServiceImpl implements CrmService {
         LOG.info(format("Updating CRM contact %s and organisation %s %nPayload is:%s ",
                 silContact.getEmail(), silContact.getOrganisation().getName(), silContact));
         return silCrmEndpoint.updateContact(silContact);
+    }
+
+    private FailingOrSucceedingResult<Void, ServiceFailure> updateApplicationEligibility(ProjectResource project) {
+        ApplicationResource application = applicationService.getApplicationById(project.getApplication()).getSuccess();
+        CompetitionResource competition = competitionService.getCompetitionById(application.getCompetition()).getSuccess();
+
+        if(!competition.isLoan()) {
+            return serviceFailure(GENERAL_INCORRECT_TYPE);
+        } else {
+            SilApplication silApplication = setSilApplication(application, project, false);
+            LOG.info(format("Updating CRM application eligibility : %d %b", silApplication.getApplicationID(), silApplication.getMarkedIneligible()));
+            return silCrmEndpoint.updateApplicationEligibility(silApplication);
+        }
     }
 
     private void stripAttributesNotNeeded(SilContact silContact, BooleanSupplier supplier) {
@@ -220,5 +250,32 @@ public class CrmServiceImpl implements CrmService {
         silContact.setOrganisation(moSilOrganisation);
 
         return silContact;
+    }
+
+    private SilApplication setSilApplication(ApplicationResource application, ProjectResource project, boolean includeApplicationDetails) {
+        SilApplication silApplication = new SilApplication();
+        silApplication.setApplicationID(project.getId().intValue());
+        if(includeApplicationDetails) {
+            silApplication.setApplicationName(Optional.ofNullable(project.getName()).orElse(null));
+            silApplication.setApplicationLocation(Optional.ofNullable(project.getAddress())
+                    .map(address -> address.getAsSingleLine()).orElse(null));
+            silApplication.setApplicationSubmissionDate(Optional.ofNullable(application.getSubmittedDate())
+                    .map(submittedDate -> submittedDate.format(DateTimeFormatter.ISO_INSTANT)).orElse(null));
+            // silApplication.setApplicationSubmissionDate(project.getOfferSubmittedDate());
+            silApplication.setProjectDuration(Optional.ofNullable(project.getDurationInMonths())
+                    .map(duration -> duration.intValue()).orElse(null));
+
+            // TODO IFS-10471
+            // silApplication.setProjectTotalCost(0d);
+            // silApplication.setProjectOtherFunding(0d);
+        } else {
+            silApplication.setMarkedIneligible(
+                    application.getApplicationState() == ApplicationState.INELIGIBLE ||
+                            application.getApplicationState() == ApplicationState.INELIGIBLE_INFORMED);
+            silApplication.setEligibilityStatusChangeDate(ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT));
+            silApplication.setEligibilityStatusChangeSource(eligibilityStatusChangeSource);
+        }
+
+        return silApplication;
     }
 }
