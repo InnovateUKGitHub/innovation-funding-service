@@ -74,6 +74,39 @@ function addTestFiles() {
     done
 }
 
+k8s_delete() {
+  pod=$(kubectl get pod -l app="$1" -o name)
+  kubectl delete $pod
+}
+
+k8s_rebuild_db() {
+  k8s_delete ldap
+  k8s_wait ldap
+  k8s_delete ifs-database
+  k8s_wait ifs-database
+  k8s_delete data-service
+  k8s_wait data-service
+  k8s_sync_ldap
+}
+
+k8s_wait() {
+  while [[ $(kubectl get pods -l app=$1 -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]];
+    do echo "waiting for pod $1" && sleep 5;
+  done;
+}
+
+k8s_sync_ldap() {
+  if [[ -z "${TEST_USER_PASSWORD}" ]]; then
+    echo 'IFS_TEST_USER_PASSWORD env var is not set so using default of Passw0rd1357'
+    pass=$(slappasswd -s "Passw0rd1357" | base64)
+  else
+    echo 'IFS_TEST_USER_PASSWORD is set as env var'
+    pass=$TEST_USER_PASSWORD
+  fi
+  POD=$(kubectl get pod -l app=ldap -o name)
+  kubectl exec "$POD" -- bash -c "export IFS_TEST_USER_PASSWORD=$pass && /usr/local/bin/ldap-sync-from-ifs-db.sh"
+}
+
 function initialiseTestEnvironment() {
 
     cd ${rootDir}
@@ -87,11 +120,9 @@ function initialiseTestEnvironment() {
         sleep 5
       else
         section "=> STARTING SELENIUM GRID, INJECTING ENVIRONMENT PARAMETERS, RESETTING DATABASE STATE"
-        ./gradlew :robotTestsFilter :ifs-data-layer:ifs-data-service:flywayClean :ifs-data-layer:ifs-data-service:flywayMigrate -Pinitialise=true --configure-on-demand
-        section "=> SYNCING SHIBBOLETH USERS"
-
-        POD=$(kubectl get pod -l app=ldap -o jsonpath="{.items[0].metadata.name}")
-        kubectl exec $POD  -- env IFS_TEST_USER_PASSWORD="e1NTSEF9eVNIdk1KSGFleUZCYkZ3dk5KZ0tIRzIzNjgzcDNZQXgK" /usr/local/bin/ldap-sync-from-ifs-db.sh
+        k8s_rebuild_db
+        DATASERVICE_POD=$(kubectl get pod -l app=data-service -o jsonpath="{.items[0].metadata.name}")
+        ./gradlew :robotTestsFilter -Pinitialise=true --configure-on-demand
 
     fi
 

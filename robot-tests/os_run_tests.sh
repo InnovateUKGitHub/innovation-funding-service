@@ -99,7 +99,7 @@ function startPybot() {
     $excludeBespokeTags \
     $includeAtsTags \
     $includeZapTags \
-    --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} IFS_acceptance_tests/tests/01__Guest/login_and_logout.robot &
+    --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
 }
 
 function runTests() {
