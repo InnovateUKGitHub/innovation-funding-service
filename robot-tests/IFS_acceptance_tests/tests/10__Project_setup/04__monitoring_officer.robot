@@ -150,7 +150,7 @@ Links to other sections in Project setup dependent on project details (applicabl
 Existing Monitoring Officer can sign in and see projects that they are assigned to
     [Documentation]    IFS-3977  IFS-3978  IFS-9576
     [Tags]  HappyPath
-    Given log in as a different user                            &{monitoring_officer_one_credentials}
+    Given log in as a different user                            &{monitoring_officer_two_credentials}
     And the user clicks the project setup tile if displayed
     When the user selects the checkbox                          previousProject
     And the user clicks the button/link                         id = update-documents-results-button
@@ -191,7 +191,7 @@ Add MO server validations
 
 Add MO - existing MO
     [Documentation]  IFS-5428
-    Given the user enters text to a text field  id = emailAddress  ${monitoring_officer_one_credentials["email"]}
+    Given the user enters text to a text field  id = emailAddress  ${monitoring_officer_two_credentials["email"]}
     And the user cannot see a validation error in the page
     When the user clicks the button/link        jQuery = button[type="submit"]
     Then the user should see the element        jQuery = span:contains("Assign projects to Monitoring Officer")
@@ -248,7 +248,7 @@ Mo is able to view application feedback on a competition which as been through a
 
 MO is able to download the appendix file
     [Documentation]  IFS-7230  IFS-9774
-    Given log in as a different user                            &{monitoring_officer_one_credentials}
+    Given log in as a different user                            &{monitoring_officer_two_credentials}
     And the user clicks the project setup tile if displayed
     And the user selects the checkbox                           previousProject
     And the user clicks the button/link                         id = update-documents-results-button
@@ -283,7 +283,7 @@ Internal user assigns a MO to a new project and removes a partner organisation
 
 MO can now check the application feedback
     [Documentation]    IFS-8753
-    Given Log in as a different user                           &{monitoring_officer_one_credentials}
+    Given Log in as a different user                           &{monitoring_officer_two_credentials}
     And the user clicks the project setup tile if displayed
     When The user clicks the button/link                       link = ${PSCapplicationTitle}
     and the user clicks the button/link                        link = view application feedback
@@ -293,7 +293,7 @@ MO can now view payment milestones in SBRI application
     [Documentation]   IFS-8958
     Given Requesting IDs of this application
     When the SBRI MO assignee has been changed
-    And Log in as a different user                                          &{monitoring_officer_one_credentials}
+    And Log in as a different user                                          &{monitoring_officer_two_credentials}
     And the user navigates to the page                                      ${server}/project-setup/project/${sbri_projectID}
     And the user clicks the button/link                                     link = view application feedback
     Then the payment milestone table is visible in application overview
@@ -311,7 +311,7 @@ Change MO for the project
 
 MO can see the link to the partners for collaborating applications only
     [Documentation]   IFS-10047
-    Given Log in as a different user            &{monitoring_officer_one_credentials}
+    Given Log in as a different user            &{monitoring_officer_two_credentials}
     And the user clicks the project setup tile if displayed
     And the user clicks the button/link         jQuery = a:contains('${Grade_Crossing_Application_Title}')
     When the user clicks the button/link        jQuery = a:contains('View the status of partners')
@@ -323,14 +323,14 @@ MO can see the link to the partners for collaborating applications only
 
 MO can view payment milestones
     [Documentation]   IFS-9925
-    Given log in as a different user                               &{monitoring_officer_one_credentials}
+    Given log in as a different user                               &{monitoring_officer_two_credentials}
     When the user clicks the project setup tile if displayed
     And monitoring officer clicks on payment milestones link
     Then monitoring officer views detailed payment milestones
 
 MO can view project finance changes
     [Documentation]   IFS-9673
-    Given log in as a different user                               &{monitoring_officer_one_credentials}
+    Given log in as a different user                               &{monitoring_officer_two_credentials}
     And the user clicks the project setup tile if displayed
     When Monitoring officer clicks on changes to finances link
     Then Monitoring officer views updated values in changes to finances
