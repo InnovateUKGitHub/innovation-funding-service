@@ -1,7 +1,10 @@
 package org.innovateuk.ifs.application.forms.questions.applicationdetails.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
+import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.util.Set;
@@ -122,5 +125,15 @@ public class ApplicationDetailsViewModel implements BaseAnalyticsViewModel {
 
     public boolean isCanResubmit() {
         return canResubmit;
+    }
+
+    @JsonIgnore
+    public CompetitionReferralSource[] getCompetitionReferralSourceValues() {
+        return CompetitionReferralSource.values();
+    }
+
+    @JsonIgnore
+    public CompanyPrimaryFocus[] getAllCompanyPrimaryFocuses() {
+        return CompanyPrimaryFocus.values();
     }
 }

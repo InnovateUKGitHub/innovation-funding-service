@@ -20,7 +20,7 @@
                     </th:block>
                     <p class="govuk-body standard-color"
                        th:if="${summary.isUsersFinancesIncomplete()}">
-                        <a th:href="@{/application/{id}/form/{sectionType}(id=${summary.applicationId},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}"
+                        <a th:href="@{/application/{id}/form/{sectionType}(id=${summary.applicationId},sectionType=${summary.getFinanceSectionType()})}"
                            class="govuk-body govuk-link standard-color">Return to your project finances</a> to complete the finance section.</p>
                     <p class="govuk-body standard-color">This application cannot be submitted until all items in the finances section have been marked as complete by all partners.</p>
                 </div>

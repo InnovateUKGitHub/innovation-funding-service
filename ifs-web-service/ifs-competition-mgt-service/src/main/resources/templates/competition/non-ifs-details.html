@@ -204,7 +204,7 @@
                                     th:attr="data-required-errormessage=#{typeMismatch.competitionSetupForm.milestoneEntries.time}"
                                     th:field="${form.registrationCloseDate.time}">
                                 <option
-                                    th:each="time : ${T(org.innovateuk.ifs.management.competition.setup.core.form.MilestoneTime).values()}"
+                                    th:each="time : ${form.getMilestoneTimeValues()}"
                                     th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}"
                                     th:selected="${time == form.registrationCloseDate.time}"></option>
                             </select>
@@ -267,7 +267,7 @@
                                     th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
                                     th:field="${form.closeDate.time}">
                                 <option
-                                    th:each="time : ${T(org.innovateuk.ifs.management.competition.setup.core.form.MilestoneTime).values()}"
+                                    th:each="time : ${form.getMilestoneTimeValues()}"
                                     th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}"
                                     th:selected="${time == form.closeDate.time}"></option>
                             </select>
@@ -384,7 +384,7 @@
             <div class="govuk-body govuk-!-margin-top-6">
                 <button class="govuk-button govuk-!-margin-right-6">Save and continue</button>
                 <a th:href="@{/dashboard}" class="button-clear">Cancel</a>
-                <a th:unless="${model.competition.competitionStatus.isLaterThan(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN)}"
+                <a th:unless="${model.competition.competitionStatus.isLaterThan()}"
                    data-js-modal="delete-modal" class="button-clear">Delete competition</a>
             </div>
         </form>

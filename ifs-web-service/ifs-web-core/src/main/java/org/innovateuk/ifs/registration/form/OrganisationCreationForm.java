@@ -18,7 +18,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Object to store the data that is used for the companies house form, while creating a new application.
@@ -261,6 +260,11 @@ public class OrganisationCreationForm implements Serializable {
 
     public void setOrganisationAddress(AddressResource organisationAddress) {
         this.organisationAddress = organisationAddress;
+    }
+
+    @JsonIgnore
+    public Long getOrganisationResearchId() {
+        return OrganisationTypeEnum.RTO.getId();
     }
 
     @Override

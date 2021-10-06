@@ -234,7 +234,7 @@
                             <select id="sort-by"
                                     name="sort"
                                     class="govuk-select govuk-input--width-20">
-                                <option th:each="sort : ${T(org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource.Sort).values()}"
+                                <option th:each="sort : ${model.getAllApplicationAvailableAssessorResource()}"
                                         th:value="${sort}"
                                         th:selected="${model.currentSort == sort}"
                                         th:text="${sort.columnName}"></option>

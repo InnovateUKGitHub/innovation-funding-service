@@ -46,8 +46,8 @@
                          <span class="govuk-error-message"  th:each="err : ${#fields.errors('*{organisationTypeId}')}" th:text="${err}"></span>
                      </th:block>
                      <div class="govuk-radios">
-                         <div class="govuk-radios__item" th:attr="data-target=${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).RTO.id == type.id ? 'rto-guidance' : null}"
-                              th:each="type : ${model.types}">
+                        <div class="govuk-radios__item" th:attr="data-target=${organisationForm.organisationResearchId == type.id ? 'rto-guidance' : null}"
+                                  th:each="type : ${model.types}">
                             <input th:id="'radio-'+ ${type.id}" type="radio"
                                    class="govuk-radios__input"
                                    th:field="*{organisationTypeId}"
@@ -59,7 +59,7 @@
                                 <span th:text="${type.name}"></span>
                                 <span class="govuk-hint" th:text="${type.description}"></span>
                             </label>
-                             <div th:if="${model.leadJourney && T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).RTO.id == type.id}" id="rto-guidance" class="govuk-body panel">
+                             <div th:if="${model.leadJourney && organisationForm.organisationResearchId == type.id}" id="rto-guidance" class="govuk-body panel">
                                  <h2 class="govuk-heading-s">You can only lead an application as an RTO if both the following rules are met:</h2>
                                  <ul class="govuk-list govuk-list--bullet">
                                      <li>you must prove within the scope section of your application that you are the best placed consortium partner to lead this project</li>

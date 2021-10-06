@@ -201,7 +201,7 @@
                                 th:errorclass="govuk-input--error"
                                 class="govuk-select govuk-!-margin-bottom-6">
                             <option value="" selected="selected">Please select...</option>
-                            <option th:each="enum : ${T(org.innovateuk.ifs.application.resource.CompetitionReferralSource).values()}"
+                            <option th:each="enum : ${model.getCompetitionReferralSourceValues()}"
                                     th:value="${enum}"
                                     th:text="${enum.name}">
                             </option>
@@ -298,7 +298,7 @@
                                 th:errorclass="govuk-input--error"
                                 class="govuk-select govuk-!-margin-bottom-6">
                             <option value="" selected="selected">Please select...</option>
-                            <option th:each="enum : ${T(org.innovateuk.ifs.application.resource.CompanyPrimaryFocus).values()}"
+                            <option th:each="enum : ${model.getAllCompanyPrimaryFocuses()}"
                                     th:value="${enum}"
                                     th:text="${enum.name}">
                             </option>
