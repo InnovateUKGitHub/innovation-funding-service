@@ -80,13 +80,15 @@ k8s_delete() {
 }
 
 k8s_rebuild_db() {
+  k8s_delete cache-provider
+  k8s_wait cache-provider
   k8s_delete ldap
   k8s_wait ldap
   k8s_delete ifs-database
   k8s_wait ifs-database
   k8s_delete data-service
   k8s_wait data-service
-  k8s_sync_ldap
+
 }
 
 k8s_wait() {
@@ -121,9 +123,14 @@ function initialiseTestEnvironment() {
       else
         section "=> STARTING SELENIUM GRID, INJECTING ENVIRONMENT PARAMETERS, RESETTING DATABASE STATE"
         k8s_rebuild_db
-        DATASERVICE_POD=$(kubectl get pod -l app=data-service -o jsonpath="{.items[0].metadata.name}")
-        ./gradlew :robotTestsFilter -Pinitialise=true --configure-on-demand
+        ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robotTestsFilter :ifs-data-layer:ifs-data-service:flywayMigrate -Pinitialise=true --configure-on-demand
 
+        DATASERVICE_POD=$(kubectl get pod -l app=data-service -o jsonpath="{.items[0].metadata.name}")
+
+#        ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robotTestsFilter -Pinitialise=true --configure-on-demand
+        section "=> SYNCING SHIBBOLETH USERS"
+#        ./gradlew :ifs-data-layer:ifs-data-service:syncShib 2>&1 >/dev/null
+         k8s_sync_ldap
     fi
 
   }
