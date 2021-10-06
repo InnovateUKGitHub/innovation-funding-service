@@ -20,6 +20,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationAddressService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.sil.crm.resource.SilAddress;
@@ -63,6 +64,9 @@ public class CrmServiceImpl implements CrmService {
 
     @Autowired
     private ApplicationService applicationService;
+
+    @Autowired
+    private ProjectService projectService;
 
     @Autowired
     private OrganisationService organisationService;
@@ -136,6 +140,20 @@ public class CrmServiceImpl implements CrmService {
         }
     }
 
+    @Override
+    public ServiceResult<Void> updateCrmApplicationEligibility(Long applicationId) {
+        ApplicationResource application = applicationService.getApplicationById(applicationId).getSuccess();
+        CompetitionResource competition = competitionService.getCompetitionById(application.getCompetition()).getSuccess();
+
+        if(!competition.isLoan()) {
+            return serviceFailure(GENERAL_INCORRECT_TYPE);
+        } else {
+            SilApplication silApplication = setSilApplication(application, false);
+            LOG.info(format("Updating CRM application eligibility : %d %b", silApplication.getApplicationID(), silApplication.getMarkedIneligible()));
+            return silCrmEndpoint.updateApplicationEligibility(silApplication);
+        }
+    }
+
     private void syncMonitoringOfficer(UserResource user) {
 
         if (user.hasRole(MONITORING_OFFICER)) {
@@ -150,19 +168,6 @@ public class CrmServiceImpl implements CrmService {
         LOG.info(format("Updating CRM contact %s and organisation %s %nPayload is:%s ",
                 silContact.getEmail(), silContact.getOrganisation().getName(), silContact));
         return silCrmEndpoint.updateContact(silContact);
-    }
-
-    private FailingOrSucceedingResult<Void, ServiceFailure> updateApplicationEligibility(ProjectResource project) {
-        ApplicationResource application = applicationService.getApplicationById(project.getApplication()).getSuccess();
-        CompetitionResource competition = competitionService.getCompetitionById(application.getCompetition()).getSuccess();
-
-        if(!competition.isLoan()) {
-            return serviceFailure(GENERAL_INCORRECT_TYPE);
-        } else {
-            SilApplication silApplication = setSilApplication(application, project, false);
-            LOG.info(format("Updating CRM application eligibility : %d %b", silApplication.getApplicationID(), silApplication.getMarkedIneligible()));
-            return silCrmEndpoint.updateApplicationEligibility(silApplication);
-        }
     }
 
     private void stripAttributesNotNeeded(SilContact silContact, BooleanSupplier supplier) {
@@ -252,10 +257,12 @@ public class CrmServiceImpl implements CrmService {
         return silContact;
     }
 
-    private SilApplication setSilApplication(ApplicationResource application, ProjectResource project, boolean includeApplicationDetails) {
+    private SilApplication setSilApplication(ApplicationResource application, boolean includeApplicationDetails) {
         SilApplication silApplication = new SilApplication();
-        silApplication.setApplicationID(project.getId().intValue());
+        silApplication.setApplicationID(application.getId().intValue());
         if(includeApplicationDetails) {
+            ProjectResource project = projectService.getByApplicationId(application.getId()).getSuccess();
+
             silApplication.setApplicationName(Optional.ofNullable(project.getName()).orElse(null));
             silApplication.setApplicationLocation(Optional.ofNullable(project.getAddress())
                     .map(address -> address.getAsSingleLine()).orElse(null));

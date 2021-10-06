@@ -31,14 +31,17 @@ public class CrmEndpointController {
         LOG.info("Stubbing out SIL CRM update application endpoint: " + JsonMappingUtil.toJson(application));
 
         if(application.getApplicationID() == null) {
+            LOG.error("application id is null");
             return restFailure(HttpStatus.BAD_REQUEST);
         } else if(application.getMarkedIneligible() != null &&                  // update eligibility
                 (application.getEligibilityStatusChangeDate() == null ||
                         application.getEligibilityStatusChangeSource() == null)) {
+            LOG.error("update eligibility is incomplete");
             return restFailure(HttpStatus.BAD_REQUEST);
         } else if(application.getMarkedIneligible() == null &&                  // update application detail
                 (application.getProjectTotalCost() == null &&
                         application.getProjectOtherFunding() == null)) {
+            LOG.error("update application detail is incomplete");
             return restFailure(HttpStatus.BAD_REQUEST);
         }
         return restSuccess(HttpStatus.OK);

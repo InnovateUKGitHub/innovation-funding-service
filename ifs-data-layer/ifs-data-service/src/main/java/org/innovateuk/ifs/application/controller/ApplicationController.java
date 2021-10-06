@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
+import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -97,7 +98,7 @@ public class ApplicationController {
 
     @PostMapping("/save-application-details/{id}")
     public RestResult<ValidationMessages> saveApplicationDetails(@PathVariable("id") final Long id,
-                                                                       @RequestBody ApplicationResource application) {
+                                                                 @RequestBody ApplicationResource application) {
 
         return applicationService.saveApplicationDetails(id, application).toPostWithBodyResponse();
     }
@@ -106,11 +107,19 @@ public class ApplicationController {
     public RestResult<Void> updateApplicationState(@RequestParam("applicationId") final Long id,
                                                    @RequestParam("state") final ApplicationState state) {
 
+        ApplicationResource beforeUpdate = getApplicationById(id).getSuccess();
+        final boolean wasIneligible = beforeUpdate.getApplicationState() == ApplicationState.INELIGIBLE ||
+                beforeUpdate.getApplicationState() == ApplicationState.INELIGIBLE_INFORMED;
+
         ServiceResult<ApplicationResource> updateStatusResult = applicationService.updateApplicationState(id, state);
 
         if (updateStatusResult.isSuccess() && ApplicationState.SUBMITTED == state) {
             applicationService.saveApplicationSubmitDateTime(id, ZonedDateTime.now());
             applicationNotificationService.sendNotificationApplicationSubmitted(id);
+
+            if(wasIneligible) {
+                crmService.updateCrmApplicationEligibility(id);
+            }
         }
 
         return updateStatusResult.toPutResponse();
@@ -156,6 +165,10 @@ public class ApplicationController {
                                              @RequestBody IneligibleOutcomeResource reason) {
         return applicationService
                 .markAsIneligible(applicationId, ineligibleOutcomeMapper.mapToDomain(reason))
+                .andOnSuccessReturn(result -> {
+                    crmService.updateCrmApplicationEligibility(applicationId);
+                    return result;
+                })
                 .toPostWithBodyResponse();
     }
 
