@@ -4,7 +4,7 @@ Variables  ../../libs/Initialisation.py
 *** Variables ***
 ${docker}                                                0
 ${BROWSER}                                               chrome
-${SERVER_BASE}                                           host.docker.internal:8443
+${SERVER_BASE}                                           ifs.local-dev
 ${PROTOCOL}                                              https://
 ${SERVER}                                                ${PROTOCOL}${SERVER_BASE}
 ${SAUCELABS_RUN}                                         1
