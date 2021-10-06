@@ -279,7 +279,8 @@ public class CrmServiceImpl implements CrmService {
             silApplication.setMarkedIneligible(
                     application.getApplicationState() == ApplicationState.INELIGIBLE ||
                             application.getApplicationState() == ApplicationState.INELIGIBLE_INFORMED);
-            silApplication.setEligibilityStatusChangeDate(ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT));
+            silApplication.setEligibilityStatusChangeDate(Optional.ofNullable(application.getLastStateChangeDate())
+                    .orElse(ZonedDateTime.now()).format(DateTimeFormatter.ISO_INSTANT));
             silApplication.setEligibilityStatusChangeSource(eligibilityStatusChangeSource);
         }
 
