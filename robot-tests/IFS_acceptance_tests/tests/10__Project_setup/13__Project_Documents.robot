@@ -195,7 +195,7 @@ Non-lead partner cannot view either document once removed
 Assign a MO to the project and they check the documents are incomplete
     [Documentation]  IFS-9577  IFS-9701
     [Tags]
-    Given the user logs-in in new browser     &{monitoring_officer_two_credentials}
+    Given the user logs-in in new browser     &{monitoring_officer_one_credentials}
     When the user navigates to the page       ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     Then the user should see the element      jQuery = ul li:contains("Documents") span:contains("Incomplete")
 
@@ -224,7 +224,7 @@ Mandatory document submission
 MO can see the Documents are awaiting review
     [Documentation]    IFS-9701
     [Tags]
-    Given the user logs-in in new browser     &{monitoring_officer_two_credentials}
+    Given the user logs-in in new browser     &{monitoring_officer_one_credentials}
     When the user navigates to the page       ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     Then the user should see the element      jQuery = ul li:contains("Documents") span:contains("Awaiting review")
 
@@ -338,7 +338,7 @@ IfsAdmin rejects both documents
 
 MO can view Incomplete status on rejected document
     [Documentation]  IFS-9578  IFS-9701
-    [Setup]  Log in as a different user      &{monitoring_officer_two_credentials}
+    [Setup]  Log in as a different user      &{monitoring_officer_one_credentials}
     Given the user navigates to the page     ${SERVER}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     Then the user should see the element     jQuery = div:contains("Collaboration agreement") ~ div span:contains("Incomplete")
     And the user should see the element      jQuery = div:contains("Exploitation plan") ~ div span:contains("Incomplete")
@@ -417,7 +417,7 @@ ifsAdmin approves both documents
 
 MO can view ifsAdmin approved the document banners
     [Documentation]  IFS-9578  IFS-9701
-    Given Log in as a different user                           &{monitoring_officer_two_credentials}
+    Given Log in as a different user                           &{monitoring_officer_one_credentials}
     When the user navigates to the page                        ${SERVER}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     Then the user sees Innovate Uk approved document banner
 
@@ -507,7 +507,7 @@ PM uploads documents and the MO receives an email
 
 MO rejects the document
     [Documentation]  IFS-9577
-    [Setup]  The user logs-in in new browser      &{monitoring_officer_two_credentials}
+    [Setup]  The user logs-in in new browser      &{monitoring_officer_one_credentials}
     Given the user navigates to the page          ${server}/project-setup/project/${MO_DocApproval_ProjectID}/document/all
     When the user clicks the button/link          link = Collaboration agreement
     Then MO reject uploaded documents
