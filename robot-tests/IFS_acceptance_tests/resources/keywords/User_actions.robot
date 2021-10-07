@@ -193,7 +193,7 @@ the user selects option from type ahead
     wait for autosave
     the user should see option in type ahead field        id = ${inputId}  ${optionSelector}
     wait for autosave
-    #mouse out                                             id = ${inputId}
+    mouse out                                             id = ${inputId}
 
 the user should see option in type ahead field
     [Arguments]  ${locator}  ${searchWord}

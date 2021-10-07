@@ -59,7 +59,7 @@ The user enters text to a text field
     Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
     Clear Element Text    ${TEXT_FIELD}
     Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
-    #Mouse Out    ${TEXT_FIELD}
+    Mouse Out    ${TEXT_FIELD}
     Set Focus To Element    link=GOV.UK
     Wait for autosave
 
@@ -68,7 +68,7 @@ The user enters text to a docusign field
     Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
     Clear Element Text    ${TEXT_FIELD}
     Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
-    #Mouse Out    ${TEXT_FIELD}
+    Mouse Out    ${TEXT_FIELD}
 
 The user enters text to an autocomplete field
 #different from the keyword above, as we don't want to lose focus from the field
@@ -83,7 +83,7 @@ The user edits autocomplete field
     click element       ${TEXT_FIELD}
     Input text          ${TEXT_FIELD}   ${TEXT_INPUT}
     click element       jQuery = li:contains("${TEXT_INPUT}")
-    #Mouse Out           ${TEXT_FIELD}
+    Mouse Out           ${TEXT_FIELD}
 
 the user sees the text in the element
     [Arguments]    ${element}    ${text}
@@ -111,7 +111,7 @@ the user selects the option from the drop-down menu
     Wait Until Element Is Visible Without Screenshots    ${drop-down}
     Wait Until Element Is Enabled   ${drop-down}
     Select From List By Label    ${drop-down}    ${option}
-    #mouse out    ${drop-down}
+    mouse out    ${drop-down}
     #Error checking
     the user should not see an error in the page
 
@@ -119,7 +119,7 @@ the user selects the index from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
     Wait Until Element Is Enabled   ${drop-down}
     Select From List By Index    ${drop-down}    ${option}
-    #mouse out    ${drop-down}
+    mouse out    ${drop-down}
     #Error checking
     the user should not see an error in the page
 
@@ -127,7 +127,7 @@ the user selects the value from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
     Wait Until Element Is Enabled   ${drop-down}
     Select From List By value    ${drop-down}    ${option}
-    #mouse out    ${drop-down}
+    mouse out    ${drop-down}
     #Error checking
     the user should not see an error in the page
 
@@ -136,7 +136,7 @@ the user should see the option in the drop-down menu
     wait until element is visible without screenshots    ${drop-down}
     ${drop-down-options}=    get list items    ${drop-down}
     list should contain value    ${drop-down-options}    ${option}
-    #mouse out    ${drop-down}
+    mouse out    ${drop-down}
     #Error checking
     the user should not see an error in the page
 

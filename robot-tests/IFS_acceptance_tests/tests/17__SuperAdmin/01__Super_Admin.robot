@@ -107,7 +107,7 @@ assessor edit the assessment question
     The user selects the option from the drop-down menu     10    css = .assessor-question-score
     The user enters text to a text field                    css = .editor    Edited This is the business opportunity feedback
     Wait for autosave
-    #mouse out                                               css = .editor
+    mouse out                                               css = .editor
     Wait Until Page Contains Without Screenshots            Saved!
     The user clicks the button with resubmission            jquery = button:contains("Save and return to assessment overview")
 

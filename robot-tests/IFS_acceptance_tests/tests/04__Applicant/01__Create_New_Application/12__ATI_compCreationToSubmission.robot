@@ -304,7 +304,7 @@ Project Finance is able to download the Overheads costs file
 *** Keywords ***
 Custom Suite Setup
     Set predefined date variables
-    The guest user opens the browser
+    #The guest user opens the browser
     Connect to database  @{database}
 
 Requesting Project ID of this Project
