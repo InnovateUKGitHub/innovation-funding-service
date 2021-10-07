@@ -122,8 +122,8 @@ function initialiseTestEnvironment() {
         sleep 5
       else
         section "=> STARTING SELENIUM GRID, INJECTING ENVIRONMENT PARAMETERS, RESETTING DATABASE STATE"
-        k8s_rebuild_db
-        ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robotTestsFilter :ifs-data-layer:ifs-data-service:flywayMigrate -Pinitialise=true --configure-on-demand
+#        k8s_rebuild_db
+        ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robotTestsFilter :ifs-data-layer:ifs-data-service:flywayClean :ifs-data-layer:ifs-data-service:flywayMigrate -Pinitialise=true --configure-on-demand
 
         DATASERVICE_POD=$(kubectl get pod -l app=data-service -o jsonpath="{.items[0].metadata.name}")
 
