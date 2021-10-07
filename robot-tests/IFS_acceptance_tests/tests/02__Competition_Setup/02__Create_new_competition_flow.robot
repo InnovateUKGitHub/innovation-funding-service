@@ -821,7 +821,7 @@ The Applicant is able to enter duration
 *** Keywords ***
 the total should be correct
     [Arguments]    ${Total}
-    #mouse out    css=input
+    mouse out    css=input
     Set Focus To Element    jQuery=button:contains("Done")
     Wait Until Element Contains Without Screenshots    css=.govuk-heading-s  ${Total}
 

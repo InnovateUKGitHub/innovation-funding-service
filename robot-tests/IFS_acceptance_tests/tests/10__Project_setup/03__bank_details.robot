@@ -332,7 +332,7 @@ The user is not able to access bank details
 
 The user moves focus away from the element
     [Arguments]  ${element}
-    #mouse out    ${element}
+    mouse out    ${element}
     Set Focus To Element        css = .govuk-button[data-js-modal = "modal-bank"]
 
 The user submits the bank account details
