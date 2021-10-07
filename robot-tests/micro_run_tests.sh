@@ -116,7 +116,7 @@ function initialiseTestEnvironment() {
     if [[ ${quickTest} -eq 1 ]]
       then
         section "=> STARTING SELENIUM GRID and INJECTING ENVIRONMENT PARAMETERS"
-        ./gradlew :robotTestsFilter --configure-on-demand
+       ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robotTestsFilter --configure-on-demand
 
         echo "=> Waiting 5 seconds for the grid to be properly started"
         sleep 5
