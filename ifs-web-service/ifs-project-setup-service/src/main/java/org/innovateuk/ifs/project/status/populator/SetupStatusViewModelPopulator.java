@@ -233,15 +233,15 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         if (monitoringOfficer) {
             ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(project.getId(), Optional.empty());
             if (allPartnersFinanceChecksApproved(teamStatus)) {
-                return sectionStatus.financeChecksSectionStatus(COMPLETE, financeChecksAccess, monitoringOfficer);
+                return sectionStatus.financeChecksSectionStatus(COMPLETE, financeChecksAccess, true);
             } else {
-                return sectionStatus.financeChecksSectionStatus(INCOMPLETE, financeChecksAccess, monitoringOfficer);
+                return sectionStatus.financeChecksSectionStatus(INCOMPLETE, financeChecksAccess, true);
             }
         }
 
         return sectionStatus.financeChecksSectionStatus(ownOrganisation.getFinanceChecksStatus(),
                 financeChecksAccess,
-                monitoringOfficer);
+                false);
     }
 
     private SectionAccess getSectionAccess(CompetitionResource competition, boolean monitoringOfficer, SectionAccess financeChecksAccess) {
