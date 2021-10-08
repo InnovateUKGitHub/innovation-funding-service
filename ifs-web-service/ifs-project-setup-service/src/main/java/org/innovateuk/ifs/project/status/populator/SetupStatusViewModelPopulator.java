@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.status.populator;
 
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionPostAwardServiceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
@@ -216,6 +217,11 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
     private SetupStatusStageViewModel financeChecksStageViewModel(ProjectSetupStage stage, ProjectResource project, CompetitionResource competition, boolean monitoringOfficer, CompletableFuture<OrganisationResource> organisationRequest, SetupSectionAccessibilityHelper statusAccessor, ProjectPartnerStatusResource ownOrganisation) {
         SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(resolve(organisationRequest));
+
+        ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(project.getId(), Optional.empty());
+
+        boolean test = allPartnersFinanceChecksApproved(teamStatus);
+
         SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(
                 ownOrganisation.getFinanceChecksStatus(),
                 financeChecksAccess
@@ -360,5 +366,9 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
     private boolean allPartnersProjectLocationStatusComplete(ProjectTeamStatusResource teamStatus) {
         return teamStatus.checkForAllPartners(status -> COMPLETE.equals(status.getPartnerProjectLocationStatus()));
+    }
+
+    private boolean allPartnersFinanceChecksApproved(ProjectTeamStatusResource teamStatus) {
+        return teamStatus.checkForAllPartners(status -> COMPLETE.equals(status.getFinanceChecksStatus()));
     }
 }
