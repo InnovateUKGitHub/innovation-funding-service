@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.status.populator;
 
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionPostAwardServiceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
@@ -37,7 +36,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
+import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.sections.SectionStatus.TICK;
 
 /**
@@ -217,15 +216,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
     private SetupStatusStageViewModel financeChecksStageViewModel(ProjectSetupStage stage, ProjectResource project, CompetitionResource competition, boolean monitoringOfficer, CompletableFuture<OrganisationResource> organisationRequest, SetupSectionAccessibilityHelper statusAccessor, ProjectPartnerStatusResource ownOrganisation) {
         SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(resolve(organisationRequest));
+        SectionStatus financeChecksStatus = getFinanceChecksStatus(project, monitoringOfficer, ownOrganisation, financeChecksAccess);
 
-        ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(project.getId(), Optional.empty());
-
-        boolean test = allPartnersFinanceChecksApproved(teamStatus);
-
-        SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(
-                ownOrganisation.getFinanceChecksStatus(),
-                financeChecksAccess
-        );
         boolean pendingQueries = SectionStatus.FLAG.equals(financeChecksStatus);
 
         return new SetupStatusStageViewModel(stage, stage.getShortName(),
@@ -234,6 +226,22 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 financeChecksStatus,
                 getSectionAccess(competition, monitoringOfficer, financeChecksAccess),
                 pendingQueries ? "pending-query" : null
+        );
+    }
+
+    private SectionStatus getFinanceChecksStatus(ProjectResource project, boolean monitoringOfficer, ProjectPartnerStatusResource ownOrganisation, SectionAccess financeChecksAccess) {
+        if (monitoringOfficer) {
+            ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(project.getId(), Optional.empty());
+            if (allPartnersFinanceChecksApproved(teamStatus)) {
+                return sectionStatus.financeChecksSectionStatus(COMPLETE, financeChecksAccess);
+            } else {
+                return sectionStatus.financeChecksSectionStatus(INCOMPLETE, financeChecksAccess);
+            }
+        }
+
+        return sectionStatus.financeChecksSectionStatus(
+                ownOrganisation.getFinanceChecksStatus(),
+                financeChecksAccess
         );
     }
 
