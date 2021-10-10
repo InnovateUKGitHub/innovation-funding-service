@@ -59,14 +59,14 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
     String FILTER_PROJECTS_BY_MO = "SELECT monitoringOfficer " +
             "FROM MonitoringOfficer monitoringOfficer " +
             "JOIN Project project " +
-            "   ON monitoringOfficer.project.id = project.id " +
+            "   ON monitoringOfficer.project.application.id = project.application.id " +
             "WHERE " +
             "   monitoringOfficer.user.id = :userId " +
             "   AND monitoringOfficer.role = org.innovateuk.ifs.project.core.ProjectParticipantRole.MONITORING_OFFICER ";
 
     String BY_STATES = "   AND project.projectProcess.activityState in :projectStates ";
 
-    String BY_KEYWORD_SEARCH = " AND (project.name LIKE :keywordSearch OR project.application.id = :keywordSearch OR project.application.competition.name LIKE :keywordSearch) ";
+    String BY_KEYWORD_SEARCH = " AND (project.application.name LIKE :keywordSearch OR project.application.id = :keywordSearch OR project.application.competition.name LIKE :keywordSearch) ";
 
     List<MonitoringOfficer> findByUserId(long userId);
 
