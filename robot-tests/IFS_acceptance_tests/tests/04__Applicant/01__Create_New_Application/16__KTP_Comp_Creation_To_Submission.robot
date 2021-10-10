@@ -110,9 +110,9 @@ Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
-${nonKTPCompettitionName}             International Competition
+${nonKTPCompetitionName}             International Competition
 ${noKTPApplicationName}               PSC application 8
-${nonKTPCompettittionInPS}            Project Setup Comp 8
+${nonKTPCompetitionInPS}            Project Setup Comp 8
 &{ktpLeadApplicantCredentials}        email=${lead_ktp_email}  password=${short_password}
 &{ktpNewPartnerCredentials}           email=${new_partner_ktp_email}  password=${correct_password}
 &{ktpExistingLeadCredentials}         email=${existing_lead_ktp_email}  password=${short_password}
@@ -167,7 +167,7 @@ ${estateValue}                        11000
 The applicants should not see knowledge based organisations when creating a non-ktp applications
     [Documentation]  IFS-8035
     Given Logging in and Error Checking                             &{ktpExistingLeadCredentials}
-    When the user select the competition and starts application     ${nonKTPCompettitionName}
+    When the user select the competition and starts application     ${nonKTPCompetitionName}
     And the user selects the radio button                           international   false
     And the user clicks the button/link                             id = international-organisation-cta
     Then the user should not see the element                        jQuery = dt:contains("${secondKTPOrgName}")
@@ -175,14 +175,14 @@ The applicants should not see knowledge based organisations when creating a non-
 The applicants should not see knowledge based organisations when joining a non-ktp applications
     [Documentation]  IFS-8035
     Given the user clicks the button/link                    id = save-organisation-button
-    And the lead invites already registered user             ${collaborator1_credentials["email"]}   ${nonKTPCompettitionName}
+    And the lead invites already registered user             ${collaborator1_credentials["email"]}   ${nonKTPCompetitionName}
     When partner login to see your organisation details
     Then the user should not see the element                 jQuery = dt:contains("${ktpOrgName}")
 
 The applicants should not see knowledge based organisations when joining a non-ktp applications from project setup
     [Documentation]  IFS-8035
     Given log in as a different user                                        &{ifs_admin_user_credentials}
-    And the user navigates to the page                                      ${server}/project-setup-management/competition/${competition_ids['${nonKTPCompettittionInPS}']}/status/all
+    And the user navigates to the page                                      ${server}/project-setup-management/competition/${competition_ids['${nonKTPCompetitionInPS}']}/status/all
     When admin adds a partner to non-ktp application from project setup
     And logging in and error checking                                       ${collaborator1_credentials["email"]}   ${short_password}
     Then the user should not see the element                                jQuery = dt:contains("${ktpOrgName}")
@@ -1476,7 +1476,7 @@ the user should see project setup sections
     the user should see the element     jQuery = li:contains("Project team") span:contains("Complete")
     the user should see the element     jQuery = li:contains("Monitoring Officer") span:contains("Complete")
     the user should see the element     jQuery = li:contains("Bank details") span:contains("To be completed")
-    the user should see the element     jQuery = li:contains("Finance checks") span:contains("Awaiting review")
+    the user should see the element     jQuery = li:contains("Finance checks") span:contains("Incomplete")
     the user should see the element     jQuery = li:contains("Grant offer letter")
     the user should not see Documents and Spend profile dashboard sections
 
