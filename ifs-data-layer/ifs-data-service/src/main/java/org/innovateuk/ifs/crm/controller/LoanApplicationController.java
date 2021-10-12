@@ -2,6 +2,8 @@ package org.innovateuk.ifs.crm.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
+import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.transactional.QuestionStatusService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
@@ -44,6 +46,8 @@ public class LoanApplicationController {
     private QuestionService questionService;
     @Autowired
     private QuestionStatusService questionStatusService;
+    @Autowired
+    private ActivityLogService activityLogService;
 
     @PreAuthorize("permitAll()")
     @PostMapping(value = "/{applicationId}")
@@ -76,10 +80,10 @@ public class LoanApplicationController {
     private RestResult<Void> getProcessRole(UserResource user, Long applicationId, SilLoanApplicationStatus silStatus) {
         return usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId).handleSuccessOrFailure(
                 failure -> RestResult.restFailure(failure.getErrors(), HttpStatus.FORBIDDEN),
-                processRole -> getCompetition(applicationId, silStatus, processRole.getId()));
+                processRole -> getCompetition(user, applicationId, silStatus, processRole.getId()));
     }
 
-    private RestResult<Void> getCompetition(Long applicationId, SilLoanApplicationStatus silStatus, Long processRoleId) {
+    private RestResult<Void> getCompetition(UserResource user, Long applicationId, SilLoanApplicationStatus silStatus, Long processRoleId) {
         return competitionService.getCompetitionByApplicationId(applicationId).handleSuccessOrFailure(
                 failure -> RestResult.restFailure(failure.getErrors(), HttpStatus.BAD_REQUEST),
                 competition -> {
@@ -88,24 +92,28 @@ public class LoanApplicationController {
                         return RestResult.restFailure(new Error(CommonFailureKeys.GENERAL_FORBIDDEN));
                     }
 
-                    return getQuestion(applicationId, silStatus, competition.getId(), processRoleId);
+                    return getQuestion(user, applicationId, silStatus, competition.getId(), processRoleId);
                 });
     }
 
-    private RestResult<Void> getQuestion(Long applicationId, SilLoanApplicationStatus silStatus, Long competitionId, Long processRoleId) {
+    private RestResult<Void> getQuestion(UserResource user, Long applicationId, SilLoanApplicationStatus silStatus, Long competitionId, Long processRoleId) {
         return questionService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId, silStatus.getQuestionSetupType()).handleSuccessOrFailure(
                 failure -> RestResult.restFailure(failure.getErrors(), HttpStatus.BAD_REQUEST),
                 question -> {
                     QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(question.getId(), applicationId);
-                    return markQuestionStatus(silStatus, ids, processRoleId).toPostResponse();
+                    return markQuestionStatus(user, silStatus, ids, processRoleId).toPostResponse();
                 });
     }
 
-    private RestResult<Void> markQuestionStatus(SilLoanApplicationStatus silStatus, QuestionApplicationCompositeId ids, Long processRoleId)  {
+    private RestResult<Void> markQuestionStatus(UserResource user, SilLoanApplicationStatus silStatus, QuestionApplicationCompositeId ids, Long processRoleId)  {
         LOG.debug(String.format("test loan-app API: %d %s %d", ids.applicationId, silStatus.getQuestionSetupType() , processRoleId));
         return (silStatus.isCompletionStatus()) ?
-                questionStatusService.markAsComplete(ids, processRoleId, silStatus.getCompletionDate()).toPostResponse() :
-                questionStatusService.markAsInComplete(ids, processRoleId).toPostResponse();
+                questionStatusService.markAsComplete(ids, processRoleId, silStatus.getCompletionDate()).andOnSuccess(() -> {
+                    activityLogService.recordActivityByApplicationId(ids.applicationId, user.getId(), ActivityType.APPLICATION_DETAILS_UPDATED);
+                }).toPostResponse() :
+                questionStatusService.markAsInComplete(ids, processRoleId).andOnSuccess(() -> {
+                    activityLogService.recordActivityByApplicationId(ids.applicationId, user.getId(), ActivityType.APPLICATION_DETAILS_UPDATED);
+                }).toPostResponse();
     }
 
 }

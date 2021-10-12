@@ -63,6 +63,17 @@ public class ActivityLogServiceImpl implements ActivityLogService {
     }
 
     @Override
+    public void recordActivityByApplicationId(long applicationId, long authorId, ActivityType activityType) {
+        applicationRepository.findById(applicationId)
+                .ifPresent(application -> {
+                    userRepository.findById(authorId).ifPresent(user -> {
+                        ActivityLog log = new ActivityLog(application, activityType, null, user);
+                        activityLogRepository.save(log);
+                    });
+                });
+    }
+
+    @Override
     public void recordActivityByProjectId(long projectId, ActivityType activityType) {
         projectRepository.findById(projectId)
                 .ifPresent(project -> {
