@@ -125,6 +125,8 @@ function initialiseTestEnvironment() {
 #        k8s_rebuild_db
         ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robotTestsFilter :ifs-data-layer:ifs-data-service:flywayClean :ifs-data-layer:ifs-data-service:flywayMigrate -Pinitialise=true --configure-on-demand
 
+        k8s_delete cache-provider
+        k8s_wait cache-provider
         DATASERVICE_POD=$(kubectl get pod -l app=data-service -o jsonpath="{.items[0].metadata.name}")
 
 #        ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robotTestsFilter -Pinitialise=true --configure-on-demand
