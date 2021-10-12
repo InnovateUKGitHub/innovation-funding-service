@@ -266,8 +266,7 @@ public class CrmServiceImpl implements CrmService {
             silApplication.setApplicationName(Optional.ofNullable(project.getName()).orElse(null));
             silApplication.setApplicationLocation(Optional.ofNullable(project.getAddress())
                     .map(address -> address.getAsSingleLine()).orElse(null));
-            silApplication.setApplicationSubmissionDate(Optional.ofNullable(application.getSubmittedDate())
-                    .map(submittedDate -> submittedDate.format(DateTimeFormatter.ISO_INSTANT)).orElse(null));
+            silApplication.setApplicationSubmissionDate(Optional.ofNullable(application.getSubmittedDate()).orElse(null));
             // silApplication.setApplicationSubmissionDate(project.getOfferSubmittedDate());
             silApplication.setProjectDuration(Optional.ofNullable(project.getDurationInMonths())
                     .map(duration -> duration.intValue()).orElse(null));
@@ -279,8 +278,7 @@ public class CrmServiceImpl implements CrmService {
             silApplication.setMarkedIneligible(
                     application.getApplicationState() == ApplicationState.INELIGIBLE ||
                             application.getApplicationState() == ApplicationState.INELIGIBLE_INFORMED);
-            silApplication.setEligibilityStatusChangeDate(Optional.ofNullable(application.getLastStateChangeDate())
-                    .orElse(ZonedDateTime.now()).format(DateTimeFormatter.ISO_INSTANT));
+            silApplication.setEligibilityStatusChangeDate(Optional.ofNullable(application.getLastStateChangeDate()).orElse(ZonedDateTime.now()));
             silApplication.setEligibilityStatusChangeSource(eligibilityStatusChangeSource);
         }
 

@@ -52,7 +52,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(monitoringEndpoint+"/**").permitAll()
                 .antMatchers("/benchmark/**").permitAll()
                 .antMatchers(ADDITIONAL_WHITELIST).permitAll()
-                .antMatchers("/loanssubmission/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .exceptionHandling().and()
