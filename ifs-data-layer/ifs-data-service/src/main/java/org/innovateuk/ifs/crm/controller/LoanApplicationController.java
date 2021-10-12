@@ -72,7 +72,7 @@ public class LoanApplicationController {
         if(user == null) {
             return RestResult.restFailure(HttpStatus.UNAUTHORIZED);
         } else {
-            LOG.debug(String.format("test loan-app API user: %d %s", user.getId(), user.getName()));
+            LOG.debug(String.format("application-update user id=%d, name=%s", user.getId(), user.getName()));
             return getProcessRole(user, applicationId, silStatus);
         }
     }
@@ -88,7 +88,7 @@ public class LoanApplicationController {
                 failure -> RestResult.restFailure(failure.getErrors(), HttpStatus.BAD_REQUEST),
                 competition -> {
                     if (!competition.isLoan()) {
-                        LOG.debug(String.format("%d not a loan application", silStatus.getApplicationId()));
+                        LOG.debug(String.format("application id %d not an loan application", silStatus.getApplicationId()));
                         return RestResult.restFailure(new Error(CommonFailureKeys.GENERAL_FORBIDDEN));
                     }
 
@@ -106,7 +106,7 @@ public class LoanApplicationController {
     }
 
     private RestResult<Void> markQuestionStatus(UserResource user, SilLoanApplicationStatus silStatus, QuestionApplicationCompositeId ids, Long processRoleId)  {
-        LOG.debug(String.format("test loan-app API: %d %s %d", ids.applicationId, silStatus.getQuestionSetupType() , processRoleId));
+        LOG.debug(String.format("application-update: application=%d, question=%s, processrole=%d", ids.applicationId, silStatus.getQuestionSetupType() , processRoleId));
         return (silStatus.isCompletionStatus()) ?
                 questionStatusService.markAsComplete(ids, processRoleId, silStatus.getCompletionDate()).andOnSuccess(() -> {
                     activityLogService.recordActivityByApplicationId(ids.applicationId, user.getId(), ActivityType.APPLICATION_DETAILS_UPDATED);
