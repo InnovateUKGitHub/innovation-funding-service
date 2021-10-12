@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.sil.crm.resource.SilLoanApplication;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.innovateuk.ifs.sil.crm.resource.SilCrmError;
+
 import org.innovateuk.ifs.util.Either;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,7 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_NOT_UPDATED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CONTACT_NOT_UPDATED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 
 @Component
@@ -51,7 +53,7 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
     }
 
     @Override
-    public ServiceResult<Void> updateApplicationEligibility(SilLoanApplication silApplication) {
+    public ServiceResult<Void> updateLoanApplicationState(SilLoanApplication silApplication) {
         return handlingErrors(() -> {
                     final Either<ResponseEntity<SilCrmError>, ResponseEntity<Void>> response = adaptor.restPostWithEntity(silRestServiceUrl + silCrmApplications, silApplication, Void.class, SilCrmError.class, HttpStatus.OK);
                     return response.mapLeftOrRight(failure -> {

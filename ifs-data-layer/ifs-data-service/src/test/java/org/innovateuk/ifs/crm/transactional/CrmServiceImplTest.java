@@ -8,6 +8,10 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.LambdaMatcher;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.application.resource.ApplicationEvent;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.transactional.ApplicationSummarisationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -28,7 +32,9 @@ import org.mockito.Mock;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -66,6 +72,9 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     private CompetitionService competitionService;
 
     @Mock
+    private ApplicationSummarisationService applicationSummarisationService;
+
+    @Mock
     private OrganisationService organisationService;
 
     @Mock
@@ -85,6 +94,10 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         logger.setLevel(Level.DEBUG);
         logger.addAppender(memoryAppender);
         memoryAppender.start();
+
+        //tell tests to return the specified LOCAL_DATE when calling ZonedDateTime.now(clock)
+        ZonedDateTime fixedClock = ZonedDateTime.parse("2021-10-12T09:38:12.850Z");
+        TimeMachine.useFixedClockAt(fixedClock);
 
     }
 
@@ -303,7 +316,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchExternalSilContactWithOrganisationUpdates(user, organisation.get(0))));
 
         List<ILoggingEvent> eventList = memoryAppender.search("Payload", Level.INFO);
-        assertEquals(expectedLogMessage,eventList.get(0).getMessage() );
+        assertEquals(expectedLogMessage, eventList.get(0).getMessage());
     }
 
     @Test
@@ -370,7 +383,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchExternalSilContactWithOrganisationUpdates(user, organisation.get(0))));
 
         List<ILoggingEvent> eventList = memoryAppender.search("Payload", Level.INFO);
-        assertEquals(expectedLogMessage,eventList.get(0).getMessage());
+        assertEquals(expectedLogMessage, eventList.get(0).getMessage());
     }
 
     @Test
@@ -436,4 +449,140 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
             return true;
         };
     }
+
+    @Test
+    public void syncCrmLoanApplicationSubmittedStateTest() {
+
+        String expectedLogMessage = "Updating CRM application for appId:3 state:SUBMITTED, " +
+                "payload:SilLoanApplication(applicationID=3, applicationSubmissionDate=2021-10-12T09:38:12.850Z, applicationName=Sample skips for plastic storage, " +
+                "applicationLocation=RG1 5LF, projectDuration=11, projectTotalCost=10.0, projectOtherFunding=1.0, markedIneligible=null, eligibilityStatusChangeDate=null, eligibilityStatusChangeSource=null)";
+
+
+        long applicationId = 3L;
+        long competitionId = 4L;
+        ApplicationResource applicationResource = new ApplicationResource();
+        applicationResource.setId(applicationId);
+        applicationResource.setApplicationState(ApplicationState.SUBMITTED);
+        applicationResource.setSubmittedDate(ZonedDateTime.parse("2021-10-12T09:38:12.850Z"));
+        applicationResource.setName("Sample skips for plastic storage");
+        applicationResource.setDurationInMonths(11l);
+        applicationResource.setCompetition(competitionId);
+        applicationResource.setEvent("submitted");
+        CompetitionResource competitionResource = new CompetitionResource();
+        competitionResource.setFundingType(FundingType.LOAN);
+
+
+        when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
+        when(applicationSummarisationService.getProjectTotalFunding(applicationResource.getId())).thenReturn(serviceSuccess(BigDecimal.TEN));
+        when(applicationSummarisationService.getProjectOtherFunding(applicationResource.getId())).thenReturn(serviceSuccess(BigDecimal.ONE));
+        when(applicationSummarisationService.getProjectLocation(applicationResource.getId())).thenReturn(serviceSuccess("RG1 5LF"));
+
+        ServiceResult<Void> result = service.syncCrmApplicationState(applicationResource);
+
+        List<ILoggingEvent> eventList = memoryAppender.search("payload:", Level.INFO);
+        assertEquals(expectedLogMessage, eventList.get(0).getMessage());
+    }
+
+
+    @Test
+    public void syncCrmLoanApplicationIneligibleStateTest() {
+        String expectedLogMessage = "Updating CRM application for appId:3 state:INELIGIBLE, " +
+                "payload:SilLoanApplication(applicationID=3, applicationSubmissionDate=null, applicationName=null, applicationLocation=null, projectDuration=null, " +
+                "projectTotalCost=null, projectOtherFunding=null, markedIneligible=true, eligibilityStatusChangeDate=2021-10-12T09:38:12.850Z, eligibilityStatusChangeSource=IFS)";
+
+
+        long applicationId = 3L;
+        long competitionId = 4L;
+        ApplicationResource applicationResource = new ApplicationResource();
+        applicationResource.setId(applicationId);
+        applicationResource.setApplicationState(ApplicationState.INELIGIBLE);
+        applicationResource.setSubmittedDate(ZonedDateTime.parse("2021-10-12T09:38:12.850Z"));
+        applicationResource.setName("Sample skips for plastic storage");
+        applicationResource.setDurationInMonths(11l);
+        applicationResource.setCompetition(competitionId);
+        applicationResource.setEvent(ApplicationEvent.MARK_INELIGIBLE.getType());
+        CompetitionResource competitionResource = new CompetitionResource();
+        competitionResource.setFundingType(FundingType.LOAN);
+
+
+        when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
+        when(applicationSummarisationService.getProjectTotalFunding(applicationResource.getId())).thenReturn(serviceSuccess(BigDecimal.TEN));
+        when(applicationSummarisationService.getProjectOtherFunding(applicationResource.getId())).thenReturn(serviceSuccess(BigDecimal.ONE));
+        when(applicationSummarisationService.getProjectLocation(applicationResource.getId())).thenReturn(serviceSuccess("RG1 5LF"));
+        ReflectionTestUtils.setField(service, "eligibilityStatusChangeSource", "IFS");
+
+        ServiceResult<Void> result = service.syncCrmApplicationState(applicationResource);
+
+        List<ILoggingEvent> eventList = memoryAppender.search("payload:", Level.INFO);
+        assertEquals(expectedLogMessage, eventList.get(0).getMessage());
+    }
+
+    @Test
+    public void syncCrmLoanApplicationIneligibleInformedStateTest() {
+        String expectedLogMessage = "Updating CRM application for appId:3 state:INELIGIBLE_INFORMED, " +
+                "payload:SilLoanApplication(applicationID=3, applicationSubmissionDate=null, applicationName=null, applicationLocation=null, " +
+                "projectDuration=null, projectTotalCost=null, projectOtherFunding=null, markedIneligible=true, eligibilityStatusChangeDate=2021-10-12T09:38:12.850Z, eligibilityStatusChangeSource=IFS)";
+
+
+        long applicationId = 3L;
+        long competitionId = 4L;
+        ApplicationResource applicationResource = new ApplicationResource();
+        applicationResource.setId(applicationId);
+        applicationResource.setApplicationState(ApplicationState.INELIGIBLE_INFORMED);
+        applicationResource.setSubmittedDate(ZonedDateTime.parse("2021-10-12T09:38:12.850Z"));
+        applicationResource.setName("Sample skips for plastic storage");
+        applicationResource.setDurationInMonths(11l);
+        applicationResource.setCompetition(competitionId);
+        applicationResource.setEvent(ApplicationEvent.INFORM_INELIGIBLE.getType());
+        CompetitionResource competitionResource = new CompetitionResource();
+        competitionResource.setFundingType(FundingType.LOAN);
+
+
+        when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
+        when(applicationSummarisationService.getProjectTotalFunding(applicationResource.getId())).thenReturn(serviceSuccess(BigDecimal.TEN));
+        when(applicationSummarisationService.getProjectOtherFunding(applicationResource.getId())).thenReturn(serviceSuccess(BigDecimal.ONE));
+        when(applicationSummarisationService.getProjectLocation(applicationResource.getId())).thenReturn(serviceSuccess("RG1 5LF"));
+        ReflectionTestUtils.setField(service, "eligibilityStatusChangeSource", "IFS");
+
+        ServiceResult<Void> result = service.syncCrmApplicationState(applicationResource);
+
+        List<ILoggingEvent> eventList = memoryAppender.search("payload:", Level.INFO);
+        assertEquals(expectedLogMessage, eventList.get(0).getMessage());
+    }
+
+    @Test
+    public void syncCrmLoanApplicationReinstatedStateTest() {
+
+        String expectedLogMessage = "Updating CRM application for appId:3 state:SUBMITTED, " +
+                "payload:SilLoanApplication(applicationID=3, applicationSubmissionDate=null, applicationName=null, applicationLocation=null, projectDuration=null, projectTotalCost=null, projectOtherFunding=null, " +
+                "markedIneligible=false, eligibilityStatusChangeDate=2021-10-12T09:38:12.850Z, eligibilityStatusChangeSource=IFS)";
+
+
+        long applicationId = 3L;
+        long competitionId = 4L;
+        ApplicationResource applicationResource = new ApplicationResource();
+        applicationResource.setId(applicationId);
+        applicationResource.setApplicationState(ApplicationState.SUBMITTED);
+        applicationResource.setSubmittedDate(ZonedDateTime.parse("2021-10-12T09:38:12.850Z"));
+        applicationResource.setName("Sample skips for plastic storage");
+        applicationResource.setDurationInMonths(11l);
+        applicationResource.setCompetition(competitionId);
+        applicationResource.setEvent(ApplicationEvent.REINSTATE_INELIGIBLE.getType());
+        CompetitionResource competitionResource = new CompetitionResource();
+        competitionResource.setFundingType(FundingType.LOAN);
+
+
+        when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
+        when(applicationSummarisationService.getProjectTotalFunding(applicationResource.getId())).thenReturn(serviceSuccess(BigDecimal.TEN));
+        when(applicationSummarisationService.getProjectOtherFunding(applicationResource.getId())).thenReturn(serviceSuccess(BigDecimal.ONE));
+        when(applicationSummarisationService.getProjectLocation(applicationResource.getId())).thenReturn(serviceSuccess("RG1 5LF"));
+        ReflectionTestUtils.setField(service, "eligibilityStatusChangeSource", "IFS");
+
+        ServiceResult<Void> result = service.syncCrmApplicationState(applicationResource);
+
+
+        List<ILoggingEvent> eventList = memoryAppender.search("payload:", Level.INFO);
+        assertEquals(expectedLogMessage, eventList.get(0).getMessage());
+    }
+
 }

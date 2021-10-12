@@ -6,5 +6,5 @@ import org.innovateuk.ifs.sil.crm.resource.SilLoanApplication;
 
 public interface SilCrmEndpoint {
     ServiceResult<Void> updateContact(SilContact silContact);
-    ServiceResult<Void> updateApplicationEligibility(SilLoanApplication silApplication);
+    ServiceResult<Void> updateLoanApplicationState(SilLoanApplication silApplication);
 }

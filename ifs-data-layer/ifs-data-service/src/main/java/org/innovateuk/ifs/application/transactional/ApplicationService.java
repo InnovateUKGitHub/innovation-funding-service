@@ -36,7 +36,7 @@ public interface ApplicationService {
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE')")
     ServiceResult<ValidationMessages> saveApplicationDetails(Long applicationId, ApplicationResource application);
 
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE_APPLICATION_STATE')")
     ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(Long applicationId, ZonedDateTime date);
 
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")

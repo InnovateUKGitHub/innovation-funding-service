@@ -2,14 +2,13 @@ package org.innovateuk.ifs.crm.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.type.ZonedDateTimeType;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.application.resource.ApplicationEvent;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import org.innovateuk.ifs.application.transactional.ApplicationSummarisationService;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -20,31 +19,25 @@ import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationAddressService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
-import org.innovateuk.ifs.project.core.transactional.ProjectService;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.sil.crm.resource.SilAddress;
-import org.innovateuk.ifs.sil.crm.resource.SilLoanApplication;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
+import org.innovateuk.ifs.sil.crm.resource.SilLoanApplication;
 import org.innovateuk.ifs.sil.crm.resource.SilOrganisation;
 import org.innovateuk.ifs.sil.crm.service.SilCrmEndpoint;
 import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.Date;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_INCORRECT_TYPE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
@@ -57,16 +50,7 @@ public class CrmServiceImpl implements CrmService {
     private BaseUserService userService;
 
     @Autowired
-    private PublicContentService publicContentService;
-
-    @Autowired
     private CompetitionService competitionService;
-
-    @Autowired
-    private ApplicationService applicationService;
-
-    @Autowired
-    private ProjectService projectService;
 
     @Autowired
     private OrganisationService organisationService;
@@ -76,6 +60,10 @@ public class CrmServiceImpl implements CrmService {
 
     @Autowired
     private SilCrmEndpoint silCrmEndpoint;
+
+    @Autowired
+    private ApplicationSummarisationService applicationSummarisationService;
+
 
     @Value("${ifs.new.organisation.search.enabled:false}")
     private Boolean newOrganisationSearchEnabled;
@@ -141,16 +129,16 @@ public class CrmServiceImpl implements CrmService {
     }
 
     @Override
-    public ServiceResult<Void> updateCrmApplicationEligibility(Long applicationId) {
-        ApplicationResource application = applicationService.getApplicationById(applicationId).getSuccess();
+    public ServiceResult<Void> syncCrmApplicationState(ApplicationResource application) {
+
         CompetitionResource competition = competitionService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        if(!competition.isLoan()) {
+        if (!competition.isLoan()) {
             return serviceFailure(GENERAL_INCORRECT_TYPE);
         } else {
-            SilLoanApplication silApplication = setSilLoanApplication(application, false);
-            LOG.info(format("Updating CRM application eligibility : %d %b", silApplication.getApplicationID(), silApplication.getMarkedIneligible()));
-            return silCrmEndpoint.updateApplicationEligibility(silApplication);
+            SilLoanApplication loanApplication = setLoanApplication(application);
+            LOG.info(format("Updating CRM application for appId:%s state:%s, payload:%s", loanApplication.getApplicationID(), application.getApplicationState(), loanApplication));
+            return silCrmEndpoint.updateLoanApplicationState(loanApplication);
         }
     }
 
@@ -257,31 +245,42 @@ public class CrmServiceImpl implements CrmService {
         return silContact;
     }
 
-    private SilLoanApplication setSilLoanApplication(ApplicationResource application, boolean includeApplicationDetails) {
-        SilLoanApplication silApplication = new SilLoanApplication();
-        silApplication.setApplicationID(application.getId().intValue());
-        if(includeApplicationDetails) {
-            ProjectResource project = projectService.getByApplicationId(application.getId()).getSuccess();
+    private SilLoanApplication setLoanApplication(ApplicationResource application) {
+        ApplicationState applicationState = application.getApplicationState();
+        SilLoanApplication loanApplication = new SilLoanApplication();
+        loanApplication.setApplicationID(application.getId().intValue());
 
-            silApplication.setApplicationName(Optional.ofNullable(project.getName()).orElse(null));
-            silApplication.setApplicationLocation(Optional.ofNullable(project.getAddress())
-                    .map(address -> address.getAsSingleLine()).orElse(null));
-            silApplication.setApplicationSubmissionDate(Optional.ofNullable(application.getSubmittedDate()).orElse(null));
-            // silApplication.setApplicationSubmissionDate(project.getOfferSubmittedDate());
-            silApplication.setProjectDuration(Optional.ofNullable(project.getDurationInMonths())
-                    .map(duration -> duration.intValue()).orElse(null));
-
-            // TODO IFS-10471
-            // silApplication.setProjectTotalCost(0d);
-            // silApplication.setProjectOtherFunding(0d);
-        } else {
-            silApplication.setMarkedIneligible(
-                    application.getApplicationState() == ApplicationState.INELIGIBLE ||
-                            application.getApplicationState() == ApplicationState.INELIGIBLE_INFORMED);
-            silApplication.setEligibilityStatusChangeDate(Optional.ofNullable(application.getLastStateChangeDate()).orElse(ZonedDateTime.now()));
-            silApplication.setEligibilityStatusChangeSource(eligibilityStatusChangeSource);
+        switch (applicationState) {
+            case SUBMITTED:
+                if (ApplicationEvent.REINSTATE_INELIGIBLE.getType().equals(application.getEvent())) {
+                    markIneligible(application, loanApplication, Boolean.FALSE);
+                } else {
+                    markSubmitted(application, loanApplication);
+                }
+                break;
+            case INELIGIBLE:
+            case INELIGIBLE_INFORMED:
+                markIneligible(application, loanApplication, Boolean.TRUE);
+                break;
         }
 
-        return silApplication;
+        return loanApplication;
+    }
+
+    private void markSubmitted(ApplicationResource application, SilLoanApplication loanApplication) {
+        loanApplication.setApplicationName(application.getName());
+        loanApplication.setApplicationLocation(applicationSummarisationService.getProjectLocation(application.getId()).getSuccess());
+        loanApplication.setApplicationSubmissionDate(application.getSubmittedDate());
+        loanApplication.setProjectDuration(application.getDurationInMonths().intValue());
+        loanApplication.setProjectTotalCost(applicationSummarisationService.getProjectTotalFunding(application.getId()).getSuccess().doubleValue());
+        loanApplication.setProjectOtherFunding(applicationSummarisationService.getProjectOtherFunding(application.getId()).getSuccess().doubleValue());
+
+    }
+
+    private void markIneligible(ApplicationResource application, SilLoanApplication loanApplication, Boolean ineligibleFlag) {
+        loanApplication.setMarkedIneligible(ineligibleFlag);
+        loanApplication.setEligibilityStatusChangeDate(Optional.ofNullable(application.getLastStateChangeDate()).orElse(TimeMachine.now()));
+        loanApplication.setEligibilityStatusChangeSource(eligibilityStatusChangeSource);
+
     }
 }
