@@ -9,7 +9,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
-import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.crm.transactional.TimeMachine;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-
 
 
 /**
@@ -60,7 +59,7 @@ public class ApplicationController {
     private ApplicationMigrationService applicationMigrationService;
 
     @GetMapping("/{id}/has-assessment")
-    public RestResult<Boolean> applicationHasAssessment(@PathVariable long id){
+    public RestResult<Boolean> applicationHasAssessment(@PathVariable long id) {
         return assessmentService.existsByTargetId(id).toGetResponse();
     }
 
@@ -107,21 +106,14 @@ public class ApplicationController {
     public RestResult<Void> updateApplicationState(@RequestParam("applicationId") final Long id,
                                                    @RequestParam("state") final ApplicationState state) {
 
-        ApplicationResource beforeUpdate = getApplicationById(id).getSuccess();
-        final boolean wasIneligible = beforeUpdate.getApplicationState() == ApplicationState.INELIGIBLE ||
-                beforeUpdate.getApplicationState() == ApplicationState.INELIGIBLE_INFORMED;
-
         ServiceResult<ApplicationResource> updateStatusResult = applicationService.updateApplicationState(id, state);
 
         if (updateStatusResult.isSuccess() && ApplicationState.SUBMITTED == state) {
-            applicationService.saveApplicationSubmitDateTime(id, ZonedDateTime.now());
+            updateStatusResult = applicationService.saveApplicationSubmitDateTime(id, TimeMachine.now());
             applicationNotificationService.sendNotificationApplicationSubmitted(id);
-
-            if(wasIneligible) {
-                crmService.updateCrmApplicationEligibility(id);
-            }
         }
 
+        crmService.syncCrmApplicationState(updateStatusResult.getSuccess());
         return updateStatusResult.toPutResponse();
     }
 
@@ -151,7 +143,6 @@ public class ApplicationController {
             @RequestBody JsonNode jsonObj) {
 
         String name = jsonObj.get("name").textValue();
-
         return applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId, organisationId)
                 .andOnSuccessReturn(application -> {
                     crmService.syncCrmContact(userId,competitionId,application.getId());
@@ -166,7 +157,8 @@ public class ApplicationController {
         return applicationService
                 .markAsIneligible(applicationId, ineligibleOutcomeMapper.mapToDomain(reason))
                 .andOnSuccessReturn(result -> {
-                    crmService.updateCrmApplicationEligibility(applicationId);
+                    ApplicationResource applicationResource = getApplicationById(applicationId).getSuccess();
+                    crmService.syncCrmApplicationState(applicationResource);
                     return result;
                 })
                 .toPostWithBodyResponse();
