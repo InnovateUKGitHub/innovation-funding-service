@@ -95,6 +95,7 @@ ${project_duration}                 48
 &{collaborator2_credentials_sp}     email=${PS_SP_Academic_Partner_Email}  password=${short_password}
 ${MO_EMAIL}                         Orville.Gibbs@gmail.com
 ${ooba_org_name}                    Ooba
+&{moCredentials}                    email=thomas.filton@isee.example.com   password=${short_password}
 
 *** Test Cases ***
 Internal user can not generate SP with pending invites
@@ -159,8 +160,8 @@ Project Finance should no longer see the project in the Generate Spend Profile t
 
 the monitoring officer can download the SP CSV files when status is incomplete
     [Documentation]    IFS-9677
-    Given Assign monitoring officer to project      ${PS_SP_Application_No}  ${PS_SP_Application_Title}
-    When log in as a different user                 &{monitoring_officer_one_credentials}
+    #Given Assign monitoring officer to project      ${PS_SP_Application_No}  ${PS_SP_Application_Title}
+    When log in as a different user                 &{moCredentials}
     And the user navigates to the page              ${server}/project-setup/project/${PS_SP_Project_Id}
     And the user clicks the button/link             link = Spend profile
     Then the monitoring officer can download the SP CSV files
@@ -403,7 +404,7 @@ MO receives an email notification and status updated after spend profile submitt
     When the user clicks the button/link    link = View the status of partners
     And the user should see the element     css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
     Then partners can see the Spend Profile section completed
-    And the user reads his email            ${monitoring_officer_one_credentials["email"]}    You need to review the spend profile for project ${PS_SP_Application_Title}     The spend profile for this project is ready for you to review:
+    And the user reads his email            ${moCredentials["email"]}    You need to review the spend profile for project ${PS_SP_Application_Title}     The spend profile for this project is ready for you to review:
 
 IFS admin can see the approve and reject options for the spend profile
     [Documentation]    IFS-9679
@@ -428,7 +429,7 @@ Project Finance cannot see the approve and reject options for the spend profile
 
 Monitoring officer is able to see Spend Profile approval page
     [Documentation]   IFS-9677
-    Given Log in as a different user                                     &{monitoring_officer_one_credentials}
+    Given Log in as a different user                                     &{moCredentials}
     When the user navigates to the page                                  ${server}/project-setup/project/${PS_SP_Project_Id}
     And the user clicks the button/link                                  link = Spend profile
     Then the monitoring officer should see the spend profile details
@@ -457,7 +458,7 @@ IFS Admin is able to Reject Spend Profile
 
 MO can see who rejected the spend profile in the banner
     [Documentation]      IFS-9678
-    [Setup]    Log in as a different user      &{monitoring_officer_one_credentials}
+    [Setup]    Log in as a different user      &{moCredentials}
     Given The user navigates to the page       ${server}/project-setup/project/${PS_SP_Project_Id}/partner-organisation/${Ooba_Lead_Org_Id}/spend-profile
     Then The user should see the element       jQuery = p:contains("Innovate UK rejected this spend profile")
 
@@ -539,7 +540,7 @@ IFS admin is able to Approve Spend Profile
 Monitoring officer is able to Approve Spend Profile
     [Documentation]    IFS-9677
     [Tags]
-    Given log in as a different user            &{monitoring_officer_one_credentials}
+    Given log in as a different user            &{moCredentials}
     When the user navigates to the page         ${server}/project-setup/project/${PS_SP_Project_Id}
     And the user clicks the button/link         link = Spend profile
     Then the monitoring officer approves to SP
@@ -548,7 +549,7 @@ Internal user can see who approved the spend profile in the banner
     [Documentation]      IFS-9678
     [Setup]    Log in as a different user      &{Comp_admin1_credentials}
     Given The user navigates to the page       ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
-    Then The user should see the element       jQuery = p:contains("Orville Gibbs approved this spend profile")
+    Then The user should see the element       jQuery = p:contains("Thomas Filton approved this spend profile")
 
 Status updates correctly for internal user's table after approval
     [Documentation]    INFUND-5543  IFS-9677
@@ -567,7 +568,7 @@ Project Finance still has a link to the spend profile after approval
     Then the user clicks the button/link     link = ${Ooba_Lead_Org_Name}-spend-profile.csv
     And the user clicks the button/link      link = ${Wordpedia_Partner_Org_Name}-spend-profile.csv
     And the user clicks the button/link      link = ${Jabbertype_Partner_Org_Name}-spend-profile.csv
-    And the user should see the element      jQuery = p:contains("Orville Gibbs approved this spend profile ")
+    And the user should see the element      jQuery = p:contains("Thomas Filton approved this spend profile ")
 
 Project finance user cannot access external users' spend profile page
     [Documentation]    INFUND-5911
@@ -978,9 +979,9 @@ the user removes a new partner org
     the user navigates to the page                               ${server}/project-setup-management/competition/${PS_Competition_Id}/project/${PS_SP_Project_Id}/team
     the user is able to remove a pending partner organisation    Spend Profile Organisation
 
-Assign monitoring officer to project
-    [Arguments]  ${applicationNumber}   ${applicationTitle}
-    the user navigates to the page            ${server}/project-setup-management/monitoring-officer/view-all?ktp=false
-    search for MO                             Orvill  Orville Gibbs
-    the user should see the element           jQuery = span:contains("Assign projects to Monitoring Officer")
-    the internal user assign project to MO    ${applicationNumber}   ${applicationTitle}
+#Assign monitoring officer to project
+#    [Arguments]  ${applicationNumber}   ${applicationTitle}
+#    the user navigates to the page            ${server}/project-setup-management/monitoring-officer/view-all?ktp=false
+#    search for MO                             Orvill  Orville Gibbs
+#    the user should see the element           jQuery = span:contains("Assign projects to Monitoring Officer")
+#    the internal user assign project to MO    ${applicationNumber}   ${applicationTitle}

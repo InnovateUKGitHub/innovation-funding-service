@@ -164,7 +164,7 @@ Existing Monitoring Officer can sign in and see projects that they are assigned 
     And the user clicks the project setup tile if displayed
     When the user selects the checkbox                          previousProject
     And the user clicks the button/link                         id = update-documents-results-button
-    Then the user should see the element                        jQuery = .task:contains("${PS_LP_Application_Title}") + .status:contains("Live project")
+    Then the user should see the project status                 ${PS_LP_Application_Title}
 
 Monitoring officer see the project setup veiw for assigned project
     [Documentation]  IFS-4209  IFS-5859
@@ -220,7 +220,8 @@ Comp admin adds new MO
 
 Comp admin assign project to new MO
     [Documentation]  IFS-5031  IFS-5088  IFS-4208
-    Given search for MO    Tom  Tom Poly
+    #Given Remove project from assigned MO
+    And search for MO                                 Tom  Tom Poly
     When the internal user assign project to MO       ${Assign_Project2_ID}  ${Assign_Project2}
     Then the user should see the element              jQuery = td:contains("${Assign_Project2_ID}") ~ td:contains("Remove")
 
@@ -404,8 +405,8 @@ Requesting IDs of this application
 
 The SBRI MO assignee has been changed
     log in as a different user                  &{Comp_admin1_credentials}
-    the user navigates to the page              ${server}/project-setup-management/project/${sbri_projectID}/monitoring-officer
-    the user clicks the button/link             link = Change monitoring officer
+    #the user navigates to the page              ${server}/project-setup-management/project/${sbri_projectID}/monitoring-officer
+    #the user clicks the button/link             link = Change monitoring officer
     internal user assigns mo to application     ${sbri_application_id}      ${sbri_applicaton_name}     Orvill    Orville Gibbs
 
 Standard verification for email address follows
@@ -615,7 +616,16 @@ MO can view completed as a finance status for individual partners
     the user should see the element    jQuery = td:contains("${organisationWardName}")~td:contains("Complete")
     the user should see the element    jQuery = td:contains("${organisationRedName}")~td:contains("Complete")
 
-#User aprove eligibility
-#    [Arguments]  ${financeProjectID}  ${organisationID}
-#    the user navigates to the page  ${server}/project-setup-management/project/${financeProjectID}/finance-check/organisation/${organisationID}/eligibility
-#    the user approves project costs
+#Remove project from assigned MO
+#    search for MO                       Thomas  Thomas Filton
+#    the user clicks the button/link     jQuery = td:contains("High Performance Gasoline Stratified") ~ td:contains("Remove")
+#    the user clicks the button/link     link = Back to assign monitoring officers
+
+#adding a if condition to run the test locally and in the cloud
+the user should see the project status
+    [Arguments]  ${applicationTitle}
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = .task:contains("${applicationTitle}") + .status:contains("Live project")
+    #cloud check
+    run keyword if  '${status}'=='PASS'  the user should see the element   jQuery = .task:contains("${applicationTitle}") + .status:contains("Live project")
+    #local check
+    ...                           ELSE   the user should see the element   jQuery = .task:contains("${applicationTitle}") + .status:contains("Monitor project")
