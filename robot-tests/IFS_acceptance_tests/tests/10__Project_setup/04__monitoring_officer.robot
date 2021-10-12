@@ -282,7 +282,10 @@ Assign MO role to existing IFS user
 
 Comp admin assign project existing IFS user MO
     [Documentation]  IFS-5104  IFS-5070  IFS-9576
-    Given the internal user assign project to MO   ${Elbow_Grease_Application_No}  ${Elbow_Grease_Title}
+    Given the user navigates to the page          ${server}/project-setup-management/monitoring-officer/view-all
+    And Remove project from exisitng MO
+    And search for MO                             Felix  Felix Wilson
+    When the internal user assign project to MO   ${Elbow_Grease_Application_No}  ${Elbow_Grease_Title}
     And logout as user
     Then the user logs in and checks for assigned projects
 
@@ -626,7 +629,7 @@ MO can view completed as a finance status for individual partners
     the user should see the element    jQuery = td:contains("${organisationRedName}")~td:contains("Complete")
 
 Remove project from exisitng MO
-    search for MO                       Orville  Orville Gibbs
+    search for MO                       Thomas  Thomas Filton
     the user clicks the button/link     jQuery = td:contains("${elbow_grease_title}") ~ td:contains("Remove")
     the user clicks the button/link     link = Back to assign monitoring officers
 
