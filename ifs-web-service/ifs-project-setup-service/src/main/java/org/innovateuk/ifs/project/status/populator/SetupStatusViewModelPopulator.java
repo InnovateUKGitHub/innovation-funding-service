@@ -215,7 +215,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     }
 
     private SetupStatusStageViewModel financeChecksStageViewModel(ProjectSetupStage stage, ProjectResource project, CompetitionResource competition, boolean monitoringOfficer, CompletableFuture<OrganisationResource> organisationRequest, SetupSectionAccessibilityHelper statusAccessor, ProjectPartnerStatusResource ownOrganisation) {
-        SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(resolve(organisationRequest));
+        SectionAccess financeChecksAccess = monitoringOfficer ? SectionAccess.ACCESSIBLE : statusAccessor.canAccessFinanceChecksSection(resolve(organisationRequest));
         SectionStatus financeChecksStatus = getFinanceChecksStatus(project, monitoringOfficer, ownOrganisation, financeChecksAccess);
 
         boolean pendingQueries = SectionStatus.FLAG.equals(financeChecksStatus);
