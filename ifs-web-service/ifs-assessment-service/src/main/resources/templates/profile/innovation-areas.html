@@ -62,7 +62,7 @@
                             </th:block>
                             <div class="govuk-radios govuk-radios--inline">
                                 <div class="govuk-radios__item"
-                                     th:each="type : ${T(com.worth.ifs.user.resource.BusinessType).values()}">
+                                     th:each="type : ${getAllAssessorTypes()}">
                                     <input th:field="*{assessorType}"
                                            th:value="${type}"
                                            type="radio"

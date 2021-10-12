@@ -1,7 +1,7 @@
 <!-- =================Application question=========================== -->
 <div th:fragment="application-question(question, editable)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:unless="${editable}">
-        <th:block th:if="${competitionSetupForm.question.type != T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}">
+        <th:block th:if="${competitionSetupForm.question.type != competitionSetupForm.question.getKTPAssessmentQuestionType()}">
             <fieldset class="govuk-fieldset">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-6">
                     <h2 class="govuk-fieldset__heading">Application question</h2>
@@ -100,12 +100,12 @@
             <fieldset
                 th:if="${question.scored != null or question.writtenFeedback != null or question.researchCategoryQuestion != null or question.scope != null}"
                 class="govuk-fieldset">
-                <legend th:if="${competitionSetupForm.question.type != T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}" class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-6">
+                <legend th:if="${competitionSetupForm.question.type != competitionSetupForm.question.getKTPAssessmentQuestionType()}" class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-6">
                     <h2 class="govuk-fieldset__heading">Assessment of this question</h2>
                 </legend>
 
                 <dl class="govuk-list application-question-list govuk-grid-row">
-                    <th:block th:if="${question.scored != null && competitionSetupForm.question.type != T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}">
+                    <th:block th:if="${question.scored != null && competitionSetupForm.question.type != competitionSetupForm.question.getKTPAssessmentQuestionType() }">
                         <dt class="govuk-grid-column-one-third">Scored</dt>
                         <dd class="govuk-grid-column-two-thirds" th:text="${question.scored ? 'Yes' : 'No'}"></dd>
                         <th:block th:if="${question.scored}">
@@ -161,7 +161,7 @@
     <th:block th:if="${editable}">
 
 
-        <h2 th:if="${competitionSetupForm.question.type != T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}"
+        <h2 th:if="${competitionSetupForm.question.type != competitionSetupForm.question.getKTPAssessmentQuestionType()}"
             class="govuk-heading-m govuk-!-margin-top-6">Application question</h2>
 
         <input type="hidden"
@@ -174,7 +174,7 @@
         <div class="question">
 
             <th:block
-                th:if="${competitionSetupForm.question.type != T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}">
+                th:if="${competitionSetupForm.question.type != competitionSetupForm.question.getKTPAssessmentQuestionType()}">
                 <div class="govuk-form-group"
                      th:classappend="${#fields.hasErrors('question.shortTitle')} ? 'govuk-form-group--error'">
                     <label class="govuk-label govuk-label--s" for="question.shortTitle">
@@ -232,7 +232,7 @@
                         </textarea>
                     </div>
                 </div>
-                <th:block th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).LOAN_BUSINESS_AND_FINANCIAL_INFORMATION}">
+                <th:block th:if="${competitionSetupForm.question.type == competitionSetupForm.question.getLoanQuestionType()}">
                     <div class="govuk-form-group">
                         <p class="govuk-body">
                             <a target="_blank" href="https://innovateuk.eu.qualtrics.com/jfe/form/SV_8JtoEompki2GcUS" class="govuk-link">Complete the online business survey (opens in a new window)</a>
@@ -304,7 +304,7 @@
             <input type="hidden" th:field="*{question.textArea}">
             <input type="hidden" th:field="*{question.multipleChoice}">
             <input type="hidden"
-                   th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}"
+                   th:if="${competitionSetupForm.question.type == competitionSetupForm.question.getKTPAssessmentQuestionType()}"
                    th:name="question.shortTitle"
                    th:value="${question.shortTitle}"/>
 
@@ -669,11 +669,14 @@
 
             <!--/* ASSESSMENT */-->
             <th:block
-                th:if="${model.displayAssessmentOptions AND (competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION or competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT or competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE)}">
+                th:if="${model.displayAssessmentOptions AND
+                (competitionSetupForm.question.type == competitionSetupForm.question.getAssessedQuestionType() or
+                competitionSetupForm.question.type == competitionSetupForm.question.getKTPAssessmentQuestionType() or
+                competitionSetupForm.question.type == competitionSetupForm.question.getScopeQuestionType())}">
 
                 <input type="hidden" name="competitionSetupForm.question.type" th:field="*{question.type}"/>
 
-                <h2 th:if="${competitionSetupForm.question.type != T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}"
+                <h2 th:if="${competitionSetupForm.question.type != competitionSetupForm.question.getKTPAssessmentQuestionType()}"
                     class="govuk-heading-m govuk-!-margin-top-6">Assessment of this question</h2>
 
                 <th:block th:if="${question.researchCategoryQuestion != null}">
@@ -720,7 +723,7 @@
                     </div>
 
                 </th:block>
-                <th:block th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION and (question.scored != null or #fields.hasErrors('question.scored'))}">
+                <th:block th:if="${competitionSetupForm.question.type == competitionSetupForm.question.getAssessedQuestionType() and (question.scored != null or #fields.hasErrors('question.scored'))}">
                     <div class="govuk-form-group"
                          th:classappend="${#fields.hasErrors('question.scored')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
@@ -819,7 +822,7 @@
 
                 <th:block th:if="${question.writtenFeedback != null or #fields.hasErrors('question.writtenFeedback')}">
 
-                    <div th:attr="aria-hidden=${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}"
+                    <div th:attr="aria-hidden=${competitionSetupForm.question.type == competitionSetupForm.question.getKTPAssessmentQuestionType()}"
                         class="govuk-form-group"
                         th:classappend="${#fields.hasErrors('question.writtenFeedback')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
@@ -907,7 +910,7 @@
 
                             <h3 class="govuk-heading-s">Guidance table</h3>
                             <table id="guidance-table" class="govuk-table assessed-guidance"
-                                   th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION or competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}">
+                                   th:if="${competitionSetupForm.question.type == competitionSetupForm.question.getAssessedQuestionType() or competitionSetupForm.question.type == competitionSetupForm.question.getKTPAssessmentQuestionType()}">
                                 <thead class="govuk-table__head">
                                 <tr class="govuk-table__row">
                                     <th class="govuk-table__header" scope="col">Score <span
@@ -1003,7 +1006,7 @@
                             </table>
 
                             <table class="govuk-table" id="guidance-table"
-                                   th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE}">
+                                   th:if="${competitionSetupForm.question.type == competitionSetupForm.question.getScopeQuestionType()}">
                                 <thead class="govuk-table__head">
                                 <tr class="govuk-table__row">
                                     <th class="govuk-table__header" scope="col">Subject</th>

@@ -1,12 +1,15 @@
 package org.innovateuk.ifs.management.competition.setup.core.viewmodel;
 
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.management.competition.setup.core.form.MilestoneTime;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
 
 public class GeneralSetupViewModel {
 
@@ -106,5 +109,45 @@ public class GeneralSetupViewModel {
 
     public static List<CompetitionSetupSection> getAssessmentSections() {
         return ASSESSMENT_SECTIONS;
+    }
+
+    @JsonIgnore
+    public CompetitionStatus getCompetitionSetupStatus() {
+        return CompetitionStatus.COMPETITION_SETUP;
+    }
+
+    @JsonIgnore
+    public boolean isCompetitionOpen() {
+        return competition.getCompetitionStatus().isLaterThan(READY_TO_OPEN);
+    }
+
+    @JsonIgnore
+    public boolean grantCompetition() {
+        return competition.getFundingType() == FundingType.GRANT;
+    }
+
+    @JsonIgnore
+    public boolean competitionIsNotInAssessmentStatus() {
+        return state.getCompetitionStatus() != CompetitionStatus.IN_ASSESSMENT;
+    }
+
+    @JsonIgnore
+    public MilestoneType getSubmissionDateMilestoneType() {
+        return MilestoneType.SUBMISSION_DATE;
+    }
+
+    @JsonIgnore
+    public MilestoneTime[] getMilestoneTimeValues() {
+        return MilestoneTime.values();
+    }
+
+    @JsonIgnore
+    public MilestoneTime getTwlevePMMilestoneTime() {
+        return MilestoneTime.TWELVE_PM;
+    }
+
+    @JsonIgnore
+    public Funder[] getFunderValues() {
+        return Funder.values();
     }
 }
