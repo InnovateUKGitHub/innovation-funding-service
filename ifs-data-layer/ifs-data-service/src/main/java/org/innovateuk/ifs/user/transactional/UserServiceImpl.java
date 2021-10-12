@@ -158,6 +158,11 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
+    public ServiceResult<UserResource> findByUid(final String uid) {
+        return find(userRepository.findByUid(uid), notFoundError(User.class, uid)).andOnSuccessReturn(userMapper::mapToResource);
+    }
+
+    @Override
     public ServiceResult<UserResource> findInactiveByEmail(String email) {
         return find(userRepository.findByEmailAndStatus(email, INACTIVE), notFoundError(User.class, email, INACTIVE)).andOnSuccessReturn(userMapper::mapToResource);
     }

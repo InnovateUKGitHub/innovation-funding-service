@@ -4,7 +4,7 @@ import org.innovateuk.ifs.sil.AbstractEndpointControllerMockMvcTest;
 import org.innovateuk.ifs.sil.crm.controller.CrmEndpointController;
 import org.innovateuk.ifs.sil.crm.resource.SilAddress;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
-import org.innovateuk.ifs.sil.crm.resource.SilApplication;
+import org.innovateuk.ifs.sil.crm.resource.SilLoanApplication;
 import org.innovateuk.ifs.sil.email.resource.SilEmailAddress;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -47,7 +47,7 @@ public class CrmEndpointControllerMockMvcTest extends AbstractEndpointController
 
     @Test
     public void testMarkApplicationIneligible() throws Exception {
-        SilApplication application = new SilApplication();
+        SilLoanApplication application = new SilLoanApplication();
         application.setApplicationID(1);
         application.setMarkedIneligible(true);
         application.setEligibilityStatusChangeDate(ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT));  //("yyyy-MM-dd'T'HH.nn.ss'Z'")
@@ -69,7 +69,7 @@ public class CrmEndpointControllerMockMvcTest extends AbstractEndpointController
 
     @Test
     public void testIncompleteMarkApplicationIneligible() throws Exception {
-        SilApplication application = new SilApplication();
+        SilLoanApplication application = new SilLoanApplication();
         String requestBody = objectMapper.writeValueAsString(application);
         // TODO-10472 update endpoint once SF ready
         mockMvc.
@@ -85,7 +85,7 @@ public class CrmEndpointControllerMockMvcTest extends AbstractEndpointController
 
     @Test
     public void testReinstateApplication() throws Exception {
-        SilApplication application = new SilApplication();
+        SilLoanApplication application = new SilLoanApplication();
         application.setApplicationID(1);
         application.setMarkedIneligible(false);
         application.setEligibilityStatusChangeDate(ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT));  //("yyyy-MM-dd'T'HH.nn.ss'Z'")
@@ -107,7 +107,7 @@ public class CrmEndpointControllerMockMvcTest extends AbstractEndpointController
 
     @Test
     public void testIncompleteReinstateApplication() throws Exception {
-        SilApplication application = new SilApplication();
+        SilLoanApplication application = new SilLoanApplication();
         String requestBody = objectMapper.writeValueAsString(application);
         // TODO-10472 update endpoint once SF ready
         mockMvc.

@@ -21,6 +21,9 @@ public interface UserService {
     ServiceResult<UserResource> findByEmail(String email);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<UserResource> findByUid(String uid);
+
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<UserResource> findInactiveByEmail(String email);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")

@@ -4,7 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
-import org.innovateuk.ifs.sil.crm.resource.SilApplication;
+import org.innovateuk.ifs.sil.crm.resource.SilLoanApplication;
 import org.innovateuk.ifs.util.JsonMappingUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +27,7 @@ public class CrmEndpointController {
     }
 
     @PostMapping("/loanssubmission")
-    public RestResult<Void> updateApplication(@RequestBody SilApplication application) {
+    public RestResult<Void> updateApplication(@RequestBody SilLoanApplication application) {
         LOG.info("Stubbing out SIL CRM update application endpoint: " + JsonMappingUtil.toJson(application));
 
         if(application.getApplicationID() == null) {

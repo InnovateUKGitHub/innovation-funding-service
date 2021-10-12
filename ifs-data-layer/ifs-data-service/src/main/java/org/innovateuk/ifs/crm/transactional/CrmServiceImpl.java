@@ -24,7 +24,7 @@ import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.sil.crm.resource.SilAddress;
-import org.innovateuk.ifs.sil.crm.resource.SilApplication;
+import org.innovateuk.ifs.sil.crm.resource.SilLoanApplication;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.innovateuk.ifs.sil.crm.resource.SilOrganisation;
 import org.innovateuk.ifs.sil.crm.service.SilCrmEndpoint;
@@ -148,7 +148,7 @@ public class CrmServiceImpl implements CrmService {
         if(!competition.isLoan()) {
             return serviceFailure(GENERAL_INCORRECT_TYPE);
         } else {
-            SilApplication silApplication = setSilApplication(application, false);
+            SilLoanApplication silApplication = setSilLoanApplication(application, false);
             LOG.info(format("Updating CRM application eligibility : %d %b", silApplication.getApplicationID(), silApplication.getMarkedIneligible()));
             return silCrmEndpoint.updateApplicationEligibility(silApplication);
         }
@@ -257,8 +257,8 @@ public class CrmServiceImpl implements CrmService {
         return silContact;
     }
 
-    private SilApplication setSilApplication(ApplicationResource application, boolean includeApplicationDetails) {
-        SilApplication silApplication = new SilApplication();
+    private SilLoanApplication setSilLoanApplication(ApplicationResource application, boolean includeApplicationDetails) {
+        SilLoanApplication silApplication = new SilLoanApplication();
         silApplication.setApplicationID(application.getId().intValue());
         if(includeApplicationDetails) {
             ProjectResource project = projectService.getByApplicationId(application.getId()).getSuccess();

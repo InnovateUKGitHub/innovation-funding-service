@@ -5,7 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.sil.crm.resource.SilApplication;
+import org.innovateuk.ifs.sil.crm.resource.SilLoanApplication;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.innovateuk.ifs.sil.crm.resource.SilCrmError;
 import org.innovateuk.ifs.util.Either;
@@ -51,7 +51,7 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
     }
 
     @Override
-    public ServiceResult<Void> updateApplicationEligibility(SilApplication silApplication) {
+    public ServiceResult<Void> updateApplicationEligibility(SilLoanApplication silApplication) {
         return handlingErrors(() -> {
                     final Either<ResponseEntity<SilCrmError>, ResponseEntity<Void>> response = adaptor.restPostWithEntity(silRestServiceUrl + silCrmApplications, silApplication, Void.class, SilCrmError.class, HttpStatus.OK);
                     return response.mapLeftOrRight(failure -> {
