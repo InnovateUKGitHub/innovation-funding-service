@@ -132,13 +132,20 @@ public class CrmServiceImpl implements CrmService {
 
         CompetitionResource competition = competitionService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        if (!competition.isLoan()) {
+        if (!competition.isLoan() || !isEligibleLoanState(application)) {
             return serviceFailure(GENERAL_INCORRECT_TYPE);
         } else {
             SilLoanApplication loanApplication = setLoanApplication(application);
             LOG.info(format("Updating CRM application for appId:%s state:%s, payload:%s", loanApplication.getApplicationID(), application.getApplicationState(), loanApplication));
             return silCrmEndpoint.updateLoanApplicationState(loanApplication);
         }
+    }
+
+    private boolean isEligibleLoanState(ApplicationResource application) {
+        ApplicationState applicationState = application.getApplicationState();
+        return ApplicationState.SUBMITTED.equals(applicationState) ||
+                ApplicationState.INELIGIBLE.equals(applicationState) ||
+                ApplicationState.INELIGIBLE_INFORMED.equals(applicationState);
     }
 
     private void syncMonitoringOfficer(UserResource user) {
