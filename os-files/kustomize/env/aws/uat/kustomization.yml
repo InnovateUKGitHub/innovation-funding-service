@@ -15,7 +15,6 @@ resources:
   - config-maps/spring-config.yml
 
 patchesStrategicMerge:
-  - auth/sp/sp-deployment.yml
   - data-layer/data-service/data-service-deployment.yml
   - data-layer/finance-data-service/finance-data-service-deployment.yml
   - web-layer/application-service/application-service-deployment.yml
