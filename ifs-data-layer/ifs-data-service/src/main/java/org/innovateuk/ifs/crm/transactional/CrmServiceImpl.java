@@ -71,6 +71,9 @@ public class CrmServiceImpl implements CrmService {
     @Value("${sil.rest.crmApplications.eligibilityStatusChangeSource}")
     private String eligibilityStatusChangeSource;
 
+    @Value("${ifs.loan.partb.enabled}")
+    private boolean isLoanPartBEnabled;
+
     @Override
     public ServiceResult<Void> syncCrmContact(long userId) {
         return userService.getUserById(userId).andOnSuccess(user -> {
@@ -138,7 +141,11 @@ public class CrmServiceImpl implements CrmService {
         } else {
             SilLoanApplication loanApplication = setLoanApplication(application);
             LOG.info(format("Updating CRM application for appId:%s state:%s, payload:%s", loanApplication.getApplicationID(), application.getApplicationState(), loanApplication));
-            return silCrmEndpoint.updateLoanApplicationState(loanApplication);
+            if (isLoanPartBEnabled) {
+                return silCrmEndpoint.updateLoanApplicationState(loanApplication);
+            }else{
+              return  serviceSuccess();
+            }
         }
     }
 
