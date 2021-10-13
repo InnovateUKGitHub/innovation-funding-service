@@ -1,5 +1,19 @@
 #!/bin/bash
 
+####################################################################################
+####################################################################################
+## This is used to scrub environments and run python robot tests on local dev boxes
+## Run everything with
+##      ./micro_run_tests.sh
+## Run a suite
+##     ./micro_run_tests.sh -d IFS_acceptance_tests/tests/04__Applicant/01__Create_New_Application/12__ATI_compCreationToSubmission.robot
+## Or
+##     ./micro_run_tests.sh -d IFS_acceptance_tests/tests/04__Applicant/
+## Open a vnc to chrome
+##     open vnc://root:secret@ifs.local-dev:5900
+####################################################################################
+####################################################################################
+
 # Define some functions for later use
 DATASERVICE_POD=$(kubectl get pod -l app=data-service -o jsonpath="{.items[0].metadata.name}")
 
