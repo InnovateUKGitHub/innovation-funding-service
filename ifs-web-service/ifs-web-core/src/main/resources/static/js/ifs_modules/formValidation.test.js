@@ -122,7 +122,7 @@ describe('test form validation', () => {
 
         // test message missing (with subtype)
         expect(IFS.core.formValidation.getErrorMessage(taggedElement, "email-invalid")).toBe('Please enter a valid email address.')
-        expect(IFS.core.formValidation.getErrorMessage(taggedElement, "email-duplicate")).toBe('The email address is already registered with us. Please sign into your account.')
+        expect(IFS.core.formValidation.getErrorMessage(taggedElement, "email-duplicate")).toBe('This email address cannot be used to register a new account.')
 
         // test %text% injection
         var injectElement = jQuery('<input type="text" data-inject-errormessage="wibble %inject% wibble" inject="something" value="46"/>');

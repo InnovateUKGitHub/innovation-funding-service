@@ -60,12 +60,12 @@
             </p></li>
 
             <li><p class="govuk-body">
-                <a th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
+                <a th:if="${model.competitionStatus == model.getFundersPanelCompStatus()}"
                    th:href="@{/assessment/panel/competition/{competitionId}/manage-applications(competitionId=${model.competitionId})}"
                    class="govuk-link">
                 Assign applications to panel
                 </a>
-                <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
+                <a th:unless="${model.competitionStatus == model.getFundersPanelCompStatus()}"
                    class="govuk-link disabled" aria-disabled="true" >
                     Assign applications to panel
                 </a>

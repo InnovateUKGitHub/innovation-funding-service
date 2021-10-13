@@ -1,7 +1,7 @@
 buildscript {
 
     ext {
-        springBootVersion = '2.4.1'
+        springBootVersion = '2.4.2'
     }
 
     repositories {
@@ -83,7 +83,6 @@ def osFileMap = [
         [name:'docusign-config', type: 'config-maps'],
         [name:'finance-db-config', type: 'config-maps'],
         [name:'flyway-config', type: 'config-maps'],
-        [name:'new-relic-config', type: 'config-maps'],
         [name:'new-relic-config', type: 'config-maps'],
         [name:'performance-config', type: 'config-maps'],
         [name:'shibboleth-config', type: 'config-maps'],

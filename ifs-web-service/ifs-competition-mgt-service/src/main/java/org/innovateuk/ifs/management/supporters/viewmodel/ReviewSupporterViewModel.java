@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.supporters.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
 import org.innovateuk.ifs.supporter.resource.SupporterState;
@@ -60,6 +61,21 @@ public class ReviewSupporterViewModel {
 
     public int getDeclinedCount() {
         return isDeclined() ? this.assignments.get(SupporterState.REJECTED).size() : 0;
+    }
+
+    @JsonIgnore
+    public SupporterState getAcceptedSupporterState() {
+        return SupporterState.ACCEPTED;
+    }
+
+    @JsonIgnore
+    public SupporterState getRejectedSupporterState() {
+        return SupporterState.REJECTED;
+    }
+
+    @JsonIgnore
+    public SupporterState getCreatedSupporterState()  {
+        return SupporterState.CREATED;
     }
 }
 

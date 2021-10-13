@@ -23,7 +23,7 @@
                 <a th:href="@{'/dashboard/live'}" class="govuk-link">Clear filters</a></p>
 
             <section
-                th:with="openComps=${model.getCompetitions().mappedCompetitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN)}">
+                th:with="openComps=${model.getCompetitions().mappedCompetitions.get(model.getOpenCompetitionStatus())}">
                 <div th:unless="${openComps == null}">
                     <h2 class="govuk-heading-m"
                         th:text="'Open ('+${openComps == null ? '0' : openComps.size()}+')'"></h2>
@@ -41,7 +41,7 @@
             </section>
 
             <section
-                th:with="closedComps=${model.getCompetitions().mappedCompetitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED)}">
+                th:with="closedComps=${model.getCompetitions().mappedCompetitions.get(model.getClosedCompetitionStatus())}">
                 <div th:unless="${closedComps == null}">
                     <h2 class="govuk-heading-m"
                         th:text="'Closed ('+${closedComps == null ? '0' : closedComps.size()}+')'"></h2>
@@ -59,7 +59,7 @@
             </section>
 
             <section
-                th:with="inAssesmentComps=${model.getCompetitions().mappedCompetitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT)}">
+                th:with="inAssesmentComps=${model.getCompetitions().mappedCompetitions.get(model.getInAssessmentCompetitionStatus())}">
                 <div th:unless="${inAssesmentComps == null}">
                     <h2 class="govuk-heading-m"
                         th:text="'In assessment ('+${inAssesmentComps == null ? '0' : inAssesmentComps.size()}+')'"></h2>
@@ -78,7 +78,7 @@
 
 
             <section
-                th:with="panelComps=${model.getCompetitions().mappedCompetitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL)}">
+                th:with="panelComps=${model.getCompetitions().mappedCompetitions.get(model.getFundersPanelCompetitionStatus())}">
                 <div th:unless="${panelComps == null}">
                     <h2 class="govuk-heading-m"
                         th:text="'Panel ('+${panelComps == null ? '0' : panelComps.size()}+')'"></h2>
@@ -97,7 +97,7 @@
 
 
             <section
-                th:with="informComps=${model.getCompetitions().mappedCompetitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK)}">
+                th:with="informComps=${model.getCompetitions().mappedCompetitions.get(model.getAssessorFeedbackCompetitionStatus())}">
                 <div th:unless="${informComps == null}">
                     <h2 class="govuk-heading-m"
                         th:text="'Inform ('+${informComps == null ? '0' : informComps.size()}+')'"></h2>
@@ -115,7 +115,7 @@
             </section>
 
             <section
-                th:with="inPrepComps=${model.getCompetitions().mappedCompetitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP)}">
+                th:with="inPrepComps=${model.getCompetitions().mappedCompetitions.get(model.getSetupCompetitionStatus())}">
                 <div th:unless="${inPrepComps == null}">
                     <h2 class="govuk-heading-m"
                         th:text="'In preparation ('+${inPrepComps == null ? '0' : inPrepComps.size()}+')'"></h2>
@@ -133,7 +133,7 @@
             </section>
 
             <section
-                th:with="readyToOpenComps=${model.getCompetitions().mappedCompetitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN)}">
+                th:with="readyToOpenComps=${model.getCompetitions().mappedCompetitions.get(model.getReadyToOpenCompetitionStatus())}">
                 <div th:unless="${readyToOpenComps == null}">
                     <h2 class="govuk-heading-m"
                         th:text="'Ready to open ('+${readyToOpenComps == null ? '0' : readyToOpenComps.size()}+')'"></h2>
@@ -151,7 +151,7 @@
             </section>
 
             <section
-                th:with="projectSetupComps=${model.getCompetitions().mappedCompetitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP)}">
+                th:with="projectSetupComps=${model.getCompetitions().mappedCompetitions.get(model.getProjectSetupCompetitionStatus())}">
                 <div th:unless="${projectSetupComps == null}">
                     <h2 class="govuk-heading-m"
                         th:text="'Project setup ('+${projectSetupComps == null ? '0' : projectSetupComps.size()}+')'"></h2>
@@ -169,7 +169,7 @@
             </section>
 
             <section
-                th:with="expressionOfInterestComps=${model.getCompetitions().mappedCompetitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PREVIOUS)}">
+                th:with="expressionOfInterestComps=${model.getCompetitions().mappedCompetitions.get(model.getPreviousCompetitionStatus())}">
                 <div th:unless="${expressionOfInterestComps == null}">
                     <h2 class="govuk-heading-m"
                         th:text="'Expression of interest ('+${expressionOfInterestComps == null ? '0' : expressionOfInterestComps.size()}+')'"></h2>

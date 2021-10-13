@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.management.assessment.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource;
 import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource.Sort;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
@@ -161,6 +162,11 @@ public class ApplicationAssessmentProgressViewModel {
 
     public boolean isCompetitionAlwaysOpen() {
         return competitionAlwaysOpen;
+    }
+
+    @JsonIgnore
+    public Sort[] getAllApplicationAvailableAssessorResource() {
+        return ApplicationAvailableAssessorResource.Sort.values();
     }
 
     @Override

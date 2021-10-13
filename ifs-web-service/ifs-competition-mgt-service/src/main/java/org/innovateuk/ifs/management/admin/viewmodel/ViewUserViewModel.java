@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.admin.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -93,6 +94,16 @@ public class ViewUserViewModel {
 
     public boolean isOrganisationVisible() {
         return this.user.getRoles().contains(SUPPORTER);
+    }
+
+    @JsonIgnore
+    public UserStatus getActiveUserStatus() {
+        return UserStatus.ACTIVE;
+    }
+
+    @JsonIgnore
+    public Boolean isInactiveUser() {
+        return user.getStatus().equals(UserStatus.INACTIVE);
     }
 
     @Override
