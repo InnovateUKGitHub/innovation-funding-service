@@ -108,7 +108,7 @@
                                         <input class="govuk-radios__input" id="state"
                                                type="radio"
                                                th:field="*{state}"
-                                               th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).HANDLED_OFFLINE.name()}"
+                                               th:value="${model.getHandledOfflineStateName()}"
                                                aria-describedby="status-offline-hint"
                                                data-aria-controls="project-status-conditional-offline">
                                         <label class="govuk-label govuk-radios__label govuk-label--s"
@@ -162,7 +162,7 @@
                                         <input class="govuk-radios__input" id="status-on-hold"
                                                type="radio"
                                                th:field="*{state}"
-                                               th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).ON_HOLD.name()}"
+                                               th:value="${model.getOnHoldStateName()}"
                                                aria-describedby="status-on-hold-hint"
                                                data-aria-controls="project-status-conditional-on-hold">
                                         <label class="govuk-label govuk-radios__label govuk-label--s"
@@ -221,7 +221,7 @@
                                         <input class="govuk-radios__input" id="status-withdrawn"
                                                type="radio"
                                                th:field="*{state}"
-                                               th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).WITHDRAWN.name()}"
+                                               th:value="${model.getWithdrawnStateName()}"
                                                aria-describedby="status-withdrawn-hint"
                                                data-aria-controls="project-status-conditional-withdrawn">
                                         <label class="govuk-label govuk-radios__label govuk-label--s"
@@ -275,7 +275,7 @@
                                         <input class="govuk-radios__input" id="status-complete-offline"
                                                type="radio"
                                                th:field="*{state}"
-                                               th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).COMPLETED_OFFLINE.name()}"
+                                               th:value="${model.getCompletedOfflineStateName()}"
                                                aria-describedby="status-complete-offline-hint"
                                                data-aria-controls="project-status-conditional-complete-offline">
                                         <label class="govuk-label govuk-radios__label govuk-label--s"
@@ -368,7 +368,7 @@
                             </div>
                         </div>
                         <input type="hidden" name="state"
-                               th:value="${T(org.innovateuk.ifs.project.resource.ProjectState).ON_HOLD.name()}"/>
+                               th:value="${model.getOnHoldStateName()}"/>
                     </th:block>
                     <div class="govuk-form-group">
                         <button class="govuk-button">Change project status</button>

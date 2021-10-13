@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.assignment.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -51,7 +52,12 @@ public class AssessmentAssignmentForm extends BaseBindingResultTarget {
         return BooleanUtils.isNotFalse(assessmentAccept) || rejectReason != null;
     }
 
-    @Override
+    @JsonIgnore
+    public AssessmentRejectOutcomeValue[] getAssessmentRejectOutcomeValues() {
+        return AssessmentRejectOutcomeValue.values();
+    }
+
+   @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 

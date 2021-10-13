@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.assessor.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
@@ -91,4 +92,10 @@ public class AssessorsForm extends CompetitionSetupForm {
     public void setKtpCompetition(boolean ktpCompetition) {
         this.ktpCompetition = ktpCompetition;
     }
+
+    @JsonIgnore
+    public AssessorFinanceView[] getAssessorFinanceViewValues() {
+        return AssessorFinanceView.values();
+    }
+
 }

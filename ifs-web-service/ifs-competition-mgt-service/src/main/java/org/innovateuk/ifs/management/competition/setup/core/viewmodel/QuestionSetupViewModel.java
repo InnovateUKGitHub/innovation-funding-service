@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.management.competition.setup.core.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.competition.resource.ApplicationFinanceType;
+
 public class QuestionSetupViewModel extends CompetitionSetupViewModel {
     private CompetitionSetupSubsectionViewModel subsectionViewModel;
     private String competitionName;
@@ -42,5 +45,15 @@ public class QuestionSetupViewModel extends CompetitionSetupViewModel {
 
     public boolean isDisplayAssessmentOptions() {
         return displayAssessmentOptions;
+    }
+
+    @JsonIgnore
+    public ApplicationFinanceType standardApplicationFinanceType() {
+        return ApplicationFinanceType.STANDARD;
+    }
+
+    @JsonIgnore
+    public ApplicationFinanceType noFinancesApplicationFinanceType() {
+        return ApplicationFinanceType.NO_FINANCES;
     }
 }

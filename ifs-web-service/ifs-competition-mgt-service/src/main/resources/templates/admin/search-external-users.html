@@ -42,7 +42,7 @@
                                         class="govuk-select"
                                         id="searchCategory"
                                         name="searchCategory">
-                                    <option th:each="category : ${T(org.innovateuk.ifs.user.resource.SearchCategory).values()}"
+                                    <option th:each="category : ${form.getAllSearchCategories()}"
                                             th:value="${category}"
                                             th:text="${category.displayName}"
                                             th:selected="${form.searchCategory == null && category.selectedByDefault}"></option>

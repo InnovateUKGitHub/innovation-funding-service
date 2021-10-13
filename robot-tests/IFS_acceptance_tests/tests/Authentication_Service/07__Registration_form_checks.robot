@@ -83,7 +83,7 @@ Email duplication check
     [Tags]  HappyPath
     Given Applicant goes to the registration form
     When the user enters the details and clicks the create account     John  Smith  ${lead_applicant}  ${correct_password}
-    Then the user should see a field and summary error                 The email address is already registered with us. Please sign into your account
+    Then the user should see a field and summary error                 This email address cannot be used to register a new account
 
 User can not verify email with invalid hash
     [Documentation]  IFS-4298

@@ -167,7 +167,7 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
         model.addAttribute("identification", knowledgeBaseCreateForm.isPresent() ? knowledgeBaseCreateForm.get().getIdentification() : null);
         model.addAttribute("address", address.orElse(null));
         model.addAttribute("isLeadApplicant", registrationCookieService.isLeadJourney(request));
-
+        model.addAttribute("identificationNumber", knowledgeBaseCreateForm.isPresent() ? getIdentificationNumberString(knowledgeBaseCreateForm.get().getType()) : " ");
 
         addPageSubtitleToModel(request, user, model);
         return TEMPLATE_PATH + "/" + KNOWLEDGE_BASE_CONFIRM_ORGANISATION;
@@ -213,5 +213,9 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
         return addressLookupRestResult.handleSuccessOrFailure(
                 failure -> new ArrayList<>(),
                 addresses -> addresses);
+    }
+
+    private String getIdentificationNumberString(KnowledgeBaseType type) {
+        return KnowledgeBaseType.UNIVERSITY == type ? "UKPRN number" : "Registration number";
     }
 }
