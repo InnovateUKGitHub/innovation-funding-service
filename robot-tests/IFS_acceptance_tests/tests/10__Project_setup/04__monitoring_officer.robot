@@ -55,6 +55,8 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...
 ...               IFS-10022 MO improvements: visibility of finance status for individual partners
 ...
+...               IFS 10580 mo dashboard finance checks: show as complete when not all partners are complete
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -370,7 +372,19 @@ MO can see status of the finance as a completed for individual partners
     And project finance approves Eligibility                                ${organisationID}  ${organisationRedPlanetID}  ${organisationSmithZoneID}  ${financeProjectID}
     And log in as a different user                                          &{monitoring_officer_one_credentials}
     And the user navigates to the page                                      ${server}/project-setup/project/46/finance-check/read-only
-    Then MO can view completed as a finance status for individual partners     
+    Then MO can view completed as a finance status for individual partners
+
+MO can see finance checks as incomplete when all individual partner organisation has not been done their reviews
+    [Documentation]   IFS-10581
+    Given log in as a different user                                        &{internal_finance_credentials}
+    When Assign monitoring officer to project                               ${financeApplicationID}  ${financeApplicationTitle}
+    When The user navigates to the page                                     ${server}/project-setup-management/competition/${financeCompetitionId}/status/all
+    And The user clicks the button/link                                     link = Review
+    And project finance approves Viability for                              ${organisationID}  ${financeProjectID}
+    And Mo project finance approves Eligibility                             ${organisationID}  ${financeProjectID}
+    And log in as a different user                                          &{monitoring_officer_one_credentials}
+    And the user navigates to the page                                      ${server}/project-setup/project/46
+    Then MO can view finance check as a incomplete
 
 *** Keywords ***
 The MO user is able to access all of the links
@@ -615,7 +629,10 @@ MO can view completed as a finance status for individual partners
     the user should see the element    jQuery = td:contains("${organisationWardName}")~td:contains("Complete")
     the user should see the element    jQuery = td:contains("${organisationRedName}")~td:contains("Complete")
 
-#User aprove eligibility
-#    [Arguments]  ${financeProjectID}  ${organisationID}
-#    the user navigates to the page  ${server}/project-setup-management/project/${financeProjectID}/finance-check/organisation/${organisationID}/eligibility
-#    the user approves project costs
+Mo project finance approves Eligibility
+    [Arguments]  ${lead}  ${project}
+    the user navigates to the page  ${server}/project-setup-management/project/${project}/finance-check/organisation/${lead}/eligibility
+    the user approves project costs
+
+MO can view finance check as a incomplete
+    the user should see the element     jQuery = p:contains("We will review your financial information."),span:contains("Incomplete")
