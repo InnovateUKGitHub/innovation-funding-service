@@ -17,6 +17,8 @@
 # Define some functions for later use
 DATASERVICE_POD=$(kubectl get pod -l app=data-service -o jsonpath="{.items[0].metadata.name}")
 
+start=$(date +%s)
+
 function coloredEcho() {
     local exp=$1;
     local color=$2;
@@ -38,9 +40,13 @@ function coloredEcho() {
 }
 
 function section() {
+    end=$(date +%s)
+    seconds=$(echo "$end - $start" | bc)
+    coloredEcho $seconds' sec' green
     echo
     coloredEcho "$1" green
     echo
+    start=$(date +%s)
 }
 
 function clearDownFileRepository() {
@@ -124,19 +130,20 @@ function initialiseTestEnvironment() {
         echo "=> Waiting 5 seconds for the grid to be properly started"
         sleep 5
       else
+        section "=> RESTARTING LDAP and cache-provider"
+        k8s_delete ldap
+        k8s_delete cache-provider
+        k8s_wait ldap
+        k8s_wait cache-provider
+
         section "=> STARTING SELENIUM GRID, INJECTING ENVIRONMENT PARAMETERS, RESETTING DATABASE STATE"
         ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robotTestsFilter :ifs-data-layer:ifs-data-service:flywayClean :ifs-data-layer:ifs-data-service:flywayMigrate -Pinitialise=true --configure-on-demand
-
-        k8s_delete ldap
-        k8s_wait ldap
-        k8s_delete cache-provider
-        k8s_wait cache-provider
 
         section "=> SYNCING SHIBBOLETH USERS"
         k8s_sync_ldap
     fi
 
-  }
+}
 
 function stopSeleniumGrid() {
     section "=> STOPPING SELENIUM GRID"
