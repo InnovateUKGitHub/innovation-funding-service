@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.project.viability.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -252,5 +255,10 @@ public class FinanceChecksViabilityViewModel {
     private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {
         return finances.stream().allMatch(finance ->
                 BigDecimal.valueOf(finance.getMaximumFundingLevel()).compareTo(finance.getGrantClaimPercentage()) >=0);
+    }
+
+    @JsonIgnore
+    public String viabilitySection() {
+        return FinanceChecksSectionType.VIABILITY.name();
     }
 }
