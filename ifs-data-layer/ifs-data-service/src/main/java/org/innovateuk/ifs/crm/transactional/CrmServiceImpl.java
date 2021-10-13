@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
@@ -276,7 +277,7 @@ public class CrmServiceImpl implements CrmService {
     private void markSubmitted(ApplicationResource application, SilLoanApplication loanApplication) {
         loanApplication.setApplicationName(application.getName());
         loanApplication.setApplicationLocation(applicationSummarisationService.getProjectLocation(application.getId()).getSuccess());
-        loanApplication.setApplicationSubmissionDate(application.getSubmittedDate().toString());
+        loanApplication.setApplicationSubmissionDate(ZonedDateTime.parse(application.getSubmittedDate().toString()));
         loanApplication.setProjectDuration(application.getDurationInMonths().intValue());
         loanApplication.setProjectTotalCost(applicationSummarisationService.getProjectTotalFunding(application.getId()).getSuccess().doubleValue());
         loanApplication.setProjectOtherFunding(applicationSummarisationService.getProjectOtherFunding(application.getId()).getSuccess().doubleValue());
@@ -285,7 +286,7 @@ public class CrmServiceImpl implements CrmService {
 
     private void markIneligible(SilLoanApplication loanApplication, Boolean ineligibleFlag) {
         loanApplication.setMarkedIneligible(ineligibleFlag);
-        loanApplication.setEligibilityStatusChangeDate(TimeMachine.now().format(DateTimeFormatter.ISO_INSTANT));
+        loanApplication.setEligibilityStatusChangeDate(ZonedDateTime.parse(TimeMachine.now().format(DateTimeFormatter.ISO_INSTANT)));
         loanApplication.setEligibilityStatusChangeSource(eligibilityStatusChangeSource);
 
     }
