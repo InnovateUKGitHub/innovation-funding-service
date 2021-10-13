@@ -478,7 +478,6 @@ Academic finance contact receives an email when the GOL is approved
 Internal user should see completed project in previous tab
     [Documentation]  IFS-6054
     [Setup]  log in as a different user           &{internal_finance_credentials}
-    #Given Assign monitoring officer to project    ${Elbow_Grease_Application_No}   ${Elbow_Grease_Title}
     Given the user navigates to the page           ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/previous
     And the user expands the section              Projects
     Then the user should see the element          jQuery = th:contains("${Elbow_Grease_Title}")
@@ -592,10 +591,3 @@ Custom suite setup
     Connect to database  @{database}
     the user logs-in in new browser     ${Elbow_Grease_Lead_PM_Email}  ${short_password}
     execute sql string  INSERT INTO `ifs`.`grant_process_configuration` (`competition_id`, `send_by_default`) VALUES ('${PROJECT_SETUP_COMPETITION}', '1');
-
-#Assign monitoring officer to project
-#    [Arguments]  ${applicationNumber}   ${applicationTitle}
-#    the user navigates to the page            ${server}/project-setup-management/monitoring-officer/view-all?ktp=false
-#    search for MO                             Orvill  Orville Gibbs
-#    the user should see the element           jQuery = span:contains("Assign projects to Monitoring Officer")
-#    the internal user assign project to MO    ${applicationNumber}   ${applicationTitle}

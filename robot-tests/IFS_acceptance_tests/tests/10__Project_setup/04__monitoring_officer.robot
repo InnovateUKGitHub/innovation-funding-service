@@ -220,8 +220,7 @@ Comp admin adds new MO
 
 Comp admin assign project to new MO
     [Documentation]  IFS-5031  IFS-5088  IFS-4208
-    #Given Remove project from assigned MO
-    And search for MO                                 Tom  Tom Poly
+    Given search for MO                                 Tom  Tom Poly
     When the internal user assign project to MO       ${Assign_Project2_ID}  ${Assign_Project2}
     Then the user should see the element              jQuery = td:contains("${Assign_Project2_ID}") ~ td:contains("Remove")
 
@@ -306,7 +305,6 @@ MO can now check the application feedback
 MO can now view payment milestones in SBRI application
     [Documentation]   IFS-8958
     Given Requesting IDs of this application
-    #When the SBRI MO assignee has been changed
     When Log in as a different user                                         &{monitoring_officer_one_credentials}
     And the user navigates to the page                                      ${server}/project-setup/project/${sbri_projectID}
     And the user clicks the button/link                                     link = view application feedback
@@ -407,8 +405,6 @@ Requesting IDs of this application
 
 The SBRI MO assignee has been changed
     log in as a different user                  &{Comp_admin1_credentials}
-    #the user navigates to the page              ${server}/project-setup-management/project/${sbri_projectID}/monitoring-officer
-    #the user clicks the button/link             link = Change monitoring officer
     internal user assigns mo to application     ${sbri_application_id}      ${sbri_applicaton_name}     Orvill    Orville Gibbs
 
 Standard verification for email address follows
@@ -537,7 +533,6 @@ The user logs in and checks for assigned projects
     the user selects the checkbox                   previousProject
     the user clicks the button/link                 id = update-documents-results-button
     the user should see the project status          ${Elbow_Grease_Title}
-    #the user should see the element                 jQuery = .task:contains("${Elbow_Grease_Title}") + .status:contains("Live project")
 
 The user navigate to assign MO page
     the user navigates to the page         ${server}/management/dashboard/project-setup

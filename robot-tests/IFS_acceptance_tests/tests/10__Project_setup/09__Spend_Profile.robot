@@ -693,9 +693,6 @@ the project finance user generate spend profile
     the user should see the element     jQuery = .success-alert p:contains("The finance checks have been approved and profiles generated.")
 
 the project finance user should not see query responses flagged
-#    the user navigates to the page         ${server}/project-setup-management/competition/${PS_Competition_Id}/status
-#    the user clicks the button/link        link = 2
-#    #the user should see the element        css = #table-project-status tr:nth-of-type(1) td:nth-of-type(4).ok
     the user navigates to the page         ${server}/project-setup-management/competition/${PS_Competition_Id}/status/queries
     the user should not see the element    link = ${Ooba_Lead_Org_Name}
     the user reads his email               ${PS_SP_Lead_PM_Email}  ${PS_Competition_Name}: Your spend profile is available for project ${PS_SP_Application_No}  The finance checks for all partners in the project have now been completed
@@ -907,7 +904,6 @@ the comp admin should see the SP status updated correctly
     ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Spend profile")
     Run Keyword If   '${status}' == 'PASS'     the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action  # GOL
     Run Keyword If   '${status}' == 'PASS'  the user should see the element    css = #table-project-status tr:nth-of-type(3) td:nth-of-type(8).status.review
-#    the user should see the element        the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action  # GOL
     the user should not see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
 
 the user should see the SP status updated correctly
