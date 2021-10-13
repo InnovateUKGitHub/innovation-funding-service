@@ -43,7 +43,7 @@ public class CrmEndpointControllerMockMvcTest extends AbstractEndpointController
         SilLoanApplication application = new SilLoanApplication();
         application.setApplicationID(1);
         application.setMarkedIneligible(true);
-        application.setEligibilityStatusChangeDate(ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT));  //("yyyy-MM-dd'T'HH.nn.ss'Z'")
+        application.setEligibilityStatusChangeDate(ZonedDateTime.parse(ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT)));  //("yyyy-MM-dd'T'HH.nn.ss'Z'")
         application.setEligibilityStatusChangeSource("IFS");
 
         String requestBody = objectMapper.writeValueAsString(application);
@@ -81,7 +81,7 @@ public class CrmEndpointControllerMockMvcTest extends AbstractEndpointController
         SilLoanApplication application = new SilLoanApplication();
         application.setApplicationID(1);
         application.setMarkedIneligible(false);
-        application.setEligibilityStatusChangeDate(ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT));  //("yyyy-MM-dd'T'HH.nn.ss'Z'")
+        application.setEligibilityStatusChangeDate(ZonedDateTime.parse(ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT)));  //("yyyy-MM-dd'T'HH.nn.ss'Z'")
         application.setEligibilityStatusChangeSource("IFS");
 
         String requestBody = objectMapper.writeValueAsString(application);
