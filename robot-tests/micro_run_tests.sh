@@ -72,23 +72,12 @@ function addTestFiles() {
         kubectl exec $DATASERVICE_POD -- cp /tmp/testing.pdf ${storedFileFolder}/000000000_999999999/000000_999999/000_999/${i}
       fi
     done
+    echo "*********** Done Creating file entry for each db entry***********"
 }
 
 k8s_delete() {
   pod=$(kubectl get pod -l app="$1" -o name)
   kubectl delete $pod
-}
-
-k8s_rebuild_db() {
-  k8s_delete cache-provider
-  k8s_wait cache-provider
-  k8s_delete ldap
-  k8s_wait ldap
-  k8s_delete ifs-database
-  k8s_wait ifs-database
-  k8s_delete data-service
-  k8s_wait data-service
-
 }
 
 k8s_wait() {
@@ -122,17 +111,15 @@ function initialiseTestEnvironment() {
         sleep 5
       else
         section "=> STARTING SELENIUM GRID, INJECTING ENVIRONMENT PARAMETERS, RESETTING DATABASE STATE"
-#        k8s_rebuild_db
         ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robotTestsFilter :ifs-data-layer:ifs-data-service:flywayClean :ifs-data-layer:ifs-data-service:flywayMigrate -Pinitialise=true --configure-on-demand
 
+        k8s_delete ldap
+        k8s_wait ldap
         k8s_delete cache-provider
         k8s_wait cache-provider
-        DATASERVICE_POD=$(kubectl get pod -l app=data-service -o jsonpath="{.items[0].metadata.name}")
 
-#        ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robotTestsFilter -Pinitialise=true --configure-on-demand
         section "=> SYNCING SHIBBOLETH USERS"
-#        ./gradlew :ifs-data-layer:ifs-data-service:syncShib 2>&1 >/dev/null
-         k8s_sync_ldap
+        k8s_sync_ldap
     fi
 
   }
