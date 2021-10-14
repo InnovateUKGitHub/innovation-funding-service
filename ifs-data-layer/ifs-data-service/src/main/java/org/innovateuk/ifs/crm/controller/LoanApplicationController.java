@@ -117,7 +117,10 @@ public class LoanApplicationController {
         LOG.debug(String.format("application-update: application=%d, question=%s, processrole=%d", ids.applicationId, silStatus.getQuestionSetupType() , processRoleId));
         if(silStatus.isCompletionStatus()) {
             return questionStatusService.markAsComplete(ids, processRoleId, silStatus.getCompletionDate()).handleSuccessOrFailure(
-                    failure -> RestResult.restFailure(failure.getErrors(), HttpStatus.BAD_REQUEST),
+                    failure -> {
+                        LOG.error(String.format("application-update error: application %d mark complete failed", ids.applicationId));
+                        return RestResult.restFailure(failure.getErrors(), HttpStatus.BAD_REQUEST);
+                    },
                     success -> {
                         LOG.info(String.format("application-update: application %d marked complete", ids.applicationId));
                         activityLogService.recordActivityByApplicationId(ids.applicationId, user.getId(), ActivityType.APPLICATION_DETAILS_UPDATED);
@@ -126,7 +129,10 @@ public class LoanApplicationController {
             );
         } else {
             return questionStatusService.markAsInComplete(ids, processRoleId).handleSuccessOrFailure(
-                    failure -> RestResult.restFailure(failure.getErrors(), HttpStatus.BAD_REQUEST),
+                    failure -> {
+                        LOG.error(String.format("application-update error: application %d mark incomplete failed", ids.applicationId));
+                        return RestResult.restFailure(failure.getErrors(), HttpStatus.BAD_REQUEST);
+                    },
                     success -> {
                         LOG.info(String.format("application-update: application %d marked incomplete", ids.applicationId));
                         activityLogService.recordActivityByApplicationId(ids.applicationId, user.getId(), ActivityType.APPLICATION_DETAILS_UPDATED);
