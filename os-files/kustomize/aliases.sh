@@ -12,6 +12,8 @@ alias skaffold_state="open -a Firefox http://localhost:50052/v1/state"
 alias skaffold_events="open -a Firefox http://localhost:50052/v1/events"
 # Redeploy in a currently deployed skaffold dev/custom instance via the rest api
 alias skaffold_refresh="curl -X POST http://localhost:50052/v1/execute -d '{'build': true, 'sync': true, 'deploy': true}'"
+# port forwarding to access application and db
+alias skaffold_ports="skaffold dev -f skaffold-PORTS.yml"
 
 # shortcuts for k8s gets
 alias k8s_po="kubectl get po"
@@ -101,7 +103,6 @@ k8s_clean() {
   kubectl delete svc sil-stub
   kubectl delete svc survey-data-svc
   kubectl delete svc survey-svc
-  kubectl delete svc selenium-hub
   kubectl delete configmap cache-config
   kubectl delete configmap data-service-config
   kubectl delete configmap db-config

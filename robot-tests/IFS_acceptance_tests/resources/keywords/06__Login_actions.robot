@@ -37,12 +37,9 @@ The guest user inserts user email and password
 
 The guest user opens the browser
     Register keyword to run on failure    capture page screenshot on failure
-#    ${options} =     Create List    --ignore-certificate-errors
-#    ${arguments} =     Create Dictionary    args=${options}
-#    ${capabilities} =     Create Dictionary    chromeOptions=${arguments}
     Run keyword if    '${VIRTUAL_DISPLAY}' == 'true'    Start Virtual Display    1920    1080
-    Run keyword if    '${SERVER_AUTH}' != ''    Open browser   ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}    ${BROWSER}  remote_url=${REMOTE_URL}
-    Run keyword if    '${SERVER_AUTH}' == ''    Open browser   ${PROTOCOL}${SERVER_BASE}    ${BROWSER}    remote_url=${REMOTE_URL}
+    Run keyword if    '${SERVER_AUTH}' != ''    Open browser    ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}    ${BROWSER}    remote_url=${REMOTE_URL}    desired_capabilities=${DESIRED_CAPABILITIES}
+    Run keyword if    '${SERVER_AUTH}' == ''    Open browser    ${PROTOCOL}${SERVER_BASE}    ${BROWSER}    remote_url=${REMOTE_URL}    desired_capabilities=${DESIRED_CAPABILITIES}
     Run keyword if    '${REMOTE_URL}' != 'http://hub:4444/wd/hub'    Set Selenium Timeout    10
     Run keyword if    '${REMOTE_URL}' == 'http://hub:4444/wd/hub'    Set Selenium Timeout    10
 
