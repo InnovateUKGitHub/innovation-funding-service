@@ -730,7 +730,7 @@ Lead applicant can view the project setup dashboard sections
     Given log in as a different user                    &{ktpLeadApplicantCredentials}
     When the user navigates to the page                 ${server}/project-setup/project/${ProjectID}
     And the user should see the element                 jQuery = h1:contains("Set up your project")
-    Then the user should see project setup sections
+    Then the external user should see project setup sections
 
 Monitoring officer can view the project setup dashboard sections
     [Documentation]  IFS-8329  IFS-8770
@@ -1477,6 +1477,15 @@ the user should see project setup sections
     the user should see the element     jQuery = li:contains("Monitoring Officer") span:contains("Complete")
     the user should see the element     jQuery = li:contains("Bank details") span:contains("To be completed")
     the user should see the element     jQuery = li:contains("Finance checks") span:contains("Incomplete")
+    the user should see the element     jQuery = li:contains("Grant offer letter")
+    the user should not see Documents and Spend profile dashboard sections
+
+the external user should see project setup sections
+    the user should see the element     jQuery = li:contains("Project details") span:contains("Complete")
+    the user should see the element     jQuery = li:contains("Project team") span:contains("Complete")
+    the user should see the element     jQuery = li:contains("Monitoring Officer") span:contains("Complete")
+    the user should see the element     jQuery = li:contains("Bank details") span:contains("To be completed")
+    the user should see the element     jQuery = li:contains("Finance checks") span:contains("Awaiting review")
     the user should see the element     jQuery = li:contains("Grant offer letter")
     the user should not see Documents and Spend profile dashboard sections
 
