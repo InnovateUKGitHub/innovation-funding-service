@@ -67,11 +67,9 @@ public class LoanApplicationControllerTest extends BaseControllerMockMVCTest<Loa
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(question.getId(), applicationId);
 
         SilLoanApplicationStatus silStatus = new SilLoanApplicationStatus();
-        silStatus.setApplicationId(applicationId);
         silStatus.setCompletionStatus("Complete");
         silStatus.setQuestionSetupType(QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
         silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
-        silStatus.setCompletedBy("1");
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
         when(usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId))
@@ -85,14 +83,13 @@ public class LoanApplicationControllerTest extends BaseControllerMockMVCTest<Loa
 
         mockMvc.perform(patch("/application-update/{applicationId}", applicationId).contentType(APPLICATION_JSON).content(toJson(silStatus)))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @Test
     public void updateApplicationUnauthorized() throws Exception {
         long applicationId = 1L;
         SilLoanApplicationStatus silStatus = new SilLoanApplicationStatus();
-        silStatus.setApplicationId(applicationId);
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(null);
 
@@ -111,11 +108,9 @@ public class LoanApplicationControllerTest extends BaseControllerMockMVCTest<Loa
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(question.getId(), applicationId);
 
         SilLoanApplicationStatus silStatus = new SilLoanApplicationStatus();
-        silStatus.setApplicationId(applicationId);
         silStatus.setCompletionStatus("Complete");
         silStatus.setQuestionSetupType(QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
         silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
-        silStatus.setCompletedBy("1");
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
         when(usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId))
