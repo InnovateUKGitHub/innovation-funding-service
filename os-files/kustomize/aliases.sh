@@ -40,6 +40,11 @@ k8s_delete() {
   kubectl delete $pod
 }
 
+k8s_describe() {
+  pod=$(kubectl get pod -l app="$1" -o name)
+  kubectl describe $pod
+}
+
 k8s_sync_ldap() {
   if [[ -z "${TEST_USER_PASSWORD}" ]]; then
     echo 'IFS_TEST_USER_PASSWORD env var is not set so using default of Passw0rd1357'
