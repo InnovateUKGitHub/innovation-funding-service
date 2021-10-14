@@ -488,7 +488,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     public void syncCrmLoanApplicationIneligibleStateTest() {
         String expectedLogMessage = "Updating CRM application for appId:3 state:INELIGIBLE, " +
                 "payload:SilLoanApplication(applicationID=3, applicationSubmissionDate=null, applicationName=null, applicationLocation=null, projectDuration=null, " +
-                "projectTotalCost=null, projectOtherFunding=null, markedIneligible=true, eligibilityStatusChangeDate=2021-10-12T09:38:12.850Z[GMT], eligibilityStatusChangeSource=IFS)";
+                "projectTotalCost=null, projectOtherFunding=null, markedIneligible=true, eligibilityStatusChangeDate=2021-10-12T09:38:12.850Z[UTC], eligibilityStatusChangeSource=IFS)";
 
 
         long applicationId = 3L;
@@ -521,7 +521,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     public void syncCrmLoanApplicationIneligibleInformedStateTest() {
         String expectedLogMessage = "Updating CRM application for appId:3 state:INELIGIBLE_INFORMED, " +
                 "payload:SilLoanApplication(applicationID=3, applicationSubmissionDate=null, applicationName=null, applicationLocation=null, " +
-                "projectDuration=null, projectTotalCost=null, projectOtherFunding=null, markedIneligible=true, eligibilityStatusChangeDate=2021-10-12T09:38:12.850Z[GMT], eligibilityStatusChangeSource=IFS)";
+                "projectDuration=null, projectTotalCost=null, projectOtherFunding=null, markedIneligible=true, eligibilityStatusChangeDate=2021-10-12T09:38:12.850Z[UTC], eligibilityStatusChangeSource=IFS)";
 
 
         long applicationId = 3L;
@@ -555,7 +555,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
 
         String expectedLogMessage = "Updating CRM application for appId:3 state:SUBMITTED, " +
                 "payload:SilLoanApplication(applicationID=3, applicationSubmissionDate=null, applicationName=null, applicationLocation=null, projectDuration=null, projectTotalCost=null, projectOtherFunding=null, " +
-                "markedIneligible=false, eligibilityStatusChangeDate=2021-10-12T09:38:12.850Z[GMT], eligibilityStatusChangeSource=IFS)";
+                "markedIneligible=false, eligibilityStatusChangeDate=2021-10-12T09:38:12.850Z[UTC], eligibilityStatusChangeSource=IFS)";
 
 
         long applicationId = 3L;

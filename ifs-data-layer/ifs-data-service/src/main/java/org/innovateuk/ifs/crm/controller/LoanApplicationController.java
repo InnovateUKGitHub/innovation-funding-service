@@ -50,7 +50,7 @@ public class LoanApplicationController {
     private ActivityLogService activityLogService;
 
     @PreAuthorize("permitAll()")
-    @PostMapping(value = "/{applicationId}")
+    @PatchMapping(value = "/{applicationId}")
     public RestResult<Void> updateApplication(@PathVariable("applicationId") final Long applicationId,
                                               @RequestBody SilLoanApplicationStatus silStatus,
                                               BindingResult bindingResult, HttpServletRequest request) {
@@ -58,7 +58,7 @@ public class LoanApplicationController {
     }
 
     @PreAuthorize("permitAll()")
-    @PostMapping(value = "/v1/{applicationId}")
+    @PatchMapping(value = "/v1/{applicationId}")
     public RestResult<Void> updateApplicationV1(@PathVariable("applicationId") final Long applicationId,
                                                 @Valid @RequestBody SilLoanApplicationStatus silStatus,
                                                 BindingResult bindingResult, HttpServletRequest request) {

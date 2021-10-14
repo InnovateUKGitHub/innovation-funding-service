@@ -7,7 +7,7 @@ import java.time.ZonedDateTime;
 public class TimeMachine {
 
     private static Clock clock = Clock.systemDefaultZone();
-    private static ZoneId zoneId = ZoneId.of("GMT");
+    private static ZoneId zoneId = ZoneId.of("UTC");
 
     public static ZonedDateTime now() {
         return ZonedDateTime.now(getClock());
