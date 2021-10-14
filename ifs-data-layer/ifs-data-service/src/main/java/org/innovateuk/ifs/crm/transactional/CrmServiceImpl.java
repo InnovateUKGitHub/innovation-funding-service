@@ -31,6 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
@@ -68,6 +70,9 @@ public class CrmServiceImpl implements CrmService {
 
     @Value("${sil.rest.crmApplications.eligibilityStatusChangeSource}")
     private String eligibilityStatusChangeSource;
+
+    @Value("${ifs.loan.partb.enabled}")
+    private boolean isLoanPartBEnabled;
 
     @Override
     public ServiceResult<Void> syncCrmContact(long userId) {
@@ -131,13 +136,24 @@ public class CrmServiceImpl implements CrmService {
 
         CompetitionResource competition = competitionService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        if (!competition.isLoan()) {
+        if (!competition.isLoan() || !isEligibleLoanState(application)) {
             return serviceFailure(GENERAL_INCORRECT_TYPE);
         } else {
             SilLoanApplication loanApplication = setLoanApplication(application);
             LOG.info(format("Updating CRM application for appId:%s state:%s, payload:%s", loanApplication.getApplicationID(), application.getApplicationState(), loanApplication));
-            return silCrmEndpoint.updateLoanApplicationState(loanApplication);
+            if (isLoanPartBEnabled) {
+                return silCrmEndpoint.updateLoanApplicationState(loanApplication);
+            }else{
+              return  serviceSuccess();
+            }
         }
+    }
+
+    private boolean isEligibleLoanState(ApplicationResource application) {
+        ApplicationState applicationState = application.getApplicationState();
+        return ApplicationState.SUBMITTED.equals(applicationState) ||
+                ApplicationState.INELIGIBLE.equals(applicationState) ||
+                ApplicationState.INELIGIBLE_INFORMED.equals(applicationState);
     }
 
     private void syncMonitoringOfficer(UserResource user) {

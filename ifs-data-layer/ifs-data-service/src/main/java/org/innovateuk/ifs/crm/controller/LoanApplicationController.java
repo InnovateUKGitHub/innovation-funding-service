@@ -31,7 +31,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_INVALID
 
 @RestController
 @RequestMapping("/application-update")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = LoanApplicationController.class)
+@SecuredBySpring(value = "Controller", description = "LoanApplicationController", securedType = LoanApplicationController.class)
 public class LoanApplicationController {
 
     private static final Log LOG = LogFactory.getLog(LoanApplicationController.class);
@@ -52,9 +52,9 @@ public class LoanApplicationController {
     @PreAuthorize("permitAll()")
     @PostMapping(value = "/{applicationId}")
     public RestResult<Void> updateApplication(@PathVariable("applicationId") final Long applicationId,
-                                              @RequestBody SilLoanApplicationStatus silApplication,
+                                              @RequestBody SilLoanApplicationStatus silStatus,
                                               BindingResult bindingResult, HttpServletRequest request) {
-        return updateApplicationV1(applicationId, silApplication, bindingResult, request);
+        return updateApplicationV1(applicationId, silStatus, bindingResult, request);
     }
 
     @PreAuthorize("permitAll()")
@@ -88,7 +88,7 @@ public class LoanApplicationController {
                 failure -> RestResult.restFailure(failure.getErrors(), HttpStatus.BAD_REQUEST),
                 competition -> {
                     if (!competition.isLoan()) {
-                        LOG.debug(String.format("application id %d not an loan application", silStatus.getApplicationId()));
+                        LOG.debug(String.format("application id %d is not an application for a loan competition", silStatus.getApplicationId()));
                         return RestResult.restFailure(new Error(CommonFailureKeys.GENERAL_FORBIDDEN));
                     }
 
