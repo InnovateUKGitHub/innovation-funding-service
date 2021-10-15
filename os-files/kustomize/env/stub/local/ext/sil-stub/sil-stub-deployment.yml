@@ -30,4 +30,4 @@ spec:
               cpu: 750m
             requests:
               cpu: 100m
-              memory: 750m
+              memory: 750M
