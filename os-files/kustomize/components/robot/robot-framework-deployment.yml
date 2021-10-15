@@ -19,19 +19,19 @@ spec:
           name: robot-framework
           imagePullPolicy: IfNotPresent
           env:
+            - name: BAMBOO_CREDS
+              value: BAMBOO_CREDS_VAR
+            - name: BAMBOO_URL
+              value: BAMBOO_URL_VAR
+            - name: BAMBOO_PLAN_PROJ
+              value: BAMBOO_PLAN_PROJ_VAR
+            - name: BAMBOO_BUILD_NO
+              value: BAMBOO_BUILD_NO_VAR
             - name: BASE_URL
               valueFrom:
                 configMapKeyRef:
                   key: SP_DOMAIN
                   name: shibboleth-config
-            - name: BAMBOO_CREDS
-              value: "BAMBOO_CREDS_VAR"
-            - name: BAMBOO_URL
-              value: "BAMBOO_URL_VAR"
-            - name: BAMBOO_PLAN_PROJ
-              value: "BAMBOO_PLAN_PROJ_VAR"
-            - name: BAMBOO_BUILD_NO
-              value: "BAMBOO_BUILD_NO_VAR"
           resources:
             limits:
               cpu: 2000m

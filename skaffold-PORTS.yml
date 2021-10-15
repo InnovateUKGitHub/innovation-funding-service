@@ -1,0 +1,47 @@
+apiVersion: skaffold/v2beta11
+kind: Config
+metadata:
+  name: innovation-funding-service
+build:
+  local:
+    useDockerCLI: true
+    useBuildkit: false
+    tryImportMissing: true
+    push: false
+deploy:
+  statusCheckDeadlineSeconds: 600
+  kustomize:
+    paths:
+      - os-files/kustomize/env/stub/local/ports
+
+portForward:
+  - resourceType: Service
+    resourceName: idp
+    namespace: default
+    port: 443
+    localPort: 9443
+  - resourceType: Service
+    resourceName: shib
+    namespace: default
+    port: 443
+    localPort: 8443
+  - resourceType: Service
+    resourceName: ifs-database
+    namespace: default
+    port: 3306
+    localPort: 3306
+  - resourceType: Service
+    resourceName: mail
+    namespace: default
+    port: 443
+    localPort: 4443
+  - resourceType: Service
+    resourceName: mail
+    namespace: default
+    port: 8143
+    localPort: 8143
+  - resourceType: Service
+    resourceName: mail
+    namespace: default
+    port: 8025
+    localPort: 8025
