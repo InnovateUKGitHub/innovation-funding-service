@@ -100,285 +100,284 @@ Before Monitoring Officer is assigned
     When the user navigates to the page                 ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
     And the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(4)
     
-#Status updates correctly for internal user's table
-#    [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
-#    [Setup]    log in as a different user       &{Comp_admin1_credentials}
-#    When the user navigates to the page         ${server}/project-setup-management/competition/${PS_Competition_Id}/status
-#    Then the user should see the element        css = #table-project-status tr:nth-of-type(4) td:nth-of-type(1)                               # Project details
-#    And the user should see the element         css = #table-project-status tr:nth-of-type(4) td:nth-of-type(2)                               # Project team
-#    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(3)                       # Documents
-#    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(4)                       # Monitoring Officer
-#    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(5)                       # Bank details
-#    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td.govuk-table__cell.status.action    # Finance checks
-#    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(7)                       # Spend Profile
-#    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(8)                       # GOL
-#
-#Search for an MO
-#    [Documentation]  IFS-5428  IFS-5418  IFS-5686
-#    [Setup]  log in as a different user             &{internal_finance_credentials}
-#    Given the user navigates to the page            ${server}/project-setup-management/competition/${PS_Competition_Id}/status
-#    When the user clicks the button/link            css = #table-project-status tr:nth-child(4) > td:nth-child(5) a
-#    Then search for MO                              Orvill  Orville Gibbs
-#    And the user should see the element             jQuery = span:contains("Assign projects to Monitoring Officer")
-#    And the internal user assign project to MO      ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Application_Title}
-#
-#MO details can be added
-#    [Documentation]    INFUND-2630, INFUND-6706, INFUND-2632
-#    [Tags]  HappyPath
-#    Given Log in as a different user                     &{lead_applicant_credentials_bd}
-#    And the user navigates to the page                   ${server}/project-setup/project/${Grade_Crossing_Project_Id}
-#    And the user should see the element                  css = ul li.complete:nth-child(4)
-#    And the user should see the text in the element      css = ul li.complete:nth-child(4) p    Your Monitoring Officer for this project is Orville Gibbs.
-#    And the user clicks the button/link                  link = View the status of partners
-#    And the user should see the element                  css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
-#
-#MO details can be edited and viewed in the Set up your project page
-#    [Documentation]    INFUND-2630, INFUND-2621, INFUND-2634
-#    [Tags]  HappyPath
-#    [Setup]    Log in as a different user              &{Comp_admin1_credentials}
-#    Given the user navigates to the page               ${server}/project-setup-management/competition/${PS_Competition_Id}/status
-#    And the user clicks the button/link                css = #table-project-status tr:nth-child(4) > td:nth-child(5) a
-#    When the user clicks the button/link               link = Change monitoring officer
-#    And the user edits the MO details
-#    When Log in as a different user                    &{lead_applicant_credentials_bd}
-#    Then the user should see assigned MO details
-#
-#MO details accessible/seen by all partners
-#    [Documentation]    INFUND-2634, INFUND-2621
-#    [Tags]  HappyPath
-#    Given Log in as a different user                   &{collaborator1_credentials_bd}
-#    When the user should see assigned MO details
-#    Then Log in as a different user                    &{collaborator2_credentials_bd}
-#    And the user should see assigned MO details
-#
-#Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
-#    [Documentation]    INFUND-4428
-#    [Setup]    Log in as a different user      &{collaborator1_credentials_bd}
-#    When the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_Id}
-#    Then the user should see the element       link = Monitoring Officer
-#    And the user should not see the element    link = Spend profile
-#    And the user should not see the element    link = Grant offer letter
-#
-#Existing Monitoring Officer can sign in and see projects that they are assigned to
-#    [Documentation]    IFS-3977  IFS-3978  IFS-9576
-#    [Tags]  HappyPath
-#    Given log in as a different user                            &{monitoring_officer_one_credentials}
-#    And the user clicks the project setup tile if displayed
-#    When the user selects the checkbox                          previousProject
-#    And the user clicks the button/link                         id = update-documents-results-button
-#    Then the user should see the element                        jQuery = .task:contains("${PS_LP_Application_Title}") + .status:contains("Live project")
-#
-#Monitoring officer see the project setup veiw for assigned project
-#    [Documentation]  IFS-4209  IFS-5859
-#    Given the user clicks the button/link    link = ${PS_LP_Application_Title}
-#    When the user should see the project set view
-#    Then the MO user is able to access all of the links
-#
-#MO sees the application feedback
-#    [Documentation]  IFS-5298  IFS-8066
-#    Given the user clicks the button/link       link = view application feedback
-#    Then the user should see the element        jQuery = h1:contains("Application overview")
-#
-#Monitoring Officer cannot see projects if they are not assigned to them
-#    [Documentation]    IFS-3978
-#    Given log in as a different user            &{monitoring_officer_two_credentials}
-#    Then the user should not see the element    .projects-in-setup
-#
-## Please note that the below test cases refer to the new Monitoring Officer role functionality so the test cases above may become deprecated
-## When adding new test cases here please make sure that anything unneccessary is removed from above.
-#
-#Add MO client validations
-#    [Documentation]  IFS-5428
-#    [Setup]  log in as a different user        &{Comp_admin1_credentials}
-#    Given the user navigates to the page       ${server}/project-setup-management/monitoring-officer/view-all
-#    When The user clicks the button/link       link = Add a monitoring officer
-#    And the user enters text to a text field   id = emailAddress  ${EMPTY}
-#    Then the user should see a field error     Please enter an email address.
-#
-#Add MO server validations
-#    [Documentation]  IFS-5428
-#    Given the user enters text to a text field          id = emailAddress  ${invalid_email_plain}
-#    When the user clicks the button/link                jQuery = button[type="submit"]
-#    Then the user should see a field and summary error  ${enter_a_valid_email}
-#
-#Add MO - existing MO
-#    [Documentation]  IFS-5428
-#    Given the user enters text to a text field  id = emailAddress  ${monitoring_officer_one_credentials["email"]}
-#    And the user cannot see a validation error in the page
-#    When the user clicks the button/link        jQuery = button[type="submit"]
-#    Then the user should see the element        jQuery = span:contains("Assign projects to Monitoring Officer")
-#
-#Add New MO details - client and server side validations
-#    [Documentation]  IFS-4208
-#    [Setup]  the user adds MO email address
-#    Given the user checks for validations
-#    Then the user should see client side validations
-#    And the user should see server side validations   Add monitoring officer
-#
-#Comp admin adds new MO
-#    [Documentation]  IFS-4208
-#    Given the user enters the details
-#    Then the user clicks the button/link         jQUery = button:contains("Add monitoring officer")
-#
-#Comp admin assign project to new MO
-#    [Documentation]  IFS-5031  IFS-5088  IFS-4208
-#    Given search for MO    Tom  Tom Poly
-#    When the internal user assign project to MO       ${Assign_Project2_ID}  ${Assign_Project2}
-#    Then the user should see the element              jQuery = td:contains("${Assign_Project2_ID}") ~ td:contains("Remove")
-#
-#Link to Application
-#    [Documentation]  IFS-5031
-#    Given the user clicks the button/link   link = ${Assign_Project2_ID}
-#    Then the user should see the element    jQuery = h1:contains("Application overview")
-#    And the user should see the element     jQuery = dd:contains("${Assign_Project2}")
-#    [Teardown]  logout as user
-#
-#MO create account: validations
-#    [Documentation]  IFS-5031  IFS-5032
-#    Given the user reads his email and clicks the link   tom@poly.io   ${INFORM_COMPETITION_NAME}   Welcome to the monitoring team  1
-#    When the user checks for details and password validations
-#    Then the user should see client side validations triggered correctly
-#    And the user should see server side validations triggered correctly
-#
-#Create account flow: MO
-#    [Documentation]  IFS-5031
-#    Given MO enter details and create account
-#    When the user clicks the button/link      link = Sign into your account
-#    Then Logging in and Error Checking        tom@poly.io   ${short_password}
-#    And the user should see the element       jQuery = h1:contains("Project setup")
-#
-#New MO see the project setup view for assigned project
-#    [Documentation]  IFS-5031
-#    Given the user clicks the button/link  link = ${Assign_Project2}
-#    Then the user should see the project set view
-#
-#Mo is able to view application feedback on a competition which as been through assessment and interview panels
-#    [Documentation]  IFS-7230  IFS-8066
-#    [Setup]  release feedback on inform comp
-#    Given the user clicks the button/link   link = view application feedback
-#    Then the user should see the element    jQuery = h1:contains("Application overview")
-#
-#MO is able to download the appendix file
-#    [Documentation]  IFS-7230  IFS-9774
-#    Given log in as a different user                            &{monitoring_officer_one_credentials}
-#    And the user clicks the project setup tile if displayed
-#    And the user selects the checkbox                           previousProject
-#    And the user clicks the button/link                         id = update-documents-results-button
-#    And the user clicks the button/link                         link = ${PS_LP_Application_Title}
-#    When the user clicks the button/link                        link = view application feedback
-#    And the user clicks the button/link                         jQuery = button:contains("Technical approach")
-#    And the user clicks the button/link                         link = super-effy---super-efficient-forecasting-of-freight-yields-technical-approach.pdf (opens in a new window)
-#    And Select Window                                           NEW
-#    Then the user should not see internal server and forbidden errors
-#    And the user closes the last opened tab
-#
-#Assign MO role to existing IFS user
-#    [Documentation]  IFS-5104
-#    [Setup]  log in as a different user         &{Comp_admin1_credentials}
-#    Given the user navigates to the page        ${server}/project-setup-management/monitoring-officer/search-by-email
-#    And the user enters text to a text field    id = emailAddress   ${assessor2_credentials["email"]}
-#    When the user clicks the button/link        jQuery = button:contains("Continue")
-#    Then the user should see exisitng IFS user details and add phone number
-#    And the user should see the element         jQuery = h1:contains("Felix Wilson") span:contains("Assign projects to Monitoring Officer")
-#
-#Comp admin assign project existing IFS user MO
-#    [Documentation]  IFS-5104  IFS-5070  IFS-9576
-#    Given the internal user assign project to MO   ${Elbow_Grease_Application_No}  ${Elbow_Grease_Title}
-#    And logout as user
-#    Then the user logs in and checks for assigned projects
-#
-#Internal user assigns a MO to a new project and removes a partner organisation
-#    [Documentation]    IFS-8753
-#    When Log in as a different user                      &{internal_finance_credentials}
-#    Then internal user assigns MO to application         ${PSCapplicationID}  ${PSCapplicationTitle}  Orvill  Orville Gibbs
-#    And Internal user removes a partner organisation
-#
-#MO can now check the application feedback
-#    [Documentation]    IFS-8753
-#    Given Log in as a different user                           &{monitoring_officer_one_credentials}
-#    And the user clicks the project setup tile if displayed
-#    When The user clicks the button/link                       link = ${PSCapplicationTitle}
-#    and the user clicks the button/link                        link = view application feedback
-#    Then The user should see the element                       jQuery = h1:contains("Application overview")
-#
-#MO can now view payment milestones in SBRI application
-#    [Documentation]   IFS-8958
-#    Given Requesting IDs of this application
-#    When the SBRI MO assignee has been changed
-#    And Log in as a different user                                          &{monitoring_officer_one_credentials}
-#    And the user navigates to the page                                      ${server}/project-setup/project/${sbri_projectID}
-#    And the user clicks the button/link                                     link = view application feedback
-#    Then the payment milestone table is visible in application overview
-#
-#Change MO for the project
-#    [Documentation]   IFS-9578
-#    Given Log in as a different user               &{Comp_admin1_credentials}
-#    When the user navigates to the page            ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/monitoring-officer
-#    And the user clicks the button/link            jQuery = a:contains("Change monitoring officer")
-#    And search for MO                              Nilesh  Nilesh Patti
-#    And the user clicks the button/link            jQuery = a:contains("Remove")
-#    And the user clicks the button/link            jQuery = a:contains("Back to assign monitoring officers")
-#    Then search for MO                             Orvill  Orville Gibbs
-#    And the internal user assign project to MO     ${Grade_Crossing_Applicaiton_No}   ${Grade_Crossing_Application_Title}
-#
-#MO can see the link to the partners for collaborating applications only
-#    [Documentation]   IFS-10047
-#    Given Log in as a different user            &{monitoring_officer_one_credentials}
-#    And the user clicks the project setup tile if displayed
-#    And the user clicks the button/link         jQuery = a:contains('${Grade_Crossing_Application_Title}')
-#    When the user clicks the button/link        jQuery = a:contains('View the status of partners')
-#    Then the user should see the element        jQuery = h1:contains('Project team status')
-#    And the user clicks the button/link         id = dashboard-navigation-link
-#    And the user clicks the project setup tile if displayed
-#    And the user clicks the button/link         jQuery = a:contains('${sbri_applicaton_name}')
-#    And the user should not see the element     jQuery = a:contains('View the status of partners')
-#
-#MO can view payment milestones
-#    [Documentation]   IFS-9925
-#    Given log in as a different user                               &{monitoring_officer_one_credentials}
-#    When the user clicks the project setup tile if displayed
-#    And monitoring officer clicks on payment milestones link
-#    Then monitoring officer views detailed payment milestones
-#
-#MO can view project finance changes
-#    [Documentation]   IFS-9673
-#    Given log in as a different user                               &{monitoring_officer_one_credentials}
-#    And the user clicks the project setup tile if displayed
-#    When Monitoring officer clicks on changes to finances link
-#    Then Monitoring officer views updated values in changes to finances
-#
-#MO can view summary of the project finances
-#    [Documentation]   IFS-9673
-#    Given The user navigates to the page      ${server}/project-setup/project/${sbri_project_id}/finance-check/read-only
-#    And the user clicks the button/link       link = see an overview
-#    Then The user should see the element      jQuery = h1:contains("Finance overview")
-#    And The user should see the element       jQuery = h3:contains("Overview") ~ h3:contains("Project cost breakdown")
-#
-#MO can see status of the finance as a awaiting review for individual partners
-#    [Documentation]   IFS-10022
-#    Given log in as a different user                                        &{internal_finance_credentials}
-#    When Assign monitoring officer to project                               ${financeApplicationID}  ${financeApplicationTitle}
-#    And log in as a different user                                          &{monitoring_officer_one_credentials}
-#    And the user navigates to the page                                      ${server}/project-setup/project/${financeProjectID}/finance-check/read-only
-#    Then MO can view awaiting review as a finance status for all partners
-#
-#MO can see status of the finance as a completed for individual partners
-#    [Documentation]   IFS-10022
-#    Given log in as a different user                                        &{internal_finance_credentials}
-#    When The user navigates to the page                                     ${server}/project-setup-management/competition/${financeCompetitionId}/status/all
-#    And The user clicks the button/link                                     link = Review
-#    And project finance approves Viability for                              ${organisationID}  ${financeProjectID}
-#    And project finance approves Viability for                              ${organisationSmithZoneID}  ${financeProjectID}
-#    And project finance approves Eligibility                                ${organisationID}  ${organisationRedPlanetID}  ${organisationSmithZoneID}  ${financeProjectID}
-#    And log in as a different user                                          &{monitoring_officer_one_credentials}
-#    And the user navigates to the page                                      ${server}/project-setup/project/46/finance-check/read-only
-#    Then MO can view completed as a finance status for individual partners
+Status updates correctly for internal user's table
+    [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
+    [Setup]    log in as a different user       &{Comp_admin1_credentials}
+    When the user navigates to the page         ${server}/project-setup-management/competition/${PS_Competition_Id}/status
+    Then the user should see the element        css = #table-project-status tr:nth-of-type(4) td:nth-of-type(1)                               # Project details
+    And the user should see the element         css = #table-project-status tr:nth-of-type(4) td:nth-of-type(2)                               # Project team
+    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(3)                       # Documents
+    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(4)                       # Monitoring Officer
+    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(5)                       # Bank details
+    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td.govuk-table__cell.status.action    # Finance checks
+    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(7)                       # Spend Profile
+    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(8)                       # GOL
+
+Search for an MO
+    [Documentation]  IFS-5428  IFS-5418  IFS-5686
+    [Setup]  log in as a different user             &{internal_finance_credentials}
+    Given the user navigates to the page            ${server}/project-setup-management/competition/${PS_Competition_Id}/status
+    When the user clicks the button/link            css = #table-project-status tr:nth-child(4) > td:nth-child(5) a
+    Then search for MO                              Orvill  Orville Gibbs
+    And the user should see the element             jQuery = span:contains("Assign projects to Monitoring Officer")
+    And the internal user assign project to MO      ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Application_Title}
+
+MO details can be added
+    [Documentation]    INFUND-2630, INFUND-6706, INFUND-2632
+    [Tags]  HappyPath
+    Given Log in as a different user                     &{lead_applicant_credentials_bd}
+    And the user navigates to the page                   ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+    And the user should see the element                  css = ul li.complete:nth-child(4)
+    And the user should see the text in the element      css = ul li.complete:nth-child(4) p    Your Monitoring Officer for this project is Orville Gibbs.
+    And the user clicks the button/link                  link = View the status of partners
+    And the user should see the element                  css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
+
+MO details can be edited and viewed in the Set up your project page
+    [Documentation]    INFUND-2630, INFUND-2621, INFUND-2634
+    [Tags]  HappyPath
+    [Setup]    Log in as a different user              &{Comp_admin1_credentials}
+    Given the user navigates to the page               ${server}/project-setup-management/competition/${PS_Competition_Id}/status
+    And the user clicks the button/link                css = #table-project-status tr:nth-child(4) > td:nth-child(5) a
+    When the user clicks the button/link               link = Change monitoring officer
+    And the user edits the MO details
+    When Log in as a different user                    &{lead_applicant_credentials_bd}
+    Then the user should see assigned MO details
+
+MO details accessible/seen by all partners
+    [Documentation]    INFUND-2634, INFUND-2621
+    [Tags]  HappyPath
+    Given Log in as a different user                   &{collaborator1_credentials_bd}
+    When the user should see assigned MO details
+    Then Log in as a different user                    &{collaborator2_credentials_bd}
+    And the user should see assigned MO details
+
+Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
+    [Documentation]    INFUND-4428
+    [Setup]    Log in as a different user      &{collaborator1_credentials_bd}
+    When the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+    Then the user should see the element       link = Monitoring Officer
+    And the user should not see the element    link = Spend profile
+    And the user should not see the element    link = Grant offer letter
+
+Existing Monitoring Officer can sign in and see projects that they are assigned to
+    [Documentation]    IFS-3977  IFS-3978  IFS-9576
+    [Tags]  HappyPath
+    Given log in as a different user                            &{monitoring_officer_one_credentials}
+    And the user clicks the project setup tile if displayed
+    When the user selects the checkbox                          previousProject
+    And the user clicks the button/link                         id = update-documents-results-button
+    Then the user should see the element                        jQuery = .task:contains("${PS_LP_Application_Title}") + .status:contains("Live project")
+
+Monitoring officer see the project setup veiw for assigned project
+    [Documentation]  IFS-4209  IFS-5859
+    Given the user clicks the button/link    link = ${PS_LP_Application_Title}
+    When the user should see the project set view
+    Then the MO user is able to access all of the links
+
+MO sees the application feedback
+    [Documentation]  IFS-5298  IFS-8066
+    Given the user clicks the button/link       link = view application feedback
+    Then the user should see the element        jQuery = h1:contains("Application overview")
+
+Monitoring Officer cannot see projects if they are not assigned to them
+    [Documentation]    IFS-3978
+    Given log in as a different user            &{monitoring_officer_two_credentials}
+    Then the user should not see the element    .projects-in-setup
+
+# Please note that the below test cases refer to the new Monitoring Officer role functionality so the test cases above may become deprecated
+# When adding new test cases here please make sure that anything unneccessary is removed from above.
+
+Add MO client validations
+    [Documentation]  IFS-5428
+    [Setup]  log in as a different user        &{Comp_admin1_credentials}
+    Given the user navigates to the page       ${server}/project-setup-management/monitoring-officer/view-all
+    When The user clicks the button/link       link = Add a monitoring officer
+    And the user enters text to a text field   id = emailAddress  ${EMPTY}
+    Then the user should see a field error     Please enter an email address.
+
+Add MO server validations
+    [Documentation]  IFS-5428
+    Given the user enters text to a text field          id = emailAddress  ${invalid_email_plain}
+    When the user clicks the button/link                jQuery = button[type="submit"]
+    Then the user should see a field and summary error  ${enter_a_valid_email}
+
+Add MO - existing MO
+    [Documentation]  IFS-5428
+    Given the user enters text to a text field  id = emailAddress  ${monitoring_officer_one_credentials["email"]}
+    And the user cannot see a validation error in the page
+    When the user clicks the button/link        jQuery = button[type="submit"]
+    Then the user should see the element        jQuery = span:contains("Assign projects to Monitoring Officer")
+
+Add New MO details - client and server side validations
+    [Documentation]  IFS-4208
+    [Setup]  the user adds MO email address
+    Given the user checks for validations
+    Then the user should see client side validations
+    And the user should see server side validations   Add monitoring officer
+
+Comp admin adds new MO
+    [Documentation]  IFS-4208
+    Given the user enters the details
+    Then the user clicks the button/link         jQUery = button:contains("Add monitoring officer")
+
+Comp admin assign project to new MO
+    [Documentation]  IFS-5031  IFS-5088  IFS-4208
+    Given search for MO    Tom  Tom Poly
+    When the internal user assign project to MO       ${Assign_Project2_ID}  ${Assign_Project2}
+    Then the user should see the element              jQuery = td:contains("${Assign_Project2_ID}") ~ td:contains("Remove")
+
+Link to Application
+    [Documentation]  IFS-5031
+    Given the user clicks the button/link   link = ${Assign_Project2_ID}
+    Then the user should see the element    jQuery = h1:contains("Application overview")
+    And the user should see the element     jQuery = dd:contains("${Assign_Project2}")
+    [Teardown]  logout as user
+
+MO create account: validations
+    [Documentation]  IFS-5031  IFS-5032
+    Given the user reads his email and clicks the link   tom@poly.io   ${INFORM_COMPETITION_NAME}   Welcome to the monitoring team  1
+    When the user checks for details and password validations
+    Then the user should see client side validations triggered correctly
+    And the user should see server side validations triggered correctly
+
+Create account flow: MO
+    [Documentation]  IFS-5031
+    Given MO enter details and create account
+    When the user clicks the button/link      link = Sign into your account
+    Then Logging in and Error Checking        tom@poly.io   ${short_password}
+    And the user should see the element       jQuery = h1:contains("Project setup")
+
+New MO see the project setup view for assigned project
+    [Documentation]  IFS-5031
+    Given the user clicks the button/link  link = ${Assign_Project2}
+    Then the user should see the project set view
+
+Mo is able to view application feedback on a competition which as been through assessment and interview panels
+    [Documentation]  IFS-7230  IFS-8066
+    [Setup]  release feedback on inform comp
+    Given the user clicks the button/link   link = view application feedback
+    Then the user should see the element    jQuery = h1:contains("Application overview")
+
+MO is able to download the appendix file
+    [Documentation]  IFS-7230  IFS-9774
+    Given log in as a different user                            &{monitoring_officer_one_credentials}
+    And the user clicks the project setup tile if displayed
+    And the user selects the checkbox                           previousProject
+    And the user clicks the button/link                         id = update-documents-results-button
+    And the user clicks the button/link                         link = ${PS_LP_Application_Title}
+    When the user clicks the button/link                        link = view application feedback
+    And the user clicks the button/link                         jQuery = button:contains("Technical approach")
+    And the user clicks the button/link                         link = super-effy---super-efficient-forecasting-of-freight-yields-technical-approach.pdf (opens in a new window)
+    And Select Window                                           NEW
+    Then the user should not see internal server and forbidden errors
+    And the user closes the last opened tab
+
+Assign MO role to existing IFS user
+    [Documentation]  IFS-5104
+    [Setup]  log in as a different user         &{Comp_admin1_credentials}
+    Given the user navigates to the page        ${server}/project-setup-management/monitoring-officer/search-by-email
+    And the user enters text to a text field    id = emailAddress   ${assessor2_credentials["email"]}
+    When the user clicks the button/link        jQuery = button:contains("Continue")
+    Then the user should see exisitng IFS user details and add phone number
+    And the user should see the element         jQuery = h1:contains("Felix Wilson") span:contains("Assign projects to Monitoring Officer")
+
+Comp admin assign project existing IFS user MO
+    [Documentation]  IFS-5104  IFS-5070  IFS-9576
+    Given the internal user assign project to MO   ${Elbow_Grease_Application_No}  ${Elbow_Grease_Title}
+    And logout as user
+    Then the user logs in and checks for assigned projects
+
+Internal user assigns a MO to a new project and removes a partner organisation
+    [Documentation]    IFS-8753
+    When Log in as a different user                      &{internal_finance_credentials}
+    Then internal user assigns MO to application         ${PSCapplicationID}  ${PSCapplicationTitle}  Orvill  Orville Gibbs
+    And Internal user removes a partner organisation
+
+MO can now check the application feedback
+    [Documentation]    IFS-8753
+    Given Log in as a different user                           &{monitoring_officer_one_credentials}
+    And the user clicks the project setup tile if displayed
+    When The user clicks the button/link                       link = ${PSCapplicationTitle}
+    and the user clicks the button/link                        link = view application feedback
+    Then The user should see the element                       jQuery = h1:contains("Application overview")
+
+MO can now view payment milestones in SBRI application
+    [Documentation]   IFS-8958
+    Given Requesting IDs of this application
+    When the SBRI MO assignee has been changed
+    And Log in as a different user                                          &{monitoring_officer_one_credentials}
+    And the user navigates to the page                                      ${server}/project-setup/project/${sbri_projectID}
+    And the user clicks the button/link                                     link = view application feedback
+    Then the payment milestone table is visible in application overview
+
+Change MO for the project
+    [Documentation]   IFS-9578
+    Given Log in as a different user               &{Comp_admin1_credentials}
+    When the user navigates to the page            ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/monitoring-officer
+    And the user clicks the button/link            jQuery = a:contains("Change monitoring officer")
+    And search for MO                              Nilesh  Nilesh Patti
+    And the user clicks the button/link            jQuery = a:contains("Remove")
+    And the user clicks the button/link            jQuery = a:contains("Back to assign monitoring officers")
+    Then search for MO                             Orvill  Orville Gibbs
+    And the internal user assign project to MO     ${Grade_Crossing_Applicaiton_No}   ${Grade_Crossing_Application_Title}
+
+MO can see the link to the partners for collaborating applications only
+    [Documentation]   IFS-10047
+    Given Log in as a different user            &{monitoring_officer_one_credentials}
+    And the user clicks the project setup tile if displayed
+    And the user clicks the button/link         jQuery = a:contains('${Grade_Crossing_Application_Title}')
+    When the user clicks the button/link        jQuery = a:contains('View the status of partners')
+    Then the user should see the element        jQuery = h1:contains('Project team status')
+    And the user clicks the button/link         id = dashboard-navigation-link
+    And the user clicks the project setup tile if displayed
+    And the user clicks the button/link         jQuery = a:contains('${sbri_applicaton_name}')
+    And the user should not see the element     jQuery = a:contains('View the status of partners')
+
+MO can view payment milestones
+    [Documentation]   IFS-9925
+    Given log in as a different user                               &{monitoring_officer_one_credentials}
+    When the user clicks the project setup tile if displayed
+    And monitoring officer clicks on payment milestones link
+    Then monitoring officer views detailed payment milestones
+
+MO can view project finance changes
+    [Documentation]   IFS-9673
+    Given log in as a different user                               &{monitoring_officer_one_credentials}
+    And the user clicks the project setup tile if displayed
+    When Monitoring officer clicks on changes to finances link
+    Then Monitoring officer views updated values in changes to finances
+
+MO can view summary of the project finances
+    [Documentation]   IFS-9673
+    Given The user navigates to the page      ${server}/project-setup/project/${sbri_project_id}/finance-check/read-only
+    And the user clicks the button/link       link = see an overview
+    Then The user should see the element      jQuery = h1:contains("Finance overview")
+    And The user should see the element       jQuery = h3:contains("Overview") ~ h3:contains("Project cost breakdown")
+
+MO can see status of the finance as a awaiting review for individual partners
+    [Documentation]   IFS-10022
+    Given log in as a different user                                        &{internal_finance_credentials}
+    When Assign monitoring officer to project                               ${financeApplicationID}  ${financeApplicationTitle}
+    And log in as a different user                                          &{monitoring_officer_one_credentials}
+    And the user navigates to the page                                      ${server}/project-setup/project/${financeProjectID}/finance-check/read-only
+    Then MO can view awaiting review as a finance status for all partners
+
+MO can see status of the finance as a completed for individual partners
+    [Documentation]   IFS-10022
+    Given log in as a different user                                        &{internal_finance_credentials}
+    When The user navigates to the page                                     ${server}/project-setup-management/competition/${financeCompetitionId}/status/all
+    And The user clicks the button/link                                     link = Review
+    And project finance approves Viability for                              ${organisationID}  ${financeProjectID}
+    And project finance approves Viability for                              ${organisationSmithZoneID}  ${financeProjectID}
+    And project finance approves Eligibility                                ${organisationID}  ${organisationRedPlanetID}  ${organisationSmithZoneID}  ${financeProjectID}
+    And log in as a different user                                          &{monitoring_officer_one_credentials}
+    And the user navigates to the page                                      ${server}/project-setup/project/46/finance-check/read-only
+    Then MO can view completed as a finance status for individual partners
 
 MO can see finance checks as incomplete when all individual partner organisation has not been done their reviews
     [Documentation]   IFS-10581
     Given log in as a different user                                        &{internal_finance_credentials}
-    When Assign monitoring officer to project                               ${financeApplicationID}  ${financeApplicationTitle}
-    And The user navigates to the page                                      ${server}/project-setup-management/competition/${financeCompetitionId}/status/all
+    When The user navigates to the page                                     ${server}/project-setup-management/competition/${financeCompetitionId}/status/all
     And The user clicks the button/link                                     link = Review
     And project finance approves Viability for                              ${organisationID}  ${financeProjectID}
     And Mo project finance approves Eligibility                             ${organisationID}  ${financeProjectID}
@@ -389,10 +388,8 @@ MO can see finance checks as incomplete when all individual partner organisation
 MO can see finance checks as complete when all individual partner organisation has been done their reviews
     [Documentation]   IFS-10581
     Given log in as a different user                                        &{internal_finance_credentials}
-    When Assign monitoring officer to project                               ${financeApplicationID}  ${financeApplicationTitle}
-    And The user navigates to the page                                     ${server}/project-setup-management/competition/${financeCompetitionId}/status/all
+    When The user navigates to the page                                     ${server}/project-setup-management/competition/${financeCompetitionId}/status/all
     And The user clicks the button/link                                     link = Review
-    And project finance approves Viability for                              ${organisationID}  ${financeProjectID}
     And project finance approves Viability for                              ${organisationSmithZoneID}  ${financeProjectID}
     And project finance approves Eligibility                                ${organisationID}  ${organisationRedPlanetID}  ${organisationSmithZoneID}  ${financeProjectID}
     And log in as a different user                                          &{monitoring_officer_one_credentials}
