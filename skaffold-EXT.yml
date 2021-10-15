@@ -9,7 +9,7 @@ build:
     tryImportMissing: true
     push: false
 deploy:
-  statusCheckDeadlineSeconds: 600
+  statusCheckDeadlineSeconds: 1800
   kustomize:
     paths:
       - os-files/kustomize/env/stub/local/ext
