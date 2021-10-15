@@ -30,3 +30,4 @@ resources:
 
 patchesStrategicMerge:
   - auth/registration-service/registration-deployment.yml
+  - auth/idp/idp-deployment.yml
