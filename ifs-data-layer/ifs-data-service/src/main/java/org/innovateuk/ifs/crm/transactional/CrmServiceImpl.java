@@ -139,12 +139,12 @@ public class CrmServiceImpl implements CrmService {
         if (!competition.isLoan() || !isEligibleLoanState(application)) {
             return serviceFailure(GENERAL_INCORRECT_TYPE);
         } else {
-            SilLoanApplication loanApplication = setLoanApplication(application);
-            LOG.info(format("Updating CRM application for appId:%s state:%s, payload:%s", loanApplication.getApplicationID(), application.getApplicationState(), loanApplication));
             if (isLoanPartBEnabled) {
+                SilLoanApplication loanApplication = setLoanApplication(application);
+                LOG.info(format("Updating CRM application for appId:%s state:%s, payload:%s", loanApplication.getApplicationID(), application.getApplicationState(), loanApplication));
                 return silCrmEndpoint.updateLoanApplicationState(loanApplication);
-            }else{
-              return  serviceSuccess();
+            } else {
+                return serviceSuccess();
             }
         }
     }
