@@ -362,38 +362,42 @@ MO can see status of the finance as a awaiting review for individual partners
     And the user navigates to the page                                      ${server}/project-setup/project/${financeProjectID}/finance-check/read-only
     Then MO can view awaiting review as a finance status for all partners
 
+MO can see finance checks as incomplete when all individual partner organisation has not been done their reviews
+    [Documentation]   IFS-10580
+    Given log in as a different user                                        &{internal_finance_credentials}
+    When The user navigates to the page                                     ${server}/project-setup-management/competition/${financeCompetitionId}/status/all
+    And The user clicks the button/link                                     link = Review
+    And project finance approves Viability for                              ${organisationID}  ${financeProjectID}
+    And project finance approves Eligibility                                ${organisationID}  ${organisationRedPlanetID}  ${organisationSmithZoneID}  ${financeProjectID}
+    And log in as a different user                                          &{monitoring_officer_one_credentials}
+    And the user navigates to the page                                      ${server}/project-setup/project/${financeProjectID}/finance-check/read-only
+    MO can view finance check as a incomplete
+
 MO can see status of the finance as a completed for individual partners
     [Documentation]   IFS-10022
     Given log in as a different user                                        &{internal_finance_credentials}
     When The user navigates to the page                                     ${server}/project-setup-management/competition/${financeCompetitionId}/status/all
     And The user clicks the button/link                                     link = Review
-    And project finance approves Viability for                              ${organisationID}  ${financeProjectID}
+#    And project finance approves Viability for                              ${organisationID}  ${financeProjectID}
     And project finance approves Viability for                              ${organisationSmithZoneID}  ${financeProjectID}
     And project finance approves Eligibility                                ${organisationID}  ${organisationRedPlanetID}  ${organisationSmithZoneID}  ${financeProjectID}
     And log in as a different user                                          &{monitoring_officer_one_credentials}
-    And the user navigates to the page                                      ${server}/project-setup/project/46/finance-check/read-only
+    And the user navigates to the page                                      ${server}/project-setup/project/${financeProjectID}/finance-check/read-only
     Then MO can view completed as a finance status for individual partners
 
-MO can see finance checks as incomplete when all individual partner organisation has not been done their reviews
-    [Documentation]   IFS-10581
-    Given log in as a different user                                        &{internal_finance_credentials}
-    When The user navigates to the page                                     ${server}/project-setup-management/competition/${financeCompetitionId}/status/all
-    And The user clicks the button/link                                     link = Review
-    And project finance approves Viability for                              ${organisationID}  ${financeProjectID}
-    And Mo project finance approves Eligibility                             ${organisationID}  ${financeProjectID}
-    And log in as a different user                                          &{monitoring_officer_one_credentials}
-    And the user navigates to the page                                      ${server}/project-setup/project/46
-    Then MO can view finance check as a incomplete
+#MO can see finance checks as incomplete when all individual partner organisation has not been done their reviews
+#    [Documentation]   IFS-10580
+#    Given log in as a different user                                        &{internal_finance_credentials}
+#    When The user navigates to the page                                     ${server}/project-setup-management/competition/${financeCompetitionId}/status/all
+#    And The user clicks the button/link                                     link = Review
+#    And project finance approves Viability for                              ${organisationID}  ${financeProjectID}
+#    And Mo project finance approves Eligibility                             ${organisationID}  ${financeProjectID}
+#    And log in as a different user                                          &{monitoring_officer_one_credentials}
+#    And the user navigates to the page                                      ${server}/project-setup/project/${financeProjectID}
+#    Then MO can view finance check as a incomplete
 
 MO can see finance checks as complete when all individual partner organisation has been done their reviews
-    [Documentation]   IFS-10581
-    Given log in as a different user                                        &{internal_finance_credentials}
-    When The user navigates to the page                                     ${server}/project-setup-management/competition/${financeCompetitionId}/status/all
-    And The user clicks the button/link                                     link = Review
-    And project finance approves Viability for                              ${organisationSmithZoneID}  ${financeProjectID}
-    And project finance approves Eligibility                                ${organisationID}  ${organisationRedPlanetID}  ${organisationSmithZoneID}  ${financeProjectID}
-    And log in as a different user                                          &{monitoring_officer_one_credentials}
-    And the user navigates to the page                                      ${server}/project-setup/project/46
+    [Documentation]   IFS-10580
     Then MO can view finance check as a complete
 
 
