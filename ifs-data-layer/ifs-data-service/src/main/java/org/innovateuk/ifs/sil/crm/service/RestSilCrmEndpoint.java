@@ -59,9 +59,10 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
     @SneakyThrows
     @Override
     public ServiceResult<Void> updateLoanApplicationState(SilLoanApplication silApplication) {
-        LOG.info("Raw Json Payload: " + objectWriter.writeValueAsString(silApplication));
+        String silApplicationJson = objectWriter.writeValueAsString(silApplication);
+        LOG.info("Raw Json Payload: " + silApplicationJson);
         return handlingErrors(() -> {
-                    final Either<ResponseEntity<SilCrmError>, ResponseEntity<Void>> response = adaptor.restPostWithEntity(silRestServiceUrl + silCrmApplications, silApplication, Void.class, SilCrmError.class, HttpStatus.OK);
+                    final Either<ResponseEntity<SilCrmError>, ResponseEntity<Void>> response = adaptor.restPostWithEntity(silRestServiceUrl + silCrmApplications, silApplicationJson, Void.class, SilCrmError.class, HttpStatus.ACCEPTED);
                     return response.mapLeftOrRight(failure -> {
                                 LOG.error("Error updating SIL application eligibility: " + silApplication +
                                         "Error: " + failure);

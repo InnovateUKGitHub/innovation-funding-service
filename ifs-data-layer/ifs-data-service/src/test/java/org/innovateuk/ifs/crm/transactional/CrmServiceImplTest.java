@@ -99,6 +99,9 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         ZonedDateTime fixedClock = ZonedDateTime.parse("2021-10-12T09:38:12.850Z");
         TimeMachine.useFixedClockAt(fixedClock);
 
+        ReflectionTestUtils.setField(service, "eligibilityStatusChangeSource", "IFS");
+        ReflectionTestUtils.setField(service, "isLoanPartBEnabled", true);
+
     }
 
     @After
@@ -576,7 +579,6 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         when(applicationSummarisationService.getProjectTotalFunding(applicationResource.getId())).thenReturn(serviceSuccess(BigDecimal.TEN));
         when(applicationSummarisationService.getProjectOtherFunding(applicationResource.getId())).thenReturn(serviceSuccess(BigDecimal.ONE));
         when(applicationSummarisationService.getProjectLocation(applicationResource.getId())).thenReturn(serviceSuccess("RG1 5LF"));
-        ReflectionTestUtils.setField(service, "eligibilityStatusChangeSource", "IFS");
 
         ServiceResult<Void> result = service.syncCrmApplicationState(applicationResource);
 
