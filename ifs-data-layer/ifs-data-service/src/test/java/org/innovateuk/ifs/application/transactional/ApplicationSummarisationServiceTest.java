@@ -39,84 +39,83 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicationSummarisationServiceTest {
 
-    private static final Long APPLICATION_ID = 123L;
+	private static final Long APPLICATION_ID = 123L;
 
-    @InjectMocks
-    private ApplicationSummarisationServiceImpl service;
+	@InjectMocks
+	private ApplicationSummarisationServiceImpl service;
 
-    @Mock
-    private ApplicationFinanceRowService financeRowCostsService;
+	@Mock
+	private ApplicationFinanceRowService financeRowCostsService;
 
-    @Mock
-    private ApplicationFinanceService financeService;
+	@Mock
+	private ApplicationFinanceService financeService;
 
-    private Application application;
+	private Application application;
 
-    @Before
-    public void setUp() {
-        application = new Application();
-        application.setId(APPLICATION_ID);
-        application.getApplicationFinances().add(new ApplicationFinance());
-    }
+	@Before
+	public void setUp() {
+		application = new Application();
+		application.setId(APPLICATION_ID);
+		application.getApplicationFinances().add(new ApplicationFinance());
+	}
 
-    @Test
-    public void testFundingSought() {
+	@Test
+	public void testFundingSought() {
 
-        ApplicationFinanceResource afr1 = mock(ApplicationFinanceResource.class);
-        when(afr1.getTotalFundingSought()).thenReturn(new BigDecimal("4.00"));
-        ApplicationFinanceResource afr2 = mock(ApplicationFinanceResource.class);
-        when(afr2.getTotalFundingSought()).thenReturn(new BigDecimal("2.00"));
+		ApplicationFinanceResource afr1 = mock(ApplicationFinanceResource.class);
+		when(afr1.getTotalFundingSought()).thenReturn(new BigDecimal("4.00"));
+		ApplicationFinanceResource afr2 = mock(ApplicationFinanceResource.class);
+		when(afr2.getTotalFundingSought()).thenReturn(new BigDecimal("2.00"));
 
-        ServiceResult<List<ApplicationFinanceResource>> afrs = serviceSuccess(Arrays.asList(afr1, afr2));
+		ServiceResult<List<ApplicationFinanceResource>> afrs = serviceSuccess(Arrays.asList(afr1, afr2));
 
-        when(financeService.financeTotals(APPLICATION_ID)).thenReturn(afrs);
+		when(financeService.financeTotals(APPLICATION_ID)).thenReturn(afrs);
 
-        ServiceResult<BigDecimal> result = service.getFundingSought(application);
+		ServiceResult<BigDecimal> result = service.getFundingSought(application);
 
-        assertTrue(result.isSuccess());
-        assertEquals(new BigDecimal("6.00"), result.getSuccess());
-    }
+		assertTrue(result.isSuccess());
+		assertEquals(new BigDecimal("6.00"), result.getSuccess());
+	}
 
-    @Test
-    public void testFundingSoughtForApplicationWithNoFinances() {
-        application.getApplicationFinances().clear();
+	@Test
+	public void testFundingSoughtForApplicationWithNoFinances() {
+		application.getApplicationFinances().clear();
 
-        ServiceResult<BigDecimal> result = service.getFundingSought(application);
+		ServiceResult<BigDecimal> result = service.getFundingSought(application);
 
-        assertTrue(result.isSuccess());
-        assertEquals(new BigDecimal("0.00"), result.getSuccess());
-        verifyNoMoreInteractions(financeRowCostsService);
-    }
+		assertTrue(result.isSuccess());
+		assertEquals(new BigDecimal("0.00"), result.getSuccess());
+		verifyNoMoreInteractions(financeRowCostsService);
+	}
 
-    @Test
-    public void testTotalProjectCost() {
+	@Test
+	public void testTotalProjectCost() {
 
-        ApplicationFinanceResource afr1 = mock(ApplicationFinanceResource.class);
-        when(afr1.getTotal()).thenReturn(new BigDecimal("8.00"));
-        ApplicationFinanceResource afr2 = mock(ApplicationFinanceResource.class);
-        when(afr2.getTotal()).thenReturn(new BigDecimal("2.00"));
+		ApplicationFinanceResource afr1 = mock(ApplicationFinanceResource.class);
+		when(afr1.getTotal()).thenReturn(new BigDecimal("8.00"));
+		ApplicationFinanceResource afr2 = mock(ApplicationFinanceResource.class);
+		when(afr2.getTotal()).thenReturn(new BigDecimal("2.00"));
 
-        ServiceResult<List<ApplicationFinanceResource>> afrs = serviceSuccess(Arrays.asList(afr1, afr2));
+		ServiceResult<List<ApplicationFinanceResource>> afrs = serviceSuccess(Arrays.asList(afr1, afr2));
 
-        when(financeService.financeTotals(APPLICATION_ID)).thenReturn(afrs);
+		when(financeService.financeTotals(APPLICATION_ID)).thenReturn(afrs);
 
-        ServiceResult<BigDecimal> result = service.getTotalProjectCost(application);
+		ServiceResult<BigDecimal> result = service.getTotalProjectCost(application);
 
-        assertTrue(result.isSuccess());
-        assertEquals(new BigDecimal("10.00"), result.getSuccess());
-    }
+		assertTrue(result.isSuccess());
+		assertEquals(new BigDecimal("10.00"), result.getSuccess());
+	}
 
-    @Test
-    public void testTotalProjectCostForApplicationWithNoFinances() {
-        application.getApplicationFinances().clear();
+	@Test
+	public void testTotalProjectCostForApplicationWithNoFinances() {
+		application.getApplicationFinances().clear();
 
-        ServiceResult<BigDecimal> result = service.getFundingSought(application);
+		ServiceResult<BigDecimal> result = service.getFundingSought(application);
 
-        assertTrue(result.isSuccess());
-        assertEquals(new BigDecimal("0.00"), result.getSuccess());
-        verifyNoMoreInteractions(financeRowCostsService);
-    }
-
+		assertTrue(result.isSuccess());
+		assertEquals(new BigDecimal("0.00"), result.getSuccess());
+		verifyNoMoreInteractions(financeRowCostsService);
+	}
     @Test
     public void testProjectTotalCost() {
 

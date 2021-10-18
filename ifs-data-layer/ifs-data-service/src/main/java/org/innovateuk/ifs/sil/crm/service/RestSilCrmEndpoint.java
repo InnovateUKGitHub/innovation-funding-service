@@ -1,14 +1,16 @@
 package org.innovateuk.ifs.sil.crm.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import lombok.SneakyThrows;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.sil.crm.resource.SilLoanApplication;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.innovateuk.ifs.sil.crm.resource.SilCrmError;
-
+import org.innovateuk.ifs.sil.crm.resource.SilLoanApplication;
 import org.innovateuk.ifs.util.Either;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,6 +28,7 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
 
     private static final Log LOG = LogFactory.getLog(RestSilCrmEndpoint.class);
 
+    protected static ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
     @Autowired
     @Qualifier("sil_adaptor")
     private AbstractRestTemplateAdaptor adaptor;
@@ -52,12 +55,16 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
         );
     }
 
+
+    @SneakyThrows
     @Override
     public ServiceResult<Void> updateLoanApplicationState(SilLoanApplication silApplication) {
+        LOG.info("Raw Json Payload: " + objectWriter.writeValueAsString(silApplication));
         return handlingErrors(() -> {
                     final Either<ResponseEntity<SilCrmError>, ResponseEntity<Void>> response = adaptor.restPostWithEntity(silRestServiceUrl + silCrmApplications, silApplication, Void.class, SilCrmError.class, HttpStatus.OK);
                     return response.mapLeftOrRight(failure -> {
-                                LOG.error("Error updating SIL application eligibility: " + silApplication);
+                                LOG.error("Error updating SIL application eligibility: " + silApplication +
+                                        "Error: " + failure);
                                 return serviceFailure(new Error(APPLICATION_NOT_UPDATED));
                             },
                             success -> serviceSuccess());

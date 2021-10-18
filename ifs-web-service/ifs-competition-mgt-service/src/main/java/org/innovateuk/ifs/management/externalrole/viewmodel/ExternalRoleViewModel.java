@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.externalrole.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.user.resource.Role;
 
 public class ExternalRoleViewModel {
@@ -30,5 +31,10 @@ public class ExternalRoleViewModel {
 
     public Role getRole() {
         return role;
+    }
+
+    @JsonIgnore
+    public Role getSupporterRole() {
+        return Role.SUPPORTER;
     }
 }

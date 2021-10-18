@@ -53,6 +53,8 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...
 ...               IFS-9673 MO improvements: visibility of project eligible costs
 ...
+...               IFS-10022 MO improvements: visibility of finance status for individual partners
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -72,6 +74,14 @@ ${PSCapplicationTitle}                    PSC application 15
 ${PSCapplicationID}                       ${application_ids["${PSCapplicationTitle}"]}
 ${PSC_Competition_Name}                   Project Setup Comp 15
 ${PSC_Competition_Id}                     ${competition_ids["${PSC_Competition_Name}"]}
+${financeApplicationTitle}                PSC application 18
+${financeApplicationID}                   ${application_ids["${financeapplicationTitle}"]}
+${financeProjectID}                       ${project_ids["${financeApplicationTitle}"]}
+${financeCompetitionName}                 Project Setup Comp 18
+${financeCompetitionId}                   ${competition_ids["${financeCompetitionName}"]}
+${organisationID}                         ${organisation_ids["${organisationWardName}"]}
+${organisationRedPlanetID}                ${organisation_ids["${organisationRedName}"]}
+${organisationSmithZoneID}                ${organisation_ids["${organisationSmithName}"]} 
 
 *** Test Cases ***
 Before Monitoring Officer is assigned
@@ -87,7 +97,7 @@ Before Monitoring Officer is assigned
     And the user should not see the element             jQuery = .success-alert:contains("We have assigned a monitoring officer to your project.")
     When the user navigates to the page                 ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
     And the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(4)
-
+    
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
     [Setup]    log in as a different user       &{Comp_admin1_credentials}
@@ -342,6 +352,25 @@ MO can view summary of the project finances
     Then The user should see the element      jQuery = h1:contains("Finance overview")
     And The user should see the element       jQuery = h3:contains("Overview") ~ h3:contains("Project cost breakdown")
 
+MO can see status of the finance as a awaiting review for individual partners
+    [Documentation]   IFS-10022
+    Given log in as a different user                                        &{internal_finance_credentials}
+    When Assign monitoring officer to project                               ${financeApplicationID}  ${financeApplicationTitle}
+    And log in as a different user                                          &{monitoring_officer_one_credentials}
+    And the user navigates to the page                                      ${server}/project-setup/project/${financeProjectID}/finance-check/read-only
+    Then MO can view awaiting review as a finance status for all partners
+
+MO can see status of the finance as a completed for individual partners
+    [Documentation]   IFS-10022
+    Given log in as a different user                                        &{internal_finance_credentials}
+    When The user navigates to the page                                     ${server}/project-setup-management/competition/${financeCompetitionId}/status/all
+    And The user clicks the button/link                                     link = Review
+    And project finance approves Viability for                              ${organisationID}  ${financeProjectID}
+    And project finance approves Viability for                              ${organisationSmithZoneID}  ${financeProjectID}
+    And project finance approves Eligibility                                ${organisationID}  ${organisationRedPlanetID}  ${organisationSmithZoneID}  ${financeProjectID}
+    And log in as a different user                                          &{monitoring_officer_one_credentials}
+    And the user navigates to the page                                      ${server}/project-setup/project/46/finance-check/read-only
+    Then MO can view completed as a finance status for individual partners     
 
 *** Keywords ***
 The MO user is able to access all of the links
@@ -569,3 +598,24 @@ Monitoring officer views updated values in changes to finances
     the user should see the element     jQuery = th:contains("Other costs") ~ td:contains("11,100")
     the user should see the element     jQuery = th:contains("Overhead costs") ~ td:contains("2,000")
     the user should see the element     jQuery = th:contains("Total project costs inclusive of VAT") ~ td:contains("£243,484")
+
+Assign monitoring officer to project
+    [Arguments]  ${applicationNumber}   ${applicationTitle}
+    the user navigates to the page            ${server}/project-setup-management/monitoring-officer/view-all?ktp=false
+    search for MO                             Orvill  Orville Gibbs
+    the user should see the element           jQuery = span:contains("Assign projects to Monitoring Officer")
+    the internal user assign project to MO    ${applicationNumber}  ${applicationTitle}
+
+MO can view awaiting review as a finance status for all partners
+    the user should see the element    jQuery = td:contains("${organisationWardName}")~td:contains("Awaiting review")
+    the user should see the element    jQuery = td:contains("${organisationSmithName}")~td:contains("Awaiting review")
+    the user should see the element    jQuery = td:contains("${organisationRedName}")~td:contains("Awaiting review")
+
+MO can view completed as a finance status for individual partners
+    the user should see the element    jQuery = td:contains("${organisationWardName}")~td:contains("Complete")
+    the user should see the element    jQuery = td:contains("${organisationRedName}")~td:contains("Complete")
+
+#User aprove eligibility
+#    [Arguments]  ${financeProjectID}  ${organisationID}
+#    the user navigates to the page  ${server}/project-setup-management/project/${financeProjectID}/finance-check/organisation/${organisationID}/eligibility
+#    the user approves project costs
