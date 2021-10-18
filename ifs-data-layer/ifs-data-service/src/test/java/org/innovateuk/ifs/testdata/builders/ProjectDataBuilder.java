@@ -7,6 +7,7 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
@@ -159,7 +160,10 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     public ProjectDataBuilder withMonitoringOfficer(String firstName, String lastName, String email, String phoneNumber) {
         return with(data -> doAs(anyProjectFinanceUser(), () -> {
             LegacyMonitoringOfficerResource mo = new LegacyMonitoringOfficerResource(firstName, lastName, email, phoneNumber, data.getProject().getId());
-            monitoringOfficerService.saveMonitoringOfficer(data.getProject().getId(), mo).getSuccess();
+            legacyMonitoringOfficerService.saveMonitoringOfficer(data.getProject().getId(), mo).getSuccess();
+            User user = userRepository.findByEmail(mo.getEmail()).get();
+            data.getProject().setMonitoringOfficerUser(user.getId());
+            monitoringOfficerService.assignProjectToMonitoringOfficer(user.getId(), data.getProject().getId()).getSuccess();
         }));
     }
 

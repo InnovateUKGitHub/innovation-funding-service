@@ -56,7 +56,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.testdata.data.CompetitionWebTestData.buildCompetitionLines;
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.COMP_ADMIN_EMAIL;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
-import static org.innovateuk.ifs.testdata.services.CsvUtils.readApplicationFinances;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.fail;

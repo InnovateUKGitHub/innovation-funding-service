@@ -477,10 +477,10 @@ Academic finance contact receives an email when the GOL is approved
 
 Internal user should see completed project in previous tab
     [Documentation]  IFS-6054
-    [Setup]  log in as a different user     &{internal_finance_credentials}
-    Given the user navigates to the page    ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/previous
-    And the user expands the section        Projects
-    Then the user should see the element    jQuery = th:contains("${Elbow_Grease_Title}")
+    [Setup]  log in as a different user           &{internal_finance_credentials}
+    Given the user navigates to the page           ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/previous
+    And the user expands the section              Projects
+    Then the user should see the element          jQuery = th:contains("${Elbow_Grease_Title}")
     And the user should see project setup compeletion status
 
 Verify support users permissions in project setup tab
