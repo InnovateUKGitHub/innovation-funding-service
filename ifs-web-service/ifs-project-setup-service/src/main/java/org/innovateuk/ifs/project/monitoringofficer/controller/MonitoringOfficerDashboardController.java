@@ -67,7 +67,7 @@ public class MonitoringOfficerDashboardController {
         this.cookieUtil = cookieUtil;
     }
 
-    @GetMapping(value = {"/", "/**"})
+    @GetMapping
     public String viewDashboard(Model model,
                                 @ModelAttribute(name = FORM_ATTR_NAME, binding = false) MonitoringOfficerDashboardForm form,
                                 UserResource user,
@@ -75,7 +75,7 @@ public class MonitoringOfficerDashboardController {
                                 @RequestParam(value = PAGE_SIZE_KEY, defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
-        form.setProjectInSetup(true);
+//        form.setProjectInSetup(true);
 
         form = getDataFromCookie(form, model, request);
         savemonitoringOfficerDashboardCookie(form, response);
@@ -94,7 +94,7 @@ public class MonitoringOfficerDashboardController {
         return "monitoring-officer/dashboard";
     }
 
-    @PostMapping(value = {"/", "/**"})
+    @PostMapping
     public String filterDashboard(Model model,
                                   @Valid @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerDashboardForm form,
                                   @SuppressWarnings("unused") BindingResult bindingResult,
@@ -104,11 +104,11 @@ public class MonitoringOfficerDashboardController {
                                   @RequestParam(value = PAGE_SIZE_KEY, defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
                                   HttpServletRequest request,
                                   HttpServletResponse response)  {
+        savemonitoringOfficerDashboardCookie(form, response);
         addFilters(form,
                 keywordSearchFromCookie(request),
                 filterProjectsInSetupFromCookie(request),
                 filterPreviousProjectsFromCookie(request));
-        savemonitoringOfficerDashboardCookie(form, response);
 
         final Supplier<String> failureView = () -> viewDashboard(model, form, user,pageNumber, pageSize, request, response);
 
@@ -185,8 +185,8 @@ public class MonitoringOfficerDashboardController {
             return Optional.empty();
         }
     }
-
     public Optional<MonitoringOfficerDashboardForm> getKeywordSearchFromCookie(HttpServletRequest request) {
+
         return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, KEYWORD_SEARCH), MonitoringOfficerDashboardForm.class));
     }
 
@@ -223,6 +223,18 @@ public class MonitoringOfficerDashboardController {
     }
 
     public void savemonitoringOfficerDashboardCookie(MonitoringOfficerDashboardForm monitoringOfficerDashboardCookie, HttpServletResponse response) {
-        compressedCookieService.saveToCookie(response, FORM_ATTR_NAME, JsonUtil.getSerializedObject(monitoringOfficerDashboardCookie));
+//        compressedCookieService.saveToCookie(response, FORM_ATTR_NAME, JsonUtil.getSerializedObject(monitoringOfficerDashboardCookie));
+        saveKeywordSearchCookie(monitoringOfficerDashboardCookie, response);
+        saveFilterProjectInSetupCookie(monitoringOfficerDashboardCookie, response);
+        saveFilterPreviousProjectCookie(monitoringOfficerDashboardCookie, response);
+    }
+    public void saveKeywordSearchCookie(MonitoringOfficerDashboardForm monitoringOfficerDashboardCookie, HttpServletResponse response) {
+        compressedCookieService.saveToCookie(response, KEYWORD_SEARCH, JsonUtil.getSerializedObject(monitoringOfficerDashboardCookie));
+    }
+    public void saveFilterProjectInSetupCookie(MonitoringOfficerDashboardForm monitoringOfficerDashboardCookie, HttpServletResponse response) {
+        compressedCookieService.saveToCookie(response, PROJECT_IN_SETUP, JsonUtil.getSerializedObject(monitoringOfficerDashboardCookie));
+    }
+    public void saveFilterPreviousProjectCookie(MonitoringOfficerDashboardForm monitoringOfficerDashboardCookie, HttpServletResponse response) {
+        compressedCookieService.saveToCookie(response, PREVIOUS_PROJECT, JsonUtil.getSerializedObject(monitoringOfficerDashboardCookie));
     }
 }
