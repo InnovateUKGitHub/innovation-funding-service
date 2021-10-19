@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
+import org.innovateuk.ifs.application.resource.QuestionStatus;
 import org.innovateuk.ifs.application.transactional.QuestionStatusService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -67,7 +68,7 @@ public class LoanApplicationControllerTest extends BaseControllerMockMVCTest<Loa
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(question.getId(), applicationId);
 
         SilLoanApplicationStatus silStatus = new SilLoanApplicationStatus();
-        silStatus.setCompletionStatus("Complete");
+        silStatus.setCompletionStatus(QuestionStatus.COMPLETE);
         silStatus.setQuestionSetupType(QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
         silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
 
@@ -108,7 +109,7 @@ public class LoanApplicationControllerTest extends BaseControllerMockMVCTest<Loa
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(question.getId(), applicationId);
 
         SilLoanApplicationStatus silStatus = new SilLoanApplicationStatus();
-        silStatus.setCompletionStatus("Complete");
+        silStatus.setCompletionStatus(QuestionStatus.COMPLETE);
         silStatus.setQuestionSetupType(QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
         silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
 

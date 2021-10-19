@@ -64,14 +64,14 @@ public class LoanApplicationController {
                                                 BindingResult bindingResult, HttpServletRequest request) {
 
         if(bindingResult.hasErrors()) {
-            LOG.error(String.format("application-update error: incorrect json for application %d", applicationId));
+            LOG.error(String.format("application-update error: incorrect json for application %d: %s", applicationId, silStatus));
             return RestResult.restFailure(new Error(GENERAL_INVALID_ARGUMENT,
                     bindingResult.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.toList())));
         }
 
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         if(user == null) {
-            LOG.error(String.format("application-update error: user not found for application %d", applicationId));
+            LOG.error(String.format("application-update error: user not found for application %d: %s", applicationId, user));
             return RestResult.restFailure(HttpStatus.UNAUTHORIZED);
         } else {
             LOG.debug(String.format("application-update: user id=%d, name=%s", user.getId(), user.getName()));
@@ -115,10 +115,10 @@ public class LoanApplicationController {
 
     private RestResult<Void> markQuestionStatus(UserResource user, SilLoanApplicationStatus silStatus, QuestionApplicationCompositeId ids, Long processRoleId)  {
         LOG.debug(String.format("application-update: application=%d, question=%s, processrole=%d", ids.applicationId, silStatus.getQuestionSetupType() , processRoleId));
-        if(silStatus.isCompletionStatus()) {
+        if(silStatus.isStatusComplete()) {
             return questionStatusService.markAsComplete(ids, processRoleId, silStatus.getCompletionDate()).handleSuccessOrFailure(
                     failure -> {
-                        LOG.error(String.format("application-update error: application %d mark complete failed", ids.applicationId));
+                        LOG.error(String.format("application-update error: application %d mark as complete failed", ids.applicationId));
                         return RestResult.restFailure(failure.getErrors(), HttpStatus.BAD_REQUEST);
                     },
                     success -> {
@@ -127,10 +127,10 @@ public class LoanApplicationController {
                         return RestResult.restSuccess(HttpStatus.NO_CONTENT);
                 }
             );
-        } else {
+        } else if(silStatus.isStatusIncomplete()) {
             return questionStatusService.markAsInComplete(ids, processRoleId).handleSuccessOrFailure(
                     failure -> {
-                        LOG.error(String.format("application-update error: application %d mark incomplete failed", ids.applicationId));
+                        LOG.error(String.format("application-update error: application %d mark as incomplete failed", ids.applicationId));
                         return RestResult.restFailure(failure.getErrors(), HttpStatus.BAD_REQUEST);
                     },
                     success -> {
@@ -139,6 +139,9 @@ public class LoanApplicationController {
                         return RestResult.restSuccess(HttpStatus.NO_CONTENT);
                     }
             );
+        } else {
+            LOG.error("application-update error: invalid complete status");
+            return RestResult.restFailure(new Error(CommonFailureKeys.GENERAL_INCORRECT_TYPE, "completionStatus"));
         }
     }
 
