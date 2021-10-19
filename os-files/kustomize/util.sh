@@ -2,6 +2,13 @@
 # Source this file (source [path/helpers.sh] then use -:
 # util_help
 #
+function util_stuck_pods {
+  echo 'Run this but be aware this may leave pods consuming resources hidden inside docker minikube...'
+  echo 'kubectl delete --all pods --grace-period=0 --force'
+  echo 'After deletion you need to check for zombie pods in minikube so open a terminal inside minikube from docker desktop'
+  echo 'docker ps'
+  echo 'Then kill anything that should not be running'
+}
 
 function util_reinstall_minikube {
   minikube delete
@@ -43,6 +50,7 @@ function util_help {
     echo ''
     echo 'Debug'
     echo '    util_versions - debug the various installed versions'
+    echo '    util_stuck_pods - run this for instructions on clearing stuck pods'
     echo '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
 }
 
