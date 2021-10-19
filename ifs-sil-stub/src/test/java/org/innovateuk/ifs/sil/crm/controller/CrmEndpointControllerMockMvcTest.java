@@ -43,11 +43,11 @@ public class CrmEndpointControllerMockMvcTest extends AbstractEndpointController
         SilLoanApplication application = new SilLoanApplication();
         application.setApplicationID(1);
         application.setMarkedIneligible(true);
-        application.setEligibilityStatusChangeDate(ZonedDateTime.parse(ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT)));  //("yyyy-MM-dd'T'HH.nn.ss'Z'")
+        application.setEligibilityStatusChangeDate(ZonedDateTime.now());  //("yyyy-MM-dd'T'HH.nn.ss'Z'")
         application.setEligibilityStatusChangeSource("IFS");
 
         String requestBody = objectMapper.writeValueAsString(application);
-        // TODO-10472 update endpoint once SF ready
+
         mockMvc.
                 perform(
                         post("/silstub/loanssubmission").
@@ -64,7 +64,7 @@ public class CrmEndpointControllerMockMvcTest extends AbstractEndpointController
     public void testIncompleteMarkApplicationIneligible() throws Exception {
         SilLoanApplication application = new SilLoanApplication();
         String requestBody = objectMapper.writeValueAsString(application);
-        // TODO-10472 update endpoint once SF ready
+
         mockMvc.
                 perform(
                         post("/silstub/loanssubmission").
@@ -81,11 +81,11 @@ public class CrmEndpointControllerMockMvcTest extends AbstractEndpointController
         SilLoanApplication application = new SilLoanApplication();
         application.setApplicationID(1);
         application.setMarkedIneligible(false);
-        application.setEligibilityStatusChangeDate(ZonedDateTime.parse(ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT)));  //("yyyy-MM-dd'T'HH.nn.ss'Z'")
+        application.setEligibilityStatusChangeDate(ZonedDateTime.now());  //("yyyy-MM-dd'T'HH.nn.ss'Z'")
         application.setEligibilityStatusChangeSource("IFS");
 
         String requestBody = objectMapper.writeValueAsString(application);
-        // TODO-10472 update endpoint once SF ready
+
         mockMvc.
                 perform(
                         post("/silstub/loanssubmission").
@@ -102,7 +102,7 @@ public class CrmEndpointControllerMockMvcTest extends AbstractEndpointController
     public void testIncompleteReinstateApplication() throws Exception {
         SilLoanApplication application = new SilLoanApplication();
         String requestBody = objectMapper.writeValueAsString(application);
-        // TODO-10472 update endpoint once SF ready
+
         mockMvc.
                 perform(
                         post("/silstub/loanssubmission").

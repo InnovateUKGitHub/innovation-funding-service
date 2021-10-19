@@ -267,14 +267,14 @@ public class CrmServiceImpl implements CrmService {
         switch (applicationState) {
             case SUBMITTED:
                 if (ApplicationEvent.REINSTATE_INELIGIBLE.getType().equals(application.getEvent())) {
-                    markIneligible(loanApplication, Boolean.FALSE);
+                    markIneligible(application, loanApplication, Boolean.FALSE);
                 } else {
                     markSubmitted(application, loanApplication);
                 }
                 break;
             case INELIGIBLE:
             case INELIGIBLE_INFORMED:
-                markIneligible(loanApplication, Boolean.TRUE);
+                markIneligible(application, loanApplication, Boolean.TRUE);
                 break;
         }
 
@@ -284,16 +284,16 @@ public class CrmServiceImpl implements CrmService {
     private void markSubmitted(ApplicationResource application, SilLoanApplication loanApplication) {
         loanApplication.setApplicationName(application.getName());
         loanApplication.setApplicationLocation(applicationSummarisationService.getProjectLocation(application.getId()).getSuccess());
-        loanApplication.setApplicationSubmissionDate(ZonedDateTime.parse(application.getSubmittedDate().toString()));
+        loanApplication.setApplicationSubmissionDate(application.getSubmittedDate());
         loanApplication.setProjectDuration(application.getDurationInMonths().intValue());
         loanApplication.setProjectTotalCost(applicationSummarisationService.getProjectTotalFunding(application.getId()).getSuccess().doubleValue());
         loanApplication.setProjectOtherFunding(applicationSummarisationService.getProjectOtherFunding(application.getId()).getSuccess().doubleValue());
 
     }
 
-    private void markIneligible(SilLoanApplication loanApplication, Boolean ineligibleFlag) {
+    private void markIneligible(ApplicationResource application, SilLoanApplication loanApplication, Boolean ineligibleFlag) {
         loanApplication.setMarkedIneligible(ineligibleFlag);
-        loanApplication.setEligibilityStatusChangeDate(ZonedDateTime.parse(TimeMachine.now().format(DateTimeFormatter.ISO_INSTANT)));
+        loanApplication.setEligibilityStatusChangeDate(Optional.ofNullable(application.getLastStateChangeDate()).orElse(TimeMachine.now()));
         loanApplication.setEligibilityStatusChangeSource(eligibilityStatusChangeSource);
 
     }

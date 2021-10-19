@@ -20,7 +20,7 @@ spec:
         app: sil-stub
     spec:
       containers:
-        - image: docker-ifs.devops.innovateuk.org/releases/sil-stub:1.1.153
+        - image: docker-ifs.devops.innovateuk.org/releases/sil-stub:1.1.159
           name: sil-stub
           livenessProbe:
             httpGet:
