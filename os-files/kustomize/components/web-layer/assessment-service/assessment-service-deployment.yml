@@ -4,6 +4,7 @@ metadata:
   name: assessment-svc
   annotations:
     monitor: monitor
+    javaDebug: javaDebug
     pullSecrets: pullSecrets
 spec:
   replicas: 1

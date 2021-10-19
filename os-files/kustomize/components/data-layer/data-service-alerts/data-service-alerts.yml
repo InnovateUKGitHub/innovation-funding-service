@@ -4,6 +4,8 @@ metadata:
   name: data-service-alerts
   labels:
     run: data-service-alerts
+  annotations:
+    javaDebug: javaDebug
 spec:
   ports:
     - name: 8080-tcp

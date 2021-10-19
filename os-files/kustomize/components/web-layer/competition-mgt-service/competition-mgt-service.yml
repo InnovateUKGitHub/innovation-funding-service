@@ -4,6 +4,8 @@ metadata:
   name: competition-mgt-svc
   labels:
     app: competition-mgt-svc
+  annotations:
+    javaDebug: javaDebug
 spec:
   ports:
     - name: 8080-tcp

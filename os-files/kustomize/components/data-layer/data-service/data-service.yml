@@ -4,6 +4,8 @@ metadata:
   name: data-service
   labels:
     app: data-service
+  annotations:
+    javaDebug: javaDebug
 spec:
   ports:
     - name: 8080-tcp

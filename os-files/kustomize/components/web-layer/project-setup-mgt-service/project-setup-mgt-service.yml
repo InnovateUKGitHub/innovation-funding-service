@@ -4,6 +4,8 @@ metadata:
   name: project-setup-mgt-svc
   labels:
     app: project-setup-mgt-svc
+  annotations:
+    javaDebug: javaDebug
 spec:
   ports:
     - name: 8080-tcp

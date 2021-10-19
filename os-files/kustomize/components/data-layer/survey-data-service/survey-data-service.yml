@@ -4,6 +4,8 @@ metadata:
   name: survey-data-svc
   labels:
     app: survey-data-svc
+  annotations:
+    javaDebug: javaDebug
 spec:
   ports:
     - name: 8080-tcp
