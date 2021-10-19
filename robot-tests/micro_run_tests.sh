@@ -126,7 +126,7 @@ function initialiseTestEnvironment() {
       then
         section "=> STARTING SELENIUM GRID and INJECTING ENVIRONMENT PARAMETERS"
         docker network create ifs
-       ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robotTestsFilter --configure-on-demand
+       ./gradlew :robot-tests:runHub :robot-tests:runChrome :robotTestsFilter --configure-on-demand
 
         echo "=> Waiting 5 seconds for the grid to be properly started"
         sleep 5
