@@ -46,7 +46,7 @@ task deployHub(type: Exec, dependsOn: [pullHub, removeHub]) {
     //docker run -d --name hub -p 4444:4444 -p 3000:3000 -e GRID_BROWSER_TIMEOUT=90000 -e GRID_TIMEOUT=100000 --network=ifs innovateuk/seleniumhub
 }
 
-task deployChrome(type: Exec) {
+task pullChrome(type: Exec) {
     doFirst {
         commandLine 'docker', 'pull', 'davidrums/node-chrome-debug-proxy:3.0.1-dysprosium'
     }
@@ -66,7 +66,7 @@ task removeChrome(type: Exec, dependsOn: stopChrome) {
     }
 }
 
-task runChrome(type: Exec, dependsOn: [pullChrome, removeChrome]) {
+task deployChrome(type: Exec, dependsOn: [pullChrome, removeChrome]) {
     doFirst {
         commandLine 'docker', 'run', '-d', '--name', 'chrome', '-p', '5900:5900',
                 '-v', '/dev/shm:/dev/shm', '-e', 'NODE_MAX_SESSION=20',
