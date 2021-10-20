@@ -30,6 +30,7 @@ resources:
 
 
   - config-maps/idp-config.yml
+  - config-maps/idp-metadata.yml
   - config-maps/ldap-config.yml
   - config-maps/shibboleth-config.yml
   - config-maps/web-config.yml
@@ -39,4 +40,5 @@ resources:
 
 patchesStrategicMerge:
   - auth/registration-service/registration-deployment.yml
+  - auth/idp/idp-deployment.yml
   - sil-stub/sil-stub-deployment.yml
