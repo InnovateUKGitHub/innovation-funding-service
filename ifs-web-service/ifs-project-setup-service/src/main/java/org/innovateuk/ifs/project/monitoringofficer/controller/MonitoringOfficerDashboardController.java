@@ -223,18 +223,18 @@ public class MonitoringOfficerDashboardController {
     }
 
     public void savemonitoringOfficerDashboardCookie(MonitoringOfficerDashboardForm monitoringOfficerDashboardCookie, HttpServletResponse response) {
-//        compressedCookieService.saveToCookie(response, FORM_ATTR_NAME, JsonUtil.getSerializedObject(monitoringOfficerDashboardCookie));
-        saveKeywordSearchCookie(monitoringOfficerDashboardCookie, response);
-        saveFilterProjectInSetupCookie(monitoringOfficerDashboardCookie, response);
-        saveFilterPreviousProjectCookie(monitoringOfficerDashboardCookie, response);
+        compressedCookieService.saveToCookie(response, FORM_ATTR_NAME, JsonUtil.getSerializedObject(monitoringOfficerDashboardCookie));
+//        saveKeywordSearchCookie(monitoringOfficerDashboardCookie, response);
+//        saveFilterProjectInSetupCookie(monitoringOfficerDashboardCookie, response);
+//        saveFilterPreviousProjectCookie(monitoringOfficerDashboardCookie, response);
     }
-    public void saveKeywordSearchCookie(MonitoringOfficerDashboardForm monitoringOfficerDashboardCookie, HttpServletResponse response) {
-        compressedCookieService.saveToCookie(response, KEYWORD_SEARCH, JsonUtil.getSerializedObject(monitoringOfficerDashboardCookie));
-    }
-    public void saveFilterProjectInSetupCookie(MonitoringOfficerDashboardForm monitoringOfficerDashboardCookie, HttpServletResponse response) {
-        compressedCookieService.saveToCookie(response, PROJECT_IN_SETUP, JsonUtil.getSerializedObject(monitoringOfficerDashboardCookie));
-    }
-    public void saveFilterPreviousProjectCookie(MonitoringOfficerDashboardForm monitoringOfficerDashboardCookie, HttpServletResponse response) {
-        compressedCookieService.saveToCookie(response, PREVIOUS_PROJECT, JsonUtil.getSerializedObject(monitoringOfficerDashboardCookie));
-    }
+//    public void saveKeywordSearchCookie(MonitoringOfficerDashboardForm monitoringOfficerDashboardCookie, HttpServletResponse response) {
+//        cookieUtil.saveToCookie(response, KEYWORD_SEARCH, JsonUtil.getSerializedObject(monitoringOfficerDashboardCookie));
+//    }
+//    public void saveFilterProjectInSetupCookie(MonitoringOfficerDashboardForm monitoringOfficerDashboardCookie, HttpServletResponse response) {
+//        cookieUtil.saveToCookie(response, PROJECT_IN_SETUP, JsonUtil.getSerializedObject(monitoringOfficerDashboardCookie));
+//    }
+//    public void saveFilterPreviousProjectCookie(MonitoringOfficerDashboardForm monitoringOfficerDashboardCookie, HttpServletResponse response) {
+//        cookieUtil.saveToCookie(response, PREVIOUS_PROJECT, JsonUtil.getSerializedObject(monitoringOfficerDashboardCookie));
+//    }
 }
