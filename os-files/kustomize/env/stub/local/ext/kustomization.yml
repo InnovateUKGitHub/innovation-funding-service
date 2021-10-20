@@ -7,10 +7,10 @@ bases:
 
 components:
 
-  - ../../../../components/auth
-  - ../../../../components/cache-provider
+#  - ../../../../components/auth
+#  - ../../../../components/cache-provider
   - ../../../../components/ifs-database
-  - ../../../../components/sil-stub
+#  - ../../../../components/sil-stub
 
   - ../../../../patches/new-relic-env-vars-patch
   - ../../../../patches/pull-secrets-patch
@@ -33,10 +33,10 @@ resources:
   - config-maps/ldap-config.yml
   - config-maps/shibboleth-config.yml
   - config-maps/web-config.yml
-  - mail/mail-config.yml
-  - mail/mail.yml
-  - mail/mail-deployment.yml
+#  - mail/mail-config.yml
+#  - mail/mail.yml
+#  - mail/mail-deployment.yml
 
-patchesStrategicMerge:
-  - auth/registration-service/registration-deployment.yml
-  - sil-stub/sil-stub-deployment.yml
+#patchesStrategicMerge:
+#  - auth/registration-service/registration-deployment.yml
+#  - sil-stub/sil-stub-deployment.yml

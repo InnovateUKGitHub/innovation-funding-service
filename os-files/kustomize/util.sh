@@ -10,6 +10,15 @@ function util_stuck_pods {
   echo 'Then kill anything that should not be running'
 }
 
+function util_start_minikube {
+  if [ $# -ne 2 ]
+      then
+        echo "Specify cpus and ram e.g. 10 20g Aborting..."
+        return
+    fi
+    _util_mini_install "$1" "$2"
+}
+
 function util_reinstall_minikube {
   if [ $# -ne 2 ]
     then
@@ -61,7 +70,7 @@ function util_help {
 }
 
 function _util_mini_install {
-  minikube start --cpus="$1" --memory="$2" --driver=virtualbox --extra-config=kubelet.streaming-connection-idle-timeout=4h --extra-config=apiserver.service-node-port-range=1-65535
+  minikube start --cpus="$1" --memory="$2" --driver=virtualbox --extra-config=kubelet.streaming-connection-idle-timeout=4h --extra-config=apiserver.service-node-port-range=1-32767
   echo 'docker username' "$(_util_prop "nexus_username")"
   kubectl create secret docker-registry regcred --docker-server=docker-ifs.devops.innovateuk.org --docker-username="$(_util_prop "nexus_username")" --docker-password="$(_util_prop "nexus_password")"
   _util_update_hosts_minikube_ip auth.local-dev

@@ -3,10 +3,11 @@ kind: Service
 metadata:
   name: shib
 spec:
+  type: NodePort
   selector:
     app: shib
   ports:
     - name: 443-tcp
       port: 443
       targetPort: 9443
-      nodePort: 8443
+      nodePort: 30843
