@@ -1,3 +1,6 @@
+# This config map is for local dev environment only.
+# for named, custom and AT environments metadata config map will be picked from S3 bucket.
+
 kind: ConfigMap
 apiVersion: v1
 metadata:
