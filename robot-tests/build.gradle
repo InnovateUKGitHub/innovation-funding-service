@@ -1,10 +1,3 @@
-import com.bmuschko.gradle.docker.tasks.image.*
-import com.bmuschko.gradle.docker.tasks.container.*
-import com.bmuschko.gradle.docker.tasks.container.extras.*
-import com.bmuschko.gradle.docker.tasks.network.*
-apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
-apply plugin: com.bmuschko.gradle.docker.DockerJavaApplicationPlugin
-
 
 buildscript {
 
@@ -14,11 +7,6 @@ buildscript {
         mavenCentral()
 
     }
-
-    dependencies {
-        classpath "com.bmuschko:gradle-docker-plugin:3.2.6"
-    }
-
 }
 
 repositories {
@@ -27,87 +15,66 @@ repositories {
     mavenCentral()
 }
 
-task buildHubDocker(type: DockerBuildImage) {
-    tag = "innovateuk/seleniumhub"
-    inputDir = project.file("$project.projectDir/hubdocker")
-}
-
-task tagHubDocker(type: DockerTagImage) {
-    dependsOn buildHubDocker
-    imageId = buildHubDocker.getTag()
-    repository = project.dockerRegistry + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
-    tag = project.version
-}
-
-task stopHub(type: DockerStopContainer) {
-    targetContainerId { createHub.getContainerId() }
-    onError {
-        //Deliberately ignore
+task pullHub(type: Exec) {
+    doFirst {
+        commandLine 'docker', 'pull', 'docker-ifs.devops.innovateuk.org/releases/innovateuk/seleniumhub:1.0'
     }
 }
 
-task removeHub(type: DockerRemoveContainer, dependsOn: stopHub) {
-    targetContainerId { createHub.getContainerId() }
-    onError {
-        //Deliberately ignore
+task stopHub(type: Exec) {
+    doFirst {
+        ignoreExitValue = true
+        commandLine 'docker', 'stop', 'hub'
     }
 }
 
-task createHub(type: DockerCreateContainer, dependsOn: [buildHubDocker, removeHub]) {
-    targetImageId { buildHubDocker.getImageId() }
-    imageId = "innovateuk/seleniumhub"
-    hostName = "hub"
-    containerName = "hub"
-    containerId = "hub"
-    portBindings = ['4444:4444','3000:3000']
-    network = "ifs"
-    networkAliases = ["hub"]
-    env = ["GRID_BROWSER_TIMEOUT=90000", "GRID_TIMEOUT=100000"]
+task removeHub(type: Exec, dependsOn: stopHub) {
+    doFirst {
+        ignoreExitValue = true
+        commandLine 'docker', 'rm', 'hub'
+    }
 }
 
-task deployHub(type: DockerStartContainer, dependsOn: createHub) {
-    targetContainerId { createHub.getContainerId() }
+task deployHub(type: Exec, dependsOn: [pullHub, removeHub]) {
+    doFirst {
+        commandLine 'docker', 'run', '-d', '--name', 'hub', '-p', '4444:4444', '-p', '3000:3000',
+                '-e', 'GRID_BROWSER_TIMEOUT=90000',
+                '-e', 'GRID_TIMEOUT=100000',
+                '--network=ifs',
+                'docker-ifs.devops.innovateuk.org/releases/innovateuk/seleniumhub:1.0'
+    }
+    //docker run -d --name hub -p 4444:4444 -p 3000:3000 -e GRID_BROWSER_TIMEOUT=90000 -e GRID_TIMEOUT=100000 --network=ifs innovateuk/seleniumhub
 }
 
-
-task pullChrome(type: Exec) {
+task deployChrome(type: Exec) {
     doFirst {
         commandLine 'docker', 'pull', 'davidrums/node-chrome-debug-proxy:3.0.1-dysprosium'
     }
 }
 
-task stopChrome(type: DockerStopContainer) {
-    targetContainerId { createChrome.getContainerId() }
-    onError {
-        //Deliberately ignore
+task stopChrome(type: Exec) {
+    doFirst {
+        ignoreExitValue = true
+        commandLine 'docker', 'stop', 'chrome'
     }
 }
 
-task removeChrome(type: DockerRemoveContainer, dependsOn: stopChrome) {
-    targetContainerId { createChrome.getContainerId() }
-    onError {
-        //Deliberately ignore
+task removeChrome(type: Exec, dependsOn: stopChrome) {
+    doFirst {
+        ignoreExitValue = true
+        commandLine 'docker', 'rm', 'chrome'
     }
 }
 
-task createChrome(type: DockerCreateContainer, dependsOn: [pullChrome, removeChrome, createHub]) {
-    imageId = "davidrums/node-chrome-debug-proxy:3.0.1-dysprosium"
-    hostName = "chrome"
-    containerName = "chrome"
-    containerId = "chrome"
-    portBindings = ['5900:5900']
-    network = "ifs"
-    volumes = ["/dev/shm:/dev/shm"]
-    env = ["NODE_MAX_SESSION=20",
-           "NODE_MAX_INSTANCES=20",
-           "NODE_REGISTER_CYCLE=600",
-           "HUB_PORT_4444_TCP_ADDR=hub",
-           "HUB_PORT_4444_TCP_PORT=4444",
-           "DBUS_SESSION_BUS_ADDRESS=/dev/null",
-           "no_proxy=localhost",
-           "HUB_ENV_no_proxy=localhost"]
-}
-
-task deployChrome(type: DockerStartContainer, dependsOn: createChrome) {
-    targetContainerId { createChrome.getContainerId() }
+task runChrome(type: Exec, dependsOn: [pullChrome, removeChrome]) {
+    doFirst {
+        commandLine 'docker', 'run', '-d', '--name', 'chrome', '-p', '5900:5900',
+                '-v', '/dev/shm:/dev/shm', '-e', 'NODE_MAX_SESSION=20',
+                '-e', 'NODE_MAX_INSTANCES=20', '-e', 'NODE_REGISTER_CYCLE=600',
+                '-e', 'HUB_PORT_4444_TCP_ADDR=hub', '-e', 'HUB_PORT_4444_TCP_PORT=4444',
+                '-e', 'DBUS_SESSION_BUS_ADDRESS=/dev/null', '-e', 'no_proxy=localhost',
+                '-e', 'HUB_ENV_no_proxy=localhost', '--network=ifs',
+                'davidrums/node-chrome-debug-proxy:3.0.1-dysprosium'
+    }
+    // docker run -d --name chrome -p 5900:5900 -v /dev/shm:/dev/shm -e NODE_MAX_SESSION=20 -e NODE_MAX_INSTANCES=20 -e NODE_REGISTER_CYCLE=600 -e HUB_PORT_4444_TCP_ADDR=hub -e HUB_PORT_4444_TCP_PORT=4444 -e DBUS_SESSION_BUS_ADDRESS=/dev/null -e no_proxy=localhost -e HUB_ENV_no_proxy=localhost --network=ifs davidrums/node-chrome-debug-proxy:3.0.1-dysprosium
 }
