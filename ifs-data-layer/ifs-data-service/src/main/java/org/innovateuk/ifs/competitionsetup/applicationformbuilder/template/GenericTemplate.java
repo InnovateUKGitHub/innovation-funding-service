@@ -34,7 +34,7 @@ public class GenericTemplate implements CompetitionTemplate {
         }
         competition.setAcademicGrantPercentage(100);
         competition.setMinProjectDuration(1);
-        competition.setMaxProjectDuration(36);
+        competition.setMaxProjectDuration(84);
         return competition;
     }
 
