@@ -10,4 +10,4 @@ spec:
     - name: 443-tcp
       port: 443
       targetPort: 9443
-      nodePort: 30843
+      nodePort: 8443
