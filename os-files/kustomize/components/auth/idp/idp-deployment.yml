@@ -41,19 +41,18 @@ spec:
               path: /idp/status
               port: 9443
               scheme: HTTPS
-            initialDelaySeconds: 30
+            initialDelaySeconds: 10
             periodSeconds: 10
             timeoutSeconds: 10
             failureThreshold: 5
-          readinessProbe:
+          startupProbe:
             httpGet:
               path: /idp/status
               port: 9443
               scheme: HTTPS
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 10
-            failureThreshold: 5
+            periodSeconds: 5
+            timeoutSeconds: 1
+            failureThreshold: 120
           imagePullPolicy: IfNotPresent
           env:
             - name: SP_DOMAIN
