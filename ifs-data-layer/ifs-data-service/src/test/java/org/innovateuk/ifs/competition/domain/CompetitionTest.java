@@ -280,4 +280,20 @@ public class CompetitionTest {
                 FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT,
                 FinanceRowType.INDIRECT_COSTS), financeRowTypes);
     }
+
+    @Test
+    public void isHeukar_forNonHeukarCompetitionType() {
+        assertFalse(competition.isHeukar());
+    }
+
+    @Test
+    public void isHeukar_forHeukarCompetitionType() {
+        CompetitionType competitionType = newCompetitionType()
+                .withName("HEUKAR")
+                .build();
+
+        competition.setCompetitionType(competitionType);
+
+        assertTrue(competition.isHeukar());
+    }
 }
