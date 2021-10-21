@@ -70,11 +70,12 @@ function util_help {
 }
 
 function _util_mini_install {
-  minikube start --cpus="$1" --memory="$2" --driver=virtualbox --extra-config=kubelet.streaming-connection-idle-timeout=4h --extra-config=apiserver.service-node-port-range=1-32767
+  minikube start --cpus="$1" --memory="$2" --driver=hyperkit --apiserver-port=6443  --extra-config=kubelet.streaming-connection-idle-timeout=4h --extra-config=apiserver.service-node-port-range=1-32767
   echo 'docker username' "$(_util_prop "nexus_username")"
   kubectl create secret docker-registry regcred --docker-server=docker-ifs.devops.innovateuk.org --docker-username="$(_util_prop "nexus_username")" --docker-password="$(_util_prop "nexus_password")"
   _util_update_hosts_minikube_ip auth.local-dev
   _util_update_hosts_minikube_ip ifs.local-dev
+  kubectl cluster-info
 }
 
 function _util_prop {
@@ -83,6 +84,7 @@ function _util_prop {
 
 function _util_update_hosts_minikube_ip {
   MINIKUBE_IP=$(minikube ip)
+  echo "Minikube Ip: $MINIKUBE_IP"
   LOCAL_HOSTNAME=$1
   HOSTS_ENTRY="$MINIKUBE_IP $LOCAL_HOSTNAME"
   if grep -Fq "$LOCAL_HOSTNAME" /etc/hosts > /dev/null
