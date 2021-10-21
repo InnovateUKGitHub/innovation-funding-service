@@ -38,7 +38,6 @@ public class GenericTemplate implements CompetitionTemplate {
         return competition;
     }
 
-
     @Override
     public List<SectionBuilder> sections() {
         return newArrayList(
@@ -59,6 +58,5 @@ public class GenericTemplate implements CompetitionTemplate {
                 finances(),
                 termsAndConditions()
         );
-
     }
 }
