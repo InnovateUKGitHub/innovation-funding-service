@@ -28,20 +28,16 @@ spec:
             httpGet:
               path: /monitoring/health
               port: 8080
-            initialDelaySeconds: 180
-            periodSeconds: 31
-            timeoutSeconds: 5
-            successThreshold: 1
-            failureThreshold: 3
-          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 1
+          startupProbe:
             httpGet:
               path: /monitoring/health
               port: 8080
-            initialDelaySeconds: 180
             periodSeconds: 5
-            timeoutSeconds: 5
-            successThreshold: 1
-            failureThreshold: 1
+            timeoutSeconds: 1
+            failureThreshold: 120
           env:
             - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
               valueFrom:
