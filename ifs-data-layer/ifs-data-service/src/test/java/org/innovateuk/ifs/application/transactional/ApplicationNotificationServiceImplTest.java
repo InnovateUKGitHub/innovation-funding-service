@@ -197,7 +197,7 @@ public class ApplicationNotificationServiceImplTest {
     }
 
     @Test
-    public void sendNotificationApplicationSubmitted_heukar() {
+    public void sendNotificationApplicationSubmitted_hesta() {
         User leadUser = newUser()
                 .withEmailAddress("leadapplicant@example.com")
                 .build();
@@ -209,7 +209,7 @@ public class ApplicationNotificationServiceImplTest {
 
         Competition competition = newCompetition()
                 .withCompetitionType(newCompetitionType()
-                        .withName("HEUKAR")
+                        .withName("Hesta")
                         .build())
                 .build();
 
@@ -228,7 +228,7 @@ public class ApplicationNotificationServiceImplTest {
             assertEquals(1, notification.getTo().size());
             assertEquals(leadUser.getEmail(), notification.getTo().get(0).getTo().getEmailAddress());
             assertEquals(leadUser.getName(), notification.getTo().get(0).getTo().getName());
-            assertEquals(HEUKAR_APPLICATION_SUBMITTED, notification.getMessageKey());
+            assertEquals(HESTA_APPLICATION_SUBMITTED, notification.getMessageKey());
         }), eq(EMAIL));
         assertTrue(result.isSuccess());
     }

@@ -1104,11 +1104,4 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     public void setCompetitionExternalConfig(CompetitionExternalConfig competitionExternalConfig) {
         this.competitionExternalConfig = competitionExternalConfig;
     }
-
-    public boolean isHeukar() {
-        return ofNullable(competitionType)
-                .map(CompetitionType::getName)
-                .map(name -> name.equals("HEUKAR"))
-                .orElse(false);
-    }
 }

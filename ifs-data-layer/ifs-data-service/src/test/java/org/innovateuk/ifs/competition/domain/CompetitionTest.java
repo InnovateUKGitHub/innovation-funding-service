@@ -282,18 +282,18 @@ public class CompetitionTest {
     }
 
     @Test
-    public void isHeukar_forNonHeukarCompetitionType() {
-        assertFalse(competition.isHeukar());
+    public void isHesta_forNonHestaCompetitionType() {
+        assertFalse(competition.isHesta());
     }
 
     @Test
-    public void isHeukar_forHeukarCompetitionType() {
+    public void isHesta_forHestaCompetitionType() {
         CompetitionType competitionType = newCompetitionType()
-                .withName("HEUKAR")
+                .withName("Hesta")
                 .build();
 
         competition.setCompetitionType(competitionType);
 
-        assertTrue(competition.isHeukar());
+        assertTrue(competition.isHesta());
     }
 }
