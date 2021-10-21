@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class OutboundAPIRequestLoggingFilter extends CommonsRequestLoggingFilter {
+public class InboundAPIRequestLoggingFilter extends CommonsRequestLoggingFilter {
 
     private List<String> loggingEndpoints;
 
