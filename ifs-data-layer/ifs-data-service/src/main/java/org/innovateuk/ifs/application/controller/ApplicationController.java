@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
+import org.innovateuk.ifs.crm.transactional.TimeMachine;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-
 
 
 /**
@@ -59,7 +59,7 @@ public class ApplicationController {
     private ApplicationMigrationService applicationMigrationService;
 
     @GetMapping("/{id}/has-assessment")
-    public RestResult<Boolean> applicationHasAssessment(@PathVariable long id){
+    public RestResult<Boolean> applicationHasAssessment(@PathVariable long id) {
         return assessmentService.existsByTargetId(id).toGetResponse();
     }
 
@@ -97,7 +97,7 @@ public class ApplicationController {
 
     @PostMapping("/save-application-details/{id}")
     public RestResult<ValidationMessages> saveApplicationDetails(@PathVariable("id") final Long id,
-                                                                       @RequestBody ApplicationResource application) {
+                                                                 @RequestBody ApplicationResource application) {
 
         return applicationService.saveApplicationDetails(id, application).toPostWithBodyResponse();
     }
@@ -109,10 +109,11 @@ public class ApplicationController {
         ServiceResult<ApplicationResource> updateStatusResult = applicationService.updateApplicationState(id, state);
 
         if (updateStatusResult.isSuccess() && ApplicationState.SUBMITTED == state) {
-            applicationService.saveApplicationSubmitDateTime(id, ZonedDateTime.now());
+            updateStatusResult = applicationService.saveApplicationSubmitDateTime(id, TimeMachine.now());
             applicationNotificationService.sendNotificationApplicationSubmitted(id);
         }
 
+        crmService.syncCrmApplicationState(updateStatusResult.getSuccess());
         return updateStatusResult.toPutResponse();
     }
 
@@ -142,7 +143,6 @@ public class ApplicationController {
             @RequestBody JsonNode jsonObj) {
 
         String name = jsonObj.get("name").textValue();
-
         return applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId, organisationId)
                 .andOnSuccessReturn(application -> {
                     crmService.syncCrmContact(userId,competitionId,application.getId());
@@ -156,6 +156,11 @@ public class ApplicationController {
                                              @RequestBody IneligibleOutcomeResource reason) {
         return applicationService
                 .markAsIneligible(applicationId, ineligibleOutcomeMapper.mapToDomain(reason))
+                .andOnSuccessReturn(result -> {
+                    ApplicationResource applicationResource = getApplicationById(applicationId).getSuccess();
+                    crmService.syncCrmApplicationState(applicationResource);
+                    return result;
+                })
                 .toPostWithBodyResponse();
     }
 
