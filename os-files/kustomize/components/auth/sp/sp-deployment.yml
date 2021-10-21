@@ -37,14 +37,14 @@ spec:
             periodSeconds: 30
             timeoutSeconds: 5
             failureThreshold: 3
-          readinessProbe:
-            exec:
-              command:
-                - readiness-probe
-            initialDelaySeconds: 30
+          startupProbe:
+            httpGet:
+              path: /Shibboleth.sso/Metadata
+              port: 9443
+              scheme: HTTPS
             periodSeconds: 5
-            timeoutSeconds: 5
-            failureThreshold: 1
+            timeoutSeconds: 1
+            failureThreshold: 120
           imagePullPolicy: IfNotPresent
           env:
             - name: SP_DOMAIN
