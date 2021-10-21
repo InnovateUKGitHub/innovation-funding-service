@@ -44,7 +44,7 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 5
-          readinessProbe:
+          startupProbe:
             exec:
               command:
                 - ldapsearch
@@ -56,10 +56,10 @@ spec:
                 - -LLL
                 - -s
                 - base
-            initialDelaySeconds: 10
+            initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
-            failureThreshold: 5
+            failureThreshold: 60
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8389
