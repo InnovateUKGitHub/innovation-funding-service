@@ -40,22 +40,22 @@
                         <div class="govuk-radios__item">
                             <input id="application-finance-standard"
                                    class="govuk-radios__input"
-                                   th:value="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).STANDARD}"
+                                   th:value="${model.standardApplicationFinanceType}"
                                    th:disabled="${model.subsection.noFinancesCompetition}" type="radio"
                                    th:field="*{applicationFinanceType}" required="required"/>
                             <label for="application-finance-standard"
-                                   th:text="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).STANDARD.displayLabel}"
+                                   th:text="${model.standardApplicationFinanceType.displayLabel}"
                                    class="govuk-label govuk-radios__label"/>
                         </div>
                         <div class="govuk-radios__item" data-target="include-your-organisation-section"
                              data-target-inverted="true" data-target-clear-form="true">
                             <input id="application-finance-no-finances"
                                    class="govuk-radios__input"
-                                   th:value="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).NO_FINANCES}"
+                                   th:value="${model.noFinancesApplicationFinanceType}"
                                    th:disabled="${!model.subsection.noFinancesCompetition}"
                                    type="radio" th:field="*{applicationFinanceType}" required="required"/>
                             <label for="application-finance-no-finances"
-                                   th:text="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).NO_FINANCES.displayLabel}"
+                                   th:text="${model.noFinancesApplicationFinanceType.displayLabel}"
                                    class="govuk-label govuk-radios__label"/>
                         </div>
                     </div>

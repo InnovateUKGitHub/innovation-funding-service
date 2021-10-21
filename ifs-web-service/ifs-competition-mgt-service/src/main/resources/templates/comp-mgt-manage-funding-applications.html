@@ -160,10 +160,10 @@
                             <td class="govuk-table__cell" th:text="${applicationSummary.name}">Machine learning in robots</td>
                             <td class="govuk-table__cell" th:text="${applicationSummary.lead}">PWC</td>
                             <th:block th:switch="${applicationSummary.fundingDecision}">
-                                <td class="govuk-table__cell" th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).FUNDED}">Successful</td>
-                                <td class="govuk-table__cell" th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).UNFUNDED}">Unsuccessful</td>
-                                <td class="govuk-table__cell" th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).UNDECIDED}">Undecided</td>
-                                <td class="govuk-table__cell" th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).ON_HOLD}">On hold</td>
+                                <td class="govuk-table__cell" th:case="${model.getFundedFundingDecision()}">Successful</td>
+                                <td class="govuk-table__cell" th:case="${model.getUnFundedFundingDecision()}">Unsuccessful</td>
+                                <td class="govuk-table__cell" th:case="${model.getUnDecidedFundingDecision()}">Undecided</td>
+                                <td class="govuk-table__cell" th:case="${model.getOnHoldFundingDecision()}">On hold</td>
                                 <td class="govuk-table__cell" th:case="*">-</td>
                             </th:block>
                             <td class="govuk-table__cell" th:text="${applicationSummary.emailStatus()}">-</td>

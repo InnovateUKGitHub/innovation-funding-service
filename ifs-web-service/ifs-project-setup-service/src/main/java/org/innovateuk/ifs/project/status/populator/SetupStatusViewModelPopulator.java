@@ -36,7 +36,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
+import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.sections.SectionStatus.TICK;
 
 /**
@@ -215,11 +215,9 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     }
 
     private SetupStatusStageViewModel financeChecksStageViewModel(ProjectSetupStage stage, ProjectResource project, CompetitionResource competition, boolean monitoringOfficer, CompletableFuture<OrganisationResource> organisationRequest, SetupSectionAccessibilityHelper statusAccessor, ProjectPartnerStatusResource ownOrganisation) {
-        SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(resolve(organisationRequest));
-        SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(
-                ownOrganisation.getFinanceChecksStatus(),
-                financeChecksAccess
-        );
+        SectionAccess financeChecksAccess = monitoringOfficer ? SectionAccess.ACCESSIBLE : statusAccessor.canAccessFinanceChecksSection(resolve(organisationRequest));
+        SectionStatus financeChecksStatus = getFinanceChecksStatus(project, monitoringOfficer, ownOrganisation, financeChecksAccess);
+
         boolean pendingQueries = SectionStatus.FLAG.equals(financeChecksStatus);
 
         return new SetupStatusStageViewModel(stage, stage.getShortName(),
@@ -229,6 +227,21 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 getSectionAccess(competition, monitoringOfficer, financeChecksAccess),
                 pendingQueries ? "pending-query" : null
         );
+    }
+
+    private SectionStatus getFinanceChecksStatus(ProjectResource project, boolean monitoringOfficer, ProjectPartnerStatusResource ownOrganisation, SectionAccess financeChecksAccess) {
+        if (monitoringOfficer) {
+            ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(project.getId(), Optional.empty());
+            if (allPartnersFinanceChecksApproved(teamStatus)) {
+                return sectionStatus.financeChecksSectionStatus(COMPLETE, financeChecksAccess, true);
+            } else {
+                return sectionStatus.financeChecksSectionStatus(INCOMPLETE, financeChecksAccess, true);
+            }
+        }
+
+        return sectionStatus.financeChecksSectionStatus(ownOrganisation.getFinanceChecksStatus(),
+                financeChecksAccess,
+                false);
     }
 
     private SectionAccess getSectionAccess(CompetitionResource competition, boolean monitoringOfficer, SectionAccess financeChecksAccess) {
@@ -360,5 +373,9 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
     private boolean allPartnersProjectLocationStatusComplete(ProjectTeamStatusResource teamStatus) {
         return teamStatus.checkForAllPartners(status -> COMPLETE.equals(status.getPartnerProjectLocationStatus()));
+    }
+
+    private boolean allPartnersFinanceChecksApproved(ProjectTeamStatusResource teamStatus) {
+        return teamStatus.checkForAllPartners(status -> COMPLETE.equals(status.getFinanceChecksStatus()));
     }
 }

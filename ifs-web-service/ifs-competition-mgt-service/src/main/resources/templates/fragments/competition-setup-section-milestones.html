@@ -35,7 +35,7 @@
                   <tr th:each="(milestoneEntry : ${competitionSetupForm.milestoneEntries})"
                       th:if="${milestoneEntry.value.milestoneType.presetDate}"
                       th:with="milestoneDescription=${model.general.competition.alwaysOpen ? milestoneEntry.value.milestoneType.alwaysOpenDescription : milestoneEntry.value.milestoneType.milestoneDescription},
-                               required=${!(model.general.competition.alwaysOpen and milestoneEntry.value.milestoneType == T(org.innovateuk.ifs.competition.resource.MilestoneType).SUBMISSION_DATE)}"
+                               required=${!(model.general.competition.alwaysOpen and milestoneEntry.value.milestoneType == model.general.getSubmissionDateMilestoneType())}"
                       class="govuk-table__row date-group form-group-row"
                       data-future-date=""
                       th:classappend="${required} ? '' : 'not-required-in-sequence'"
@@ -59,7 +59,7 @@
                                   th:required="${required} ? 'required'"
                                   th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
                                   th:readonly="${!milestoneEntry.value.readonly}">
-                              <option th:each="time : ${T(org.innovateuk.ifs.management.competition.setup.core.form.MilestoneTime).values()}"
+                              <option th:each="time : ${model.general.getMilestoneTimeValues()}"
                                       th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}" th:selected="${time == milestoneEntry.value.time}"></option>
                           </select>
                           <th:block th:if="${milestoneEntry.value.middayTime}" >
@@ -68,7 +68,7 @@
                                 data-time="12"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
                                 th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
-                                th:value="${T(org.innovateuk.ifs.management.competition.setup.core.form.MilestoneTime).TWELVE_PM}">
+                                th:value="${model.general.getTwlevePMMilestoneTime()}">
                           </th:block>
                       </td>
                       <td class="govuk-table__cell js-addWeekDay" th:id="'milestoneWeekdayEntry-' + ${milestoneEntry.key}" th:text="${milestoneEntry.value.dayOfWeek}"></td>

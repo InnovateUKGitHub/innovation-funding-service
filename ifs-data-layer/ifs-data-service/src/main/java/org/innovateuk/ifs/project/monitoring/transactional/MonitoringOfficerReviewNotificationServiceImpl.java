@@ -53,7 +53,7 @@ public class MonitoringOfficerReviewNotificationServiceImpl extends RootTransact
         Map<String, Object> globalArgs = new HashMap<>();
         globalArgs.put("monitoringOfficer", user);
         globalArgs.put("applicationName", project.getName());
-        globalArgs.put("applicationId", project.getId());
+        globalArgs.put("applicationId", project.getApplication().getId());
         globalArgs.put("dashboardUrl", webBaseUrl);
 
         return sendNotification(globalArgs,

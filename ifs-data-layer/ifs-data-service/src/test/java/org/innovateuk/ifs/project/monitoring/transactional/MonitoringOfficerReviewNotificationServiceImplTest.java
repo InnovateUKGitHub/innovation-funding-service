@@ -7,7 +7,6 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -32,12 +31,12 @@ public class MonitoringOfficerReviewNotificationServiceImplTest {
 
     @InjectMocks
     private MonitoringOfficerReviewNotificationServiceImpl service;
+
     @Mock
-    private UserRepository userRepositoryMock;
+    private ProjectRepository projectRepository;
+
     @Mock
-    private ProjectRepository projectRepositoryMock;
-    @Mock
-    private NotificationService notificationServiceMock;
+    private NotificationService notificationService;
 
     @Test
     public void sendDocumentReviewNotification() {
@@ -52,17 +51,17 @@ public class MonitoringOfficerReviewNotificationServiceImplTest {
                         .withCompetition(newCompetition().build())
                         .build())
                 .build();
-        when(notificationServiceMock.sendNotificationWithFlush(any(Notification.class), any(NotificationMedium.class)))
+        when(notificationService.sendNotificationWithFlush(any(Notification.class), any(NotificationMedium.class)))
                 .thenReturn(serviceSuccess());
 
-        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+        when(projectRepository.findById(project.getId())).thenReturn(Optional.of(project));
 
         ServiceResult<Void> result = service.sendDocumentReviewNotification(moUser, project.getId());
 
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(notificationServiceMock);
-        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(any(Notification.class), any(NotificationMedium.class));
+        InOrder inOrder = inOrder(notificationService);
+        inOrder.verify(notificationService).sendNotificationWithFlush(any(Notification.class), any(NotificationMedium.class));
         inOrder.verifyNoMoreInteractions();
     }
 }

@@ -28,7 +28,7 @@ ${address_postcode}              NW11 8AJ
 ${applicant_first_name}          Paul
 ${applicant_last_name}           Scholes
 ${applicant_email}               paul@scholes.com
-# This file uses the Application: Climate science the history of Greenland's ice    (Lead applcant: Steve.Smith)
+# This file uses the Application: Climate science the history of Greenland's ice    (Lead applicant: Steve.Smith)
 
 *** Test Cases ***
 Lead applicant details should show in the invite page

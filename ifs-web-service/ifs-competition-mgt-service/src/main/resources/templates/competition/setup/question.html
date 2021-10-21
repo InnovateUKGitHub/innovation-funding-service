@@ -24,7 +24,7 @@
 
         <p class="govuk-body govuk-!-margin-top-6" th:unless="${model.general.state.preventEdit}">
             You can edit this question for the applicant as well as the guidance for
-            <span th:text="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT ? 'Knowledge transfer adviser' : 'assessors'}">assessors</span>.</p>
+            <span th:text="${competitionSetupForm.question.type == competitionSetupForm.question.getKTPAssessmentQuestionType() ? 'Knowledge transfer adviser' : 'assessors'}">assessors</span>.</p>
 
         <p class="govuk-body govuk-!-margin-top-6" th:if="${model.general.state.preventEdit}">
             You are no longer able to make changes to this page.</p>
@@ -34,7 +34,7 @@
               th:object="${competitionSetupForm}"
               th:action="@{'/competition/setup/{competitionId}/section/application/question/{questionId}/edit'(competitionId=${model.general.competition.id}, questionId=${competitionSetupForm.question.questionId})}"
               data-th-attr="data-competition=${model.general.competition.id}, data-objectId=${competitionSetupForm.question.questionId},
-              data-subsection=${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE ? 'project' : 'question'}"
+              data-subsection=${competitionSetupForm.question.type == competitionSetupForm.question.getScopeQuestionType() ? 'project' : 'question'}"
               data-section="application"
               enctype="multipart/form-data"
               novalidate="novalidate">
@@ -52,7 +52,7 @@
               <a class="govuk-button"
                  th:unless="${model.general.state.preventEdit}"
                  th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}/edit(competitionId=${model.general.competition.id},questionId=${competitionSetupForm.question.questionId})}"
-                 th:text="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT ? 'Edit this guidance' : 'Edit this question'}">
+                 th:text="${competitionSetupForm.question.type == competitionSetupForm.question.getKTPAssessmentQuestionType() ? 'Edit this guidance' : 'Edit this question'}">
                   Edit this question</a>
             </div>
             <div class="govuk-!-margin-top-6">

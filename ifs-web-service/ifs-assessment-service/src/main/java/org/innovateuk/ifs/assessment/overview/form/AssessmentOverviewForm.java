@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.overview.form;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
@@ -35,6 +36,11 @@ public class AssessmentOverviewForm extends BaseBindingResultTarget {
 
     public void setRejectComment(String rejectComment) {
         this.rejectComment = rejectComment;
+    }
+
+    @JsonIgnore
+    public AssessmentRejectOutcomeValue[] getAssessmentRejectOutcomeValues() {
+        return AssessmentRejectOutcomeValue.values();
     }
 
     @Override

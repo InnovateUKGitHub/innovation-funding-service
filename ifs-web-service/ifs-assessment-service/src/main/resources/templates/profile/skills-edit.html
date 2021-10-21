@@ -78,7 +78,7 @@
                                 <span class="govuk-error-message"  th:each="err : ${#fields.errors('assessorType')}" th:text="${err}" />
                             </th:block>
                             <div class="govuk-radios">
-                                <div class="govuk-radios__item" th:each="type : ${T(org.innovateuk.ifs.user.resource.BusinessType).values()}">
+                                <div class="govuk-radios__item" th:each="type : ${model.getAllAssessorTypes()}">
                                     <input th:field="*{assessorType}"
                                            th:value="${type}"
                                            type="radio"

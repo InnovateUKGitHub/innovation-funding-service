@@ -27,7 +27,7 @@
             <dd th:text="${model.user.statusDisplay}">Active</dd>
         </dl>
 
-        <th:block th:if="${model.user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).INACTIVE)}">
+        <th:block th:if="${model.isInactiveUser()}">
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST" novalidate="novalidate">
                 <div class="form-footer">
                     <div class="form-footer__actions">

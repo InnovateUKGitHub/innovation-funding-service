@@ -283,7 +283,7 @@
                     <select id="sort-by"
                             name="sort"
                             class="govuk-select govuk-input--width-20">
-                        <option th:each="sort : ${T(org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource.Sort).values()}"
+                        <option th:each="sort : ${model.getAllApplicationCountSummaryResource()}"
                                 th:unless="${sort.onlyInAssessment && !model.applicationsView.inAssessment}"
                                 th:value="${sort}"
                                 th:selected="${model.applicationsView.currentSort == sort}"

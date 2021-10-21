@@ -25,7 +25,7 @@
         <ul class="task-list">
             <li>
                 <th:block
-                    th:if="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).APPLICATION_DETAILS)}">
+                    th:if="${model.isApplicationDetailsCompSetupSubSection()}">
                     <div class="task">
                         <h4 class="govuk-heading-s">
                             <a th:href="@{/competition/setup/{competitionId}/section/application/detail(competitionId=${model.general.competition.id})}"
@@ -35,7 +35,7 @@
                     <div class="task-status-complete"><span>Complete</span></div>
                 </th:block>
                 <th:block
-                    th:unless="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).APPLICATION_DETAILS)}">
+                    th:unless="${model.isApplicationDetailsCompSetupSubSection()}">
                     <div class="task">
                         <h4 class="govuk-heading-s">
                             <a th:href="@{/competition/setup/{competitionId}/section/application/detail/edit(competitionId=${model.general.competition.id})}"
@@ -121,7 +121,7 @@
         <ul class="task-list">
             <li>
                 <th:block
-                    th:if="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).FINANCES)}">
+                    th:if="${model.isFinancesDetailsCompSetupSubSection()}">
                     <div class="task">
                         <h4 class="govuk-heading-s">
                             <a th:href="@{/competition/setup/{competitionId}/section/application/question/finance(competitionId=${model.general.competition.id})}"
@@ -131,7 +131,7 @@
                     <div class="task-status-complete"><span>Complete</span></div>
                 </th:block>
                 <th:block
-                    th:unless="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).FINANCES)}">
+                    th:unless="${model.isFinancesDetailsCompSetupSubSection()}">
                     <div class="task">
                         <h4 class="govuk-heading-s">
                             <a th:href="@{/competition/setup/{competitionId}/section/application/question/finance/edit(competitionId=${model.general.competition.id})}"

@@ -21,7 +21,7 @@
             <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'upcoming'}, counts=${model.counts}, tabs=${model.tabs})" />
 
             <section class="govuk-tabs__panel">
-                <section th:with="inPrepComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP)}">
+                <section th:with="inPrepComps=${model.competitions.get(model.getSetupCompetitionStatus())}">
                     <h2 class="govuk-heading-m"
                         th:text="'In preparation ('+${inPrepComps == null ? '0' : inPrepComps.size()}+')'"></h2>
                     <ul class="govuk-list list-overview">
@@ -35,7 +35,7 @@
                     </ul>
                 </section>
 
-                <section th:with="readyToOpenComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN)}">
+                <section th:with="readyToOpenComps=${model.competitions.get(model.getReadyToOpenCompetitionStatus())}">
                     <h2 class="govuk-heading-m"
                         th:text="'Ready to open ('+${readyToOpenComps == null ? 0 : readyToOpenComps.size()}+')'"></h2>
                     <ul class="govuk-list list-overview">
