@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestServ
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.funding.form.NotificationEmailsForm;
@@ -18,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +30,7 @@ import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfigResourceBuilder.newCompetitionAssessmentConfigResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -80,6 +82,27 @@ public class SendNotificationsModelPopulatorTest {
         assertThat(viewModel.getUnsuccessfulRecipientsCount(), is(equalTo(1L)));
         assertThat(viewModel.getOnHoldRecipientsCount(), is(equalTo(1L)));
         assertThat(viewModel.getFundingDecisions(), is(equalTo(expectedDecisions)));
-        assertThat(viewModel.isHesta(), is(equalTo(false)));
+        assertFalse(viewModel.isHesta());
+    }
+
+    @Test
+    public void populateModel_hesta() {
+
+        CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .withName(COMPETITION_NAME)
+                .withCompetitionTypeEnum(CompetitionTypeEnum.HESTA)
+                .build();
+
+        CompetitionAssessmentConfigResource assessmentConfig = newCompetitionAssessmentConfigResource().withIncludeAverageAssessorScoreInNotifications(Boolean.FALSE).build();
+
+        when(applicationFundingDecisionRestService.getNotificationResourceForApplications(Collections.emptyList()))
+                .thenReturn(restSuccess(Collections.emptyList()));
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+        when(competitionAssessmentConfigRestService.findOneByCompetitionId(COMPETITION_ID)).thenReturn(restSuccess(assessmentConfig));
+
+        SendNotificationsViewModel viewModel = sendNotificationsModelPopulator.populate(COMPETITION_ID, Collections.emptyList(), new NotificationEmailsForm());
+
+        assertTrue(viewModel.isHesta());
     }
 }

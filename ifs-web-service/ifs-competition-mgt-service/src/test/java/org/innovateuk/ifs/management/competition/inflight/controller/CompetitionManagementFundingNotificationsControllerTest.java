@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.competition.inflight.controller;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.LambdaMatcher;
 import org.innovateuk.ifs.application.resource.*;
@@ -282,10 +283,22 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     public void getSendNotificationsPageTest() throws Exception {
 
         List<Long> applicationsIds = singletonList(APPLICATION_ID_ONE);
-        when(sendNotificationsModelPopulator.populate(eq(COMPETITION_ID), eq(applicationsIds), any())).thenReturn(emptyViewModel());
+        when(sendNotificationsModelPopulator.populate(eq(COMPETITION_ID), eq(applicationsIds), any())).thenReturn(emptyViewModel(false));
         mockMvc.perform(get("/competition/{competitionId}/funding/send?application_ids={applicationId}", COMPETITION_ID, APPLICATION_ID_ONE))
                 .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt-send-notifications"));
+                .andExpect(view().name("comp-mgt-send-notifications"))
+                .andExpect(model().attribute("model", Matchers.hasProperty("hesta", Matchers.equalTo(false))));
+    }
+
+    @Test
+    public void getSendNotificationsPageTest_hesta() throws Exception {
+
+        List<Long> applicationsIds = singletonList(APPLICATION_ID_ONE);
+        when(sendNotificationsModelPopulator.populate(eq(COMPETITION_ID), eq(applicationsIds), any())).thenReturn(emptyViewModel(true));
+        mockMvc.perform(get("/competition/{competitionId}/funding/send?application_ids={applicationId}", COMPETITION_ID, APPLICATION_ID_ONE))
+                .andExpect(status().isOk())
+                .andExpect(view().name("comp-mgt-send-notifications"))
+                .andExpect(model().attribute("model", Matchers.hasProperty("hesta", Matchers.equalTo(true))));
     }
 
     @Test
@@ -323,7 +336,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     @Test
     public void sendNotificationsTestWithInvalidMessage() throws Exception {
         when(applicationFundingDecisionRestService.sendApplicationFundingDecisions(any(FundingNotificationResource.class))).thenReturn(restSuccess());
-        when(sendNotificationsModelPopulator.populate(anyLong(), any(), any())).thenReturn(emptyViewModel());
+        when(sendNotificationsModelPopulator.populate(anyLong(), any(), any())).thenReturn(emptyViewModel(false));
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("fundingDecisions[" + APPLICATION_ID_ONE + "]", String.valueOf(FUNDED)))
@@ -337,7 +350,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     @Test
     public void sendNotificationsWithInvalidFundingDecisions() throws Exception {
         when(applicationFundingDecisionRestService.sendApplicationFundingDecisions(any(FundingNotificationResource.class))).thenReturn(restSuccess());
-        when(sendNotificationsModelPopulator.populate(anyLong(), any(), any())).thenReturn(emptyViewModel());
+        when(sendNotificationsModelPopulator.populate(anyLong(), any(), any())).thenReturn(emptyViewModel(false));
 
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -370,8 +383,8 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         }
     }
 
-    private SendNotificationsViewModel emptyViewModel() {
+    private SendNotificationsViewModel emptyViewModel(boolean hesta) {
         List<FundingDecisionToSendApplicationResource> resourceList = singletonList(new FundingDecisionToSendApplicationResource(1L, "", "", UNFUNDED));
-        return new SendNotificationsViewModel(resourceList, 0L, 0L, 0L, newCompetitionResource().withId(COMPETITION_ID).withName("compName").withAlwaysOpen(false).build(), false, false);
+        return new SendNotificationsViewModel(resourceList, 0L, 0L, 0L, newCompetitionResource().withId(COMPETITION_ID).withName("compName").withAlwaysOpen(false).build(), false, hesta);
     }
 }
