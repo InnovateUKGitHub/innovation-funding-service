@@ -39,3 +39,4 @@ patchesStrategicMerge:
   - auth/registration-service/registration-deployment.yml
   - sil-stub/sil-stub-deployment.yml
   - mail/mail-config.yml
+  - auth/idp/idp.yml
