@@ -6,6 +6,7 @@ import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerDashbo
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerDashboardViewModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CompressedCookieService;
+import org.innovateuk.ifs.util.CompressionUtil;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,22 +76,51 @@ public class MonitoringOfficerDashboardController {
                                 @RequestParam(value = PAGE_SIZE_KEY, defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
-//        form.setProjectInSetup(true);
 
-        form = getDataFromCookie(form, model, request);
-        savemonitoringOfficerDashboardCookie(form, response);
-
-        model.addAttribute(FORM_ATTR_NAME, form);
-        model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user
-                , form.getKeywordSearch()
-                , form.isProjectInSetup()
-                , form.isPreviousProject()
-                , form.isDocumentsComplete()
-                , form.isDocumentsIncomplete()
-                , form.isDocumentsAwaitingReview()
-                , form.isSpendProfileComplete()
-                , form.isSpendProfileIncomplete()
-                , form.isSpendProfileAwaitingReview() , pageNumber, pageSize ));
+        if(pageNumber == 0) {
+            form.setProjectInSetup(true);
+        }
+//
+//        form = getDataFromCookie(form, model, request);
+//        savemonitoringOfficerDashboardCookie(form, response);
+//
+//        model.addAttribute(FORM_ATTR_NAME, form);
+//        model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user
+//                , form.getKeywordSearch()
+//                , form.isProjectInSetup()
+//                , form.isPreviousProject()
+//                , form.isDocumentsComplete()
+//                , form.isDocumentsIncomplete()
+//                , form.isDocumentsAwaitingReview()
+//                , form.isSpendProfileComplete()
+//                , form.isSpendProfileIncomplete()
+//                , form.isSpendProfileAwaitingReview() , pageNumber, pageSize ));
+        Optional<MonitoringOfficerDashboardForm> cookieForm = getMonitoringOfficerDashboardFormCookieValue(request);
+        if(cookieForm.isPresent()) {
+            model.addAttribute(FORM_ATTR_NAME, cookieForm.get());
+            model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user
+                    , cookieForm.get().getKeywordSearch()
+                    , cookieForm.get().isProjectInSetup()
+                    , cookieForm.get().isPreviousProject()
+                    , cookieForm.get().isDocumentsComplete()
+                    , cookieForm.get().isDocumentsIncomplete()
+                    , cookieForm.get().isDocumentsAwaitingReview()
+                    , cookieForm.get().isSpendProfileComplete()
+                    , cookieForm.get().isSpendProfileIncomplete()
+                    , cookieForm.get().isSpendProfileAwaitingReview(), pageNumber, pageSize));
+        } else {
+            model.addAttribute(FORM_ATTR_NAME, form);
+            model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user
+                    , form.getKeywordSearch()
+                    , form.isProjectInSetup()
+                    , form.isPreviousProject()
+                    , form.isDocumentsComplete()
+                    , form.isDocumentsIncomplete()
+                    , form.isDocumentsAwaitingReview()
+                    , form.isSpendProfileComplete()
+                    , form.isSpendProfileIncomplete()
+                    , form.isSpendProfileAwaitingReview(), pageNumber, pageSize));
+        }
         return "monitoring-officer/dashboard";
     }
 
@@ -104,16 +134,17 @@ public class MonitoringOfficerDashboardController {
                                   @RequestParam(value = PAGE_SIZE_KEY, defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
                                   HttpServletRequest request,
                                   HttpServletResponse response)  {
-        savemonitoringOfficerDashboardCookie(form, response);
-        addFilters(form,
-                keywordSearchFromCookie(request),
-                filterProjectsInSetupFromCookie(request),
-                filterPreviousProjectsFromCookie(request));
+//        addFilters(form,
+//                keywordSearchFromCookie(request),
+//                filterProjectsInSetupFromCookie(request),
+//                filterPreviousProjectsFromCookie(request));
 
         final Supplier<String> failureView = () -> viewDashboard(model, form, user,pageNumber, pageSize, request, response);
 
         return validationHandler.failNowOrSucceedWith(failureView,
                 () -> {
+                    savemonitoringOfficerDashboardCookie(form, response);
+
                     model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user
                             , form.getKeywordSearch()
                             , form.isProjectInSetup()
@@ -137,7 +168,7 @@ public class MonitoringOfficerDashboardController {
     private Optional<MonitoringOfficerDashboardForm> processedMonitoringOfficerDashboardFormFromCookie(Model model, HttpServletRequest request) {
         Optional<MonitoringOfficerDashboardForm> monitoringOfficerDashboardFormFromCookie = getMonitoringOfficerDashboardFormCookieValue(request);
         monitoringOfficerDashboardFormFromCookie.ifPresent(monitoringOfficerDashboardForm -> {
-            populateOrganisationCreationForm(request, monitoringOfficerDashboardForm);
+            populateMonitoringOfficerDashboardForm(request, monitoringOfficerDashboardForm);
 
             BindingResult bindingResult = new BeanPropertyBindingResult(monitoringOfficerDashboardForm, FORM_ATTR_NAME);
             monitoringOfficerDashboardFormValidate(monitoringOfficerDashboardForm, bindingResult);
@@ -147,11 +178,20 @@ public class MonitoringOfficerDashboardController {
         return monitoringOfficerDashboardFormFromCookie;
     }
 
-    public Optional<MonitoringOfficerDashboardForm> getMonitoringOfficerDashboardFormCookieValue(HttpServletRequest request) {
-        return Optional.ofNullable(getObjectFromJson(compressedCookieService.getCookieValue(request, FORM_ATTR_NAME), MonitoringOfficerDashboardForm.class));
+//    protected void saveFormToCookie(HttpServletResponse response, String identifier, T selectionForm) {
+//        cookieUtil.saveToCookie(response, format("%s_comp_%s", getCookieName(), identifier), getSerializedObject(selectionForm));
+//    }
+
+    protected String getValueFromCookie(String value) {
+        return CompressionUtil.getDecompressedString(value);
     }
 
-    private void populateOrganisationCreationForm(HttpServletRequest request, MonitoringOfficerDashboardForm monitoringOfficerDashboardForm) {
+    public Optional<MonitoringOfficerDashboardForm> getMonitoringOfficerDashboardFormCookieValue(HttpServletRequest request) {
+//        return Optional.ofNullable(getObjectFromJson(compressedCookieService.getCookieValue(request, FORM_ATTR_NAME), MonitoringOfficerDashboardForm.class));
+        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, FORM_ATTR_NAME), MonitoringOfficerDashboardForm.class));
+    }
+
+    private void populateMonitoringOfficerDashboardForm(HttpServletRequest request, MonitoringOfficerDashboardForm monitoringOfficerDashboardForm) {
         addFilters(monitoringOfficerDashboardForm,
                 keywordSearchFromCookie(request),
                 filterProjectsInSetupFromCookie(request),
@@ -223,7 +263,8 @@ public class MonitoringOfficerDashboardController {
     }
 
     public void savemonitoringOfficerDashboardCookie(MonitoringOfficerDashboardForm monitoringOfficerDashboardCookie, HttpServletResponse response) {
-        compressedCookieService.saveToCookie(response, FORM_ATTR_NAME, JsonUtil.getSerializedObject(monitoringOfficerDashboardCookie));
+        cookieUtil.saveToCookie(response, FORM_ATTR_NAME, JsonUtil.getSerializedObject(monitoringOfficerDashboardCookie));
+        //        compressedCookieService.saveToCookie(response, FORM_ATTR_NAME, JsonUtil.getSerializedObject(monitoringOfficerDashboardCookie));
 //        saveKeywordSearchCookie(monitoringOfficerDashboardCookie, response);
 //        saveFilterProjectInSetupCookie(monitoringOfficerDashboardCookie, response);
 //        saveFilterPreviousProjectCookie(monitoringOfficerDashboardCookie, response);
