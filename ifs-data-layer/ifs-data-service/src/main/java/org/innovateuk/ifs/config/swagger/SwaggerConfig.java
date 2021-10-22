@@ -45,6 +45,9 @@ public class SwaggerConfig extends SecurityConfig {
             "/swagger-ui.html",
             "/webjars/**",
             "/v3/api-docs/**",
+            "/monitoring/**",
+            "/actuator/**",
+            "/jolokia/**",
             "/swagger-ui/**"
     };
 

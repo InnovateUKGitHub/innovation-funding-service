@@ -61,6 +61,8 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-validation"
     compile "org.springframework.security:spring-security-crypto"
     compile "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.jolokia:jolokia-core"
 
     compile "org.springframework.boot:spring-boot-starter-data-redis"
     compile "org.apache.commons:commons-pool2"
