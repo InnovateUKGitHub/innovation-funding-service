@@ -19,7 +19,8 @@ function util_versions {
   echo 'kustomize:' "$(kustomize version --short)"
   echo 'skaffold:' "$(skaffold version)"
   java -version 2>&1 | head -n 1
-  echo 'gradle' "$(gradle -version | sed -n '3p')"
+  echo 'gradle:' "$(gradle -version | sed -n '3p')"
+  git version
   sysctl hw.memsize
   sysctl hw.ncpu
   echo '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
