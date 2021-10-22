@@ -40,7 +40,7 @@ public class MonitoringOfficerDashboardViewModel {
     }
 
     public long projectCount() {
-        return projects.size();
+        return pagination.getTotalCount();
     }
 
     public boolean isEmptyResults() {
