@@ -41,4 +41,7 @@ patchesStrategicMerge:
   - mail/mail.yml
   - ifs-database/ifs-database.yml
   - auth/idp/idp.yml
+  - auth/idp/idp-deployment.yml
   - auth/sp/sp.yml
+  - auth/sp/sp-deployment.yml
+  - auth/ldap/ldap-deployment.yml

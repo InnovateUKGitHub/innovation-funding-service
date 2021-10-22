@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ldap
+spec:
+  template:
+    spec:
+      containers:
+        - name: ldap
+          startupProbe:
+            exec:
+              command:
+                - ldapsearch
+                - -H
+                - ldaps://localhost:8389
+                - -b
+                - dc=nodomain
+                - -x
+                - -LLL
+                - -s
+                - base
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 60
