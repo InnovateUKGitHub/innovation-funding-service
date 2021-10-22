@@ -34,10 +34,11 @@ resources:
   - config-maps/shibboleth-config.yml
   - config-maps/web-config.yml
 
-
 patchesStrategicMerge:
   - auth/registration-service/registration-deployment.yml
   - sil-stub/sil-stub-deployment.yml
   - mail/mail-config.yml
+  - mail/mail.yml
+  - ifs-database/ifs-database.yml
   - auth/idp/idp.yml
   - auth/sp/sp.yml

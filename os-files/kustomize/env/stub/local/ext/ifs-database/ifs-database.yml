@@ -5,9 +5,7 @@ metadata:
   labels:
     app: ifs-database
 spec:
+  type: NodePort
   ports:
     - name: 3306-tcp
-      port: 3306
-      targetPort: 3306
-  selector:
-    app: ifs-database
+      nodePort: 3306
