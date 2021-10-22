@@ -14,7 +14,7 @@ spec:
     - name: 4443-tcp
       port: 443
       targetPort: 4443
-      nodePort: 443
+      nodePort: 4443
     - name: 8143-tcp
       port: 8143
       targetPort: 8143
