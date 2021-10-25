@@ -9,5 +9,5 @@ ${message}
 
 Yours sincerely,
 
-<@layout.heukarSenderPlainText />
+<@layout.hestaSenderPlainText />
 </@layout.defaultPlainText>
