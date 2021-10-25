@@ -55,6 +55,10 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...
 ...               IFS-10022 MO improvements: visibility of finance status for individual partners
 ...
+...               IFS 10580 mo dashboard finance checks: show as incomplete when all partners are not complete their review
+...
+...               IFS 10581 mo dashboard finance checks: show as incomplete when none of the partners organization has not been completed their review
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -361,17 +365,38 @@ MO can see status of the finance as a awaiting review for individual partners
     And the user navigates to the page                                      ${server}/project-setup/project/${financeProjectID}/finance-check/read-only
     Then MO can view awaiting review as a finance status for all partners
 
+Mo can see finance checks as incomplete when none of the partner organisation has not done their reviews
+    [Documentation]   IFS-10581
+    And the user navigates to the page                                      ${server}/project-setup/project/${financeProjectID}
+    Then the user should see the element     jQuery = p:contains("We will review your financial information."),span:contains("Incomplete")
+
+MO can see finance checks as incomplete when one of the partner organization has done their reviews
+    [Documentation]   IFS-10580
+    Given log in as a different user                                        &{internal_finance_credentials}
+    When The user navigates to the page                                     ${server}/project-setup-management/competition/${financeCompetitionId}/status/all
+    And The user clicks the button/link                                     link = Review
+    And confirm viability  0
+    And confirm eligibility  0
+    And log in as a different user                                          &{monitoring_officer_one_credentials}
+    And the user navigates to the page                                      ${server}/project-setup/project/${financeProjectID}
+    Then the user should see the element     jQuery = p:contains("We will review your financial information."),span:contains("Incomplete")
+
 MO can see status of the finance as a completed for individual partners
     [Documentation]   IFS-10022
     Given log in as a different user                                        &{internal_finance_credentials}
     When The user navigates to the page                                     ${server}/project-setup-management/competition/${financeCompetitionId}/status/all
     And The user clicks the button/link                                     link = Review
-    And project finance approves Viability for                              ${organisationID}  ${financeProjectID}
-    And project finance approves Viability for                              ${organisationSmithZoneID}  ${financeProjectID}
-    And project finance approves Eligibility                                ${organisationID}  ${organisationRedPlanetID}  ${organisationSmithZoneID}  ${financeProjectID}
+    And confirm viability  2
+    And confirm eligibility  1
+    And confirm eligibility  2
     And log in as a different user                                          &{monitoring_officer_one_credentials}
-    And the user navigates to the page                                      ${server}/project-setup/project/46/finance-check/read-only
-    Then MO can view completed as a finance status for individual partners     
+    And the user navigates to the page                                      ${server}/project-setup/project/${financeProjectID}/finance-check/read-only
+    Then MO can view completed as a finance status for individual partners
+
+MO can see finance checks as complete when all individual partner organisation has been done their reviews
+    [Documentation]   IFS-10580
+    And the user navigates to the page                                      ${server}/project-setup/project/${financeProjectID}
+    Then the user should see the element     jQuery = p:contains("We will review your financial information."),span:contains("Complete")
 
 *** Keywords ***
 The MO user is able to access all of the links
@@ -635,3 +660,4 @@ the user should see the project status
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = .task:contains("${applicationTitle}") + .status:contains("Live project")
     #Local check
     run keyword if  '${status}'=='FAIL'  run keyword  the user should see the element   jQuery = .task:contains("${applicationTitle}") + .status:contains("Monitor project")
+
