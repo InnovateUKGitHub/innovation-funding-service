@@ -14,7 +14,7 @@ import static org.innovateuk.ifs.project.monitoringofficer.service.MonitoringOff
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-class MonitoringOfficerDashBoardCookieServiceTest extends BaseServiceUnitTest<MonitoringOfficerDashBoardCookieService> {
+public class MonitoringOfficerDashBoardCookieServiceTest extends BaseServiceUnitTest<MonitoringOfficerDashBoardCookieService> {
 
     @Mock
     private EncryptedCookieService cookieUtil;
