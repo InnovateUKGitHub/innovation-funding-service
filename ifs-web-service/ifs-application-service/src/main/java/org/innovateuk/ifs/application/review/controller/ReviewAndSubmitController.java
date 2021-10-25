@@ -269,14 +269,14 @@ public class ReviewAndSubmitController {
     private String getTrackingPage(CompetitionResource competition) {
         if (CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType())) {
             return "covid-additional-funding-application-track";
+        } else if (competition.isHesta()) {
+            return "hesta-application-track";
         } else if (competition.isAlwaysOpen()) {
             return "always-open-track";
         } else if (competition.isH2020()) {
             return "h2020-grant-transfer-track";
         } else if (competition.isLoan()) {
             return "loan-application-track";
-        } else if (competition.isHesta()) {
-            return "heukar-application-track";
         } else {
             return "application-track";
         }
