@@ -275,6 +275,8 @@ public class ReviewAndSubmitController {
             return "h2020-grant-transfer-track";
         } else if (competition.isLoan()) {
             return "loan-application-track";
+        } else if (competition.isHesta()) {
+            return "heukar-application-track";
         } else {
             return "application-track";
         }
