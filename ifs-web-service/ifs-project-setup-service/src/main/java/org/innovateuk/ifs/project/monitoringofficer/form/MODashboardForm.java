@@ -20,7 +20,7 @@ import java.util.function.BiPredicate;
         secondField = "keywordSearchMaxLength",
         message = "{validation.modashboard.filterprojects.keywordsearch.max.length}",
         predicate = MODashboardForm.KeywordSearchMaxPredicateProvider.class)
-public class MODashboardForm extends BaseBindingResultTarget {
+public class MODashboardForm extends BaseBindingResultTarget implements Serializable{
 
     private static final Integer KEYWORD_SEARCH_MIN_LENGTH = 3;
     private static final Integer KEYWORD_SEARCH_MAX_LENGTH = 100;
