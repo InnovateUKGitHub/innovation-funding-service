@@ -48,6 +48,9 @@ public class MonitoringOfficerDashboardController {
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
 
+        if (pageNumber == 0) {
+            monitoringOfficerDashBoardCookieService.deleteMODashBoardDataFromCookie(response);
+        }
         form.setProjectInSetup(true);
         MonitoringOfficerDashboardForm moDashboardForm = monitoringOfficerDashBoardCookieService.getMODashboardFormCookieValue(form, model, request);
         model.addAttribute(FORM_ATTR_NAME, moDashboardForm);

@@ -134,4 +134,8 @@ public class MonitoringOfficerDashBoardCookieService {
     private void monitoringOfficerDashboardFormValidate(MonitoringOfficerDashboardForm monitoringOfficerDashboardForm, BindingResult bindingResult) {
         validator.validate(monitoringOfficerDashboardForm, bindingResult);
     }
+
+    public void deleteMODashBoardDataFromCookie(HttpServletResponse response) {
+        cookieUtil.removeCookie(response, MO_DASHBOARD_FORM_NAME);
+    }
 }
