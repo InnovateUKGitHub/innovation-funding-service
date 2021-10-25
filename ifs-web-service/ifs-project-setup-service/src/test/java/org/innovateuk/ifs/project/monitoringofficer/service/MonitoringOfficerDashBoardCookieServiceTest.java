@@ -118,8 +118,4 @@ class MonitoringOfficerDashBoardCookieServiceTest extends BaseServiceUnitTest<Mo
 
         verify(cookieUtil, times(1)).removeCookie(response, MO_DASHBOARD_FORM_NAME);
     }
-
-
-
-
 }
