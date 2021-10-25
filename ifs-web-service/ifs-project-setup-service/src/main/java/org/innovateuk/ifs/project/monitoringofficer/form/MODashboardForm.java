@@ -14,13 +14,13 @@ import java.util.function.BiPredicate;
         firstField = "keywordSearch",
         secondField = "keywordSearchMinLength",
         message = "{validation.modashboard.filterprojects.keywordsearch.min.length}",
-        predicate = MonitoringOfficerDashboardForm.KeywordSearchMinPredicateProvider.class)
+        predicate = MODashboardForm.KeywordSearchMinPredicateProvider.class)
 @FieldComparison(
         firstField = "keywordSearch",
         secondField = "keywordSearchMaxLength",
         message = "{validation.modashboard.filterprojects.keywordsearch.max.length}",
-        predicate = MonitoringOfficerDashboardForm.KeywordSearchMaxPredicateProvider.class)
-public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget implements Serializable {
+        predicate = MODashboardForm.KeywordSearchMaxPredicateProvider.class)
+public class MODashboardForm extends BaseBindingResultTarget {
 
     private static final Integer KEYWORD_SEARCH_MIN_LENGTH = 3;
     private static final Integer KEYWORD_SEARCH_MAX_LENGTH = 100;
@@ -37,7 +37,7 @@ public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget impl
     private boolean spendProfileIncomplete;
     private boolean spendProfileAwaitingReview;
 
-    public MonitoringOfficerDashboardForm() {
+    public MODashboardForm() {
     }
 
     public String getKeywordSearch() {
@@ -156,7 +156,7 @@ public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget impl
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        MonitoringOfficerDashboardForm that = (MonitoringOfficerDashboardForm) o;
+        MODashboardForm that = (MODashboardForm) o;
 
         return new EqualsBuilder()
                 .append(keywordSearch, that.keywordSearch)

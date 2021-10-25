@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerDashboardForm;
+import org.innovateuk.ifs.project.monitoringofficer.form.MODashboardForm;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerDashboardViewModelPopulator;
 import org.innovateuk.ifs.project.monitoringofficer.service.MonitoringOfficerDashBoardCookieService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -41,7 +41,7 @@ public class MonitoringOfficerDashboardController {
 
     @GetMapping
     public String viewDashboard(Model model,
-                                @ModelAttribute(name = FORM_ATTR_NAME, binding = false) MonitoringOfficerDashboardForm form,
+                                @ModelAttribute(name = FORM_ATTR_NAME, binding = false) MODashboardForm form,
                                 UserResource user,
                                 @RequestParam(value = PAGE_NUMBER_KEY, defaultValue = DEFAULT_PAGE_NUMBER) int pageNumber,
                                 @RequestParam(value = PAGE_SIZE_KEY, defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
@@ -52,7 +52,7 @@ public class MonitoringOfficerDashboardController {
             monitoringOfficerDashBoardCookieService.deleteMODashBoardDataFromCookie(response);
         }
         form.setProjectInSetup(true);
-        MonitoringOfficerDashboardForm moDashboardForm = monitoringOfficerDashBoardCookieService.getMODashboardFormCookieValue(form, model, request);
+        MODashboardForm moDashboardForm = monitoringOfficerDashBoardCookieService.getMODashboardFormCookieValue(form, model, request);
         model.addAttribute(FORM_ATTR_NAME, moDashboardForm);
         model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user
                 , moDashboardForm.getKeywordSearch()
@@ -70,7 +70,7 @@ public class MonitoringOfficerDashboardController {
 
     @PostMapping
     public String filterDashboard(Model model,
-                                  @Valid @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerDashboardForm form,
+                                  @Valid @ModelAttribute(FORM_ATTR_NAME) MODashboardForm form,
                                   @SuppressWarnings("unused") BindingResult bindingResult,
                                   ValidationHandler validationHandler,
                                   UserResource user,

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerDashboardForm;
+import org.innovateuk.ifs.project.monitoringofficer.form.MODashboardForm;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerDashboardViewModelPopulator;
 import org.innovateuk.ifs.project.monitoringofficer.service.MonitoringOfficerDashBoardCookieService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerDashboardViewModel;
@@ -27,7 +27,7 @@ public class MonitoringOfficerDashboardControllerTest extends BaseControllerMock
     @Mock
     private MonitoringOfficerDashBoardCookieService cookieService;
 
-    private MonitoringOfficerDashboardForm monitoringOfficerDashboardForm;
+    private MODashboardForm monitoringOfficerDashboardForm;
 
     @Override
     protected MonitoringOfficerDashboardController supplyControllerUnderTest() {
@@ -36,7 +36,7 @@ public class MonitoringOfficerDashboardControllerTest extends BaseControllerMock
 
     @Before
     public void setUpForm() {
-        monitoringOfficerDashboardForm = new MonitoringOfficerDashboardForm();
+        monitoringOfficerDashboardForm = new MODashboardForm();
     }
     @Test
     public void viewDashboard() throws Exception {
