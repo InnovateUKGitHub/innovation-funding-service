@@ -51,6 +51,8 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...
 ...               IFS-10239 Rejected document is visible in PM view throws upload error
 ...
+...               IFS-10067 Email sent to MO to review the documents shouldnt display projectID
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -499,11 +501,11 @@ Assign a MO to the project
     And the internal user assign project to MO     ${MO_DocApproval_application_No}   ${MO_DocApproval_application_Title}
 
 PM uploads documents and the MO receives an email
-    [Documentation]    IFS-9575
+    [Documentation]    IFS-9575  IFS-10067
     [Setup]    log in as a different user                         ${USER_PM}     ${short_password}
     Given PM uploads and notifies the project documents to MO     ${MO_DocApproval_ProjectID}
     And the user logs out if they are logged in
-    And the user reads his email                                  ${MO_EMAIL}     You have a new document to review for project ${MO_DocApproval_application_Title}     A new document has been uploaded by the project manager for this project:
+    And the user reads his email                                  ${MO_EMAIL}     You have a new document to review for project ${MO_DocApproval_application_Title}  ${MO_DocApproval_application_No}
 
 MO rejects the document
     [Documentation]  IFS-9577

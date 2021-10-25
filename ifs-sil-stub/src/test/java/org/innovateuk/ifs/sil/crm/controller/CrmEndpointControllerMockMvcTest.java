@@ -6,7 +6,6 @@ import org.innovateuk.ifs.sil.crm.resource.SilLoanApplication;
 import org.junit.Test;
 
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,7 +54,7 @@ public class CrmEndpointControllerMockMvcTest extends AbstractEndpointController
                                 header("IFS_AUTH_TOKEN", "123abc").
                                 content(requestBody)
                 ).
-                andExpect(status().isOk()).
+                andExpect(status().isAccepted()).
                 andReturn();
     }
 
@@ -93,7 +92,7 @@ public class CrmEndpointControllerMockMvcTest extends AbstractEndpointController
                                 header("IFS_AUTH_TOKEN", "123abc").
                                 content(requestBody)
                 ).
-                andExpect(status().isOk()).
+                andExpect(status().isAccepted()).
                 andReturn();
     }
 

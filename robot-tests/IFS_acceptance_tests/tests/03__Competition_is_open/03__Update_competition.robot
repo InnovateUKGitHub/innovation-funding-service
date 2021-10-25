@@ -326,7 +326,7 @@ return the database to its previous status
 
 the user moves the competition back again
     the user navigates to the page       ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
-    the user clicks the button/link      jQuery = button:contains("Done")   # this action  is marking appication section complete
+    the user clicks the button/link      jQuery = button:contains("Done")   # this action  is marking application section complete
     the user clicks the button/link      link = Back to competition details
     the user clicks the button/link      jQuery = a:contains("Complete setup")
     the user clicks the button/link      css = button[type="submit"]
