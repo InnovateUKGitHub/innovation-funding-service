@@ -15,6 +15,7 @@ import java.nio.file.Path;
 /**
  * this class supplies the /health endpoint with the knowledge about if the file storage cluster is accessible.
  */
+@Component
 public class FileStorageHealthIndicator implements HealthIndicator {
     private static final Log LOG = LogFactory.getLog(FileStorageHealthIndicator.class);
 
