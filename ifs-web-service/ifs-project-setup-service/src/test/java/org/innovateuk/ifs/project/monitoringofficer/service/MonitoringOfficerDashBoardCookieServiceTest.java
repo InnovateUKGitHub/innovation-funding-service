@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.monitoringofficer.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerDashboardForm;
-import org.innovateuk.ifs.util.CompressedCookieService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
@@ -10,10 +9,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 
-import static org.innovateuk.ifs.project.monitoringofficer.service.MonitoringOfficerDashBoardCookieService.*;
+import static org.innovateuk.ifs.project.monitoringofficer.service.MonitoringOfficerDashBoardCookieService.MO_DASHBOARD_FORM_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -22,16 +19,8 @@ public class MonitoringOfficerDashBoardCookieServiceTest extends BaseServiceUnit
     @Mock
     private EncryptedCookieService cookieUtil;
 
-    @Mock
-    private CompressedCookieService compressedCookieService;
-
     private MockHttpServletResponse response;
     private MockHttpServletRequest request;
-
-    @Mock
-    private Validator validator;
-
-    private BindingResult bindingResult;
 
     protected MonitoringOfficerDashBoardCookieService supplyServiceUnderTest() {
         return new MonitoringOfficerDashBoardCookieService();
@@ -59,17 +48,11 @@ public class MonitoringOfficerDashBoardCookieServiceTest extends BaseServiceUnit
         MonitoringOfficerDashboardForm mODashboardForm = new MonitoringOfficerDashboardForm();
 
         when(cookieUtil.getCookieValue(request, MO_DASHBOARD_FORM_NAME)).thenReturn(JsonUtil.getSerializedObject(mODashboardForm));
-        when(cookieUtil.getCookieValue(request, KEYWORD_SEARCH)).thenReturn(JsonUtil.getSerializedObject(mODashboardForm));
-        when(cookieUtil.getCookieValue(request, PROJECT_IN_SETUP)).thenReturn(JsonUtil.getSerializedObject(mODashboardForm));
-        when(cookieUtil.getCookieValue(request, PREVIOUS_PROJECT)).thenReturn(JsonUtil.getSerializedObject(mODashboardForm));
 
         MonitoringOfficerDashboardForm result = service.getMODashboardFormCookieValue(request);
 
         assertEquals(result, mODashboardForm);
         verify(cookieUtil, times(1)).getCookieValue(request, MO_DASHBOARD_FORM_NAME);
-        verify(cookieUtil, times(1)).getCookieValue(request, KEYWORD_SEARCH);
-        verify(cookieUtil, times(1)).getCookieValue(request, PROJECT_IN_SETUP);
-        verify(cookieUtil, times(1)).getCookieValue(request, PREVIOUS_PROJECT);
     }
 
     @Test

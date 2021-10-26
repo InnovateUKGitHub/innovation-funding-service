@@ -16,9 +16,6 @@ import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
 public class MonitoringOfficerDashBoardCookieService {
 
     public static final String MO_DASHBOARD_FORM_NAME = "moDashboardForm";
-    public static final String KEYWORD_SEARCH = "keywordSearch";
-    public static final String PROJECT_IN_SETUP = "projectInSetup";
-    public static final String PREVIOUS_PROJECT = "previousProject";
 
     @Autowired
     private EncryptedCookieService cookieUtil;
@@ -40,11 +37,12 @@ public class MonitoringOfficerDashBoardCookieService {
         cookieUtil.saveToCookie(response, MO_DASHBOARD_FORM_NAME, JsonUtil.getSerializedObject(monitoringOfficerDashboardCookie));
     }
 
-    public Optional<MonitoringOfficerDashboardForm> getMODashboardFormFromCookieValue(HttpServletRequest request) {
-        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, MO_DASHBOARD_FORM_NAME), MonitoringOfficerDashboardForm.class));
-    }
-
     public void deleteMODashBoardDataFromCookie(HttpServletResponse response) {
         cookieUtil.removeCookie(response, MO_DASHBOARD_FORM_NAME);
     }
+
+    private Optional<MonitoringOfficerDashboardForm> getMODashboardFormFromCookieValue(HttpServletRequest request) {
+        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, MO_DASHBOARD_FORM_NAME), MonitoringOfficerDashboardForm.class));
+    }
+
 }
