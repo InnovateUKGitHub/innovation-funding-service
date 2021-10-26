@@ -42,7 +42,7 @@ public class MonitoringOfficerDashboardControllerTest extends BaseControllerMock
     public void viewDashboard() throws Exception {
         MonitoringOfficerDashboardViewModel model = mock(MonitoringOfficerDashboardViewModel.class);
 
-        when(cookieService.getMODashboardFormCookieValue(any(), any(), any())).thenReturn(monitoringOfficerDashboardForm);
+        when(cookieService.getMODashboardFormCookieValue(any())).thenReturn(monitoringOfficerDashboardForm);
         when(populator.populate(loggedInUser, null, true, false, false,
                 false, false, false, false,
                 false,0, 10)).thenReturn(model);

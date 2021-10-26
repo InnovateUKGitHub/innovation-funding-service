@@ -51,8 +51,7 @@ public class MonitoringOfficerDashboardController {
         if (pageNumber == 0) {
             monitoringOfficerDashBoardCookieService.deleteMODashBoardDataFromCookie(response);
         }
-        form.setProjectInSetup(true);
-        MonitoringOfficerDashboardForm moDashboardForm = monitoringOfficerDashBoardCookieService.getMODashboardFormCookieValue(form, model, request);
+        MonitoringOfficerDashboardForm moDashboardForm = monitoringOfficerDashBoardCookieService.getMODashboardFormCookieValue(request);
         model.addAttribute(FORM_ATTR_NAME, moDashboardForm);
         model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user
                 , moDashboardForm.getKeywordSearch()

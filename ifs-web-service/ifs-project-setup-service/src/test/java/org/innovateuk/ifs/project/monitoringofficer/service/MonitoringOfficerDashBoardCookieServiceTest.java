@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
@@ -58,14 +57,13 @@ public class MonitoringOfficerDashBoardCookieServiceTest extends BaseServiceUnit
     @Test
     public void getMODashboardFormCookieValue() throws Exception {
         MonitoringOfficerDashboardForm mODashboardForm = new MonitoringOfficerDashboardForm();
-        Model model = mock(Model.class);
 
         when(cookieUtil.getCookieValue(request, MO_DASHBOARD_FORM_NAME)).thenReturn(JsonUtil.getSerializedObject(mODashboardForm));
         when(cookieUtil.getCookieValue(request, KEYWORD_SEARCH)).thenReturn(JsonUtil.getSerializedObject(mODashboardForm));
         when(cookieUtil.getCookieValue(request, PROJECT_IN_SETUP)).thenReturn(JsonUtil.getSerializedObject(mODashboardForm));
         when(cookieUtil.getCookieValue(request, PREVIOUS_PROJECT)).thenReturn(JsonUtil.getSerializedObject(mODashboardForm));
 
-        MonitoringOfficerDashboardForm result = service.getMODashboardFormCookieValue(mODashboardForm, model, request);
+        MonitoringOfficerDashboardForm result = service.getMODashboardFormCookieValue(request);
 
         assertEquals(result, mODashboardForm);
         verify(cookieUtil, times(1)).getCookieValue(request, MO_DASHBOARD_FORM_NAME);
