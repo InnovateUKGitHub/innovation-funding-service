@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.monitoringofficer.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.project.monitoringofficer.form.MODashboardForm;
+import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerDashboardForm;
 import org.innovateuk.ifs.util.CompressedCookieService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
@@ -48,7 +48,7 @@ public class MonitoringOfficerDashBoardCookieServiceTest extends BaseServiceUnit
 
     @Test
     public void saveMODashboardDataIntoCookie() throws Exception {
-        MODashboardForm moDashboardForm = new MODashboardForm();
+        MonitoringOfficerDashboardForm moDashboardForm = new MonitoringOfficerDashboardForm();
 
         service.saveMODashboardDataIntoCookie(moDashboardForm, response);
 
@@ -57,7 +57,7 @@ public class MonitoringOfficerDashBoardCookieServiceTest extends BaseServiceUnit
 
     @Test
     public void getMODashboardFormCookieValue() throws Exception {
-        MODashboardForm mODashboardForm = new MODashboardForm();
+        MonitoringOfficerDashboardForm mODashboardForm = new MonitoringOfficerDashboardForm();
         Model model = mock(Model.class);
 
         when(cookieUtil.getCookieValue(request, MO_DASHBOARD_FORM_NAME)).thenReturn(JsonUtil.getSerializedObject(mODashboardForm));
@@ -65,7 +65,7 @@ public class MonitoringOfficerDashBoardCookieServiceTest extends BaseServiceUnit
         when(cookieUtil.getCookieValue(request, PROJECT_IN_SETUP)).thenReturn(JsonUtil.getSerializedObject(mODashboardForm));
         when(cookieUtil.getCookieValue(request, PREVIOUS_PROJECT)).thenReturn(JsonUtil.getSerializedObject(mODashboardForm));
 
-        MODashboardForm result = service.getMODashboardFormCookieValue(mODashboardForm, model, request);
+        MonitoringOfficerDashboardForm result = service.getMODashboardFormCookieValue(mODashboardForm, model, request);
 
         assertEquals(result, mODashboardForm);
         verify(cookieUtil, times(1)).getCookieValue(request, MO_DASHBOARD_FORM_NAME);

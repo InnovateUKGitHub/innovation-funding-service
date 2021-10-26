@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.monitoringofficer.service;
 
-import org.innovateuk.ifs.project.monitoringofficer.form.MODashboardForm;
+import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerDashboardForm;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,76 +37,76 @@ public class MonitoringOfficerDashBoardCookieService {
         this.validator = validator;
     }
 
-    public MODashboardForm getMODashboardFormCookieValue(MODashboardForm mODashboardForm, Model model, HttpServletRequest request) {
+    public MonitoringOfficerDashboardForm getMODashboardFormCookieValue(MonitoringOfficerDashboardForm monitoringOfficerDashboardForm, Model model, HttpServletRequest request) {
         return processedMODashboardFormFromCookie(model, request)
-                .orElseGet(() -> processedMODashboardFormFromRequest(mODashboardForm, request));
+                .orElseGet(() -> processedMODashboardFormFromRequest(monitoringOfficerDashboardForm, request));
     }
 
-    public void saveMODashboardDataIntoCookie(MODashboardForm monitoringOfficerDashboardCookie, HttpServletResponse response) {
+    public void saveMODashboardDataIntoCookie(MonitoringOfficerDashboardForm monitoringOfficerDashboardCookie, HttpServletResponse response) {
         cookieUtil.saveToCookie(response, MO_DASHBOARD_FORM_NAME, JsonUtil.getSerializedObject(monitoringOfficerDashboardCookie));
     }
 
-    public Optional<MODashboardForm> getMODashboardFormFromCookieValue(HttpServletRequest request) {
-        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, MO_DASHBOARD_FORM_NAME), MODashboardForm.class));
+    public Optional<MonitoringOfficerDashboardForm> getMODashboardFormFromCookieValue(HttpServletRequest request) {
+        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, MO_DASHBOARD_FORM_NAME), MonitoringOfficerDashboardForm.class));
     }
 
 
-    public Optional<MODashboardForm> getKeywordSearchFromCookie(HttpServletRequest request) {
-        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, KEYWORD_SEARCH), MODashboardForm.class));
+    public Optional<MonitoringOfficerDashboardForm> getKeywordSearchFromCookie(HttpServletRequest request) {
+        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, KEYWORD_SEARCH), MonitoringOfficerDashboardForm.class));
     }
 
-    public Optional<MODashboardForm> getFilterProjectsInSetupFromCookie(HttpServletRequest request) {
-        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, PROJECT_IN_SETUP), MODashboardForm.class));
+    public Optional<MonitoringOfficerDashboardForm> getFilterProjectsInSetupFromCookie(HttpServletRequest request) {
+        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, PROJECT_IN_SETUP), MonitoringOfficerDashboardForm.class));
     }
 
-    public Optional<MODashboardForm> getFilterPreviousProjectsFromCookie(HttpServletRequest request) {
-        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, PREVIOUS_PROJECT), MODashboardForm.class));
+    public Optional<MonitoringOfficerDashboardForm> getFilterPreviousProjectsFromCookie(HttpServletRequest request) {
+        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, PREVIOUS_PROJECT), MonitoringOfficerDashboardForm.class));
     }
 
     public void deleteMODashBoardDataFromCookie(HttpServletResponse response) {
         cookieUtil.removeCookie(response, MO_DASHBOARD_FORM_NAME);
     }
 
-    private Optional<MODashboardForm> processedMODashboardFormFromCookie(Model model, HttpServletRequest request) {
-        Optional<MODashboardForm> mODashboardFormFromCookie = getMODashboardFormFromCookieValue(request);
-        mODashboardFormFromCookie.ifPresent(mODashboardForm -> {
-            populateMODashboardForm(request, mODashboardForm);
+    private Optional<MonitoringOfficerDashboardForm> processedMODashboardFormFromCookie(Model model, HttpServletRequest request) {
+        Optional<MonitoringOfficerDashboardForm> moDashboardFormFromCookie = getMODashboardFormFromCookieValue(request);
+        moDashboardFormFromCookie.ifPresent(monitoringOfficerDashboardForm -> {
+            populateMODashboardForm(request, monitoringOfficerDashboardForm);
 
-            BindingResult bindingResult = new BeanPropertyBindingResult(mODashboardForm, MO_DASHBOARD_FORM_NAME);
-            mODashboardFormValidate(mODashboardForm, bindingResult);
+            BindingResult bindingResult = new BeanPropertyBindingResult(monitoringOfficerDashboardForm, MO_DASHBOARD_FORM_NAME);
+            monitoringOfficerDashboardValidate(monitoringOfficerDashboardForm, bindingResult);
             model.addAttribute(BINDING_RESULT_MODASHBOARD_FORM, bindingResult);
         });
 
-        return mODashboardFormFromCookie;
+        return moDashboardFormFromCookie;
     }
 
-    private MODashboardForm processedMODashboardFormFromRequest(MODashboardForm mODashboardForm,
+    private MonitoringOfficerDashboardForm processedMODashboardFormFromRequest(MonitoringOfficerDashboardForm monitoringOfficerDashboardForm,
                                                                                               HttpServletRequest request) {
-        addFilters(mODashboardForm,
+        addFilters(monitoringOfficerDashboardForm,
                 keywordSearchFromCookie(request),
                 filterProjectsInSetupFromCookie(request),
                 filterPreviousProjectsFromCookie(request));
-        return mODashboardForm;
+        return monitoringOfficerDashboardForm;
     }
 
-    private void populateMODashboardForm(HttpServletRequest request, MODashboardForm mODashboardForm) {
-        addFilters(mODashboardForm,
+    private void populateMODashboardForm(HttpServletRequest request, MonitoringOfficerDashboardForm monitoringOfficerDashboardForm) {
+        addFilters(monitoringOfficerDashboardForm,
                 keywordSearchFromCookie(request),
                 filterProjectsInSetupFromCookie(request),
                 filterPreviousProjectsFromCookie(request));
     }
 
-    private void addFilters(MODashboardForm mODashboardForm,
+    private void addFilters(MonitoringOfficerDashboardForm monitoringOfficerDashboardForm,
                             Optional<String> keywordSearch,
                             Optional<Boolean> projectInSetup,
                             Optional<Boolean> previousProject) {
-        keywordSearch.ifPresent(mODashboardForm::setKeywordSearch);
-        projectInSetup.ifPresent(mODashboardForm::setProjectInSetup);
-        previousProject.ifPresent(mODashboardForm::setPreviousProject);
+        keywordSearch.ifPresent(monitoringOfficerDashboardForm::setKeywordSearch);
+        projectInSetup.ifPresent(monitoringOfficerDashboardForm::setProjectInSetup);
+        previousProject.ifPresent(monitoringOfficerDashboardForm::setPreviousProject);
     }
 
     private Optional<String> keywordSearchFromCookie(HttpServletRequest request) {
-        Optional<MODashboardForm> keywordSearchMODashboardForm = getKeywordSearchFromCookie(request);
+        Optional<MonitoringOfficerDashboardForm> keywordSearchMODashboardForm = getKeywordSearchFromCookie(request);
 
         if (keywordSearchMODashboardForm.isPresent()) {
             return Optional.ofNullable(keywordSearchMODashboardForm.get().getKeywordSearch());
@@ -116,26 +116,26 @@ public class MonitoringOfficerDashBoardCookieService {
     }
 
     private Optional<Boolean> filterProjectsInSetupFromCookie(HttpServletRequest request) {
-        Optional<MODashboardForm> MODashboardForm = getFilterProjectsInSetupFromCookie(request);
+        Optional<MonitoringOfficerDashboardForm> monitoringOfficerDashboardForm = getFilterProjectsInSetupFromCookie(request);
 
-        if (MODashboardForm.isPresent()) {
-            return Optional.of(MODashboardForm.get().isProjectInSetup());
+        if (monitoringOfficerDashboardForm.isPresent()) {
+            return Optional.of(monitoringOfficerDashboardForm.get().isProjectInSetup());
         } else {
             return Optional.empty();
         }
     }
 
     private Optional<Boolean> filterPreviousProjectsFromCookie(HttpServletRequest request) {
-        Optional<MODashboardForm> MODashboardForm = getFilterPreviousProjectsFromCookie(request);
+        Optional<MonitoringOfficerDashboardForm> monitoringOfficerDashboardForm = getFilterPreviousProjectsFromCookie(request);
 
-        if (MODashboardForm.isPresent()) {
-            return Optional.of(MODashboardForm.get().isPreviousProject());
+        if (monitoringOfficerDashboardForm.isPresent()) {
+            return Optional.of(monitoringOfficerDashboardForm.get().isPreviousProject());
         } else {
             return Optional.empty(); }
     }
 
-    private void mODashboardFormValidate(MODashboardForm mODashboardForm, BindingResult bindingResult) {
-        validator.validate(mODashboardForm, bindingResult);
+    private void monitoringOfficerDashboardValidate(MonitoringOfficerDashboardForm monitoringOfficerDashboardForm, BindingResult bindingResult) {
+        validator.validate(monitoringOfficerDashboardForm, bindingResult);
     }
 
 }
