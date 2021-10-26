@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: idp
+spec:
+  template:
+    spec:
+      volumes:
+        - name: ifs-metadata-volume
+          configMap:
+            name: ifs-metadata
+      containers:
+        - name: idp
+          volumeMounts:
+            - name: ifs-metadata-volume
+              mountPath: /var/ifs-metadata/
