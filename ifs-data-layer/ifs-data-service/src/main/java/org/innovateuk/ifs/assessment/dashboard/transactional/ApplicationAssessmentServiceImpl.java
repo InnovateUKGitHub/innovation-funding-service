@@ -30,6 +30,19 @@ public class ApplicationAssessmentServiceImpl implements ApplicationAssessmentSe
     private OrganisationRepository organisationRepository;
 
     @Override
+    public ServiceResult<List<ApplicationAssessmentResource>> getApplicationAssessmentResource(long applicationId) {
+        Set<AssessmentState> allowedStates = EnumSet.of(PENDING, OPEN, ACCEPTED, READY_TO_SUBMIT, SUBMITTED);
+
+        List<Assessment> assessments = assessmentRepository.findByTargetId(applicationId);
+
+        return serviceSuccess(assessments.stream()
+                .map(this::mapToResource)
+                .filter(assessment -> allowedStates.contains(assessment.getState()))
+                .sorted()
+                .collect(toList()));
+    }
+
+    @Override
     public ServiceResult<List<ApplicationAssessmentResource>> getApplicationAssessmentResource(long userId, long competitionId) {
         Set<AssessmentState> allowedStates = EnumSet.of(PENDING, OPEN, ACCEPTED, READY_TO_SUBMIT, SUBMITTED);
 
@@ -44,6 +57,7 @@ public class ApplicationAssessmentServiceImpl implements ApplicationAssessmentSe
 
     private ApplicationAssessmentResource mapToResource(Assessment assessment) {
         Optional<Organisation> leadOrganisation = organisationRepository.findById(assessment.getTarget().getLeadOrganisationId());
+        AssessmentTotalScoreResource assessmentTotalScore = assessmentRepository.getTotalScore(assessment.getId());
 
         return new ApplicationAssessmentResource(
                 assessment.getTarget().getId(),
@@ -51,15 +65,16 @@ public class ApplicationAssessmentServiceImpl implements ApplicationAssessmentSe
                 assessment.getTarget().getName(),
                 leadOrganisation.get().getName(),
                 assessment.getProcessState(),
-                getOverallScore(assessment),
+                getOverallScore(assessment, assessmentTotalScore),
+                assessmentTotalScore.getMaxScoreGiven(),
+                assessmentTotalScore.getMinScoreGiven(),
                 getRecommended(assessment));
     }
 
-    private int getOverallScore(Assessment assessment) {
+    private int getOverallScore(Assessment assessment, AssessmentTotalScoreResource assessmentTotalScore) {
         switch (assessment.getProcessState()) {
             case READY_TO_SUBMIT:
             case SUBMITTED:
-                AssessmentTotalScoreResource assessmentTotalScore = assessmentRepository.getTotalScore(assessment.getId());
                 return assessmentTotalScore.getTotalScorePercentage();
             default:
                 return 0;

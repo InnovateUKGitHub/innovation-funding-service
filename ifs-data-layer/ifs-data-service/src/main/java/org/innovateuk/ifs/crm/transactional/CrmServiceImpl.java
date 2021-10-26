@@ -5,20 +5,33 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder;
+import org.innovateuk.ifs.assessment.dashboard.transactional.ApplicationAssessmentService;
+import org.innovateuk.ifs.assessment.dashboard.transactional.ApplicationAssessmentServiceImpl;
+import org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount;
+
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
+import org.innovateuk.ifs.assessment.resource.dashboard.ApplicationAssessmentResource;
+import org.innovateuk.ifs.assessment.transactional.AssessmentService;
+import org.innovateuk.ifs.assessment.transactional.AssessmentServiceImpl;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationAddressService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
-import org.innovateuk.ifs.sil.crm.resource.SilAddress;
-import org.innovateuk.ifs.sil.crm.resource.SilContact;
-import org.innovateuk.ifs.sil.crm.resource.SilOrganisation;
+import org.innovateuk.ifs.sil.crm.resource.*;
 import org.innovateuk.ifs.sil.crm.service.SilCrmEndpoint;
 import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -27,10 +40,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 
@@ -49,6 +66,9 @@ public class CrmServiceImpl implements CrmService {
 
     @Autowired
     private ApplicationService applicationService;
+
+    @Autowired
+    private AssessmentService assessmentService;
 
     @Autowired
     private OrganisationService organisationService;
@@ -133,6 +153,28 @@ public class CrmServiceImpl implements CrmService {
         LOG.info(format("Updating CRM contact %s and organisation %s %nPayload is:%s ",
                 silContact.getEmail(), silContact.getOrganisation().getName(), silContact));
         return silCrmEndpoint.updateContact(silContact);
+    }
+
+    @Override
+    public ServiceResult<Void> syncCrmCompetitionAssessment(Long competitionId) {
+        CompetitionResource competition = competitionService.getCompetitionById(competitionId).getSuccess();
+
+        if (!competition.isLoan()) {
+            return serviceFailure(CommonFailureKeys.GENERAL_INCORRECT_TYPE);
+        } else {
+            return applicationService.getApplicationsByCompetitionIdAndState(competitionId,
+                    ApplicationState.submittedStates).handleSuccessOrFailure(failure -> {
+                return serviceFailure(CommonFailureKeys.GENERAL_INCORRECT_TYPE);
+            }, applications -> {
+                applications.forEach(application -> {
+                    setSilAssessmentRow(application);
+                });
+                //applications.forEach(application -> application.getAssessments().stream().map(assessment -> assessment.))
+
+                // TODO-10692 put all AssessmentSummaryRows into AssessmentSummary and return it
+                return serviceSuccess();
+            });
+        }
     }
 
     private void stripAttributesNotNeeded(SilContact silContact, BooleanSupplier supplier) {
@@ -220,5 +262,27 @@ public class CrmServiceImpl implements CrmService {
         silContact.setOrganisation(moSilOrganisation);
 
         return silContact;
+    }
+
+    // TODO-10692 create a AssessmentSummaryRow for each application
+    private SilLoanAssessmentRow setSilAssessmentRow(Application application) {
+        SilLoanAssessmentRow row = new SilLoanAssessmentRow();
+        row.setApplicationID(application.getId().intValue());
+
+        int assessmentScoreAverage = 0;
+        int assessmentMaxScore = 0;
+        int assessmentMinScore = 0;
+        int assessmentRecommendCount = 0;
+
+        application.getAssessments()
+                .stream().filter(assessment -> assessment.getProcessState() == AssessmentState.SUBMITTED)
+                .forEach(assessment -> {
+                    List<ApplicationAssessmentResource> aa = new ApplicationAssessmentServiceImpl().getApplicationAssessmentResource(application.getId()).getSuccess();
+                    //assessmentScoreAverage = aa.get(0).getOverallScore();
+                    //assessmentMaxScore = aa.get(0).getMaxScoreGiven();
+                    //assessmentMinScore = aa.get(0).getMinScoreGiven();
+                    //assessmentRecommendCount += assessment.getFundingDecision().isFundingConfirmation() ? 1 : 0;
+        });
+        return row;
     }
 }
