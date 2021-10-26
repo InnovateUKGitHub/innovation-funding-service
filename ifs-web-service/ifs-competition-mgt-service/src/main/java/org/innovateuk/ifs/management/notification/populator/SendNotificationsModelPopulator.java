@@ -61,12 +61,10 @@ public class SendNotificationsModelPopulator {
     }
 
     private void tryToPrePopulateMessage(CompetitionResource competition, long successfulCount, long unsuccessfulCount, long onHoldCount, NotificationEmailsForm form) {
-        if (!competition.isAlwaysOpen()) {
-            if (onlySuccessfulEmails(successfulCount, unsuccessfulCount, onHoldCount)) {
-                form.setMessage(applicationNotificationTemplateRestService.getSuccessfulNotificationTemplate(competition.getId()).getSuccess().getMessageBody());
-            } else if (onlyUnsuccessfulEmails(successfulCount, unsuccessfulCount, onHoldCount)) {
-                form.setMessage(applicationNotificationTemplateRestService.getUnsuccessfulNotificationTemplate(competition.getId()).getSuccess().getMessageBody());
-            }
+        if (onlySuccessfulEmails(successfulCount, unsuccessfulCount, onHoldCount)) {
+            form.setMessage(applicationNotificationTemplateRestService.getSuccessfulNotificationTemplate(competition.getId()).getSuccess().getMessageBody());
+        } else if (onlyUnsuccessfulEmails(successfulCount, unsuccessfulCount, onHoldCount)) {
+            form.setMessage(applicationNotificationTemplateRestService.getUnsuccessfulNotificationTemplate(competition.getId()).getSuccess().getMessageBody());
         }
     }
 

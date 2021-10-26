@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.management.model;
 
+import org.innovateuk.ifs.application.resource.ApplicationNotificationTemplateResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingDecisionToSendApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestService;
+import org.innovateuk.ifs.application.service.ApplicationNotificationTemplateRestService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -51,6 +53,9 @@ public class SendNotificationsModelPopulatorTest {
     @Mock
     private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
 
+    @Mock
+    private ApplicationNotificationTemplateRestService applicationNotificationTemplateRestService;
+
     @Test
     public void populateModel() {
 
@@ -88,21 +93,32 @@ public class SendNotificationsModelPopulatorTest {
     @Test
     public void populateModel_hesta() {
 
+        NotificationEmailsForm notificationEmailsForm = new NotificationEmailsForm();
+
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withName(COMPETITION_NAME)
                 .withCompetitionTypeEnum(CompetitionTypeEnum.HESTA)
                 .build();
 
+        ApplicationNotificationTemplateResource notificationTemplateResource = new ApplicationNotificationTemplateResource("hesta_unsuccessful_template.html");
+
+        FundingDecisionToSendApplicationResource application
+                = new FundingDecisionToSendApplicationResource(3L, "", "", UNFUNDED);
+
+        List<FundingDecisionToSendApplicationResource> applicationResults = Collections.singletonList(application);
         CompetitionAssessmentConfigResource assessmentConfig = newCompetitionAssessmentConfigResource().withIncludeAverageAssessorScoreInNotifications(Boolean.FALSE).build();
 
-        when(applicationFundingDecisionRestService.getNotificationResourceForApplications(Collections.emptyList()))
-                .thenReturn(restSuccess(Collections.emptyList()));
+        List<Long> requestedIds =  Collections.singletonList(application.getId());
+
+        when(applicationFundingDecisionRestService.getNotificationResourceForApplications(requestedIds)).thenReturn(restSuccess(applicationResults));
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
         when(competitionAssessmentConfigRestService.findOneByCompetitionId(COMPETITION_ID)).thenReturn(restSuccess(assessmentConfig));
+        when(applicationNotificationTemplateRestService.getUnsuccessfulNotificationTemplate(COMPETITION_ID)).thenReturn(restSuccess(notificationTemplateResource));
 
-        SendNotificationsViewModel viewModel = sendNotificationsModelPopulator.populate(COMPETITION_ID, Collections.emptyList(), new NotificationEmailsForm());
+        SendNotificationsViewModel viewModel = sendNotificationsModelPopulator.populate(COMPETITION_ID, requestedIds, notificationEmailsForm);
 
         assertTrue(viewModel.isHesta());
+        assertEquals("hesta_unsuccessful_template.html", notificationEmailsForm.getMessage());
     }
 }

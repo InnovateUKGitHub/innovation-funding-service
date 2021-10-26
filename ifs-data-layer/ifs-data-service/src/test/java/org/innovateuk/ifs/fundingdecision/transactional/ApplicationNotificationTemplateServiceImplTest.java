@@ -81,6 +81,32 @@ public class ApplicationNotificationTemplateServiceImplTest extends BaseServiceU
     }
 
     @Test
+    public void getSuccessfulAlwaysOpenCompetitionNotificationTemplate() {
+        ZonedDateTime feedbackDate = ZonedDateTime.now();
+        Competition competition = newCompetition()
+                .withName("Competition")
+                .withFundingType(GRANT)
+                .withAlwaysOpen(true)
+                .build();
+
+        Map<String, Object> arguments = new HashMap<>();
+        arguments.put("competitionName", competition.getName());
+        arguments.put("dashboardUrl", webBaseUrl);
+        arguments.put("feedbackDate", toUkTimeZone(feedbackDate).format(formatter));
+        arguments.put("competitionId", competition.getId());
+
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(renderer.renderTemplate(eq(systemNotificationSource), any(),
+                eq(DEFAULT_NOTIFICATION_TEMPLATES_PATH + "successful_funding_decision.html"), eq(arguments)))
+                .thenReturn(serviceSuccess("MessageBody"));
+
+        ServiceResult<ApplicationNotificationTemplateResource> result = service.getSuccessfulNotificationTemplate(competitionId);
+
+        assertTrue(result.isSuccess());
+        assertEquals("MessageBody", result.getSuccess().getMessageBody());
+    }
+
+    @Test
     public void getSuccessfulKtpNotificationTemplate() {
         ZonedDateTime feedbackDate = ZonedDateTime.now();
         Competition competition = newCompetition()
@@ -135,17 +161,16 @@ public class ApplicationNotificationTemplateServiceImplTest extends BaseServiceU
     @Test
     public void getUnsuccessfulHestaNotificationTemplate() {
         ZonedDateTime feedbackDate = ZonedDateTime.now();
-
         Competition competition = newCompetition()
                 .withName("Competition")
                 .withCompetitionType(newCompetitionType().withName("Hesta").build())
-                .withReleaseFeedbackDate(feedbackDate)
+                .withAlwaysOpen(true)
                 .build();
 
         Map<String, Object> arguments = new HashMap<>();
         arguments.put("competitionName", competition.getName());
         arguments.put("dashboardUrl", webBaseUrl);
-        arguments.put("feedbackDate", toUkTimeZone(competition.getReleaseFeedbackDate()).format(formatter));
+        arguments.put("feedbackDate", toUkTimeZone(feedbackDate).format(formatter));
         arguments.put("competitionId", competition.getId());
 
         when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));

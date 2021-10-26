@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +47,7 @@ public class ApplicationNotificationTemplateServiceImpl extends BaseTransactiona
                 Map<String, Object> arguments = new HashMap<>();
                 arguments.put("competitionName", c.getName());
                 arguments.put("dashboardUrl", webBaseUrl);
-                arguments.put("feedbackDate", toUkTimeZone(c.getReleaseFeedbackDate()).format(formatter));
+                arguments.put("feedbackDate", toUkTimeZone(getReleaseFeedbackDate(c)).format(formatter));
                 arguments.put("competitionId", c.getId());
                 return arguments;
             });
@@ -63,11 +64,15 @@ public class ApplicationNotificationTemplateServiceImpl extends BaseTransactiona
                 Map<String, Object> arguments = new HashMap<>();
                 arguments.put("competitionName", c.getName());
                 arguments.put("dashboardUrl", webBaseUrl);
-                arguments.put("feedbackDate", toUkTimeZone(c.getReleaseFeedbackDate()).format(formatter));
+                arguments.put("feedbackDate", toUkTimeZone(getReleaseFeedbackDate(c)).format(formatter));
                 arguments.put("competitionId", c.getId());
                 return arguments;
             });
         });
+    }
+
+    private ZonedDateTime getReleaseFeedbackDate(Competition competition) {
+        return competition.isAlwaysOpen() ? ZonedDateTime.now() : competition.getReleaseFeedbackDate();
     }
 
     private String getUnsuccessfulTemplate(Competition competition) {
