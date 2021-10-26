@@ -5,4 +5,5 @@ dependencies {
     // version must match here and in ifs-libraries repo (bom and java.gradle)
     annotationProcessor "org.projectlombok:lombok:1.18.20"
     testAnnotationProcessor  "org.projectlombok:lombok:1.18.20"
+
 }
