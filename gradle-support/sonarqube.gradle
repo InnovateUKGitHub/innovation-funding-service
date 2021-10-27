@@ -1,17 +1,30 @@
-apply plugin: org.sonarqube.gradle.SonarQubePlugin
+//apply plugin: org.sonarqube.gradle.SonarQubePlugin
+//
+//buildscript {
+//
+//    repositories {
+//        maven { url "https://repo.spring.io/milestone" }
+//        maven { url "https://plugins.gradle.org/m2/"}
+//        mavenCentral()
+//    }
+//
+//    dependencies {
+//        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.0'
+//    }
+//
+//}
 
-buildscript {
+plugins {
+    id "org.sonarqube" version "3.1.1"
+}
 
-    repositories {
-        maven { url "https://repo.spring.io/milestone" }
-        maven { url "https://plugins.gradle.org/m2/"}
-        mavenCentral()
+sonarqube {
+    properties {
+        property 'sonar.projectName', 'IFS-Libraries'
+        property "sonar.projectKey", "IFS-Libraries"
+        property "sonar.host.url", "https://devops.innovateuk.org/code-quality"
+        property "sonar.login", "7a61de9a87dab0f3b93873988c855037ed85bf91"
     }
-
-    dependencies {
-        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.0'
-    }
-
 }
 
 sonarqube {
@@ -20,6 +33,7 @@ sonarqube {
         property "sonar.host.url", "https://devops.innovateuk.org/code-quality/"
         property "sonar.branch.name", "development"
         property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
+        property "sonar.login", "7a61de9a87dab0f3b93873988c855037ed85bf91"
         // These exclusions are because SonarQube fails to parse the files
         // Raised DHS-400 to contact SonarQube for support
         property "sonar.exclusions", "**/*MapperImpl.java," +
