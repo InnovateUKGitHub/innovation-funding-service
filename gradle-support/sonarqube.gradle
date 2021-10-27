@@ -14,18 +14,7 @@
 //
 //}
 
-plugins {
-    id "org.sonarqube" version "3.1.1"
-}
 
-sonarqube {
-    properties {
-        property 'sonar.projectName', 'IFS-Libraries'
-        property "sonar.projectKey", "IFS-Libraries"
-        property "sonar.host.url", "https://devops.innovateuk.org/code-quality"
-        property "sonar.login", "7a61de9a87dab0f3b93873988c855037ed85bf91"
-    }
-}
 
 sonarqube {
     properties {

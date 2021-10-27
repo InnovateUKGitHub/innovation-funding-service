@@ -27,12 +27,13 @@ buildscript {
 
 plugins {
     id 'com.google.cloud.tools.jib' version '3.1.4' apply false
+    id "org.sonarqube" version "3.1.1"
 }
 
 apply plugin: 'com.google.cloud.tools.jib'
 
 apply from: "gradle-support/versions.gradle"
-apply from: "gradle-support/sonarqube.gradle"
+//apply from: "gradle-support/sonarqube.gradle"
 apply from: "gradle-support/taurus.gradle"
 apply from: "gradle-support/pull-all-base-images.gradle"
 apply from: "gradle-support/stage-base-images.gradle"
@@ -170,5 +171,32 @@ publishing {
                 url "https://devops.innovateuk.org/binaries/repository/ifs-config-releases/"
             }
         }
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectName", "IFS_Project"
+        property "sonar.host.url", "https://devops.innovateuk.org/code-quality/"
+        property "sonar.branch.name", "development"
+        property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
+        property "sonar.login", "7a61de9a87dab0f3b93873988c855037ed85bf91"
+        // These exclusions are because SonarQube fails to parse the files
+        // Raised DHS-400 to contact SonarQube for support
+        property "sonar.exclusions", "**/*MapperImpl.java," +
+                "**/CategoryRepositoryIntegrationTest.java," +
+                "**/ProjectPartnerInviteServiceImpl.java," +
+                "**/GrantsInviteServiceImpl.java," +
+                "**/OverheadFileServiceImpl.java," +
+                "**/InterviewInviteServiceImpl.java," +
+                "**/AssessmentInviteServiceImpl.java," +
+                "**/FinanceReviewerServiceImpl.java," +
+                "**/ApplicationFinanceServiceImpl.java," +
+                "**/ReviewInviteServiceImpl.java,"
+        property "sonar.coverage.exclusions",
+                "**/*ViewModel.java," +
+                        "**/*Resource.java,"
+        property "sonar.java.source", "1.8"
+        property "sonar.java.target", "1.8"
     }
 }
