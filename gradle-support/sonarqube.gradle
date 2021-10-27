@@ -18,10 +18,9 @@
 
 sonarqube {
     properties {
-        property "sonar.projectName", "IFS_Project"
         property "sonar.host.url", "https://devops.innovateuk.org/code-quality"
-        property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
-        property "sonar.login", "7a61de9a87dab0f3b93873988c855037ed85bf91"
+        property "sonar.projectKey", "IFS_10544_Sonarqube_test"
+        property "sonar.login", "75451a9f12e17f33cca05aca083144f165542733"
         // These exclusions are because SonarQube fails to parse the files
         // Raised DHS-400 to contact SonarQube for support
         property "sonar.exclusions", "**/*MapperImpl.java," +
