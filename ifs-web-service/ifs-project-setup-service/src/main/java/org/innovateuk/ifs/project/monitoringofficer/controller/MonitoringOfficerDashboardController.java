@@ -45,24 +45,23 @@ public class MonitoringOfficerDashboardController {
                                 UserResource user,
                                 @RequestParam(value = PAGE_NUMBER_KEY, defaultValue = DEFAULT_PAGE_NUMBER) int pageNumber,
                                 @RequestParam(value = PAGE_SIZE_KEY, defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-                                HttpServletRequest request,
                                 HttpServletResponse response) {
 
-        if (pageNumber == 0) {
-            monitoringOfficerDashBoardCookieService.deleteMODashBoardDataFromCookie(response);
-        }
-        MonitoringOfficerDashboardForm moDashboardForm = monitoringOfficerDashBoardCookieService.getMODashboardFormCookieValue(request);
-        model.addAttribute(FORM_ATTR_NAME, moDashboardForm);
+        monitoringOfficerDashBoardCookieService.deleteMODashBoardDataFromCookie(response);
+
+        form.setProjectInSetup(true);
+
+        model.addAttribute(FORM_ATTR_NAME, form);
         model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user
-                , moDashboardForm.getKeywordSearch()
-                , moDashboardForm.isProjectInSetup()
-                , moDashboardForm.isPreviousProject()
-                , moDashboardForm.isDocumentsComplete()
-                , moDashboardForm.isDocumentsIncomplete()
-                , moDashboardForm.isDocumentsAwaitingReview()
-                , moDashboardForm.isSpendProfileComplete()
-                , moDashboardForm.isSpendProfileIncomplete()
-                , moDashboardForm.isSpendProfileAwaitingReview(), pageNumber, pageSize));
+                , form.getKeywordSearch()
+                , form.isProjectInSetup()
+                , form.isPreviousProject()
+                , form.isDocumentsComplete()
+                , form.isDocumentsIncomplete()
+                , form.isDocumentsAwaitingReview()
+                , form.isSpendProfileComplete()
+                , form.isSpendProfileIncomplete()
+                , form.isSpendProfileAwaitingReview(), pageNumber, pageSize));
 
         return "monitoring-officer/dashboard";
     }
@@ -75,13 +74,52 @@ public class MonitoringOfficerDashboardController {
                                   UserResource user,
                                   @RequestParam(value = PAGE_NUMBER_KEY, defaultValue = DEFAULT_PAGE_NUMBER) int pageNumber,
                                   @RequestParam(value = PAGE_SIZE_KEY, defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-                                  HttpServletRequest request,
                                   HttpServletResponse response) {
-        final Supplier<String> failureView = () -> viewDashboard(model, form, user, pageNumber, pageSize, request, response);
+        final Supplier<String> failureView = () -> viewDashboard(model, form, user, pageNumber, pageSize, response);
 
         return validationHandler.failNowOrSucceedWith(failureView,
                 () -> {
                     monitoringOfficerDashBoardCookieService.saveMODashboardDataIntoCookie(form, response);
+                    return "redirect:/monitoring-officer/dashboard/results";
+                });
+    }
+
+    @GetMapping("/results")
+    public String getResultsDashboard(Model model,
+                                UserResource user,
+                                @RequestParam(value = PAGE_NUMBER_KEY, defaultValue = DEFAULT_PAGE_NUMBER) int pageNumber,
+                                @RequestParam(value = PAGE_SIZE_KEY, defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                HttpServletRequest request) {
+
+        MonitoringOfficerDashboardForm moDashboardForm = monitoringOfficerDashBoardCookieService.getMODashboardFormCookieValue(request);
+            model.addAttribute(FORM_ATTR_NAME, moDashboardForm);
+            model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user
+                    , moDashboardForm.getKeywordSearch()
+                    , moDashboardForm.isProjectInSetup()
+                    , moDashboardForm.isPreviousProject()
+                    , moDashboardForm.isDocumentsComplete()
+                    , moDashboardForm.isDocumentsIncomplete()
+                    , moDashboardForm.isDocumentsAwaitingReview()
+                    , moDashboardForm.isSpendProfileComplete()
+                    , moDashboardForm.isSpendProfileIncomplete()
+                    , moDashboardForm.isSpendProfileAwaitingReview(), pageNumber, pageSize));
+
+        return "monitoring-officer/dashboard";
+    }
+
+    @PostMapping("/results")
+    public String postResultsDashboard(Model model,
+                                  @Valid @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerDashboardForm form,
+                                  @SuppressWarnings("unused") BindingResult bindingResult,
+                                  ValidationHandler validationHandler,
+                                  UserResource user,
+                                  @RequestParam(value = PAGE_NUMBER_KEY, defaultValue = DEFAULT_PAGE_NUMBER) int pageNumber,
+                                  @RequestParam(value = PAGE_SIZE_KEY, defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                  HttpServletRequest request) {
+        final Supplier<String> failureView = () -> getResultsDashboard(model, user, pageNumber, pageSize, request);
+
+        return validationHandler.failNowOrSucceedWith(failureView,
+                () -> {
                     model.addAttribute("model", monitoringOfficerDashboardViewModelPopulator.populate(user
                             , form.getKeywordSearch()
                             , form.isProjectInSetup()
@@ -96,4 +134,5 @@ public class MonitoringOfficerDashboardController {
                     return "monitoring-officer/dashboard";
                 });
     }
+
 }
