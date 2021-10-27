@@ -177,8 +177,7 @@ publishing {
 sonarqube {
     properties {
         property "sonar.projectName", "IFS_Project"
-        property "sonar.host.url", "https://devops.innovateuk.org/code-quality/"
-        property "sonar.branch.name", "development"
+        property "sonar.host.url", "https://devops.innovateuk.org/code-quality"
         property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
         property "sonar.login", "7a61de9a87dab0f3b93873988c855037ed85bf91"
         // These exclusions are because SonarQube fails to parse the files
