@@ -11,6 +11,7 @@ components:
   - ../../../../components/cache-provider
   - ../../../../components/ifs-database
   - ../../../../components/sil-stub
+  - ../../../../components/mail
 
   - ../../../../patches/new-relic-env-vars-patch
   - ../../../../patches/pull-secrets-patch
@@ -28,17 +29,20 @@ resources:
 #  - storage/persistent-volume-claim.yml
 #  - storage/persistent-volume.yml
 
-
   - config-maps/idp-config.yml
   - config-maps/idp-metadata.yml
   - config-maps/ldap-config.yml
   - config-maps/shibboleth-config.yml
   - config-maps/web-config.yml
-  - mail/mail-config.yml
-  - mail/mail.yml
-  - mail/mail-deployment.yml
 
 patchesStrategicMerge:
   - auth/registration-service/registration-deployment.yml
-  - auth/idp/idp-deployment.yml
   - sil-stub/sil-stub-deployment.yml
+  - mail/mail-config.yml
+  - mail/mail.yml
+  - ifs-database/ifs-database.yml
+  - auth/idp/idp.yml
+  - auth/idp/idp-deployment.yml
+  - auth/sp/sp.yml
+  - auth/sp/sp-deployment.yml
+  - auth/ldap/ldap-deployment.yml
