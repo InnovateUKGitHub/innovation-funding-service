@@ -1,0 +1,3 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: local

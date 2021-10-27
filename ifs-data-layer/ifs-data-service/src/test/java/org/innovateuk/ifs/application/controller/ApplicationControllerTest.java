@@ -10,12 +10,14 @@ import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.crm.transactional.CrmService;
+import org.innovateuk.ifs.crm.transactional.TimeMachine;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.util.JsonMappingUtil;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -34,6 +36,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ApplicationControllerTest extends BaseControllerMockMVCTest<ApplicationController> {
@@ -177,12 +180,12 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationServiceMock.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId, organisationId)).thenReturn(serviceSuccess(applicationResource));
 
         mockMvc.perform(post("/application/create-application-by-name/{competitionId}/{userId}/{organisationId}", competitionId, userId, organisationId, "json")
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(applicationNameNode)))
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(applicationNameNode)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", notNullValue()));
 
-        verify(crmService, only()).syncCrmContact(userId,applicationId,competitionId);
+        verify(crmService, only()).syncCrmContact(userId, applicationId, competitionId);
     }
 
     @Test
@@ -209,12 +212,18 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .withReason("Reason")
                 .build();
 
+        Application testApplication2 = newApplication().withId(applicationId).withName("testApplication2Name").build();
+        Competition competition = newCompetition().withName("Technology Inspired").build();
+        ApplicationResource testApplicationResource2 = newApplicationResource().withId(applicationId).withCompetition(competition.getId()).withName("testApplication2Name").build();
+
+
         when(ineligibleOutcomeMapperMock.mapToDomain(ineligibleOutcomeResource)).thenReturn(reason);
         when(applicationServiceMock.markAsIneligible(applicationId, reason)).thenReturn(serviceSuccess());
+        when(applicationServiceMock.getApplicationById(testApplication2.getId())).thenReturn(serviceSuccess(testApplicationResource2));
 
         mockMvc.perform(post("/application/{applicationId}/ineligible", applicationId)
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(ineligibleOutcomeResource)))
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(ineligibleOutcomeResource)))
                 .andExpect(status().isOk());
 
         verify(ineligibleOutcomeMapperMock).mapToDomain(ineligibleOutcomeResource);
@@ -228,8 +237,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationNotificationServiceMock.informIneligible(applicationId, resource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/inform-ineligible/{applicationId}", applicationId)
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(resource)))
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(resource)))
                 .andExpect(status().isOk());
     }
 
@@ -272,4 +281,61 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         mockMvc.perform(post("/application/migrate-application/{applicationId}", applicationId))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void updateApplicationStateSubmitted() throws Exception {
+        Long applicationId = 1L;
+
+
+        Application testApplication2 = newApplication().withId(applicationId).withName("testApplication2Name").build();
+        Competition competition = newCompetition().withName("Technology Inspired").build();
+        ApplicationResource testApplicationResource2 = newApplicationResource().withId(applicationId).withCompetition(competition.getId()).withName("testApplication2Name").build();
+
+
+        when(applicationServiceMock.updateApplicationState(testApplication2.getId(),ApplicationState.SUBMITTED)).thenReturn(serviceSuccess(testApplicationResource2));
+
+        ZonedDateTime fixedClock = ZonedDateTime.parse("2021-10-12T09:38:12.850Z");
+        TimeMachine.useFixedClockAt(fixedClock);
+        when(applicationServiceMock.saveApplicationSubmitDateTime(testApplication2.getId(), TimeMachine.now())).thenReturn(serviceSuccess(testApplicationResource2));
+        when(applicationNotificationServiceMock.sendNotificationApplicationSubmitted(applicationId)).thenReturn(serviceSuccess());
+        when(crmService.syncCrmApplicationState(testApplicationResource2)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/application/update-application-state")
+                        .param("applicationId", applicationId.toString())
+                        .param("state", ApplicationState.SUBMITTED.toString())
+                        .contentType(APPLICATION_JSON))
+
+                .andExpect(status().isOk());
+
+    }
+
+
+    @Test
+    public void updateApplicationStateIneligible() throws Exception {
+        Long applicationId = 1L;
+
+
+        Application testApplication2 = newApplication().withId(applicationId).withName("testApplication2Name").build();
+        Competition competition = newCompetition().withName("Technology Inspired").build();
+        ApplicationResource testApplicationResource2 = newApplicationResource().withId(applicationId).withCompetition(competition.getId()).withName("testApplication2Name").build();
+
+
+        when(applicationServiceMock.updateApplicationState(testApplication2.getId(),ApplicationState.INELIGIBLE)).thenReturn(serviceSuccess(testApplicationResource2));
+
+        ZonedDateTime fixedClock = ZonedDateTime.parse("2021-10-12T09:38:12.850Z");
+        TimeMachine.useFixedClockAt(fixedClock);
+        when(applicationServiceMock.saveApplicationSubmitDateTime(testApplication2.getId(), TimeMachine.now())).thenReturn(serviceSuccess(testApplicationResource2));
+        when(applicationNotificationServiceMock.sendNotificationApplicationSubmitted(applicationId)).thenReturn(serviceSuccess());
+        when(crmService.syncCrmApplicationState(testApplicationResource2)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/application/update-application-state")
+                        .param("applicationId", applicationId.toString())
+                        .param("state", ApplicationState.INELIGIBLE.toString())
+                        .contentType(APPLICATION_JSON))
+
+                .andExpect(status().isOk());
+
+    }
+
+
 }

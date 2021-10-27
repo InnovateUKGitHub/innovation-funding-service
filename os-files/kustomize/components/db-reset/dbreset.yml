@@ -1,0 +1,108 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dbreset
+spec:
+  imagePullSecrets:
+    - name: regcred
+  containers:
+    - name: dbreset
+      image: dbreset
+      imagePullPolicy: Always
+      command: [ "/bin/bash", "-exec" ]
+      args:
+        - |
+          cat > /flyway/flyway.conf <<EOF
+          flyway.url=jdbc:mysql://$DB_HOST:$DB_PORT
+          flyway.schemas=$DB_NAME
+          flyway.locations=filesystem:/flyway/sql/db/migration,filesystem:/flyway/sql/db/reference,filesystem:/flyway/sql/db/setup,filesystem:/flyway/sql/db/webtest
+          flyway.placeholders.ifs.system.user.uuid=$SYSTEM_USER_UUID
+          flyway.user=$DB_USER
+          flyway.password=$DB_PASS
+          flyway.table=$FLYWAY_TABLE
+          EOF
+          . /clean-migrate-db-sync-ldap.sh
+      env:
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: DB_HOST
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: DB_PORT
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: DB_NAME
+        - name: DB_USER
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: DB_USER
+        - name: DB_PASS
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: DB_PASS
+        - name: PERFORMANCE_APPLICANT_USERS
+          valueFrom:
+            configMapKeyRef:
+              name: performance-config
+              key: PERFORMANCE_APPLICANT_USERS
+        - name: PERFORMANCE_h2020_USERS
+          valueFrom:
+            configMapKeyRef:
+              name: performance-config
+              key: PERFORMANCE_h2020_USERS
+        - name: LDAP_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: ldap-config
+              key: LDAP_HOST
+        - name: LDAP_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: ldap-config
+              key: LDAP_PORT
+        - name: LDAP_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              name: ldap-config
+              key: LDAP_PASSWORD
+        - name: LDAP_DOMAIN
+          valueFrom:
+            configMapKeyRef:
+              name: ldap-config
+              key: LDAP_DOMAIN
+        - name: ONLY_SYNC_LDAP
+          valueFrom:
+            configMapKeyRef:
+              name: ldap-config
+              key: ONLY_SYNC_LDAP
+        - name: ONLY_DELETE_IFS_USERS
+          valueFrom:
+            configMapKeyRef:
+              name: ldap-config
+              key: ONLY_DELETE_IFS_USERS
+        - name: LDAP_SCHEME
+          valueFrom:
+            configMapKeyRef:
+              name: ldap-config
+              key: LDAP_SCHEME
+        - name: FLYWAY_TABLE
+          valueFrom:
+            configMapKeyRef:
+              name: flyway-config
+              key: FLYWAY_TABLE
+        - name: SYSTEM_USER_UUID
+          valueFrom:
+            configMapKeyRef:
+              name: flyway-config
+              key: SYSTEM_USER_UUID
+        - name: IFS_TEST_USER_PASSWORD
+          value: "%%IFS_TEST_USER_PASSWORD%%"
+  restartPolicy: Never

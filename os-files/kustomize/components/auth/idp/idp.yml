@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: idp
+spec:
+  selector:
+    app: idp
+  ports:
+    - name: 443-tcp
+      port: 443
+      targetPort: 9443

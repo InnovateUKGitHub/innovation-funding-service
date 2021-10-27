@@ -1,0 +1,18 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: demo
+
+bases:
+  - ../aws-base
+
+components:
+  - ../../../patches/new-relic-env-vars-patch
+  - ../../../patches/pull-secrets-patch
+  - ../../../patches/spring-profile-patch
+  - ../../../patches/wait-for-db-patch
+
+resources:
+  - config-maps/spring-config.yml
+
+patchesStrategicMerge:
+  - data-layer/data-service/data-service-deployment.yml

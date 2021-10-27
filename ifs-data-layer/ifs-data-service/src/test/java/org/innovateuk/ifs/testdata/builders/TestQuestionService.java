@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -32,6 +33,6 @@ public class TestQuestionService extends QuestionStatusServiceImpl {
     @Transactional
     public ServiceResult<List<ValidationMessages>> markAsCompleteWithoutApplicationCompletionStatusUpdate(final QuestionApplicationCompositeId ids,
                                                                                                           final Long markedAsCompleteById) {
-        return setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true, false);
+        return setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true, false, ZonedDateTime.now());
     }
 }
