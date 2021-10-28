@@ -176,22 +176,22 @@ publishing {
 
 sonarqube {
     properties {
-//        property "sonar.projectName", "IFS_Project"
+        property "sonar.projectName", "IFS"
         property "sonar.host.url", "https://devops.innovateuk.org/code-quality"
-        property "sonar.projectKey", "IFS_10544_Sonarqube_test"
-        property "sonar.login", "75451a9f12e17f33cca05aca083144f165542733"
+        property "sonar.projectKey", "IFS"
+        property "sonar.login", "4eae6d7ee6491d294123296a68d2b89547c4903f"
         // These exclusions are because SonarQube fails to parse the files
         // Raised DHS-400 to contact SonarQube for support
-        property "sonar.exclusions", "**/*MapperImpl.java," +
-                "**/CategoryRepositoryIntegrationTest.java," +
-                "**/ProjectPartnerInviteServiceImpl.java," +
-                "**/GrantsInviteServiceImpl.java," +
-                "**/OverheadFileServiceImpl.java," +
-                "**/InterviewInviteServiceImpl.java," +
-                "**/AssessmentInviteServiceImpl.java," +
-                "**/FinanceReviewerServiceImpl.java," +
-                "**/ApplicationFinanceServiceImpl.java," +
-                "**/ReviewInviteServiceImpl.java,"
+//        property "sonar.exclusions", "**/*MapperImpl.java," +
+//                "**/CategoryRepositoryIntegrationTest.java," +
+//                "**/ProjectPartnerInviteServiceImpl.java," +
+//                "**/GrantsInviteServiceImpl.java," +
+//                "**/OverheadFileServiceImpl.java," +
+//                "**/InterviewInviteServiceImpl.java," +
+//                "**/AssessmentInviteServiceImpl.java," +
+//                "**/FinanceReviewerServiceImpl.java," +
+//                "**/ApplicationFinanceServiceImpl.java," +
+//                "**/ReviewInviteServiceImpl.java,"
         property "sonar.coverage.exclusions",
                 "**/*ViewModel.java," +
                         "**/*Resource.java,"
