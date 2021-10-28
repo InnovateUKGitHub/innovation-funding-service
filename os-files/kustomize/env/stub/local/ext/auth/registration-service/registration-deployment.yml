@@ -28,3 +28,10 @@ spec:
             timeoutSeconds: 5
             successThreshold: 1
             failureThreshold: 1
+          startupProbe:
+            httpGet:
+              path: /monitoring/health
+              port: 8080
+            periodSeconds: 5
+            timeoutSeconds: 1
+            failureThreshold: 120
