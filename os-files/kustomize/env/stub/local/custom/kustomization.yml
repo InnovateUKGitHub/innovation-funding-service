@@ -14,6 +14,7 @@ components:
   - ../../../../patches/pull-secrets-patch
   - ../../../../patches/spring-profile-patch
   - ../../../../patches/wait-for-db-patch
+  - ../../../../patches/slow-startup-patch
 
 resources:
   - config-maps/web-config.yml
