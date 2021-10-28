@@ -1,5 +1,6 @@
 *** Settings ***
 Documentation     IFS-10694 Hesta - Email notification content for application submission
+...               IFS-10688 Hesta - Create competition type hesta
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -17,14 +18,14 @@ ${hestaApplicationSubmissionEmail}           We have received your stage 1 pre-r
 
 *** Test Cases ***
 Comp admin can select the competition type option Heukar in Initial details on competition setup
-    [Documentation]  IFS-8638
+    [Documentation]  IFS-10688
     Given the user logs-in in new browser             &{Comp_admin1_credentials}
     When the user navigates to the page               ${CA_UpcomingComp}
     And the user clicks the button/link               jQuery = .govuk-button:contains("Create competition")
     Then the user fills in the CS Initial details     ${hestaCompetitionName}  ${month}  ${nextyear}  ${compType_HESTA}  STATE_AID  GRANT
 
 Comp admin can view Hesta competition type in Initial details read only view
-    [Documentation]  IFS-8638
+    [Documentation]  IFS-10688
     Given the user clicks the button/link    link = Initial details
     Then the user can view Hesta competition type in Initial details read only view
 
