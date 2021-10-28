@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
+import base64
+base64.encodestring = base64.encodebytes
+
 import pytz
 import pymysql
 import os

@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: survey-svc
+  annotations:
+    monitor: monitor
+    javaDebug: javaDebug
+    pullSecrets: pullSecrets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: survey-svc
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: survey-svc
+    spec:
+      containers:
+        - image: survey-service
+          name: spring-boot-service-container
+          imagePullPolicy: IfNotPresent
+          env:
+              - name: NEW_RELIC_LICENSE_KEY
+                valueFrom:
+                  configMapKeyRef:
+                    name: new-relic-config
+                    key: NEW_RELIC_LICENSE_KEY
+              - name: NEW_RELIC_LOG
+                valueFrom:
+                  configMapKeyRef:
+                    name: new-relic-config
+                    key: NEW_RELIC_LOG
+              - name: IFS_WEB_SYSTEM_USER_UID
+                valueFrom:
+                  configMapKeyRef:
+                    name: web-config
+                    key: IFS_WEB_SYSTEM_USER_UID
+              - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
+                valueFrom:
+                  configMapKeyRef:
+                    name: web-config
+                    key: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
+              - name: SPRING_APPLICATION_JSON
+                valueFrom:
+                  configMapKeyRef:
+                    name: web-config
+                    key: SPRING_APPLICATION_JSON
+              - name: IFS_WEB_BASEURL
+                valueFrom:
+                  configMapKeyRef:
+                    name: web-config
+                    key: IFS_WEB_BASEURL
+              - name: JAVA_OPTS
+                value: -Xms400m -Xmx400m -javaagent:/newrelic.jar
+              - name: NEW_RELIC_APP_NAME
+                value: "ifs-survey-service (${openshiftEnv})"
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: 500m
+            requests:
+              cpu: 100m
+              memory: 400M

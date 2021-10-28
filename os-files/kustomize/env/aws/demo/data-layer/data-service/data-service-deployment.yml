@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-service
+  annotations:
+    monitor: monitor
+    waitForDb: waitForDb
+    pullSecrets: pullSecrets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-service
+  template:
+    metadata:
+      labels:
+        app: data-service
+    spec:
+      containers:
+        - name: spring-boot-service-container
+          image: data-service
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: 2000m
+            requests:
+              cpu: 400m
+              memory: 1500M
+          volumeMounts:
+            - mountPath: /mnt/ifs_storage
+              name: dir-1
+      volumes:
+        - name: dir-1
+          persistentVolumeClaim:
+            claimName: ifs-demo-file-upload-claim

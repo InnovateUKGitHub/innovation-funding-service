@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: project-setup-mgt-svc
+  labels:
+    app: project-setup-mgt-svc
+  annotations:
+    javaDebug: javaDebug
+spec:
+  ports:
+    - name: 8080-tcp
+      port: 8080
+      targetPort: 8080
+    - name: 8009-tcp
+      port: 8009
+      targetPort: 8009
+  selector:
+    app: project-setup-mgt-svc

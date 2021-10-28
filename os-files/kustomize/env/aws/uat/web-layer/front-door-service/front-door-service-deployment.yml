@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-door-svc
+  annotations:
+    monitor: monitor
+    pullSecrets: pullSecrets
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: front-door-svc
+  template:
+    metadata:
+      labels:
+        app: front-door-svc

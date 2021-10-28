@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: survey-data-svc
+  annotations:
+    monitor: monitor
+    pullSecrets: pullSecrets
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: survey-data-svc
+  template:
+    metadata:
+      labels:
+        app: survey-data-svc
+    spec:
+      containers:
+      - image: survey-data-service
+        name: spring-boot-service-container
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 1000m
+          requests:
+            cpu: 300m
+            memory: 800M
+

@@ -188,7 +188,7 @@ function setMinimumNumberOfReplicas() {
 
     echo "Setting application replicas"
     CURRENT_REPLICAS=$(oc describe dc/application-svc ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
-    sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/ifs-services/4-application-service.yml
+    sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/ifs-services/4-assessment-service.yml
 
     echo "Setting front door replicas"
     CURRENT_REPLICAS=$(oc describe dc/front-door-svc ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
@@ -209,10 +209,6 @@ function setMinimumNumberOfReplicas() {
     echo "Setting competition replicas"
     CURRENT_REPLICAS=$(oc describe dc/competition-mgt-svc ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
     sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/ifs-services/42-competition-mgt-svc.yml
-
-    echo "Setting idp replicas"
-    CURRENT_REPLICAS=$(oc describe dc/idp ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
-    sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/shib/56-idp.yml
 
     echo "Setting shib replicas"
     CURRENT_REPLICAS=$(oc describe dc/shib ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')

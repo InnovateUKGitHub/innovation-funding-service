@@ -1,0 +1,27 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: prod
+
+bases:
+  - ../aws-base
+
+components:
+  - ../../../patches/new-relic-env-vars-patch
+  - ../../../patches/pull-secrets-patch
+  - ../../../patches/spring-profile-patch
+  - ../../../patches/wait-for-db-patch
+
+resources:
+  - config-maps/spring-config.yml
+
+patchesStrategicMerge:
+  - data-layer/data-service/data-service-deployment.yml
+  - data-layer/finance-data-service/finance-data-service-deployment.yml
+  - data-layer/survey-data-service/survey-data-service-deployment.yml
+  - web-layer/application-service/application-service-deployment.yml
+  - web-layer/assessment-service/assessment-service-deployment.yml
+  - web-layer/competition-mgt-service/competition-mgt-service-deployment.yml
+  - web-layer/front-door-service/front-door-service-deployment.yml
+  - web-layer/project-setup-mgt-service/project-setup-mgt-service-deployment.yml
+  - web-layer/project-setup-service/project-setup-service-deployment.yml
+  - web-layer/registration-service/registration-service-deployment.yml

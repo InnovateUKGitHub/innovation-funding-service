@@ -1,8 +1,38 @@
-import org.ajoberstar.grgit.*
+buildscript {
+
+    ext {
+        springBootVersion = '2.4.2'
+    }
+
+    repositories {
+        maven { url "http://dl.bintray.com/robfletcher/gradle-plugins" }
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://plugins.gradle.org/m2/" }
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.7.RELEASE"
+        classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
+
+        classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
+
+        classpath 'org.ajoberstar.grgit:grgit-core:4.0.2'
+        classpath "com.github.node-gradle:gradle-node-plugin:1.5.3"
+
+    }
+
+}
+
+plugins {
+    id 'com.google.cloud.tools.jib' version '3.1.4' apply false
+}
+
+apply plugin: 'com.google.cloud.tools.jib'
 
 apply from: "gradle-support/versions.gradle"
 apply from: "gradle-support/sonarqube.gradle"
-apply from: "gradle-support/certificates.gradle"
 apply from: "gradle-support/taurus.gradle"
 apply from: "gradle-support/pull-all-base-images.gradle"
 apply from: "gradle-support/stage-base-images.gradle"
@@ -36,32 +66,7 @@ if (!project.hasProperty('osTestArgs')) {
 
 apply from: "gradle-support/openshift-support.gradle"
 
-buildscript {
 
-    ext {
-        springBootVersion = '2.4.2'
-    }
-
-    repositories {
-        maven { url "http://dl.bintray.com/robfletcher/gradle-plugins" }
-        maven { url "https://repo.spring.io/milestone" }
-        maven { url "https://plugins.gradle.org/m2/" }
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-        classpath "io.spring.gradle:dependency-management-plugin:1.0.7.RELEASE"
-        classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
-
-        classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
-
-        classpath 'org.ajoberstar.grgit:grgit-core:4.0.2'
-        classpath "com.github.node-gradle:gradle-node-plugin:1.5.3"
-
-    }
-
-}
 
 
 apply plugin: "com.github.hierynomus.license"
@@ -78,8 +83,6 @@ def osFileMap = [
         [name:'docusign-config', type: 'config-maps'],
         [name:'finance-db-config', type: 'config-maps'],
         [name:'flyway-config', type: 'config-maps'],
-        [name:'idp-config', type: 'config-maps'],
-        [name:'ldap-config', type: 'config-maps'],
         [name:'new-relic-config', type: 'config-maps'],
         [name:'performance-config', type: 'config-maps'],
         [name:'shibboleth-config', type: 'config-maps'],
@@ -128,13 +131,8 @@ def osFileMap = [
         [name:'7-chrome', type: 'robot-tests'],
         [name:'8-robot', type: 'robot-tests'],
 
-        [name:'idp-route', type: 'routes'],
         [name:'mail-route', type: 'routes'],
         [name:'shib-route', type: 'routes'],
-
-        [name:'5-shib', type: 'shib'],
-        [name:'55-ldap', type: 'shib'],
-        [name:'56-idp', type: 'shib'],
 
         [name:'80-sil-stub', type: 'sil-stub'],
 

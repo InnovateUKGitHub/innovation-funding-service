@@ -16,6 +16,9 @@ public interface ActivityLogService {
     void recordActivityByApplicationId(long applicationId, ActivityType activityType);
 
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
+    void recordActivityByApplicationId(long applicationId, long authorId, ActivityType activityType);
+
+    @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
     void recordActivityByProjectId(long projectId, ActivityType activityType);
 
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)

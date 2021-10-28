@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chrome
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chrome
+  template:
+    metadata:
+      labels:
+        app: chrome
+    spec:
+      volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
+      containers:
+        - image: selenium/standalone-chrome:3.14.0-arsenic
+          name: chrome
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /dev/shm
+              name: dshm
+          ports:
+            - containerPort: 4444
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: 3000m
+              memory: 3000M
+            requests:
+              cpu: 400m
+              memory: 400M
+          env:
+            - name: NODE_MAX_SESSION
+              value: "20"
+            - name: NODE_MAX_INSTANCES
+              value: "20"
+            - name: NODE_REGISTER_CYCLE
+              value: "600"
+            - name: DBUS_SESSION_BUS_ADDRESS
+              value: "/dev/null"
+            - name: SCREEN_WIDTH
+              value: "1920"
+            - name: SCREEN_HEIGHT
+              value: "5000"
+            - name: JAVA_OPTS
+              value: "-Xms1024m -Xmx1024m"
+            - name: POOL_MAX
+              value: "30000"

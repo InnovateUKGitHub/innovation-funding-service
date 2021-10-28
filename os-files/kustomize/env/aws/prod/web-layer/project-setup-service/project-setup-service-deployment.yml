@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-setup-svc
+  annotations:
+    monitor: monitor
+    pullSecrets: pullSecrets
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: project-setup-svc
+  template:
+    metadata:
+      labels:
+        app: project-setup-svc
