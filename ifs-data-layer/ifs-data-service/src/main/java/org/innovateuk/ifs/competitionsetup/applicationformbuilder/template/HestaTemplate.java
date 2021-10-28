@@ -38,9 +38,6 @@ public class HestaTemplate implements CompetitionTemplate {
         competition.setAcademicGrantPercentage(100);
         competition.setMinProjectDuration(1);
         competition.setMaxProjectDuration(84);
-        competition.setAlwaysOpen(true);
-        competition.setCompletionStage(PROJECT_SETUP);
-        competition.setHasAssessmentStage(false);
         return competition;
     }
 

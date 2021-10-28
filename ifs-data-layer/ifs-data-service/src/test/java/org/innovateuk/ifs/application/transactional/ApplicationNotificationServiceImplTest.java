@@ -197,6 +197,43 @@ public class ApplicationNotificationServiceImplTest {
     }
 
     @Test
+    public void sendNotificationApplicationSubmitted_hesta() {
+        User leadUser = newUser()
+                .withEmailAddress("leadapplicant@example.com")
+                .build();
+
+        ProcessRole leadProcessRole = newProcessRole()
+                .withUser(leadUser)
+                .withRole(LEADAPPLICANT)
+                .build();
+
+        Competition competition = newCompetition()
+                .withCompetitionType(newCompetitionType()
+                        .withName("Hesta")
+                        .build())
+                .build();
+
+        Application application = newApplication()
+                .withProcessRoles(leadProcessRole)
+                .withCompetition(competition)
+                .build();
+
+        when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
+        when(notificationService.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(ServiceResult.serviceSuccess());
+
+        ServiceResult<Void> result = service.sendNotificationApplicationSubmitted(application.getId());
+
+        verify(notificationService).sendNotificationWithFlush(createLambdaMatcher(notification -> {
+            assertEquals(application.getName(), notification.getGlobalArguments().get("applicationName"));
+            assertEquals(1, notification.getTo().size());
+            assertEquals(leadUser.getEmail(), notification.getTo().get(0).getTo().getEmailAddress());
+            assertEquals(leadUser.getName(), notification.getTo().get(0).getTo().getName());
+            assertEquals(HESTA_APPLICATION_SUBMITTED, notification.getMessageKey());
+        }), eq(EMAIL));
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
     public void notifyApplicantsByCompetition() {
         Long competitionId = 1L;
         Long applicationOneId = 2L;
