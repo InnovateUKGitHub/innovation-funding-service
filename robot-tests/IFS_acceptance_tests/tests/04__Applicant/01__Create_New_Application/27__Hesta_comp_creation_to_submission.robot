@@ -17,7 +17,7 @@ ${hestaApplicationSubmissionEmailSubject}    confirmation of your Horizon Europe
 ${hestaApplicationSubmissionEmail}           We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
 
 *** Test Cases ***
-Comp admin can select the competition type option Heukar in Initial details on competition setup
+Comp admin can select the competition type option Hesta in Initial details on competition setup
     [Documentation]  IFS-10688
     Given the user logs-in in new browser             &{Comp_admin1_credentials}
     When the user navigates to the page               ${CA_UpcomingComp}
@@ -29,7 +29,7 @@ Comp admin can view Hesta competition type in Initial details read only view
     Given the user clicks the button/link    link = Initial details
     Then the user can view Hesta competition type in Initial details read only view
 
-Comp admin creates Heukar competition
+Comp admin creates Hesta competition
     [Documentation]  IFS-8751
     Given the user clicks the button/link                             link = Back to competition details
     Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  GRANT  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
