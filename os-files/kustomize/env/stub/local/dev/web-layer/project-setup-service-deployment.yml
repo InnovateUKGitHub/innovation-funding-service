@@ -17,5 +17,5 @@ spec:
               port: 8080
           startupProbe:
             httpGet:
-              path: /project-setup-management/monitoring/health
+              path: /project-setup/monitoring/health
               port: 8080
