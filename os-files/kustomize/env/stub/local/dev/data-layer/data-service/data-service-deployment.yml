@@ -12,7 +12,7 @@ spec:
           httpGet:
             path: /monitoring/health
             port: 8080
-          initialDelaySeconds: 240
+          initialDelaySeconds: 10
           periodSeconds: 5
           timeoutSeconds: 25
           successThreshold: 1
@@ -21,7 +21,7 @@ spec:
           httpGet:
             path: /monitoring/health
             port: 8080
-          initialDelaySeconds: 240
+          initialDelaySeconds: 10
           periodSeconds: 5
           timeoutSeconds: 25
           successThreshold: 1
