@@ -6,7 +6,6 @@ metadata:
     app: project-setup-mgt-svc
   annotations:
     javaDebug: javaDebug
-    waitForDs: waitForDs
 spec:
   ports:
     - name: 8080-tcp

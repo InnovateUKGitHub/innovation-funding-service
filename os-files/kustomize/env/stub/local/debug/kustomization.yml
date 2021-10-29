@@ -3,7 +3,7 @@ commonAnnotations:
   environment: local
 
 bases:
-  - ../../stub-base
+  - ../local-base
 
 components:
   # Ordering is important in components
@@ -13,8 +13,9 @@ components:
   - ../../../../patches/new-relic-env-vars-patch
   - ../../../../patches/pull-secrets-patch
   - ../../../../patches/spring-profile-patch
-  - ../../../../patches/wait-for-db-patch
-  - ../../../../patches/java-debug-mode-patch
+  - ../patches/slow-startup-patch
+  - ../patches/wait-for-data-service-patch
+  - ../patches/java-debug-mode-patch
+  - ../patches/resource-limit-patch
 
-resources:
-  - config-maps/web-config.yml
+

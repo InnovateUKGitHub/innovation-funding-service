@@ -16,10 +16,6 @@ alias skaffold_cx="skaffold dev -f skaffold-CUSTOM.yml --cache-artifacts=false -
 # View state/events for dev/custom in firefox
 alias skaffold_state="open -a Firefox http://localhost:50052/v1/state"
 alias skaffold_events="open -a Firefox http://localhost:50052/v1/events"
-# Redeploy in a currently deployed skaffold dev/custom instance via the rest api
-alias skaffold_refresh="curl -X POST http://localhost:50052/v1/execute -d '{'build': true, 'sync': true, 'deploy': true}'"
-# port forwarding to access application and db
-alias skaffold_ports="skaffold dev -f skaffold-PORTS.yml"
 
 # shortcuts for k8s gets
 alias k8s_po="kubectl get po"
@@ -117,7 +113,7 @@ k8s_clean() {
   kubectl delete configmap  new-relic-config
   kubectl delete configmap  performance-config
   kubectl delete configmap  shibboleth-config
-  kubectl delete configmap  spring-profile-env
+  kubectl delete configmap  spring-config
   kubectl delete configmap  survey-data-service-config
   kubectl delete configmap  web-config
   kubectl delete secrets idp-keys-secrets

@@ -3,21 +3,15 @@ commonAnnotations:
   environment: local
 
 bases:
-  - ../../stub-base
+  - ../local-base
 
 components:
-  # Ordering is important in components
   - ../../../../components/data-layer/data-service
 #  - ../../../../components/web-layer/application-service
 
   - ../../../../patches/new-relic-env-vars-patch
   - ../../../../patches/pull-secrets-patch
   - ../../../../patches/spring-profile-patch
-  - ../../../../patches/wait-for-db-patch
-  - ../../../../patches/slow-startup-patch
-
-resources:
-  - config-maps/web-config.yml
-
-patchesStrategicMerge:
-  - data-layer/data-service/data-service-deployment.yml
+  - ../patches/slow-startup-patch
+  - ../patches/wait-for-data-service-patch
+  - ../patches/resource-limit-patch

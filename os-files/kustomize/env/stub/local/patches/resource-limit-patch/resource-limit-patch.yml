@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resource-limit-patch
+spec:
+  template:
+    spec:
+      containers:
+        - name: spring-boot-service-container
+          resources:
+            limits:
+              cpu: 5
+            requests:
+              cpu: 400m
+              memory: 1500M

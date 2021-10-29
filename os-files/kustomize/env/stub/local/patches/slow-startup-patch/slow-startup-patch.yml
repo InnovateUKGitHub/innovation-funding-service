@@ -1,33 +1,41 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: project-setup-svc
+  name: slow-startup-patch
 spec:
   template:
     spec:
       containers:
         - name: spring-boot-service-container
+          startupProbe:
+            httpGet:
+              path: /monitoring/health
+              port: 8080
+            periodSeconds: 5
+            timeoutSeconds: 1
+            failureThreshold: 120
+            # allows 120 failures in 5 second intervals (10 mins) to start
           livenessProbe:
             httpGet:
-              path: /project-setup/monitoring/health
+              path: /monitoring/health
               port: 8080
-            initialDelaySeconds: 30
+            initialDelaySeconds: 5
             periodSeconds: 31
             timeoutSeconds: 5
             successThreshold: 1
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /project-setup/monitoring/health
+              path: /monitoring/health
               port: 8080
-            initialDelaySeconds: 30
+            initialDelaySeconds: 5
             periodSeconds: 5
             timeoutSeconds: 5
             successThreshold: 1
-            failureThreshold: 1
+            failureThreshold: 3
           resources:
             limits:
-              cpu: 500m
+              cpu: 5
             requests:
-              cpu: 100m
-              memory: 500M
+              cpu: 400m
+              memory: 1500M
