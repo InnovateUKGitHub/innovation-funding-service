@@ -6,6 +6,7 @@ metadata:
     monitor: monitor
     javaDebug: javaDebug
     pullSecrets: pullSecrets
+    waitForDs: waitForDs
 spec:
   replicas: 1
   selector:

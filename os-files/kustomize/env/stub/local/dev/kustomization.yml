@@ -15,6 +15,7 @@ components:
   - ../../../../patches/spring-profile-patch
   - ../../../../patches/wait-for-db-patch
   - ../../../../patches/slow-startup-patch
+  - ../../../../patches/wait-for-data-service
 
 resources:
   - config-maps/web-config.yml
