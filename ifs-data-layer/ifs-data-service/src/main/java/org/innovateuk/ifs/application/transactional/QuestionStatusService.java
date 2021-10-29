@@ -10,6 +10,7 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -21,6 +22,11 @@ public interface QuestionStatusService {
     @PreAuthorize("hasPermission(#ids, 'UPDATE')")
     ServiceResult<List<ValidationMessages>> markAsComplete(final QuestionApplicationCompositeId ids,
                                                            final long markedAsCompleteById);
+
+    @PreAuthorize("hasPermission(#ids, 'UPDATE')")
+    ServiceResult<List<ValidationMessages>> markAsComplete(final QuestionApplicationCompositeId ids,
+                                                           final long markedAsCompleteById,
+                                                           final ZonedDateTime markedAsCompleteOn);
 
     @PreAuthorize("hasPermission(#ids, 'UPDATE')")
     ServiceResult<Void> markAsCompleteNoValidate(QuestionApplicationCompositeId ids, long markedAsCompleteById);

@@ -5,13 +5,12 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.innovateuk.ifs.sil.crm.resource.SilLoanAssessment;
+import org.innovateuk.ifs.sil.crm.resource.SilLoanApplication;
 import org.innovateuk.ifs.util.JsonMappingUtil;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 
@@ -29,6 +28,28 @@ public class CrmEndpointController {
         return restSuccess(HttpStatus.ACCEPTED);
     }
 
+
+    @PostMapping("/loanssubmission")
+    public RestResult<Void> updateApplication(@RequestBody SilLoanApplication application) {
+        LOG.info("Stubbing out SIL CRM update application endpoint: " + JsonMappingUtil.toJson(application));
+
+        if(application.getApplicationID() == null) {
+            LOG.error("application id is null");
+            return restFailure(HttpStatus.BAD_REQUEST);
+        } else if(application.getMarkedIneligible() != null &&                  // update eligibility
+                (application.getEligibilityStatusChangeDate() == null ||
+                        application.getEligibilityStatusChangeSource() == null)) {
+            LOG.error("update eligibility is incomplete");
+            return restFailure(HttpStatus.BAD_REQUEST);
+        } else if(application.getMarkedIneligible() == null &&                  // update application detail
+                (application.getProjectTotalCost() == null &&
+                        application.getProjectOtherFunding() == null)) {
+            LOG.error("update application detail is incomplete");
+            return restFailure(HttpStatus.BAD_REQUEST);
+        }
+        return restSuccess(HttpStatus.ACCEPTED);
+    }
+
     @PostMapping("/decisionmatrix")
     public RestResult<Void> updateApplication(@RequestBody SilLoanAssessment assessment) {
         LOG.info("Stubbing out SIL CRM update loan assessment endpoint: " + JsonMappingUtil.toJson(assessment));
@@ -42,4 +63,6 @@ public class CrmEndpointController {
         }
         return restSuccess(HttpStatus.ACCEPTED);
     }
+}
+
 }
