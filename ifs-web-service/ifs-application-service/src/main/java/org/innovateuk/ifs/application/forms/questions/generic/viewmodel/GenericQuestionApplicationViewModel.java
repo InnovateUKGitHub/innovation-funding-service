@@ -63,6 +63,8 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
     private final List<MultipleChoiceOptionResource> multipleChoiceOptions;
     private final MultipleChoiceOptionResource selectedMultipleChoiceOption;
 
+    private final boolean loansPartBEnabled;
+
     public GenericQuestionApplicationViewModel(long applicationId, String competitionName ,long questionId, long currentUser,
                                                String applicationName, String questionName, String questionNumber, String questionSubtitle,
                                                String questionDescription, String questionDescription2, String questionGuidanceTitle, String questionGuidance,
@@ -74,7 +76,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                                                ZonedDateTime lastUpdated, String lastUpdatedByName, Long lastUpdatedBy, boolean open,
                                                boolean complete, boolean leadApplicant, AssignButtonsViewModel assignButtonsViewModel,
                                                Long multipleChoiceFormInputId, List<MultipleChoiceOptionResource> multipleChoiceOptions, MultipleChoiceOptionResource selectedMultipleChoiceOption,
-                                               String leadOrganisationName, String leadOrganisationCompaniesHouseNumber) {
+                                               String leadOrganisationName, String leadOrganisationCompaniesHouseNumber, boolean loansPartBEnabled) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.questionId = questionId;
@@ -114,6 +116,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         this.selectedMultipleChoiceOption = selectedMultipleChoiceOption;
         this.leadOrganisationName = leadOrganisationName;
         this.leadOrganisationCompaniesHouseNumber = leadOrganisationCompaniesHouseNumber;
+        this.loansPartBEnabled = loansPartBEnabled;
     }
 
     @Override
@@ -316,6 +319,10 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         return leadOrganisationCompaniesHouseNumber;
     }
 
+    public boolean isLoansPartBEnabled() {
+        return loansPartBEnabled;
+    }
+
     @JsonIgnore
     public QuestionSetupType getLoansBusinessAndFinancialInformation() {
         return QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
@@ -361,6 +368,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         private MultipleChoiceOptionResource selectedMultipleChoiceOption;
         private String leadOrganisationName;
         private String leadOrganisationCompaniesHouseNumber;
+        private boolean loansPartBEnabled;
 
         private GenericQuestionApplicationViewModelBuilder() {
         }
@@ -564,6 +572,11 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
             return this;
         }
 
+        public GenericQuestionApplicationViewModelBuilder withLoansPartBEnabled(boolean loansPartBEnabled) {
+            this.loansPartBEnabled = loansPartBEnabled;
+            return this;
+        }
+
         public GenericQuestionApplicationViewModel build() {
             return new GenericQuestionApplicationViewModel(applicationId, competitionName, questionId, currentUser, applicationName,
                     questionName, questionNumber, questionSubtitle, questionDescription, questionDescription2, questionGuidanceTitle, questionGuidance,
@@ -571,8 +584,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                     appendices, maximumAppendices, templateDocumentFormInputId, templateDocumentTitle, templateDocumentFilename,
                     templateDocumentResponseFilename, templateDocumentResponseFileEntryId, lastUpdated, lastUpdatedByName, lastUpdatedBy,
                     open, complete, leadApplicant, assignButtonsViewModel, multipleChoiceFormInputId, multipleChoiceOptions, selectedMultipleChoiceOption,
-                    leadOrganisationName, leadOrganisationCompaniesHouseNumber);
+                    leadOrganisationName, leadOrganisationCompaniesHouseNumber, loansPartBEnabled);
         }
-
     }
 }

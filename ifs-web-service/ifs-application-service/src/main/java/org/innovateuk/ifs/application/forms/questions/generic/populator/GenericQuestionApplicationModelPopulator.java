@@ -16,6 +16,7 @@ import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
@@ -36,6 +37,9 @@ public class GenericQuestionApplicationModelPopulator {
 
     @Autowired
     private AssignButtonsPopulator assignButtonsPopulator;
+
+    @Value("${ifs.loan.partb.enabled}")
+    private boolean ifsLoanPartBEnabled;
 
     public GenericQuestionApplicationViewModel populate(ApplicantQuestionResource applicantQuestion, Optional<Long> organisationId) {
         Map<FormInputType, ApplicantFormInputResource> formInputs = applicantQuestion.getApplicantFormInputs()
@@ -82,6 +86,7 @@ public class GenericQuestionApplicationModelPopulator {
                 .withAssignButtonsViewModel(assignButtonsPopulator.populate(applicantQuestion, applicantQuestion, hideAssignButtons))
                 .withLeadOrganisationName(leadOrganisation.getName())
                 .withLeadOrganisationCompaniesHouseNumber(leadOrganisation.getCompaniesHouseNumber())
+                .withLoansPartBEnabled(ifsLoanPartBEnabled)
                 .build();
     }
 
