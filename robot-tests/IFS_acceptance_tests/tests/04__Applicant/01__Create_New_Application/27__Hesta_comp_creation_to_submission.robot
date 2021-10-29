@@ -1,6 +1,8 @@
 *** Settings ***
 Documentation     IFS-10694 Hesta - Email notification content for application submission
 ...
+...               IFS-10697 Hesta - Application Submission confirmation page
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -9,6 +11,7 @@ Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
+${assessorEmail}                             another.person@gmail.com
 ${hestaCompTypeSelector}                     dt:contains("Competition type") ~ dd:contains("${compType_HESTA}")
 ${hestaApplicationName}                      hesta application
 ${newLeadApplicantEmail}                     tim.timmy@heukar.com
@@ -44,8 +47,18 @@ Lead applicant can submit application
 
 Lead applicant should get a confirmation email after application submission
     [Documentation]    IFS-10694
-    Given Requesting IDs of this application
-    Then the user reads his email     ${newLeadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
+    Given the user should see the element       jQuery = h1:contains("Application status")
+    When Requesting IDs of this application
+    Then the user is presented with the Application Summary page
+    And the user reads his email     ${newLeadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
+
+The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
+    [Documentation]  IFS-10697
+    [Setup]  Requesting IDs of this competition
+    Given Competition admin creates an assessment period                            ${competitionId}
+    When the internal team mark the application as successful
+    And Log in as a different user                                                  email=${newLeadApplicantEmail}    password=${short_password}
+    Then the application summary page must not include the reopen application link
 
 *** Keywords ***
 the user can view Hesta competition type in Initial details read only view
@@ -61,7 +74,7 @@ the competition admin creates Hesta competition
     the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
     the user fills in the CS funding eligibility            true   ${compType_HESTA}  ${fundingRule}
     the user selects the organisational eligibility         true    true
-    the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}  No
+    the user completes milestones section
     the user marks the Hesta application question as done   ${projectGrowth}  ${compType}  ${competition}
     the user clicks the button/link                         link = Public content
     the user fills in the Public content and publishes      ${extraKeyword}
@@ -74,6 +87,10 @@ the competition admin creates Hesta competition
 Requesting IDs of this application
     ${ApplicationID} =  get application id by name    ${hestaApplicationName}
     Set suite variable    ${ApplicationID}
+
+Requesting IDs of this competition
+    ${competitionId} =  get comp id from comp title  ${hestaCompetitionName}
+    Set suite variable  ${competitionId}
 
 user selects where is organisation based
     [Arguments]  ${org_type}
@@ -134,6 +151,43 @@ the user marks the Hesta application question as done
     the user clicks the button/link                                     link = Application
     the user marks each question as complete                            Application details
     the user fills in the CS Application section with custom questions  ${growthTable}  ${comp_type}
+
+the user completes milestones section
+    the user clicks the button/link                 link = Milestones
+    the user clicks the button twice                jQuery = label:contains("Project setup")
+    the user clicks the button/link                 jQuery = button:contains("Done")
+    the user completes application submission page  Yes
+    the user clicks the button/link                 jQuery = button:contains("Done")
+    the user clicks the button/link                 link = Back to competition details
+    the user should see the element                 jQuery = div:contains("Milestones") ~ .task-status-complete
+
+Competition admin creates an assessment period
+    [Arguments]  ${competitionId}
+    Log in as a different user              &{Comp_admin1_credentials}
+    the user clicks the button/link         link = ${hestaCompetitionName}
+    the user clicks the button/link         link = Manage assessments
+    the user clicks the button/link         link = Manage assessment period
+    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.day  12
+    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.month  12
+    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.year  2100
+    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.day  14
+    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.month  12
+    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.year  2100
+    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.day  16
+    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.month  12
+    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.year  2100
+    the user clicks the button/link         jQuery = button:contains('Save and return to manage assessments')
+    the user clicks the button/link         jQuery = button:contains("Notify assessors")
+    update assessment batch 1 milestone to yesterday   ${competitionId}  ASSESSOR_DEADLINE
+    the user clicks the button/link         jQuery = button:contains("Close assessment")
+    the user clicks the button/link         link = Competition
+
+
+update assessment batch 1 milestone to yesterday
+    [Arguments]  ${competition_id}  ${milestone}
+    ${yesterday} =    get yesterday
+    execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${competition_id}' and type IN ('${milestone}');
+    reload page
 
 Custom Suite Setup
     Set predefined date variables
