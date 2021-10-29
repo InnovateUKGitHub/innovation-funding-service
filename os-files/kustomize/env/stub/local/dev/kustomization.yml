@@ -22,3 +22,4 @@ patchesStrategicMerge:
   - web-layer/competition-mgt-service-deployment.yml
   - web-layer/project-setup-mgt-service-deployment.yml
   - web-layer/project-setup-service-deployment.yml
+  - web-layer/survey-service-deployment.yml

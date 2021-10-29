@@ -7,14 +7,6 @@ spec:
     spec:
       containers:
         - name: spring-boot-service-container
-          livenessProbe:
-            httpGet:
-              path: /management/monitoring/health
-              port: 8080
-          readinessProbe:
-            httpGet:
-              path: /management/monitoring/health
-              port: 8080
           startupProbe:
             httpGet:
               path: /management/monitoring/health

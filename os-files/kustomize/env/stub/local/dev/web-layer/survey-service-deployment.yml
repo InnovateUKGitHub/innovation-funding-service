@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: project-setup-svc
+  name: survey-svc
 spec:
   template:
     spec:
@@ -9,5 +9,5 @@ spec:
         - name: spring-boot-service-container
           startupProbe:
             httpGet:
-              path: /project-setup/monitoring/health
+              path: /survey/monitoring/health
               port: 8080

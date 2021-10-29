@@ -16,26 +16,14 @@ spec:
             failureThreshold: 120
             # allows 120 failures in 5 second intervals (10 mins) to start
           livenessProbe:
-            httpGet:
-              path: /monitoring/health
-              port: 8080
             initialDelaySeconds: 5
             periodSeconds: 31
             timeoutSeconds: 5
             successThreshold: 1
             failureThreshold: 3
           readinessProbe:
-            httpGet:
-              path: /monitoring/health
-              port: 8080
             initialDelaySeconds: 5
             periodSeconds: 5
             timeoutSeconds: 5
             successThreshold: 1
             failureThreshold: 3
-          resources:
-            limits:
-              cpu: 5
-            requests:
-              cpu: 400m
-              memory: 1500M
