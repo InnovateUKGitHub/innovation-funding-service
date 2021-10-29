@@ -320,7 +320,8 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
     }
 
     public boolean isLoansPartBEnabled() {
-        return loansPartBEnabled;
+        return (questionType == QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION)
+                && loansPartBEnabled;
     }
 
     @JsonIgnore
