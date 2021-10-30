@@ -9,7 +9,7 @@ spec:
         - name: spring-boot-service-container
           resources:
             limits:
-              cpu: 5
+              cpu: 4
             requests:
-              cpu: 400m
-              memory: 1500M
+              cpu: 200m
+              memory: 500M

@@ -30,6 +30,14 @@ k8s_log() {
     kubectl logs -f $pod
 }
 
+k8s_wp() {
+    watch kubectl get po
+}
+
+k8s_logs() {
+    k8s_log "$1"
+}
+
 k8s_describe() {
     pod=$(kubectl get pod -l app="$1" -o name)
     kubectl describe $pod
