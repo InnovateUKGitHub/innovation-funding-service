@@ -9,7 +9,6 @@ components:
 
   - ../../../../components/data-layer/data-service
   - ../../../../components/data-layer/finance-data-service
-  - ../../../../components/data-layer/survey-data-service
 
   - ../../../../components/web-layer/application-service
   - ../../../../components/web-layer/assessment-service
