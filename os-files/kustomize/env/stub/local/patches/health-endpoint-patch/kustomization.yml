@@ -3,16 +3,21 @@ kind: Component
 patches:
 - path: assessment-service-deployment.yml
   target:
+    kind: Deployment
     name: assessment-svc
 - path: competition-mgt-service-deployment.yml
   target:
+    kind: Deployment
     name: competition-mgt-svc
 - path: project-setup-mgt-service-deployment.yml
   target:
+    kind: Deployment
     name: project-setup-mgt-svc
 - path: project-setup-service-deployment.yml
   target:
+    kind: Deployment
     name: project-setup-svc
 - path: survey-service-deployment.yml
   target:
+    kind: Deployment
     name: survey-svc
