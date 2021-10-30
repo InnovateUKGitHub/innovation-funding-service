@@ -24,6 +24,14 @@ alias k8s_svc="kubectl get svc"
 alias k8s_configmap="kubectl get configmap"
 alias k8s_secrets="kubectl get secrets"
 
+skaffold_dev() {
+  skaffold dev -f $1 --watch-image='[]' --cache-artifacts=false --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true --tail=false
+}
+
+skaffold_debug() {
+  skaffold debug -f $1 --watch-image='[]' --cache-artifacts=false --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true --tail=false
+}
+
 # Use k8s_dep alias then the name is the first arg here e.g. 'k8s_log application-svc'
 k8s_log() {
     pod=$(kubectl get pod -l app="$1" -o name)
@@ -137,7 +145,8 @@ skaffold_help () {
     echo ''
     echo '    skaffold_e - auth, cache, mail, registration-service, sil and ifs-database '
     echo '    skaffold_dx - runs data and web tier '
-    echo '    skaffold_ports - does port forwarding for idp, shib, database and mail '
+    echo '    skaffold_dev [file] runs fast dev mode on specified skaffold file'
+    echo '    skaffold_debug [file] runs fast debug mode on specified skaffold file'
     echo ''
     echo '    skaffold_cx - runs services configured via skaffold-CUSTOM.yml (editable)'
     echo '    It is quite easy to create ad-hoc configurations for any dev/ops purpose'

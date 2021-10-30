@@ -1,0 +1,28 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: local-min
+
+bases:
+  - ../local-base
+
+components:
+
+  - ../../../../components/data-layer/data-service
+  - ../../../../components/data-layer/finance-data-service
+  - ../../../../components/data-layer/survey-data-service
+
+  - ../../../../components/web-layer/application-service
+  - ../../../../components/web-layer/assessment-service
+  - ../../../../components/web-layer/competition-mgt-service
+  - ../../../../components/web-layer/front-door-service
+  - ../../../../components/web-layer/project-setup-mgt-service
+  - ../../../../components/web-layer/project-setup-service
+
+  - ../../../../patches/new-relic-env-vars-patch
+  - ../../../../patches/pull-secrets-patch
+  - ../../../../patches/spring-profile-patch
+
+  - ../patches/health-endpoint-patch
+  - ../patches/resource-limit-patch
+  - ../patches/slow-startup-patch
+  - ../patches/wait-for-data-service-patch

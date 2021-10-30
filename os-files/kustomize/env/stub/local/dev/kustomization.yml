@@ -1,6 +1,6 @@
 commonAnnotations:
   deployedWith: kustomize
-  environment: local
+  environment: local-dev
 
 bases:
   - ../local-base
@@ -13,13 +13,8 @@ components:
   - ../../../../patches/new-relic-env-vars-patch
   - ../../../../patches/pull-secrets-patch
   - ../../../../patches/spring-profile-patch
+
+  - ../patches/health-endpoint-patch
+  - ../patches/resource-limit-patch
   - ../patches/slow-startup-patch
   - ../patches/wait-for-data-service-patch
-  - ../patches/resource-limit-patch
-
-patchesStrategicMerge:
-  - web-layer/assessment-service-deployment.yml
-  - web-layer/competition-mgt-service-deployment.yml
-  - web-layer/project-setup-mgt-service-deployment.yml
-  - web-layer/project-setup-service-deployment.yml
-  - web-layer/survey-service-deployment.yml

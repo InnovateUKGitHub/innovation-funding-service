@@ -1,6 +1,6 @@
 commonAnnotations:
   deployedWith: kustomize
-  environment: local
+  environment: local-custom
 
 bases:
   - ../local-base
@@ -12,6 +12,8 @@ components:
   - ../../../../patches/new-relic-env-vars-patch
   - ../../../../patches/pull-secrets-patch
   - ../../../../patches/spring-profile-patch
+
+  - ../patches/health-endpoint-patch
+  - ../patches/resource-limit-patch
   - ../patches/slow-startup-patch
   - ../patches/wait-for-data-service-patch
-  - ../patches/resource-limit-patch

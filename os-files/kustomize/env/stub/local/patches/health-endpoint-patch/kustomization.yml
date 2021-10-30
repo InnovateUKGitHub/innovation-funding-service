@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+patches:
+- path: assessment-service-deployment.yml
+  target:
+    name: assessment-svc
+- path: competition-mgt-service-deployment.yml
+  target:
+    name: competition-mgt-svc
+- path: project-setup-mgt-service-deployment.yml
+  target:
+    name: project-setup-mgt-svc
+- path: project-setup-service-deployment.yml
+  target:
+    name: project-setup-svc
+- path: survey-service-deployment.yml
+  target:
+    name: survey-svc
