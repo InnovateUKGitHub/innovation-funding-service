@@ -35,6 +35,5 @@ kustomize build env/stub/local/ext > /dev/null || echo 'xxx error on local ext'
 kustomize build env/stub/local/local-base > /dev/null || echo 'xxx error on local dev'
 kustomize build env/stub/local/dev > /dev/null || echo 'xxx error on local dev'
 kustomize build env/stub/local/custom > /dev/null || echo 'xxx error on local custom'
-kustomize build env/stub/local/debug > /dev/null || echo 'xxx error on local ext'
-
-
+kustomize build env/stub/local/debug > /dev/null || echo 'xxx error on local debug'
+kustomize build env/stub/local/min > /dev/null || echo 'xxx error on local min'
