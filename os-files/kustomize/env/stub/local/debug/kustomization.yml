@@ -10,14 +10,8 @@ components:
   - ../../../../components/web-layer/project-setup-mgt-service
 #  - ../../../../components/web-layer/application-service
 
-  - ../../../../patches/new-relic-env-vars-patch
-  - ../../../../patches/pull-secrets-patch
-  - ../../../../patches/spring-profile-patch
-
-  - ../patches/health-endpoint-patch
+  - ../../../../patches/
+  - ../patches/
   - ../patches/java-debug-mode-patch
-  - ../patches/resource-limit-patch
-  - ../patches/slow-startup-patch
-  - ../patches/wait-for-data-service-patch
 
 
