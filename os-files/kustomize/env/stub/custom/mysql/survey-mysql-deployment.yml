@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ifs-survey-database
+  annotations:
+    pullSecrets: pullSecrets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ifs-survey-database
+  template:
+    metadata:
+      labels:
+        app: ifs-survey-database
+    spec:
+      containers:
+        - env:
+            - name: MYSQL_DATABASE
+              value: ifs_survey
+            - name: MYSQL_ROOT_PASSWORD
+              value: password
+          image: mysql:5.6.51
+          name: ifs-survey-database
+          imagePullPolicy: IfNotPresent
+          args: ["--character-set-server=utf8", "--collation-server=utf8_bin"]
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-tmp-storage
+              mountPath: /var/lib/mysql
+          resources:
+            requests:
+              memory: 300M
+            limits:
+              memory: 600M
+      volumes:
+        - emptyDir: {}
+          name: mysql-tmp-storage

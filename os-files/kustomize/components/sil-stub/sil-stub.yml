@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sil-stub
+spec:
+  selector:
+    app: sil-stub
+  ports:
+    - name: 8080-tcp
+      port: 8080
+      targetPort: 8080

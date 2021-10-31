@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registration-svc
+spec:
+  template:
+    spec:
+      containers:
+        - name: spring-boot-service-container
+          env:
+          - name: SHIBBOLETH_LDAP_REQUIREVALIDPPOLICY
+            value: "false"
+          livenessProbe:
+            httpGet:
+              path: /monitoring/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 31
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /monitoring/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1
+          startupProbe:
+            httpGet:
+              path: /monitoring/health
+              port: 8080
+            periodSeconds: 5
+            timeoutSeconds: 1
+            failureThreshold: 120
