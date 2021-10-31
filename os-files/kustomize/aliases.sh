@@ -7,15 +7,13 @@
 # Deployments
 # Use sensible defaults to deploy 'external' resources
 alias skaffold_e="skaffold dev -f skaffold-EXT.yml --rpc-http-port=50054 --rpc-port=50053 --auto-build=false --auto-sync=false --auto-deploy=false --status-check=true --wait-for-deletions=true --tail=false"
-# Use sensible defaults to deploy dev and custom builds (use one at a time)
-alias skaffold_d="skaffold dev --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true --tail=false"
-alias skaffold_c="skaffold dev -f skaffold-CUSTOM.yml --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true --tail=false"
 # Use sensible defaults to deploy dev and custom builds in a faster mode (use one at a time)
 alias skaffold_dx="skaffold dev --watch-image='[]' --cache-artifacts=false --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true --tail=false"
 alias skaffold_cx="skaffold dev -f skaffold-CUSTOM.yml --cache-artifacts=false --watch-image='[]' --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true --tail=false"
 # View state/events for dev/custom in firefox
 alias skaffold_state="open -a Firefox http://localhost:50052/v1/state"
 alias skaffold_events="open -a Firefox http://localhost:50052/v1/events"
+alias dev_home="open -a Firefox https://host.docker.internal:8443/"
 
 # shortcuts for k8s gets
 alias k8s_po="kubectl get po"
@@ -96,7 +94,21 @@ k8s_rebuild_db() {
   k8s_sync_ldap
 }
 
-k8s_clean() {
+k8s_clean_svc() {
+  kubectl delete deployment application-svc
+  kubectl delete deployment assessment-svc
+  kubectl delete deployment competition-mgt-svc
+  kubectl delete deployment data-service
+  kubectl delete deployment data-service-alerts
+  kubectl delete deployment finance-data-service
+  kubectl delete deployment front-door-svc
+  kubectl delete deployment project-setup-mgt-svc
+  kubectl delete deployment project-setup-svc
+  kubectl delete deployment survey-data-svc
+  kubectl delete deployment survey-svc
+}
+
+k8s_clean_all() {
   kubectl delete deployment --all
   kubectl delete svc application-svc
   kubectl delete svc assessment-svc
@@ -158,7 +170,8 @@ k8s_help() {
     echo 'Having sourced this file all commands prefixed k8s_ should tab auto-complete'
     echo ''
     echo 'Developer utility scripts -:'
-    echo '    k8s_clean - clean the k8s namespace'
+    echo '    k8s_clean_all - clean the k8s namespace'
+    echo '    k8s_clean_svc - clean non ext services'
     echo '    k8s_rebuild_db - rebuilds the database and ldap entries'
     echo '    k8s_sync_ldap - syncs the db users with ldap'
     echo ''
