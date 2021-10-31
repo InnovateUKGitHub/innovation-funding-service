@@ -207,7 +207,7 @@ public class ReviewAndSubmitController {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
 
-        if (!canReopenApplication(applicationResource, userResource, competitionResource.isAlwaysOpen(), competitionResource.isHesta())) {
+        if (!canReopenApplication(applicationResource, userResource, competitionResource)) {
             return "redirect:/application/" + applicationId + "/track";
         }
 
@@ -218,9 +218,9 @@ public class ReviewAndSubmitController {
         return "application-confirm-reopen";
     }
 
-    private boolean canReopenApplication(ApplicationResource application, UserResource user, boolean alwaysOpen, boolean isHesta) {
+    private boolean canReopenApplication(ApplicationResource application, UserResource user, CompetitionResource competitionResource) {
 
-        return !alwaysOpen || isHesta
+        return !competitionResource.isAlwaysOpen() || competitionResource.isHesta()
                 && CompetitionStatus.OPEN.equals(application.getCompetitionStatus())
                 && application.canBeReopened()
                 && userService.isLeadApplicant(user.getId(), application);
@@ -263,7 +263,7 @@ public class ReviewAndSubmitController {
                 application,
                 earlyMetricsUrl,
                 application.getCompletion(),
-                canReopenApplication(application, user, competition.isAlwaysOpen(), competition.isHesta())
+                canReopenApplication(application, user, competition)
         ));
         return getTrackingPage(competition);
     }

@@ -27,8 +27,10 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
+import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.HESTA;
 import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.HORIZON_2020;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -44,8 +46,6 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     private CompetitionRestService competitionRestService;
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
-    @Mock
-    private ProcessRoleRestService processRoleRestService;
     @Mock
     private UserService userService;
 
@@ -100,7 +100,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     }
 
     @Test
-    public void testAlwaysOpenApplicationTrackNoReopen() throws Exception {
+    public void alwaysOpenApplicationTrackNoReopen() throws Exception {
         CompetitionResource competition = newCompetitionResource().withAlwaysOpen(true).build();
 
         ApplicationResource application = newApplicationResource()
@@ -124,7 +124,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     }
 
     @Test
-    public void testAlwaysOpenApplicationTrackReopen() throws Exception {
+    public void alwaysOpenApplicationTrackReopen() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withAlwaysOpen(true).build();
 
@@ -143,6 +143,29 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
                 .andReturn();
         TrackViewModel model = (TrackViewModel) mvcResult.getModelAndView().getModel().get("model");
         assertFalse(model.isReopenLinkVisible());
+    }
+
+    @Test
+    public void hestaApplicationTrackReopen() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionTypeEnum(HESTA)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withApplicationState(SUBMITTED)
+                .withCompetitionStatus(CompetitionStatus.OPEN)
+                .withCompetition(competition.getId())
+                .build();
+
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(userService.isLeadApplicant(loggedInUser.getId(), application)).thenReturn(true);
+
+        MvcResult mvcResult = mockMvc.perform(get("/application/" + application.getId() + "/track"))
+                .andExpect(view().name("hesta-application-track"))
+                .andReturn();
+        TrackViewModel model = (TrackViewModel) mvcResult.getModelAndView().getModel().get("model");
+        assertTrue(model.isReopenLinkVisible());
     }
 
     @Test
