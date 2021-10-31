@@ -1,0 +1,24 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: data-service-config
+data:
+  DATA_SERVICE_HOST: "data-service"
+  DATA_SERVICE_PORT: "8080"
+  IDP_REST_BASEURL: 'http://registration-svc:8080'
+  SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE: '100'
+  IFS_DATA_SERVICE_FILE_GRANT_SEND_DELAY_MILLIS: "60000"
+  IFS_FINANCE_TOTALS_ENABLED: "true"
+  IFS_FINANCE-TOTALS_AUTHSECRETKEY: "supersecretkey"
+  SIL_REST_BASEURL: "http://sil-stub:8080/silstub"
+  IFS_DATA_POSTCODE_LOOKUP_KEY: ""
+  IFS_DATA_COMPANIES_HOUSE_LOOKUP_ENABLED: "false"
+  IFS_DATA_COMPANIES_HOUSE_KEY: "mock-key"
+  IFS_DATA_SERVICE_FILE_STORAGE_BASE: "/tmp"
+  IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAINS: "innovateuk.ukri.test,innovateuk.test"
+  IFS_SYSTEM_KTA_USER_EMAIL_DOMAIN: "ktn-uk.test"
+  IFS_SLACK_AUTH_KEY: ""
+  IFS_EMAIL_BLACKLIST: "blacklisted.com"
+  IFS_EMAIL_WHITELIST: "*"
+  IFS_SYSTEM_EMAIL_ADDRESS: "noreply-innovateuk@example.com"
+  IFS_DATA_SERVICE_FILE_STORAGE_VIRUS_SCANNING_ENABLED: "false"

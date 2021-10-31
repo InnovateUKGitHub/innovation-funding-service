@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonAnnotations:
+  stub-base: stub-base
+
+bases:
+  - ../../env-base
+
+resources:
+  # We use only one physical DB for local and at
+  - config-maps/finance-data-service-config.yml
+  - config-maps/survey-data-service-config.yml
+
+  - config-maps/data-service-config.yml
+  - config-maps/cache-config.yml
+  - config-maps/db-config.yml
+  - config-maps/docusign-config.yml
+  - config-maps/feature-toggle-config.yml
+  - config-maps/flyway-config.yml
+  - config-maps/new-relic-config.yml
+  - config-maps/performance-config.yml
+

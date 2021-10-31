@@ -1,0 +1,30 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+
+components:
+  - ../../patches/pull-secrets-patch
+resources:
+  # application service
+  - application-service/application-service.yml
+  - application-service/application-service-deployment.yml
+  # assessment service
+  - assessment-service/assessment-service.yml
+  - assessment-service/assessment-service-deployment.yml
+  # front-door service
+  - front-door-service/front-door-service.yml
+  - front-door-service/front-door-service-deployment.yml
+  # project-setup-mgt service
+  - project-setup-mgt-service/project-setup-mgt-service.yml
+  - project-setup-mgt-service/project-setup-mgt-service-deployment.yml
+  # project-setup service
+  - project-setup-service/project-setup-service.yml
+  - project-setup-service/project-setup-service-deployment.yml
+  # competition management service
+  - competition-mgt-service/competition-mgt-service.yml
+  - competition-mgt-service/competition-mgt-service-deployment.yml
+  # survey service
+  - survey-service/survey-service.yml
+  - survey-service/survey-service-deployment.yml
+
+
+

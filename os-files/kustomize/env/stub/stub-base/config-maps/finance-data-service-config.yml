@@ -1,0 +1,12 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: finance-data-service-config
+data:
+  FINANCE_DB_URL: "jdbc:mysql://ifs-database:3306/ifs_finance"
+  FINANCE_DB_NAME: "ifs_finance"
+  FINANCE_DB_USER: "root"
+  # Dev docker mode only
+  FINANCE_DB_PASS: "password"
+  FINANCE_DB_HOST: "ifs-database"
+  FINANCE_DB_PORT: "3306"
