@@ -27,6 +27,7 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -92,6 +93,13 @@ public class CompetitionSetupApplicationController {
 
     @Autowired
     private CompetitionSetupApplicationQuestionValidator competitionSetupApplicationQuestionValidator;
+
+    @Value("${ifs.loan.partb.enabled}")
+    private boolean ifsLoanPartBEnabled;
+
+    @Value("${ifs.loans.salesforce.page.url}")
+    private String salesForceURL;
+
 
     @PostMapping(value = "/landing-page", params = "createQuestion")
     public String createQuestion(@PathVariable long competitionId) {
@@ -481,7 +489,7 @@ public class CompetitionSetupApplicationController {
         CompetitionSetupQuestionResource questionResource = questionId.isPresent() ? questionSetupCompetitionRestService.getByQuestionId(
                 (questionId.get())).getSuccess() : null;
 
-        return new QuestionSetupViewModel(generalViewModel, subsectionViewModel, competition.getName(), isEditable, filename, displayAssessmentOptions(competition, questionResource));
+        return new QuestionSetupViewModel(generalViewModel, subsectionViewModel, competition.getName(), isEditable, filename, displayAssessmentOptions(competition, questionResource), ifsLoanPartBEnabled, salesForceURL);
     }
 
     private boolean displayAssessmentOptions(CompetitionResource competitionResource, CompetitionSetupQuestionResource questionResource) {
