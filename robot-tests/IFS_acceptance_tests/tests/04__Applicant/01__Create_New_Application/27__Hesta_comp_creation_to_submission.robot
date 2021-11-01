@@ -2,7 +2,6 @@
 Documentation     IFS-10694 Hesta - Email notification content for application submission
 ...               IFS-10688 Hesta - Create competition type hesta
 ...               IFS-10695 Hesta - Email notification content for unsuccessfull application
-...               IFS-10695 Hesta -  Email notification of unsuccessful application
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
