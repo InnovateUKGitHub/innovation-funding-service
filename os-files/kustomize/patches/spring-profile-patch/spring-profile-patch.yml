@@ -11,5 +11,5 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               valueFrom:
                 configMapKeyRef:
-                  name: spring-config
+                  name: spring-profile-env
                   key: SPRING_PROFILES_ACTIVE
