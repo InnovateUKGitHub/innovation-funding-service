@@ -97,7 +97,7 @@ Max funding sought validation
     [Documentation]  IFS-7866
     Given the user sets max available funding              60000  ${loan_comp_appl_id}
     When the user enters a value over the max funding
-    Then the user should see a field and summary error     Your funding sought exceeds £60,000. You must lower your funding level percentage or your project costs.
+    Then the user should see a field and summary error     Your funding sought exceeds GBP 60,000. You must lower your funding level percentage or your project costs.
 
 Loan application Your funding
     [Documentation]  IFS-6207

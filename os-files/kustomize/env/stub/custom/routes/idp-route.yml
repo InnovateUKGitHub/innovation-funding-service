@@ -1,0 +1,23 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    haproxy.router.openshift.io/balance: source
+  name: idp
+spec:
+  host: auth-openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org
+  port:
+    targetPort: 443-tcp
+  tls:
+    termination: passthrough
+  to:
+    kind: Service
+    name: idp
+    weight: 100
+status:
+  ingress:
+    - conditions:
+        - status: 'True'
+          type: Admitted
+      host: openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org
+      routerName: router

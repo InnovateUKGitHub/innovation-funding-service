@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cache-provider
+  annotations:
+    pullSecrets: pullSecrets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cache-provider
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: cache-provider
+    spec:
+      containers:
+        - image: docker-ifs.devops.innovateuk.org/releases/cache-provider:5.0.5
+          name: cache-container
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6379
+          resources:
+            requests:
+              memory: 50M
+            limits:
+              memory: 100M

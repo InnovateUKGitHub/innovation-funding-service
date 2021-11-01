@@ -1,4 +1,5 @@
-def jdbcUrl = "jdbc:mysql://127.0.0.1:3306"
+def host = System.getenv("DATABASE_HOST") ?: "ifs-database"
+def jdbcUrl = "jdbc:mysql://$host:3306"
 def flywayParams = "characterEncoding=utf8&useMysqlMetadata=true"
 
 ext.testIfsDatasourceUrl="$jdbcUrl/ifs_test?$flywayParams"

@@ -62,7 +62,8 @@ public class SetupSectionStatus {
     }
 
     public SectionStatus financeChecksSectionStatus(final ProjectActivityStates financeCheckState,
-                                                    final SectionAccess access) {
+                                                    final SectionAccess access,
+                                                    boolean isProjectMO) {
 
         if (access.equals(SectionAccess.NOT_ACCESSIBLE)) {
             return EMPTY;
@@ -71,7 +72,7 @@ public class SetupSectionStatus {
         } else if (financeCheckState.equals(ACTION_REQUIRED)) {
             return FLAG;
         } else {
-            return HOURGLASS;
+            return isProjectMO ? INCOMPLETE : HOURGLASS;
         }
     }
 
