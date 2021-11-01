@@ -6,6 +6,11 @@ metadata:
     monitor: monitor
     pullSecrets: pullSecrets
 spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1 #So Flyway runs on one thread at a time
+      maxUnavailable: 0
   replicas: 8
   selector:
     matchLabels:
