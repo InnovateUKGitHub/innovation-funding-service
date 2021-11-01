@@ -4,14 +4,14 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
@@ -41,6 +41,40 @@ public class ApplicationSummarisationServiceImpl implements ApplicationSummarisa
     }
 
     @Override
+    public ServiceResult<BigDecimal> getProjectTotalFunding(Long appId) {
+
+        return financeService.financeTotals(appId).andOnSuccessReturn(financeTotalsResult -> {
+            BigDecimal total = financeTotalsResult.stream().findFirst().get().getFinanceOrganisationDetails().entrySet().stream()
+                    .filter(x -> totalProjectCostTypes(x.getKey())).map(Map.Entry::getValue)
+                    .map(t -> t.getTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
+            return total;
+        });
+
+
+    }
+
+    @Override
+    public ServiceResult<BigDecimal> getProjectOtherFunding(Long appId) {
+
+        return financeService.financeTotals(appId).andOnSuccessReturn(financeTotalsResult -> {
+            BigDecimal total = financeTotalsResult.stream().findFirst().get().getFinanceOrganisationDetails().get(FinanceRowType.OTHER_FUNDING).getTotal();
+            return total;
+        });
+
+
+    }
+
+
+    @Override
+    public ServiceResult<String> getProjectLocation(Long appId) {
+
+        return financeService.financeTotals(appId).andOnSuccessReturn(financeTotalsResult -> {
+            return financeTotalsResult.stream().findFirst().get().getWorkPostcode();
+        });
+    }
+
+
+    @Override
     public ServiceResult<BigDecimal> getFundingSought(Application application) {
 
         if (application.getApplicationFinances() == null || application.getApplicationFinances().isEmpty()) {
@@ -62,7 +96,15 @@ public class ApplicationSummarisationServiceImpl implements ApplicationSummarisa
         return result(fundingSought);
     }
 
+
     private ServiceResult<BigDecimal> result(BigDecimal value) {
         return serviceSuccess(value.setScale(2, RoundingMode.HALF_UP));
+    }
+
+    private boolean totalProjectCostTypes(FinanceRowType t) {
+        return t.equals(FinanceRowType.LABOUR) || t.equals(FinanceRowType.OVERHEADS) ||
+                t.equals(FinanceRowType.MATERIALS) || t.equals(FinanceRowType.CAPITAL_USAGE) ||
+                t.equals(FinanceRowType.SUBCONTRACTING_COSTS) || t.equals(FinanceRowType.TRAVEL) ||
+                t.equals(FinanceRowType.OTHER_COSTS);
     }
 }

@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ldap
+  annotations:
+    pullSecrets: pullSecrets
+    waitForDb: waitForDb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ldap
+  template:
+    metadata:
+      labels:
+        app: ldap
+    spec:
+      volumes:
+        - name: ldap-keys-volume
+          secret:
+            secretName: ldap-keys-secrets
+      containers:
+        - env:
+            - name: LDAP_PORT
+              value: "8389"
+          name: ldap
+          image: docker-ifs.devops.innovateuk.org/snapshots/ldap-service:8285b36
+          volumeMounts:
+            - name: ldap-keys-volume
+              mountPath: /var/certs
+          livenessProbe:
+            exec:
+              command:
+                - ldapsearch
+                - -H
+                - ldaps://localhost:8389
+                - -b
+                - dc=nodomain
+                - -x
+                - -LLL
+                - -s
+                - base
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            exec:
+              command:
+                - ldapsearch
+                - -H
+                - ldaps://localhost:8389
+                - -b
+                - dc=nodomain
+                - -x
+                - -LLL
+                - -s
+                - base
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8389
+          resources:
+            limits:
+              memory: 1200M
+            requests:
+              memory: 800M

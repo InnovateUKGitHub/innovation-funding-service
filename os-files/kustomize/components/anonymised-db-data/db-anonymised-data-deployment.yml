@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: anonymised-db-data
+spec:
+  imagePullSecrets:
+    - name: regcred
+  containers:
+    - name: anonymised-db-data
+      image: anonymised-db-data
+      imagePullPolicy: Always
+      env:
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: DB_HOST
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: DB_PORT
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: DB_NAME
+        - name: DB_USER
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: DB_USER
+        - name: DB_PASS
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: DB_PASS
+        - name: DB_ANON_PASS
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: DB_ANON_PASS
+  restartPolicy: Never

@@ -1,0 +1,33 @@
+apiVersion: skaffold/v2beta11
+kind: Config
+metadata:
+  name: innovation-funding-service
+build:
+  artifacts:
+    - image: project-setup-mgt-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-web-service:ifs-project-setup-mgt-service
+        args:
+          - "-DskipTests"
+  local:
+    useDockerCLI: false
+    useBuildkit: false
+    tryImportMissing: false
+    push: false
+deploy:
+  kustomize:
+    paths:
+      - os-files/kustomize/env/stub/local/debug
+portForward:
+  - resourceType: Service
+    resourceName: project-setup-mgt-svc
+    namespace: default
+    port: 5005
+    localPort: 5005
+  - resourceType: Service
+    resourceName: project-setup-mgt-svc
+    namespace: default
+    port: 1099
+    localPort: 1099
