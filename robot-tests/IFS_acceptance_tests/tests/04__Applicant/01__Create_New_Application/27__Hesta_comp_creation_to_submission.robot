@@ -2,6 +2,7 @@
 Documentation     IFS-10694 Hesta - Email notification content for application submission
 ...               IFS-10688 Hesta - Create competition type hesta
 ...               IFS-10695 Hesta - Email notification content for unsuccessfull application
+...               IFS-10695 Hesta -  Email notification of unsuccessful application
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -16,6 +17,15 @@ ${hestaApplicationName}                      hesta application
 ${newLeadApplicantEmail}                     tim.timmy@heukar.com
 ${hestaApplicationSubmissionEmailSubject}    confirmation of your Horizon Europe UK Application Registration
 ${hestaApplicationSubmissionEmail}           We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
+${heukarCompTypeSelector}                       dt:contains("Competition type") ~ dd:contains("${compType_HEUKAR}")
+${heukarApplicationName}                        Heukar application
+${newHeukarApplicationName}                     NEW Heukar application
+${leadApplicantEmail}                           tim.timmy@heukar.com
+${newLeadApplicantEmail}                        barry.barrington@heukar.com
+${heukarApplicationSubmissionEmailSubject}      confirmation of your Horizon Europe UK Application Registration
+${heukarApplicationUnsuccessfulEmailSubject}    update about your Horizon Europe UK Application Registration for government-backed funding
+${huekarApplicationSubmissionEmail}             We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
+${huekarApplicationUnsuccessfulEmail}           We have been advised you were unsuccessful in your grant application for Horizon Europe funding from The European Commission
 
 *** Test Cases ***
 Comp admin can select the competition type option Hesta in Initial details on competition setup
@@ -48,7 +58,7 @@ Lead applicant should get a confirmation email after application submission
     [Documentation]    IFS-10694
     Given Requesting IDs of this application
     Then the user reads his email     ${newLeadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
-r
+
 
 *** Keywords ***
 the user can view Hesta competition type in Initial details read only view
