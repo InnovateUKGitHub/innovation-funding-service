@@ -1,0 +1,17 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: local-debug
+
+bases:
+  - ../local-base
+
+components:
+  # Ordering is important in components
+  - ../../../../components/web-layer/project-setup-mgt-service
+#  - ../../../../components/web-layer/application-service
+
+  - ../../../../patches/
+  - ../patches/
+  - ../patches/java-debug-mode-patch
+
+

@@ -1,4 +1,4 @@
-def jdbcBaseUrl = "jdbc:mysql://ifs-database:3306"
+def jdbcBaseUrl = "jdbc:mysql://127.0.0.1:3306"
 def jdbcParams = "?characterEncoding=utf8";
 
 ext.testIfsDatasourceUrl="$jdbcBaseUrl/ifs_test"

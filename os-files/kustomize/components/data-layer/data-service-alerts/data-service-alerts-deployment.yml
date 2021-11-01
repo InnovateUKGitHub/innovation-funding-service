@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-service-alerts
+  annotations:
+    monitor: monitor
+    waitForDb: waitForDb
+    javaDebug: javaDebug
+    pullSecrets: pullSecrets
+    waitForDs: waitForDs
+    slow: slow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-service-alerts
+  template:
+    metadata:
+      labels:
+        app: data-service-alerts
+    spec:
+      containers:
+      - image: data-service-alerts
+        name: spring-boot-service-container
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /monitoring/health
+            port: 8080
+          initialDelaySeconds: 180
+          periodSeconds: 31
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /monitoring/health
+            port: 8080
+          initialDelaySeconds: 180
+          periodSeconds: 5
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 1
+        env:
+          - name: JAVA_OPTS
+            value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
+          - name: NEW_RELIC_APP_NAME
+            value: "ifs-data-service-alerts (${openshiftEnv})"
+          - name: NEW_RELIC_LICENSE_KEY
+            valueFrom:
+              configMapKeyRef:
+                name: new-relic-config
+                key: NEW_RELIC_LICENSE_KEY
+          - name: NEW_RELIC_LOG
+            valueFrom:
+              configMapKeyRef:
+                name: new-relic-config
+                key: NEW_RELIC_LOG
+          - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
+            value: "100"
+        ports:
+          - containerPort: 8080
+        resources:
+          limits:
+            cpu: 1000m
+          requests:
+            cpu: 200m
+            memory: 750M

@@ -1,8 +1,7 @@
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
-
-def targetBuild = hasProperty('profile') ? profile : 'docker';
+apply from: rootProject.file("gradle-support/jib.gradle")
 
 group 'innovateuk'
 version project.version
@@ -15,7 +14,6 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-
     compile("org.springframework.ldap:spring-ldap-core")
     compile("org.springframework.security:spring-security-ldap")
     compile("org.springframework.data:spring-data-ldap")
@@ -24,32 +22,5 @@ dependencies {
     testCompile("org.springframework.ldap:spring-ldap-test")
     testCompile("junit:junit")
 }
-
-
-
-buildDocker.dependsOn prepareDockerInput
-buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-buildDocker.inputDir = project.file("$project.buildDir/docker")
-
-tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-tagDockerLocal.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-
-
 project.version = nexusVersion
-tagDocker.tag = nexusVersion
-osStageRemote.tag = nexusVersion
-tagDockerLocal.tag = nexusVersion
-osStageLocal.tag = nexusVersion
-
-createContainer.hostName = "registration-svc"
-createContainer.containerName = "registration-svc"
-createContainer.containerId = "registration-svc"
-createContainer.env = ["SHIBBOLETH_API_KEYS=1234567890"]
-createContainer.binds = ["${rootProject.projectDir}/ifs-auth-service/ifs-ldap-service/src/main/docker/certs":"/var/certs"]
-
-def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
-[stop, removeContainer, createContainer, deploy, wait].each { task ->
-    task.enabled = enabled
-}
-
 deploy.dependsOn ":ifs-auth-service:ifs-ldap-service:deploy"

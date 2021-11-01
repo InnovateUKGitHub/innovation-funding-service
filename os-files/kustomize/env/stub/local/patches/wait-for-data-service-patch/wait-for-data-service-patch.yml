@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wait-for-data-service-patch
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: wait-for-data-service
+          image: curlimages/curl:latest
+          command: ["/bin/sh","-c"]
+          args: ["while [ $(curl -sw '%{http_code}' http://data-service.default.svc.cluster.local:8080/monitoring/health -o /dev/null) -ne 200 ]; do sleep 5; echo 'Waiting for the data-service...'; done"]

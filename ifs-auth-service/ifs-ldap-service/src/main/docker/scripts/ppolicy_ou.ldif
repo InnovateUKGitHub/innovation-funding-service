@@ -1,6 +1,0 @@
-dn: ou=Policies,dc=nodomain
-objectClass: top
-objectClass: organizationalUnit
-ou: Policies
-description: Policies in a box
-
