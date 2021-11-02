@@ -806,6 +806,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @Override
+    public boolean isHesta() {
+        return ofNullable(competitionType)
+                .map(CompetitionType::getName)
+                .map(name -> name.equals(CompetitionTypeEnum.HESTA.getText()))
+                .orElse(false);
+    }
+
+    @Override
     public boolean isFullyFunded() {
         // Competitions which always have 100% funding level
         return isH2020() || isProcurement();
