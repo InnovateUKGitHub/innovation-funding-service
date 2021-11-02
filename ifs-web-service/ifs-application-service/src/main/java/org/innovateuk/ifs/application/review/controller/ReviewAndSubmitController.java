@@ -220,7 +220,7 @@ public class ReviewAndSubmitController {
 
     private boolean canReopenApplication(ApplicationResource application, UserResource user, CompetitionResource competitionResource) {
 
-        return !competitionResource.isAlwaysOpen() || competitionResource.isHesta()
+        return !competitionResource.isAlwaysOpen()
                 && CompetitionStatus.OPEN.equals(application.getCompetitionStatus())
                 && application.canBeReopened()
                 && userService.isLeadApplicant(user.getId(), application);

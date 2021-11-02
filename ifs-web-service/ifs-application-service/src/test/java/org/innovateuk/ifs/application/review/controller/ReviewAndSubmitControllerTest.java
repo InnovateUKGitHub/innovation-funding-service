@@ -149,6 +149,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     public void hestaApplicationTrackReopen() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionTypeEnum(HESTA)
+                .withAlwaysOpen(true)
                 .build();
 
         ApplicationResource application = newApplicationResource()
@@ -165,7 +166,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
                 .andExpect(view().name("hesta-application-track"))
                 .andReturn();
         TrackViewModel model = (TrackViewModel) mvcResult.getModelAndView().getModel().get("model");
-        assertTrue(model.isReopenLinkVisible());
+        assertFalse(model.isReopenLinkVisible());
     }
 
     @Test
