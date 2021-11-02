@@ -171,6 +171,8 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
 
                     if (competition.isH2020()) {
                         notification = horizon2020GrantTransferNotification(from, to, application);
+                    } else if (competition.isHesta()) {
+                        notification = hestaApplicationSubmitNotification(from, to, application, competition);
                     } else if (LOAN.equals(competition.getFundingType())) {
                         notification = loanApplicationSubmitNotification(from, to, application, competition);
                     } else {
@@ -272,11 +274,25 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         );
     }
 
+    private Notification hestaApplicationSubmitNotification(NotificationSource from, NotificationTarget to, Application application, Competition competition) {
+        Map<String, Object> notificationArguments = new HashMap<>();
+        notificationArguments.put("applicationId", application.getId());
+        notificationArguments.put("applicationName", application.getName());
+        notificationArguments.put("competitionName", competition.getName());
+
+        return new Notification(
+                from,
+                to,
+                Notifications.HESTA_APPLICATION_SUBMITTED,
+                notificationArguments
+        );
+    }
 
     enum Notifications {
         APPLICATION_SUBMITTED,
         APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
         KTP_APPLICATION_ASSESSOR_FEEDBACK_PUBLISHED,
+        HESTA_APPLICATION_SUBMITTED,
         HORIZON_2020_APPLICATION_SUBMITTED,
         APPLICATION_INELIGIBLE,
         LOANS_APPLICATION_SUBMITTED,
