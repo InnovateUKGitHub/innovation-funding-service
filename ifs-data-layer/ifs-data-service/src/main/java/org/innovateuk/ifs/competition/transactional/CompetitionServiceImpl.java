@@ -11,6 +11,7 @@ import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
@@ -77,6 +78,10 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Autowired
     protected AssessmentPeriodRepository assessmentPeriodRepository;
 
+    @Autowired
+    private CrmService crmService;
+
+
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(long id) {
         return findCompetitionById(id).andOnSuccess(comp -> serviceSuccess(competitionMapper.mapToResource(comp)));
@@ -123,7 +128,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<Void> closeAssessment(long competitionId) {
         return getCompetition(competitionId)
                 .andOnSuccessReturn(competition -> competition.getAssessmentPeriods().get(0).getId())
-                .andOnSuccess(assessmentPeriodId -> closeAssessmentByAssessmentPeriod(assessmentPeriodId));
+                .andOnSuccess(assessmentPeriodId -> closeAssessmentByAssessmentPeriod(assessmentPeriodId))
+                .andOnSuccess(()->crmService.syncCrmCompetitionAssessment(competitionId));
     }
 
     @Override
@@ -138,11 +144,11 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 });
     }
 
-    private ServiceResult<Void> markApplicationsToBeCreatedOnCloseAssessmentKtp(Competition competition, AssessmentPeriod assessmentPeriod){
-            List<Application> applicationsToMark = competition.isAlwaysOpen() ?
-                    applicationRepository.findByCompetitionIdAndAssessmentPeriodIdAndApplicationProcessActivityStateIn(competition.getId(), assessmentPeriod.getId(), newArrayList(SUBMITTED)) :
-                    applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competition.getId(), newArrayList(SUBMITTED));
-         return aggregate(applicationsToMark.stream()
+    private ServiceResult<Void> markApplicationsToBeCreatedOnCloseAssessmentKtp(Competition competition, AssessmentPeriod assessmentPeriod) {
+        List<Application> applicationsToMark = competition.isAlwaysOpen() ?
+                applicationRepository.findByCompetitionIdAndAssessmentPeriodIdAndApplicationProcessActivityStateIn(competition.getId(), assessmentPeriod.getId(), newArrayList(SUBMITTED)) :
+                applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competition.getId(), newArrayList(SUBMITTED));
+        return aggregate(applicationsToMark.stream()
                 .map(Application::getId)
                 .map(id -> projectToBeCreatedService.markApplicationReadyToBeCreated(id, null))
                 .collect(toList())).andOnSuccessReturnVoid();
