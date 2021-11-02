@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.project.monitoringofficer.form;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.validation.constraints.FieldComparison;
 import org.innovateuk.ifs.commons.validation.predicate.BiPredicateProvider;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
-import java.io.Serializable;
 import java.util.function.BiPredicate;
 
 @FieldComparison(
@@ -20,7 +18,7 @@ import java.util.function.BiPredicate;
         secondField = "keywordSearchMaxLength",
         message = "{validation.modashboard.filterprojects.keywordsearch.max.length}",
         predicate = MonitoringOfficerDashboardForm.KeywordSearchMaxPredicateProvider.class)
-public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget implements Serializable{
+public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget {
 
     private static final Integer KEYWORD_SEARCH_MIN_LENGTH = 3;
     private static final Integer KEYWORD_SEARCH_MAX_LENGTH = 100;
@@ -112,12 +110,10 @@ public class MonitoringOfficerDashboardForm extends BaseBindingResultTarget impl
         this.spendProfileAwaitingReview = spendProfileAwaitingReview;
     }
 
-    @JsonIgnore
     public Integer getKeywordSearchMinLength() {
         return KEYWORD_SEARCH_MIN_LENGTH;
     }
 
-    @JsonIgnore
     public Integer getKeywordSearchMaxLength() {
         return KEYWORD_SEARCH_MAX_LENGTH;
     }
