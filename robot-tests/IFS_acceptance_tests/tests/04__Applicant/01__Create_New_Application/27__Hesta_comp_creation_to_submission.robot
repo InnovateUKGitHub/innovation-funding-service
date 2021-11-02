@@ -13,18 +13,15 @@ Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
-${hestaApplicationSubmissionEmailSubject}    confirmation of your Horizon Europe UK Application Registration
-${hestaApplicationSubmissionEmail}           We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
-${heukarCompTypeSelector}                       dt:contains("Competition type") ~ dd:contains("${compType_HEUKAR}")
-${heukarApplicationName}                        Heukar application
-${newHeukarApplicationName}                     NEW Heukar application
+${hestaCompTypeSelector}                        dt:contains("Competition type") ~ dd:contains("${compType_HEUKAR}")
+${hestaApplicationName}                         Hesta application
+${newHestaApplicationName}                      NEW Hesta application
 ${leadApplicantEmail}                           tim.timmy@heukar.com
 ${newLeadApplicantEmail}                        barry.barrington@heukar.com
-${heukarApplicationSubmissionEmailSubject}      confirmation of your Horizon Europe UK Application Registration
-${heukarApplicationUnsuccessfulEmailSubject}    update about your Horizon Europe UK Application Registration for government-backed funding
-${huekarApplicationSubmissionEmail}             We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
-${huekarApplicationUnsuccessfulEmail}           We have been advised you were unsuccessful in your grant application for Horizon Europe funding from The European Commission
-
+${hestaApplicationSubmissionEmailSubject}       confirmation of your Horizon Europe UK Application Registration
+${hestaApplicationUnsuccessfulEmailSubject}     update about your Horizon Europe UK Application Registration for government-backed funding
+${hestaApplicationSubmissionEmail}              We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
+${hestaApplicationUnsuccessfulEmail}            We have been advised you were unsuccessful in your grant application for Horizon Europe funding from The European Commission
 
 *** Test Cases ***
 Comp admin can select the competition type option Hesta in Initial details on competition setup
@@ -58,6 +55,18 @@ Lead applicant should get a confirmation email after application submission
     Given Requesting IDs of this application
     Then the user reads his email     ${leadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
 
+Lead applicant receives email notifiction when internal user marks application unsuccessful
+    [Documentation]  IFS-8641
+    Given the user logs out if they are logged in
+    And the user successfully completes application                                 barry   barrington   ${newLeadApplicantEmail}   ${newHestaApplicationName}
+    And the user can submit the application
+    And log in as a different user                                                  &{Comp_admin1_credentials}
+    When the internal team mark the application as successful / unsuccessful        ${newHestaApplicationName}   UNFUNDED
+    And the user clicks the button/link                                             link = Competition
+    And Requesting IDs of this application                                          ${newHeukarApplicationName}
+    And the internal team notifies all applicants
+    Then the user reads his email                                                   ${newLeadApplicantEmail}  ${ApplicationID}: ${hestaApplicationUnsuccessfulEmailSubject}  ${hestaApplicationUnsuccessfulEmail}
+
 *** Keywords ***
 the user can view Hesta competition type in Initial details read only view
     the user should see the element     jQuery = ${hestaCompTypeSelector}
@@ -83,8 +92,14 @@ the competition admin creates Hesta competition
     the user should see the element                         jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
 Requesting IDs of this application
-    ${ApplicationID} =  get application id by name    ${hestaApplicationName}
+    [Arguments]  ${applicationName}
+    ${ApplicationID} =  get application id by name    ${applicationName}
     Set suite variable    ${ApplicationID}
+
+Requesting IDs of this competition
+    [Arguments]  ${competitionName}
+    ${competitionId} =  get comp id from comp title  ${competitionName}
+    Set suite variable  ${competitionId}
 
 user selects where is organisation based
     [Arguments]  ${org_type}
@@ -92,6 +107,7 @@ user selects where is organisation based
     the user clicks the button/link       id = international-organisation-cta
 
 the user successfully completes application
+    [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
     the user select the competition and starts application          ${hestaCompetitionName}
     the user clicks the button/link                                 link = Continue and create an account
     user selects where is organisation based                        isNotInternational
@@ -99,13 +115,13 @@ the user successfully completes application
     the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House            ASOS  ASOS PLC
     the user should be redirected to the correct page               ${SERVER}/registration/register
-    the user enters the details and clicks the create account       tim  timmy  ${newLeadApplicantEmail}  ${short_password}
-    the user reads his email and clicks the link                    ${newLeadApplicantEmail}  Please verify your email address  Once verified you can sign into your account.
+    the user enters the details and clicks the create account       ${firstName}  ${lastName}  ${email}  ${short_password}
+    the user reads his email and clicks the link                    ${email}  Please verify your email address  Once verified you can sign into your account.
     the user should be redirected to the correct page               ${REGISTRATION_VERIFIED}
     the user clicks the button/link                                 link = Sign in
-    Logging in and Error Checking                                   ${newLeadApplicantEmail}  ${short_password}
+    Logging in and Error Checking                                   ${email}  ${short_password}
     the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user completes the application details section              ${hestaApplicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
+    the user completes Heukar Application details                   ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team
     the user completes the application research category            Feasibility studies
     the lead applicant fills all the questions and marks as complete(Hesta)
@@ -130,11 +146,20 @@ the user is presented with the Application Summary page
     the user should not see the element      jQuery = h3:contains("Decision notification")
     the user should not see the element      jQuery = p:contains("Application feedback will be provided by")
 
-the internal team mark the application as successful
+the internal team mark the application as successful / unsuccessful
+    [Arguments]   ${applicationName}   ${decision}
     the user navigates to the page      ${server}/management/competition/${competitionId}
     the user clicks the button/link     link = Input and review funding decision
-    the user clicks the button/link     jQuery = tr:contains("${hestaApplicationName}") label
-    the user clicks the button/link     css = [type="submit"][value="FUNDED"]
+    the user clicks the button/link     jQuery = tr:contains("${applicationName}") label
+    the user clicks the button/link     css = [type="submit"][value="${decision}"]
+
+the internal team notifies all applicants
+    the user clicks the button/link                      link = Manage funding notifications
+    the user clicks the button/link                      id = app-row-${ApplicationID}
+    the user clicks the button/link                      id = write-and-send-email
+    the user clicks the button/link                      id = send-email-to-all-applicants
+    the user clicks the button/link                      id = send-email-to-all-applicants-button
+    the user refreshes until element appears on page     jQuery = td:contains("Sent")
 
 the application summary page must not include the reopen application link
     the user navigates to the page          ${server}/application/${ApplicationID}/track
