@@ -1,20 +1,17 @@
 commonAnnotations:
   deployedWith: kustomize
-  environment: local
+  environment: local-debug
 
 bases:
-  - ../../stub-base
+  - ../local-base
 
 components:
   # Ordering is important in components
   - ../../../../components/web-layer/project-setup-mgt-service
 #  - ../../../../components/web-layer/application-service
 
-  - ../../../../patches/new-relic-env-vars-patch
-  - ../../../../patches/pull-secrets-patch
-  - ../../../../patches/spring-profile-patch
-  - ../../../../patches/wait-for-db-patch
-  - ../../../../patches/java-debug-mode-patch
+  - ../../../../patches/
+  - ../patches/
+  - ../patches/java-debug-mode-patch
 
-resources:
-  - config-maps/web-config.yml
+
