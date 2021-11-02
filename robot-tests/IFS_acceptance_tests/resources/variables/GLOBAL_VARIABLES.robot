@@ -54,7 +54,7 @@ ${fundingEligibilityTitle}                                  Funding eligibility
 ${organisationalEligibilityTitle}                           Organisational eligibility
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}     Aerospace technology investment sector
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}          ${competition_ids['${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}']}
-
+${hestaCompetitionName}                                     Hesta competition
 # Using double quotes below, cause there's an apostrophe in the title
 ${OPEN_COMPETITION_APPLICATION_NAME}                            Climate science the history of Greenland\'s ice
 ${OPEN_COMPETITION_APPLICATION_1_NUMBER}                        ${application_ids["${OPEN_COMPETITION_APPLICATION_NAME}"]}
@@ -295,6 +295,7 @@ ${compType_APC}        Advanced Propulsion Centre
 ${compType_ATI}        Aerospace Technology Institute
 ${compType_PT}         The Prince's Trust
 ${compType_H2020}      Horizon 2020
+${compType_HESTA}      Hesta
 
 # Competition and Applicant lists
 # the questions are only the assessed questions for a particular compettion type
@@ -306,6 +307,7 @@ ${compType_H2020}      Horizon 2020
 @{EOI_questions}                          Business opportunity and potential market  Innovation  Project team  Funding and adding value
 @{APC_questions}                          How innovative is your project?   Your approach regarding innovation.   Your technical approach.
 @{project_details}                        Project summary  Public description  Scope
+@{Hesta_questions}                        How innovative is your project?  Your approach regarding innovation.  Your technical approach.
 
 #SBRI Type 1 competition milestones
 @{sbriType1Milestones}     Open date  Briefing event  Submission date

@@ -16,7 +16,6 @@ components:
   - ../../../../patches/new-relic-env-vars-patch
   - ../../../../patches/pull-secrets-patch
   - ../../../../patches/spring-profile-patch
-  - ../../../../patches/wait-for-db-patch
 
 resources:
   - config-maps/spring-config.yml
@@ -25,9 +24,6 @@ resources:
   - secrets/sp-keys-secrets.yml
   - secrets/idp-keys-secrets.yml
   - secrets/sp-secrets.yml
-
-#  - storage/persistent-volume-claim.yml
-#  - storage/persistent-volume.yml
 
   - config-maps/idp-config.yml
   - config-maps/idp-metadata.yml
