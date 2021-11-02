@@ -148,7 +148,7 @@ public class LoanTemplate implements FundingTypeTemplate {
     private static QuestionBuilder loanPartBBusinessAndFinancialInformation() {
         return aQuestion()
                 .withQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION)
-                .withName("")
+                .withName("Business and financial details")
                 .withShortName("Business and financial information")
                 .withMarkAsCompletedEnabled(true)
                 .withDescription(
