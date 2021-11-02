@@ -1,17 +1,7 @@
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
-
-buildDocker.dependsOn prepareDockerInput
-buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-buildDocker.inputDir = project.file("$project.buildDir/docker")
-tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-
-afterEvaluate {
-    ext {
-        dockerDir = file("$project.parent.projectDir/docker/")
-    }
-}
+apply from: rootProject.file("gradle-support/jib.gradle")
 
 ext.IFS_WEB_VIRTUALASSISTANT_BOTSECRET = ext.has('ifs.web.virtualAssistant.botSecret') ? ext.get('ifs.web.virtualAssistant.botSecret') : 'authSecretNotConfigured'
 ext.IFS_WEB_VIRTUALASSISTANT_BOTID = ext.has('ifs.web.virtualAssistant.botId') ? ext.get('ifs.web.virtualAssistant.botId') : 'ukridev-qnamaker-bot'
@@ -22,47 +12,6 @@ version project.version
 apply plugin: 'idea'
 
 project.version = nexusVersion
-tagDocker.tag = nexusVersion
-osStageRemote.tag = nexusVersion
-tagDockerLocal.tag = nexusVersion
-osStageLocal.tag = nexusVersion
-
-createContainer.hostName = "application-svc"
-createContainer.containerName = "application-svc"
-createContainer.containerId = "application-svc"
-createContainer.portBindings = ['9001:8000']
-createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
-
-pullImageAndCreateContainer.hostName = "application-svc"
-pullImageAndCreateContainer.containerName = "application-svc"
-pullImageAndCreateContainer.containerId = "application-svc"
-pullImageAndCreateContainer.portBindings = ['9001:8000']
-createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
-
-def enabled = project.hasProperty('ifs.application-service.enabled') ? project.property('ifs.application-service.enabled').toBoolean() : true
-def pullNexusImage = project.hasProperty('ifs.application-service.pull.nexus.image') ? project.property('ifs.application-service.pull.nexus.image').toBoolean() : false
-if (enabled && pullNexusImage) {
-
-    [stopNexusContainer, removeNexusContainer, pullImageAndCreateContainer, deployNexusLocal, waitNexusDeploy].each { task ->
-        task.enabled = true
-    }
-
-    [buildDocker, stop, removeContainer, createContainer, deploy, wait].each { task ->
-        task.enabled = false
-    }
-
-    assemble.dependsOn deployNexusLocal
-
-} else {
-    [buildDocker, stop, removeContainer, createContainer, deploy, wait].each { task ->
-        task.enabled = enabled
-    }
-}
-
-prepareDockerBaseInput {
-    inputs.dir file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
-    dependsOn ":ifs-web-service:ifs-web-core:build"
-}
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')

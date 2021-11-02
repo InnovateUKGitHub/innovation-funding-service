@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finance-data-service
+  annotations:
+    monitor: monitor
+    pullSecrets: pullSecrets
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: finance-data-service
+  template:
+    metadata:
+      labels:
+        app: finance-data-service

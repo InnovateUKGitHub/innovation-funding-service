@@ -22,7 +22,7 @@ function takeMysqlDump() {
     echo "Taking anonymised data dump"
     mkdir -p /tmp/anonymised
     oc rsh ${SVC_ACCOUNT_CLAUSE} db-anonymised-data /dump/make-mysqldump.sh > /dev/null;
-    oc rsync ${SVC_ACCOUNT_CLAUSE} db-anonymised-data:/dump/anonymised-dump.sql.gpg /tmp/anonymised/ > /dev/null;
+    oc rsync ${SVC_ACCOUNT_CLAUSE} db-anonymised-data:/dump/anonymised-dump.sql /tmp/anonymised/ > /dev/null;
     echo "Anonymised data dump taken"
 }
 

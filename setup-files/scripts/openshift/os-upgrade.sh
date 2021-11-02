@@ -52,10 +52,10 @@ function upgradeServices {
     rolloutStatus registration-svc
 
     oc apply -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
+
 
     rolloutStatus shib
-    rolloutStatus idp
+
 
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
@@ -109,10 +109,10 @@ function forceReload {
     rolloutStatus project-setup-svc
     rolloutStatus registration-svc
 
-    oc rollout latest dc/idp ${SVC_ACCOUNT_CLAUSE}
+
     oc rollout latest dc/shib ${SVC_ACCOUNT_CLAUSE}
 
-    rolloutStatus idp
+
     rolloutStatus shib
 
     # The SIL stub is required in all environments, in one form or another, except for production

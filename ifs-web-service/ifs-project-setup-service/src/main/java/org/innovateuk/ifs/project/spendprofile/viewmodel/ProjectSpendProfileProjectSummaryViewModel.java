@@ -60,7 +60,7 @@ public class ProjectSpendProfileProjectSummaryViewModel {
 
     private OrganisationReviewDetails getLeadOrganisationReviewDetails(OrganisationResource leadOrganisation, Map<Long, OrganisationReviewDetails> editablePartners) {
         return editablePartners.values().stream()
-                .filter(organisationReviewDetails -> organisationReviewDetails.getOrganisationId() == leadOrganisation.getId())
+                .filter(organisationReviewDetails -> organisationReviewDetails.getOrganisationId().equals(leadOrganisation.getId()))
                 .findFirst()
                 .orElse(null);
     }

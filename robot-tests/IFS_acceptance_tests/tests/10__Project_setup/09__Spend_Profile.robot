@@ -81,6 +81,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...
 ...               IFS-9678 MO Spend profile: banner updates for all roles
 ...
+...               IFS-10718 Empty banner on approved spend profile for MO on project
+...
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -537,7 +539,7 @@ IFS admin is able to Approve Spend Profile
     Then the IFS Admin approves to SP
 
 Monitoring officer is able to Approve Spend Profile
-    [Documentation]    IFS-9677
+    [Documentation]    IFS-9677  IFS-9678  IFS-10718
     [Tags]
     Given log in as a different user            &{monitoring_officer_one_credentials}
     When the user navigates to the page         ${server}/project-setup/project/${PS_SP_Project_Id}
@@ -573,6 +575,19 @@ Project finance user cannot access external users' spend profile page
     [Documentation]    INFUND-5911
     [Tags]
     When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_Project_Id}/partner-organisation/${Ooba_Lead_Org_Id}/spend-profile    ${403_error_message}
+
+lead applicant should see a banner message with name of the person approved spend profile
+    [Documentation]    IFS-10718
+    Given log in as a different user        &{lead_applicant_credentials_sp}
+    When the user navigates to the page     ${server}/project-setup/project/${PS_SP_Project_Id}/partner-organisation/${Ooba_Lead_Org_Id}/spend-profile
+    Then the user should see the element    jQuery = p:contains("Orville Gibbs approved this spend profile ")
+
+#commenting this AT's as we will deliver this bug in a seperate ticket
+#Partner applicant should see a banner message with name of the person approved spend profile
+#    [Documentation]    IFS-10718
+#    Given log in as a different user        &{collaborator1_credentials_sp}
+#    When the user navigates to the page     ${server}/project-setup/project/${PS_SP_Project_Id}/partner-organisation/${Wordpedia_Partner_Org_Id}/spend-profile
+#    Then the user should see the element    jQuery = p:contains("Orville Gibbs approved this spend profile ")
 
 *** Keywords ***
 Custom suite setup
