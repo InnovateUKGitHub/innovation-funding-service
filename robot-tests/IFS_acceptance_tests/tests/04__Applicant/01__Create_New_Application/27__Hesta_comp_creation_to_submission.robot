@@ -121,7 +121,6 @@ the user successfully completes application
 the user is presented with the Application Summary page
     the user should see the element          jQuery = h2:contains("Application submitted")
     the user should see the element          jQuery = .govuk-panel:contains("Application number: ${ApplicationID}")
-    the user should see the element          link = Reopen application
     the user should see the element          jQuery = h2:contains("What happens next?")
     the user should see the element          jQuery = p:contains("You have already applied directly to the European Commission for an EU grant.")
     the user should see the element          jQuery = h3:contains("Verification checks")
