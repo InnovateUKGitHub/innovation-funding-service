@@ -64,5 +64,3 @@ public class CrmEndpointController {
         return restSuccess(HttpStatus.ACCEPTED);
     }
 }
-
-}
