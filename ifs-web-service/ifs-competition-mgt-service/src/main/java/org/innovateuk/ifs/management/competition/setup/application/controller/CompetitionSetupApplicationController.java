@@ -97,10 +97,6 @@ public class CompetitionSetupApplicationController {
     @Value("${ifs.loan.partb.enabled}")
     private boolean ifsLoanPartBEnabled;
 
-    @Value("${ifs.loans.salesforce.page.url}")
-    private String salesForceURL;
-
-
     @PostMapping(value = "/landing-page", params = "createQuestion")
     public String createQuestion(@PathVariable long competitionId) {
         ServiceResult<CompetitionSetupQuestionResource> result = questionSetupCompetitionRestService
@@ -489,7 +485,7 @@ public class CompetitionSetupApplicationController {
         CompetitionSetupQuestionResource questionResource = questionId.isPresent() ? questionSetupCompetitionRestService.getByQuestionId(
                 (questionId.get())).getSuccess() : null;
 
-        return new QuestionSetupViewModel(generalViewModel, subsectionViewModel, competition.getName(), isEditable, filename, displayAssessmentOptions(competition, questionResource), ifsLoanPartBEnabled, salesForceURL);
+        return new QuestionSetupViewModel(generalViewModel, subsectionViewModel, competition.getName(), isEditable, filename, displayAssessmentOptions(competition, questionResource), ifsLoanPartBEnabled);
     }
 
     private boolean displayAssessmentOptions(CompetitionResource competitionResource, CompetitionSetupQuestionResource questionResource) {

@@ -11,15 +11,14 @@ public class QuestionSetupViewModel extends CompetitionSetupViewModel {
     private String templateFilename;
     private boolean displayAssessmentOptions;
     private boolean ifsLoanPartBEnabled;
-    private String salesForceURL;
 
     public QuestionSetupViewModel(GeneralSetupViewModel generalSetupViewModel,
                                   CompetitionSetupSubsectionViewModel subsectionViewModel,
                                   String competitionName, boolean editable,
                                   String templateFilename,
                                   boolean displayAssessmentOptions,
-                                  boolean ifsLoanPartBEnabled,
-                                  String salesForceURL) {
+                                  boolean ifsLoanPartBEnabled
+                                  ) {
         this.generalSetupViewModel = generalSetupViewModel;
         this.subsectionViewModel = subsectionViewModel;
         this.competitionName = competitionName;
@@ -27,7 +26,6 @@ public class QuestionSetupViewModel extends CompetitionSetupViewModel {
         this.templateFilename = templateFilename;
         this.displayAssessmentOptions = displayAssessmentOptions;
         this.ifsLoanPartBEnabled = ifsLoanPartBEnabled;
-        this.salesForceURL = salesForceURL;
     }
 
     public CompetitionSetupSubsectionViewModel getSubsection() {
@@ -62,10 +60,6 @@ public class QuestionSetupViewModel extends CompetitionSetupViewModel {
     @JsonIgnore
     public ApplicationFinanceType noFinancesApplicationFinanceType() {
         return ApplicationFinanceType.NO_FINANCES;
-    }
-
-    public String getSalesForceURL() {
-        return salesForceURL;
     }
 
     public boolean isIFSLoanPartBEnabled() {
