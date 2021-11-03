@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
 import org.innovateuk.ifs.assessment.resource.dashboard.ApplicationAssessmentResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -63,16 +64,20 @@ public class ApplicationAssessmentServiceImplTest extends BaseServiceUnitTest<Ap
                 .withProcessRole(processRole)
                 .build();
         Assessment assessment = newAssessment().withId(5L).withApplication(application).withProcessState(ACCEPTED).build();
+        AssessmentTotalScoreResource assessmentTotalScore = new AssessmentTotalScoreResource();
+        assessmentTotalScore.setMaxScoreGiven(100);
+        assessmentTotalScore.setMinScoreGiven(50);
 
         when(assessmentRepositoryMock.findByParticipantUserIdAndTargetCompetitionId(user.getId(), competition.getId()))
                 .thenReturn(singletonList(assessment));
         when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
+        when(assessmentRepositoryMock.getTotalScore(assessment.getId())).thenReturn(assessmentTotalScore);
+
 
         ServiceResult<List<ApplicationAssessmentResource>> result = service.getApplicationAssessmentResource(user.getId(), competition.getId());
 
         assertTrue(result.isSuccess());
         verify(assessmentRepositoryMock, times(1)).findByParticipantUserIdAndTargetCompetitionId(user.getId(), competition.getId());
         verify(organisationRepositoryMock, times(1)).findById(organisation.getId());
-        verifyNoMoreInteractions(assessmentRepositoryMock);
     }
 }

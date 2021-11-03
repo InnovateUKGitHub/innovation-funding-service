@@ -353,8 +353,8 @@ public class CrmServiceImpl implements CrmService {
         row.setScoreSpread(getScoreSpread(appId));
         row.setAssessorNumber(assessments.size());
         row.setAssessorNotInScope(res.getTotalScope() - res.getInScope());
-        row.setAssessorRecommended(getRecommendedOrNot(appId, () -> r1 -> r1.getRecommended()));
-        row.setAssessorNotRecommended(getRecommendedOrNot(appId, () -> r1 -> !r1.getRecommended()));
+        row.setAssessorRecommended(getRecommendedOrNot(appId, () -> applicationAssessmentResource -> applicationAssessmentResource.getRecommended()));
+        row.setAssessorNotRecommended(getRecommendedOrNot(appId, () -> applicationAssessmentResource -> !applicationAssessmentResource.getRecommended()));
 
         return row;
     }
