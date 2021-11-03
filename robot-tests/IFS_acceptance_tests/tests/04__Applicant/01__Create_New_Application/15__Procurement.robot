@@ -274,7 +274,7 @@ Internal user adds payment milestones
     And the user clicks the button/link               jQuery = button:contains("Open all")
     And the user clicks the button/link               jQuery = button:contains("Close all")
     And the user clicks the button/link               jQuery = button:contains("Add another project milestone")
-    And the user clicks the button/link               jQuery = div[id='accordion-finances'] div:nth-of-type(22) span:nth-of-type(4)
+    And the user clicks the button/link               jQuery = div[id='accordion-finances'] div:nth-of-type(22)
     When the user creates a new payment milestone
     And the user clicks the button/link               jQuery = button:contains("Save and return to payment milestone check")
     And the user navigates to the page                ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
