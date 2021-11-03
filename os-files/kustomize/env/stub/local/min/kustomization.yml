@@ -1,0 +1,21 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: local-min
+
+bases:
+  - ../local-base
+
+components:
+
+  - ../../../../components/data-layer/data-service
+  - ../../../../components/data-layer/finance-data-service
+
+  - ../../../../components/web-layer/application-service
+  - ../../../../components/web-layer/assessment-service
+  - ../../../../components/web-layer/competition-mgt-service
+  - ../../../../components/web-layer/front-door-service
+  - ../../../../components/web-layer/project-setup-mgt-service
+  - ../../../../components/web-layer/project-setup-service
+
+  - ../../../../patches/
+  - ../patches/

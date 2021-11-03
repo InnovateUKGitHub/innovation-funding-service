@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonAnnotations:
+  local-base: local-base
+
+bases:
+  - ../../stub-base
+
+resources:
+  - config-maps/web-config.yml
+
+patchesStrategicMerge:
+  - config-maps/feature-toggle-config.yml

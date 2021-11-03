@@ -17,7 +17,6 @@ components:
   - ../../../patches/new-relic-env-vars-patch
   - ../../../patches/pull-secrets-patch
   - ../../../patches/spring-profile-patch
-  - ../../../patches/wait-for-db-patch
 
 resources:
   - routes/idp-route.yml

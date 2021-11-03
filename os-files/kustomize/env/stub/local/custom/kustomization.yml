@@ -1,22 +1,13 @@
 commonAnnotations:
   deployedWith: kustomize
-  environment: local
+  environment: local-custom
 
 bases:
-  - ../../stub-base
+  - ../local-base
 
 components:
-  # Ordering is important in components
   - ../../../../components/data-layer/data-service
 #  - ../../../../components/web-layer/application-service
 
-  - ../../../../patches/new-relic-env-vars-patch
-  - ../../../../patches/pull-secrets-patch
-  - ../../../../patches/spring-profile-patch
-  - ../../../../patches/wait-for-db-patch
-
-resources:
-  - config-maps/web-config.yml
-
-patchesStrategicMerge:
-  - data-layer/data-service/data-service-deployment.yml
+  - ../../../../patches/
+  - ../patches/
