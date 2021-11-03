@@ -39,9 +39,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -338,48 +340,32 @@ public class CrmServiceImpl implements CrmService {
 
     private SilLoanAssessmentRow setSilAssessmentRow(Application application) {
         SilLoanAssessmentRow row = new SilLoanAssessmentRow();
-
-
         Long appId = application.getId();
-        System.out.println("1 appID:" + application.getId());
         row.setApplicationID(application.getId().intValue());
         ApplicationAssessmentAggregateResource res = assessorFormInputResponseService.getApplicationAggregateScores(application.getId()).toGetResponse().getSuccess();
 
-        List<Assessment> s = application.getAssessments()
-                .stream().filter(assessment -> assessment.getProcessState() == AssessmentState.SUBMITTED).collect(Collectors.toList());
+        List<Assessment> assessments
+                = application.getAssessments()
+                .stream().filter(assessment -> assessment.getProcessState() == AssessmentState.SUBMITTED)
+                .collect(Collectors.toList());
 
-        System.out.println("2 scoreAverage:" + res.getAveragePercentage());
         row.setScoreAverage(res.getAveragePercentage());
-
-        System.out.println("3 scoreSpread:" + getScoreSpread(appId));
         row.setScoreSpread(getScoreSpread(appId));
-        System.out.println("4 assessorNumber:" + s.size());
-        row.setAssessorNumber(s.size());
-        System.out.println("5 assessorNotInScope:" + (res.getTotalScope() - res.getInScope()));
+        row.setAssessorNumber(assessments.size());
         row.setAssessorNotInScope(res.getTotalScope() - res.getInScope());
-
-
-        System.out.println("6 assessorRecommended:" + getRecommendedOrNot(appId, () -> r1 -> r1.getRecommended()));
         row.setAssessorRecommended(getRecommendedOrNot(appId, () -> r1 -> r1.getRecommended()));
-        System.out.println("7 assessorNotRecommended:" + getRecommendedOrNot(appId, () -> r1 -> !r1.getRecommended()));
         row.setAssessorNotRecommended(getRecommendedOrNot(appId, () -> r1 -> !r1.getRecommended()));
-
 
         return row;
     }
 
     private long getRecommendedOrNot(Long appId, Supplier<Predicate<ApplicationAssessmentResource>> supplier) {
-
         return applicationAssessmentService.getApplicationAssessmentResource(appId).getSuccess().stream().filter(supplier.get()).count();
-
-
     }
 
     private int getScoreSpread(Long appId) {
-
-        return ((Function<Long, Integer>) appId1 -> applicationAssessmentService.getApplicationAssessmentResource(appId1).getSuccess().stream().max(Comparator.comparing(ApplicationAssessmentResource::getOverallScore)).get().getOverallScore() -
-                applicationAssessmentService.getApplicationAssessmentResource(appId1).getSuccess().stream().min(Comparator.comparing(ApplicationAssessmentResource::getOverallScore)).get().getOverallScore()).apply(appId);
-
+        return applicationAssessmentService.getApplicationAssessmentResource(appId).getSuccess().stream().max(Comparator.comparing(ApplicationAssessmentResource::getOverallScore)).get().getOverallScore() -
+                applicationAssessmentService.getApplicationAssessmentResource(appId).getSuccess().stream().min(Comparator.comparing(ApplicationAssessmentResource::getOverallScore)).get().getOverallScore();
 
     }
 
