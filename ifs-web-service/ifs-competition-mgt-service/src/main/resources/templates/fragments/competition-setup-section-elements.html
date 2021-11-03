@@ -234,9 +234,11 @@
                 </div>
                 <th:block th:if="${competitionSetupForm.question.type == competitionSetupForm.question.getLoanQuestionType()}">
                     <div class="govuk-form-group">
-                        <p class="govuk-body">
-                            <a target="_blank" href="https://innovateuk.eu.qualtrics.com/jfe/form/SV_8JtoEompki2GcUS" class="govuk-link">Edit the online business survey (opens in a new window).</a>
-                        </p>
+                        <div th:unless="${model.isIFSLoanPartBEnabled()}">
+                            <p class="govuk-body">
+                                 <a target="_blank" href="https://innovateuk.eu.qualtrics.com/jfe/form/SV_8JtoEompki2GcUS" class="govuk-link">Edit the online business survey (opens in a new window).</a>
+                            </p>
+                        </div>
                     </div>
                     <div class="govuk-form-group"
                          th:classappend="${#fields.hasErrors('question.subTitle2')} ? 'govuk-form-group--error'">

@@ -141,6 +141,11 @@ spec:
               configMapKeyRef:
                 name: web-config
                 key: IFS_WEB_BASEURL
+          - name: IFS_LOANS_SALESFORCE_PAGE_URL
+            valueFrom:
+               configMapKeyRef:
+                 name: web-config
+                 key: IFS_LOANS_SALESFORCE_PAGE_URL
           - name: JAVA_OPTS
             value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
