@@ -487,9 +487,9 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     @Test
     public void syncCrmLoanApplicationSubmittedStateTest() {
 
-        String expectedLogMessage = "Updating CRM application for appId:3 state:SUBMITTED, " +
-                "payload:SilLoanApplication(applicationID=3, applicationSubmissionDate=2021-10-12T09:38:12.850Z, applicationName=Sample skips for plastic storage, " +
-                "applicationLocation=RG1 5LF, projectDuration=11, projectTotalCost=10.0, projectOtherFunding=1.0, markedIneligible=null, eligibilityStatusChangeDate=null, eligibilityStatusChangeSource=null)";
+        String expectedLogMessage = "Updating CRM application for appId:3 state:SUBMITTED, payload:SilLoanApplication(applicationID=3, " +
+                "applicationSubmissionDate=2021-10-12T09:38:12.850Z, applicationName=Sample skips for plastic storage, applicationLocation=RG1 5LF," +
+                " competitionCode=null, competitionName=null, projectDuration=11, projectTotalCost=10.0, projectOtherFunding=1.0, markedIneligible=null, eligibilityStatusChangeDate=null, eligibilityStatusChangeSource=null)";
 
 
         long applicationId = 3L;
@@ -504,7 +504,8 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         applicationResource.setEvent("submitted");
         CompetitionResource competitionResource = new CompetitionResource();
         competitionResource.setFundingType(FundingType.LOAN);
-
+        competitionResource.setCode("COMP-1");
+        competitionResource.setName("Competition 1");
 
         when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
         when(applicationSummarisationService.getProjectTotalFunding(applicationResource.getId())).thenReturn(serviceSuccess(BigDecimal.TEN));
@@ -521,8 +522,8 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     @Test
     public void syncCrmLoanApplicationIneligibleStateTest() {
         String expectedLogMessage = "Updating CRM application for appId:3 state:INELIGIBLE, " +
-                "payload:SilLoanApplication(applicationID=3, applicationSubmissionDate=null, applicationName=null, applicationLocation=null, projectDuration=null, " +
-                "projectTotalCost=null, projectOtherFunding=null, markedIneligible=true, eligibilityStatusChangeDate=2021-10-12T09:38:12.850Z[UTC], eligibilityStatusChangeSource=IFS)";
+                "payload:SilLoanApplication(applicationID=3, applicationSubmissionDate=null, applicationName=null, applicationLocation=null, competitionCode=null, competitionName=null, " +
+                "projectDuration=null, projectTotalCost=null, projectOtherFunding=null, markedIneligible=true, eligibilityStatusChangeDate=2021-10-12T09:38:12.850Z[UTC], eligibilityStatusChangeSource=IFS)";
 
 
         long applicationId = 3L;
@@ -555,7 +556,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     public void syncCrmLoanApplicationIneligibleInformedStateTest() {
         String expectedLogMessage = "Updating CRM application for appId:3 state:INELIGIBLE_INFORMED, " +
                 "payload:SilLoanApplication(applicationID=3, applicationSubmissionDate=null, applicationName=null, applicationLocation=null, " +
-                "projectDuration=null, projectTotalCost=null, projectOtherFunding=null, markedIneligible=true, eligibilityStatusChangeDate=2021-10-12T09:38:12.850Z[UTC], eligibilityStatusChangeSource=IFS)";
+                "competitionCode=null, competitionName=null, projectDuration=null, projectTotalCost=null, projectOtherFunding=null, markedIneligible=true, eligibilityStatusChangeDate=2021-10-12T09:38:12.850Z[UTC], eligibilityStatusChangeSource=IFS)";
 
 
         long applicationId = 3L;
@@ -588,7 +589,8 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     public void syncCrmLoanApplicationReinstatedStateTest() {
 
         String expectedLogMessage = "Updating CRM application for appId:3 state:SUBMITTED, " +
-                "payload:SilLoanApplication(applicationID=3, applicationSubmissionDate=null, applicationName=null, applicationLocation=null, projectDuration=null, projectTotalCost=null, projectOtherFunding=null, " +
+                "payload:SilLoanApplication(applicationID=3, applicationSubmissionDate=null, applicationName=null, applicationLocation=null, " +
+                "competitionCode=null, competitionName=null, projectDuration=null, projectTotalCost=null, projectOtherFunding=null, " +
                 "markedIneligible=false, eligibilityStatusChangeDate=2021-10-12T09:38:12.850Z[UTC], eligibilityStatusChangeSource=IFS)";
 
 
