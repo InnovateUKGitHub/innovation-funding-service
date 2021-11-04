@@ -69,12 +69,13 @@
         <th:block th:unless="${model.readOnly}">
             <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}" ifs:utext="${model.questionDescription}"/>
             <div th:if="${model.questionType == model.getLoansBusinessAndFinancialInformation()}" class="govuk-body">
-               <div th:if="${model.isIFSLoanPartBEnabled()}">
+               <div th:if="${model.isLoansPartBEnabled()}">
                    <a class="govuk-button"
+                      target="_blank"
                       th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}" value="open-salesforce"
                       type="Continue">Continue (opens in new tab)</a>
                 </div>
-                <div th:unless="${model.isIFSLoanPartBEnabled()}">
+                <div th:unless="${model.isLoansPartBEnabled()}">
                     <a class="govuk-link"
                        target="_blank"
                        th:href="@{https://innovateuk.eu.qualtrics.com/jfe/form/SV_8JtoEompki2GcUS(

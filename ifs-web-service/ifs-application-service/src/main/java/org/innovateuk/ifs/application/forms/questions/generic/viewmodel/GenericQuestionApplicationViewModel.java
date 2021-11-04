@@ -330,7 +330,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         return salesForceURL;
     }
 
-    public boolean isIFSLoanPartBEnabled() {
+    public boolean isLoansPartBEnabled() {
         return loansPartBEnabled;
     }
 
