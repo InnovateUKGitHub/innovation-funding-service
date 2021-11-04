@@ -827,6 +827,11 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         return FundingType.KTP == fundingType;
     }
 
+    @Override
+    public boolean isHesta() {
+        return false;
+    }
+
     public void releaseFeedback(ZonedDateTime date) {
         setMilestoneDate(MilestoneType.FEEDBACK_RELEASED, date);
     }
