@@ -563,14 +563,14 @@ the user is able to configure the new question
     [Arguments]  ${questionTitle}
     the user enters text to a text field  id = question.title  Tell us how your project is innovative.
     the user enters text to a text field  id = question.shortTitle  ${questionTitle}
-    the user enters text to a text field  jQuery = label:contains("Question subtitle") + div .editor  Adding value on existing projects is important to InnovateUK.
+    the user enters text to a text field  css = [aria-labelledby="question.subTitle-label"]  Adding value on existing projects is important to InnovateUK.
     the user enters text to a text field  id = question.guidanceTitle  Innovation is crucial to the continuing success of any organization.
-    the user enters text to a text field  css = label[for = "question.guidance"] + * .editor  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
+    the user enters text to a text field  css = [aria-labelledby="question.guidance-label"]  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
     the user enters text to a text field  id = question.maxWords  500
     the user selects the radio button     numberOfUploads  1
     click element                         css = label[for="question.allowedAppendixResponseFileTypes1"]
     the user clicks the button/link       css = label[for="question.allowedAppendixResponseFileTypes2"]
-    the user enters text to a text field  css = label[for="question.appendixGuidance"] + * .editor  You may include an appendix of additional information to provide details of the specific expertise and track record of each project partner and each subcontractor.
+    the user enters text to a text field  css = [aria-labelledby="question.appendixGuidance-label"]  You may include an appendix of additional information to provide details of the specific expertise and track record of each project partner and each subcontractor.
     the user selects the radio button     question.scored  1
     the user enters text to a text field  question.scoreTotal  10
     the user selects the radio button     question.writtenFeedback  1

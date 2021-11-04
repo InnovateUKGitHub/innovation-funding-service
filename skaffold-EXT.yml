@@ -1,0 +1,15 @@
+apiVersion: skaffold/v2beta11
+kind: Config
+metadata:
+  name: innovation-funding-service
+build:
+  local:
+    useDockerCLI: true
+    useBuildkit: false
+    tryImportMissing: true
+    push: false
+deploy:
+  statusCheckDeadlineSeconds: 1800
+  kustomize:
+    paths:
+      - os-files/kustomize/env/stub/local/ext

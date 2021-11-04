@@ -280,4 +280,20 @@ public class CompetitionTest {
                 FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT,
                 FinanceRowType.INDIRECT_COSTS), financeRowTypes);
     }
+
+    @Test
+    public void isHesta_forNonHestaCompetitionType() {
+        assertFalse(competition.isHesta());
+    }
+
+    @Test
+    public void isHesta_forHestaCompetitionType() {
+        CompetitionType competitionType = newCompetitionType()
+                .withName("Hesta")
+                .build();
+
+        competition.setCompetitionType(competitionType);
+
+        assertTrue(competition.isHesta());
+    }
 }

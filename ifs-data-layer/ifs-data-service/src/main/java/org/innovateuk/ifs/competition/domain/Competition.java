@@ -806,6 +806,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @Override
+    public boolean isHesta() {
+        return ofNullable(competitionType)
+                .map(CompetitionType::getName)
+                .map(name -> name.equals(CompetitionTypeEnum.HESTA.getText()))
+                .orElse(false);
+    }
+
+    @Override
     public boolean isFullyFunded() {
         // Competitions which always have 100% funding level
         return isH2020() || isProcurement();
@@ -827,10 +835,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         return FundingType.KTP == fundingType;
     }
 
-    @Override
-    public boolean isHesta() {
-        return false;
-    }
 
     public void releaseFeedback(ZonedDateTime date) {
         setMilestoneDate(MilestoneType.FEEDBACK_RELEASED, date);

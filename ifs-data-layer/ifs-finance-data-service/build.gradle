@@ -6,6 +6,7 @@ apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
 
 apply from: rootProject.file("gradle-support/profile-handler.gradle")
+apply from: rootProject.file("gradle-support/jib.gradle")
 
 processResources.dependsOn applyProfiles
 
@@ -16,38 +17,6 @@ group 'innovateuk'
 version project.version
 
 project.version = nexusVersion
-tagDocker.tag = nexusVersion
-osStageRemote.tag = nexusVersion
-tagDockerLocal.tag = nexusVersion
-osStageLocal.tag = nexusVersion
-
-def enabled = project.hasProperty('ifs.finance-data-service.enabled') ? project.property('ifs.finance-data-service.enabled').toBoolean() : true
-def pullNexusImage = project.hasProperty('ifs.finance-data-service.pull.nexus.image') ? project.property('ifs.finance-data-service.pull.nexus.image').toBoolean() : false
-if (enabled && pullNexusImage) {
-
-    [stopNexusContainer, removeNexusContainer, pullImageAndCreateContainer, deployNexusLocal, waitNexusDeploy, flywayClean, flywayMigrate].each { task ->
-        task.enabled = true
-    }
-
-    [buildDocker, stop, removeContainer, createContainer, deploy, wait].each { task ->
-        task.enabled = false
-    }
-
-    assemble.dependsOn deployNexusLocal
-
-} else {
-    [buildDocker, stop, removeContainer, createContainer, deploy, wait, flywayClean, flywayMigrate].each { task ->
-        task.enabled = enabled
-    }
-}
-
-createContainer.portBindings = ['9012:8000']
-createContainer.networkAliases = ["ifs-finance-data-service"]
-
-pullImageAndCreateContainer.portBindings = ['9012:8000']
-pullImageAndCreateContainer.networkAliases = ["ifs-finance-data-service"]
-createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
-
 deploy.dependsOn ":docker:ifs-mysql:ifs-finance-database:wait"
 deploy.mustRunAfter ":docker:ifs-mysql:ifs-finance-database:deploy"
 
@@ -55,26 +24,11 @@ deployNexusLocal.dependsOn ":docker:ifs-mysql:ifs-finance-database:waitNexusDepl
 deployNexusLocal.mustRunAfter ":docker:ifs-mysql:ifs-finance-database:deployNexusLocal"
 
 
-afterEvaluate {
-    ext {
-        dockerDir = file("$project.parent.projectDir/docker/")
-    }
-}
-
 ext.dockerComposeFile = "docker-compose/docker-compose-finance-totals.yml"
 ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
 
 ext {
     snippetsDir = file('build/generated-snippets')
-}
-
-buildDocker.dependsOn prepareDockerInput
-buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-buildDocker.inputDir = project.file("$project.buildDir/docker")
-tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-
-prepareDockerBaseInput {
-
 }
 
 dependencies {
