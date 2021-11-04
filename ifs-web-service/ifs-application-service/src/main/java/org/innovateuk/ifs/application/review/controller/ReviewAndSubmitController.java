@@ -207,7 +207,7 @@ public class ReviewAndSubmitController {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
 
-        if (!canReopenApplication(applicationResource, userResource, competitionResource.isAlwaysOpen())) {
+        if (!canReopenApplication(applicationResource, userResource, competitionResource)) {
             return "redirect:/application/" + applicationId + "/track";
         }
 
@@ -218,8 +218,10 @@ public class ReviewAndSubmitController {
         return "application-confirm-reopen";
     }
 
-    private boolean canReopenApplication(ApplicationResource application, UserResource user, boolean alwaysOpen) {
-        return !alwaysOpen && CompetitionStatus.OPEN.equals(application.getCompetitionStatus())
+    private boolean canReopenApplication(ApplicationResource application, UserResource user, CompetitionResource competitionResource) {
+
+        return !competitionResource.isAlwaysOpen()
+                && CompetitionStatus.OPEN.equals(application.getCompetitionStatus())
                 && application.canBeReopened()
                 && userService.isLeadApplicant(user.getId(), application);
     }
@@ -261,7 +263,7 @@ public class ReviewAndSubmitController {
                 application,
                 earlyMetricsUrl,
                 application.getCompletion(),
-                canReopenApplication(application, user, competition.isAlwaysOpen())
+                canReopenApplication(application, user, competition)
         ));
         return getTrackingPage(competition);
     }
@@ -269,6 +271,8 @@ public class ReviewAndSubmitController {
     private String getTrackingPage(CompetitionResource competition) {
         if (CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType())) {
             return "covid-additional-funding-application-track";
+        } else if (competition.isHesta()) {
+            return "hesta-application-track";
         } else if (competition.isAlwaysOpen()) {
             return "always-open-track";
         } else if (competition.isH2020()) {
