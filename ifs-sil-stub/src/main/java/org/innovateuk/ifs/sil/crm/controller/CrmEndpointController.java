@@ -4,15 +4,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
-import org.innovateuk.ifs.sil.crm.resource.SilLoanAssessment;
 import org.innovateuk.ifs.sil.crm.resource.SilLoanApplication;
+import org.innovateuk.ifs.sil.crm.resource.SilLoanAssessment;
 import org.innovateuk.ifs.util.JsonMappingUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
+
 
 /**
  * A simple endpoint to allow stubbing of the SIL outbound CRM updates.
