@@ -3,13 +3,9 @@ package org.innovateuk.ifs.sil.crm.controller;
 import org.innovateuk.ifs.sil.AbstractEndpointControllerMockMvcTest;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.innovateuk.ifs.sil.crm.resource.SilLoanApplication;
-import org.innovateuk.ifs.sil.crm.resource.SilLoanAssessment;
-import org.innovateuk.ifs.sil.crm.resource.SilLoanAssessmentRow;
 import org.junit.Test;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -109,71 +105,6 @@ public class CrmEndpointControllerMockMvcTest extends AbstractEndpointController
         mockMvc.
                 perform(
                         post("/silstub/loanssubmission").
-                                header("Content-Type", "application/json").
-                                header("IFS_AUTH_TOKEN", "123abc").
-                                content(requestBody)
-                ).
-                andExpect(status().isBadRequest()).
-                andReturn();
-    }
-
-    @Test
-    public void testDecisionMatrixIsGoodRequest() throws Exception {
-        SilLoanAssessment silLoanAssessment = new SilLoanAssessment();
-        silLoanAssessment.setCompetitionID(1l);
-        SilLoanAssessmentRow row =  new SilLoanAssessmentRow();
-        row.setAssessorNumber(10);
-        row.setAssessorNotInScope(5);
-        row.setApplicationID(365);
-        row.setAssessorNotRecommended(2l);
-        row.setScoreAverage(BigDecimal.TEN);
-        row.setScoreSpread(2);
-        silLoanAssessment.setApplications(Arrays.asList(row));
-        String requestBody = objectMapper.writeValueAsString(silLoanAssessment);
-
-        mockMvc.
-                perform(
-                        post("/silstub/decisionmatrix").
-                                header("Content-Type", "application/json").
-                                header("IFS_AUTH_TOKEN", "123abc").
-                                content(requestBody)
-                ).
-                andExpect(status().isAccepted()).
-                andReturn();
-    }
-
-    @Test
-    public void testDecisionMatrixIsBadRequestMissingCompetitionId() throws Exception {
-        SilLoanAssessment silLoanAssessment = new SilLoanAssessment();
-        SilLoanAssessmentRow row =  new SilLoanAssessmentRow();
-        row.setAssessorNumber(10);
-        row.setAssessorNotInScope(5);
-        row.setApplicationID(365);
-        row.setAssessorNotRecommended(2l);
-        row.setScoreAverage(BigDecimal.TEN);
-        row.setScoreSpread(2);
-        silLoanAssessment.setApplications(Arrays.asList(row));
-        String requestBody = objectMapper.writeValueAsString(silLoanAssessment);
-
-        mockMvc.
-                perform(
-                        post("/silstub/decisionmatrix").
-                                header("Content-Type", "application/json").
-                                header("IFS_AUTH_TOKEN", "123abc").
-                                content(requestBody)
-                ).
-                andExpect(status().isBadRequest()).
-                andReturn();
-    }
-
-    @Test
-    public void testDecisionMatrixIsBadRequestMissingApplications() throws Exception {
-        SilLoanAssessment silLoanAssessment = new SilLoanAssessment();
-        String requestBody = objectMapper.writeValueAsString(silLoanAssessment);
-
-        mockMvc.
-                perform(
-                        post("/silstub/decisionmatrix").
                                 header("Content-Type", "application/json").
                                 header("IFS_AUTH_TOKEN", "123abc").
                                 content(requestBody)
