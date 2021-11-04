@@ -31,11 +31,12 @@ Monitoring officer can filter previous projects only
     And the user clicks the button/link                         id = update-documents-results-button
     Then check correct number of previous projects filtered     Previous
 
-Monitoring officer can filter both in-setup and previous projects
-    [Documentation]  IFS-9576
-    Given the user selects the checkbox                       projectInSetup
-    When the user clicks the button/link                      id = update-documents-results-button
-    Then check correct total number of projects displaying
+#  revisit this when working on IFS-10409
+#Monitoring officer can filter both in-setup and previous projects
+#    [Documentation]  IFS-9576
+#    Given the user selects the checkbox                       projectInSetup
+#    When the user clicks the button/link                      id = update-documents-results-button
+#    Then check correct total number of projects displaying
 
 Monitoring officer can view no results text when none of the projects been assigned to him
     [Documentation]  IFS-9576
