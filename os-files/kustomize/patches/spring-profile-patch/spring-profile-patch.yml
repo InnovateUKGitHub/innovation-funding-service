@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-profiles-active-env-patch
+spec:
+  template:
+    spec:
+      containers:
+        - name: spring-boot-service-container
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-profile-env
+                  key: SPRING_PROFILES_ACTIVE

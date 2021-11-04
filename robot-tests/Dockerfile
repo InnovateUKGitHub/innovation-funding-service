@@ -1,5 +1,5 @@
 # This dockerfile builds the zap stable release
-FROM ubuntu:20.04
+FROM docker-ifs.devops.innovateuk.org/releases/ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 # ARG WEBSWING_TOKEN=""
@@ -132,6 +132,7 @@ USER 996:993
 
 HEALTHCHECK --retries=5 --interval=5s CMD zap-cli status
 
+COPY IFS_acceptance_tests/resources/variables/EMAIL_VARIABLES_TEMPLATE.robot /robot-tests/IFS_acceptance_tests/resources/variables/EMAIL_VARIABLES_SENSITIVE.robot
 
 WORKDIR /robot-tests
 

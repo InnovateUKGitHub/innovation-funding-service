@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: robot-framework
+  annotations:
+    pullSecrets: pullSecrets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: robot-service
+  template:
+    metadata:
+      labels:
+        run: robot-service
+    spec:
+      containers:
+        - image: robot-framework
+          name: robot-framework
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: BAMBOO_CREDS
+              value: BAMBOO_CREDS_VAR
+            - name: BAMBOO_URL
+              value: BAMBOO_URL_VAR
+            - name: BAMBOO_PLAN_PROJ
+              value: BAMBOO_PLAN_PROJ_VAR
+            - name: BAMBOO_BUILD_NO
+              value: BAMBOO_BUILD_NO_VAR
+            - name: BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: SP_DOMAIN
+                  name: shibboleth-config
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 2000M
+            requests:
+              cpu: 100m
+              memory: 400M
+          volumeMounts:
+          - mountPath: /mnt/ifs_storage
+            name: dir-1
+      volumes:
+        - name: dir-1
+          persistentVolumeClaim:
+            claimName: file-upload-claim

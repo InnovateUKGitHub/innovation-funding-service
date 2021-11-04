@@ -67,7 +67,15 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     @Transactional
     public ServiceResult<List<ValidationMessages>> markAsComplete(final QuestionApplicationCompositeId ids,
                                                                   final long markedAsCompleteById) {
-        return setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true, true);
+        return setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true, true, now());
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<List<ValidationMessages>> markAsComplete(final QuestionApplicationCompositeId ids,
+                                                                  final long markedAsCompleteById,
+                                                                  final ZonedDateTime markedAsCompleteOn) {
+        return setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true, true, markedAsCompleteOn);
     }
 
     @Override
@@ -75,21 +83,21 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     public ServiceResult<Void> markAsCompleteNoValidate(QuestionApplicationCompositeId ids, long markedAsCompleteById) {
         return find(processRole(markedAsCompleteById), openApplication(ids.applicationId), getQuestionSupplier(ids.questionId))
                 .andOnSuccess((markedAsCompleteBy, application, question)
-                        -> setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, true, true));
+                        -> setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, true, true, now()));
     }
 
     @Override
     @Transactional
     public ServiceResult<List<ValidationMessages>> markAsInComplete(final QuestionApplicationCompositeId ids,
                                                                     final long markedAsInCompleteById) {
-        return setComplete(ids.questionId, ids.applicationId, markedAsInCompleteById, false, true);
+        return setComplete(ids.questionId, ids.applicationId, markedAsInCompleteById, false, true, now());
     }
 
     @Override
     @Transactional
     public ServiceResult<List<ValidationMessages>> markTeamAsInComplete(final QuestionApplicationCompositeId ids,
                                                                         final long markedAsInCompleteById) {
-        return setComplete(ids.questionId, ids.applicationId, markedAsInCompleteById, false, true);
+        return setComplete(ids.questionId, ids.applicationId, markedAsInCompleteById, false, true, now());
     }
 
     @Override
@@ -280,12 +288,12 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
         return pr != null && pr.getOrganisationId() == organisationId;
     }
 
-    protected ServiceResult<List<ValidationMessages>> setComplete(long questionId, long applicationId, long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus) {
+    protected ServiceResult<List<ValidationMessages>> setComplete(long questionId, long applicationId, long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus, ZonedDateTime markedAsCompleteOn) {
         return find(processRole(processRoleId), openApplication(applicationId), getQuestionSupplier(questionId))
                 .andOnSuccess((markedAsCompleteBy, application, question) -> {
                             List<ValidationMessages> validation = validateApplicationQuestion(markAsComplete, question, application, processRoleId);
                             if (validation.isEmpty()) {
-                                setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, markAsComplete, updateApplicationCompleteStatus);
+                                setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, markAsComplete, updateApplicationCompleteStatus, markedAsCompleteOn);
                             }
                             return serviceSuccess(validation);
                         }
@@ -317,11 +325,12 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
                                                             Application application,
                                                             Question question,
                                                             boolean markAsComplete,
-                                                            boolean updateApplicationCompleteStatus) {
+                                                            boolean updateApplicationCompleteStatus,
+                                                            ZonedDateTime markedAsCompleteOn) {
         QuestionStatus questionStatus = getQuestionStatus(question, application, markedAsCompleteBy).orElse(new QuestionStatus(question, application));
 
         if (markAsComplete) {
-            questionStatus.markAsComplete(markedAsCompleteBy, now());
+            questionStatus.markAsComplete(markedAsCompleteBy, markedAsCompleteOn);
         } else {
             questionStatus.markAsInComplete();
         }

@@ -1,0 +1,24 @@
+# Common to aws envs
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+commonAnnotations:
+  aws-base: aws-base
+
+bases:
+  - ../../env-base
+
+components:
+  - ../../../components/auth/registration-service
+
+  - ../../../components/data-layer/data-service/data-service.yml
+  - ../../../components/data-layer/data-service/data-service-deployment.yml
+  - ../../../components/data-layer/finance-data-service/finance-data-service.yml
+  - ../../../components/data-layer/finance-data-service/finance-data-service-deployment.yml
+  - ../../../components/data-layer/survey-data-service/survey-data-service.yml
+  - ../../../components/data-layer/survey-data-service/survey-data-service-deployment.yml
+
+  - ../../../components/web-layer
+
+resources:
+  - config-maps/finance-db-config.yml
+  - config-maps/survey-db-config.yml

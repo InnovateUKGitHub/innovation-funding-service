@@ -107,8 +107,9 @@ public class RegistrationController {
         model.addAttribute("isApplicantJourney", registrationCookieService.isApplicantJourney(request));
         registrationCookieService.deleteInviteHashCookie(response);
         registrationCookieService.deleteProjectInviteHashCookie(response);
-        if (referer == null || !referer.contains(request.getServerName() + "/registration/register")) {
-            throw new ObjectNotFoundException("Attempt to access registration page directly...", emptyList());
+        if (referer == null ||
+                (!referer.contains(request.getServerName()) || !referer.contains("/registration/register"))) {
+            throw new ObjectNotFoundException("Attempt to access registration page directly..." + referer + " " + request.getServerName());
         }
         return "registration/successful";
     }
