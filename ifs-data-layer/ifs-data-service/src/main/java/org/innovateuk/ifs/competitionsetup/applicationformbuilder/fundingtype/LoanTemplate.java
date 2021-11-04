@@ -161,28 +161,28 @@ public class LoanTemplate implements FundingTypeTemplate {
                         "<p><strong>Edit the online business survey</strong></p>" +
                                 "<p>At any stage, you can return here to carry on editing incomplete form.</p>"
                 )
-                .withAssignEnabled(false)
-                .withFormInputs(
-                        asList(
-                                aFormInput()
-                                    .withType(FormInputType.TEXTAREA)
-                                    .withScope(FormInputScope.APPLICATION)
-                                    .withActive(true)
-                                    .withWordCount(400),
-                                aFormInput()
-                                    .withType(FormInputType.MULTIPLE_CHOICE)
-                                    .withScope(FormInputScope.APPLICATION)
-                                    .withActive(false),
-                                aFormInput()
-                                    .withType(FormInputType.FILEUPLOAD)
-                                    .withScope(FormInputScope.APPLICATION)
-                                    .withActive(false),
-                                aFormInput()
-                                    .withType(FormInputType.TEMPLATE_DOCUMENT)
-                                    .withScope(FormInputScope.APPLICATION)
-                                    .withActive(false)
-                        )
-                );
+                .withAssignEnabled(false);
+//                .withFormInputs(
+//                        asList(
+//                                aFormInput()
+//                                    .withType(FormInputType.TEXTAREA)
+//                                    .withScope(FormInputScope.APPLICATION)
+//                                    .withActive(true)
+//                                    .withWordCount(400),
+//                                aFormInput()
+//                                    .withType(FormInputType.MULTIPLE_CHOICE)
+//                                    .withScope(FormInputScope.APPLICATION)
+//                                    .withActive(false),
+//                                aFormInput()
+//                                    .withType(FormInputType.FILEUPLOAD)
+//                                    .withScope(FormInputScope.APPLICATION)
+//                                    .withActive(false),
+//                                aFormInput()
+//                                    .withType(FormInputType.TEMPLATE_DOCUMENT)
+//                                    .withScope(FormInputScope.APPLICATION)
+//                                    .withActive(false)
+//                        )
+//                );
     }
 
     private void addLoanProjectSetupColumns(Competition competition) {
