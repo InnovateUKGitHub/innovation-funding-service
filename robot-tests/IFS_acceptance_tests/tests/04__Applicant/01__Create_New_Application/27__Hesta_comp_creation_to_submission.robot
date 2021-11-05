@@ -15,8 +15,7 @@ Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
-<<<<<<< HEAD
-${hestaCompTypeSelector}                        dt:contains("Competition type") ~ dd:contains("${compType_HEUKAR}")
+${hestaCompTypeSelector}                        dt:contains("Competition type") ~ dd:contains("${compType_HESTA}")
 ${hestaApplicationName}                         Hesta application
 ${newHestaApplicationName}                      NEW Hesta application
 ${leadApplicantEmail}                           tim.timmy@heukar.com
@@ -26,9 +25,6 @@ ${hestaApplicationUnsuccessfulEmailSubject}     update about your Horizon Europe
 ${hestaApplicationSubmissionEmail}              We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
 ${hestaApplicationUnsuccessfulEmail}            We have been advised you were unsuccessful in your grant application for Horizon Europe funding from The European Commission
 ${assessorEmail}                                another.person@gmail.com
-
-
-
 
 *** Test Cases ***
 Comp admin can select the competition type option Hesta in Initial details on competition setup
@@ -52,18 +48,16 @@ Comp admin creates Hesta competition
 Lead applicant can submit application
     [Documentation]  IFS-8751
     Given the user logs out if they are logged in
-    When the user successfully completes application
-    And the user clicks the button/link                       link = Your project finances
-    Then the user marks the finances as complete              ${hestaApplicationName}  labour costs  54,000  no
+    When the user successfully completes application          tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
     Then the user can submit the application
 
 Lead applicant should get a confirmation email after application submission
     [Documentation]    IFS-10694
-    Given Requesting IDs of this application
+    Given Requesting IDs of this application    ${hestaApplicationName}
     Then the user reads his email     ${leadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
 
 Lead applicant receives email notifiction when internal user marks application unsuccessful
-    [Documentation]  IFS-8641
+    [Documentation]  IFS-10695
     Given the user logs out if they are logged in
     And the user successfully completes application                                 barry   barrington   ${newLeadApplicantEmail}   ${newHestaApplicationName}
     And the user can submit the application
@@ -80,10 +74,10 @@ Lead applicant receives email notifiction when internal user marks application u
 
 The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
     [Documentation]  IFS-10697
-    [Setup]  Requesting IDs of this competition
-    Given Competition admin creates an assessment period                            ${competitionId}
-    When the internal team mark the application as successful
-    And Log in as a different user                                                  email=${newLeadApplicantEmail}    password=${short_password}
+    Given Log in as a different user                                               &{Comp_admin1_credentials}
+    And Requesting IDs of this competition                                         ${hestaCompetitionName}
+    When the internal team mark the application as successful / unsuccessful       ${hestaCompetitionName}   FUNDED
+    And Log in as a different user                                                 email=${leadApplicantEmail}   password=${short_password}
     Then the application summary page must not include the reopen application link
 
 *** Keywords ***
@@ -140,7 +134,7 @@ the user successfully completes application
     the user clicks the button/link                                 link = Sign in
     Logging in and Error Checking                                   ${email}  ${short_password}
     the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user completes Heukar Application details                   ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
+    the user completes Hesta Application details                    ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team
     the user completes the application research category            Feasibility studies
     the lead applicant fills all the questions and marks as complete(Hesta)
