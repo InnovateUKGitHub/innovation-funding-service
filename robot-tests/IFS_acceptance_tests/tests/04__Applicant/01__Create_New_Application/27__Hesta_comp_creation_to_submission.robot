@@ -49,6 +49,8 @@ Lead applicant can submit application
     [Documentation]  IFS-8751
     Given the user logs out if they are logged in
     When the user successfully completes application          tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
+    And the user clicks the button/link                       link = Your project finances
+    Then the user marks the finances as complete              ${hestaApplicationName}  labour costs  54,000  no
     Then the user can submit the application
 
 Lead applicant should get a confirmation email after application submission
@@ -60,17 +62,19 @@ Lead applicant receives email notifiction when internal user marks application u
     [Documentation]  IFS-10695
     Given the user logs out if they are logged in
     And the user successfully completes application                                 barry   barrington   ${newLeadApplicantEmail}   ${newHestaApplicationName}
+    And the user clicks the button/link                                             link = Your project finances
+    And the user marks the finances as complete                                     ${newHestaApplicationName}  labour costs  54,000  no
     And the user can submit the application
     And log in as a different user                                                  &{Comp_admin1_credentials}
     When the internal team mark the application as successful / unsuccessful        ${newHestaApplicationName}   UNFUNDED
     And the user clicks the button/link                                             link = Competition
-    And Requesting IDs of this application                                          ${newHeukarApplicationName}
+    And Requesting IDs of this application                                          ${newHestaApplicationName}
     And the internal team notifies all applicants
     Then the user reads his email                                                   ${newLeadApplicantEmail}  ${ApplicationID}: ${hestaApplicationUnsuccessfulEmailSubject}  ${hestaApplicationUnsuccessfulEmail}
-    Given the user should see the element       jQuery = h1:contains("Application status")
+    Given the user should see the element                                           jQuery = h1:contains("Application status")
     When Requesting IDs of this application
     Then the user is presented with the Application Summary page
-    And the user reads his email     ${newLeadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
+    And the user reads his email                                                    ${newLeadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
 
 The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
     [Documentation]  IFS-10697
@@ -134,7 +138,7 @@ the user successfully completes application
     the user clicks the button/link                                 link = Sign in
     Logging in and Error Checking                                   ${email}  ${short_password}
     the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user completes Hesta Application details                    ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
+    the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team
     the user completes the application research category            Feasibility studies
     the lead applicant fills all the questions and marks as complete(Hesta)
@@ -212,7 +216,6 @@ Competition admin creates an assessment period
     update assessment batch 1 milestone to yesterday   ${competitionId}  ASSESSOR_DEADLINE
     the user clicks the button/link         jQuery = button:contains("Close assessment")
     the user clicks the button/link         link = Competition
-
 
 update assessment batch 1 milestone to yesterday
     [Arguments]  ${competition_id}  ${milestone}
