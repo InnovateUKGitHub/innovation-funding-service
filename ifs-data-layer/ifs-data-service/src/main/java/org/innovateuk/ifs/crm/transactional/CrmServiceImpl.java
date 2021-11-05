@@ -214,7 +214,7 @@ public class CrmServiceImpl implements CrmService {
                     ApplicationState.submittedStates).handleSuccessOrFailure(failure -> {
                 return serviceFailure(CommonFailureKeys.GENERAL_INCORRECT_TYPE);
             }, applications -> {
-                applications.forEach(application -> {
+                applications.stream().filter(app->app.getAssessments().size()>0).forEach(application -> {
                     silLoanAssessmentRows.add(setSilAssessmentRow(application));
                 });
                 silLoanAssessment.setApplications(silLoanAssessmentRows);
