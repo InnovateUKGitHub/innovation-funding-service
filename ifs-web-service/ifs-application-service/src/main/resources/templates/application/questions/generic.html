@@ -69,12 +69,13 @@
         <th:block th:unless="${model.readOnly}">
             <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}" ifs:utext="${model.questionDescription}"/>
             <div th:if="${model.questionType == model.getLoansBusinessAndFinancialInformation()}" class="govuk-body">
-                <div th:if="${model.isIFSLoanPartBEnabled()}">
-                    <a class="govuk-button"
-                       th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}" value="open-salesforce"
-                       type="Continue">Continue (opens in new tab)</a>
+               <div th:if="${model.isLoansPartBEnabled()}">
+                   <a class="govuk-button"
+                      target="_blank"
+                      th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}" value="open-salesforce"
+                      type="Continue">Continue (opens in new tab)</a>
                 </div>
-                <div th:unless="${model.isIFSLoanPartBEnabled()}">
+                <div th:unless="${model.isLoansPartBEnabled()}">
                     <a class="govuk-link"
                        target="_blank"
                        th:href="@{https://innovateuk.eu.qualtrics.com/jfe/form/SV_8JtoEompki2GcUS(
@@ -172,7 +173,7 @@
                 </div>
             </th:block>
 
-                <div class="govuk-form-group" th:if="${model.templateDocumentActive}">
+            <div class="govuk-form-group" th:if="${model.templateDocumentActive}">
                 <div class="govuk-form-group download">
                     <h3 class="govuk-heading-s" th:text="|Download the ${model.templateDocumentTitle} template|">Download</h3>
                     <p class="govuk-body">
@@ -197,7 +198,7 @@
                 </div>
             </div>
 
-                <div class="govuk-form-group" th:if="${model.appendixActive}">
+            <div class="govuk-form-group" th:if="${model.appendixActive}">
                 <div class="upload-section">
                     <h3 class="govuk-heading-s govuk-!-margin-0">Appendix</h3>
                     <details class="govuk-details" role="group">
@@ -256,37 +257,37 @@
                 </div>
             </div>
 
-                <div class="form-footer govuk-!-margin-top-8">
-                    <div th:if="${model.open}" class="form-footer__actions">
-                        <th:block th:unless="${model.complete or !model.assignButtonsViewModel.assignedToCurrentUser}">
-                            <button th:if="${model.leadApplicant OR model.questionHasMultipleStatuses}"
-                                    id="application-question-complete" type="submit"
-                                    name="complete"
-                                    class="button-clear">Mark as complete
-                            </button>
-                            <button th:unless="${model.leadApplicant OR model.questionHasMultipleStatuses}"
-                                    type="submit"
-                                    name="assign"
-                                    class="button-clear">Assign to lead for review
-                            </button>
-                        </th:block>
-                        <button th:if="${model.complete}" id="edit" type="submit" name="edit" class="button-clear">Edit</button>
-                    </div>
-                    <div class="form-footer__info" aria-live="polite" aria-atomic="true" role="status">
-                        <th:block th:if="${model.hasResponse()}">
-                            <span class="update-label">Last updated: </span>
-                            <th:block th:insert="question-type/form-elements :: updateTimeDetails" th:with="updateDate=${model.lastUpdated},lastUpdatedText=${model.lastUpdatedText}, applicationId=${model.applicationId}" />
-                        </th:block>
-                    </div>
+            <div class="form-footer govuk-!-margin-top-8">
+                <div th:if="${model.open}" class="form-footer__actions">
+                    <th:block th:unless="${model.complete or !model.assignButtonsViewModel.assignedToCurrentUser}">
+                        <button th:if="${model.leadApplicant OR model.questionHasMultipleStatuses}"
+                                id="application-question-complete" type="submit"
+                                name="complete"
+                                class="button-clear">Mark as complete
+                        </button>
+                        <button th:unless="${model.leadApplicant OR model.questionHasMultipleStatuses}"
+                                type="submit"
+                                name="assign"
+                                class="button-clear">Assign to lead for review
+                        </button>
+                    </th:block>
+                    <button th:if="${model.complete}" id="edit" type="submit" name="edit" class="button-clear">Edit</button>
+                </div>
+                <div class="form-footer__info" aria-live="polite" aria-atomic="true" role="status">
+                    <th:block th:if="${model.hasResponse()}">
+                        <span class="update-label">Last updated: </span>
+                        <th:block th:insert="question-type/form-elements :: updateTimeDetails" th:with="updateDate=${model.lastUpdated},lastUpdatedText=${model.lastUpdatedText}, applicationId=${model.applicationId}" />
+                    </th:block>
+                </div>
                 </div>
 
-                <div class="govuk-!-margin-top-6">
+            <div class="govuk-!-margin-top-6">
 
-                    <a th:if="${model.readOnly}" th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
-                       class="govuk-button govuk-button--secondary">Return to application overview
-                    </a>
-                    <button class="govuk-button" th:unless="${model.readOnly}" type="submit">Save and return to application overview</button>
-                </div>
+                <a th:if="${model.readOnly}" th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
+                   class="govuk-button govuk-button--secondary">Return to application overview
+                </a>
+                <button class="govuk-button" th:unless="${model.readOnly}" type="submit">Save and return to application overview</button>
+            </div>
             </th:block>
         </form>
 
