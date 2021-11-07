@@ -71,7 +71,7 @@ public class AssessorCompetitionDashboardModelPopulator {
                 assessment.getLeadOrganisation(),
                 assessment.getState(),
                 assessment.getOverallScore(),
-                assessment.isRecommended()
+                assessment.getRecommended()
         );
     }
 }
