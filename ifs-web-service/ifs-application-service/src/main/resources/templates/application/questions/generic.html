@@ -67,13 +67,17 @@
         </div>
 
         <th:block th:unless="${model.readOnly}">
-            <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}" ifs:utext="${model.questionDescription}"/>
+            <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}"
+                 ifs:utext="${model.questionDescription}"/>
+            <div class="govuk-hint wysiwyg-styles"
+                 th:if="${(model.questionDescription2 != null) and model.loanCompetitionAndPartBEnabled}"
+                 ifs:utext="${model.questionDescription2}"/>
             <div th:if="${model.questionType == model.getLoansBusinessAndFinancialInformation()}" class="govuk-body">
-               <div th:if="${model.isLoansPartBEnabled()}">
-                   <a class="govuk-button"
-                      target="_blank"
-                      th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}" value="open-salesforce"
-                      type="Continue">Continue (opens in new tab)</a>
+                <div th:if="${model.isLoansPartBEnabled()}">
+                    <a class="govuk-button"
+                       target="_blank"
+                       th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}" value="open-salesforce"
+                       type="Continue">Continue (opens in new tab)</a>
                 </div>
                 <div th:unless="${model.isLoansPartBEnabled()}">
                     <a class="govuk-link"
@@ -81,10 +85,13 @@
                        th:href="@{https://innovateuk.eu.qualtrics.com/jfe/form/SV_8JtoEompki2GcUS(
                     CompanyName=${model.leadOrganisationName},
                     CompanyNumber=${model.leadOrganisationCompaniesHouseNumber},
-                    IFSApplicationNumber=${model.applicationId})}">Complete the online business survey (opens in a new window)</a>'"
+                    IFSApplicationNumber=${model.applicationId})}">Complete the online business survey (opens in a new
+                        window)</a>'"
                 </div>
             </div>
-            <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription2 != null}" ifs:utext="${model.questionDescription2}"/>
+            <div class="govuk-hint wysiwyg-styles"
+                 th:if="${(model.questionDescription2 != null) and !model.loanCompetitionAndPartBEnabled}"
+                 ifs:utext="${model.questionDescription2}"/>
             <details th:unless="${#strings.isEmpty(model.questionGuidance)}" class="govuk-details" role="group">
                 <summary th:unless="${#strings.isEmpty(model.questionGuidanceTitle)}" class="govuk-details__summary">
                     <span class="govuk-details__summary-text" th:text="${model.questionGuidanceTitle}">What should I include in the project public description?</span>
@@ -93,6 +100,16 @@
                      ifs:utext="${model.questionGuidance}">Guidance
                 </div>
             </details>
+        </th:block>
+
+        <th:block th:if="${model.complete and model.loanCompetitionAndPartBEnabled}">
+            <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}"
+                 ifs:utext="${model.questionDescription}"/>
+            <div class="govuk-hint wysiwyg-styles"
+                 th:if="${(model.questionDescription2 != null) and model.loanCompetitionAndPartBEnabled}">
+                <p><strong>Edit the online business survey</strong></p>
+                <p>At any stage, you can return here to carry on editing incomplete form.</p>
+            </div>
         </th:block>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
@@ -105,7 +122,7 @@
                 <input type="hidden" th:field="${model.multipleChoiceOptionsActive}" />
             </th:block>
 
-            <th:block th:unless="${model.isIFSLoanPartBEnabled()}">
+            <th:block th:unless="${model.isLoansPartBEnabled()}">
                 <div class="govuk-form-group" th:if="${model.textAreaActive}"
                  th:classappend="${#fields.hasErrors('answer')} ? 'govuk-form-group--error'">
                 <th:block th:if="${#fields.hasErrors('answer')}">

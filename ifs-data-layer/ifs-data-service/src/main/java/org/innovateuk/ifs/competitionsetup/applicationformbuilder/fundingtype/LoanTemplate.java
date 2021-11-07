@@ -158,7 +158,7 @@ public class LoanTemplate implements FundingTypeTemplate {
                                 "<p>You must submit financial information to us about your business. This is done through completion of a spreadsheet template. Please download the financial spreadsheet template and fill this in offline. At the end of the survey you will be asked to upload the financial spreadsheet.</p>"
                 )
                 .withDescription2(
-                        "<p><strong>Edit the online business survey</strong></p>" +
+                        "<p><strong>Complete the online business survey</strong></p>" +
                                 "<p>At any stage, you can return here to carry on editing incomplete form.</p>"
                 )
                 .withAssignEnabled(false)

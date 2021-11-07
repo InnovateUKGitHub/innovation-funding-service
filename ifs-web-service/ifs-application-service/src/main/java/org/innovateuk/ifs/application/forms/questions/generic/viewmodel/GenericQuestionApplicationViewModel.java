@@ -64,6 +64,8 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
     private final MultipleChoiceOptionResource selectedMultipleChoiceOption;
     private final boolean loansPartBEnabled;
     private final String salesForceURL;
+    private final boolean isLoan;
+
 
     public GenericQuestionApplicationViewModel(long applicationId, String competitionName ,long questionId, long currentUser,
                                                String applicationName, String questionName, String questionNumber, String questionSubtitle,
@@ -76,7 +78,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                                                ZonedDateTime lastUpdated, String lastUpdatedByName, Long lastUpdatedBy, boolean open,
                                                boolean complete, boolean leadApplicant, AssignButtonsViewModel assignButtonsViewModel,
                                                Long multipleChoiceFormInputId, List<MultipleChoiceOptionResource> multipleChoiceOptions, MultipleChoiceOptionResource selectedMultipleChoiceOption,
-                                               String leadOrganisationName, String leadOrganisationCompaniesHouseNumber, boolean loansPartBEnabled, String salesForceURL) {
+                                               String leadOrganisationName, String leadOrganisationCompaniesHouseNumber, boolean loansPartBEnabled, String salesForceURL, boolean isLoan) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.questionId = questionId;
@@ -118,6 +120,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         this.leadOrganisationCompaniesHouseNumber = leadOrganisationCompaniesHouseNumber;
         this.loansPartBEnabled = loansPartBEnabled;
         this.salesForceURL = salesForceURL;
+        this.isLoan = isLoan;
     }
 
     @Override
@@ -333,6 +336,14 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         return loansPartBEnabled;
     }
 
+    public boolean isLoan() {
+        return isLoan;
+    }
+
+    public boolean loanCompetitionAndPartBEnabled() {
+        return isLoan && loansPartBEnabled;
+    }
+
     @JsonIgnore
     public String getLoansQuestionsFormSalesForceURL() {
         return salesForceURL + "/?" + "(" + "CompanyName= " + leadOrganisationName + "," +
@@ -382,6 +393,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         private String leadOrganisationCompaniesHouseNumber;
         private boolean loansPartBEnabled;
         private String salesForceURL;
+        private boolean isLoan;
 
         private GenericQuestionApplicationViewModelBuilder() {
         }
@@ -595,6 +607,11 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
             return this;
         }
 
+        public GenericQuestionApplicationViewModelBuilder withLoanCompetition(boolean isLoan){
+            this.isLoan = isLoan;
+            return this;
+        }
+
         public GenericQuestionApplicationViewModel build() {
             return new GenericQuestionApplicationViewModel(applicationId, competitionName, questionId, currentUser, applicationName,
                     questionName, questionNumber, questionSubtitle, questionDescription, questionDescription2, questionGuidanceTitle, questionGuidance,
@@ -602,7 +619,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                     appendices, maximumAppendices, templateDocumentFormInputId, templateDocumentTitle, templateDocumentFilename,
                     templateDocumentResponseFilename, templateDocumentResponseFileEntryId, lastUpdated, lastUpdatedByName, lastUpdatedBy,
                     open, complete, leadApplicant, assignButtonsViewModel, multipleChoiceFormInputId, multipleChoiceOptions, selectedMultipleChoiceOption,
-                    leadOrganisationName, leadOrganisationCompaniesHouseNumber, loansPartBEnabled, salesForceURL);
+                    leadOrganisationName, leadOrganisationCompaniesHouseNumber, loansPartBEnabled, salesForceURL, isLoan);
         }
 
     }
