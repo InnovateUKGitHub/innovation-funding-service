@@ -110,6 +110,12 @@
                 <p><strong>Edit the online business survey</strong></p>
                 <p>At any stage, you can return here to carry on editing incomplete form.</p>
             </div>
+            <div>
+                <a class="govuk-button"
+                   target="_blank"
+                   th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}" value="open-salesforce"
+                   type="Continue">Continue (opens in new tab)</a>
+            </div>
         </th:block>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
