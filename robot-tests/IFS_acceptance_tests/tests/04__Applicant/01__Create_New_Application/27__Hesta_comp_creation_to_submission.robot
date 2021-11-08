@@ -58,6 +58,15 @@ Lead applicant should get a confirmation email after application submission
     Given Requesting IDs of this application    ${hestaApplicationName}
     Then the user reads his email     ${leadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
 
+The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
+    [Documentation]  IFS-10697
+    Given Log in as a different user                                               &{Comp_admin1_credentials}
+    And Requesting IDs of this competition                                         ${hestaCompetitionName}
+    And Competition admin creates an assessment period
+    When the internal team mark the application as successful / unsuccessful       ${hestaCompetitionName}   FUNDED
+    And Log in as a different user                                                 email=${leadApplicantEmail}   password=${short_password}
+    Then the application summary page must not include the reopen application link
+
 Lead applicant receives email notifiction when internal user marks application unsuccessful
     [Documentation]  IFS-10695
     Given the user logs out if they are logged in
@@ -75,14 +84,6 @@ Lead applicant receives email notifiction when internal user marks application u
     When Requesting IDs of this application
     Then the user is presented with the Application Summary page
     And the user reads his email                                                    ${newLeadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
-
-The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
-    [Documentation]  IFS-10697
-    Given Log in as a different user                                               &{Comp_admin1_credentials}
-    And Requesting IDs of this competition                                         ${hestaCompetitionName}
-    When the internal team mark the application as successful / unsuccessful       ${hestaCompetitionName}   FUNDED
-    And Log in as a different user                                                 email=${leadApplicantEmail}   password=${short_password}
-    Then the application summary page must not include the reopen application link
 
 *** Keywords ***
 the user can view Hesta competition type in Initial details read only view
