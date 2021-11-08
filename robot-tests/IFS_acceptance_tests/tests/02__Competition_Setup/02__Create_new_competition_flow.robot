@@ -113,6 +113,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-8847 Always open competitions: new comp setup configuration
 ...
 ...               IFS-10165 Users can not edit completion stage from release feedback to project setup
+
+...               IFS-10693 Hesta - Increase project duration in months
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -448,7 +450,7 @@ Application: Application details validations
 
 
 Application: Application details
-    [Documentation]  INFUND-5633 IFS-2776
+    [Documentation]  INFUND-5633 IFS-2776 IFS-10693
     [Tags]  HappyPath
     Given the user clicks the button/link           link = Application details
     And the user should see the element             jQuery = h1:contains("Details")

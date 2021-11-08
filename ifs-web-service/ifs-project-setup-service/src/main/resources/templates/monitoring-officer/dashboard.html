@@ -256,10 +256,10 @@
                                 </ul>
                             </div>
                         </th:block>
+                        <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
                     </div>
                 </div>
               </form>
-            <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
         </div>
     </main>
 </div>
