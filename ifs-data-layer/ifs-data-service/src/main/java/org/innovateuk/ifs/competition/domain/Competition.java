@@ -835,6 +835,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         return FundingType.KTP == fundingType;
     }
 
+
     public void releaseFeedback(ZonedDateTime date) {
         setMilestoneDate(MilestoneType.FEEDBACK_RELEASED, date);
     }
