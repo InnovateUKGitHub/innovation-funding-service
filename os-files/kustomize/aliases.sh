@@ -66,7 +66,7 @@ k8s_describe() {
   kubectl describe $pod
 }
 
-k8s_sync_ldap() {
+k8s_sync_ldap_all_users() {
   if [[ -z "${TEST_USER_PASSWORD}" ]]; then
     echo 'IFS_TEST_USER_PASSWORD env var is not set so using default of Passw0rd1357'
     pass=$(slappasswd -s "Passw0rd1357" | base64)
@@ -76,6 +76,18 @@ k8s_sync_ldap() {
   fi
   POD=$(kubectl get pod -l app=ldap -o name)
   kubectl exec "$POD" -- bash -c "export IFS_TEST_USER_PASSWORD=$pass && /usr/local/bin/ldap-sync-from-ifs-db.sh"
+}
+
+k8s_sync_ldap_one_user() {
+  if [[ -z "${TEST_USER_PASSWORD}" ]]; then
+    echo 'IFS_TEST_USER_PASSWORD env var is not set so using default of Passw0rd1357'
+    pass=$(slappasswd -s "Passw0rd1357" | base64)
+  else
+    echo 'IFS_TEST_USER_PASSWORD is set as env var'
+    pass=$TEST_USER_PASSWORD
+  fi
+  POD=$(kubectl get pod -l app=ldap -o name)
+  kubectl exec "$POD" -- bash -c "export IFS_TEST_USER_PASSWORD=$pass && /usr/local/bin/ldap-sync-one-user.sh $1"
 }
 
 k8s_wait() {
@@ -91,7 +103,7 @@ k8s_rebuild_db() {
   k8s_wait ifs-database
   k8s_delete data-service
   k8s_wait data-service
-  k8s_sync_ldap
+  k8s_sync_ldap_all_users
 }
 
 k8s_clean_svc() {
@@ -173,7 +185,8 @@ k8s_help() {
     echo '    k8s_clean_all - clean the k8s namespace'
     echo '    k8s_clean_svc - clean non ext services'
     echo '    k8s_rebuild_db - rebuilds the database and ldap entries'
-    echo '    k8s_sync_ldap - syncs the db users with ldap'
+    echo '    k8s_sync_ldap_all_users - syncs all db users with ldap'
+    echo '    k8s_sync_ldap_one_user - syncs given db user with ldap'
     echo ''
     echo 'Shortcuts (save typing) -:'
     echo '    k8s_po - get the list of pods'
