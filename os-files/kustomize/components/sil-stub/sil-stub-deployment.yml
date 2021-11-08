@@ -20,8 +20,8 @@ spec:
         app: sil-stub
     spec:
       containers:
-        - image: docker-ifs.devops.innovateuk.org/releases/sil-stub:1.1.159
-          name: sil-stub
+        - name: spring-boot-service-container
+          image: sil-stub
           livenessProbe:
             httpGet:
               path: /monitoring/health
