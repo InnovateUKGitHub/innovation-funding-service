@@ -9,14 +9,7 @@ bases:
 
 components:
   - ../../../components/auth/registration-service
-
-  - ../../../components/data-layer/data-service/data-service.yml
-  - ../../../components/data-layer/data-service/data-service-deployment.yml
-  - ../../../components/data-layer/finance-data-service/finance-data-service.yml
-  - ../../../components/data-layer/finance-data-service/finance-data-service-deployment.yml
-  - ../../../components/data-layer/survey-data-service/survey-data-service.yml
-  - ../../../components/data-layer/survey-data-service/survey-data-service-deployment.yml
-
+  - ../../../components/data-layer
   - ../../../components/web-layer
 
 resources:
