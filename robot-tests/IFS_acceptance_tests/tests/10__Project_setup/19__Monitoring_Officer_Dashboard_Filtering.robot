@@ -45,7 +45,7 @@ Monitoring officer can view no results text when none of the projects been assig
     And the user should see the element      jQuery = h2:contains("No results found")
     And page should contain element          jQuery = h2:contains("0 projects")
 
-#  revisit this when working on IFS-10409
+#  revisit when document and spend profile improvements completed
 #Monitoring officer can filter projects based on complete document status
 #    [Documentation]  IFS-9941
 #    Given assign monitoring officer to the projects
