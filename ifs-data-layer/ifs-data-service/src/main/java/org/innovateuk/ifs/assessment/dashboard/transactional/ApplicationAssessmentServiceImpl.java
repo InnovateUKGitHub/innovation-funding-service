@@ -31,7 +31,7 @@ public class ApplicationAssessmentServiceImpl implements ApplicationAssessmentSe
 
     @Override
     public ServiceResult<List<ApplicationAssessmentResource>> getApplicationAssessmentResource(long applicationId) {
-        Set<AssessmentState> allowedStates = EnumSet.of(PENDING, OPEN, ACCEPTED, READY_TO_SUBMIT, SUBMITTED);
+        Set<AssessmentState> allowedStates = EnumSet.of(SUBMITTED);
 
         List<Assessment> assessments = assessmentRepository.findByTargetId(applicationId);
 

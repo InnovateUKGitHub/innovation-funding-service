@@ -341,8 +341,8 @@ public class CrmServiceImpl implements CrmService {
     private SilLoanAssessmentRow setSilAssessmentRow(Application application) {
         SilLoanAssessmentRow row = new SilLoanAssessmentRow();
         Long appId = application.getId();
-        row.setApplicationID(application.getId().intValue());
-        ApplicationAssessmentAggregateResource res = assessorFormInputResponseService.getApplicationAggregateScores(application.getId()).toGetResponse().getSuccess();
+        row.setApplicationID(appId.intValue());
+        ApplicationAssessmentAggregateResource res = assessorFormInputResponseService.getApplicationAggregateScores(appId).toGetResponse().getSuccess();
 
         List<Assessment> assessments
                 = application.getAssessments()
