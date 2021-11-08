@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.AssessmentController;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -147,6 +148,8 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                 ));
     }
 
+
+    @Ignore
     @Test
     public void getTotalScore() throws Exception {
         long assessmentId = 1L;
