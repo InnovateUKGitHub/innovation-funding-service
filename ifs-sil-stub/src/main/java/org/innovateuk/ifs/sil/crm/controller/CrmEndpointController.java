@@ -52,8 +52,16 @@ public class CrmEndpointController {
     }
 
     @PostMapping("/decisionmatrix")
-    public RestResult<Void> updateAssessment(@RequestBody SilLoanAssessment silLoanAssessment) {
-        LOG.info("Stubbing out SIL CRM update loan assessment: " + JsonMappingUtil.toJson(silLoanAssessment));
+    public RestResult<Void> updateApplication(@RequestBody SilLoanAssessment assessment) {
+        LOG.info("Stubbing out SIL CRM update loan assessment endpoint: " + JsonMappingUtil.toJson(assessment));
+
+        if(assessment.getCompetitionID() == null) {
+            LOG.error("competition id is null");
+            return restFailure(HttpStatus.BAD_REQUEST);
+        } else if(assessment.getApplications() == null) {
+            LOG.error("applications is null");
+            return restFailure(HttpStatus.BAD_REQUEST);
+        }
         return restSuccess(HttpStatus.ACCEPTED);
     }
 }
