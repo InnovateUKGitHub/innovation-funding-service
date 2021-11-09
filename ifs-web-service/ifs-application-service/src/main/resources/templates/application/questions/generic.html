@@ -83,12 +83,9 @@
                        th:href="@{https://innovateuk.eu.qualtrics.com/jfe/form/SV_8JtoEompki2GcUS(
                     CompanyName=${model.leadOrganisationName},
                     CompanyNumber=${model.leadOrganisationCompaniesHouseNumber},
-                    IFSApplicationNumber=${model.applicationId})}">Complete the online business survey (opens in a new window)</a>'"
+                    IFSApplicationNumber=${model.applicationId})}">Complete the online business survey (opens in a new window)</a>
                 </div>
             </div>
-            <div class="govuk-hint wysiwyg-styles"
-                 th:if="${(model.questionDescription2 != null) and !model.loanCompetitionAndPartBEnabled}"
-                 ifs:utext="${model.questionDescription2}"/>
             <details th:unless="${#strings.isEmpty(model.questionGuidance)}" class="govuk-details" role="group">
                 <summary th:unless="${#strings.isEmpty(model.questionGuidanceTitle)}" class="govuk-details__summary">
                     <span class="govuk-details__summary-text" th:text="${model.questionGuidanceTitle}">What should I include in the project public description?</span>
