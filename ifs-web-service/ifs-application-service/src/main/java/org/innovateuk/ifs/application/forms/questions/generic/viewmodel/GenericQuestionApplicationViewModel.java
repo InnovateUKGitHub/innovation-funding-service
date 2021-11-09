@@ -67,18 +67,48 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
     private final boolean isLoan;
 
 
-    public GenericQuestionApplicationViewModel(long applicationId, String competitionName ,long questionId, long currentUser,
-                                               String applicationName, String questionName, String questionNumber, String questionSubtitle,
-                                               String questionDescription, String questionDescription2, String questionGuidanceTitle, String questionGuidance,
-                                               QuestionSetupType questionType, boolean questionHasMultipleStatuses, Long textAreaFormInputId,
-                                               Integer wordCount, Integer wordsLeft, Long appendixFormInputId, String appendixGuidance,
-                                               Set<FileTypeCategory> appendixAllowedFileTypes, List<GenericQuestionAppendix> appendices,
-                                               Integer maximumAppendices, Long templateDocumentFormInputId, String templateDocumentTitle,
-                                               String templateDocumentFilename, String templateDocumentResponseFilename, Long templateDocumentResponseFileEntryId,
-                                               ZonedDateTime lastUpdated, String lastUpdatedByName, Long lastUpdatedBy, boolean open,
-                                               boolean complete, boolean leadApplicant, AssignButtonsViewModel assignButtonsViewModel,
-                                               Long multipleChoiceFormInputId, List<MultipleChoiceOptionResource> multipleChoiceOptions, MultipleChoiceOptionResource selectedMultipleChoiceOption,
-                                               String leadOrganisationName, String leadOrganisationCompaniesHouseNumber, boolean loansPartBEnabled, String salesForceURL, boolean isLoan) {
+    public GenericQuestionApplicationViewModel(long applicationId,
+                                               String competitionName,
+                                               long questionId,
+                                               long currentUser,
+                                               String applicationName,
+                                               String questionName,
+                                               String questionNumber,
+                                               String questionSubtitle,
+                                               String questionDescription,
+                                               String questionDescription2,
+                                               String questionGuidanceTitle,
+                                               String questionGuidance,
+                                               QuestionSetupType questionType,
+                                               boolean questionHasMultipleStatuses,
+                                               Long textAreaFormInputId,
+                                               Integer wordCount,
+                                               Integer wordsLeft,
+                                               Long appendixFormInputId,
+                                               String appendixGuidance,
+                                               Set<FileTypeCategory> appendixAllowedFileTypes,
+                                               List<GenericQuestionAppendix> appendices,
+                                               Integer maximumAppendices,
+                                               Long templateDocumentFormInputId,
+                                               String templateDocumentTitle,
+                                               String templateDocumentFilename,
+                                               String templateDocumentResponseFilename,
+                                               Long templateDocumentResponseFileEntryId,
+                                               ZonedDateTime lastUpdated,
+                                               String lastUpdatedByName,
+                                               Long lastUpdatedBy,
+                                               boolean open,
+                                               boolean complete,
+                                               boolean leadApplicant,
+                                               AssignButtonsViewModel assignButtonsViewModel,
+                                               Long multipleChoiceFormInputId,
+                                               List<MultipleChoiceOptionResource> multipleChoiceOptions,
+                                               MultipleChoiceOptionResource selectedMultipleChoiceOption,
+                                               String leadOrganisationName,
+                                               String leadOrganisationCompaniesHouseNumber,
+                                               boolean loansPartBEnabled,
+                                               String salesForceURL,
+                                               boolean isLoan) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.questionId = questionId;
@@ -587,22 +617,22 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
             return this;
         }
 
-        public GenericQuestionApplicationViewModelBuilder withLeadOrganisationName(String leadOrganisationName){
+        public GenericQuestionApplicationViewModelBuilder withLeadOrganisationName(String leadOrganisationName) {
             this.leadOrganisationName = leadOrganisationName;
             return this;
         }
 
-        public GenericQuestionApplicationViewModelBuilder withLeadOrganisationCompaniesHouseNumber(String leadOrganisationCompaniesHouseNumber){
+        public GenericQuestionApplicationViewModelBuilder withLeadOrganisationCompaniesHouseNumber(String leadOrganisationCompaniesHouseNumber) {
             this.leadOrganisationCompaniesHouseNumber = leadOrganisationCompaniesHouseNumber;
             return this;
         }
 
-        public GenericQuestionApplicationViewModelBuilder withLoansPartBEnabled(boolean loansPartBEnabled){
+        public GenericQuestionApplicationViewModelBuilder withLoansPartBEnabled(boolean loansPartBEnabled) {
             this.loansPartBEnabled = loansPartBEnabled;
             return this;
         }
 
-        public GenericQuestionApplicationViewModelBuilder withLoansFormQuestionsSalesForceURL(String salesForceURL){
+        public GenericQuestionApplicationViewModelBuilder withLoansFormQuestionsSalesForceURL(String salesForceURL) {
             this.salesForceURL = salesForceURL;
             return this;
         }
@@ -621,6 +651,5 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                     open, complete, leadApplicant, assignButtonsViewModel, multipleChoiceFormInputId, multipleChoiceOptions, selectedMultipleChoiceOption,
                     leadOrganisationName, leadOrganisationCompaniesHouseNumber, loansPartBEnabled, salesForceURL, isLoan);
         }
-
     }
 }
