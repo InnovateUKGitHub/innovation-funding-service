@@ -92,8 +92,10 @@ The user can complete the Overview of business and financial information Content
     [Documentation]    IFS-10753
     Given log in as a different user               &{lead_applicant_credentials}
     When The user clicks the button/link           link = Loan Application
+    And The user clicks the button/link            link = Review and submit
+    And The user clicks the button/link            id = submit-application-button
     And The user clicks the button/link            link = View application
-    And the user clicks the button/link            link = Business and financial information
+    And the user clicks the button/link            id = accordion-questions-heading-1-1
     Then the user should see the overview of business and financial information
 
 Loan application shows correct T&C's
@@ -391,3 +393,5 @@ the user should see qualtrics survey fields
     the user should see the element     xpath = //span[contains(text(),'60674010')]
     the user should see the element     xpath = //span[contains(text(),'${loanApplicationID}')]
 
+the user should see the overview of business and financial information
+    the user should see the element     id = accordion-questions-heading-1-1
