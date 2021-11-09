@@ -35,6 +35,8 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...
 ...             IFS-9679 MO Spend profile: IFS Admin only to be able to approve or reject spend profiles
 ...
+...             IFS-10753 Loans - Application Overview business and financial information Content
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -85,6 +87,14 @@ The user can complete the business and financial information application questio
     When the user clicks the button/link           id = application-question-complete
     And the user clicks the button/link            link = Back to application overview
     Then the user should see the element           jQuery = div:contains("Business and financial information") ~ .task-status-complete
+
+The user can complete the Overview of business and financial information Content
+    [Documentation]    IFS-10753
+    Given log in as a different user               &{lead_applicant_credentials}
+    When The user clicks the button/link           link = Loan Application
+    And The user clicks the button/link            link = View application
+    And the user clicks the button/link            link = Business and financial information
+    Then the user should see the overview of business and financial information
 
 Loan application shows correct T&C's
     [Documentation]    IFS-6205  IFS-9483  IFS-9716
@@ -380,3 +390,4 @@ the user should see qualtrics survey fields
     the user should see the element     xpath = //span[contains(text(),'${EMPIRE_LTD_NAME}')]
     the user should see the element     xpath = //span[contains(text(),'60674010')]
     the user should see the element     xpath = //span[contains(text(),'${loanApplicationID}')]
+
