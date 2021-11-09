@@ -24,3 +24,11 @@ dependencies {
 }
 project.version = nexusVersion
 deploy.dependsOn ":ifs-auth-service:ifs-ldap-service:deploy"
+
+sourceSets {
+    main {
+        resources {
+            srcDirs = ["src/main/resource", "../shared-resources"]
+        }
+    }
+}

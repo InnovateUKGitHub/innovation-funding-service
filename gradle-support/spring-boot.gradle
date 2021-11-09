@@ -14,6 +14,13 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-web"
 
+    //Sleuth
+    compile "org.springframework.cloud:spring-cloud-starter-sleuth:3.0.4"
+
+    // logstash
+    compile "net.logstash.logback:logstash-logback-encoder:5.3"
+    compile "ch.qos.logback:logback-core:1.2.3"
+
     testCompile 'org.springframework.boot:spring-boot-starter-test'
 }
 
