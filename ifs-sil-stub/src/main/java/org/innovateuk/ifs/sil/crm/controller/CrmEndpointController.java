@@ -51,5 +51,9 @@ public class CrmEndpointController {
         return restSuccess(HttpStatus.ACCEPTED);
     }
 
-
+    @PostMapping("/decisionmatrix")
+    public RestResult<Void> updateAssessment(@RequestBody SilLoanAssessment silLoanAssessment) {
+        LOG.info("Stubbing out SIL CRM update loan assessment: " + JsonMappingUtil.toJson(silLoanAssessment));
+        return restSuccess(HttpStatus.ACCEPTED);
+    }
 }
