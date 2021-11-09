@@ -41,7 +41,7 @@ Comp admin can view Hesta competition type in Initial details read only view
 
 Comp admin creates Hesta competition
     [Documentation]  IFS-8751
-    Given the user clicks the button/link                             link = Back to competition details
+    Given the user clicks the button/link                            link = Back to competition details
     Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  GRANT  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
 
@@ -56,16 +56,18 @@ Lead applicant can submit application
 Lead applicant should get a confirmation email after application submission
     [Documentation]    IFS-10694
     Given Requesting IDs of this application    ${hestaApplicationName}
-    Then the user reads his email     ${leadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
+    Then the user reads his email               ${leadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
 
 The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
     [Documentation]  IFS-10697
-    Given Log in as a different user                                               &{Comp_admin1_credentials}
-    And Requesting IDs of this competition                                         ${hestaCompetitionName}
-    And Competition admin creates an assessment period
-    When the internal team mark the application as successful / unsuccessful       ${hestaCompetitionName}   FUNDED
-    And Log in as a different user                                                 email=${leadApplicantEmail}   password=${short_password}
+    Given Log in as a different user                                                &{Comp_admin1_credentials}
+    And Requesting IDs of this competition                                          ${hestaCompetitionName}
+    And Competition admin creates an assessment period                              ${competitionId}
+    When the internal team mark the application as successful / unsuccessful        ${hestaApplicationName}   FUNDED
+    And Log in as a different user                                                  email=${leadApplicantEmail}   password=${short_password}
     Then the application summary page must not include the reopen application link
+    And the user should see the element                                            jQuery = h1:contains("Application status")
+    And the user is presented with the Application Summary page
 
 Lead applicant receives email notifiction when internal user marks application unsuccessful
     [Documentation]  IFS-10695
@@ -78,12 +80,9 @@ Lead applicant receives email notifiction when internal user marks application u
     When the internal team mark the application as successful / unsuccessful        ${newHestaApplicationName}   UNFUNDED
     And the user clicks the button/link                                             link = Competition
     And Requesting IDs of this application                                          ${newHestaApplicationName}
-    And the internal team notifies all applicants
+    And the internal team notifies all applicants                                   ${ApplicationID}
     Then the user reads his email                                                   ${newLeadApplicantEmail}  ${ApplicationID}: ${hestaApplicationUnsuccessfulEmailSubject}  ${hestaApplicationUnsuccessfulEmail}
-    Given the user should see the element                                           jQuery = h1:contains("Application status")
-    When Requesting IDs of this application
-    Then the user is presented with the Application Summary page
-    And the user reads his email                                                    ${newLeadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
+
 
 *** Keywords ***
 the user can view Hesta competition type in Initial details read only view
@@ -171,7 +170,8 @@ the internal team mark the application as successful / unsuccessful
     the user clicks the button/link     css = [type="submit"][value="${decision}"]
 
 the internal team notifies all applicants
-    the user clicks the button/link                      link = Manage funding notifications
+    [Arguments]  ${ApplicationID}
+    the user clicks the button/link                      link = Send notification and release feedback
     the user clicks the button/link                      id = app-row-${ApplicationID}
     the user clicks the button/link                      id = write-and-send-email
     the user clicks the button/link                      id = send-email-to-all-applicants
