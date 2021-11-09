@@ -6,9 +6,8 @@ bases:
   - ../local-base
 
 components:
-
   - ../../../../components/data-layer
   - ../../../../components/web-layer
-
+  - ../../../../components/sil-stub
   - ../../../../patches/
   - ../patches/
