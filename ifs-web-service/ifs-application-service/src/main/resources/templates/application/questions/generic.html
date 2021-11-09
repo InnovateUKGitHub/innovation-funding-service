@@ -68,8 +68,14 @@
 
         <th:block th:unless="${model.readOnly}">
             <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}" ifs:utext="${model.questionDescription}"/>
-            <th:block th:unless="${model.isLoansPartBEnabled()}">
-                <div th:if="${model.questionType == model.getLoansBusinessAndFinancialInformation()}" class="govuk-body">
+            <div th:if="${model.questionType == model.getLoansBusinessAndFinancialInformation()}" class="govuk-body">
+               <div th:if="${model.isLoansPartBEnabled()}">
+                   <a class="govuk-button"
+                      target="_blank"
+                      th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}" value="open-salesforce"
+                      type="Continue">Continue (opens in new tab)</a>
+                </div>
+                <div th:unless="${model.isLoansPartBEnabled()}">
                     <a class="govuk-link"
                        target="_blank"
                        th:href="@{https://innovateuk.eu.qualtrics.com/jfe/form/SV_8JtoEompki2GcUS(
@@ -77,7 +83,7 @@
                     CompanyNumber=${model.leadOrganisationCompaniesHouseNumber},
                     IFSApplicationNumber=${model.applicationId})}">Complete the online business survey (opens in a new window)</a>
                 </div>
-            </th:block>
+            </div>
             <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription2 != null}" ifs:utext="${model.questionDescription2}"/>
             <details th:unless="${#strings.isEmpty(model.questionGuidance)}" class="govuk-details" role="group">
                 <summary th:unless="${#strings.isEmpty(model.questionGuidanceTitle)}" class="govuk-details__summary">

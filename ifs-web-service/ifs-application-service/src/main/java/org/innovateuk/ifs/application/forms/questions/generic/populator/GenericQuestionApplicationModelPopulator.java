@@ -41,6 +41,9 @@ public class GenericQuestionApplicationModelPopulator {
     @Value("${ifs.loan.partb.enabled}")
     private boolean ifsLoanPartBEnabled;
 
+    @Value("${ifs.loans.salesforce.page.url}")
+    private String salesForceURL;
+
     public GenericQuestionApplicationViewModel populate(ApplicantQuestionResource applicantQuestion, Optional<Long> organisationId) {
         Map<FormInputType, ApplicantFormInputResource> formInputs = applicantQuestion.getApplicantFormInputs()
                 .stream()
@@ -87,6 +90,7 @@ public class GenericQuestionApplicationModelPopulator {
                 .withLeadOrganisationName(leadOrganisation.getName())
                 .withLeadOrganisationCompaniesHouseNumber(leadOrganisation.getCompaniesHouseNumber())
                 .withLoansPartBEnabled(ifsLoanPartBEnabled)
+                .withLoansFormQuestionsSalesForceURL(salesForceURL)
                 .build();
     }
 
