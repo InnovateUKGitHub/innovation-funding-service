@@ -74,10 +74,8 @@
                  ifs:utext="${model.questionDescription2}"/>
             <div th:if="${model.questionType == model.getLoansBusinessAndFinancialInformation()}" class="govuk-body">
                 <div th:if="${model.isLoansPartBEnabled()}">
-                    <a class="govuk-button"
-                       target="_blank"
-                       th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}" value="open-salesforce"
-                       type="Continue">Continue (opens in new tab)</a>
+                    <a href="@{${model.getLoansQuestionsFormSalesForceURL()}}" role="button" class="govuk-button" data-module="govuk-button" target="_blank">
+                        Continue (opens in new tab) </a>
                 </div>
                 <div th:unless="${model.isLoansPartBEnabled()}">
                     <a class="govuk-link"
@@ -101,7 +99,7 @@
             </details>
         </th:block>
 
-        <th:block th:if="${model.complete and model.loanCompetitionAndPartBEnabled}">
+        <th:block th:if="${model.complete and model.isLoansPartBEnabled()}">
             <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}"
                  ifs:utext="${model.questionDescription}"/>
             <div class="govuk-hint wysiwyg-styles"
@@ -110,10 +108,8 @@
                 <p>At any stage, you can return here to carry on editing incomplete form.</p>
             </div>
             <div>
-                <a class="govuk-button"
-                   target="_blank"
-                   th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}" value="open-salesforce"
-                   type="Continue">Continue (opens in new tab)</a>
+                <a href="@{${model.getLoansQuestionsFormSalesForceURL()}}" role="button" class="govuk-button" data-module="govuk-button" target="_blank">
+                    Continue (opens in new tab) </a>
             </div>
         </th:block>
 
