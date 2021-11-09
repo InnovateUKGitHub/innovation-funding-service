@@ -9,7 +9,11 @@ bases:
 
 components:
   - ../../../components/auth/registration-service
-  - ../../../components/data-layer
+
+  - ../../../components/data-layer/data-service/
+  - ../../../components/data-layer/finance-data-service/
+  - ../../../components/data-layer/survey-data-service/
+
   - ../../../components/web-layer
 
 resources:
