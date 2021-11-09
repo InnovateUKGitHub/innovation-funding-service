@@ -70,7 +70,7 @@
             <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}"
                  ifs:utext="${model.questionDescription}"/>
             <div class="govuk-hint wysiwyg-styles"
-                 th:if="${(model.questionDescription2 != null) and model.loanCompetitionAndPartBEnabled}"
+                 th:if="${(model.questionDescription2 != null) and model.isLoansPartBEnabled()}"
                  ifs:utext="${model.questionDescription2}"/>
             <div th:if="${model.questionType == model.getLoansBusinessAndFinancialInformation()}" class="govuk-body">
                 <div th:if="${model.isLoansPartBEnabled()}">
@@ -99,8 +99,7 @@
         <th:block th:if="${model.complete and model.isLoansPartBEnabled()}">
             <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}"
                  ifs:utext="${model.questionDescription}"/>
-            <div class="govuk-hint wysiwyg-styles"
-                 th:if="${(model.questionDescription2 != null) and model.loanCompetitionAndPartBEnabled}">
+            <div class="govuk-hint wysiwyg-styles">
                 <p><strong>Edit the online business survey</strong></p>
                 <p>At any stage, you can return here to carry on editing incomplete form.</p>
             </div>
