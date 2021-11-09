@@ -107,7 +107,6 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                                                String leadOrganisationCompaniesHouseNumber,
                                                boolean loansPartBEnabled,
                                                String salesForceURL) {
-        ) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.questionId = questionId;
