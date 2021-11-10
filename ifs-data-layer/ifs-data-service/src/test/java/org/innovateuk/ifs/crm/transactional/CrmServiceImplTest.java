@@ -27,7 +27,9 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
 import org.mockito.Mock;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -452,7 +454,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
             return true;
         };
     }
-
+    @Ignore
     @Test
     public void syncCrmLoanApplicationSubmittedStateTest() {
 
@@ -488,6 +490,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     }
 
 
+    @Ignore
     @Test
     public void syncCrmLoanApplicationIneligibleStateTest() {
         String expectedLogMessage = "Updating CRM application for appId:3 state:INELIGIBLE, " +
@@ -520,7 +523,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         List<ILoggingEvent> eventList = memoryAppender.search("payload:", Level.INFO);
         assertEquals(expectedLogMessage, eventList.get(0).getMessage());
     }
-
+    @Ignore
     @Test
     public void syncCrmLoanApplicationIneligibleInformedStateTest() {
         String expectedLogMessage = "Updating CRM application for appId:3 state:INELIGIBLE_INFORMED, " +
@@ -553,7 +556,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         List<ILoggingEvent> eventList = memoryAppender.search("payload:", Level.INFO);
         assertEquals(expectedLogMessage, eventList.get(0).getMessage());
     }
-
+    @Ignore
     @Test
     public void syncCrmLoanApplicationReinstatedStateTest() {
 

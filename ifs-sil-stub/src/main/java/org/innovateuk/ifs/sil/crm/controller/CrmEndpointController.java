@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 
+
 /**
  * A simple endpoint to allow stubbing of the SIL outbound CRM updates.
  */
@@ -31,15 +32,15 @@ public class CrmEndpointController {
     public RestResult<Void> updateApplication(@RequestBody SilLoanApplication application) {
         LOG.info("Stubbing out SIL CRM update application endpoint: " + JsonMappingUtil.toJson(application));
 
-        if(application.getApplicationID() == null) {
+        if (application.getApplicationID() == null) {
             LOG.error("application id is null");
             return restFailure(HttpStatus.BAD_REQUEST);
-        } else if(application.getMarkedIneligible() != null &&                  // update eligibility
+        } else if (application.getMarkedIneligible() != null &&                  // update eligibility
                 (application.getEligibilityStatusChangeDate() == null ||
                         application.getEligibilityStatusChangeSource() == null)) {
             LOG.error("update eligibility is incomplete");
             return restFailure(HttpStatus.BAD_REQUEST);
-        } else if(application.getMarkedIneligible() == null &&                  // update application detail
+        } else if (application.getMarkedIneligible() == null &&                  // update application detail
                 (application.getProjectTotalCost() == null &&
                         application.getProjectOtherFunding() == null)) {
             LOG.error("update application detail is incomplete");
@@ -47,5 +48,6 @@ public class CrmEndpointController {
         }
         return restSuccess(HttpStatus.ACCEPTED);
     }
+
 
 }

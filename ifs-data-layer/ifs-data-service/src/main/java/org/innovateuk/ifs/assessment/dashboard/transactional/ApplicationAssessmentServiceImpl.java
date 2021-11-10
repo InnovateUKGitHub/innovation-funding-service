@@ -52,6 +52,8 @@ public class ApplicationAssessmentServiceImpl implements ApplicationAssessmentSe
                 leadOrganisation.get().getName(),
                 assessment.getProcessState(),
                 getOverallScore(assessment),
+                0,
+                0,
                 getRecommended(assessment));
     }
 

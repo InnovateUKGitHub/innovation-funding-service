@@ -11,6 +11,13 @@ build:
         project: ifs-data-layer:ifs-data-service
         args:
           - "-DskipTests"
+    - image: sil-stub
+      context: .
+      jib:
+        type: gradle
+        project: ifs-sil-stub
+        args:
+          - "-DskipTests"
     - image: finance-data-service
       context: .
       jib:

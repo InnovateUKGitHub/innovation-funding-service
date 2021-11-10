@@ -7,6 +7,7 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerDashboardPageResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
+import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerDashboardForm;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerDashboardViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerSummaryViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -173,6 +174,17 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
         monitoringOfficerDashboardPageResource.setTotalElements(projectResourceList.size());
         monitoringOfficerDashboardPageResource.setTotalPages(1);
 
+        MonitoringOfficerDashboardForm monitoringOfficerDashboardForm = new MonitoringOfficerDashboardForm();
+        monitoringOfficerDashboardForm.setKeywordSearch("Competition name");
+        monitoringOfficerDashboardForm.setProjectInSetup(true);
+        monitoringOfficerDashboardForm.setPreviousProject(true);
+        monitoringOfficerDashboardForm.setDocumentsComplete(true);
+        monitoringOfficerDashboardForm.setDocumentsIncomplete(false);
+        monitoringOfficerDashboardForm.setDocumentsAwaitingReview(true);
+        monitoringOfficerDashboardForm.setSpendProfileComplete(true);
+        monitoringOfficerDashboardForm.setSpendProfileIncomplete(false);
+        monitoringOfficerDashboardForm.setSpendProfileAwaitingReview(false);
+
         when(monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(), 0, 10, "Competition name", true, true))
                 .thenReturn(restSuccess(monitoringOfficerDashboardPageResource));
         when(projectFilterPopulator.getProjectsWithDocumentsComplete(projectResourceList)).thenReturn(singletonList(projectResourceList.get(1)));
@@ -200,7 +212,7 @@ public class MonitoringOfficerDashboardViewModelPopulatorTest {
         when(projectFilterPopulator.hasSpendProfileSection(projectResourceList.get(0))).thenReturn(true);
         when(projectFilterPopulator.hasSpendProfileSection(projectResourceList.get(1))).thenReturn(true);
 
-        MonitoringOfficerDashboardViewModel viewModel = populator.populate(user, "Competition name", true, true, true, false, true, true, false, false, 0, 10);
+        MonitoringOfficerDashboardViewModel viewModel = populator.populate(user, monitoringOfficerDashboardForm, 0, 10);
 
         assertEquals(2, viewModel.getProjects().size());
 

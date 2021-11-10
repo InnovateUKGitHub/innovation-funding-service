@@ -6,6 +6,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerDashboardPageResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
+import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerDashboardForm;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.*;
 import org.innovateuk.ifs.project.navigation.Pagination;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -66,35 +66,27 @@ public class MonitoringOfficerDashboardViewModelPopulator {
     }
 
     public MonitoringOfficerDashboardViewModel populate(UserResource user,
-                                                        String keywordSearch,
-                                                        boolean projectInSetup,
-                                                        boolean previousProject,
-                                                        boolean documentsComplete,
-                                                        boolean documentsIncomplete,
-                                                        boolean documentsAwaitingReview,
-                                                        boolean spendProfileComplete,
-                                                        boolean spendProfileIncomplete,
-                                                        boolean spendProfileAwaitingReview,
+                                                        MonitoringOfficerDashboardForm form,
                                                         int pageNumber, int pageSize) {
 
         MonitoringOfficerDashboardPageResource monitoringOfficerDashboardPageResource = monitoringOfficerRestService.filterProjectsForMonitoringOfficer(user.getId(),
-                pageNumber, pageSize, keywordSearch, projectInSetup, previousProject).getSuccess();
+                pageNumber, pageSize, form.getKeywordSearch(), form.isProjectInSetup(), form.isPreviousProject()).getSuccess();
 
         List<ProjectResource> projectsFilteredByState = monitoringOfficerDashboardPageResource.getContent();
 
         if (moDashboardFilterEnabled) {
-            if (documentsComplete || documentsIncomplete || documentsAwaitingReview) {
+            if (form.isDocumentsComplete() || form.isDocumentsIncomplete() || form.isDocumentsAwaitingReview()) {
                 projectsFilteredByState = projectsFilteredByDocuments(projectsFilteredByState
-                        , documentsComplete
-                        , documentsIncomplete
-                        , documentsAwaitingReview);
+                        , form.isDocumentsComplete()
+                        , form.isDocumentsIncomplete()
+                        , form.isDocumentsAwaitingReview());
             }
 
-            if (spendProfileComplete || spendProfileIncomplete || spendProfileAwaitingReview) {
+            if (form.isSpendProfileComplete() || form.isDocumentsIncomplete() || form.isDocumentsAwaitingReview()) {
                 projectsFilteredByState = projectsFilteredBySpendProfile(projectsFilteredByState
-                        , spendProfileComplete
-                        , spendProfileIncomplete
-                        , spendProfileAwaitingReview);
+                        , form.isSpendProfileComplete()
+                        , form.isSpendProfileIncomplete()
+                        , form.isSpendProfileAwaitingReview());
             }
         }
 
