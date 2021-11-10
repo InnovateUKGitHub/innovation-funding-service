@@ -65,6 +65,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfig
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDING;
+import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.HESTA_FUNDING;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
@@ -395,6 +396,94 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
         when(notificationService.sendNotificationWithFlush(createSimpleNotificationExpectations(expectedFundingNotification), eq(EMAIL))).thenReturn(serviceSuccess());
         when(applicationService.setApplicationFundingEmailDateTime(any(Long.class), any(ZonedDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
+        when(competitionService.manageInformState(competition.getId())).thenReturn(serviceSuccess());
+
+        when(applicationWorkflowHandler.notifyFromApplicationState(any(), any())).thenReturn(true);
+        ServiceResult<Void> result = service.notifyApplicantsOfFundingDecisions(fundingNotificationResource);
+        assertTrue(result.isSuccess());
+
+        verify(notificationService).sendNotificationWithFlush(createSimpleNotificationExpectations(expectedFundingNotification), eq(EMAIL));
+        verifyNoMoreInteractions(notificationService);
+
+        verify(applicationService).setApplicationFundingEmailDateTime(eq(application1.getId()), any(ZonedDateTime.class));
+        verify(applicationService).setApplicationFundingEmailDateTime(eq(application2.getId()), any(ZonedDateTime.class));
+        verifyNoMoreInteractions(applicationService);
+    }
+
+    @Test
+    public void testNotifyAllApplicantsOfFundingDecisions_hesta() {
+        CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
+        Competition competition = newCompetition()
+                .withCompetitionAssessmentConfig(competitionAssessmentConfig)
+                .withFundingType(FundingType.GRANT)
+                .withCompetitionType(newCompetitionType()
+                        .withName("Hesta")
+                        .build())
+                .build();
+
+        Application application1 = newApplication()
+                .withActivityState(ApplicationState.SUBMITTED)
+                .withCompetition(competition)
+                .build();
+        Application application2 = newApplication()
+                .withActivityState(ApplicationState.SUBMITTED)
+                .withCompetition(competition)
+                .build();
+
+        User application1LeadApplicant = newUser().build();
+        User application1Collaborator = newUser().build();
+        User application1Assessor = newUser().build();
+        User application2LeadApplicant = newUser().build();
+        User application2Collaborator = newUser().build();
+        User application2Assessor = newUser().build();
+
+        List<ProcessRole> allProcessRoles = newProcessRole().
+                withUser(application1LeadApplicant, application1Collaborator, application1Assessor,
+                        application2LeadApplicant, application2Collaborator, application2Assessor).
+                withApplication(application1, application1, application1, application2, application2, application2).
+                withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR, ProcessRoleType.ASSESSOR,
+                        ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR, ProcessRoleType.ASSESSOR).
+                build(6);
+
+        UserNotificationTarget application1LeadApplicantTarget = new UserNotificationTarget(application1LeadApplicant.getName(),
+                application1LeadApplicant.getEmail());
+        UserNotificationTarget application2LeadApplicantTarget = new UserNotificationTarget(application2LeadApplicant.getName(),
+                application2LeadApplicant.getEmail());
+        UserNotificationTarget application1CollaboratorTarget = new UserNotificationTarget(application1Collaborator.getName(),
+                application1Collaborator.getEmail());
+        UserNotificationTarget application2CollaboratorTarget = new UserNotificationTarget(application2Collaborator.getName(),
+                application2Collaborator.getEmail());
+        List<NotificationTarget> expectedApplicants = newArrayList(application1LeadApplicantTarget, application2LeadApplicantTarget,
+                application1CollaboratorTarget, application2CollaboratorTarget);
+
+        Map<Long, FundingDecision> decisions = MapFunctions.asMap(
+                application1.getId(), FundingDecision.FUNDED,
+                application2.getId(), FundingDecision.UNFUNDED);
+        FundingNotificationResource fundingNotificationResource = new FundingNotificationResource("The message body.", decisions);
+
+        Notification expectedFundingNotification =
+                new Notification(systemNotificationSource, expectedApplicants
+                        .stream()
+                        .map(NotificationMessage::new)
+                        .collect(Collectors.toList()), HESTA_FUNDING, emptyMap());
+
+        List<Long> applicationIds = newArrayList(application1.getId(), application2.getId());
+        List<Application> applications = newArrayList(application1, application2);
+        when(applicationRepository.findAllById(applicationIds)).thenReturn(applications);
+
+        newArrayList(application1, application2).forEach(application ->
+                when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application))
+        );
+
+        allProcessRoles.forEach(processRole ->
+                when(processRoleRepository.findByApplicationIdAndRole(processRole.getApplicationId(), processRole.getRole()))
+                        .thenReturn(singletonList(processRole))
+        );
+
+        when(notificationService.sendNotificationWithFlush(createSimpleNotificationExpectations(expectedFundingNotification), eq(EMAIL)))
+                .thenReturn(serviceSuccess());
+        when(applicationService.setApplicationFundingEmailDateTime(any(Long.class), any(ZonedDateTime.class)))
+                .thenReturn(serviceSuccess(new ApplicationResource()));
         when(competitionService.manageInformState(competition.getId())).thenReturn(serviceSuccess());
 
         when(applicationWorkflowHandler.notifyFromApplicationState(any(), any())).thenReturn(true);
