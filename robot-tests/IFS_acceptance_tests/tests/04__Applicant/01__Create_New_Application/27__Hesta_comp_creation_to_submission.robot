@@ -1,6 +1,9 @@
 *** Settings ***
 Documentation     IFS-10694 Hesta - Email notification content for application submission
+...
 ...               IFS-10688 Hesta - Create competition type hesta
+...
+...               IFS-10695 Hesta - Email notification content for unsuccessfull application
 ...
 ...               IFS-10697 Hesta - Application Submission confirmation page
 ...
@@ -12,12 +15,16 @@ Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
-${assessorEmail}                             another.person@gmail.com
-${hestaCompTypeSelector}                     dt:contains("Competition type") ~ dd:contains("${compType_HESTA}")
-${hestaApplicationName}                      hesta application
-${newLeadApplicantEmail}                     tim.timmy@heukar.com
-${hestaApplicationSubmissionEmailSubject}    confirmation of your Horizon Europe UK Application Registration
-${hestaApplicationSubmissionEmail}           We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
+${hestaCompTypeSelector}                        dt:contains("Competition type") ~ dd:contains("${compType_HESTA}")
+${hestaApplicationName}                         Hesta application
+${newHestaApplicationName}                      NEW Hesta application
+${leadApplicantEmail}                           tim.timmy@heukar.com
+${newLeadApplicantEmail}                        barry.barrington@heukar.com
+${hestaApplicationSubmissionEmailSubject}       confirmation of your Horizon Europe UK Application Registration
+${hestaApplicationUnsuccessfulEmailSubject}     update about your Horizon Europe UK Application Registration for government-backed funding
+${hestaApplicationSubmissionEmail}              We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
+${hestaApplicationUnsuccessfulEmail}            We have been advised you were unsuccessful in your grant application for Horizon Europe funding from The European Commission
+${assessorEmail}                                another.person@gmail.com
 
 *** Test Cases ***
 Comp admin can select the competition type option Hesta in Initial details on competition setup
@@ -34,32 +41,48 @@ Comp admin can view Hesta competition type in Initial details read only view
 
 Comp admin creates Hesta competition
     [Documentation]  IFS-8751
-    Given the user clicks the button/link                             link = Back to competition details
+    Given the user clicks the button/link                            link = Back to competition details
     Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  GRANT  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
 
 Lead applicant can submit application
     [Documentation]  IFS-8751
     Given the user logs out if they are logged in
-    When the user successfully completes application
+    When the user successfully completes application          tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
     And the user clicks the button/link                       link = Your project finances
     Then the user marks the finances as complete              ${hestaApplicationName}  labour costs  54,000  no
     Then the user can submit the application
 
 Lead applicant should get a confirmation email after application submission
     [Documentation]    IFS-10694
-    Given the user should see the element       jQuery = h1:contains("Application status")
-    When Requesting IDs of this application
-    Then the user is presented with the Application Summary page
-    And the user reads his email     ${newLeadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
+    Given Requesting IDs of this application    ${hestaApplicationName}
+    Then the user reads his email               ${leadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
 
 The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
     [Documentation]  IFS-10697
-    [Setup]  Requesting IDs of this competition
-    Given Competition admin creates an assessment period                            ${competitionId}
-    When the internal team mark the application as successful
-    And Log in as a different user                                                  email=${newLeadApplicantEmail}    password=${short_password}
+    Given Log in as a different user                                                &{Comp_admin1_credentials}
+    And Requesting IDs of this competition                                          ${hestaCompetitionName}
+    And Competition admin creates an assessment period                              ${competitionId}
+    When the internal team mark the application as successful / unsuccessful        ${hestaApplicationName}   FUNDED
+    And Log in as a different user                                                  email=${leadApplicantEmail}   password=${short_password}
     Then the application summary page must not include the reopen application link
+    And the user should see the element                                            jQuery = h1:contains("Application status")
+    And the user is presented with the Application Summary page
+
+Lead applicant receives email notifiction when internal user marks application unsuccessful
+    [Documentation]  IFS-10695
+    Given the user logs out if they are logged in
+    And the user successfully completes application                                 barry   barrington   ${newLeadApplicantEmail}   ${newHestaApplicationName}
+    And the user clicks the button/link                                             link = Your project finances
+    And the user marks the finances as complete                                     ${newHestaApplicationName}  labour costs  54,000  no
+    And the user can submit the application
+    And log in as a different user                                                  &{Comp_admin1_credentials}
+    When the internal team mark the application as successful / unsuccessful        ${newHestaApplicationName}   UNFUNDED
+    And the user clicks the button/link                                             link = Competition
+    And Requesting IDs of this application                                          ${newHestaApplicationName}
+    And the internal team notifies all applicants                                   ${ApplicationID}
+    Then the user reads his email                                                   ${newLeadApplicantEmail}  ${ApplicationID}: ${hestaApplicationUnsuccessfulEmailSubject}  ${hestaApplicationUnsuccessfulEmail}
+
 
 *** Keywords ***
 the user can view Hesta competition type in Initial details read only view
@@ -86,10 +109,12 @@ the competition admin creates Hesta competition
     the user should see the element                         jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
 Requesting IDs of this application
-    ${ApplicationID} =  get application id by name    ${hestaApplicationName}
+    [Arguments]  ${applicationName}
+    ${ApplicationID} =  get application id by name    ${applicationName}
     Set suite variable    ${ApplicationID}
 
 Requesting IDs of this competition
+    [Arguments]  ${competitionName}
     ${competitionId} =  get comp id from comp title  ${hestaCompetitionName}
     Set suite variable  ${competitionId}
 
@@ -99,6 +124,7 @@ user selects where is organisation based
     the user clicks the button/link       id = international-organisation-cta
 
 the user successfully completes application
+    [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
     the user select the competition and starts application          ${hestaCompetitionName}
     the user clicks the button/link                                 link = Continue and create an account
     user selects where is organisation based                        isNotInternational
@@ -106,13 +132,13 @@ the user successfully completes application
     the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House            ASOS  ASOS PLC
     the user should be redirected to the correct page               ${SERVER}/registration/register
-    the user enters the details and clicks the create account       tim  timmy  ${newLeadApplicantEmail}  ${short_password}
-    the user reads his email and clicks the link                    ${newLeadApplicantEmail}  Please verify your email address  Once verified you can sign into your account.
+    the user enters the details and clicks the create account       ${firstName}  ${lastName}  ${email}  ${short_password}
+    the user reads his email and clicks the link                    ${email}  Please verify your email address  Once verified you can sign into your account.
     the user should be redirected to the correct page               ${REGISTRATION_VERIFIED}
     the user clicks the button/link                                 link = Sign in
-    Logging in and Error Checking                                   ${newLeadApplicantEmail}  ${short_password}
+    Logging in and Error Checking                                   ${email}  ${short_password}
     the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user completes the application details section              ${hestaApplicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
+    the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team
     the user completes the application research category            Feasibility studies
     the lead applicant fills all the questions and marks as complete(Hesta)
@@ -136,11 +162,21 @@ the user is presented with the Application Summary page
     the user should not see the element      jQuery = h3:contains("Decision notification")
     the user should not see the element      jQuery = p:contains("Application feedback will be provided by")
 
-the internal team mark the application as successful
+the internal team mark the application as successful / unsuccessful
+    [Arguments]   ${applicationName}   ${decision}
     the user navigates to the page      ${server}/management/competition/${competitionId}
     the user clicks the button/link     link = Input and review funding decision
-    the user clicks the button/link     jQuery = tr:contains("${hestaApplicationName}") label
-    the user clicks the button/link     css = [type="submit"][value="FUNDED"]
+    the user clicks the button/link     jQuery = tr:contains("${applicationName}") label
+    the user clicks the button/link     css = [type="submit"][value="${decision}"]
+
+the internal team notifies all applicants
+    [Arguments]  ${ApplicationID}
+    the user clicks the button/link                      link = Send notification and release feedback
+    the user clicks the button/link                      id = app-row-${ApplicationID}
+    the user clicks the button/link                      id = write-and-send-email
+    the user clicks the button/link                      id = send-email-to-all-applicants
+    the user clicks the button/link                      id = send-email-to-all-applicants-button
+    the user refreshes until element appears on page     jQuery = td:contains("Sent")
 
 the application summary page must not include the reopen application link
     the user navigates to the page          ${server}/application/${ApplicationID}/track
@@ -181,7 +217,6 @@ Competition admin creates an assessment period
     update assessment batch 1 milestone to yesterday   ${competitionId}  ASSESSOR_DEADLINE
     the user clicks the button/link         jQuery = button:contains("Close assessment")
     the user clicks the button/link         link = Competition
-
 
 update assessment batch 1 milestone to yesterday
     [Arguments]  ${competition_id}  ${milestone}
