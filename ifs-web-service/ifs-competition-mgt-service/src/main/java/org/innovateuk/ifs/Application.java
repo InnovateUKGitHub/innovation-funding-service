@@ -13,7 +13,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-@PropertySource(value = { "classpath:/application.properties", "classpath:/managementapplication.properties" })
+@PropertySource(value = { "classpath:/application.properties" })
 @SpringBootApplication
 @EnableAspectJAutoProxy(proxyTargetClass=true)
 @EnableAsync

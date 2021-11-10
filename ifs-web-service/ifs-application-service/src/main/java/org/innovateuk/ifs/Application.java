@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-@PropertySource(value = { "classpath:/application.properties", "classpath:/applicationservice.properties" })
+@PropertySource(value = { "classpath:/application.properties" })
 @SpringBootApplication
 @EnableAspectJAutoProxy(proxyTargetClass=true)
 @EnableAsync
