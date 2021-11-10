@@ -151,6 +151,11 @@
                                     Input and review funding decision
                                 </a>
                             </li>
+                            <li th:if="${model.alwaysOpen}">
+                                <a class="disabled govuk-link" aria-disabled="true">
+                                    Close competition
+                                </a>
+                            </li>
                         </th:block>
                     </ul>
                 </div>
