@@ -68,10 +68,12 @@
 
         <th:block th:unless="${model.readOnly}">
             <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}" ifs:utext="${model.questionDescription}"/>
-            <div th:if="${model.questionType == model.getLoansBusinessAndFinancialInformation()}" class="govuk-body">
+            <div th:if="${model.questionType == model.getLoansBusinessAndFinancialInformation()}">
                <div th:if="${model.isLoansPartBEnabled()}">
-                   <a href="@{${model.getLoansQuestionsFormSalesForceURL()}}" role="button" class="govuk-button" data-module="govuk-button" target="_blank">
-                       Continue (opens in new tab) </a>
+                   <a class="govuk-button"
+                      target="_blank"
+                      th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}" value="open-salesforce"
+                      type="Continue">Continue (opens in new tab)</a>
                </div>
                 <div th:unless="${model.isLoansPartBEnabled()}">
                     <a class="govuk-link"
