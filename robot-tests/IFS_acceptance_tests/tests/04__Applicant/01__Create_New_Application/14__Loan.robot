@@ -88,16 +88,6 @@ The user can complete the business and financial information application questio
     And the user clicks the button/link            link = Back to application overview
     Then the user should see the element           jQuery = div:contains("Business and financial information") ~ .task-status-complete
 
-The user can complete the Overview of business and financial information Content
-    [Documentation]    IFS-10753
-    Given log in as a different user               &{lead_applicant_credentials}
-    When The user clicks the button/link           link = Loan Application
-    And The user clicks the button/link            link = Review and submit
-    And The user clicks the button/link            id = submit-application-button
-    And The user clicks the button/link            link = View application
-    And the user clicks the button/link            id = accordion-questions-heading-1-1
-    Then the user should see the overview of business and financial information
-
 Loan application shows correct T&C's
     [Documentation]    IFS-6205  IFS-9483  IFS-9716
     Given the user clicks the button/link   link = Loan terms and conditions
@@ -125,10 +115,12 @@ Loan application finance overview
     Then the user should see the element   jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00%") ~ td:contains("2,468") ~ td:contains("140,632")
 
 Loan application submission
-    [Documentation]  IFS-6237  IFS-6238  IFS-9483
+    [Documentation]  IFS-6237  IFS-6238  IFS-9483 IFS-10753
     Given the user submits the loan application
     When the user clicks the button/link            link = View application
     Then the user should see the element            jQuery = h1:contains("Application overview")
+    And The user clicks the button/link             id = accordion-questions-heading-1-1
+    And the user should see the element             jQuery = span:contains("Thanks for submitting Part B of your loan application.")
     And the user reads his email                    ${lead_applicant_credentials["email"]}   Complete your application for Loan Competition   You have completed your application for Loan Competition.
 
 Applicant complete the project setup details
@@ -393,5 +385,3 @@ the user should see qualtrics survey fields
     the user should see the element     xpath = //span[contains(text(),'60674010')]
     the user should see the element     xpath = //span[contains(text(),'${loanApplicationID}')]
 
-the user should see the overview of business and financial information
-    the user should see the element     id = accordion-questions-heading-1-1
