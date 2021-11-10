@@ -69,7 +69,7 @@ ext.ifsFlywayLocations = "db/migration"
 sourceSets {
     main {
         resources {
-            srcDirs = ["src/main/resource", "../../shared-resources"]
+            srcDirs = ["src/main/resources", "../../shared-resources"]
         }
     }
 }

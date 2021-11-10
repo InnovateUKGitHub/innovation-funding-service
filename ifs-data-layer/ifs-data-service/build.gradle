@@ -150,7 +150,7 @@ ext.serverPort = 8080
 sourceSets {
     main {
         resources {
-            srcDirs = ["src/main/resource", "../../shared-resources"]
+            srcDirs = ["src/main/resources", "../../shared-resources"]
         }
     }
 }
