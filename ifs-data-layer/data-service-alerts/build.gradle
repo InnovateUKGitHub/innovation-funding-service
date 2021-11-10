@@ -1,77 +1,11 @@
-apply from: rootProject.file("gradle-support/spring-boot.gradle")
-
+apply from: rootProject.file("gradle-support/spring-boot-cp.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
-apply from: rootProject.file("gradle-support/openshift-build.gradle")
-apply from: rootProject.file("gradle-support/openshift-util.gradle")
-apply from: rootProject.file("gradle-support/prepare-docker.gradle")
-apply from: rootProject.file("gradle-support/profile-handler.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
 
 apply plugin: 'idea'
 
 group 'innovateuk'
 version project.version
-
-processResources.dependsOn applyProfiles
-
-project.version = nexusVersion
-tagDocker.tag = nexusVersion
-osStageRemote.tag = nexusVersion
-tagDockerLocal.tag = nexusVersion
-osStageLocal.tag = nexusVersion
-
-ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
-
-afterEvaluate {
-    ext {
-        dockerDir = file("$project.parent.projectDir/docker/")
-    }
-}
-
-buildDocker.dependsOn prepareDockerInput
-buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-buildDocker.inputDir = project.file("$project.buildDir/docker")
-tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-
-
-def enabled = project.hasProperty('ifs.alert-service.enabled') ? project.property('ifs.alert-service.enabled').toBoolean() : true
-[stop, removeContainer, createContainer, deploy, wait].each { task ->
-    task.enabled = enabled
-}
-deploy.dependsOn ":docker:ifs-mysql:ifs-database:wait"
-deploy.mustRunAfter ":docker:ifs-mysql:ifs-database:deploy"
-
-task prepareDeployment(type: Copy) {
-
-    destinationDir = file('build/os-files')
-
-    from('os-files/') {
-        include '**/*.yml'
-    }
-    filesMatching("**/**.*") {
-        expand project.properties
-    }
-}
-
-task deployAlerts(type: Exec) {
-    dependsOn osStageRemote
-    dependsOn prepareDeployment
-    doFirst {
-        executable 'oc'
-        args 'create', '-f', "${project.buildDir}/os-files/alerts-data-service.yml", "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
-
-    }
-}
-
-
-task stopAlerts(type: Exec) {
-    doFirst {
-        executable = 'oc'
-        args 'delete', 'dc', 'data-service-alerts', "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
-    }
-}
-
-createContainer.networkAliases = ["data-service-alerts"]
 
 dependencies {
     compile "org.innovateuk.ifs.libraries:ifs-commons"
@@ -94,7 +28,4 @@ dependencies {
 
 }
 
-ext.serverPort = 8080
-ext.ifsDatasourceUrl = "jdbc:mysql://ifs-database:3306/ifs"
-ext.ifsDatasourceUsername = "root"
-ext.ifsDatasourcePassword = "password"
+
