@@ -12,3 +12,6 @@ components:
   - ../../../../components/sil-stub
   - ../../../../patches/
   - ../patches/
+
+patchesStrategicMerge:
+  - registration-service/registration-deployment.yml
