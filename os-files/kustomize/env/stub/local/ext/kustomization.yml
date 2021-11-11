@@ -7,7 +7,6 @@ bases:
 
 components:
   - ../../../../components/auth
-  - ../../../../components/registration-service
   - ../../../../components/cache-provider
   - ../../../../components/ifs-database
   - ../../../../components/mail
@@ -28,7 +27,6 @@ resources:
   - config-maps/web-config.yml
 
 patchesStrategicMerge:
-  - registration-service/registration-deployment.yml
   - mail/mail-config.yml
   - mail/mail.yml
   - ifs-database/ifs-database.yml
