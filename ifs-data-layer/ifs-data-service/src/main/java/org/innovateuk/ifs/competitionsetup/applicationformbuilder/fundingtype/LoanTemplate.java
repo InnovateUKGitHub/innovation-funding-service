@@ -153,9 +153,9 @@ public class LoanTemplate implements FundingTypeTemplate {
                 .withMarkAsCompletedEnabled(true)
                 .withDescription(
                         "<p><strong>Business and financial details</strong></p>" +
-                                "<p>For us to consider the suitability of your business for a loan, we need detailed information about your business as well as financial information and forecasts</p>" +
+                                "<p>For us to consider the suitability of your business for a loan, we need detailed information about your business as well as financial information and forecasts.</p>" +
                                 "<p><strong>Financial information</strong></p>" +
-                                "<p>You must submit financial information to us about your business. This is done through completion of a spreadsheet template. Please download the financial spreadsheet template and fill this in offline. At the end of the survey you will be asked to upload the financial spreadsheet.</p>"
+                                "<p>You must submit financial information to us about your business. This is done through completion of a spreadsheet template. Please download the financial spreadsheet template and fill this in offline. At the end of the business and financial information you will be asked to upload the financial spreadsheet.</p>"
                 )
                 .withDescription2(
                         "<p><strong>Complete the online business survey</strong></p>" +
