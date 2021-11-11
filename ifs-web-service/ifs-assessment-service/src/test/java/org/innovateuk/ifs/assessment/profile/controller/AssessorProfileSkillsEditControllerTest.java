@@ -5,15 +5,11 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileSkillsForm;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileEditSkillsModelPopulator;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileEditSkillsViewModel;
-import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.ProfileSkillsEditResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.util.CollectionFunctions;
-import org.innovateuk.ifs.viewmodel.AssessorProfileDetailsViewModel;
-import org.innovateuk.ifs.viewmodel.AssessorProfileSkillsViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -30,7 +26,6 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.nCopies;
-import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
@@ -46,7 +41,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-@TestPropertySource(locations = "classpath:application.properties")
+@TestPropertySource(locations = { "classpath:application.properties", "classpath:ifs-web-core.properties" } )
 public class AssessorProfileSkillsEditControllerTest extends BaseControllerMockMVCTest<AssessorProfileSkillsEditController> {
 
     @Spy

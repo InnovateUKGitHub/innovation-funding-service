@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-@TestPropertySource(locations = "classpath:application.properties")
+@TestPropertySource(locations = { "classpath:application.properties", "classpath:ifs-web-core.properties"} )
 public class InterviewAssessorSendInviteControllerTest extends BaseControllerMockMVCTest<InterviewAssessorSendInviteController> {
 
     private CompetitionResource competition;

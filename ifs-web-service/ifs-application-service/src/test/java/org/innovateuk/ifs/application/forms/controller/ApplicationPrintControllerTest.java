@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-@TestPropertySource(locations = "classpath:application.properties")
+@TestPropertySource(locations = { "classpath:application.properties", "classpath:ifs-web-core.properties" })
 public class ApplicationPrintControllerTest extends AbstractApplicationMockMVCTest<ApplicationPrintController> {
     @Mock
     private ApplicationPrintPopulator applicationPrintPopulator;

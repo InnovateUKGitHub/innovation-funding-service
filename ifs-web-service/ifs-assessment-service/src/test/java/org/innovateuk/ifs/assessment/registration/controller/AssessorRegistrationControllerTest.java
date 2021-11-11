@@ -14,7 +14,6 @@ import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel;
 import org.innovateuk.ifs.user.resource.Title;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -52,7 +51,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-@TestPropertySource(locations = "classpath:application.properties")
+@TestPropertySource(locations = { "classpath:application.properties", "classpath:ifs-web-core.properties" } )
 public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTest<AssessorRegistrationController> {
 
     @Spy
