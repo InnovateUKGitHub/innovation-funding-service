@@ -70,18 +70,18 @@ The user can see b&fi application question as complete and shows edit online sur
 
 The user will not be able to mark the application as complete without completing business and financial information
     [Documentation]    IFS-9484  IFS-10705
-    [Setup]  the user marks b&fi question as incomplete/complete    0
-    Given the user clicks the button/link                           link = Back to application overview
-    When the user clicks the button/link                            id = application-overview-submit-cta
-    Then the user should see that the element is disabled           id = submit-application-button
-    And the user should see the element                             jQuery = .section-incomplete + button:contains("Business and financial information")
-    And the user should see the element                             jQuery = h2:contains("Applicant details")
-    And the user should see the element                             jQuery = h2:contains("Project finance")
+    [Setup]  the sales force submits/unsubmits b&fi survey      0
+    Given the user clicks the button/link                       link = Back to application overview
+    When the user clicks the button/link                        id = application-overview-submit-cta
+    Then the user should see that the element is disabled       id = submit-application-button
+    And the user should see the element                         jQuery = .section-incomplete + button:contains("Business and financial information")
+    And the user should see the element                         jQuery = h2:contains("Applicant details")
+    And the user should see the element                         jQuery = h2:contains("Project finance")
 
-The user can complete the business and financial information application question
+The user can see the business and financial information application question in application overview as complete
     [Documentation]    IFS-9484  IFS-10705
-    When the user marks b&fi question as incomplete/complete    1
-    Then the user should see the element                        jQuery = .section-complete + button:contains("Business and financial information")
+    When the sales force submits/unsubmits b&fi survey     1
+    Then the user should see the element                   jQuery = .section-complete + button:contains("Business and financial information")
 
 Loan application shows correct T&C's
     [Documentation]    IFS-6205  IFS-9483  IFS-9716
@@ -387,7 +387,7 @@ the user should see b&fi question details
     the user should see the element     jQuery = p:contains("Business and financial details")
     the user should see the element     jQuery = p:contains("Financial information")
 
-the user marks b&fi question as incomplete/complete
+the sales force submits/unsubmits b&fi survey
     [Arguments]  ${completeStatus}
     execute sql string  UPDATE `${database_name}`.`question_status` SET `marked_as_complete`=${completeStatus} WHERE `application_id`='${loanApplicationID}' and `question_id`='739';
     reload page
