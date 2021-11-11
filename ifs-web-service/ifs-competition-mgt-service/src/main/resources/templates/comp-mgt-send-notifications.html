@@ -88,14 +88,22 @@
                     <label class="govuk-label govuk-label--s" for="subject">
                         Subject
                     </label>
-                    <input class="govuk-input"
-                           id="subject"
-                           type="text"
-                           readonly="readonly"
-                           th:value="${model.isH2020()} ?
-                           '<competition name>: Notification regarding your submission <application number>: <application title>' :
-                           'Important message about your application \'[application name]\' for the competition \'[competition name]\''" />
-
+                    <input
+                        th:unless="${model.isHesta()}"
+                        class="govuk-input"
+                        id="subject"
+                        type="text"
+                        readonly="readonly"
+                        th:value="${model.isH2020()} ?
+                        '<competition name>: Notification regarding your submission <application number>: <application title>' :
+                        'Important message about your application \'[application name]\' for the competition \'[competition name]\''" />
+                    <input
+                        th:if="${model.isHesta()}"
+                        class="govuk-input"
+                        id="subject"
+                        type="text"
+                        readonly="readonly"
+                        value="<application number>: update about your Horizon Europe UK Application Registration for government-backed funding" />
                 </div>
 
                 <div class="govuk-form-group">

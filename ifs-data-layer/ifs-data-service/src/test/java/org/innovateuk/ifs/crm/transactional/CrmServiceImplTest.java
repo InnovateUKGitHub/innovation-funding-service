@@ -39,6 +39,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.junit.jupiter.api.Disabled;
 import org.mockito.Mock;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -131,7 +132,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
 
         ReflectionTestUtils.setField(service, "eligibilityStatusChangeSource", "IFS");
         ReflectionTestUtils.setField(service, "isLoanPartBEnabled", true);
-        //MockitoAnnotations.initMocks(this);
+
     }
 
     @After
@@ -487,9 +488,9 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     @Test
     public void syncCrmLoanApplicationSubmittedStateTest() {
 
-        String expectedLogMessage = "Updating CRM application for appId:3 state:SUBMITTED, payload:SilLoanApplication(applicationID=3, " +
-                "applicationSubmissionDate=2021-10-12T09:38:12.850Z, applicationName=Sample skips for plastic storage, applicationLocation=RG1 5LF," +
-                " competitionCode=null, competitionName=null, projectDuration=11, projectTotalCost=10.0, projectOtherFunding=1.0, markedIneligible=null, eligibilityStatusChangeDate=null, eligibilityStatusChangeSource=null)";
+        String expectedLogMessage = "Updating CRM application for appId:3 state:SUBMITTED, " +
+                "payload:SilLoanApplication(applicationID=3, applicationSubmissionDate=2021-10-12T09:38:12.850Z, applicationName=Sample skips for plastic storage, " +
+                "applicationLocation=RG1 5LF, competitionCode=COMP-1, competitionName=Competition 1, projectDuration=11, projectTotalCost=10.0, projectOtherFunding=1.0, markedIneligible=null, eligibilityStatusChangeDate=null, eligibilityStatusChangeSource=null)";
 
 
         long applicationId = 3L;
