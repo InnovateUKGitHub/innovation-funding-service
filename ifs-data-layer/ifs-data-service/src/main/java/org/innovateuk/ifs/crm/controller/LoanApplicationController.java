@@ -118,8 +118,9 @@ public class LoanApplicationController {
     private RestResult<Void> markQuestionStatus(UserResource user, SilLoanApplicationStatus silStatus, QuestionApplicationCompositeId ids, Long processRoleId)  {
         LOG.debug(String.format("application-update: application=%d, question=%s, processrole=%d", ids.applicationId, silStatus.getQuestionSetupType() , processRoleId));
         if(silStatus.isStatusComplete()) {
-            String logError = String.format("application-update error: %s on application %d mark as complete failed", silStatus.getQuestionSetupType().getShortName(), ids.applicationId);
-            String logInfo = String.format("application-update: %s application %d marked complete", silStatus.getQuestionSetupType().getShortName(), ids.applicationId);
+            String questionName = silStatus.getQuestionSetupType().getShortName();
+            String logError = String.format("application-update error: %s on application %d mark as complete failed", questionName, ids.applicationId);
+            String logInfo = String.format("application-update: %s application %d marked complete", questionName, ids.applicationId);
 
             QuestionSetupType questionSetupType = questionService.getQuestionById(ids.questionId).getSuccess().getQuestionSetupType();
             if (questionSetupType.equals(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION)) {
