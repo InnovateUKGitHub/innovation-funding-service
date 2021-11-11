@@ -33,6 +33,8 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...
 ...             IFS-9484 Loans: Applicant journey
 ...
+...             IFS-10703 Loans question - open in Salesforce (as second tab)
+...
 ...             IFS-9679 MO Spend profile: IFS Admin only to be able to approve or reject spend profiles
 ...
 Suite Setup     Custom suite setup
@@ -78,7 +80,7 @@ The user will not be able to mark the application as complete without completing
     And the user should see the element                       jQuery = h2:contains("Project finance")
 
 The user can complete the business and financial information application question
-    [Documentation]    IFS-9484
+    [Documentation]    IFS-9484 IFS-10703
     Given the user clicks the button/link          link = Application overview
     And the user clicks the button/link            link = Business and financial information
     And the user enters text to a text field       css = * .editor    This is the applicant response for have you completed the business information, including uploading your financial submission.
