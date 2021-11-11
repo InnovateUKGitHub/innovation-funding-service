@@ -118,16 +118,18 @@ public class LoanApplicationController {
     private RestResult<Void> markQuestionStatus(UserResource user, SilLoanApplicationStatus silStatus, QuestionApplicationCompositeId ids, Long processRoleId)  {
         LOG.debug(String.format("application-update: application=%d, question=%s, processrole=%d", ids.applicationId, silStatus.getQuestionSetupType() , processRoleId));
         if(silStatus.isStatusComplete()) {
+            String logError = String.format("application-update error: %s on application %d mark as complete failed", silStatus.getQuestionSetupType(), ids.applicationId);
+            String logInfo = String.format("application-update: %s application %d marked complete", silStatus.getQuestionSetupType(), ids.applicationId);
 
             QuestionSetupType questionSetupType = questionService.getQuestionById(ids.questionId).getSuccess().getQuestionSetupType();
             if (questionSetupType.equals(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION)) {
                 return questionStatusService.markAsCompleteNoValidate(ids, user.getId()).handleSuccessOrFailure(
                         failure -> {
-                            LOG.error(String.format("application-update error: Loan business and financial information for application %d mark as complete failed", ids.applicationId));
+                            LOG.error(logError);
                             return RestResult.restFailure(failure.getErrors(), HttpStatus.BAD_REQUEST);
                         },
                         success -> {
-                            LOG.info(String.format("application-update: Loan business and financial information for application %d marked complete", ids.applicationId));
+                            LOG.info(logInfo);
                             activityLogService.recordActivityByApplicationId(ids.applicationId, user.getId(), ActivityType.APPLICATION_DETAILS_UPDATED);
                             return RestResult.restSuccess(HttpStatus.NO_CONTENT);
                         }
@@ -135,11 +137,11 @@ public class LoanApplicationController {
             }
             return questionStatusService.markAsComplete(ids, processRoleId, silStatus.getCompletionDate()).handleSuccessOrFailure(
                     failure -> {
-                        LOG.error(String.format("application-update error: application %d mark as complete failed", ids.applicationId));
+                        LOG.error(logError);
                         return RestResult.restFailure(failure.getErrors(), HttpStatus.BAD_REQUEST);
                     },
                     success -> {
-                        LOG.info(String.format("application-update: application %d marked complete", ids.applicationId));
+                        LOG.info(logInfo);
                         activityLogService.recordActivityByApplicationId(ids.applicationId, user.getId(), ActivityType.APPLICATION_DETAILS_UPDATED);
                         return RestResult.restSuccess(HttpStatus.NO_CONTENT);
                     }
@@ -157,7 +159,7 @@ public class LoanApplicationController {
                     }
             );
         } else {
-            LOG.error("application-update error: invalid complete status");
+            LOG.error(String.format("application-update error: invalid complete status, question status %s", silStatus.getCompletionStatus().getDisplayName()));
             return RestResult.restFailure(new Error(CommonFailureKeys.GENERAL_INCORRECT_TYPE, "completionStatus"));
         }
     }
