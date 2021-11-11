@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@TestPropertySource(locations = { "classpath:application.properties", "classpath:ifs-web-core.properties" })
+@TestPropertySource(locations = { "classpath:/application.properties", "classpath:/ifs-web-core.properties" })
 public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVCTest<ApplicantDashboardController> {
 
     @Override
