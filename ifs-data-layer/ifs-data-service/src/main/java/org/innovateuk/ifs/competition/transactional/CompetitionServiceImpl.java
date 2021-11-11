@@ -126,10 +126,10 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<Void> closeAssessment(long competitionId) {
-        return getCompetition(competitionId)
-                .andOnSuccessReturn(competition -> competition.getAssessmentPeriods().get(0).getId())
-                .andOnSuccess(assessmentPeriodId -> closeAssessmentByAssessmentPeriod(assessmentPeriodId))
-                .andOnSuccess(()->crmService.syncCrmCompetitionAssessment(competitionId));
+        ServiceResult<Competition> competitionResult = getCompetition(competitionId);
+        ServiceResult<Void> result = competitionResult.andOnSuccessReturn(competition -> competition.getAssessmentPeriods().get(0).getId())
+                .andOnSuccess(assessmentPeriodId -> closeAssessmentByAssessmentPeriod(assessmentPeriodId));
+        return result.andOnSuccess(() -> competitionResult.getSuccess().isLoan() ? crmService.syncCrmCompetitionAssessment(competitionId) : result);
     }
 
     @Override

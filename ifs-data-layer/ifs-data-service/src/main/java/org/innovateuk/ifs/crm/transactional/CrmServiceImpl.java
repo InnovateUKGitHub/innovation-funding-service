@@ -364,8 +364,9 @@ public class CrmServiceImpl implements CrmService {
     }
 
     private int getScoreSpread(Long appId) {
-        return applicationAssessmentService.getApplicationAssessmentResource(appId).getSuccess().stream().max(Comparator.comparing(ApplicationAssessmentResource::getOverallScore)).get().getOverallScore() -
-                applicationAssessmentService.getApplicationAssessmentResource(appId).getSuccess().stream().min(Comparator.comparing(ApplicationAssessmentResource::getOverallScore)).get().getOverallScore();
+        List<ApplicationAssessmentResource> assessments = applicationAssessmentService.getApplicationAssessmentResource(appId).getSuccess();
+        return assessments.stream().max(Comparator.comparing(ApplicationAssessmentResource::getMaxScoreGiven)).get().getMaxScoreGiven() -
+                assessments.stream().min(Comparator.comparing(ApplicationAssessmentResource::getMinScoreGiven)).get().getMinScoreGiven();
 
     }
 
