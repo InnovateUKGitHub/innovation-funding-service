@@ -11,10 +11,27 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkUrl=@{/templates/dashboard}"/>
+    <th:block th:insert="fragments/layout :: header-sub (linkTitle='Back to competition',linkUrl=@{/competition/{id}(id=${model.competitionId})})" />
+
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Close competition',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'"/>
 
+        <p class="govuk-body govuk-!-margin-top-9">You can close this competition and move it to the 'Previous' section
+            of your dashboard, if all 3 of these requirements have been met:</p>
+        <ol>
+            <li>A submission date as been set and is now in the past.
+            <li>All eligible applications have been assessed and their funding decisions entered.</li>
+            <li>All funding decision notifications have been sent and application feedback released.</li>
+        </ol>
+        <p class="govuk-body govuk-!-margin-top-6">Once this competition is closed you will no longer be able to assess
+            applications, add funding decisions or release feedback.</p>
+
+        <div class="govuk-!-margin-top-6">
+            <a th:href="@{/competition/setup/{id}(id=${model.competitionId})}"
+               class="govuk-button">Close competition</a>
+        </div>
     </main>
 </div>
 <th:block th:insert="fragments/layout :: footer"/>

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.competition.setup.closecompetition.control
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.management.competition.setup.closecompetition.populator.AlwaysOpenCloseCompetitionViewModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -20,9 +21,13 @@ public class AlwaysOpenCloseCompetitionController {
     @Autowired
     private CompetitionRestService competitionRestService;
 
+    @Autowired
+    private AlwaysOpenCloseCompetitionViewModelPopulator populator;
+
     @GetMapping
     public String viewPage(Model model,
                            @PathVariable("competitionId") Long competitionId) {
+        model.addAttribute("model", populator.populate(competitionId));
         return "competition/setup/close-competition-always-open-competition";
     }
 

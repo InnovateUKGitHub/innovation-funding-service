@@ -152,7 +152,8 @@
                                 </a>
                             </li>
                             <li th:if="${model.alwaysOpen}">
-                                <a class="disabled govuk-link" aria-disabled="true">
+                                <a class="govuk-link"
+                                   th:href="@{/competition/{competitionId}/close-competition(competitionId=${model.competitionId})}">
                                     Close competition
                                 </a>
                             </li>
