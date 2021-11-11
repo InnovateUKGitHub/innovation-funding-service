@@ -118,8 +118,8 @@ public class LoanApplicationController {
     private RestResult<Void> markQuestionStatus(UserResource user, SilLoanApplicationStatus silStatus, QuestionApplicationCompositeId ids, Long processRoleId)  {
         LOG.debug(String.format("application-update: application=%d, question=%s, processrole=%d", ids.applicationId, silStatus.getQuestionSetupType() , processRoleId));
         if(silStatus.isStatusComplete()) {
-            String logError = String.format("application-update error: %s on application %d mark as complete failed", silStatus.getQuestionSetupType(), ids.applicationId);
-            String logInfo = String.format("application-update: %s application %d marked complete", silStatus.getQuestionSetupType(), ids.applicationId);
+            String logError = String.format("application-update error: %s on application %d mark as complete failed", silStatus.getQuestionSetupType().getShortName(), ids.applicationId);
+            String logInfo = String.format("application-update: %s application %d marked complete", silStatus.getQuestionSetupType().getShortName(), ids.applicationId);
 
             QuestionSetupType questionSetupType = questionService.getQuestionById(ids.questionId).getSuccess().getQuestionSetupType();
             if (questionSetupType.equals(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION)) {
@@ -159,7 +159,7 @@ public class LoanApplicationController {
                     }
             );
         } else {
-            LOG.error(String.format("application-update error: invalid complete status, question status %s", silStatus.getCompletionStatus().getDisplayName()));
+            LOG.error(String.format("application-update error: invalid complete status %s", silStatus.getCompletionStatus().getDisplayName()));
             return RestResult.restFailure(new Error(CommonFailureKeys.GENERAL_INCORRECT_TYPE, "completionStatus"));
         }
     }
