@@ -79,7 +79,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     private String webBaseUrl;
 
     public enum Notifications {
-        APPLICATION_FUNDING, HORIZON_2020_FUNDING
+        APPLICATION_FUNDING, HORIZON_2020_FUNDING, HESTA_FUNDING
     }
 
     @Override
@@ -247,7 +247,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
         Competition competition = applications.get(0)
                 .getCompetition();
         boolean includeAssesssorScore = Boolean.TRUE.equals(competition.getCompetitionAssessmentConfig().getIncludeAverageAssessorScoreInNotifications());
-        Notifications notificationType = isH2020Competition(applications) ? HORIZON_2020_FUNDING : APPLICATION_FUNDING;
+        Notifications notificationType = getNotificationType(applications, competition);
         Map<String, Object> globalArguments = new HashMap<>();
 
         List<NotificationMessage> notificationMessages = simpleMap(
@@ -273,6 +273,20 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
         globalArguments.put("message", fundingNotificationResource.getMessageBody());
 
         return new Notification(systemNotificationSource, notificationMessages, notificationType, globalArguments);
+    }
+
+    private Notifications getNotificationType(List<Application> applications, Competition competition) {
+        Notifications notificationType;
+
+        if(isH2020Competition(applications)){
+            notificationType = HORIZON_2020_FUNDING;
+        } else if (competition.isHesta()){
+            notificationType = HESTA_FUNDING;
+        } else {
+            notificationType = APPLICATION_FUNDING;
+        }
+
+        return notificationType;
     }
 
     private List<ServiceResult<Pair<Long, NotificationTarget>>> getApplicantNotificationTargets(List<Long> applicationIds) {

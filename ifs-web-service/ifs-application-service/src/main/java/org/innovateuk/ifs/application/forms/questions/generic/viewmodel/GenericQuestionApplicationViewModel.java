@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -63,8 +62,8 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
     private final Long multipleChoiceFormInputId;
     private final List<MultipleChoiceOptionResource> multipleChoiceOptions;
     private final MultipleChoiceOptionResource selectedMultipleChoiceOption;
-    private boolean loansPartBEnabled;
-    private String salesForceURL;
+    private final boolean loansPartBEnabled;
+    private final String salesForceURL;
 
     public GenericQuestionApplicationViewModel(long applicationId,
                                                String competitionName,

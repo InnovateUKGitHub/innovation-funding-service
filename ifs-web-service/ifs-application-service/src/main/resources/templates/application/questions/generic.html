@@ -68,6 +68,7 @@
 
         <th:block th:unless="${model.readOnly}">
             <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}" ifs:utext="${model.questionDescription}"/>
+            <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription2 != null}" ifs:utext="${model.questionDescription2}"/>
             <div th:if="${model.questionType == model.getLoansBusinessAndFinancialInformation()}">
                <div th:if="${model.isLoansPartBEnabled()}">
                    <a class="govuk-button"
@@ -84,7 +85,6 @@
                     IFSApplicationNumber=${model.applicationId})}">Complete the online business survey (opens in a new window)</a>
                 </div>
             </div>
-            <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription2 != null}" ifs:utext="${model.questionDescription2}"/>
             <details th:unless="${#strings.isEmpty(model.questionGuidance)}" class="govuk-details" role="group">
                 <summary th:unless="${#strings.isEmpty(model.questionGuidanceTitle)}" class="govuk-details__summary">
                     <span class="govuk-details__summary-text" th:text="${model.questionGuidanceTitle}">What should I include in the project public description?</span>
@@ -93,6 +93,19 @@
                      ifs:utext="${model.questionGuidance}">Guidance
                 </div>
             </details>
+        </th:block>
+
+        <th:block th:if="${model.complete and  (model.questionType == model.getLoansBusinessAndFinancialInformation())}">
+            <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}"
+                 ifs:utext="${model.questionDescription}"/>
+            <div class="govuk-hint wysiwyg-styles">
+                <p><strong>Edit the online business survey</strong></p>
+                <p>At any stage, you can return here to carry on editing incomplete form.</p>
+            </div>
+            <div>
+                <a href="@{${model.getLoansQuestionsFormSalesForceURL()}}" role="button" class="govuk-button" data-module="govuk-button" target="_blank">
+                    Continue (opens in new tab) </a>
+            </div>
         </th:block>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
@@ -105,7 +118,7 @@
                 <input type="hidden" th:field="${model.multipleChoiceOptionsActive}" />
             </th:block>
 
-            <th:block th:unless="${model.isLoansPartBEnabled()}">
+            <th:block th:unless="${model.isLoansPartBEnabled() and (model.questionType == model.getLoansBusinessAndFinancialInformation())}">
                 <div class="govuk-form-group" th:if="${model.textAreaActive}"
                  th:classappend="${#fields.hasErrors('answer')} ? 'govuk-form-group--error'">
                 <th:block th:if="${#fields.hasErrors('answer')}">
@@ -132,9 +145,9 @@
 
                     </div>
                 </div>
-            </div>
+                </div>
 
-                <th:block th:if="${model.multipleChoiceOptionsActive}">
+            <th:block th:if="${model.multipleChoiceOptionsActive}">
                 <div class="govuk-form-group" th:unless="${model.readOnly}"
                      th:classappend="${#fields.hasErrors('multipleChoiceOptionId')} ? 'govuk-form-group--error'">
                     <th:block th:if="${#fields.hasErrors('multipleChoiceOptionId')}">
@@ -173,7 +186,7 @@
                 </div>
             </th:block>
 
-                <div class="govuk-form-group" th:if="${model.templateDocumentActive}">
+            <div class="govuk-form-group" th:if="${model.templateDocumentActive}">
                 <div class="govuk-form-group download">
                     <h3 class="govuk-heading-s" th:text="|Download the ${model.templateDocumentTitle} template|">Download</h3>
                     <p class="govuk-body">
@@ -198,7 +211,7 @@
                 </div>
             </div>
 
-                <div class="govuk-form-group" th:if="${model.appendixActive}">
+            <div class="govuk-form-group" th:if="${model.appendixActive}">
                 <div class="upload-section">
                     <h3 class="govuk-heading-s govuk-!-margin-0">Appendix</h3>
                     <details class="govuk-details" role="group">

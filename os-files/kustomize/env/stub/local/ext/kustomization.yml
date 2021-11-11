@@ -6,25 +6,20 @@ bases:
   - ../../stub-base
 
 components:
-
   - ../../../../components/auth
   - ../../../../components/cache-provider
   - ../../../../components/ifs-database
-  - ../../../../components/sil-stub
   - ../../../../components/mail
-
   - ../../../../patches/new-relic-env-vars-patch
   - ../../../../patches/pull-secrets-patch
   - ../../../../patches/spring-profile-patch
 
 resources:
   - config-maps/spring-config.yml
-
   - secrets/ldap-keys-secrets.yml
   - secrets/sp-keys-secrets.yml
   - secrets/idp-keys-secrets.yml
   - secrets/sp-secrets.yml
-
   - config-maps/idp-config.yml
   - config-maps/idp-metadata.yml
   - config-maps/ldap-config.yml
@@ -33,7 +28,6 @@ resources:
 
 patchesStrategicMerge:
   - auth/registration-service/registration-deployment.yml
-  - sil-stub/sil-stub-deployment.yml
   - mail/mail-config.yml
   - mail/mail.yml
   - ifs-database/ifs-database.yml
