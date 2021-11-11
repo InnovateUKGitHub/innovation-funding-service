@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: spring-boot-service-container
-          image: docker-ifs.devops.innovateuk.org/releases/registration-service:1.1.153
+          image: registration-service
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
