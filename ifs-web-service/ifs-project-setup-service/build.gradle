@@ -30,11 +30,11 @@ dependencies {
 }
 
 processResources {
-    filesMatching("*.properties") {
+    /*filesMatching("*.properties") {
         expand project.properties
-    }
+    }*/
     if (project.hasProperty("profile") && project.profile == "automated") {
-        exclude '**/application.properties'
+        //exclude '**/application.properties'
     }
 }
 
