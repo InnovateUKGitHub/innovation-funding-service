@@ -47,7 +47,8 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
             @Mapping(source = "applicationProcess.processEvent", target = "event"),
             @Mapping(source = "applicationProcess.lastModified", target = "lastStateChangeDate"),
             @Mapping(target = "assessmentPeriodId", ignore = true),
-            @Mapping(target = "stateAidAgreed", ignore = true)
+            @Mapping(target = "stateAidAgreed", ignore = true),
+            @Mapping(target = "manageFundingEmailDate", ignore = true),
     })
     @Override
     public abstract ApplicationResource mapToResource(Application domain);

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.closecompetition.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -33,9 +32,6 @@ public class AlwaysOpenCloseCompetitionViewModelPopulator {
     @Autowired
     private ApplicationRestService applicationRestService;
 
-    @Autowired
-    private ApplicationSummaryResource applicationSummaryResource;
-
 
     public AlwaysOpenCloseCompetitionViewModel populate(Long competitionId) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
@@ -45,7 +41,7 @@ public class AlwaysOpenCloseCompetitionViewModelPopulator {
         List<ApplicationResource> applications = new ArrayList<>();
         applicationIds.forEach(applicationId -> applications.add(applicationRestService.getApplicationById(applicationId).getSuccess()));
 
-        boolean allApplicationsHadBeenNotified = applications.stream().allMatch(application -> applicationSummaryResource.getManageFundingEmailDate() != null);
+        boolean allApplicationsHadBeenNotified = applications.stream().allMatch(application -> application.getManageFundingEmailDate() != null);
 
         return new AlwaysOpenCloseCompetitionViewModel(competitionId,
                 competition.getName(),
