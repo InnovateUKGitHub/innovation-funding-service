@@ -7,6 +7,4 @@ resources:
   - ldap/ldap-deployment.yml
   - sp/sp.yml
   - sp/sp-deployment.yml
-  - registration-service/registration-service.yml
-  - registration-service/registration-deployment.yml
 

@@ -11,6 +11,7 @@ components:
   - ../../../components/ifs-database
   - ../../../components/cache-provider
   - ../../../components/auth
+  - ../../../components/registration-service
   - ../../../components/data-layer
   - ../../../components/web-layer
 
@@ -28,5 +29,5 @@ resources:
   - storage/persistent-volume-claim.yml
 
 patchesStrategicMerge:
-  - auth/registration-service/registration-deployment.yml
+  - registration-service/registration-deployment.yml
   - auth/idp/idp-deployment.yml
