@@ -1,5 +1,10 @@
 package org.innovateuk.ifs.management.competition.setup.closecompetition.viewmodel;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+
+import java.time.ZonedDateTime;
+import java.util.List;
+
 /**
  * Holder of model attributes for the Always Open Competition - Close competition page
  */
@@ -7,35 +12,48 @@ public class AlwaysOpenCloseCompetitionViewModel {
 
     private Long competitionId;
     private String competitionName;
-    private boolean hasSubmissionDatePassed;
+    private ZonedDateTime submissionDate;
+    private List<ApplicationResource> submittedApplications;
+    private boolean allApplicationsHadBeenNotified;
 
-    public AlwaysOpenCloseCompetitionViewModel(Long competitionId, String competitionName, boolean hasSubmissionDatePassed) {
+    public AlwaysOpenCloseCompetitionViewModel(Long competitionId, String competitionName, ZonedDateTime submissionDate, List<ApplicationResource> submittedApplications, boolean allApplicationsHadBeenNotified) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
-        this.hasSubmissionDatePassed = hasSubmissionDatePassed;
+        this.submissionDate = submissionDate;
+        this.submittedApplications = submittedApplications;
+        this.allApplicationsHadBeenNotified = allApplicationsHadBeenNotified;
     }
 
     public Long getCompetitionId() {
         return competitionId;
     }
 
-    public void setCompetitionId(Long competitionId) {
-        this.competitionId = competitionId;
-    }
-
     public String getCompetitionName() {
         return competitionName;
     }
 
-    public void setCompetitionName(String competitionName) {
-        this.competitionName = competitionName;
+    public ZonedDateTime getSubmissionDate() {
+        return submissionDate;
     }
 
-    public boolean isHasSubmissionDatePassed() {
-        return hasSubmissionDatePassed;
+    public List<ApplicationResource> getSubmittedApplications() {
+        return submittedApplications;
     }
 
-    public void setHasSubmissionDatePassed(boolean hasSubmissionDatePassed) {
-        this.hasSubmissionDatePassed = hasSubmissionDatePassed;
+    public boolean isAllApplicationsHadBeenNotified() {
+        return allApplicationsHadBeenNotified;
     }
+
+    public boolean submissionDateIsPresentAndHadPassed() {
+        return (submissionDate != null) && (submissionDate.isBefore(ZonedDateTime.now()));
+    }
+
+    public boolean feedbackReleasedForAllApplications() {
+        return submittedApplications.stream().allMatch(ApplicationResource::isFeedbackReleased);
+    }
+
+    public boolean showCloseCompetitionButton() {
+        return submissionDateIsPresentAndHadPassed() && feedbackReleasedForAllApplications() && allApplicationsHadBeenNotified;
+    }
+
 }
