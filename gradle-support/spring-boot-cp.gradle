@@ -11,10 +11,10 @@ dependencies {
     // is a best practice that prevents devtools from being transitively applied to other modules using your project.
     compileOnly "org.springframework.boot:spring-boot-devtools"
 
-    compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-web"
 
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 processResources {

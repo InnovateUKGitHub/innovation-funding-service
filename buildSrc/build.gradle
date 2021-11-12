@@ -5,6 +5,6 @@ repositories {
 }
 
 dependencies {
-    compile "com.bmuschko:gradle-docker-plugin:3.2.6"
-    compile 'com.aries:docker-java-shaded:3.0.14'
+    implementation "com.bmuschko:gradle-docker-plugin:3.2.6"
+    implementation 'com.aries:docker-java-shaded:3.0.14'
 }

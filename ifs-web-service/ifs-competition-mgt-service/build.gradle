@@ -17,21 +17,22 @@ apply plugin: 'idea'
 project.version = nexusVersion
 
 dependencies {
-    compile project(':ifs-web-service:ifs-web-core')
-    compile "org.innovateuk.ifs.libraries:ifs-application-commons"
+    implementation project(':ifs-web-service:ifs-web-core')
+    implementation "org.innovateuk.ifs.libraries:ifs-application-commons"
     implementation 'org.innovateuk.ifs.libraries:ifs-assessment-commons'
-    compile "org.innovateuk.ifs.libraries:ifs-project-commons"
+    implementation "org.innovateuk.ifs.libraries:ifs-project-commons"
 
-    compile 'org.apache.commons:commons-collections4'
+    implementation 'org.apache.commons:commons-collections4'
+    implementation "org.springframework.boot:spring-boot-starter-validation"
 
-    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
-    testCompile "org.innovateuk.ifs.libraries:ifs-web-commons-test"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-commons"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-web-commons-test"
 
-    testCompile "com.opencsv:opencsv"
+    testImplementation "com.opencsv:opencsv"
 
-    testCompile 'org.assertj:assertj-core'
-    testCompile 'junit:junit'
+    testImplementation 'org.assertj:assertj-core'
+    testImplementation 'junit:junit'
 
 }
 

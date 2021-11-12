@@ -32,20 +32,20 @@ ext {
 }
 
 dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-    compile "org.springframework.boot:spring-boot-starter-security"
-    compile 'commons-codec:commons-codec'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation 'commons-codec:commons-codec'
 
-    compile "org.innovateuk.ifs.libraries:ifs-commons"
-    compile 'org.innovateuk.ifs.libraries:ifs-resources'
-    compile 'org.innovateuk.ifs.libraries:ifs-security'
+    implementation "org.innovateuk.ifs.libraries:ifs-commons"
+    implementation 'org.innovateuk.ifs.libraries:ifs-resources'
+    implementation 'org.innovateuk.ifs.libraries:ifs-security'
 
-    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
-    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-commons"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
 
-    testCompile "junit:junit"
+    testImplementation "junit:junit"
 }
 
 test {

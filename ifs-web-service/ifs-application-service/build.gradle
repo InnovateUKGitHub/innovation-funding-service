@@ -9,21 +9,20 @@ ext.IFS_WEB_VIRTUALASSISTANT_BOTID = ext.has('ifs.web.virtualAssistant.botId') ?
 group 'innovateuk'
 version project.version
 
-apply plugin: 'idea'
-
-project.version = nexusVersion
 
 dependencies {
-    compile project(':ifs-web-service:ifs-web-core')
-    compile "org.innovateuk.ifs.libraries:ifs-application-commons"
+    implementation project(':ifs-web-service:ifs-web-core')
+    implementation "org.innovateuk.ifs.libraries:ifs-web-commons"
+    implementation "org.innovateuk.ifs.libraries:ifs-application-commons"
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
 
-    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
-    testCompile "org.innovateuk.ifs.libraries:ifs-web-commons-test"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-commons"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-web-commons-test"
 
-    testCompile "com.opencsv:opencsv"
-    testCompile "junit:junit"
-    testCompile "org.mockito:mockito-core"
+    testImplementation "com.opencsv:opencsv"
+    testImplementation "junit:junit"
+    testImplementation "org.mockito:mockito-core"
 }
 
 jar.dependsOn ":ifs-web-service:gulp_default"

@@ -8,23 +8,23 @@ group 'innovateuk'
 version project.version
 
 dependencies {
-    compile "org.innovateuk.ifs.libraries:ifs-commons"
-    compile "org.innovateuk.ifs.libraries:ifs-data-service-commons"
-    compile "org.innovateuk.ifs.libraries:ifs-data-service-commons-test"
+    implementation "org.innovateuk.ifs.libraries:ifs-commons"
+    implementation "org.innovateuk.ifs.libraries:ifs-data-service-commons"
+    implementation "org.innovateuk.ifs.libraries:ifs-data-service-commons-test"
 
-    compile "org.springframework.boot:spring-boot-starter-data-jpa"
-    compile "org.springframework.boot:spring-boot-starter-security"
-    compile "org.apache.httpcomponents:httpasyncclient"
-    compile "org.mariadb.jdbc:mariadb-java-client"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.apache.httpcomponents:httpasyncclient"
+    implementation "org.mariadb.jdbc:mariadb-java-client"
 
-    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
-    testCompile "org.innovateuk.ifs.libraries:ifs-data-service-commons-test"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-commons"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-data-service-commons-test"
 
-    testCompile "com.h2database:h2"
-    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    testCompile "com.opencsv:opencsv"
-    testCompile "junit:junit"
+    testImplementation "com.h2database:h2"
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation "com.opencsv:opencsv"
+    testImplementation "junit:junit"
 
 }
 
