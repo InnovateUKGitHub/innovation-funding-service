@@ -8,7 +8,7 @@ bases:
   - ../../env-base
 
 components:
-  - ../../../components/auth/registration-service
+  - ../../../components/registration-service
   - ../../../components/data-layer/
   - ../../../components/web-layer
 

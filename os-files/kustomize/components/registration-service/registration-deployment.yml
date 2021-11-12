@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: spring-boot-service-container
-          image: docker-ifs.devops.innovateuk.org/releases/registration-service:1.1.153
+          image: registration-service
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -120,10 +120,14 @@ spec:
             requests:
               cpu: 100m
               memory: 1G
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "$JAVA_HOME/bin/keytool -import -trustcacerts -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit -noprompt -alias iuk-auth-localdev -file /var/certs/ldap-encryption.crt"]
           volumeMounts:
             - mountPath: /var/certs
               name: registration-keys-volume
       volumes:
         - name: registration-keys-volume
           secret:
-            secretName: ldap-keys-secrets
+            secretName: registration-keys-secrets
