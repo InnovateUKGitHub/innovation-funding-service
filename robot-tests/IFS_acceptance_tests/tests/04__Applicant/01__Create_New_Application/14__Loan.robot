@@ -39,6 +39,8 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...
 ...             IFS-10705  B&FI question submitted
 ...
+...             IFS-10703 Loans question - open in Salesforce (as second tab)
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -66,32 +68,23 @@ ${spend_profile}                           ${server}/project-setup-management/pr
 
 *** Test Cases ***
 The user can see b&fi application question as complete and shows edit online survey button
-    [Documentation]    IFS-9484  IFS-10705
+    [Documentation]    IFS-9484  IFS-10705  IFS-10703
     When the user clicks the button/link       link = Business and financial information
+    And the user clicks the button/link        jQuery = a:contains("Continue (opens in new tab)")
+    And Select Window                          title = Sign in - Innovation Funding Service
+    And the user closes the last opened tab
     Then the user should see b&fi question details
 
-The user will not be able to mark the application as complete without completing business and financial information
-    [Documentation]    IFS-9484
-    Given the user clicks the button/link                     link = Back to application overview
-    When the user clicks the button/link                      id = application-overview-submit-cta
-    Then the user should see that the element is disabled     id = submit-application-button
-    And the user should see the element                       jQuery = .section-incomplete + button:contains("Business and financial information")
-    And the user should see the element                       jQuery = p:contains("You must ensure that the business information and financial spreadsheet have been completed before you click submit below.")
-    And the user should see the element                       jQuery = h2:contains("Applicant details")
-    And the user should see the element                       jQuery = h2:contains("Project finance")
+the user can open the sales force new tab on clicking conitnue button in incomplete status of b&fi question
+    [Documentation]   IFS-10703
+    Given the sales force submits/unsubmits b&fi survey     0
+    When the user clicks the button/link                    jQuery = a:contains("Continue (opens in new tab)")
+    Then Select Window                                      title = Sign in - Innovation Funding Service
+    And the user closes the last opened tab
 
-The user can complete the business and financial information application question
-    [Documentation]    IFS-9484 IFS-10703
-    Given the user clicks the button/link          link = Application overview
-    And the user clicks the button/link            link = Business and financial information
-    And the user enters text to a text field       css = * .editor    This is the applicant response for have you completed the business information, including uploading your financial submission.
-    When the user clicks the button/link           id = application-question-complete
-    And the user clicks the button/link            link = Back to application overview
-    Then the user should see the element           jQuery = div:contains("Business and financial information") ~ .task-status-complete
-=======
+The user will not be able to mark the application as complete without completing business and financial information
     [Documentation]    IFS-9484  IFS-10705
-    [Setup]  the sales force submits/unsubmits b&fi survey      0
-    Given the user clicks the button/link                       link = Back to application overview
+    Given the user clicks the button/link                         link = Back to application overview
     When the user clicks the button/link                        id = application-overview-submit-cta
     Then the user should see that the element is disabled       id = submit-application-button
     And the user should see the element                         jQuery = .section-incomplete + button:contains("Business and financial information")
@@ -102,10 +95,10 @@ The user can see the business and financial information application question in 
     [Documentation]    IFS-9484  IFS-10705
     When the sales force submits/unsubmits b&fi survey     1
     Then the user should see the element                   jQuery = .section-complete + button:contains("Business and financial information")
->>>>>>> 27f243792cc97a080cd6cc2cf54c08f63374c063
 
 Loan application shows correct T&C's
     [Documentation]    IFS-6205  IFS-9483  IFS-9716
+    Given the user clicks the button/link   link = Loan terms and conditions
     Given the user clicks the button/link   link = Application overview
     And the user clicks the button/link     link = Loan terms and conditions
     And the user should see the element     jQuery = h1:contains("Loans terms and conditions")
@@ -389,6 +382,11 @@ the user should see the finished finance checks
     the user should see the element   jQuery = .message-alert p:contains("We have finished checking your finances.")
 
 the user enters a value over the max funding
+    the user clicks the button/link                link = Your project finances
+    the user clicks the button/link                link = Your funding
+    the user clicks the button/link                jQuery = button:contains("Edit your funding")
+    the user enters text to a text field           id = amount  65000
+    the user clicks the button/link                id = mark-all-as-complete
     the user clicks the button/link         link = Your project finances
     the user clicks the button/link         link = Your funding
     the user clicks the button/link         jQuery = button:contains("Edit your funding")
@@ -412,4 +410,3 @@ the sales force submits/unsubmits b&fi survey
     [Arguments]  ${completeStatus}
     execute sql string  UPDATE `${database_name}`.`question_status` SET `marked_as_complete`=${completeStatus} WHERE `application_id`='${loanApplicationID}' and `question_id`='739';
     reload page
-
