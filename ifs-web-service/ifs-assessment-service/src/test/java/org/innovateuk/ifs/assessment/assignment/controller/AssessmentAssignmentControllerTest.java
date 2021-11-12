@@ -57,7 +57,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-@TestPropertySource(locations = { "classpath:/application.properties", "classpath:/ifs-web-core.properties" })
+@TestPropertySource(locations = { "classpath:/application.properties", "classpath:/application-web-core.properties"})
 public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTest<AssessmentAssignmentController> {
 
     private static final long APPLICATION_ID = 2L;
