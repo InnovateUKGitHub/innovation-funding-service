@@ -8,10 +8,6 @@ processResources.dependsOn applyProfiles
 
 apply from: "../flyway.gradle"
 
-apply from: "db-reset.gradle"
-apply from: "db-baseline.gradle"
-apply from: "finance-data-service-sync.gradle"
-
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
 
 apply from: rootProject.file("gradle-support/jib.gradle")
