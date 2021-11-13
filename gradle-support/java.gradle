@@ -33,15 +33,25 @@ test {
     }
 }
 
+// Process resources copies non class files in build an test phases which is the default
+// behaviour and applied as part of the java plugin
+//
+// The expansion element is to pull in and expand gradle properties in this phase.
+// This however breaks the spring properties expansion in application.yml etc.
+// The skipExpansion flag will stop expansion of these projects.
 processResources {
-    filesMatching("*.properties") {
-        expand project.properties
+    if(!project.hasProperty("skipExpansion")) {
+        filesMatching("*.properties") {
+            expand project.properties
+        }
     }
 }
 
 processTestResources {
-    filesMatching("*.properties") {
-        expand project.properties
+    if(!project.hasProperty("skipExpansion")) {
+        filesMatching("*.properties") {
+            expand project.properties
+        }
     }
 }
 
