@@ -14,9 +14,16 @@ ext.ifsSurveyDataServiceRestBaseURL = "http://survey-data-service:8080"
 
 dependencies {
     implementation project(':ifs-web-service:ifs-web-core')
+    implementation "org.innovateuk.ifs.libraries:ifs-resources"
+    implementation "org.innovateuk.ifs.libraries:ifs-commons"
+    implementation "org.innovateuk.ifs.libraries:ifs-rest-util"
+    implementation "org.innovateuk.ifs.libraries:ifs-error-util"
     implementation "org.innovateuk.ifs.libraries:ifs-survey-resources"
     implementation "org.innovateuk.ifs.libraries:ifs-survey-rest-api-service"
     implementation "org.innovateuk.ifs.libraries:ifs-web-commons"
+
+    implementation 'org.apache.commons:commons-lang3'
+    implementation "org.springframework.boot:spring-boot-starter-validation"
 
     testImplementation "org.innovateuk.ifs.libraries:ifs-commons"
     testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
