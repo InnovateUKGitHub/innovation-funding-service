@@ -121,6 +121,8 @@ Loan application submission
     Then the user should see the element            jQuery = h1:contains("Application overview")
     And The user clicks the button/link             id = accordion-questions-heading-1-1
     And the user should see the element             jQuery = span:contains("Thanks for submitting Part B of your loan application.")
+    And the user should see the element             jQuery = span:contains("What happens next")
+    And the user should see the element             jQuery = span:contains("We will make our decision based on: Suitability of your business to receive a loan and the quality of the project.")
     And the user reads his email                    ${lead_applicant_credentials["email"]}   Complete your application for Loan Competition   You have completed your application for Loan Competition.
 
 Applicant complete the project setup details
