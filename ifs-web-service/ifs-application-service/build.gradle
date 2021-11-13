@@ -10,11 +10,21 @@ version project.version
 
 dependencies {
     implementation project(':ifs-web-service:ifs-web-core')
+    implementation "org.innovateuk.ifs.libraries:ifs-commons"
+    implementation "org.innovateuk.ifs.libraries:ifs-resources"
+    implementation "org.innovateuk.ifs.libraries:ifs-rest-util"
+    implementation "org.innovateuk.ifs.libraries:ifs-error-util"
     implementation "org.innovateuk.ifs.libraries:ifs-web-commons"
+    implementation "org.innovateuk.ifs.libraries:ifs-security"
     implementation "org.innovateuk.ifs.libraries:ifs-application-commons"
-    implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+    implementation "org.innovateuk.ifs.libraries:ifs-rest-api-service"
 
-    testImplementation "org.innovateuk.ifs.libraries:ifs-commons"
+    implementation "org.apache.commons:commons-lang3"
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+
+    testImplementation "org.innovateuk.ifs.libraries:ifs-commons-test"
     testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
     testImplementation "org.innovateuk.ifs.libraries:ifs-web-commons-test"
 

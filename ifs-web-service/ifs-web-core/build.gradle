@@ -28,12 +28,14 @@ dependencies {
     implementation "org.apache.httpcomponents:httpclient"
     implementation "org.apache.httpcomponents:httpasyncclient"
     implementation 'org.jsoup:jsoup'
-
+    implementation "org.apache.commons:commons-lang3"
+    implementation "commons-beanutils:commons-beanutils"
 
     implementation "org.innovateuk.ifs.libraries:ifs-web-commons"
     implementation "org.innovateuk.ifs.libraries:ifs-resources"
     implementation 'org.innovateuk.ifs.libraries:ifs-rest-api-service'
     implementation "org.innovateuk.ifs.libraries:ifs-rest-util"
+    implementation "org.innovateuk.ifs.libraries:ifs-error-util"
 
     implementation "org.innovateuk.ifs.libraries:ifs-commons"
     implementation "org.innovateuk.ifs.libraries:ifs-security"
