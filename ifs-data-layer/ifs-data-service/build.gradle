@@ -48,6 +48,11 @@ dependencies {
     implementation "org.innovateuk.ifs.libraries:ifs-data-service-notifications"
     implementation "org.innovateuk.ifs.libraries:ifs-sil-resources"
     implementation "org.innovateuk.ifs.libraries:ifs-error-util"
+    implementation 'org.innovateuk.ifs.libraries:ifs-data-service-file'
+    implementation 'org.innovateuk.ifs.libraries:ifs-resources'
+    implementation 'org.innovateuk.ifs.libraries:ifs-commons'
+    implementation 'org.innovateuk.ifs.libraries:ifs-security'
+    implementation 'org.innovateuk.ifs.libraries:ifs-rest-util'
 
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-validation"
@@ -60,6 +65,9 @@ dependencies {
     implementation "io.springfox:springfox-boot-starter:3.0.0"
     implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 
+    implementation 'org.apache.pdfbox:pdfbox:2.0.22'
+    implementation 'org.apache.poi:poi:4.1.2'
+    implementation 'org.apache.poi:poi-ooxml:4.1.2'
     implementation "org.springframework.boot:spring-boot-starter-cache"
     implementation "org.springframework:spring-web"
     implementation "com.jayway.jsonpath:json-path-assert"
@@ -82,11 +90,9 @@ dependencies {
     implementation 'org.jsoup:jsoup'
     implementation "com.opencsv:opencsv"
 
-    testImplementation "org.innovateuk.ifs.libraries:ifs-commons"
-    testImplementation "org.innovateuk.ifs.libraries:ifs-resources"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-commons-test"
     testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
     testImplementation "org.innovateuk.ifs.libraries:ifs-data-service-commons-test"
-
     testImplementation "org.innovateuk.ifs.libraries:ifs-data-service-notifications-test"
 
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'

@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.NotFoundException;
-
 import java.util.UUID;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;

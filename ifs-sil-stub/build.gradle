@@ -12,12 +12,12 @@ dependencies {
     implementation "org.innovateuk.ifs.libraries:ifs-commons"
     implementation "org.innovateuk.ifs.libraries:ifs-sil-resources"
     implementation "org.innovateuk.ifs.libraries:ifs-rest-util"
+    implementation 'org.innovateuk.ifs.libraries:ifs-error-util'
 
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation 'javax.mail:mail'
     testImplementation "org.springframework.restdocs:spring-restdocs-mockmvc"
 
-    testImplementation "org.innovateuk.ifs.libraries:ifs-commons"
     testImplementation "junit:junit"
 }
 

@@ -15,7 +15,7 @@ import java.util.Map;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
+import static org.innovateuk.ifs.util.JsonMappingDeprecatedUtil.fromJson;
 
 /**
  * A simple endpoint to allow stubbing of the SIL outbound email endpoint for non-integration test environments

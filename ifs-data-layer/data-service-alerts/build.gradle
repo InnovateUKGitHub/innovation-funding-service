@@ -8,6 +8,10 @@ version project.version
 dependencies {
 
     implementation "org.innovateuk.ifs.libraries:ifs-commons"
+    implementation "org.innovateuk.ifs.libraries:ifs-resources"
+    implementation "org.innovateuk.ifs.libraries:ifs-rest-util"
+    implementation "org.innovateuk.ifs.libraries:ifs-error-util"
+    implementation "org.innovateuk.ifs.libraries:ifs-security"
     implementation "org.innovateuk.ifs.libraries:ifs-data-service-commons"
     implementation "org.innovateuk.ifs.libraries:ifs-data-service-commons-test"
 

@@ -7,7 +7,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import static junit.framework.TestCase.fail;
 import static org.innovateuk.ifs.sil.experian.controller.ExperianEndpointController.VALIDATION_ERRORS;
 import static org.innovateuk.ifs.sil.experian.controller.ExperianEndpointController.VERIFICATION_RESULTS;
-import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.innovateuk.ifs.util.JsonMappingDeprecatedUtil.toJson;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
