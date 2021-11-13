@@ -1,7 +1,6 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
 
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
-apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
 
@@ -16,15 +15,6 @@ apply plugin: 'idea'
 group 'innovateuk'
 version project.version
 
-project.version = nexusVersion
-deploy.dependsOn ":docker:ifs-mysql:ifs-finance-database:wait"
-deploy.mustRunAfter ":docker:ifs-mysql:ifs-finance-database:deploy"
-
-deployNexusLocal.dependsOn ":docker:ifs-mysql:ifs-finance-database:waitNexusDeploy"
-deployNexusLocal.mustRunAfter ":docker:ifs-mysql:ifs-finance-database:deployNexusLocal"
-
-
-ext.dockerComposeFile = "docker-compose/docker-compose-finance-totals.yml"
 ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
 
 ext {

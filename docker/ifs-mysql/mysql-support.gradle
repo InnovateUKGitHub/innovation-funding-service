@@ -1,7 +1,7 @@
 import org.innovateuk.ifs.tasks.StartDbContainerIfNotStartedTask
 
 
-apply from: rootProject.file("gradle-support/openshift-build.gradle")
+apply from: "../openshift-build.gradle"
 
 tagDocker.onlyIf { !isNamedEnv() }
 tagDocker.repository = project.dockerRegistry + "/" + openshiftEnv + "/ifs-mysql"

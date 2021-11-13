@@ -1,7 +1,6 @@
 apply from: rootProject.file("gradle-support/profile-handler.gradle")
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 
-apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
 
@@ -34,31 +33,6 @@ test {
     if (project.hasProperty('testGroups')) {
         systemProperty 'testGroups', project.getProperty('testGroups')
     }
-}
-
-prepareDockerBaseInput {
-}
-
-buildDocker.dependsOn prepareDockerBaseInput
-
-buildDocker.inputDir = project.file("$project.buildDir/docker")
-
-osStageRemote.onlyIf { isNotProductionEnv() }
-
-project.version = nexusVersion
-tagDocker.tag = nexusVersion
-osStageRemote.tag = nexusVersion
-tagDockerLocal.tag = nexusVersion
-osStageLocal.tag = nexusVersion
-
-createContainer.hostName = "sil-stub"
-createContainer.containerName = "sil-stub"
-createContainer.containerId = "sil-stub"
-createContainer.portBindings = ['8091:8080']
-
-def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
-[stop, removeContainer, createContainer, deploy, wait].each { task ->
-    task.enabled = enabled
 }
 
 //

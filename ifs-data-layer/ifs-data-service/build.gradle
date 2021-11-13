@@ -21,8 +21,6 @@ apply from: rootProject.file("gradle-support/jib.gradle")
 group 'innovateuk'
 version project.version
 
-project.version = nexusVersion
-
 afterEvaluate {
     ext {
         dockerDir = file("$project.parent.projectDir/docker/")

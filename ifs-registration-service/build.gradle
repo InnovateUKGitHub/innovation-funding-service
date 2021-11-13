@@ -1,4 +1,3 @@
-apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
@@ -22,5 +21,3 @@ dependencies {
     testImplementation("org.springframework.ldap:spring-ldap-test")
     testImplementation("junit:junit")
 }
-project.version = nexusVersion
-deploy.dependsOn ":ifs-auth-service:ifs-ldap-service:deploy"
