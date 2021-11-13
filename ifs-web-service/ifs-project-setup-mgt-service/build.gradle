@@ -27,7 +27,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-validation"
     implementation "org.springframework.boot:spring-boot-starter-security"
 
-    testImplementation "org.innovateuk.ifs.libraries:ifs-commons"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-commons-test"
     testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
 
     testImplementation "org.innovateuk.ifs.libraries:ifs-web-commons-test"
