@@ -24,6 +24,7 @@ dependencies {
     implementation "org.innovateuk.ifs.libraries:ifs-security"
 
     implementation 'org.apache.commons:commons-lang3'
+    implementation 'org.apache.commons:commons-io'
     implementation 'org.apache.commons:commons-collections4'
     implementation "org.springframework.boot:spring-boot-starter-validation"
     implementation "org.springframework.boot:spring-boot-starter-security"
