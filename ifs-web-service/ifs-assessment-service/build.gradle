@@ -16,10 +16,16 @@ dependencies {
     implementation "org.innovateuk.ifs.libraries:ifs-resources"
     implementation "org.innovateuk.ifs.libraries:ifs-rest-util"
     implementation "org.innovateuk.ifs.libraries:ifs-error-util"
+    implementation "org.innovateuk.ifs.libraries:ifs-security"
     implementation "org.innovateuk.ifs.libraries:ifs-application-commons"
     implementation 'org.innovateuk.ifs.libraries:ifs-assessment-commons'
+    implementation 'org.innovateuk.ifs.libraries:ifs-rest-api-service'
+    implementation 'org.innovateuk.ifs.libraries:ifs-web-commons'
 
-    implementation 'org.springframework.boot:springboot-starter-validation'
+    implementation 'org.apache.commons:commons-lang3'
+
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.boot:spring-boot-starter-security"
 
     testImplementation "org.innovateuk.ifs.libraries:ifs-commons-test"
     testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"

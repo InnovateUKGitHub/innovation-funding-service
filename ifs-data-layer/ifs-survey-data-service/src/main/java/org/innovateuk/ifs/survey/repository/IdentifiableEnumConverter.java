@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.survey.repository;
 
 
-import org.innovateuk.ifs.commons.LibraryCandidate;
 import org.innovateuk.ifs.identity.Identifiable;
 
 import javax.persistence.AttributeConverter;
@@ -21,7 +20,6 @@ import static java.util.stream.Collectors.toMap;
  *   <li>Provide a public default constructor</li>
  * </ul>
  */
-@LibraryCandidate
 public abstract class IdentifiableEnumConverter<T extends Enum<T> & Identifiable> implements AttributeConverter<T, Long> {
 
     private final Map<Long, T> idMap;
