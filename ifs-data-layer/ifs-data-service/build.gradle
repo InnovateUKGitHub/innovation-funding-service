@@ -14,8 +14,6 @@ apply from: "finance-data-service-sync.gradle"
 
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
 
-apply plugin: 'idea'
-
 apply from: rootProject.file("gradle-support/jib.gradle")
 
 group 'innovateuk'

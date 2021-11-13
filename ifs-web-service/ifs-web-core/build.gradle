@@ -1,7 +1,5 @@
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 
-apply plugin: 'idea'
-
 bootJar.enabled=false
 jar.enabled=true
 

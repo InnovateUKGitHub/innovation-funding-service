@@ -1,5 +1,4 @@
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
-apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
 
 buildscript {
@@ -10,9 +9,6 @@ buildscript {
 
 group 'innovateuk'
 version project.version
-
-apply plugin: 'idea'
-
 
 dependencies {
     implementation project(':ifs-web-service:ifs-web-core')
