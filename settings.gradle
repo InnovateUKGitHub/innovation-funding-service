@@ -1,5 +1,3 @@
-include 'docker:ifs-mysql'
-include 'docker:ifs-mysql:ifs-database'
 include 'ifs-data-layer'
 include 'ifs-data-layer:ifs-data-service'
 include 'ifs-data-layer:ifs-finance-data-service'
