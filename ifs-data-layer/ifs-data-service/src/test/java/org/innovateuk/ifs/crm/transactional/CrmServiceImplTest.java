@@ -629,7 +629,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         String expectedLogMessage = "Updating CRM application for compId:15,  " +
                 "payload:SilLoanAssessment(competitionID=15, applications=[" +
                 "SilLoanAssessmentRow(applicationID=366, scoreAverage=55, scoreSpread=0, assessorNumber=2, assessorNotInScope=1, assessorRecommended=2, assessorNotRecommended=0), " +
-                "SilLoanAssessmentRow(applicationID=367, scoreAverage=61, scoreSpread=7, assessorNumber=2, assessorNotInScope=0, assessorRecommended=1, assessorNotRecommended=1)])";
+                "SilLoanAssessmentRow(applicationID=367, scoreAverage=61, scoreSpread=2, assessorNumber=2, assessorNotInScope=0, assessorRecommended=1, assessorNotRecommended=1)])";
 
 
         CompetitionResource competitionResource = new CompetitionResource();
@@ -658,6 +658,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
                 .withLeadOrganisation("Lead Company")
                 .withRecommended(true)
                 .withOverallScore(55)
+                .withTotalScoreGiven(11)
                 .withState(SUBMITTED)
                 .build();
 
@@ -668,6 +669,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
                 .withLeadOrganisation("Lead Company")
                 .withRecommended(true)
                 .withOverallScore(55)
+                .withTotalScoreGiven(11)
                 .withState(SUBMITTED)
                 .build();
 
@@ -678,8 +680,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
                 .withLeadOrganisation("Lead Company2")
                 .withRecommended(true)
                 .withOverallScore(60)
-                .withMaximumScoreGiven(9)
-                .withMinimumScoreGiven(5)
+                .withTotalScoreGiven(10)
                 .withState(SUBMITTED)
                 .build();
 
@@ -690,8 +691,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
                 .withLeadOrganisation("Lead Company2")
                 .withRecommended(false)
                 .withOverallScore(62)
-                .withMaximumScoreGiven(8)
-                .withMinimumScoreGiven(2)
+                .withTotalScoreGiven(12)
                 .withState(SUBMITTED)
                 .build();
 

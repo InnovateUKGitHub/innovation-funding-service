@@ -65,8 +65,6 @@ public class ApplicationAssessmentServiceImplTest extends BaseServiceUnitTest<Ap
                 .build();
         Assessment assessment = newAssessment().withId(5L).withApplication(application).withProcessState(ACCEPTED).build();
         AssessmentTotalScoreResource assessmentTotalScore = new AssessmentTotalScoreResource();
-        assessmentTotalScore.setMaxScoreGiven(100);
-        assessmentTotalScore.setMinScoreGiven(50);
 
         when(assessmentRepositoryMock.findByParticipantUserIdAndTargetCompetitionId(user.getId(), competition.getId()))
                 .thenReturn(singletonList(assessment));

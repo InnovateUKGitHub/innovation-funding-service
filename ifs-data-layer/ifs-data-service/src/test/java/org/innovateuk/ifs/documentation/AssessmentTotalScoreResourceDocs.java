@@ -10,9 +10,6 @@ public class AssessmentTotalScoreResourceDocs {
 
     public static final FieldDescriptor[] assessmentTotalScoreResourceFields = {
             fieldWithPath("totalScoreGiven").description("The sum of the scores given for each of the assessed questions"),
-            fieldWithPath("totalScoreGiven").description("The sum of the scores given for each of the assessed questions"),
-            fieldWithPath("maxScoreGiven").description("The max Score Given"),
-            fieldWithPath("minScoreGiven").description("The min Score Given"),
             fieldWithPath("totalScorePossible").description("The total Score Possible")
     };
 

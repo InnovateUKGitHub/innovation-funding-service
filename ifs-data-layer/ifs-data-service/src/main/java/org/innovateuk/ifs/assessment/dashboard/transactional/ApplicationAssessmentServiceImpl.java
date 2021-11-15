@@ -66,8 +66,7 @@ public class ApplicationAssessmentServiceImpl implements ApplicationAssessmentSe
                 leadOrganisation.get().getName(),
                 assessment.getProcessState(),
                 getOverallScore(assessment, assessmentTotalScore),
-                assessmentTotalScore.getMaxScoreGiven(),
-                assessmentTotalScore.getMinScoreGiven(),
+                getTotalScoreGiven(assessment, assessmentTotalScore),
                 getRecommended(assessment));
     }
 
@@ -76,6 +75,16 @@ public class ApplicationAssessmentServiceImpl implements ApplicationAssessmentSe
             case READY_TO_SUBMIT:
             case SUBMITTED:
                 return assessmentTotalScore.getTotalScorePercentage();
+            default:
+                return 0;
+        }
+    }
+
+    private int getTotalScoreGiven(Assessment assessment, AssessmentTotalScoreResource assessmentTotalScore) {
+        switch (assessment.getProcessState()) {
+            case READY_TO_SUBMIT:
+            case SUBMITTED:
+                return assessmentTotalScore.getTotalScoreGiven();
             default:
                 return 0;
         }
