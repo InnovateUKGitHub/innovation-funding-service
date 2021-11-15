@@ -364,9 +364,9 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
 
     @JsonIgnore
     public String getLoansQuestionsFormSalesForceURL() {
-        return salesForceURL + "/?" + "(" + "CompanyName= " + leadOrganisationName + "," +
-            "CompanyNumber= " + leadOrganisationCompaniesHouseNumber + "," +
-            "IFSApplicationNumber= " + applicationId + ")" ;
+        return salesForceURL + "?" + "CompanyNumber=" + leadOrganisationCompaniesHouseNumber + "&" +
+                "IFSApplicationNumber=" + applicationId + "&" +
+                "CompanyName=" + leadOrganisationName;
     }
 
     public static final class GenericQuestionApplicationViewModelBuilder {
