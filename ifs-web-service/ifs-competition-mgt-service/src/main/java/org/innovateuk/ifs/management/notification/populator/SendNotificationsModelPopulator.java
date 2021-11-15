@@ -50,9 +50,9 @@ public class SendNotificationsModelPopulator {
                                               unsuccessfulCount,
                                               onHoldCount,
                                               competitionResource,
-                                              Boolean.TRUE.equals(competitionAssessmentConfigResource.getIncludeAverageAssessorScoreInNotifications()));
+                                              Boolean.TRUE.equals(competitionAssessmentConfigResource.getIncludeAverageAssessorScoreInNotifications()),
+                                              competitionResource.isHesta());
     }
-
 
     private long getApplicationCountByFundingDecision(List<FundingDecisionToSendApplicationResource> filteredApplications, FundingDecision fundingDecision) {
         return filteredApplications.stream()
@@ -61,12 +61,10 @@ public class SendNotificationsModelPopulator {
     }
 
     private void tryToPrePopulateMessage(CompetitionResource competition, long successfulCount, long unsuccessfulCount, long onHoldCount, NotificationEmailsForm form) {
-        if (!competition.isAlwaysOpen()) {
-            if (onlySuccessfulEmails(successfulCount, unsuccessfulCount, onHoldCount)) {
-                form.setMessage(applicationNotificationTemplateRestService.getSuccessfulNotificationTemplate(competition.getId()).getSuccess().getMessageBody());
-            } else if (onlyUnsuccessfulEmails(successfulCount, unsuccessfulCount, onHoldCount)) {
-                form.setMessage(applicationNotificationTemplateRestService.getUnsuccessfulNotificationTemplate(competition.getId()).getSuccess().getMessageBody());
-            }
+        if (onlySuccessfulEmails(successfulCount, unsuccessfulCount, onHoldCount)) {
+            form.setMessage(applicationNotificationTemplateRestService.getSuccessfulNotificationTemplate(competition.getId()).getSuccess().getMessageBody());
+        } else if (onlyUnsuccessfulEmails(successfulCount, unsuccessfulCount, onHoldCount)) {
+            form.setMessage(applicationNotificationTemplateRestService.getUnsuccessfulNotificationTemplate(competition.getId()).getSuccess().getMessageBody());
         }
     }
 
@@ -77,6 +75,4 @@ public class SendNotificationsModelPopulator {
     private boolean onlySuccessfulEmails(long successfulCount, long unsuccessfulCount, long onHoldCount) {
         return successfulCount > 0 && unsuccessfulCount == 0 && onHoldCount == 0;
     }
-
-
 }

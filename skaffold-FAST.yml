@@ -44,6 +44,20 @@ profiles:
             project: ifs-data-layer:data-service-alerts
             args:
               - "-DskipTests"
+        - image: sil-stub
+          context: .
+          jib:
+            type: gradle
+            project: ifs-sil-stub
+            args:
+              - "-DskipTests"
+        - image: registration-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-registration-service
+            args:
+              - "-DskipTests"
         - image: survey-service
           context: .
           jib:

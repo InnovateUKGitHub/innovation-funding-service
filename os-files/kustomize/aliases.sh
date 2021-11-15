@@ -167,7 +167,7 @@ skaffold_help () {
     echo 'Having sourced this file all commands prefixed skaffold_ should tab auto-complete'
     echo 'Skaffold_e, _dx, _ports is the full dev env but there are many ways to run this'
     echo ''
-    echo '    skaffold_e - auth, cache, mail, registration-service, sil and ifs-database '
+    echo '    skaffold_e - auth, cache, mail, sil and ifs-database '
     echo '    skaffold_dx - runs data and web tier '
     echo '    skaffold_dev [file] runs fast dev mode on specified skaffold file'
     echo '    skaffold_debug [file] runs fast debug mode on specified skaffold file'

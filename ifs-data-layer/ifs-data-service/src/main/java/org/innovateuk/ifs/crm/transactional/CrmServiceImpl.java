@@ -269,7 +269,8 @@ public class CrmServiceImpl implements CrmService {
                 if (ApplicationEvent.REINSTATE_INELIGIBLE.getType().equals(application.getEvent())) {
                     markIneligible(application, loanApplication, Boolean.FALSE);
                 } else {
-                    markSubmitted(application, loanApplication);
+                    CompetitionResource competition = competitionService.getCompetitionById(application.getCompetition()).getSuccess();
+                    markSubmitted(application, competition, loanApplication);
                 }
                 break;
             case INELIGIBLE:
@@ -281,10 +282,12 @@ public class CrmServiceImpl implements CrmService {
         return loanApplication;
     }
 
-    private void markSubmitted(ApplicationResource application, SilLoanApplication loanApplication) {
+    private void markSubmitted(ApplicationResource application, CompetitionResource competition, SilLoanApplication loanApplication) {
         loanApplication.setApplicationName(application.getName());
         loanApplication.setApplicationLocation(applicationSummarisationService.getProjectLocation(application.getId()).getSuccess());
         loanApplication.setApplicationSubmissionDate(application.getSubmittedDate());
+        loanApplication.setCompetitionCode(competition.getCode());
+        loanApplication.setCompetitionName(competition.getName());
         loanApplication.setProjectDuration(application.getDurationInMonths().intValue());
         loanApplication.setProjectTotalCost(applicationSummarisationService.getProjectTotalFunding(application.getId()).getSuccess().doubleValue());
         loanApplication.setProjectOtherFunding(applicationSummarisationService.getProjectOtherFunding(application.getId()).getSuccess().doubleValue());
