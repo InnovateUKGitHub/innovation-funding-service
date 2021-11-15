@@ -31,7 +31,7 @@ public class AlwaysOpenCloseCompetitionController {
     public String viewPage(Model model,
                            @PathVariable long competitionId) {
         model.addAttribute("model", populator.populate(competitionId));
-        return "close-always-open-competition";
+        return "competition/setup/close-always-open-competition";
     }
 
     @PostMapping(params="close-competition")
