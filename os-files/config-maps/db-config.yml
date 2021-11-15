@@ -1,0 +1,12 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: db-config
+data:
+  DB_URL: "${DB_URL}"
+  DB_NAME: "${DB_NAME}"
+  DB_USER: "${DB_USER}"
+  DB_PASS: "${DB_PASS}"
+  DB_HOST: "${DB_HOST}"
+  DB_PORT: "${DB_PORT}"
+  DB_ANON_PASS: "${DB_ANON_PASS}"
