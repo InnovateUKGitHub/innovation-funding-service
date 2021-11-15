@@ -3,7 +3,6 @@ package org.innovateuk.ifs.shibboleth.api.component;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.innovateuk.ifs.shibboleth.api.models.NewIdentity;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -28,7 +27,6 @@ public class PasswordValidationTest {
         assertPasswordViolations("aCtU4lGoodP4$$worD", ImmutableSet.of());
     }
 
-    @Ignore
     @Test
     public void testNoNumberPassword() {
         assertPasswordViolations("pAssWordThEFg", ImmutableSet.of(
@@ -36,7 +34,6 @@ public class PasswordValidationTest {
         ));
     }
 
-    @Ignore
     @Test
     public void testLongPassword() {
         assertPasswordViolations("paSSsword123456789!!kljdfsjkdfsjkldfsdfjklsdfsjkldfsjkl", ImmutableSet.of(
@@ -44,7 +41,6 @@ public class PasswordValidationTest {
         ));
     }
 
-    @Ignore
     @Test
     public void testNoUppercasePassword() {
         assertPasswordViolations("password123456789", ImmutableSet.of(
@@ -53,14 +49,12 @@ public class PasswordValidationTest {
     }
 
     @Test
-    @Ignore
     public void testNoLowercasePassword() {
         assertPasswordViolations("PASSWORD123456789", ImmutableSet.of(
                 "PASSWORD_MUST_CONTAIN_AT_LEAST_ONE_LOWER_CASE_LETTER"
         ));
     }
 
-    @Ignore
     @Test
     public void testBlankPassword() {
         assertPasswordViolations("", ImmutableSet.of(
@@ -72,7 +66,6 @@ public class PasswordValidationTest {
         ));
     }
 
-    @Ignore
     @Test
     public void testShortPassword() {
         assertPasswordViolations("short", ImmutableSet.of(
