@@ -84,7 +84,7 @@ the user can open the sales force new tab on clicking conitnue button in incompl
 
 The user will not be able to mark the application as complete without completing business and financial information
     [Documentation]    IFS-9484  IFS-10705
-    Given the user clicks the button/link                         link = Back to application overview
+    Given the user clicks the button/link                       link = Back to application overview
     When the user clicks the button/link                        id = application-overview-submit-cta
     Then the user should see that the element is disabled       id = submit-application-button
     And the user should see the element                         jQuery = .section-incomplete + button:contains("Business and financial information")
@@ -98,7 +98,6 @@ The user can see the business and financial information application question in 
 
 Loan application shows correct T&C's
     [Documentation]    IFS-6205  IFS-9483  IFS-9716
-    Given the user clicks the button/link   link = Loan terms and conditions
     Given the user clicks the button/link   link = Application overview
     And the user clicks the button/link     link = Loan terms and conditions
     And the user should see the element     jQuery = h1:contains("Loans terms and conditions")
@@ -382,11 +381,6 @@ the user should see the finished finance checks
     the user should see the element   jQuery = .message-alert p:contains("We have finished checking your finances.")
 
 the user enters a value over the max funding
-    the user clicks the button/link                link = Your project finances
-    the user clicks the button/link                link = Your funding
-    the user clicks the button/link                jQuery = button:contains("Edit your funding")
-    the user enters text to a text field           id = amount  65000
-    the user clicks the button/link                id = mark-all-as-complete
     the user clicks the button/link         link = Your project finances
     the user clicks the button/link         link = Your funding
     the user clicks the button/link         jQuery = button:contains("Edit your funding")
