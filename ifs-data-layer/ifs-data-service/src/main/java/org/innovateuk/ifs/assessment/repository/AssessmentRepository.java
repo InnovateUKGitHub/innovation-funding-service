@@ -49,7 +49,7 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
 
     String TOTAL_SCORE = "SELECT NEW org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource(" +
             "  CAST(COALESCE(SUM(assessorFormInputResponse.value),0) AS int)," +
-            "  CAST(SUM(question.assessorMaximumScore) AS int))" +
+            "  CAST(SUM(question.assessorMaximumScore) AS int)) " +
             "FROM Assessment assessment" +
             "  JOIN assessment.target.competition.questions question" +
             "  JOIN question.formInputs formInput" +
