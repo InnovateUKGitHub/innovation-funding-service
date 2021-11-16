@@ -1,6 +1,7 @@
 kustomize build base > /dev/null || echo 'xxx error on base'
 
 kustomize build components/auth > /dev/null || echo 'xxx error on base'
+kustomize build components/registration-service > /dev/null || echo 'xxx error on reg service'
 kustomize build components/cache-provider > /dev/null || echo 'xxx error on base cache'
 kustomize build components/data-layer > /dev/null || echo 'xxx error on base data'
 kustomize build components/db-reset > /dev/null || echo 'xxx error on base web'
