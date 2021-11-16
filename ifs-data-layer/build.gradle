@@ -6,11 +6,3 @@ apply plugin: 'idea'
 ext {
     javaLanguageLevel = 1.8
 }
-
-sourceSets {
-    main {
-        resources {
-            srcDirs = ["src/main/resources", "../../shared-resources"]
-        }
-    }
-}
