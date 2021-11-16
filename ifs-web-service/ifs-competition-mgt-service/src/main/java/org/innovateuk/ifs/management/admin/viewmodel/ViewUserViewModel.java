@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.management.admin.viewmodel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.user.resource.*;

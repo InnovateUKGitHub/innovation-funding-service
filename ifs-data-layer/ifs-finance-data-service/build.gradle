@@ -1,8 +1,6 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
 
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
-apply from: rootProject.file("gradle-support/openshift-build.gradle")
-apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
 
 apply from: rootProject.file("gradle-support/profile-handler.gradle")
@@ -11,20 +9,10 @@ apply from: rootProject.file("gradle-support/jib.gradle")
 processResources.dependsOn applyProfiles
 
 apply from: "../flyway.gradle"
-apply plugin: 'idea'
 
 group 'innovateuk'
 version project.version
 
-project.version = nexusVersion
-deploy.dependsOn ":docker:ifs-mysql:ifs-finance-database:wait"
-deploy.mustRunAfter ":docker:ifs-mysql:ifs-finance-database:deploy"
-
-deployNexusLocal.dependsOn ":docker:ifs-mysql:ifs-finance-database:waitNexusDeploy"
-deployNexusLocal.mustRunAfter ":docker:ifs-mysql:ifs-finance-database:deployNexusLocal"
-
-
-ext.dockerComposeFile = "docker-compose/docker-compose-finance-totals.yml"
 ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
 
 ext {
@@ -32,20 +20,24 @@ ext {
 }
 
 dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-    compile "org.springframework.boot:spring-boot-starter-security"
-    compile 'commons-codec:commons-codec'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation 'commons-codec:commons-codec'
+    implementation 'commons-io:commons-io'
 
-    compile "org.innovateuk.ifs.libraries:ifs-commons"
-    compile 'org.innovateuk.ifs.libraries:ifs-resources'
-    compile 'org.innovateuk.ifs.libraries:ifs-security'
+    implementation "org.innovateuk.ifs.libraries:ifs-commons"
+    implementation 'org.innovateuk.ifs.libraries:ifs-resources'
+    implementation 'org.innovateuk.ifs.libraries:ifs-security'
+    implementation 'org.innovateuk.ifs.libraries:ifs-error-util'
+    implementation 'org.innovateuk.ifs.libraries:ifs-rest-util'
 
-    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
-    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-commons-test"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
 
-    testCompile "junit:junit"
+    testImplementation "junit:junit"
 }
 
 test {

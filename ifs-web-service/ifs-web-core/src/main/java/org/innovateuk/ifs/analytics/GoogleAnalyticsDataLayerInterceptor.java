@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.Long.parseLong;
 import static org.innovateuk.ifs.util.CollectionFunctions.negate;
-import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
+import static org.innovateuk.ifs.util.JsonMappingDeprecatedUtil.fromJson;
 
 /**
  * Interceptor to add Google Analytics data layer to the Model.

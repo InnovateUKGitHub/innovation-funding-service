@@ -78,3 +78,10 @@ task deployChrome(type: Exec, dependsOn: [pullChrome, removeChrome]) {
     }
     // docker run -d --name chrome -p 5900:5900 -v /dev/shm:/dev/shm -e NODE_MAX_SESSION=20 -e NODE_MAX_INSTANCES=20 -e NODE_REGISTER_CYCLE=600 -e HUB_PORT_4444_TCP_ADDR=hub -e HUB_PORT_4444_TCP_PORT=4444 -e DBUS_SESSION_BUS_ADDRESS=/dev/null -e no_proxy=localhost -e HUB_ENV_no_proxy=localhost --network=ifs davidrums/node-chrome-debug-proxy:3.0.1-dysprosium
 }
+
+task robotTestsFilter(type: Copy) {
+    from 'robot-tests/IFS_acceptance_tests/resources/variables/'
+    into 'robot-tests/IFS_acceptance_tests/resources/variables/'
+    include 'EMAIL_VARIABLES_TEMPLATE.robot'
+    rename 'EMAIL_VARIABLES_TEMPLATE.robot', 'EMAIL_VARIABLES_SENSITIVE.robot'
+}

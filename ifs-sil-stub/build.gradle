@@ -1,11 +1,6 @@
 apply from: rootProject.file("gradle-support/profile-handler.gradle")
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
-
-apply from: rootProject.file("gradle-support/openshift-build.gradle")
-apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
-
-apply plugin: 'idea'
 
 group 'innovateuk'
 version project.version
@@ -14,16 +9,16 @@ processResources.dependsOn applyProfiles
 
 
 dependencies {
-    compile "org.innovateuk.ifs.libraries:ifs-commons"
-    compile "org.innovateuk.ifs.libraries:ifs-sil-resources"
-    compile "org.innovateuk.ifs.libraries:ifs-rest-util"
+    implementation "org.innovateuk.ifs.libraries:ifs-commons"
+    implementation "org.innovateuk.ifs.libraries:ifs-sil-resources"
+    implementation "org.innovateuk.ifs.libraries:ifs-rest-util"
+    implementation 'org.innovateuk.ifs.libraries:ifs-error-util'
 
-    compile "org.springframework.boot:spring-boot-starter-web"
-    compile 'javax.mail:mail'
-    testCompile "org.springframework.restdocs:spring-restdocs-mockmvc"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation 'javax.mail:mail'
+    testImplementation "org.springframework.restdocs:spring-restdocs-mockmvc"
 
-    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile "junit:junit"
+    testImplementation "junit:junit"
 }
 
 test {
@@ -34,31 +29,6 @@ test {
     if (project.hasProperty('testGroups')) {
         systemProperty 'testGroups', project.getProperty('testGroups')
     }
-}
-
-prepareDockerBaseInput {
-}
-
-buildDocker.dependsOn prepareDockerBaseInput
-
-buildDocker.inputDir = project.file("$project.buildDir/docker")
-
-osStageRemote.onlyIf { isNotProductionEnv() }
-
-project.version = nexusVersion
-tagDocker.tag = nexusVersion
-osStageRemote.tag = nexusVersion
-tagDockerLocal.tag = nexusVersion
-osStageLocal.tag = nexusVersion
-
-createContainer.hostName = "sil-stub"
-createContainer.containerName = "sil-stub"
-createContainer.containerId = "sil-stub"
-createContainer.portBindings = ['8091:8080']
-
-def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
-[stop, removeContainer, createContainer, deploy, wait].each { task ->
-    task.enabled = enabled
 }
 
 //

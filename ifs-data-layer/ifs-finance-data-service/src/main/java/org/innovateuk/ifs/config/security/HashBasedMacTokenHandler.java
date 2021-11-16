@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.config.security;
 
 import org.apache.commons.codec.binary.Hex;
-import org.innovateuk.ifs.commons.LibraryCandidate;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;
@@ -15,7 +14,6 @@ import java.security.NoSuchAlgorithmException;
  * with a secret key.
  */
 @Component
-@LibraryCandidate
 public class HashBasedMacTokenHandler {
 
     private static final String ALGORITHM = "HmacSHA256";
