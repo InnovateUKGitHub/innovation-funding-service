@@ -1,6 +1,4 @@
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
-apply from: rootProject.file("gradle-support/openshift-build.gradle")
-apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
 
 buildscript {
@@ -12,24 +10,27 @@ buildscript {
 group 'innovateuk'
 version project.version
 
-apply plugin: 'idea'
-
-
 ext.ifsSurveyDataServiceRestBaseURL = "http://survey-data-service:8080"
 
-project.version = nexusVersion
-
 dependencies {
-    compile project(':ifs-web-service:ifs-web-core')
-    compile "org.innovateuk.ifs.libraries:ifs-survey-resources"
-    compile "org.innovateuk.ifs.libraries:ifs-survey-rest-api-service"
+    implementation project(':ifs-web-service:ifs-web-core')
+    implementation "org.innovateuk.ifs.libraries:ifs-resources"
+    implementation "org.innovateuk.ifs.libraries:ifs-commons"
+    implementation "org.innovateuk.ifs.libraries:ifs-rest-util"
+    implementation "org.innovateuk.ifs.libraries:ifs-error-util"
+    implementation "org.innovateuk.ifs.libraries:ifs-survey-resources"
+    implementation "org.innovateuk.ifs.libraries:ifs-survey-rest-api-service"
+    implementation "org.innovateuk.ifs.libraries:ifs-web-commons"
 
-    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
-    testCompile "org.innovateuk.ifs.libraries:ifs-web-commons-test"
+    implementation 'org.apache.commons:commons-lang3'
+    implementation "org.springframework.boot:spring-boot-starter-validation"
 
-    testCompile "com.opencsv:opencsv"
-    testCompile "junit:junit"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-commons"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-web-commons-test"
+
+    testImplementation "com.opencsv:opencsv"
+    testImplementation "junit:junit"
 }
 
 jar.dependsOn ":ifs-web-service:gulp_default"

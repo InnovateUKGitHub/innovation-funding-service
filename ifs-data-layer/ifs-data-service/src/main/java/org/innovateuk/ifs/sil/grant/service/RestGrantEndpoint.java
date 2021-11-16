@@ -21,7 +21,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_PROCESS_SEND_FAILED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.innovateuk.ifs.util.JsonMappingDeprecatedUtil.toJson;
 
 @Component
 public class RestGrantEndpoint implements GrantEndpoint {

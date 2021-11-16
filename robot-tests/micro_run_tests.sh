@@ -138,7 +138,7 @@ function initialiseTestEnvironment() {
         k8s_wait cache-provider
 
         section "=> STARTING SELENIUM GRID, INJECTING ENVIRONMENT PARAMETERS, RESETTING DATABASE STATE"
-        ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robotTestsFilter :ifs-data-layer:ifs-data-service:flywayClean :ifs-data-layer:ifs-data-service:flywayMigrate -Pinitialise=true --configure-on-demand
+        ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robot-tests:robotTestsFilter :ifs-data-layer:ifs-data-service:flywayClean :ifs-data-layer:ifs-data-service:flywayMigrate -Pinitialise=true --configure-on-demand
 
         section "=> SYNCING SHIBBOLETH USERS"
         k8s_sync_ldap

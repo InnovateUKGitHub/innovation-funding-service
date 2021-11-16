@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.domain;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import lombok.EqualsAndHashCode;
 import org.innovateuk.ifs.alert.resource.AlertType;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,6 +14,7 @@ import static javax.persistence.EnumType.STRING;
  * Represents an alert which is displayed to users.
  */
 @Entity
+@EqualsAndHashCode
 public class Alert {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -85,31 +85,5 @@ public class Alert {
         this.validToDate = validToDate;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Alert alert = (Alert) o;
-
-        return new EqualsBuilder()
-                .append(id, alert.id)
-                .append(message, alert.message)
-                .append(type, alert.type)
-                .append(validFromDate, alert.validFromDate)
-                .append(validToDate, alert.validToDate)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(message)
-                .append(type)
-                .append(validFromDate)
-                .append(validToDate)
-                .toHashCode();
-    }
 }

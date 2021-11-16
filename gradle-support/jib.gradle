@@ -3,4 +3,8 @@ apply plugin: 'com.google.cloud.tools.jib'
 jib.to.auth.username = project.hasProperty("nexus_username") ? project.property("nexus_username") : ""
 jib.to.auth.password = project.hasProperty("nexus_password") ? project.property("nexus_password") : ""
 
-jib.from.image="docker-ifs.devops.innovateuk.org/releases/openjdk:latest"
+jib {
+    // git ifs-app-base-image/openjdk
+    from.image = 'docker-ifs.devops.innovateuk.org/releases/openjdk:1.8@sha256:64d80ede56e27f44a253ae7072773d73bd67462c99f390ecedd9300acf3d2af0'
+//    container.entrypoint = ["/bin/bash", "bootstrap.sh", ";", "java", "-cp", "/app/resources:/app/classes:/app/libs/*", "org.innovateuk.ifs.Application"]
+}

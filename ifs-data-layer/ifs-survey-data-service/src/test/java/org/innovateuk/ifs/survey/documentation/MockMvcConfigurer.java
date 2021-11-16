@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.survey.documentation;
 
-import org.innovateuk.ifs.commons.LibraryCandidate;
 import org.innovateuk.ifs.commons.rest.RestResultHandlingHttpMessageConverter;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -26,7 +25,6 @@ import static org.springframework.test.util.ReflectionTestUtils.getField;
  * in the data tier. We should also be able to apply any other optional
  * configuration such as Spring RestDocs (if required).
  */
-@LibraryCandidate
 public class MockMvcConfigurer {
 
     private UriConfigurer documentConfiguration;

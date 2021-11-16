@@ -24,7 +24,6 @@ import org.mockito.Mock;
 
 import java.util.*;
 
-import static com.beust.jcommander.internal.Lists.newArrayList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -226,6 +225,10 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                 }
             });
         });
+    }
+
+    public static <K> List<K> newArrayList(K... c) {
+        return new ArrayList<>(Arrays.asList(c));
     }
 
     @Test
