@@ -10,6 +10,7 @@ import java.io.IOException;
 /**
  * @deprecated prefer an autowired ObjectMapper in impl code
  */
+@Deprecated
 public final class JsonMappingDeprecatedUtil {
 
     private JsonMappingDeprecatedUtil() {}
