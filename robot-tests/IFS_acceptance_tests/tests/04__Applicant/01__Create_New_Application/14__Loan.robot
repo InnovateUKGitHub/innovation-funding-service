@@ -35,6 +35,8 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...
 ...             IFS-9679 MO Spend profile: IFS Admin only to be able to approve or reject spend profiles
 ...
+...             IFS-10753 Loans - Application Overview business and financial information Content
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -113,10 +115,14 @@ Loan application finance overview
     Then the user should see the element   jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00%") ~ td:contains("2,468") ~ td:contains("140,632")
 
 Loan application submission
-    [Documentation]  IFS-6237  IFS-6238  IFS-9483
+    [Documentation]  IFS-6237  IFS-6238  IFS-9483 IFS-10753
     Given the user submits the loan application
     When the user clicks the button/link            link = View application
     Then the user should see the element            jQuery = h1:contains("Application overview")
+    And The user clicks the button/link             id = accordion-questions-heading-1-1
+    And the user should see the element             jQuery = span:contains("Thanks for submitting Part B of your loan application.")
+    And the user should see the element             jQuery = span:contains("What happens next")
+    And the user should see the element             jQuery = span:contains("We will make our decision based on: Suitability of your business to receive a loan and the quality of the project.")
     And the user reads his email                    ${lead_applicant_credentials["email"]}   Complete your application for Loan Competition   You have completed your application for Loan Competition.
 
 Applicant complete the project setup details
@@ -380,3 +386,4 @@ the user should see qualtrics survey fields
     the user should see the element     xpath = //span[contains(text(),'${EMPIRE_LTD_NAME}')]
     the user should see the element     xpath = //span[contains(text(),'60674010')]
     the user should see the element     xpath = //span[contains(text(),'${loanApplicationID}')]
+
