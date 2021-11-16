@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.config;
 
-import org.innovateuk.ifs.commons.LibraryCandidate;
 import org.innovateuk.ifs.commons.security.UidSupplier;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.user.resource.Role;
@@ -18,7 +17,6 @@ import static java.util.Collections.singletonList;
  * A component to set the special Web User on the Spring Security context, and additionally clear afterwards.
  */
 @Component
-@LibraryCandidate
 public class WebUserSecuritySetter {
 
     @Autowired

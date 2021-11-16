@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.util.*;
 
-import static freemarker.template.utility.Collections12.singletonList;
+import static java.util.Collections.singletonList;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;

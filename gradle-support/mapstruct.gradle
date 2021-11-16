@@ -8,7 +8,7 @@ configurations {
 }
 
 dependencies {
-    compile 'org.mapstruct:mapstruct-jdk8:1.2.0.Final'
+    implementation 'org.mapstruct:mapstruct-jdk8:1.2.0.Final'
     compileOnly 'org.mapstruct:mapstruct:1.2.0.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.2.0.Final'
     mapstruct 'org.mapstruct:mapstruct-processor:1.2.0.Final'

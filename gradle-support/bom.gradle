@@ -1,9 +1,0 @@
-
-dependencies {
-    implementation enforcedPlatform ('org.innovateuk.ifs.libraries:bom:2.0.IFS-10753.5-SNAPSHOT')
-
-    // version must match here and in ifs-libraries repo (bom and java.gradle)
-    annotationProcessor "org.projectlombok:lombok:1.18.20"
-    testAnnotationProcessor  "org.projectlombok:lombok:1.18.20"
-
-}

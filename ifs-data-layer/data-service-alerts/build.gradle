@@ -1,30 +1,34 @@
-apply from: rootProject.file("gradle-support/spring-boot-cp.gradle")
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
-
-apply plugin: 'idea'
 
 group 'innovateuk'
 version project.version
 
 dependencies {
-    compile "org.innovateuk.ifs.libraries:ifs-commons"
-    compile "org.innovateuk.ifs.libraries:ifs-data-service-commons"
-    compile "org.innovateuk.ifs.libraries:ifs-data-service-commons-test"
 
-    compile "org.springframework.boot:spring-boot-starter-data-jpa"
-    compile "org.springframework.boot:spring-boot-starter-security"
-    compile "org.apache.httpcomponents:httpasyncclient"
-    compile "org.mariadb.jdbc:mariadb-java-client"
+    implementation "org.innovateuk.ifs.libraries:ifs-commons"
+    implementation "org.innovateuk.ifs.libraries:ifs-resources"
+    implementation "org.innovateuk.ifs.libraries:ifs-rest-util"
+    implementation "org.innovateuk.ifs.libraries:ifs-error-util"
+    implementation "org.innovateuk.ifs.libraries:ifs-security"
+    implementation "org.innovateuk.ifs.libraries:ifs-data-service-commons"
 
-    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
-    testCompile "org.innovateuk.ifs.libraries:ifs-data-service-commons-test"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
 
-    testCompile "com.h2database:h2"
-    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    testCompile "com.opencsv:opencsv"
-    testCompile "junit:junit"
+    implementation "org.apache.httpcomponents:httpasyncclient"
+    implementation "org.mariadb.jdbc:mariadb-java-client"
+
+    testImplementation "org.innovateuk.ifs.libraries:ifs-commons"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-data-service-commons-test"
+
+    testImplementation "com.h2database:h2"
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation "com.opencsv:opencsv"
+    testImplementation "junit:junit"
 
 }
 

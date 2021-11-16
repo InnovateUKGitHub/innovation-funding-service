@@ -14,10 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.util.StringUtils;
 
 import javax.validation.Valid;
 import java.util.function.Supplier;
@@ -121,11 +121,11 @@ public class AssessorManagementController {
     }
 
     private void validateForm(BindingResult bindingResult, ChangeRoleProfileForm form) {
-        if (UNAVAILABLE.equals(form.getRoleProfileState()) && StringUtils.isEmpty(form.getUnavailableReason())) {
+        if (UNAVAILABLE.equals(form.getRoleProfileState()) && ObjectUtils.isEmpty(form.getUnavailableReason())) {
             bindingResult.addError(new FieldError("form", "unavailableReason", "Please enter some text."));
         }
 
-        if (DISABLED.equals(form.getRoleProfileState()) && StringUtils.isEmpty(form.getDisabledReason())) {
+        if (DISABLED.equals(form.getRoleProfileState()) && ObjectUtils.isEmpty(form.getDisabledReason())) {
             bindingResult.addError(new FieldError("form", "disabledReason", "Please enter some text."));
         }
     }

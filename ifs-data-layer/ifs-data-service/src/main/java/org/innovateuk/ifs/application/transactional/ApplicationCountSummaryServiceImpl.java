@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.mapper.ApplicationCountSummaryPageMapper;
 import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -47,7 +46,6 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
         SORT_FIELD_TO_DB_SORT_FIELDS = Collections.unmodifiableMap(sortFieldToDbSortFields);
     }
 
-    @ZeroDowntime(reference = "IFS-8853", description = "This can probably be removed")
     @Override
     public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(long competitionId,
                                                                                                           int pageIndex,

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.survey.documentation;
 
-import org.innovateuk.ifs.commons.LibraryCandidate;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.springframework.validation.BindingResult;
@@ -17,7 +16,6 @@ import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
  * Controller parameters
  */
 @ControllerAdvice
-@LibraryCandidate
 public class ErrorControllerAdvice {
 
     @ResponseStatus(NOT_ACCEPTABLE)
