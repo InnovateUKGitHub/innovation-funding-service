@@ -18,11 +18,13 @@ dependencies {
     compileOnly "org.springframework.boot:spring-boot-devtools"
 
     //Sleuth
-    compile "org.springframework.cloud:spring-cloud-starter-sleuth:3.0.4"
+    implementation "org.springframework.cloud:spring-cloud-starter-sleuth:3.0.1"
 
     // logstash
-    compile "net.logstash.logback:logstash-logback-encoder:5.3"
-    compile "ch.qos.logback:logback-core:1.2.3"
+    implementation "net.logstash.logback:logstash-logback-encoder:5.3"
+    implementation "ch.qos.logback:logback-core:1.2.3"
+
+    implementation "io.projectreactor:reactor-core:3.4.10"
 
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-web"
