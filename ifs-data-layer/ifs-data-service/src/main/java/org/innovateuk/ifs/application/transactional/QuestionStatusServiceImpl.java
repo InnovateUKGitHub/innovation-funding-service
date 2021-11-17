@@ -13,12 +13,14 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,9 +33,11 @@ import java.util.stream.Collectors;
 import static java.time.ZonedDateTime.now;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_NOT_UPDATED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSIGNEE_SHOULD_BE_APPLICANT;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -44,6 +48,9 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 @Primary
 public class QuestionStatusServiceImpl extends BaseTransactionalService implements QuestionStatusService {
+
+    @Value("${ifs.loan.partb.enabled}")
+    private boolean ifsLoanPartBEnabled;
 
     @Autowired
     private QuestionStatusMapper questionStatusMapper;
@@ -56,6 +63,9 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private QuestionService questionService;
 
     @Autowired
     private QuestionRepository questionRepository;
@@ -289,6 +299,11 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     }
 
     protected ServiceResult<List<ValidationMessages>> setComplete(long questionId, long applicationId, long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus, ZonedDateTime markedAsCompleteOn) {
+        QuestionSetupType questionSetupType = questionService.getQuestionById(questionId).getSuccess().getQuestionSetupType();
+        if (isLoansBusinessAndFinancialInformationQuestion(questionSetupType)) {
+            return serviceFailure(APPLICATION_NOT_UPDATED);
+        }
+
         return find(processRole(processRoleId), openApplication(applicationId), getQuestionSupplier(questionId))
                 .andOnSuccess((markedAsCompleteBy, application, question) -> {
                             List<ValidationMessages> validation = validateApplicationQuestion(markAsComplete, question, application, processRoleId);
@@ -298,6 +313,10 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
                             return serviceSuccess(validation);
                         }
                 );
+    }
+
+    private boolean isLoansBusinessAndFinancialInformationQuestion(QuestionSetupType questionSetupType) {
+        return ifsLoanPartBEnabled && questionSetupType.equals(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
     }
 
     private List<ValidationMessages> validateApplicationQuestion(boolean markAsComplete, Question question, Application application, long processRoleId) {

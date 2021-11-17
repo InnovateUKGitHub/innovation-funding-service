@@ -40,6 +40,7 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...             IFS-10705  B&FI question submitted
 ...
 ...             IFS-10753 Loans - Application Overview business and financial information Content
+...             IFS-10757 Loans - Application summary and Overview Content
 ...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
