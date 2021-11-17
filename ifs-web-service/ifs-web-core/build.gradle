@@ -59,3 +59,11 @@ ext.ifsWebSystemUserUid=project.properties['ifs.web.system.user.id'] ?: "8394d97
 
 jar.dependsOn ":ifs-web-service:gulp_default"
 processResources.dependsOn ":ifs-web-service:applyProfiles"
+
+sourceSets {
+    main {
+        resources {
+            srcDirs = ["src/main/resources"]
+        }
+    }
+}

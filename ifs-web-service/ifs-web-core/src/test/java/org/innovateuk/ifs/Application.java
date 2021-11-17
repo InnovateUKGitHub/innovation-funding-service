@@ -7,9 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
+@PropertySource(value = {"classpath:application-web-core.properties"})
 @EnableAspectJAutoProxy(proxyTargetClass=true)
 @EnableAsync
 public class Application extends SpringBootServletInitializer {

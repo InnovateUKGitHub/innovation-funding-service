@@ -17,6 +17,15 @@ dependencies {
     // is a best practice that prevents devtools from being transitively applied to other modules using your project.
     compileOnly "org.springframework.boot:spring-boot-devtools"
 
+    //Sleuth
+    implementation "org.springframework.cloud:spring-cloud-starter-sleuth:3.0.1"
+
+    // logstash
+    implementation "net.logstash.logback:logstash-logback-encoder:5.3"
+    implementation "ch.qos.logback:logback-core:1.2.3"
+
+    implementation "io.projectreactor:reactor-core:3.4.10"
+
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-web"
 

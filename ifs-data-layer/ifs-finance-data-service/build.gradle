@@ -58,3 +58,10 @@ flywayMigrate.dependsOn processResources
 ext.serverPort = 8080
 ext.ifsFlywayLocations = "db/migration"
 
+sourceSets {
+    main {
+        resources {
+            srcDirs = ["src/main/resources", "../../shared-resources"]
+        }
+    }
+}
