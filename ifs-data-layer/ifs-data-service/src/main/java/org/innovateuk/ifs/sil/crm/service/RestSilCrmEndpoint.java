@@ -11,6 +11,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.innovateuk.ifs.sil.crm.resource.SilCrmError;
 import org.innovateuk.ifs.sil.crm.resource.SilLoanApplication;
+import org.innovateuk.ifs.sil.crm.resource.SilLoanAssessment;
 import org.innovateuk.ifs.util.Either;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -42,6 +43,9 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
     @Value("${sil.rest.crmApplications}")
     private String silCrmApplications;
 
+    @Value("${sil.rest.crmDecisionmatrix}")
+    private String silmDecisionmatrix;
+
     @Override
     public ServiceResult<Void> updateContact(SilContact silContact) {
         return handlingErrors(() -> {
@@ -60,11 +64,28 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
     @Override
     public ServiceResult<Void> updateLoanApplicationState(SilLoanApplication silApplication) {
         String silApplicationJson = objectWriter.writeValueAsString(silApplication);
-        LOG.info("Raw Json Payload: " + silApplicationJson);
+        LOG.info("Json Payload: " + silApplicationJson);
         return handlingErrors(() -> {
                     final Either<ResponseEntity<SilCrmError>, ResponseEntity<Void>> response = adaptor.restPostWithEntity(silRestServiceUrl + silCrmApplications, silApplicationJson, Void.class, SilCrmError.class, HttpStatus.ACCEPTED);
                     return response.mapLeftOrRight(failure -> {
-                                LOG.error("Error updating SIL application eligibility: " + silApplication +
+                                LOG.error("Error updating SIL Loan Application state: " + silApplication +
+                                        "Error: " + failure);
+                                return serviceFailure(new Error(APPLICATION_NOT_UPDATED));
+                            },
+                            success -> serviceSuccess());
+                }
+        );
+    }
+
+    @Override
+    @SneakyThrows
+    public ServiceResult<Void> updateLoanAssessment(SilLoanAssessment silLoanAssessment) {
+        String silApplicationJson = objectWriter.writeValueAsString(silLoanAssessment);
+        LOG.info("Json Payload: " + silApplicationJson);
+        return handlingErrors(() -> {
+                    final Either<ResponseEntity<SilCrmError>, ResponseEntity<Void>> response = adaptor.restPostWithEntity(silRestServiceUrl + silmDecisionmatrix, silApplicationJson, Void.class, SilCrmError.class, HttpStatus.ACCEPTED);
+                    return response.mapLeftOrRight(failure -> {
+                                LOG.error("Error updating SIL Loan Assessment: " + silLoanAssessment +
                                         "Error: " + failure);
                                 return serviceFailure(new Error(APPLICATION_NOT_UPDATED));
                             },
