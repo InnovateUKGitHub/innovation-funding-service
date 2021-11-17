@@ -139,16 +139,6 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
         assertTrue(questionStatusService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
     }
 
-    public void isMarkedAsCompleteLoanBusinessAndFinancialInformationQuestion() {
-        question.setQuestionSetupType(QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
-
-        assertFalse(questionStatusService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
-
-        controller.markAsComplete(questionId, applicationId, userId);
-
-        assertFalse(questionStatusService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
-    }
-
     @Test
     public void isMarkedAsCompleteMultiple() {
         question = questionRepository.findById(QUESTION_ID_WITH_MULTIPLE).get();
@@ -162,6 +152,16 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
         controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, 9L);
 
         assertTrue(questionStatusService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
+    }
+
+    public void isMarkedAsCompleteLoanBusinessAndFinancialInformationQuestion() {
+        question.setQuestionSetupType(QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
+
+        assertFalse(questionStatusService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
+
+        controller.markAsComplete(questionId, applicationId, userId);
+
+        assertFalse(questionStatusService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
     }
 
     @Test
