@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-@TestPropertySource("classpath:application.properties")
+@TestPropertySource(locations = { "classpath:application.properties", "classpath:/application-web-core.properties"} )
 public class UpcomingCompetitionControllerTest extends BaseControllerMockMVCTest<UpcomingCompetitionController> {
 
     @Spy

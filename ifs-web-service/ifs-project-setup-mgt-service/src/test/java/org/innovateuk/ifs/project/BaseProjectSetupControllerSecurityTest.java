@@ -10,7 +10,6 @@ import java.util.function.Consumer;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@TestPropertySource(properties = { "ifs.loan.partb.enabled=true" })
 public abstract class BaseProjectSetupControllerSecurityTest<ControllerType> extends BaseControllerSecurityTest<ControllerType> {
 
     private SetupSectionsPermissionRules permissionRules;
