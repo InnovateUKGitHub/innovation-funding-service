@@ -8,10 +8,19 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.LambdaMatcher;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationEvent;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.ApplicationSummarisationService;
+import org.innovateuk.ifs.assessment.builder.AssessmentBuilder;
+import org.innovateuk.ifs.assessment.dashboard.transactional.ApplicationAssessmentService;
+import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
+import org.innovateuk.ifs.assessment.resource.dashboard.ApplicationAssessmentResource;
+import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
+import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseServiceImpl;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -22,16 +31,17 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationAddressService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
+import org.innovateuk.ifs.sil.crm.resource.SilLoanAssessment;
 import org.innovateuk.ifs.sil.crm.service.SilCrmEndpoint;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.jupiter.api.Disabled;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
@@ -48,7 +58,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.builder.AddressTypeBuilder.newAddressType;
 import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentResourceBuilder.newApplicationAssessmentResource;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
+import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationExecutiveOfficerResourceBuilder.newOrganisationExecutiveOfficerResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -75,6 +91,8 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
 
     @Mock
     private ApplicationSummarisationService applicationSummarisationService;
+    @Mock
+    private ApplicationAssessmentService applicationAssessmentService;
 
     @Mock
     private OrganisationService organisationService;
@@ -83,10 +101,23 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     private OrganisationAddressService organisationAddressService;
 
     @Mock
+    private AssessorFormInputResponseService assessorFormInputResponseServiceMock;
+
+    @Mock
     private SilCrmEndpoint silCrmEndpoint;
 
     private static MemoryAppender memoryAppender;
     private static final String LOGGER_NAME = "org.innovateuk.ifs.crm.transactional";
+
+    @Mock
+    private CompetitionService competitionServiceMock;
+    @Mock
+    private ApplicationService applicationService;
+    @Mock
+    private AssessorFormInputResponseRepository assessorFormInputResponseRepositoryMock;
+
+    @InjectMocks
+    private AssessorFormInputResponseService assessorFormInputResponseService = new AssessorFormInputResponseServiceImpl();
 
     @Before
     public void setup() {
@@ -130,6 +161,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         when(baseUserService.getUserById(userId)).thenReturn(serviceSuccess(user));
         when(organisationService.getAllByUserId(userId)).thenReturn(serviceSuccess(organisations));
         when(silCrmEndpoint.updateContact(any(SilContact.class))).thenReturn(serviceSuccess());
+
 
         ServiceResult<Void> result = service.syncCrmContact(userId);
 
@@ -454,7 +486,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
             return true;
         };
     }
-    @Ignore
+
     @Test
     public void syncCrmLoanApplicationSubmittedStateTest() {
 
@@ -490,7 +522,6 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     }
 
 
-    @Ignore
     @Test
     public void syncCrmLoanApplicationIneligibleStateTest() {
         String expectedLogMessage = "Updating CRM application for appId:3 state:INELIGIBLE, " +
@@ -523,7 +554,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         List<ILoggingEvent> eventList = memoryAppender.search("payload:", Level.INFO);
         assertEquals(expectedLogMessage, eventList.get(0).getMessage());
     }
-    @Ignore
+
     @Test
     public void syncCrmLoanApplicationIneligibleInformedStateTest() {
         String expectedLogMessage = "Updating CRM application for appId:3 state:INELIGIBLE_INFORMED, " +
@@ -556,7 +587,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         List<ILoggingEvent> eventList = memoryAppender.search("payload:", Level.INFO);
         assertEquals(expectedLogMessage, eventList.get(0).getMessage());
     }
-    @Ignore
+
     @Test
     public void syncCrmLoanApplicationReinstatedStateTest() {
 
@@ -590,6 +621,185 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
 
         List<ILoggingEvent> eventList = memoryAppender.search("payload:", Level.INFO);
         assertEquals(expectedLogMessage, eventList.get(0).getMessage());
+    }
+
+    @Test
+    public void syncCrmCompetitionAssessmentTest() {
+        Long competitionId = 15l;
+        long applicationId1 = 366L;
+        long applicationId2 = 367L;
+        String expectedLogMessage = "Updating CRM application for compId:15,  " +
+                "payload:SilLoanAssessment(competitionID=15, applications=[" +
+                "SilLoanAssessmentRow(applicationID=366, scoreAverage=55, scoreSpread=0, assessorNumber=2, assessorNotInScope=1, assessorRecommended=2, assessorNotRecommended=0), " +
+                "SilLoanAssessmentRow(applicationID=367, scoreAverage=61, scoreSpread=2, assessorNumber=2, assessorNotInScope=0, assessorRecommended=1, assessorNotRecommended=1)])";
+
+
+        CompetitionResource competitionResource = new CompetitionResource();
+        competitionResource.setFundingType(FundingType.LOAN);
+        competitionResource.setId(competitionId);
+
+
+        List<Application> applicationsCompsStream = Arrays.asList(newApplication()
+                        .withId(applicationId1)
+                        .withAssessments(Arrays.asList(AssessmentBuilder.newAssessment().withProcessState(SUBMITTED).build(),
+                                AssessmentBuilder.newAssessment().withProcessState(SUBMITTED).build()))
+                        .withCompetition(newCompetition().withId(competitionId).build()).build(),
+                newApplication()
+                        .withId(applicationId2)
+                        .withAssessments(Arrays.asList(AssessmentBuilder.newAssessment().withProcessState(SUBMITTED).build(),
+                                AssessmentBuilder.newAssessment().withProcessState(SUBMITTED).build()))
+                        .withCompetition(newCompetition().withId(competitionId).build()).build());
+
+
+        ApplicationAssessmentAggregateResource expected1 = new ApplicationAssessmentAggregateResource(true, 2, 1, Collections.emptyMap(), BigDecimal.valueOf(55));
+        ApplicationAssessmentAggregateResource expected2 = new ApplicationAssessmentAggregateResource(true, 2, 2, Collections.emptyMap(), BigDecimal.valueOf(61));
+        ApplicationAssessmentResource applicationAssessmentResource1 = newApplicationAssessmentResource()
+                .withApplicationId(applicationId1)
+                .withApplicationName("Loans Application1")
+                .withAssessmentId(101L)
+                .withLeadOrganisation("Lead Company")
+                .withRecommended(true)
+                .withOverallScore(55)
+                .withTotalScoreGiven(11)
+                .withState(SUBMITTED)
+                .build();
+
+        ApplicationAssessmentResource applicationAssessmentResource2 = newApplicationAssessmentResource()
+                .withApplicationId(applicationId2)
+                .withApplicationName("Loans Application1")
+                .withAssessmentId(102L)
+                .withLeadOrganisation("Lead Company")
+                .withRecommended(true)
+                .withOverallScore(55)
+                .withTotalScoreGiven(11)
+                .withState(SUBMITTED)
+                .build();
+
+        ApplicationAssessmentResource applicationAssessmentResource3 = newApplicationAssessmentResource()
+                .withApplicationId(applicationId1)
+                .withApplicationName("Loans Application2")
+                .withAssessmentId(101L)
+                .withLeadOrganisation("Lead Company2")
+                .withRecommended(true)
+                .withOverallScore(60)
+                .withTotalScoreGiven(10)
+                .withState(SUBMITTED)
+                .build();
+
+        ApplicationAssessmentResource applicationAssessmentResource4 = newApplicationAssessmentResource()
+                .withApplicationId(applicationId2)
+                .withApplicationName("Loans Application2")
+                .withAssessmentId(102L)
+                .withLeadOrganisation("Lead Company2")
+                .withRecommended(false)
+                .withOverallScore(62)
+                .withTotalScoreGiven(12)
+                .withState(SUBMITTED)
+                .build();
+
+
+        when(assessorFormInputResponseServiceMock.getApplicationAggregateScores(applicationId1)).thenReturn(serviceSuccess(expected1));
+        when(assessorFormInputResponseServiceMock.getApplicationAggregateScores(applicationId2)).thenReturn(serviceSuccess(expected2));
+        when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
+        when(applicationService.getApplicationsByCompetitionIdAndState(any(), any())).thenReturn(ServiceResult.serviceSuccess(applicationsCompsStream));
+        when(applicationAssessmentService.getApplicationAssessmentResource(applicationId1)).thenReturn(serviceSuccess(Arrays.asList(applicationAssessmentResource1, applicationAssessmentResource2)));
+        when(applicationAssessmentService.getApplicationAssessmentResource(applicationId2)).thenReturn(serviceSuccess(Arrays.asList(applicationAssessmentResource3, applicationAssessmentResource4)));
+        when(silCrmEndpoint.updateLoanAssessment(any(SilLoanAssessment.class))).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.syncCrmCompetitionAssessment(competitionId);
+        List<ILoggingEvent> eventList = memoryAppender.search("payload:", Level.INFO);
+
+        assertThat(result.isSuccess(), equalTo(true));
+        assertEquals(expectedLogMessage, eventList.get(0).getMessage());
+    }
+
+    @Test
+    public void syncCrmCompetitionAssessmentTestSilEndpointFailure() {
+        Long competitionId = 15l;
+        long applicationId1 = 366L;
+
+
+        CompetitionResource competitionResource = new CompetitionResource();
+        competitionResource.setFundingType(FundingType.LOAN);
+        competitionResource.setId(competitionId);
+
+
+        List<Application> applicationsCompsStream = Arrays.asList(newApplication()
+                .withId(applicationId1)
+                .withAssessments(Arrays.asList(AssessmentBuilder.newAssessment().withProcessState(SUBMITTED).build(),
+                        AssessmentBuilder.newAssessment().withProcessState(SUBMITTED).build()))
+                .withCompetition(newCompetition().withId(competitionId).build()).build());
+
+
+        ApplicationAssessmentAggregateResource expected1 = new ApplicationAssessmentAggregateResource(true, 2, 1, Collections.emptyMap(), BigDecimal.valueOf(55));
+        ApplicationAssessmentResource applicationAssessmentResource1 = newApplicationAssessmentResource()
+                .withApplicationId(applicationId1)
+                .withApplicationName("Loans Application1")
+                .withAssessmentId(101L)
+                .withLeadOrganisation("Lead Company")
+                .withRecommended(true)
+                .withOverallScore(55)
+                .withTotalScoreGiven(11)
+                .withState(SUBMITTED)
+                .build();
+
+
+        when(assessorFormInputResponseServiceMock.getApplicationAggregateScores(applicationId1)).thenReturn(serviceSuccess(expected1));
+
+        when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
+        when(applicationService.getApplicationsByCompetitionIdAndState(any(), any())).thenReturn(ServiceResult.serviceSuccess(applicationsCompsStream));
+        when(applicationAssessmentService.getApplicationAssessmentResource(applicationId1)).thenReturn(serviceSuccess(Arrays.asList(applicationAssessmentResource1)));
+
+        when(silCrmEndpoint.updateLoanAssessment(any(SilLoanAssessment.class))).thenReturn(serviceFailure(internalServerErrorError()));
+
+        ServiceResult<Void> result = service.syncCrmCompetitionAssessment(competitionId);
+        assertThat(result.isFailure(), equalTo(true));
+
+    }
+
+    @Test
+    public void syncCrmCompetitionAssessmentTestServiceWithNonLoanFundingType() {
+        Long competitionId = 15l;
+        long applicationId1 = 366L;
+
+
+        CompetitionResource competitionResource = new CompetitionResource();
+        competitionResource.setFundingType(FundingType.GRANT);
+        competitionResource.setId(competitionId);
+
+
+        List<Application> applicationsCompsStream = Arrays.asList(newApplication()
+                .withId(applicationId1)
+                .withAssessments(Arrays.asList(AssessmentBuilder.newAssessment().withProcessState(SUBMITTED).build(),
+                        AssessmentBuilder.newAssessment().withProcessState(SUBMITTED).build()))
+                .withCompetition(newCompetition().withId(competitionId).build()).build());
+
+
+        ApplicationAssessmentAggregateResource expected1 = new ApplicationAssessmentAggregateResource(true, 2, 1, Collections.emptyMap(), BigDecimal.valueOf(55));
+        ApplicationAssessmentResource applicationAssessmentResource1 = newApplicationAssessmentResource()
+                .withApplicationId(applicationId1)
+                .withApplicationName("Loans Application1")
+                .withAssessmentId(101L)
+                .withLeadOrganisation("Lead Company")
+                .withRecommended(true)
+                .withOverallScore(55)
+                .withTotalScoreGiven(11)
+                .withState(SUBMITTED)
+                .build();
+
+
+        when(assessorFormInputResponseServiceMock.getApplicationAggregateScores(applicationId1)).thenReturn(serviceSuccess(expected1));
+
+        when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
+        when(applicationService.getApplicationsByCompetitionIdAndState(any(), any())).thenReturn(ServiceResult.serviceSuccess(applicationsCompsStream));
+        when(applicationAssessmentService.getApplicationAssessmentResource(applicationId1)).thenReturn(serviceSuccess(Arrays.asList(applicationAssessmentResource1)));
+
+        when(silCrmEndpoint.updateLoanAssessment(any(SilLoanAssessment.class))).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.syncCrmCompetitionAssessment(competitionId);
+        assertThat(HttpStatus.BAD_REQUEST, equalTo(result.getErrors().get(0).getStatusCode()));
+        assertThat(result.isFailure(), equalTo(true));
+
     }
 
 }
