@@ -8,7 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.sil.grant.resource.Grant;
-import org.innovateuk.ifs.util.JsonMappingUtil;
+import org.innovateuk.ifs.util.JsonMappingDeprecatedUtil;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class GrantEndpointController {
 
         Grant grant = grantAsList.get(0);
 
-        LOG.info("Grant data send to stub : JSON = " + JsonMappingUtil.toJson(grant));
+        LOG.info("Grant data send to stub : JSON = " + JsonMappingDeprecatedUtil.toJson(grant));
         history.add(new Event(grant));
 
         LOG.info("Grant data sent to stub : Summary = " + getSummary(grant));

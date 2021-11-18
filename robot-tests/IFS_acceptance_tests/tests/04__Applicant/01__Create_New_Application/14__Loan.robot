@@ -33,7 +33,13 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...
 ...             IFS-9484 Loans: Applicant journey
 ...
+...             IFS-10703 Loans question - open in Salesforce (as second tab)
+...
 ...             IFS-9679 MO Spend profile: IFS Admin only to be able to approve or reject spend profiles
+...
+...             IFS-10705  B&FI question submitted
+...
+...             IFS-10753 Loans - Application Overview business and financial information Content
 ...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
@@ -61,34 +67,39 @@ ${spend_profile}                           ${server}/project-setup-management/pr
 
 
 *** Test Cases ***
-The user can see qualtrics survey link in business and financial information application question
-    [Documentation]    IFS-9484
-    Given the user clicks the button/link       link = Business and financial information
-    When the user clicks the button/link        id = edit
-    Then the user should see the element        link = Complete the online business survey (opens in a new window)
+The user can see b&fi application question as complete and shows edit online survey button
+    [Documentation]    IFS-9484  IFS-10705  IFS-10703
+    When the user clicks the button/link       link = Business and financial information
+    And the user clicks the button/link        jQuery = a:contains("Continue (opens in new tab)")
+    And Select Window                          title = Sign in - Innovation Funding Service
+    And the user closes the last opened tab
+    Then the user should see b&fi question details
+
+the user can open the sales force new tab on clicking conitnue button in incomplete status of b&fi question
+    [Documentation]   IFS-10703
+    Given the sales force submits/unsubmits b&fi survey     0
+    When the user clicks the button/link                    jQuery = a:contains("Continue (opens in new tab)")
+    Then Select Window                                      title = Sign in - Innovation Funding Service
+    And the user closes the last opened tab
 
 The user will not be able to mark the application as complete without completing business and financial information
-    [Documentation]    IFS-9484
-    Given the user clicks the button/link                     link = Back to application overview
-    When the user clicks the button/link                      id = application-overview-submit-cta
-    Then the user should see that the element is disabled     id = submit-application-button
-    And the user should see the element                       jQuery = .section-incomplete + button:contains("Business and financial information")
-    And the user should see the element                       jQuery = p:contains("You must ensure that the business information and financial spreadsheet have been completed before you click submit below.")
-    And the user should see the element                       jQuery = h2:contains("Applicant details")
-    And the user should see the element                       jQuery = h2:contains("Project finance")
+    [Documentation]    IFS-9484  IFS-10705
+    Given the user clicks the button/link                       link = Back to application overview
+    When the user clicks the button/link                        id = application-overview-submit-cta
+    Then the user should see that the element is disabled       id = submit-application-button
+    And the user should see the element                         jQuery = .section-incomplete + button:contains("Business and financial information")
+    And the user should see the element                         jQuery = h2:contains("Applicant details")
+    And the user should see the element                         jQuery = h2:contains("Project finance")
 
-The user can complete the business and financial information application question
-    [Documentation]    IFS-9484
-    Given the user clicks the button/link          link = Application overview
-    And the user clicks the button/link            link = Business and financial information
-    And the user enters text to a text field       css = * .editor    This is the applicant response for have you completed the business information, including uploading your financial submission.
-    When the user clicks the button/link           id = application-question-complete
-    And the user clicks the button/link            link = Back to application overview
-    Then the user should see the element           jQuery = div:contains("Business and financial information") ~ .task-status-complete
+The user can see the business and financial information application question in application overview as complete
+    [Documentation]    IFS-9484  IFS-10705
+    When the sales force submits/unsubmits b&fi survey     1
+    Then the user should see the element                   jQuery = .section-complete + button:contains("Business and financial information")
 
 Loan application shows correct T&C's
     [Documentation]    IFS-6205  IFS-9483  IFS-9716
-    Given the user clicks the button/link   link = Loan terms and conditions
+    Given the user clicks the button/link   link = Application overview
+    And the user clicks the button/link     link = Loan terms and conditions
     And the user should see the element     jQuery = h1:contains("Loans terms and conditions")
     When the user clicks the button/link    link = Back to application overview
     Then the user should see the element    jQuery = li:contains("Loan terms and conditions") .task-status-complete
@@ -113,10 +124,14 @@ Loan application finance overview
     Then the user should see the element   jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00%") ~ td:contains("2,468") ~ td:contains("140,632")
 
 Loan application submission
-    [Documentation]  IFS-6237  IFS-6238  IFS-9483
+    [Documentation]  IFS-6237  IFS-6238  IFS-9483 IFS-10753
     Given the user submits the loan application
     When the user clicks the button/link            link = View application
     Then the user should see the element            jQuery = h1:contains("Application overview")
+    And The user clicks the button/link             id = accordion-questions-heading-1-1
+    And the user should see the element             jQuery = span:contains("Thanks for submitting Part B of your loan application.")
+    And the user should see the element             jQuery = span:contains("What happens next")
+    And the user should see the element             jQuery = p:contains("We will make our decision based on: Suitability of your business to receive a loan and the quality of the project.")
     And the user reads his email                    ${lead_applicant_credentials["email"]}   Complete your application for Loan Competition   You have completed your application for Loan Competition.
 
 Applicant complete the project setup details
@@ -370,13 +385,26 @@ the user should see the finished finance checks
     the user should see the element   jQuery = .message-alert p:contains("We have finished checking your finances.")
 
 the user enters a value over the max funding
-    the user clicks the button/link                link = Your project finances
-    the user clicks the button/link                link = Your funding
-    the user clicks the button/link                jQuery = button:contains("Edit your funding")
-    the user enters text to a text field           id = amount  65000
-    the user clicks the button/link                id = mark-all-as-complete
+    the user clicks the button/link         link = Your project finances
+    the user clicks the button/link         link = Your funding
+    the user clicks the button/link         jQuery = button:contains("Edit your funding")
+    the user enters text to a text field    id = amount  65000
+    the user clicks the button/link         id = mark-all-as-complete
 
 the user should see qualtrics survey fields
     the user should see the element     xpath = //span[contains(text(),'${EMPIRE_LTD_NAME}')]
     the user should see the element     xpath = //span[contains(text(),'60674010')]
     the user should see the element     xpath = //span[contains(text(),'${loanApplicationID}')]
+
+the user should see b&fi question details
+    the user should see the element     jQuery = p:contains("This question is marked as complete.")
+    the user should see the element     jQuery = a:contains("Continue (opens in new tab)")
+    the user should see the element     jQuery = p:contains("Edit the online business survey")
+    the user should see the element     jQuery = p:contains("At any stage, you can return here to carry on editing incomplete form.")
+    the user should see the element     jQuery = p:contains("Business and financial details")
+    the user should see the element     jQuery = p:contains("Financial information")
+
+the sales force submits/unsubmits b&fi survey
+    [Arguments]  ${completeStatus}
+    execute sql string  UPDATE `${database_name}`.`question_status` SET `marked_as_complete`=${completeStatus} WHERE `application_id`='${loanApplicationID}' and `question_id`='739';
+    reload page

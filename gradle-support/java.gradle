@@ -1,8 +1,16 @@
 apply plugin: 'java'
 apply plugin: 'jacoco'
+apply plugin: 'idea'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+tasks.withType(Test) {
+    systemProperty "file.encoding", "UTF-8"
+}
 
 jacocoTestReport{
     additionalSourceDirs.from = files(sourceSets.main.allJava.srcDirs)
@@ -25,15 +33,25 @@ test {
     }
 }
 
+// Process resources copies non class files in build an test phases which is the default
+// behaviour and applied as part of the java plugin
+//
+// The expansion element is to pull in and expand gradle properties in this phase.
+// This however breaks the spring properties expansion in application.yml etc.
+// The skipExpansion flag will stop expansion of these projects.
 processResources {
-    filesMatching("*.properties") {
-        expand project.properties
+    if(!project.hasProperty("skipExpansion")) {
+        filesMatching("*.properties") {
+            expand project.properties
+        }
     }
 }
 
 processTestResources {
-    filesMatching("*.properties") {
-        expand project.properties
+    if(!project.hasProperty("skipExpansion")) {
+        filesMatching("*.properties") {
+            expand project.properties
+        }
     }
 }
 

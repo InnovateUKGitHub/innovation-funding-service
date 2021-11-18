@@ -17,7 +17,7 @@ import java.security.InvalidKeyException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.innovateuk.ifs.util.JsonMappingDeprecatedUtil.toJson;
 
 /**
  * Communication with the finance-data-service endpoint implemented by async REST .

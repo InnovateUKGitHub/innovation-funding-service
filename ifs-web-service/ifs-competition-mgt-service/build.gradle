@@ -1,6 +1,4 @@
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
-apply from: rootProject.file("gradle-support/openshift-build.gradle")
-apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
 
 buildscript {
@@ -12,38 +10,54 @@ buildscript {
 group 'innovateuk'
 version project.version
 
-apply plugin: 'idea'
-
-project.version = nexusVersion
-
 dependencies {
-    compile project(':ifs-web-service:ifs-web-core')
-    compile "org.innovateuk.ifs.libraries:ifs-application-commons"
+    implementation project(':ifs-web-service:ifs-web-core')
+    implementation "org.innovateuk.ifs.libraries:ifs-commons"
+    implementation "org.innovateuk.ifs.libraries:ifs-error-util"
+    implementation "org.innovateuk.ifs.libraries:ifs-rest-util"
+    implementation "org.innovateuk.ifs.libraries:ifs-resources"
+    implementation "org.innovateuk.ifs.libraries:ifs-application-commons"
     implementation 'org.innovateuk.ifs.libraries:ifs-assessment-commons'
-    compile "org.innovateuk.ifs.libraries:ifs-project-commons"
+    implementation "org.innovateuk.ifs.libraries:ifs-project-commons"
+    implementation "org.innovateuk.ifs.libraries:ifs-web-commons"
+    implementation "org.innovateuk.ifs.libraries:ifs-rest-api-service"
+    implementation "org.innovateuk.ifs.libraries:ifs-security"
 
-    compile 'org.apache.commons:commons-collections4'
+    implementation 'org.apache.commons:commons-lang3'
+    implementation 'commons-io:commons-io'
 
-    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
-    testCompile "org.innovateuk.ifs.libraries:ifs-web-commons-test"
+    implementation 'org.apache.commons:commons-collections4'
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.boot:spring-boot-starter-security"
 
-    testCompile "com.opencsv:opencsv"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-commons-test"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-web-commons-test"
 
-    testCompile 'org.assertj:assertj-core'
-    testCompile 'junit:junit'
+    testImplementation "com.opencsv:opencsv"
+
+    testImplementation 'org.assertj:assertj-core'
+    testImplementation 'junit:junit'
 
 }
 
 processResources {
-    filesMatching("*.properties") {
+    /*filesMatching("*.properties") {
         expand project.properties
-    }
+    }*/
     if (project.hasProperty("profile") && project.profile == "automated") {
-        exclude '**/application.properties'
+        //exclude '**/application.properties'
     }
 }
 
 
 jar.dependsOn ":ifs-web-service:gulp_default"
 processResources.dependsOn ":ifs-web-service:applyProfiles"
+
+sourceSets {
+    main {
+        resources {
+            srcDirs = ["src/main/resources", "../../shared-resources"]
+        }
+    }
+}

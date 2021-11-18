@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
 import org.innovateuk.ifs.assessment.resource.dashboard.ApplicationAssessmentResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -21,7 +22,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.List;
 import java.util.Optional;
 
-import static freemarker.template.utility.Collections12.singletonList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.ACCEPTED;
@@ -63,16 +64,18 @@ public class ApplicationAssessmentServiceImplTest extends BaseServiceUnitTest<Ap
                 .withProcessRole(processRole)
                 .build();
         Assessment assessment = newAssessment().withId(5L).withApplication(application).withProcessState(ACCEPTED).build();
+        AssessmentTotalScoreResource assessmentTotalScore = new AssessmentTotalScoreResource();
 
         when(assessmentRepositoryMock.findByParticipantUserIdAndTargetCompetitionId(user.getId(), competition.getId()))
                 .thenReturn(singletonList(assessment));
         when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
+        when(assessmentRepositoryMock.getTotalScore(assessment.getId())).thenReturn(assessmentTotalScore);
+
 
         ServiceResult<List<ApplicationAssessmentResource>> result = service.getApplicationAssessmentResource(user.getId(), competition.getId());
 
         assertTrue(result.isSuccess());
         verify(assessmentRepositoryMock, times(1)).findByParticipantUserIdAndTargetCompetitionId(user.getId(), competition.getId());
         verify(organisationRepositoryMock, times(1)).findById(organisation.getId());
-        verifyNoMoreInteractions(assessmentRepositoryMock);
     }
 }

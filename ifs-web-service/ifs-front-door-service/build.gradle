@@ -1,26 +1,38 @@
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
-apply from: rootProject.file("gradle-support/openshift-build.gradle")
-apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
 
 group 'innovateuk'
 version project.version
 
-apply plugin: 'idea'
-
-project.version = nexusVersion
-
 dependencies {
-    compile project(':ifs-web-service:ifs-web-core')
-    compile "org.innovateuk.ifs.libraries:ifs-application-commons"
+    implementation project(':ifs-web-service:ifs-web-core')
+    implementation "org.innovateuk.ifs.libraries:ifs-commons"
+    implementation "org.innovateuk.ifs.libraries:ifs-error-util"
+    implementation "org.innovateuk.ifs.libraries:ifs-rest-util"
+    implementation "org.innovateuk.ifs.libraries:ifs-resources"
+    implementation "org.innovateuk.ifs.libraries:ifs-security"
+    implementation "org.innovateuk.ifs.libraries:ifs-application-commons"
+    implementation "org.innovateuk.ifs.libraries:ifs-rest-api-service"
 
-    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
-    testCompile "org.innovateuk.ifs.libraries:ifs-web-commons-test"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation 'org.apache.commons:commons-lang3'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
 
-    testCompile "com.opencsv:opencsv"
-    testCompile "junit:junit"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-commons-test"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-web-commons-test"
+
+    testImplementation "com.opencsv:opencsv"
+    testImplementation "junit:junit"
 }
 
 jar.dependsOn ":ifs-web-service:gulp_default"
 processResources.dependsOn ":ifs-web-service:applyProfiles"
+
+sourceSets {
+    main {
+        resources {
+            srcDirs = ["src/main/resources", "../../shared-resources"]
+        }
+    }
+}

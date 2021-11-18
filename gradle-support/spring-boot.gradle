@@ -1,32 +1,35 @@
 apply from: rootProject.file("gradle-support/java.gradle")
-apply from: rootProject.file("gradle-support/bom.gradle")
 
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.springframework.boot'
 
 dependencies {
+    // Enforced platform is composite of IFS libraries, spring boot and spring cloud
+    implementation enforcedPlatform ('org.innovateuk.ifs.libraries:bom:2.0.14-RELEASE')
+
+    // version must match here and in ifs-libraries repo (bom and java.gradle)
+    annotationProcessor "org.projectlombok:lombok:1.18.20"
+    testAnnotationProcessor  "org.projectlombok:lombok:1.18.20"
+
     // Developer tools are automatically disabled when running a fully packaged application. If your application is
     // launched using java -jar or if it’s started using a special classloader, then it is considered a
     // “production application”. Flagging the dependency as optional in Maven or using compileOnly in Gradle
     // is a best practice that prevents devtools from being transitively applied to other modules using your project.
     compileOnly "org.springframework.boot:spring-boot-devtools"
 
-    compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile "org.springframework.boot:spring-boot-starter-web"
+    //Sleuth
+    implementation "org.springframework.cloud:spring-cloud-starter-sleuth:3.0.1"
 
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
-}
+    // logstash
+    implementation "net.logstash.logback:logstash-logback-encoder:5.3"
+    implementation "ch.qos.logback:logback-core:1.2.3"
 
-processResources {
-    filesMatching("*.properties") {
-        expand project.properties
-    }
-}
+    implementation "io.projectreactor:reactor-core:3.4.10"
 
-processTestResources {
-    filesMatching("*.properties") {
-        expand project.properties
-    }
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 bootJar {
@@ -34,12 +37,3 @@ bootJar {
     mainClassName = 'org.innovateuk.ifs.Application'
 }
 
-ext.springCloudVersion = '2020.0.1'
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
-}
-
-test.finalizedBy jacocoTestReport

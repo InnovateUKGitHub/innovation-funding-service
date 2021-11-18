@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -79,7 +78,6 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
 
     List<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateIn(long competitionId, Collection<ApplicationState> applicationStates);
 
-    @ZeroDowntime(reference = "IFS-8853", description = "This can probably be removed")
     @Query(APPLICATION_FILTER)
     Page<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateIn(@Param("compId") long competitionId,
                                                                                       @Param("states") Collection<ApplicationState> applicationStates,
