@@ -142,6 +142,7 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
     @Test
     public void isMarkedAsCompleteMultiple() {
         question = questionRepository.findById(QUESTION_ID_WITH_MULTIPLE).get();
+        question.setQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION);
         controller.markAsInComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, userId);
 
         assertFalse(questionStatusService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
