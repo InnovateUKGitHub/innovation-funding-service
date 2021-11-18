@@ -60,6 +60,8 @@ public class AssessorCompetitionDashboardModelPopulatorTest {
                 .withCompetitionId(compId)
                 .withCompetitionName("Competition Name")
                 .withInnovationLead("Innovation Lead")
+                .withOpenEndCompetition(false)
+                .withAssessmentPeriodId(null)
                 .withAssessorAcceptDate(ZonedDateTime.now().minusDays(2))
                 .withAssessorDeadlineDate(ZonedDateTime.now().plusDays(4))
                 .withApplicationAssessments(combineLists(submittedAssessments, outstandingAssessments))
@@ -72,6 +74,8 @@ public class AssessorCompetitionDashboardModelPopulatorTest {
         assertEquals(viewModel.getCompetitionId(), assessorCompetitionDashboardResource.getCompetitionId());
         assertEquals(viewModel.getCompetitionTitle(), assessorCompetitionDashboardResource.getCompetitionName());
         assertEquals(viewModel.getLeadTechnologist(), assessorCompetitionDashboardResource.getInnovationLead());
+        assertEquals(viewModel.isOpenEndCompetition(), assessorCompetitionDashboardResource.getOpenEndCompetition());
+        assertEquals(viewModel.getAssessmentPeriodId(), assessorCompetitionDashboardResource.getAssessmentPeriodId());
         assertEquals(viewModel.getAcceptDeadline(), assessorCompetitionDashboardResource.getAssessorAcceptDate());
         assertEquals(viewModel.getSubmitDeadline(), assessorCompetitionDashboardResource.getAssessorDeadlineDate());
         assertEquals(viewModel.getSubmitted().size(), 2);
