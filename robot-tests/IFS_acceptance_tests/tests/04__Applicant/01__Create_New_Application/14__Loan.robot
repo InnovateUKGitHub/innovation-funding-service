@@ -40,6 +40,7 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...             IFS-10705  B&FI question submitted
 ...
 ...             IFS-10753 Loans - Application Overview business and financial information Content
+...
 ...             IFS-10757 Loans - Application summary and Overview Content
 ...
 Suite Setup     Custom suite setup
@@ -125,11 +126,12 @@ Loan application finance overview
     Then the user should see the element   jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00%") ~ td:contains("2,468") ~ td:contains("140,632")
 
 Loan application submission
-    [Documentation]  IFS-6237  IFS-6238  IFS-9483 IFS-10753
+    [Documentation]  IFS-6237  IFS-6238  IFS-9483 IFS-10753 IFS-10757
     Given the user submits the loan application
     When the user clicks the button/link            link = View application
     Then the user should see the element            jQuery = h1:contains("Application overview")
     And The user clicks the button/link             id = accordion-questions-heading-1-1
+    And the user should see that the element is disabled       jQuery = #accordion-questions-content-1-2 button:contains("Mark")
     And the user should see the element             jQuery = span:contains("Thanks for submitting Part B of your loan application.")
     And the user should see the element             jQuery = span:contains("What happens next")
     And the user should see the element             jQuery = p:contains("We will make our decision based on: Suitability of your business to receive a loan and the quality of the project.")
