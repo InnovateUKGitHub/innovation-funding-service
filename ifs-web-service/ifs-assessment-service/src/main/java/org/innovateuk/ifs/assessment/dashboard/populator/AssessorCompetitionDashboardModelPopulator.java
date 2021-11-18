@@ -36,6 +36,8 @@ public class AssessorCompetitionDashboardModelPopulator {
                 assessorCompetitionDashboard.getCompetitionId(),
                 assessorCompetitionDashboard.getCompetitionName(),
                 assessorCompetitionDashboard.getInnovationLead(),
+                assessorCompetitionDashboard.getOpenEndCompetition(),
+                assessorCompetitionDashboard.getAssessmentPeriodId(),
                 assessorCompetitionDashboard.getAssessorAcceptDate(),
                 assessorCompetitionDashboard.getAssessorDeadlineDate(),
                 submitted,
