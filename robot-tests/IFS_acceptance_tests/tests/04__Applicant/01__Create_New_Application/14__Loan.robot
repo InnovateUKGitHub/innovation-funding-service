@@ -85,10 +85,12 @@ the user can open the sales force new tab on clicking conitnue button in incompl
     And the user closes the last opened tab
 
 The user will not be able to mark the application as complete without completing business and financial information
-    [Documentation]    IFS-9484  IFS-10705
+    [Documentation]    IFS-9484  IFS-10705 IFS-10757
     Given the user clicks the button/link                       link = Back to application overview
     When the user clicks the button/link                        id = application-overview-submit-cta
     Then the user should see that the element is disabled       id = submit-application-button
+    And The user clicks the button/link                         id = accordion-questions-heading-1-1
+    And The user should not see the element                     jQuery = #accordion-questions-content-1-1 button:contains("Mark")
     And the user should see the element                         jQuery = .section-incomplete + button:contains("Business and financial information")
     And the user should see the element                         jQuery = h2:contains("Applicant details")
     And the user should see the element                         jQuery = h2:contains("Project finance")
@@ -126,13 +128,11 @@ Loan application finance overview
     Then the user should see the element   jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00%") ~ td:contains("2,468") ~ td:contains("140,632")
 
 Loan application submission
-    [Documentation]  IFS-6237  IFS-6238  IFS-9483 IFS-10753 IFS-10757
+    [Documentation]  IFS-6237  IFS-6238  IFS-9483 IFS-10753
     Given the user submits the loan application
     When the user clicks the button/link            link = View application
     Then the user should see the element            jQuery = h1:contains("Application overview")
     And The user clicks the button/link             id = accordion-questions-heading-1-1
-#    And The user clicks the button/link             id = application-overview-submit-cta
-#    And the user should see that the element is disabled       jQuery = #accordion-questions-content-1-1 button:contains("Mark")
     And the user should see the element             jQuery = span:contains("Thanks for submitting Part B of your loan application.")
     And the user should see the element             jQuery = span:contains("What happens next")
     And the user should see the element             jQuery = p:contains("We will make our decision based on: Suitability of your business to receive a loan and the quality of the project.")
