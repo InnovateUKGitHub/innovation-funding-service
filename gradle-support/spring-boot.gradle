@@ -6,7 +6,7 @@ apply plugin: 'org.springframework.boot'
 dependencies {
 
     // Enforced platform is composite of IFS libraries, spring boot and spring cloud
-    implementation enforcedPlatform ('org.innovateuk.ifs.libraries:bom:2.0.16.IFS-10564-1')
+    implementation enforcedPlatform ('org.innovateuk.ifs.libraries:bom:2.0.10564-22')
 
     // version must match here and in ifs-libraries repo (bom and java.gradle)
     annotationProcessor "org.projectlombok:lombok:1.18.20"
@@ -20,6 +20,7 @@ dependencies {
 
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.innovateuk.ifs.libraries:ifs-starter-logging"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
