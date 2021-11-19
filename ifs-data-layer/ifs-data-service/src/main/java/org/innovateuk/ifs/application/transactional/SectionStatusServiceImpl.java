@@ -157,12 +157,14 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
         find(
                 processRole(markedAsCompleteById),
                 () -> find(sectionRepository.findByTypeAndCompetitionId(PAYMENT_MILESTONES, application.getCompetition().getId()), CommonErrors.notFoundError(Section.class, PAYMENT_MILESTONES, application.getCompetition().getId())))
-                .andOnSuccessReturnVoid((processRole, section) -> questionStatusService.getQuestionStatusForOrganisationOnApplication(section.getQuestions().get(0).getId(), application.getId(), processRole.getOrganisationId()).andOnSuccessReturnVoid(questionStatus -> {
-                   if (!applicationProcurementMilestoneService.arePaymentMilestonesEqualToFunding(application.getId(), processRole.getOrganisationId()).getSuccess()
-                       && !questionStatus.isEmpty() && Boolean.TRUE.equals(questionStatus.get(0).getMarkedAsComplete())) {
-                        questionStatusService.markAsInComplete(new QuestionApplicationCompositeId(section.getQuestions().get(0).getId(), application.getId()), markedAsCompleteById);
-                   }
-                }));
+                .andOnSuccessReturnVoid((processRole, section) -> {
+                    questionStatusService.getQuestionStatusForOrganisationOnApplication(section.getQuestions().get(0).getId(), application.getId(), processRole.getOrganisationId()).andOnSuccessReturnVoid(questionStatus -> {
+                       if (!applicationProcurementMilestoneService.arePaymentMilestonesEqualToFunding(application.getId(), processRole.getOrganisationId()).getSuccess()
+                           && !questionStatus.isEmpty() && Boolean.TRUE.equals(questionStatus.get(0).getMarkedAsComplete())) {
+                            questionStatusService.markAsInComplete(new QuestionApplicationCompositeId(section.getQuestions().get(0).getId(), application.getId()), markedAsCompleteById);
+                       };
+                    });
+                });
     }
 
 

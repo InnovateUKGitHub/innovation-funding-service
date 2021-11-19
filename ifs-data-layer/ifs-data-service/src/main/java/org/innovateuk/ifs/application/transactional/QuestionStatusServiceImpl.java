@@ -300,7 +300,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
 
     protected ServiceResult<List<ValidationMessages>> setComplete(long questionId, long applicationId, long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus, ZonedDateTime markedAsCompleteOn) {
         QuestionSetupType questionSetupType = questionService.getQuestionById(questionId).getSuccess().getQuestionSetupType();
-        if (isLoansBusinessAndFinancialInformationQuestion(questionSetupType)) {
+        if (questionSetupType != null && isLoansBusinessAndFinancialInformationQuestion(questionSetupType)) {
             return serviceFailure(APPLICATION_NOT_UPDATED);
         }
 
