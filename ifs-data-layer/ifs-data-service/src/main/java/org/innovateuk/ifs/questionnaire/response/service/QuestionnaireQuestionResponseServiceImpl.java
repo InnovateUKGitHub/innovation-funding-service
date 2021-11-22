@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.questionnaire.response.service;
 
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crud.AbstractIfsCrudServiceImpl;
 import org.innovateuk.ifs.questionnaire.config.repository.QuestionnaireOptionRepository;
@@ -10,8 +11,6 @@ import org.innovateuk.ifs.questionnaire.response.repository.QuestionnaireRespons
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
-
-import javax.ws.rs.NotFoundException;
 
 import java.util.UUID;
 
@@ -45,12 +44,12 @@ public class QuestionnaireQuestionResponseServiceImpl extends AbstractIfsCrudSer
         if (domain.getId() != null && domain.getOption() != null && !domain.getOption().getId().equals(resource.getOption())) {
             resetAnswersDeeperThanThis(resource.getOption(), domain.getQuestionnaireResponse().getId(), domain.getId());
         }
-        domain.setOption(questionnaireOptionRepository.findById(resource.getOption()).orElseThrow(NotFoundException::new));
+        domain.setOption(questionnaireOptionRepository.findById(resource.getOption()).orElseThrow(ObjectNotFoundException::new));
         return domain;
     }
 
     private void resetAnswersDeeperThanThis(long optionId, UUID questionnaireResponseId, long questionResponseId) {
-        int questionDepth = questionnaireOptionRepository.findById(optionId).orElseThrow(NotFoundException::new).getQuestion().getDepth();
+        int questionDepth = questionnaireOptionRepository.findById(optionId).orElseThrow(ObjectNotFoundException::new).getQuestion().getDepth();
         questionnaireQuestionResponseRepository.deleteByQuestionnaireResponseIdAndOptionQuestionDepthGreaterThanEqualAndIdNot(questionnaireResponseId, questionDepth, questionResponseId);
     }
 

@@ -60,6 +60,13 @@ build:
         project: ifs-web-service:ifs-application-service
         args:
           - "-DskipTests"
+    - image: registration-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-registration-service
+        args:
+          - "-DskipTests"
   local:
     # Experiment with build concurrency
     # 2/3 seems to be the sweet spot and build takes 2 mins

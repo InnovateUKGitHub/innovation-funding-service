@@ -41,7 +41,7 @@ bin/
 
 # ignore properties
 **/*-build.gradle
-!**/openshift-build.gradle
+!docker/ifs-mysql/openshift-build.gradle
 !**/automated-build.gradle
 !**/application-integration-test.properties
 !**/application-seeding-db.properties

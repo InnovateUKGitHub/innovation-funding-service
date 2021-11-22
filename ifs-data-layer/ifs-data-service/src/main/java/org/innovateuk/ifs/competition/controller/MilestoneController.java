@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.controller;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -40,7 +39,6 @@ public class MilestoneController {
     }
 
     @PostMapping(value = "/{competitionId}")
-    @ZeroDowntime(reference = "todo", description = "REMOVE THIS ENDPOINT.")
     public RestResult<MilestoneResource> create(@RequestParam("type") final MilestoneType type,
                                                 @PathVariable("competitionId") final Long competitionId) {
         MilestoneResource milestone = new MilestoneResource();

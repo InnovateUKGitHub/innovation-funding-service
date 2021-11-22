@@ -17,9 +17,9 @@ dependencies {
     implementation enforcedPlatform("org.flywaydb:flyway-core:7.1.1")
     implementation enforcedPlatform("com.h2database:h2:1.4.199")
 
-    compile "org.flywaydb:flyway-core"
-    compile "org.mariadb.jdbc:mariadb-java-client"
-    testCompile "com.h2database:h2" //1.4.200
+    implementation "org.flywaydb:flyway-core"
+    implementation "org.mariadb.jdbc:mariadb-java-client"
+    testImplementation "com.h2database:h2" //1.4.200
 }
 
 flyway {

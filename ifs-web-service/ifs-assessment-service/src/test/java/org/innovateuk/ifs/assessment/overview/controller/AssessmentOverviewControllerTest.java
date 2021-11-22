@@ -106,7 +106,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-@TestPropertySource(locations = "classpath:application.properties")
+@TestPropertySource(locations = { "classpath:application.properties", "classpath:/application-web-core.properties"} )
 public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVCTest<AssessmentOverviewController> {
 
     private static final long APPLICATION_ID = 1L;

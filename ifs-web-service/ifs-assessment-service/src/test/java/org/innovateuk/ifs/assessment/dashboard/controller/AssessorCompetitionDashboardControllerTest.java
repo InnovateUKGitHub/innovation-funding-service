@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
-@TestPropertySource(locations = "classpath:application.properties")
+@TestPropertySource(locations = { "classpath:application.properties", "classpath:/application-web-core.properties"})
 public class AssessorCompetitionDashboardControllerTest extends AbstractApplicationMockMVCTest<AssessorCompetitionDashboardController> {
 
     @Mock

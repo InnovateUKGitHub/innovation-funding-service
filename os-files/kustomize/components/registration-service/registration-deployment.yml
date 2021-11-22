@@ -1,0 +1,133 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registration-svc
+  annotations:
+    monitor: monitor
+    pullSecrets: pullSecrets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: registration-svc
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: registration-svc
+    spec:
+      containers:
+        - name: spring-boot-service-container
+          image: registration-service
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /monitoring/health
+              port: 8080
+            initialDelaySeconds: 180
+            periodSeconds: 31
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /monitoring/health
+              port: 8080
+            initialDelaySeconds: 180
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1
+          env:
+            - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
+              valueFrom:
+                configMapKeyRef:
+                  name: web-config
+                  key: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
+            - name: IFS_WEB_SYSTEM_USER_UID
+              valueFrom:
+                configMapKeyRef:
+                  name: web-config
+                  key: IFS_WEB_SYSTEM_USER_UID
+            - name: SPRING_APPLICATION_JSON
+              valueFrom:
+                configMapKeyRef:
+                  name: web-config
+                  key: SPRING_APPLICATION_JSON
+            - name: NEW_RELIC_LICENSE_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: new-relic-config
+                  key: NEW_RELIC_LICENSE_KEY
+            - name: NEW_RELIC_LOG
+              valueFrom:
+                configMapKeyRef:
+                  name: new-relic-config
+                  key: NEW_RELIC_LOG
+            - name: LDAP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: ldap-config
+                  key: LDAP_URL
+            - name: SHIBBOLETH_LDAP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: shibboleth-config
+                  key: SHIBBOLETH_LDAP_PORT
+            - name: SHIBBOLETH_LDAP_BASE_DN
+              valueFrom:
+                configMapKeyRef:
+                  name: shibboleth-config
+                  key: SHIBBOLETH_LDAP_BASE_DN
+            - name: SHIBBOLETH_LDAP_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: shibboleth-config
+                  key: SHIBBOLETH_LDAP_USER
+            - name: LDAP_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: ldap-config
+                  key: LDAP_PASSWORD
+            - name: SHIBBOLETH_API_KEYS
+              valueFrom:
+                configMapKeyRef:
+                  name: shibboleth-config
+                  key: SHIBBOLETH_API_KEYS
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-config
+                  key: SPRING_PROFILES_ACTIVE
+            - name: IFS_WEB_BASEURL
+              valueFrom:
+                configMapKeyRef:
+                  name: web-config
+                  key: IFS_WEB_BASEURL
+            - name: JAVA_OPTS
+              value: -Xms256m -Xmx650m -javaagent:/newrelic.jar
+            - name: NEW_RELIC_APP_NAME
+              value: "ifs-registration-service (${openshiftEnv})"
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: 1000m
+            requests:
+              cpu: 100m
+              memory: 1G
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "$JAVA_HOME/bin/keytool -import -trustcacerts -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit -noprompt -alias iuk-auth-localdev -file /var/certs/ldap-encryption.crt"]
+          volumeMounts:
+            - mountPath: /var/certs
+              name: registration-keys-volume
+      volumes:
+        - name: registration-keys-volume
+          secret:
+            secretName: registration-keys-secrets

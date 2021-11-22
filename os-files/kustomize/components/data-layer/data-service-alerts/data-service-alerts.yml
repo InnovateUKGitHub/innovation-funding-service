@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: data-service-alerts
   labels:
-    run: data-service-alerts
+    app: data-service-alerts
   annotations:
     javaDebug: javaDebug
 spec:

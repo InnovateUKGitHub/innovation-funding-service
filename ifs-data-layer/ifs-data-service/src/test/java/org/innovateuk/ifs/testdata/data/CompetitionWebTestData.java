@@ -408,7 +408,11 @@ public class CompetitionWebTestData {
                 ktpCompetition()
                         .withName("FEC KTP project competition"),
                 ktpCompetition()
-                        .withName("FEC KTP competition duplicate")
+                        .withName("FEC KTP competition duplicate"),
+                loanCompetition()
+                        .withName("Loans SF Part-B Competition")
+                        .withInnovationSector("Infrastructure systems")
+                        .withAssessorCount(5)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.OPEN))
@@ -576,7 +580,6 @@ public class CompetitionWebTestData {
                 .withFundingRules(FundingRules.STATE_AID)
                 .withPublished(true)
                 .withAlwaysOpen(false);
-
     }
 
     private static CompetitionLineBuilder nonIfsCompetition() {

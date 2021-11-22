@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project;
 import org.innovateuk.ifs.project.status.security.SetupSectionsPermissionRules;
 import org.innovateuk.ifs.security.BaseControllerSecurityTest;
 import org.junit.Before;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.function.Consumer;
 
