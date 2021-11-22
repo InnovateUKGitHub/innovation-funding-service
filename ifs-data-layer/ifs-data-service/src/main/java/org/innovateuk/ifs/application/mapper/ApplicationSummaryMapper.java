@@ -83,6 +83,8 @@ public abstract class ApplicationSummaryMapper {
 
         result.setInAssessmentPanel(source.isInAssessmentReviewPanel());
 
+        result.setAssessmentClosed(source.getAssessmentPeriod().isAssessmentClosed());
+
         return result;
     }
 

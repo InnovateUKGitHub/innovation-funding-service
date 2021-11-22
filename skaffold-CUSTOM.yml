@@ -11,6 +11,13 @@ build:
         project: ifs-data-layer:ifs-data-service
         args:
           - "-DskipTests"
+    - image: competition-mgt-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-web-service:ifs-competition-mgt-service
+        args:
+          - "-DskipTests"
   local:
     useDockerCLI: false
     useBuildkit: false
