@@ -3,11 +3,7 @@ package org.innovateuk.ifs.management.funding.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerRestService;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.assessment.service.AssessmentPeriodService;
-import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
-import org.innovateuk.ifs.competition.service.AssessmentPeriodRestService;
 import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -29,11 +25,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 
@@ -78,12 +72,6 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     protected Class<FundingDecisionSelectionCookie> getFormType() {
         return FundingDecisionSelectionCookie.class;
     }
-
-    @Autowired
-    private AssessmentPeriodRestService assessmentPeriodRestService;
-
-    @Autowired
-    private GoogleAnalyticsDataLayerRestService googleAnalyticsDataLayerRestService;
 
     @GetMapping
     public String applications(Model model,
@@ -219,15 +207,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     }
 
     private List<Long> getAllApplicationIdsByFilters(long competitionId, FundingDecisionFilterForm filterForm) {
-        List<Long> assessedApplicationIds = new ArrayList<>();
-        List<AssessmentPeriodResource> assessmentPeriods = assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionId).getSuccess();
-        List<AssessmentPeriodResource> closedAssessmentPeriods = assessmentPeriods.stream().filter(assessmentPeriodResource -> assessmentPeriodResource.isAssessmentClosed()).collect(Collectors.toList());
-        for(AssessmentPeriodResource assessmentPeriod :closedAssessmentPeriods) {
-          assessedApplicationIds.add(googleAnalyticsDataLayerRestService.getApplicationIdForAssessment(assessmentPeriod.getId()).getSuccess());
-        }
-
-        return assessedApplicationIds;
-        //  return applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
+        return applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
     }
 
     private FundingDecisionSelectionForm trimSelectionByFilteredResult(FundingDecisionSelectionForm selectionForm,

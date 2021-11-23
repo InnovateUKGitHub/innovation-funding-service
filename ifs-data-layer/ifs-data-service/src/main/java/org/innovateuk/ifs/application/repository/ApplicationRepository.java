@@ -46,6 +46,19 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             ") " +
             "AND (:inAssessmentReviewPanel IS NULL OR a.inAssessmentReviewPanel = :inAssessmentReviewPanel)";
 
+
+    String ASSESSED_APPLICATION_FILTER_WHERE = "WHERE " +
+            "a.competition.id = :compId " +
+            "AND (a.assessmentPeriod.id IN :closedAssessmentPeriods) " +
+            "AND (a.applicationProcess.activityState IN :states) " +
+            "AND (:filter IS NULL OR str(a.id) LIKE CONCAT('%', :filter, '%') ) " +
+            "AND (:funding IS NULL " +
+            "OR ( str(:funding) = 'UNDECIDED' AND a.fundingDecision IS NULL AND a.applicationProcess.activityState <> org.innovateuk.ifs.application.resource.ApplicationState.APPROVED ) " +
+            "OR a.fundingDecision = :funding " +
+            "   OR ( str(:funding) = 'FUNDED' AND a.applicationProcess.activityState = org.innovateuk.ifs.application.resource.ApplicationState.APPROVED ) " +
+            ") " +
+            "AND (:inAssessmentReviewPanel IS NULL OR a.inAssessmentReviewPanel = :inAssessmentReviewPanel)";
+
     String COMP_FUNDING_FILTER = "WHERE " +
             "a.competition.id = :compId " +
             "AND (a.fundingDecision IS NOT NULL) " +
@@ -129,6 +142,15 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
                                                                Pageable pageable);
 
+    @Query(APPLICATION_SELECT + ASSESSED_APPLICATION_FILTER_WHERE)
+    Page<Application> findByApplicationByClosedAssesmentPeriodStateAndFundingDecision(@Param("compId") long competitionId,
+                                                               @Param("states") Collection<ApplicationState> applicationStates,
+                                                               @Param("filter") String filter,
+                                                               @Param("funding") FundingDecisionStatus funding,
+                                                               @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
+                                                               @Param("closedAssessmentPeriods") List<Long> closedAssessmentPeriods,
+                                                               Pageable pageable);
+
     @Query(APPLICATION_SELECT + COMP_STATUS_FILTER_WHERE)
     List<Application> findByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
                                                                @Param("states") Collection<ApplicationState> applicationStates,
@@ -136,12 +158,29 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                @Param("funding") FundingDecisionStatus funding,
                                                                @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel);
 
+    @Query(APPLICATION_SELECT + ASSESSED_APPLICATION_FILTER_WHERE)
+    List<Application> findByApplicationByClosedAssesmentPeriodStateAndFundingDecision(@Param("compId") long competitionId,
+                                                               @Param("states") Collection<ApplicationState> applicationStates,
+                                                               @Param("filter") String filter,
+                                                               @Param("funding") FundingDecisionStatus funding,
+                                                               @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
+                                                               @Param("closedAssessmentPeriods") List<Long> closedAssessmentPeriods);
+
     @Query(APPLICATION_ID_SELECT + COMP_STATUS_FILTER_WHERE)
     List<Long> findApplicationIdsByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
                                                                @Param("states") Collection<ApplicationState> applicationStates,
                                                                @Param("filter") String filter,
                                                                @Param("funding") FundingDecisionStatus funding,
                                                                @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel);
+
+
+    @Query(APPLICATION_ID_SELECT + ASSESSED_APPLICATION_FILTER_WHERE)
+    List<Long> findApplicationIdsByClosedAssessmentPeriodApplicationStateAndFundingDecision(@Param("compId") long competitionId,
+                                                                      @Param("states") Collection<ApplicationState> applicationStates,
+                                                                      @Param("filter") String filter,
+                                                                      @Param("funding") FundingDecisionStatus funding,
+                                                                      @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
+                                                                      @Param("closedAssessmentPeriods") List<Long> closedAssessmentPeriods);
 
     @Query(COMP_NOT_STATUS_FILTER)
     Page<Application> findByCompetitionIdAndApplicationProcessActivityStateNotIn(@Param("compId") long competitionId,

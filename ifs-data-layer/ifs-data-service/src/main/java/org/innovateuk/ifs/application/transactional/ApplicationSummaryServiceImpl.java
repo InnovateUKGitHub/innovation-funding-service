@@ -8,7 +8,10 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.application.resource.comparators.*;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
+import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Collections.singleton;
@@ -102,6 +106,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
     @Autowired
     private ApplicationSummaryPageMapper applicationSummaryPageMapper;
 
+    @Autowired
+    private AssessmentPeriodRepository assessmentPeriodRepository;
+
     @Override
     public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(
             long competitionId,
@@ -127,11 +134,26 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
         String filterString = trimFilterString(filter);
 
+      //Need to redo
+        List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
+        List<AssessmentPeriod> closedAssessmentPeriodsList = assessmentPeriods.stream().filter(assessmentPeriod -> assessmentPeriod.isAssessmentClosed()).collect(Collectors.toList());
+        List<Long> closedAsssessmentPeriodIds = new ArrayList<Long>();
+        for(AssessmentPeriod assessmentPeriod : closedAssessmentPeriodsList) {
+            closedAsssessmentPeriodIds.add(assessmentPeriod.getId());
+        }
+
+
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByApplicationStateAndFundingDecision(
-                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentReviewPanel.orElse(null), pageable),
-                () -> applicationRepository.findByApplicationStateAndFundingDecision(
-                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentReviewPanel.orElse(null)));
+                pageable -> applicationRepository.findByApplicationByClosedAssesmentPeriodStateAndFundingDecision(
+                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentReviewPanel.orElse(null), closedAsssessmentPeriodIds, pageable),
+                () -> applicationRepository.findByApplicationByClosedAssesmentPeriodStateAndFundingDecision(
+                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentReviewPanel.orElse(null), closedAsssessmentPeriodIds));
+
+//        return applicationSummaries(sortBy, pageIndex, pageSize,
+//                pageable -> applicationRepository.findByApplicationStateAndFundingDecision(
+//                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentReviewPanel.orElse(null), pageable),
+//                () -> applicationRepository.findByApplicationStateAndFundingDecision(
+//                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentReviewPanel.orElse(null)));
     }
 
     @Override
@@ -140,7 +162,16 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             Optional<String> filter,
             Optional<FundingDecisionStatus> fundingFilter) {
         String filterString = trimFilterString(filter);
-        return serviceSuccess(applicationRepository.findApplicationIdsByApplicationStateAndFundingDecision(competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), null));
+        //Need to redo
+        List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
+        List<AssessmentPeriod> closedAssessmentPeriodsList = assessmentPeriods.stream().filter(assessmentPeriod -> assessmentPeriod.isAssessmentClosed()).collect(Collectors.toList());
+        List<Long> closedAsssessmentPeriodIds = new ArrayList<Long>();
+        for(AssessmentPeriod assessmentPeriod : closedAssessmentPeriodsList) {
+            closedAsssessmentPeriodIds.add(assessmentPeriod.getId());
+        }
+
+        return serviceSuccess(applicationRepository.findApplicationIdsByClosedAssessmentPeriodApplicationStateAndFundingDecision(competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), null, closedAsssessmentPeriodIds));
+     //   return serviceSuccess(applicationRepository.findApplicationIdsByApplicationStateAndFundingDecision(competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), null));
     }
 
     @Override
