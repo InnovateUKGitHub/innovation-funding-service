@@ -40,6 +40,8 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...             IFS-10705  B&FI question submitted
 ...
 ...             IFS-10753 Loans - Application Overview business and financial information Content
+
+...             IFS-10825 Assessor Dashboard Business and Financial Overview
 ...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
@@ -134,75 +136,81 @@ Loan application submission
     And the user should see the element             jQuery = p:contains("We will make our decision based on: Suitability of your business to receive a loan and the quality of the project.")
     And the user reads his email                    ${lead_applicant_credentials["email"]}   Complete your application for Loan Competition   You have completed your application for Loan Competition.
 
-Applicant complete the project setup details
-    [Documentation]  IFS-6369  IFS-6285  IFS-9483
-    Given the user completes the project details
-    And the user completes the project team details
-    Then the user should not see the element    jQuery = h2:contains("Bank details")
+Loan assessor invition
+    Given the comp admin logs in and invite loan assessor      ${loan_comp_application}
 
-The user is unable to change funding percentage
-    [Documentation]  IFS-7244
-    [Setup]  log in as a different user         &{internal_finance_credentials}
-    Given the user navigates to the page        ${loan_finance_checks}
-    When the user clicks the button/link        link = View finances
-    Then the user should not see the element    link = Change funding level percentages
 
-Funding sought validations
-    [Documentation]  IFS-6293
-    Given the user selects to change funding sought
-    When the user enters text to a text field           id = partners[${EMPIRE_LTD_ID}].funding  ${EMPTY}
-    And the user clicks the button/link                 jQuery = button:contains("Save and return to project finances")
-    Then the user should see a field and summary error  Enter the amount of funding sought.
 
-Fund sought changes
-    [Documentation]  IFS-6293  IFS-6298  IFS-8944
-    Given the user enters text to a text field     id = partners[${EMPIRE_LTD_ID}].funding  6000
-    When the user clicks the button/link           jQuery = button:contains("Save and return to project finances")
-    Then the user should see the element           jQuery = h3:contains("Finance summary") ~ div td:contains("£200,903") ~ td:contains("4.21%") ~ td:contains("6,000") ~ td:contains("2,468") ~ td:contains("192,435")
 
-Project finance completes all project setup steps
-    [Documentation]  IFS-6369  IFS-6292  IFS-6307  IFS-6298  IFS-6368
-    [Setup]  log in as a different user               &{internal_finance_credentials}
-    Given internal user assign MO to loan project
-    And internal user generate SP
-    When the user navigates to the page               ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
-    Then the user should not see the element          jQuery = th:contains("Bank details")
-
-Applicant checks the generated SP
-    [Documentation]  IFS-6369  IFS-6298
-    Given log in as a different user       &{lead_applicant_credentials}
-    And the user should see the finished finance checks
-    When the user navigates to the page    ${loan_PS}/partner-organisation/${EMPIRE_LTD_ID}/spend-profile/review
-    Then the user should not see the financial year table on SP
-
-Internal user can see application details in project setup
-    [Documentation]  IFS-9483
-    Given Log in as a different user         &{internal_finance_credentials}
-    When the user navigates to the page      ${server}/management/competition/${loan_comp_PS_Id}/application/${loan_PS_application_Id}
-    Then the user should see the element     jQuery = h2:contains("Applicant details")
-    And the user should see the element      jQuery = h2:contains("Project finance")
-
-IFS Admin can mark project as successful
-    [Documentation]  IFS-6363  IFS-9679
-    Given Log in as a different user              &{ifs_admin_user_credentials}
-    And the user navigates to the page            ${spend_profile}
-    When the IFS Admin approves to SP
-    And the user clicks the button/link           jQuery = button.govuk-button:contains("Submit")
-    And the user navigates to the page            ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
-    And the user clicks the button/link           jQuery = tr:contains("${loan_PS_application1}") td:contains("Review") a
-    Then the user marks loan as complete          successful  ${loan_PS_application1}
-
-Internal user can mark project as unsuccessful
-    [Documentation]  IFS-6363
-    Given the user navigates to the page     ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
-    When the user clicks the button/link     jQuery = tr:contains("${loan_PS_application2}") td:contains("Review") a
-    Then the user marks loan as complete     unsuccessful  ${loan_PS_application2}
-
-Applicant checks successful and unsuccessful project status
-    [Documentation]  IFS-6294
-    Given log in as a different user                          &{lead_applicant_credentials}
-    And the user clicks the application tile if displayed
-    Then the applicant checks for project status
+#Applicant complete the project setup details
+#    [Documentation]  IFS-6369  IFS-6285  IFS-9483
+#    Given the user completes the project details
+#    And the user completes the project team details
+#    Then the user should not see the element    jQuery = h2:contains("Bank details")
+#
+#The user is unable to change funding percentage
+#    [Documentation]  IFS-7244
+#    [Setup]  log in as a different user         &{internal_finance_credentials}
+#    Given the user navigates to the page        ${loan_finance_checks}
+#    When the user clicks the button/link        link = View finances
+#    Then the user should not see the element    link = Change funding level percentages
+#
+#Funding sought validations
+#    [Documentation]  IFS-6293
+#    Given the user selects to change funding sought
+#    When the user enters text to a text field           id = partners[${EMPIRE_LTD_ID}].funding  ${EMPTY}
+#    And the user clicks the button/link                 jQuery = button:contains("Save and return to project finances")
+#    Then the user should see a field and summary error  Enter the amount of funding sought.
+#
+#Fund sought changes
+#    [Documentation]  IFS-6293  IFS-6298  IFS-8944
+#    Given the user enters text to a text field     id = partners[${EMPIRE_LTD_ID}].funding  6000
+#    When the user clicks the button/link           jQuery = button:contains("Save and return to project finances")
+#    Then the user should see the element           jQuery = h3:contains("Finance summary") ~ div td:contains("£200,903") ~ td:contains("4.21%") ~ td:contains("6,000") ~ td:contains("2,468") ~ td:contains("192,435")
+#
+#Project finance completes all project setup steps
+#    [Documentation]  IFS-6369  IFS-6292  IFS-6307  IFS-6298  IFS-6368
+#    [Setup]  log in as a different user               &{internal_finance_credentials}
+#    Given internal user assign MO to loan project
+#    And internal user generate SP
+#    When the user navigates to the page               ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
+#    Then the user should not see the element          jQuery = th:contains("Bank details")
+#
+#Applicant checks the generated SP
+#    [Documentation]  IFS-6369  IFS-6298
+#    Given log in as a different user       &{lead_applicant_credentials}
+#    And the user should see the finished finance checks
+#    When the user navigates to the page    ${loan_PS}/partner-organisation/${EMPIRE_LTD_ID}/spend-profile/review
+#    Then the user should not see the financial year table on SP
+#
+#Internal user can see application details in project setup
+#    [Documentation]  IFS-9483
+#    Given Log in as a different user         &{internal_finance_credentials}
+#    When the user navigates to the page      ${server}/management/competition/${loan_comp_PS_Id}/application/${loan_PS_application_Id}
+#    Then the user should see the element     jQuery = h2:contains("Applicant details")
+#    And the user should see the element      jQuery = h2:contains("Project finance")
+#
+#IFS Admin can mark project as successful
+#    [Documentation]  IFS-6363  IFS-9679
+#    Given Log in as a different user              &{ifs_admin_user_credentials}
+#    And the user navigates to the page            ${spend_profile}
+#    When the IFS Admin approves to SP
+#    And the user clicks the button/link           jQuery = button.govuk-button:contains("Submit")
+#    And the user navigates to the page            ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
+#    And the user clicks the button/link           jQuery = tr:contains("${loan_PS_application1}") td:contains("Review") a
+#    Then the user marks loan as complete          successful  ${loan_PS_application1}
+#
+#Internal user can mark project as unsuccessful
+#    [Documentation]  IFS-6363
+#    Given the user navigates to the page     ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
+#    When the user clicks the button/link     jQuery = tr:contains("${loan_PS_application2}") td:contains("Review") a
+#    Then the user marks loan as complete     unsuccessful  ${loan_PS_application2}
+#
+#Applicant checks successful and unsuccessful project status
+#    [Documentation]  IFS-6294
+#    Given log in as a different user                          &{lead_applicant_credentials}
+#    And the user clicks the application tile if displayed
+#    Then the applicant checks for project status
 
 *** Keywords ***
 Custom suite setup
@@ -226,6 +234,10 @@ the user submits the loan application
     the user clicks the button/link           id = submit-application-button
     the user should see the element           link = Reopen application
 
+the user assign the loan assessor
+
+the user invite an assessor
+
 the user completes the project details
     log in as a different user            &{lead_applicant_credentials}
     the user navigates to the page        ${loan_PS}
@@ -235,7 +247,6 @@ the user completes the project details
     the user should see the element       jQuery = h2:contains("Applicant details")
     the user should see the element       jQuery = h2:contains("Project finance")
     the user clicks the button/link       link = Back to set up your project
-    the user clicks the button/link       link = Project details
     the user clicks the button/link       link = Correspondence address
     the user enter the Correspondence address
     the user clicks the button/link       link = Return to set up your project
@@ -403,6 +414,30 @@ the user should see b&fi question details
     the user should see the element     jQuery = p:contains("At any stage, you can return here to carry on editing incomplete form.")
     the user should see the element     jQuery = p:contains("Business and financial details")
     the user should see the element     jQuery = p:contains("Financial information")
+
+
+the user shoulds see b&fi link
+    the user clicks the button/link      link = Business and financial information
+    the user should see the element      jQuery = a:contains("Business and financial information")
+    the user sholud see the element      jQuery = p:contains("This section has been completed and will be reviewed by Innovate UK.")
+
+the comp admin logs in and invite loan assessor
+    [Arguments]  ${loan_comp_application}
+    the user logs-in in new browser     &{Comp_admin1_credentials}
+    the user clicks the button/link     link = Loan Competition
+    the user clicks the button/link     jQuery = a:contains("Invite assessors to assess the competition")
+    the user clicks the button/link		jQuery = a:contains("81 to ")
+	the user selects the checkbox       assessor-row-10
+	the user clicks the button/link     jQuery = button:contains("Add selected to invite list")
+	the user clicks the button/link     jQuery = a:contains("Review and send invites")
+	the user clicks the button/link     jQuery = .govuk-button:contains("Send invitation")
+
+loan assessors accept the invitation to assess the loan competition
+    #log in as a different user                            ${assessor1_email}   ${short_password}
+    the user logs-in in new browser                       ${assessor_email}   ${short_password}
+    the user clicks the button/link                       jQuery = a:contains("Loan Competition")
+    the user selects the radio button                     acceptInvitation   true
+    the user clicks the button/link                       jQuery = button:contains("Confirm")
 
 the sales force submits/unsubmits b&fi survey
     [Arguments]  ${completeStatus}
