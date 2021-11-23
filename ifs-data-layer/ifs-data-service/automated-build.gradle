@@ -38,3 +38,6 @@ ext.ifsWebBaseURL="https://ifs.local-dev"
 
 // Following is required to override allowed suffix on test environments. See comments on IFS-27.
 ext.ktaUserEmailDomain="ktn-uk.test"
+
+ext.postcodeLookupKey=""
+ext.ifsFileStorageLocation="/tmp"
