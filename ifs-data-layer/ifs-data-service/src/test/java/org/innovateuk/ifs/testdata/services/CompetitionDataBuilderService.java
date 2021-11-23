@@ -149,11 +149,11 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
 
     public void moveCompetitionIntoOpenStatus(CompetitionData competition) {
 
-            AssessmentPeriodLine assessmentPeriodLine = simpleFindFirstMandatory(competitionAssessmentPeriodLines, l ->
-                    Objects.equals(l.competition, competition.getCompetition().getName()));
+        List<CsvUtils.AssessmentPeriodLine> assessmentPeriodLines = simpleFilter(competitionAssessmentPeriodLines, l ->
+                competition.getCompetition().getName().equals(l.competition));
 
         CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competition);
-        basicCompetitionInformation.moveCompetitionIntoOpenStatus(assessmentPeriodLine).build();
+        basicCompetitionInformation.moveCompetitionIntoOpenStatus(assessmentPeriodLines.get(0)).build();
     }
 
     private CompetitionDataBuilder nonIfsCompetitionDataBuilder(CompetitionLine line) {
