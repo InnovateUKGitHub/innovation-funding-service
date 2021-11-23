@@ -37,7 +37,6 @@ dependencies {
 }
 
 test {
-    outputs.dir snippetsDir
     if (project.hasProperty('excludeTests')) {
         exclude "${project.excludeTests}"
     }
