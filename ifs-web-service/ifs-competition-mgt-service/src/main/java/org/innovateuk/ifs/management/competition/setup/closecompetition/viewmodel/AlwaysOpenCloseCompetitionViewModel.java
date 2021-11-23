@@ -14,14 +14,12 @@ public class AlwaysOpenCloseCompetitionViewModel {
     private String competitionName;
     private ZonedDateTime submissionDate;
     private List<ApplicationResource> submittedApplications;
-    private boolean allApplicationsHadBeenNotified;
 
-    public AlwaysOpenCloseCompetitionViewModel(Long competitionId, String competitionName, ZonedDateTime submissionDate, List<ApplicationResource> submittedApplications, boolean allApplicationsHadBeenNotified) {
+    public AlwaysOpenCloseCompetitionViewModel(Long competitionId, String competitionName, ZonedDateTime submissionDate, List<ApplicationResource> submittedApplications) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.submissionDate = submissionDate;
         this.submittedApplications = submittedApplications;
-        this.allApplicationsHadBeenNotified = allApplicationsHadBeenNotified;
     }
 
     public Long getCompetitionId() {
@@ -40,10 +38,6 @@ public class AlwaysOpenCloseCompetitionViewModel {
         return submittedApplications;
     }
 
-    public boolean isAllApplicationsHadBeenNotified() {
-        return allApplicationsHadBeenNotified;
-    }
-
     public boolean submissionDateIsPresentAndHadPassed() {
         return (submissionDate != null) && (submissionDate.isBefore(ZonedDateTime.now()));
     }
@@ -52,8 +46,9 @@ public class AlwaysOpenCloseCompetitionViewModel {
         return submittedApplications.stream().allMatch(ApplicationResource::isFeedbackReleased);
     }
 
+    // need to see if the manage_email_funding_date can be used after the bug fix tickets/ web test data fixes
     public boolean showCloseCompetitionButton() {
-        return submissionDateIsPresentAndHadPassed() && feedbackReleasedForAllApplications() && allApplicationsHadBeenNotified;
+        return submissionDateIsPresentAndHadPassed() && feedbackReleasedForAllApplications();
     }
 
 }

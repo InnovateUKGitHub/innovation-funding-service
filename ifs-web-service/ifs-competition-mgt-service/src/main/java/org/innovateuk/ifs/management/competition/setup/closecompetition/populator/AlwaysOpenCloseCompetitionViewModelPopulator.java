@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Optional.empty;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.SUBMISSION_DATE;
@@ -32,7 +33,6 @@ public class AlwaysOpenCloseCompetitionViewModelPopulator {
     @Autowired
     private ApplicationRestService applicationRestService;
 
-
     public AlwaysOpenCloseCompetitionViewModel populate(Long competitionId) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         ZonedDateTime submissionDate = milestoneRestService.getMilestoneByTypeAndCompetitionId(SUBMISSION_DATE, competitionId).getSuccess().getDate();
@@ -40,14 +40,11 @@ public class AlwaysOpenCloseCompetitionViewModelPopulator {
         List<Long> applicationIds = applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, empty(), empty()).getSuccess();
         List<ApplicationResource> applications = new ArrayList<>();
         applicationIds.forEach(applicationId -> applications.add(applicationRestService.getApplicationById(applicationId).getSuccess()));
-
-        boolean allApplicationsHadBeenNotified = applications.stream().allMatch(application -> application.getManageFundingEmailDate() != null);
+        List<ApplicationResource> submittedApplications = applications.stream().filter(ApplicationResource::isSubmitted).collect(Collectors.toList());
 
         return new AlwaysOpenCloseCompetitionViewModel(competitionId,
                 competition.getName(),
                 submissionDate,
-                applications,
-                allApplicationsHadBeenNotified);
+                submittedApplications);
     }
-
 }
