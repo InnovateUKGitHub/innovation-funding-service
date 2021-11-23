@@ -3,7 +3,6 @@ package org.innovateuk.ifs.analytics.service;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
-import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -17,16 +16,9 @@ import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -105,13 +97,6 @@ public class GoogleAnalyticsDataLayerServiceImpl extends BaseTransactionalServic
     public ServiceResult<Long> getApplicationIdForAssessment(long assessmentId) {
         return find(assessmentRepository.findById(assessmentId), notFoundError(Assessment.class)).andOnSuccessReturn(
                 assessment -> assessment.getTarget().getId()
-        );
-    }
-
-    @Override
-    public ServiceResult<Long> getApplicationIdForAssessmentPeriodId(long assessmentPeriodId) {
-        return find(applicationRepository.findById(assessmentPeriodId), notFoundError(Application.class, assessmentPeriodId)).andOnSuccessReturn(
-                application -> application.getId()
         );
     }
 }
