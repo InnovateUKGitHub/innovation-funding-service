@@ -3,7 +3,6 @@ package org.innovateuk.ifs.documentation;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
 import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
-import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.ZonedDateTime;
 
@@ -12,7 +11,6 @@ import static org.innovateuk.ifs.publiccontent.builder.ContentEventResourceBuild
 import static org.innovateuk.ifs.publiccontent.builder.ContentGroupResourceBuilder.newContentGroupResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResourceBuilder.newPublicContentSectionResource;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class PublicContentResourceDocs {
 

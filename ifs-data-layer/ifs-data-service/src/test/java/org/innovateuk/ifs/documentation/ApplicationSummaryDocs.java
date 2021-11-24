@@ -2,14 +2,12 @@ package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class ApplicationSummaryDocs {
 

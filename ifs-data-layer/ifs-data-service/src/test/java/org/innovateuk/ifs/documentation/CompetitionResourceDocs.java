@@ -2,17 +2,15 @@ package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.ZonedDateTime;
 
 import static com.google.common.primitives.Longs.asList;
 import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class CompetitionResourceDocs {
 

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder;
 import org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder;
-import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.LocalDate;
 
@@ -12,7 +11,6 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourc
 import static org.innovateuk.ifs.assessment.documentation.AssessmentFundingDecisionOutcomeDocs.assessmentFundingDecisionOutcomeResourceBuilder;
 import static org.innovateuk.ifs.assessment.documentation.AssessmentRejectOutcomeDocs.assessmentRejectOutcomeResourceBuilder;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.OPEN;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class AssessmentDocs {
 

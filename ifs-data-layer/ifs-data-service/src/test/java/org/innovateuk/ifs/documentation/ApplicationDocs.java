@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,7 +12,6 @@ import java.time.LocalDate;
 import static java.time.ZonedDateTime.now;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE_OR_COLLABORATIVE;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class ApplicationDocs {
 

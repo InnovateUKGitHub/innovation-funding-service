@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder;
-import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.util.Collections;
 
@@ -9,7 +8,6 @@ import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddre
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 /**
  * Helper for Spring REST Docs, specifically for user registration.

@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.interview.builder.InterviewInviteResourceBuilder;
-import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.innovateuk.ifs.interview.builder.InterviewInviteResourceBuilder.newInterviewInviteResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class InterviewInviteDocs {
 

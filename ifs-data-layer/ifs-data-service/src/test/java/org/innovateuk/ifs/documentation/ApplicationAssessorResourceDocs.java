@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder;
-import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
@@ -10,7 +9,6 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentState.READY_TO_SU
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.REJECTED;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class ApplicationAssessorResourceDocs {
 

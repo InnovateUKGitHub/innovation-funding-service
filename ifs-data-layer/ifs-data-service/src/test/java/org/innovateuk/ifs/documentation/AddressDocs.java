@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.address.builder.AddressResourceBuilder;
-import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class AddressDocs {
     public static final AddressResourceBuilder addressResourceBuilder = newAddressResource()
