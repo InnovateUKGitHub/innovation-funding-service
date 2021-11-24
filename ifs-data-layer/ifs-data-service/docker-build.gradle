@@ -1,0 +1,37 @@
+def jdbcBaseUrl = "jdbc:mysql://127.0.0.1:3306"
+def jdbcParams = "?characterEncoding=utf8";
+
+ext.testIfsDatasourceUrl="$jdbcBaseUrl/ifs_test"
+ext.testIfsDatasourceUsername="root"
+ext.testIfsDatasourcePassword="password"
+
+ext['flyway.url']="$jdbcBaseUrl$jdbcParams"
+ext['flyway.schemas']='ifs,ifs_test'
+ext['flyway.user']="$ext.testIfsDatasourceUsername"
+ext['flyway.password']="$ext.testIfsDatasourcePassword"
+ext['flyway.table']="schema_version"
+
+def flywayPatchesPath = "filesystem:$project.buildDir.path/resources/main/db"
+ext['flyway.locations']="$flywayPatchesPath/migration," +
+                        "$flywayPatchesPath/reference," +
+                        "$flywayPatchesPath/setup," +
+                        "$flywayPatchesPath/webtest"
+
+ext['flyway.placeholders.ifs.system.user.uuid']='c0d02979-e66e-11e7-ac43-0242ac120002'
+
+ext.ifsFinanceTotalsEnabled=true
+ext.ifsFinanceTotalsAuthSecretKey="supersecretkey"
+
+ext.idpRestBaseURL="http://registration-svc:8080"
+
+ext.postcodeLookupKey=""
+
+ext.ifsFileStorageLocation="/tmp"
+
+ext.ifsWebBaseURL="https://ifs.local-dev"
+
+ext.activeProfile="local"
+
+// Following is required to override allowed suffix on test environments. See comments on IFS-27.
+ext.allValidInternalUserEmailDomains="innovateuk.ukri.test,innovateuk.test"
+ext.ktaUserEmailDomain="ktn-uk.test"

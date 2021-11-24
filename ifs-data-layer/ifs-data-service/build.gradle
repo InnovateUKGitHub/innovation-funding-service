@@ -15,6 +15,15 @@ apply from: rootProject.file("gradle-support/jib.gradle")
 group 'innovateuk'
 version project.version
 
+afterEvaluate {
+    ext {
+        dockerDir = file("$project.parent.projectDir/docker/")
+    }
+    ext {
+        snippetsDir = file('build/generated-snippets')
+    }
+
+}
 ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
 
 ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
