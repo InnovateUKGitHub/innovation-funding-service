@@ -7,7 +7,6 @@ bases:
 
 components:
   - ../../../../components/data-layer/data-service
-  - ../../../../components/web-layer/competition-mgt-service
 #  - ../../../../components/web-layer/application-service
 
   - ../../../../patches/
