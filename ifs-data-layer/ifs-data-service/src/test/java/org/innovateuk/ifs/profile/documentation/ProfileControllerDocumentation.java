@@ -18,8 +18,8 @@ import static org.innovateuk.ifs.documentation.UserProfileResourceDocs.userProfi
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<ProfileController> {

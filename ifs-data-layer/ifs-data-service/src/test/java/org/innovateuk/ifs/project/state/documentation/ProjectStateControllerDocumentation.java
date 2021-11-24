@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 public class ProjectStateControllerDocumentation extends BaseControllerMockMVCTest<ProjectStateController> {
 

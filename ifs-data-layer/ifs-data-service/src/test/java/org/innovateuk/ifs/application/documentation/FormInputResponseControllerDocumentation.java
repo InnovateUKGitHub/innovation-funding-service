@@ -14,7 +14,7 @@ import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBu
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.PROJECT_SUMMARY;
 import static org.mockito.Mockito.when;
-org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 public class FormInputResponseControllerDocumentation extends BaseControllerMockMVCTest<FormInputResponseController> {
 
