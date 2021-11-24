@@ -15,17 +15,10 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.ApplicationAssessmentSummaryResourceDocs.applicationAssessmentSummaryFields;
 import static org.innovateuk.ifs.documentation.ApplicationAssessmentSummaryResourceDocs.applicationAssessmentSummaryResourceBuilder;
-import static org.innovateuk.ifs.documentation.ApplicationAssessorResourceDocs.applicationAssessorFields;
 import static org.innovateuk.ifs.documentation.ApplicationAssessorResourceDocs.applicationAssessorResourceBuilder;
-import static org.innovateuk.ifs.documentation.PageResourceDocs.pageResourceFields;
 import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationAssessmentSummaryControllerDocumentation extends BaseControllerMockMVCTest<ApplicationAssessmentSummaryController> {

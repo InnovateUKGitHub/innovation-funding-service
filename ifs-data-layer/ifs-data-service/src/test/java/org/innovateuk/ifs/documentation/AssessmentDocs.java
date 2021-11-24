@@ -15,21 +15,6 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentState.OPEN;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class AssessmentDocs {
-    public static final FieldDescriptor[] assessmentFields = {
-            fieldWithPath("id").description("Id of the assessment"),
-            fieldWithPath("event").description("currently not used"),
-            fieldWithPath("startDate").description("start date of the assessment"),
-            fieldWithPath("endDate").description("end date of the assessment"),
-            fieldWithPath("fundingDecision").description("Response to the application funding confirmation"),
-            fieldWithPath("rejection").description("The reason for rejecting the application"),
-            fieldWithPath("processRole").description("process role of the assigned assessor"),
-            fieldWithPath("application").description("the id of the application being assessed"),
-            fieldWithPath("applicationName").description("the name of the application being assessed"),
-            fieldWithPath("competition").description("the competition id of the application being assessed"),
-            fieldWithPath("assessmentState").description("the current workflow state of the assessment process"),
-            fieldWithPath("internalParticipant").description("the user id of an internal user who is working on the process"),
-            fieldWithPath("collaborativeProject").description("flag indicating if the project is collaborative")
-    };
 
     public static final AssessmentResourceBuilder assessmentResourceBuilder = newAssessmentResource()
             .withId(1L)
@@ -40,10 +25,6 @@ public class AssessmentDocs {
             .withActivityState(OPEN)
             .withProcessRole(1L)
             .withApplication(2L);
-
-    public static final FieldDescriptor[] assessmentSubmissionsFields = {
-            fieldWithPath("assessmentIds").description("List of assessment ids to submit.")
-    };
 
     public static final AssessmentSubmissionsResourceBuilder assessmentSubmissionsResourceBuilder =
             newAssessmentSubmissionsResource()

@@ -94,16 +94,7 @@ public class CompaniesHouseControllerDocumentation extends BaseControllerMockMVC
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Arrays.asList(organisationSearchResults))))
-                .andExpect(status().isOk())
-                .andDo(document("companies-house/{method-name}",
-                        pathParameters(
-                                parameterWithName("searchText").description("Name of the Organisation to search."),
-                                parameterWithName("indexPos").description("Position to fetch the search results")
-                        ),
-                        responseFields(fieldWithPath("[]").description("List of Organisation search results"))
-                                .andWithPrefix("[].", organisationSearchResultFields())
-                                .and(fieldWithPath("[].extraAttributes.Key").description("extra attribute"))
-                ));
+                .andExpect(status().isOk());
 
         verify(companyHouseService,only()).searchOrganisations(searchText, 0);
     }
@@ -120,16 +111,7 @@ public class CompaniesHouseControllerDocumentation extends BaseControllerMockMVC
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(organisationSearchResults)))
-                .andDo(document("companies-house/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the Organisation to search.")
-                        ),
-                        responseFields(organisationSearchResultFields())
-                        .and(fieldWithPath("organisationSicCodes[].sicCode").description("Sic Codes of the organisation"))
-                        .and(fieldWithPath("organisationExecutiveOfficers[].name").description("Current Director's name of the organisation"))
-                        .and(fieldWithPath("extraAttributes.Key").description("extra attribute"))
-                ));
+                .andExpect(content().json(toJson(organisationSearchResults)));
         verify(companyHouseService,only()).getOrganisationById(id);
     }
 }

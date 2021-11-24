@@ -63,8 +63,7 @@ public class InterviewResponseControllerDocumentation extends BaseFileController
                 (service) -> service.downloadResponse(applicationId);
 
         assertGetFileContents("/interview-response/{applicationId}", new Object[]{applicationId},
-                emptyMap(), interviewResponseService, serviceCallToDownload)
-                .andDo(documentFileGetContentsMethod("interview-response/{method-name}"));
+                emptyMap(), interviewResponseService, serviceCallToDownload);
     }
 
     @Test

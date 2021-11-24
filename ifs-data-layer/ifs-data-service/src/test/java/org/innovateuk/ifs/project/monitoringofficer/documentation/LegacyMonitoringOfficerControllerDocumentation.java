@@ -71,13 +71,7 @@ public class LegacyMonitoringOfficerControllerDocumentation extends BaseControll
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(monitoringOfficerResource))
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isBadRequest())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
-                        ),
-                        requestFields(legacyMonitoringOfficerResourceFields)
-                ));
+                .andExpect(status().isBadRequest());
 
         verify(monitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
 
@@ -98,13 +92,7 @@ public class LegacyMonitoringOfficerControllerDocumentation extends BaseControll
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(monitoringOfficerResource))
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isBadRequest())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
-                        ),
-                        requestFields(legacyMonitoringOfficerResourceFields)
-                ));
+                .andExpect(status().isBadRequest());
 
         verify(monitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
 
@@ -127,13 +115,7 @@ public class LegacyMonitoringOfficerControllerDocumentation extends BaseControll
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(monitoringOfficerResource)))
-                .andExpect(status().isInternalServerError())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
-                        ),
-                        requestFields(legacyMonitoringOfficerResourceFields)
-                ));
+                .andExpect(status().isInternalServerError());
 
         verify(monitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
         verify(monitoringOfficerServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
@@ -155,13 +137,7 @@ public class LegacyMonitoringOfficerControllerDocumentation extends BaseControll
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(monitoringOfficerResource)))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
-                        ),
-                        requestFields(legacyMonitoringOfficerResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(monitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
         verify(monitoringOfficerServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);

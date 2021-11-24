@@ -121,14 +121,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseFileCon
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .param("filename", "randomFile.pdf")
                 .headers(createFileUploadHeader("application/pdf", 1234)))
-                .andExpect(status().isCreated())
-                .andDo(document("question-setup-competition/{method-name}",
-                        pathParameters(parameterWithName("questionId").description("The question in which the template file will be attached.")),
-                        requestParameters(parameterWithName("filename").description("The filename of the file being uploaded")),
-                        requestHeaders(
-                                headerWithName("Content-Type").description("The Content Type of the file being uploaded e.g. application/pdf")
-                        )
-                ));
+                .andExpect(status().isCreated());
 
         verify(questionFileSetupCompetitionService).uploadTemplateFile(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
                 eq(questionId), any(HttpServletRequest.class));

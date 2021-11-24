@@ -13,32 +13,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class ApplicationSummaryDocs {
 
-    public static final FieldDescriptor[] APPLICATION_SUMMARY_PAGE_RESOURCE_FIELDS = {
-            fieldWithPath("totalElements").description("Total size of the unpaged results set"),
-            fieldWithPath("totalPages").description("Total number of pages"),
-            fieldWithPath("number").description("Page number - zero indexed"),
-            fieldWithPath("size").description("Page size"),
-            fieldWithPath("lastPage").description("Is this the last page"),
-            fieldWithPath("lastPageFull").description("Is the last page full"),
-            fieldWithPath("content[].id").description("Application id"),
-            fieldWithPath("content[].name").description("Application name"),
-            fieldWithPath("content[].lead").description("Lead organisation"),
-            fieldWithPath("content[].leadApplicant").description("lead applicant"),
-            fieldWithPath("content[].status").description("Application status"),
-            fieldWithPath("content[].completedPercentage").description("Application completed percentage"),
-            fieldWithPath("content[].numberOfPartners").description("Number of partners on the application"),
-            fieldWithPath("content[].grantRequested").description("The grant requested on the application"),
-            fieldWithPath("content[].totalProjectCost").description("The total project cost of the application"),
-            fieldWithPath("content[].duration").description("Application duration in months"),
-            fieldWithPath("content[].fundingDecision").description("The funding decision for the application"),
-            fieldWithPath("content[].funded").description("Whether the application will be funded"),
-            fieldWithPath("content[].innovationArea").description("The innovation area of the application"),
-            fieldWithPath("content[].manageFundingEmailDate").description("The date of the last  manage funding email sent"),
-            fieldWithPath("content[].ineligibleInformed").description("Whether the applicant has been informed the application is ineligible"),
-            fieldWithPath("content[].inAssessmentPanel").description("Whether the application has been chosen for assessment review panel"),
-            fieldWithPath("content[].emailInQueue").description("Is the service currently queuing the funding email notification.")
-    };
-
     public static final ApplicationSummaryResourceBuilder APPLICATION_SUMMARY_RESOURCE_BUILDER =
             ApplicationSummaryResourceBuilder.newApplicationSummaryResource().
                     with(uniqueIds()).

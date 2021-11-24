@@ -51,10 +51,7 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseFileCo
         mockMvc.perform(get("/project/finance/attachments/{attachmentId}", id)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(attachmentResource)))
-                .andDo(document(identifier,
-                        pathParameters(parameterWithName("attachmentId").description("Id of the Attachment to be fetched")),
-                        responseFields(attachmentFields())));
+                .andExpect(content().json(toJson(attachmentResource)));
 
         verify(projectFinanceAttachmentServiceMock).findOne(id);
     }
@@ -67,8 +64,7 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseFileCo
                 (service) -> service.attachmentFileAndContents(id);
 
         assertGetFileContents("/project/finance/attachments/download/{attachmentId}", new Object[]{id},
-                emptyMap(), projectFinanceAttachmentServiceMock, serviceCallToDownload)
-                .andDo(documentFileGetContentsMethod(identifier));
+                emptyMap(), projectFinanceAttachmentServiceMock, serviceCallToDownload);
     }
 
     @Test
@@ -78,10 +74,7 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseFileCo
 
         mockMvc.perform(RestDocumentationRequestBuilders.delete("/project/finance/attachments/{attachmentId}", id)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isNoContent())
-                .andDo(document(identifier,
-                        pathParameters(parameterWithName("attachmentId").description("Id of the Attachment to be deleted")))
-                );
+                .andExpect(status().isNoContent());
 
         verify(projectFinanceAttachmentServiceMock).delete(id);
     }
@@ -98,15 +91,7 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseFileCo
                 .param("filename", attachmentResource.name)
                 .headers(createFileUploadHeader("application/pdf", 1234)))
                 .andExpect(content().json(toJson(attachmentResource)))
-                .andExpect(status().isCreated())
-                .andDo(document(identifier,
-                        pathParameters(parameterWithName("projectId").description("The Id of the Project under which this Attachment is being uploaded.")),
-                        requestParameters(parameterWithName("filename").description("The filename of the file being uploaded")),
-                        requestHeaders(
-                                headerWithName("Content-Type").description("The Content Type of the file being uploaded e.g. application/pdf")
-                        ),
-                        responseFields(attachmentFields())
-                ));
+                .andExpect(status().isCreated());
 
         verify(projectFinanceAttachmentServiceMock).upload(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
                 eq(projectId), any(HttpServletRequest.class));

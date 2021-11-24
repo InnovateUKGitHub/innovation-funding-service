@@ -66,12 +66,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         when(userService.findInactiveByEmail(emailAddress)).thenReturn(serviceSuccess(userResource));
 
         mockMvc.perform(put("/user/send-email-verification-notification/{emailAddress}/", emailAddress)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("user/{method-name}",
-                        pathParameters(
-                                parameterWithName("emailAddress").description("E-mail address of the user who a verification link should be sent to by e-mail")
-                        )
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test

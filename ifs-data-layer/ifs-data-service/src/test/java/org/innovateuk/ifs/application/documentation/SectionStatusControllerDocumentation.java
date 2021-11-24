@@ -104,14 +104,7 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
         mockMvc.perform(post(baseURI + "/mark-as-in-complete/{sectionId}/{applicationId}/{markedAsInCompleteById}",
                 sectionId, applicationId, markedAsInCompleteById)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("section/{method-name}",
-                        pathParameters(
-                                parameterWithName("sectionId").description("Id of the section"),
-                                parameterWithName("applicationId").description("Id of the application"),
-                                parameterWithName("markedAsInCompleteById").description("Id of the process role marking the section as incomplete")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -121,11 +114,6 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
         when(sectionStatusServiceMock.sectionsCompleteForAllOrganisations(id)).thenReturn(serviceSuccess(true));
         mockMvc.perform(get(baseURI + "/all-sections-marked-as-complete/{applicationId}", id)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("section/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("id of the application")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 }

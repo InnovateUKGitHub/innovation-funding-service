@@ -41,15 +41,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
 
         mockMvc.perform(get("/organisation/find-by-application-id/{applicationId}", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("organisation/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("Identifier of the application to find the organisations for")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("List of organisations for the selected application")
-                        ).andWithPrefix("[].", organisationResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -60,13 +52,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
 
         mockMvc.perform(get("/organisation/find-by-id/{organisationId}", organisationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("organisation/{method-name}",
-                        pathParameters(
-                                parameterWithName("organisationId").description("Identifier of the organisation to find")
-                        ),
-                        responseFields(organisationResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -79,14 +65,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
 
         mockMvc.perform(get("/organisation/by-user-and-application-id/{userId}/{applicationId}", userId, applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("organisation/{method-name}",
-                        pathParameters(
-                                parameterWithName("userId").description("Identifier of the user to find the application organisation for"),
-                                parameterWithName("applicationId").description("Identifier of the application to find the application organisation for")
-                        ),
-                        responseFields(organisationResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -99,14 +78,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
 
         mockMvc.perform(get("/organisation/by-user-and-project-id/{userId}/{projectId}", userId, projectId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("organisation/{method-name}",
-                        pathParameters(
-                                parameterWithName("userId").description("Identifier of the user to find the project organisation for"),
-                                parameterWithName("projectId").description("Identifier of the project to find the project organisation for")
-                        ),
-                        responseFields(organisationResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -119,11 +91,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(organisationResource)))
-                .andExpect(status().isCreated())
-                .andDo(document("organisation/{method-name}",
-                        requestFields(organisationResourceFields),
-                        responseFields(organisationResourceFields)
-                ));
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -136,11 +104,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(organisationResource)))
-                .andExpect(status().isOk())
-                .andDo(document("organisation/{method-name}",
-                        requestFields(organisationResourceFields),
-                        responseFields(organisationResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -156,16 +120,6 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .param("name", name)
                 .param("registration", registration))
-                .andExpect(status().is2xxSuccessful())
-                .andDo(document("organisation/{method-name}",
-                        pathParameters(
-                                parameterWithName("organisationId").description("The identifier of the organisation being updated")
-                        ),
-                        requestParameters(
-                                parameterWithName("name").description("The name of the organisation"),
-                                parameterWithName("registration").description("The companies house number")
-                        ),
-                        responseFields(organisationResourceFields)
-                ));
+                .andExpect(status().is2xxSuccessful());
     }
 }

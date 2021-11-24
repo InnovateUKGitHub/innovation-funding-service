@@ -40,11 +40,7 @@ public class ProjectTeamControllerDocumentation extends BaseControllerMockMVCTes
         when(projectTeamService.removeUser(composite)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/team/remove-user/{userId}", projectId, userId))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                                pathParameters(
-                                        parameterWithName("projectId").description("Id of project the user will be removed from"),
-                                        parameterWithName("userId").description("Id of the user to be removed from the project"))));
+                .andExpect(status().isOk());
 
         verify(projectTeamService).removeUser(composite);
     }
@@ -57,11 +53,7 @@ public class ProjectTeamControllerDocumentation extends BaseControllerMockMVCTes
         when(projectTeamService.removeInvite(inviteId, projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/team/remove-invite/{inviteId}", projectId, inviteId))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                                pathParameters(
-                                        parameterWithName("projectId").description("Id of project the user was invited to"),
-                                        parameterWithName("inviteId").description("Id of the invite to be removed"))));
+                .andExpect(status().isOk());
 
         verify(projectTeamService).removeInvite(inviteId, projectId);
     }
@@ -75,11 +67,6 @@ public class ProjectTeamControllerDocumentation extends BaseControllerMockMVCTes
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(invite)))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of project that the project member is being invited to")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 }

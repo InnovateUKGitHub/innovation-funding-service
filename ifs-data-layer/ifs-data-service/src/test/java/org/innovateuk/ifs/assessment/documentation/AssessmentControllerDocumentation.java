@@ -168,12 +168,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(put("/assessment/{id}/accept-invitation", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("assessment/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the assessment for which to accept")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -184,12 +179,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(put("/assessment/{id}/withdraw", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("assessment/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the assessment for which to withdraw")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -200,12 +190,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(put("/assessment/{id}/unsubmit", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("assessment/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the assessment for which to unsubmit")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
 
@@ -218,7 +203,6 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(assessmentSubmissions)))
-                .andExpect(status().isOk())
-                .andDo(document("assessment/{method-name}", requestFields(assessmentSubmissionsFields)));
+                .andExpect(status().isOk());
     }
 }

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.interview.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.documentation.InterviewResourceDocs;
 import org.innovateuk.ifs.interview.controller.InterviewAllocationController;
 import org.innovateuk.ifs.interview.resource.*;
 import org.innovateuk.ifs.interview.transactional.InterviewAllocationService;
@@ -18,12 +17,6 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.AssessorInviteToSendDocs.ASSESSOR_INVITES_TO_SEND_FIELDS;
-import static org.innovateuk.ifs.documentation.InterviewAcceptedAssessorsPageResourceDocs.interviewAssessorAllocateApplicationsPageResourceFields;
-import static org.innovateuk.ifs.documentation.InterviewAcceptedAssessorsResourceDocs.interviewAcceptedAssessorsResourceFields;
-import static org.innovateuk.ifs.documentation.InterviewApplicationPageResourceDocs.InterviewApplicationPageResourceFields;
-import static org.innovateuk.ifs.documentation.InterviewApplicationResourceDocs.InterviewApplicationResourceFields;
-import static org.innovateuk.ifs.documentation.InterviewNotifyAllocationResourceDocs.INTERVIEW_ALLOCATION_RESOURCE_FIELDS;
 import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsPageResourceBuilder.newInterviewAcceptedAssessorsPageResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAcceptedAssessorsResourceBuilder.newInterviewAcceptedAssessorsResource;
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationPageResourceBuilder.newInterviewApplicationPageResource;
@@ -34,11 +27,8 @@ import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBui
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class InterviewAllocationControllerDocumentation extends BaseControllerMockMVCTest<InterviewAllocationController> {

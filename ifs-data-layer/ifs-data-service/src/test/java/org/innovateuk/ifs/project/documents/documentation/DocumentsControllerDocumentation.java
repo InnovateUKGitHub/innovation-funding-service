@@ -68,8 +68,7 @@ public class DocumentsControllerDocumentation extends BaseFileControllerMockMVCT
                 (service) -> service.getFileContents(projectId, documentConfigId);
 
         assertGetFileContents("/project/" + projectId + "/document/config/" + documentConfigId + "/file-contents",
-                              new Object[] {}, emptyMap(), documentsServiceMock, serviceCallToUpload)
-                .andDo(documentFileGetContentsMethod("project/{method-name}"));
+                              new Object[] {}, emptyMap(), documentsServiceMock, serviceCallToUpload);
     }
 
     @Test
@@ -79,8 +78,7 @@ public class DocumentsControllerDocumentation extends BaseFileControllerMockMVCT
                 (service) -> service.getFileEntryDetails(projectId, documentConfigId);
 
         assertGetFileDetails("/project/" + projectId + "/document/config/" + documentConfigId + "/file-entry-details", new Object[] {}, emptyMap(),
-                             documentsServiceMock, serviceCallToUpload)
-                .andDo(documentFileGetDetailsMethod("project/{method-name}"));
+                             documentsServiceMock, serviceCallToUpload);
     }
 
     @Test
@@ -90,8 +88,7 @@ public class DocumentsControllerDocumentation extends BaseFileControllerMockMVCT
                 service -> service.deleteDocument(projectId, documentConfigId);
 
         assertDeleteFile("/project/" + projectId + "/document/config/" + documentConfigId + "/delete", new Object[] {},
-                         emptyMap(), documentsServiceMock, serviceCallToDelete)
-                .andDo(documentFileDeleteMethod("project/{method-name}"));
+                         emptyMap(), documentsServiceMock, serviceCallToDelete);
     }
 
     @Test
@@ -100,13 +97,7 @@ public class DocumentsControllerDocumentation extends BaseFileControllerMockMVCT
 
         mockMvc.perform(post("/project/{projectId}/document/config/{documentConfigId}/submit", projectId, documentConfigId)
                                 .contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                                pathParameters(
-                                        parameterWithName("projectId").description("Id of the project the documents are associated with"),
-                                        parameterWithName("documentConfigId").description("Id of the competition document being submitted")
-                                )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -118,12 +109,6 @@ public class DocumentsControllerDocumentation extends BaseFileControllerMockMVCT
         mockMvc.perform(post("/project/{projectId}/document/config/{documentConfigId}/decision", projectId, documentConfigId)
                                 .contentType(APPLICATION_JSON)
                                 .content(toJson(decision)))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                                pathParameters(
-                                        parameterWithName("projectId").description("Id of the project the documents are associated with"),
-                                        parameterWithName("documentConfigId").description("Id of the competition document for this decision")
-                                )
-                ));
+                .andExpect(status().isOk());
     }
 }

@@ -6,8 +6,7 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 
-public class AssessorCreatedInvitePageResourceDocs extends PageResourceDocs {
-    public static final FieldDescriptor[] assessorCreatedInvitePageResourceFields = pageResourceFields;
+public class AssessorCreatedInvitePageResourceDocs {
 
     public static final AssessorCreatedInvitePageResourceBuilder assessorCreatedInvitePageResourceBuilder =
             newAssessorCreatedInvitePageResource()

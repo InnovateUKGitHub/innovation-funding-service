@@ -68,20 +68,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
         when(internalUserProjectStatusService.getCompetitionStatus(competitionId, applicationSearchString, 0, 5)).thenReturn(serviceSuccess(page));
 
         mockMvc.perform(get("/project/competition/{id}?applicationSearchString={applicationSearchString}&page={page}&size={size}", competitionId, applicationSearchString, 0, 5)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the competition for which project status details are being requested")
-                        ),
-                        requestParameters(
-                                parameterWithName("applicationSearchString").description("The filter to search by application number."),
-                                parameterWithName("page").description("The page number requested."),
-                                parameterWithName("size").description("Size of each page.")
-                        ),
-
-                        responseFields(PageResourceDocs.pageResourceFields)
-                                .andWithPrefix("content[].", projectStatusResourceFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -108,14 +95,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
 
         mockMvc.perform(get("/project/previous/competition/{id}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(content().json(toJson(projectStatusResources)))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the competition for which project status details are being requested")
-                        ),
-                        responseFields(fieldWithPath("[]").description("List of project statuses"))
-                                .andWithPrefix("[].", projectStatusResourceFields)
-                ));
+                .andExpect(content().json(toJson(projectStatusResources)));
     }
 
     @Test
@@ -147,13 +127,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
         when(internalUserProjectStatusService.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
 
         mockMvc.perform(get("/project/{id}/status", projectId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the project that is being requested")
-                        ),
-                        responseFields(projectStatusResourceFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     private ProjectTeamStatusResource buildTeamStatus() {

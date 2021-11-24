@@ -126,17 +126,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                         .param("filter", filter)
                         .param("informFilter", informFilter.toString())
                         .contentType(APPLICATION_JSON)
-                        .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("application-summary/{method-name}",
-                        pathParameters(parameterWithName("competitionId").description("The competition id")),
-                        requestParameters(
-                                parameterWithName("sort").description("Sort on entity field name"),
-                                parameterWithName("page").description("Page number - zero indexed"),
-                                parameterWithName("size").description("Page size"),
-                                parameterWithName("filter").description("String based filter"),
-                                parameterWithName("informFilter").description("Filter on whether the applicant has been informed")
-                        ),
-                        responseFields(ApplicationSummaryDocs.APPLICATION_SUMMARY_PAGE_RESOURCE_FIELDS)));
+                        .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -147,18 +137,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
 
         mockMvc.perform(
                 get(baseUrl + "/find-by-competition/{competitionId}/previous", competitionId)
-                        .contentType(APPLICATION_JSON))
-                .andDo(document("application-summary/{method-name}",
-                        pathParameters(parameterWithName("competitionId").description("The competition id to get previous applications")),
-                        responseFields(
-                                fieldWithPath("[].id").description("The id of the application"),
-                                fieldWithPath("[].name").description("The name of the application"),
-                                fieldWithPath("[].leadOrganisationName").description("The lead organisation of the application"),
-                                fieldWithPath("[].applicationState").description("The state of the application"),
-                                fieldWithPath("[].competition").description("The id of the competition")
-                        )
-                )
-            );
+                        .contentType(APPLICATION_JSON));
 
         verify(applicationSummaryService).getPreviousApplications(competitionId);
     }

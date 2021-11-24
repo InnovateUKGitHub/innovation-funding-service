@@ -99,12 +99,7 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
 
         mockMvc.perform(get("/analytics/project/{projectId}/user-roles", PROJECT_ID)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("analytics/{method-name}",
-                                pathParameters(
-                                         parameterWithName("projectId").description("Id of the project")
-                                )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -113,12 +108,7 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
 
         mockMvc.perform(get("/analytics/project/{projectId}/application-id", PROJECT_ID)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("analytics/{method-name}",
-                                pathParameters(
-                                        parameterWithName("projectId").description("Id of the project")
-                                )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -127,12 +117,7 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
 
         mockMvc.perform(get("/analytics/assessment/{assessmentId}/application-id", ASSESSMENT_ID)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("analytics/{method-name}",
-                        pathParameters(
-                                parameterWithName("assessmentId").description("Id of the assessment")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     private static String competitionName() {

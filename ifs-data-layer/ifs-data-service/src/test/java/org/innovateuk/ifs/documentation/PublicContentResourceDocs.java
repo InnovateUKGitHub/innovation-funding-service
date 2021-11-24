@@ -15,21 +15,6 @@ import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResou
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class PublicContentResourceDocs {
-    public static final FieldDescriptor[] publicContentResourceFields = {
-            fieldWithPath("id").description("Id of the public content resource"),
-            fieldWithPath("competitionId").description("Id of the competition"),
-            fieldWithPath("eligibilitySummary").description("The summary of the eligibility"),
-            fieldWithPath("keywords").description("List of keywords that will match the search on"),
-            fieldWithPath("inviteOnly").description("Indicates if the competition will public or only by invite"),
-            fieldWithPath("projectFundingRange").description("The range of project funding"),
-            fieldWithPath("projectSize").description("The size of the project"),
-            fieldWithPath("publishDate").description("The date the public content was last published on"),
-            fieldWithPath("shortDescription").description("The short description"),
-            fieldWithPath("summary").description("The summary"),
-            fieldWithPath("contentSections").description("The content sections"),
-            fieldWithPath("contentEvents").description("The content events"),
-
-    };
 
     public static final PublicContentResourceBuilder publicContentResourceBuilder = newPublicContentResource()
             .withCompetitionId(1L)

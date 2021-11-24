@@ -1,29 +1,23 @@
 package org.innovateuk.ifs.form.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.controller.QuestionController;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.documentation.QuestionDocs.questionBuilder;
-import static org.innovateuk.ifs.documentation.QuestionDocs.questionFields;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
 public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<QuestionController> {
 

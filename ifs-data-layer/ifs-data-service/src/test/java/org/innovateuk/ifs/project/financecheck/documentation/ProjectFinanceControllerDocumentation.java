@@ -140,12 +140,6 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         mockMvc.perform(get("/project/{projectId}/project-finances", projectId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(expectedFinances)))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which finance totals are being retrieved")
-                        ),
-                        PayloadDocumentation.relaxedResponseFields(ProjectFinanceResponseFields.projectFinanceFields)
-                ));
+                .andExpect(content().json(toJson(expectedFinances)));
     }
 }

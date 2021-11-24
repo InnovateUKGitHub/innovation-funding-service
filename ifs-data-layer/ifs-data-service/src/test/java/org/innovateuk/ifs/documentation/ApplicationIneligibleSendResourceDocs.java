@@ -8,11 +8,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class ApplicationIneligibleSendResourceDocs {
 
-    public static final FieldDescriptor[] applicationIneligibleSendResourceFields = {
-            fieldWithPath("subject").description("Subject of the message informing an applicant that their application is ineligible"),
-            fieldWithPath("message").description("The message informing an applicant that their application is ineligible")
-    };
-
     public static final ApplicationIneligibleSendResourceBuilder applicationIneligibleSendResourceBuilder =
             newApplicationIneligibleSendResource()
                     .withSubject("Subject line")

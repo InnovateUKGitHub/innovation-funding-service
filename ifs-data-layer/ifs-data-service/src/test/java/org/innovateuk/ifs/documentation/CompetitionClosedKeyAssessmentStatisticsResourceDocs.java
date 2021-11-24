@@ -8,12 +8,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class CompetitionClosedKeyAssessmentStatisticsResourceDocs {
 
-    public static final FieldDescriptor[] competitionClosedKeyAssessmentStatisticsResourceFields = {
-            fieldWithPath("assessorsInvited").description("The number of assessors invited"),
-            fieldWithPath("assessorsAccepted").description("The number of assessors who accepted the invite"),
-            fieldWithPath("assessorsWithoutApplications").description("The number of assessors without any applications")
-    };
-
     public static final CompetitionClosedKeyAssessmentStatisticsResourceBuilder
             competitionClosedKeyAssessmentStatisticsResourceBuilder =
             newCompetitionClosedKeyAssessmentStatisticsResource()

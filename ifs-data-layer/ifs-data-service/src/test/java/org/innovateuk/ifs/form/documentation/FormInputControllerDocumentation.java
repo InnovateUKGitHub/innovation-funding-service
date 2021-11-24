@@ -101,8 +101,7 @@ public class FormInputControllerDocumentation extends BaseFileControllerMockMVCT
 
         assertGetFileContents(baseURI + "/file/{formInputId}", new Object[]{formInputId},
                 emptyMap(), formInputServiceMock, serviceCallToDownload)
-                .andExpect(status().isOk())
-                .andDo(documentFileGetContentsMethod("forminput/{method-name}"));
+                .andExpect(status().isOk());
     }
 
 }

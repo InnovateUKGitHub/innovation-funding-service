@@ -61,8 +61,7 @@ public class SpendProfileControllerTest extends BaseControllerMockMVCTest<SpendP
         when(spendProfileService.deleteSpendProfile(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/project/{projectId}/spend-profile/reset", projectId))
-                .andExpect(status().isNoContent()).
-                andDo(document("project/{method-name}"));
+                .andExpect(status().isNoContent());
 
         verify(spendProfileService).deleteSpendProfile(projectId);
     }

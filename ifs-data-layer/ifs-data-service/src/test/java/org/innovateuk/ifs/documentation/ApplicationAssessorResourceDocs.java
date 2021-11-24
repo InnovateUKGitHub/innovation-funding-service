@@ -14,31 +14,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class ApplicationAssessorResourceDocs {
 
-    public static final FieldDescriptor[] applicationAssessorFields = {
-            fieldWithPath("userId").description("Id of the user"),
-            fieldWithPath("firstName").description("First name of the user"),
-            fieldWithPath("lastName").description("Last name of the user"),
-            fieldWithPath("businessType").description("Assessor type (business or academic)"),
-            fieldWithPath("skillAreas").description("Skills of the user"),
-            fieldWithPath("rejectReason").description("The reason for rejecting the application"),
-            fieldWithPath("rejectComment").description("Any other comments about the reason why this application is being rejected"),
-            fieldWithPath("mostRecentAssessmentId").description("Assessment id of the most recent assessment for the user for the requested application"),
-            fieldWithPath("mostRecentAssessmentState").description("Assessment state of the most recent assessment for the user for the requested application"),
-            fieldWithPath("totalApplicationsCount").description("Total count of applications assigned to this user for all competitions currently in assessment"),
-            fieldWithPath("assignedCount").description("Count of applications assigned to this user for the requested competition including those already submitted"),
-            fieldWithPath("submittedCount").description("Count of applications submitted by this user for the requested competition"),
-            fieldWithPath("available").description("available"),
-            fieldWithPath("innovationAreas").description("Innovation areas"),
-            fieldWithPath("assigned").description("assigned"),
-            fieldWithPath("accepted").description("accepted"),
-            fieldWithPath("notified").description("notified"),
-            fieldWithPath("started").description("started"),
-            fieldWithPath("submitted").description("submitted"),
-            fieldWithPath("rejected").description("rejected"),
-            fieldWithPath("withdrawn").description("withdrawn"),
-
-    };
-
     public static final ApplicationAssessorResourceBuilder applicationAssessorResourceBuilder = newApplicationAssessorResource()
             .withUserId(1L, 2L)
             .withFirstName("Oliver", "Irving")

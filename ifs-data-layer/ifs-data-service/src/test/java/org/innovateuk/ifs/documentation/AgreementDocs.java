@@ -10,12 +10,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class AgreementDocs {
 
-    public static final FieldDescriptor[] agreementResourceFields = {
-            fieldWithPath("id").description("Id of the agreement"),
-            fieldWithPath("current").description("Flag to signify if this is the current agreement"),
-            fieldWithPath("text").description("Text of the agreement")
-    };
-
     public static final AgreementResourceBuilder agreementResourceBuilder = newAgreementResource()
             .with(id(1L))
             .withCurrent(TRUE)

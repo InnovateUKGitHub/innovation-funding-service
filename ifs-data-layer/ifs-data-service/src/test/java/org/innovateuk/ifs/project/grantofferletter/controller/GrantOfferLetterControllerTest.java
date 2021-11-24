@@ -210,7 +210,6 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(stateInformation)))
-                .andDo(document("project/grant-offer-letter/current-state/{method-name}"))
                 .andReturn();
 
         verify(grantOfferLetterService).getGrantOfferLetterState(projectId);

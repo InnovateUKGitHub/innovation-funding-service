@@ -66,15 +66,7 @@ public class ProjectPartnerInviteDocumentation extends BaseControllerMockMVCTest
         when(projectPartnerInviteService.getPartnerInvites(projectId)).thenReturn(serviceSuccess(invites));
         mockMvc.perform(get("/project/{projectId}/project-partner-invite", projectId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of project to get invites from")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("An array of invites")
-                        ).andWithPrefix("[].", sentResourceDocs)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -84,13 +76,7 @@ public class ProjectPartnerInviteDocumentation extends BaseControllerMockMVCTest
         when(projectPartnerInviteService.resendInvite(inviteId)).thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/project-partner-invite/{inviteId}/resend", projectId, inviteId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project the invite belongs to"),
-                                parameterWithName("inviteId").description("Id of the invite")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -100,13 +86,7 @@ public class ProjectPartnerInviteDocumentation extends BaseControllerMockMVCTest
         when(projectPartnerInviteService.deleteInvite(inviteId)).thenReturn(serviceSuccess());
         mockMvc.perform(delete("/project/{projectId}/project-partner-invite/{inviteId}", projectId, inviteId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isNoContent())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project the invite belongs to"),
-                                parameterWithName("inviteId").description("Id of the invite")
-                        )
-                ));
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -116,16 +96,7 @@ public class ProjectPartnerInviteDocumentation extends BaseControllerMockMVCTest
         when(projectPartnerInviteService.getInviteByHash(hash)).thenReturn(serviceSuccess(newSentProjectPartnerInviteResource().build()));
         mockMvc.perform(get("/project/{projectId}/project-partner-invite/{hash}", projectId, hash)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project the invite belongs to"),
-                                parameterWithName("hash").description("Hash of the invite")
-                        ),
-                        responseFields(
-                                sentResourceDocs
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -136,13 +107,6 @@ public class ProjectPartnerInviteDocumentation extends BaseControllerMockMVCTest
         when(projectPartnerInviteService.acceptInvite(inviteId, organisationId)).thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/project-partner-invite/{inviteId}/organisation/{organisationId}/accept", projectId, inviteId, organisationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project the invite belongs to"),
-                                parameterWithName("inviteId").description("Id of the invite"),
-                                parameterWithName("organisationId").description("organisation id to join the project")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 }

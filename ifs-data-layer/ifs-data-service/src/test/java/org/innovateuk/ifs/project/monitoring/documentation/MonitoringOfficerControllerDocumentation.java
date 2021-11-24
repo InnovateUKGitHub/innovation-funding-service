@@ -11,20 +11,12 @@ import org.mockito.Mock;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.ProjectDocs.projectResourceFields;
-import static org.innovateuk.ifs.documentation.ProjectMonitoringOfficerResourceDocs.*;
-import static org.innovateuk.ifs.documentation.UserDocs.simpleUserResourceFields;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.SimpleUserResourceBuilder.newSimpleUserResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class MonitoringOfficerControllerDocumentation extends BaseControllerMockMVCTest<MonitoringOfficerController> {

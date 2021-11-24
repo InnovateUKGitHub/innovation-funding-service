@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.profile.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.documentation.AddressDocs;
-import org.innovateuk.ifs.documentation.AgreementDocs;
-import org.innovateuk.ifs.documentation.InnovationAreaResourceDocs;
 import org.innovateuk.ifs.profile.controller.ProfileController;
 import org.innovateuk.ifs.profile.transactional.ProfileService;
 import org.innovateuk.ifs.user.resource.ProfileAgreementResource;
@@ -15,20 +12,14 @@ import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ProfileAgreementDocs.profileAgreementResourceBuilder;
-import static org.innovateuk.ifs.documentation.ProfileAgreementDocs.profileAgreementResourceFields;
-import static org.innovateuk.ifs.documentation.ProfileSkillsDocs.*;
+import static org.innovateuk.ifs.documentation.ProfileSkillsDocs.profileSkillsEditResourceBuilder;
+import static org.innovateuk.ifs.documentation.ProfileSkillsDocs.profileSkillsResourceBuilder;
 import static org.innovateuk.ifs.documentation.UserProfileResourceDocs.userProfileResourceBuilder;
-import static org.innovateuk.ifs.documentation.UserProfileResourceDocs.userProfileResourceFields;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<ProfileController> {
