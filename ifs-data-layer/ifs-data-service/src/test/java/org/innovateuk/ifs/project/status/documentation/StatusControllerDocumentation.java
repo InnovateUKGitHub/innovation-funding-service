@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.status.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.documentation.PageResourceDocs;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.status.controller.StatusController;
@@ -18,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.ProjectDocs.projectStatusResourceFields;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -26,11 +24,7 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.restdocs.payload.PayloadDocumentation;
 
 import java.util.List;
 
@@ -15,12 +14,7 @@ import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBu
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.PROJECT_SUMMARY;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
 public class FormInputResponseControllerDocumentation extends BaseControllerMockMVCTest<FormInputResponseController> {
 

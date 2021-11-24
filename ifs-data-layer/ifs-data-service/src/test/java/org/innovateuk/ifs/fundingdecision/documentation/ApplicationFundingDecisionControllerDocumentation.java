@@ -15,12 +15,9 @@ import java.util.Map;
 
 import static org.innovateuk.ifs.application.resource.FundingDecision.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.FundingNotificationResourceDocs.fundingNotificationResourceFields;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedRequestFields;
 
 public class ApplicationFundingDecisionControllerDocumentation extends BaseControllerMockMVCTest<ApplicationFundingDecisionController> {
 

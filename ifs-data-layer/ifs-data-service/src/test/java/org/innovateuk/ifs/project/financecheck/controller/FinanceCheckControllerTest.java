@@ -11,8 +11,8 @@ import org.mockito.Mock;
 
 import java.time.LocalDate;
 
-import static java.util.Collections.singletonList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.newFinanceCheckPartnerStatusResource;

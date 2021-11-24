@@ -5,9 +5,6 @@ import org.innovateuk.ifs.competition.controller.CompetitionSearchController;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.transactional.CompetitionSearchService;
-import org.innovateuk.ifs.documentation.CompetitionCountResourceDocs;
-import org.innovateuk.ifs.documentation.CompetitionSearchResultDocs;
-import org.innovateuk.ifs.documentation.CompetitionSearchResultItemDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -16,11 +13,7 @@ import java.util.ArrayList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.UpcomingCompetitionSearchResultItemBuilder.newUpcomingCompetitionSearchResultItem;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionSearchControllerDocumentation extends BaseControllerMockMVCTest<CompetitionSearchController> {

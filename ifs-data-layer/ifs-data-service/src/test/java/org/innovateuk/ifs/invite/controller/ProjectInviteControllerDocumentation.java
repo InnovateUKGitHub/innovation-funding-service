@@ -10,16 +10,11 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ProjectInviteDocs.PROJECT_USER_INVITE_RESOURCE_BUILDER;
-import static org.innovateuk.ifs.documentation.ProjectInviteDocs.projectInviteFieldsList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProjectInviteControllerDocumentation extends BaseControllerMockMVCTest<ProjectInviteController> {

@@ -6,9 +6,6 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.transactional.CategoryService;
-import org.innovateuk.ifs.documentation.InnovationAreaResourceDocs;
-import org.innovateuk.ifs.documentation.InnovationSectorResourceDocs;
-import org.innovateuk.ifs.documentation.ResearchCategoryResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -18,11 +15,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.CategoryDocs.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
 public class CategoryControllerDocumentation extends BaseControllerMockMVCTest<CategoryController> {
 

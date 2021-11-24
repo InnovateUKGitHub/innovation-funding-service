@@ -3,21 +3,14 @@ package org.innovateuk.ifs.competition.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.controller.CompetitionController;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
-import org.innovateuk.ifs.documentation.CompetitionResourceDocs;
-import org.innovateuk.ifs.documentation.TermsAndConditionsResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.CompetitionResourceDocs.competitionResourceBuilder;
-import static org.innovateuk.ifs.documentation.CompetitionResourceDocs.competitionResourceFields;
 import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionControllerDocumentation extends BaseControllerMockMVCTest<CompetitionController> {

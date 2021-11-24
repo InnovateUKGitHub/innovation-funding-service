@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.user.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.documentation.EditUserResourceDocs;
-import org.innovateuk.ifs.documentation.UserDocs;
-import org.innovateuk.ifs.documentation.UserOrganisationResourceDocs;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.resource.*;
@@ -22,7 +19,6 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.UserDocs.*;
 import static org.innovateuk.ifs.user.builder.ManageUserResourceBuilder.newManageUserResource;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -34,10 +30,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

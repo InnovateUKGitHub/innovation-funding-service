@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.controller.ApplicationSummaryController;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.transactional.ApplicationSummaryService;
-import org.innovateuk.ifs.documentation.ApplicationSummaryDocs;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -20,11 +19,7 @@ import static org.innovateuk.ifs.documentation.ApplicationSummaryDocs.APPLICATIO
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
 
 public class ApplicationSummaryControllerDocumentation extends BaseControllerMockMVCTest<ApplicationSummaryController> {
     @Mock

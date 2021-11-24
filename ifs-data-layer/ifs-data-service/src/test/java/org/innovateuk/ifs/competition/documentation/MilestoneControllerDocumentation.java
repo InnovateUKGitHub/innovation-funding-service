@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
-import org.innovateuk.ifs.documentation.MilestoneResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -14,16 +13,13 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
-import static org.innovateuk.ifs.documentation.MilestoneResourceDocs.milestoneResourceFields;
-import static org.mockito.Mockito.verify;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<MilestoneController> {

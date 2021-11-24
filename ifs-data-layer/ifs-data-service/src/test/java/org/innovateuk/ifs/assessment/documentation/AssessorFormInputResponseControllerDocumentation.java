@@ -7,7 +7,6 @@ import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResourc
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
-import org.innovateuk.ifs.documentation.AssessorFormInputResponseDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -15,20 +14,13 @@ import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentFeedbackAggregateResourceBuilder.newAssessmentFeedbackAggregateResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
-import static org.innovateuk.ifs.assessment.documentation.AssessmentAggregateScoreDocs.applicationAssessmentAggregateResourceFields;
-import static org.innovateuk.ifs.assessment.documentation.AssessmentFeedbackAggregateDocs.assessmentFeedbackAggregateResourceFields;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AssessorFormInputResponseDocs.assessorFormInputResponseResourceBuilder;
-import static org.innovateuk.ifs.documentation.AssessorFormInputResponseDocs.assessorFormInputResponsesFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 

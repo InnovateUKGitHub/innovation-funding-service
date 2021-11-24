@@ -14,7 +14,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 @Rollback

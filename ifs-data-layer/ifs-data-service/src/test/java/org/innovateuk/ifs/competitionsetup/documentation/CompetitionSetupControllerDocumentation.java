@@ -8,8 +8,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
-import org.innovateuk.ifs.documentation.CompetitionResourceDocs;
-import org.innovateuk.ifs.documentation.TermsAndConditionsResourceDocs;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
@@ -28,10 +26,7 @@ import static org.innovateuk.ifs.documentation.SetupStatusResourceDocs.setupStat
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionSetupControllerDocumentation extends BaseFileControllerMockMVCTest<CompetitionSetupController> {

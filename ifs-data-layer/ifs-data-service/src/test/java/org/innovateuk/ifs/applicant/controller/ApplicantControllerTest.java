@@ -7,8 +7,6 @@ import org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder;
 import org.innovateuk.ifs.applicant.resource.dashboard.*;
 import org.innovateuk.ifs.applicant.transactional.ApplicantService;
 import org.innovateuk.ifs.application.transactional.ApplicationDashboardService;
-import org.innovateuk.ifs.documentation.*;
-import org.innovateuk.ifs.form.documentation.FormInputResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.payload.FieldDescriptor;
@@ -39,12 +37,8 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicantControllerTest extends BaseControllerMockMVCTest<ApplicantController> {

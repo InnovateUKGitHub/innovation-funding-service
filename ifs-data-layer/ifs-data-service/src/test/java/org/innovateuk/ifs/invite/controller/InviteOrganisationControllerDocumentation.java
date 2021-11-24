@@ -1,22 +1,15 @@
 package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.documentation.ApplicationInviteResourceDocs;
-import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.transactional.InviteOrganisationService;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.InviteOrganisationDocs.inviteOrganisationFields;
 import static org.innovateuk.ifs.documentation.InviteOrganisationDocs.inviteOrganisationResourceBuilder;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class InviteOrganisationControllerDocumentation extends BaseControllerMockMVCTest<InviteOrganisationController> {

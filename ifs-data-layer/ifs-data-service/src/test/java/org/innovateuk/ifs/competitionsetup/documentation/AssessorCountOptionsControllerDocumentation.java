@@ -8,14 +8,9 @@ import org.innovateuk.ifs.competitionsetup.transactional.AssessorCountOptionServ
 import org.junit.Test;
 import org.mockito.Mock;
 
-import static org.innovateuk.ifs.documentation.AssessorCountOptionResourceDocs.assessorCountOptionResourceFields;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AssessorCountOptionsControllerDocumentation extends BaseControllerMockMVCTest<AssessorCountOptionsController> {

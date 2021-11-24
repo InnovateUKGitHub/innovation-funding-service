@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.controller.CompaniesHouseController;
-import org.innovateuk.ifs.organisation.domain.SicCode;
 import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
@@ -17,18 +16,12 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.documentation.CompaniesHouseDocs.organisationSearchResultFields;
 import static org.innovateuk.ifs.organisation.builder.OrganisationSearchResultBuilder.newOrganisationSearchResult;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
