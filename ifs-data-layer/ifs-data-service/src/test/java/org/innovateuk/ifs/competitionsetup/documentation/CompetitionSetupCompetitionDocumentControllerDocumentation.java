@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupDocumentCo
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupDocumentService;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
@@ -120,7 +120,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
         long projectDocumentId = 1L;
         when(competitionSetupDocumentServiceMock.delete(projectDocumentId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.delete("/competition/setup/project-document/{projectDocumentId}", projectDocumentId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/competition/setup/project-document/{projectDocumentId}", projectDocumentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk());
 

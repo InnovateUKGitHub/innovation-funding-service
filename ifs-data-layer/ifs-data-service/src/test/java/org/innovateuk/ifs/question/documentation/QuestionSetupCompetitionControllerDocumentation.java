@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -97,7 +97,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseFileCon
         final long questionId = 22L;
         when(questionFileSetupCompetitionService.deleteTemplateFile(questionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.delete(baseUrl + "/template-file/{questionId}", questionId)
+        mockMvc.perform(MockMvcRequestBuilders.delete(baseUrl + "/template-file/{questionId}", questionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isNoContent());
 

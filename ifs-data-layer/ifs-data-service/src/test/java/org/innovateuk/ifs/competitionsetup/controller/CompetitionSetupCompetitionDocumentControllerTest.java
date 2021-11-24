@@ -5,7 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupDocumentService;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
@@ -107,7 +107,7 @@ public class CompetitionSetupCompetitionDocumentControllerTest extends BaseContr
         long projectDocumentId = 1L;
         when(competitionSetupDocumentServiceMock.delete(projectDocumentId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.delete("/competition/setup/project-document/{projectDocumentId}", projectDocumentId))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/competition/setup/project-document/{projectDocumentId}", projectDocumentId))
                 .andExpect(status().isOk());
 
         verify(competitionSetupDocumentServiceMock, only()).delete(projectDocumentId);
