@@ -72,7 +72,6 @@
             <div th:if="${model.questionType == model.getLoansBusinessAndFinancialInformation()}">
                <div th:if="${model.isLoansPartBEnabled()}">
                    <a class="govuk-button"
-                      target="_blank"
                       th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}" value="open-salesforce"
                       type="Continue">Continue (opens in new tab)</a>
                </div>
