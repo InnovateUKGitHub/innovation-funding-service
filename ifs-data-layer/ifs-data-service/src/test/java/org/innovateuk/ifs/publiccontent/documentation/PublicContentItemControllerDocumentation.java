@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResource
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class PublicContentItemControllerDocumentation extends BaseControllerMockMVCTest<PublicContentItemController> {

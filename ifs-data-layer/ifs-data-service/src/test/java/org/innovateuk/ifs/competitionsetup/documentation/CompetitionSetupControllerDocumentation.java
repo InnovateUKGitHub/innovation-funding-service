@@ -26,7 +26,7 @@ import static org.innovateuk.ifs.documentation.SetupStatusResourceDocs.setupStat
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionSetupControllerDocumentation extends BaseFileControllerMockMVCTest<CompetitionSetupController> {
