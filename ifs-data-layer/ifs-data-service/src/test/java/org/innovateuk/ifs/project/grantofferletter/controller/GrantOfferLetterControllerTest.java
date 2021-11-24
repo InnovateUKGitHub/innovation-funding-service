@@ -28,7 +28,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -150,8 +149,7 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
         when(grantOfferLetterService.removeGrantOfferLetterFileEntry(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/project/{projectId}/grant-offer", projectId)).
-                andExpect(status().isNoContent()).
-                andDo(document("project/{method-name}"));
+                andExpect(status().isNoContent());
     }
 
     @Test
@@ -160,8 +158,7 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
         when(grantOfferLetterService.resetGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/project/{projectId}/grant-offer/reset", projectId)).
-                andExpect(status().isNoContent()).
-                andDo(document("project/{method-name}"));
+                andExpect(status().isNoContent());
     }
 
     @Test
@@ -170,8 +167,7 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
         when(grantOfferLetterService.removeSignedGrantOfferLetterFileEntry(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/project/{projectId}/signed-grant-offer-letter", projectId)).
-                andExpect(status().isNoContent()).
-                andDo(document("project/{method-name}"));
+                andExpect(status().isNoContent());
     }
 
     @Test
@@ -180,8 +176,7 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
         when(grantOfferLetterService.removeSignedAdditionalContractFileEntry(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/project/{projectId}/signed-additional-contract", projectId)).
-                andExpect(status().isNoContent()).
-                andDo(document("project/{method-name}"));
+                andExpect(status().isNoContent());
     }
 
     @Test

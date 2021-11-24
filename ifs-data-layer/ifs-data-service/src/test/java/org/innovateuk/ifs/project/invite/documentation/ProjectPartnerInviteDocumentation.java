@@ -7,7 +7,6 @@ import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResour
 import org.innovateuk.ifs.project.invite.transactional.ProjectPartnerInviteService;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.util.List;
 
@@ -17,7 +16,6 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProjectPartnerInviteDocumentation extends BaseControllerMockMVCTest<ProjectPartnerInviteController> {
@@ -29,19 +27,6 @@ public class ProjectPartnerInviteDocumentation extends BaseControllerMockMVCTest
     protected ProjectPartnerInviteController supplyControllerUnderTest() {
         return new ProjectPartnerInviteController();
     }
-
-    private static FieldDescriptor[] sentResourceDocs = {
-                fieldWithPath("id").description("Id of the invite"),
-                fieldWithPath("sentOn").description("Date the invite was sent"),
-                fieldWithPath("email").description("Email address that invite was sent to."),
-                fieldWithPath("organisationName").description("Organisation name for invite"),
-                fieldWithPath("userName").description("Users name of invite"),
-                fieldWithPath("user").optional().description("The id of the user the invite was sent to"),
-                fieldWithPath("status").description("The status of the invite"),
-                fieldWithPath("projectName").description("The name of the project the invite is to"),
-                fieldWithPath("applicationId").description("Id of the application"),
-                fieldWithPath("competitionId").description("Id of the competition")
-    };
 
     @Test
     public void invitePartnerOrganisation() throws Exception {

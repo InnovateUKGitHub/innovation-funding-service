@@ -10,8 +10,8 @@ import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.innovateuk.ifs.project.documents.transactional.DocumentsService;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 import java.util.function.BiFunction;
@@ -96,7 +96,7 @@ public class DocumentsControllerTest extends BaseFileControllerMockMVCTest<Docum
     public void submitDocument() throws Exception {
         when(documentsServiceMock.submitDocument(projectId, documentConfigId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/project/" + projectId + "/document/config/" + documentConfigId + "/submit")
+        mockMvc.perform(MockMvcRequestBuilders.post("/project/" + projectId + "/document/config/" + documentConfigId + "/submit")
                 .contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -109,7 +109,7 @@ public class DocumentsControllerTest extends BaseFileControllerMockMVCTest<Docum
 
         when(documentsServiceMock.documentDecision(projectId, documentConfigId, decision)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/project/" + projectId + "/document/config/" + documentConfigId + "/decision")
+        mockMvc.perform(MockMvcRequestBuilders.post("/project/" + projectId + "/document/config/" + documentConfigId + "/decision")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(decision)))
                 .andExpect(status().isOk());

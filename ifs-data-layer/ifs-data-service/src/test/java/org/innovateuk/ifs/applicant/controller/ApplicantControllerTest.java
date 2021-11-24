@@ -9,7 +9,6 @@ import org.innovateuk.ifs.applicant.transactional.ApplicantService;
 import org.innovateuk.ifs.application.transactional.ApplicationDashboardService;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static java.util.Collections.singletonList;
@@ -38,7 +37,6 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicantControllerTest extends BaseControllerMockMVCTest<ApplicantController> {
@@ -155,54 +153,4 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
                 .withProcessRole(newProcessRoleResource().build())
                 .withOrganisation(newOrganisationResource().build());
     }
-
-    private static final FieldDescriptor[] questionFields = {
-            fieldWithPath("application").description("The resource representing an application."),
-            fieldWithPath("competition").description("The resource representing a competition."),
-            fieldWithPath("currentApplicant").description("The resource representing the current applicant and their role and organisation on the application."),
-            fieldWithPath("currentApplicant.processRole").description("The resource representing the applicants role on the application"),
-            fieldWithPath("currentApplicant.organisation").description("The resource representing the applicants organisation in the application."),
-            fieldWithPath("currentUser").description("The resource representing the current user."),
-            fieldWithPath("applicants[]").description("The resources representing all applicants and their roles and organisations on the application."),
-
-            fieldWithPath("question").description("The resource representing an application question."),
-            fieldWithPath("applicantFormInputs[]").description("The resources representing a form input and its responses for the application."),
-            fieldWithPath("applicantFormInputs[].formInput").description("The resource representing a form input."),
-            fieldWithPath("applicantFormInputs[].applicantResponses[]").description("The resources representing a responses to a form input and who responded for the application."),
-            fieldWithPath("applicantFormInputs[].applicantResponses[].response").description("The resource representing a responses to a form input and who responded for the application."),
-            fieldWithPath("applicantFormInputs[].applicantResponses[].applicant").description("The resource representing an applicant that responded to the form input."),
-            fieldWithPath("applicantQuestionStatuses[]").description("The resources representing an the status of a question and who is assigned to or completed by on the application."),
-            fieldWithPath("applicantQuestionStatuses[].status").description("The resource representing the status of a question."),
-            fieldWithPath("applicantQuestionStatuses[].markedAsCompleteBy").description("The resource representing the applicant who marked the question as complete."),
-            fieldWithPath("applicantQuestionStatuses[].assignee").description("The resource representing the applicant who is assigned to the question."),
-            fieldWithPath("applicantQuestionStatuses[].assignedBy").description("The resource representing the applicant who assigned the question.")
-    };
-
-    private static final FieldDescriptor[] sectionFields = {
-            fieldWithPath("application").description("The resource representing an application."),
-            fieldWithPath("competition").description("The resource representing a competition."),
-            fieldWithPath("currentApplicant").description("The resource representing the current applicant and their role and organisation on the application."),
-            fieldWithPath("currentApplicant.processRole").description("The resource representing the applicants role on the application"),
-            fieldWithPath("currentApplicant.organisation").description("The resource representing the applicants organisation in the application."),
-            fieldWithPath("currentUser").description("The resource representing the current user."),
-            fieldWithPath("applicants[]").description("The resources representing all applicants and their roles and organisations on the application."),
-
-            fieldWithPath("section").description("The resource representing an application section."),
-            fieldWithPath("applicantParentSection").description("The resource representing the parent applicant section."),
-            fieldWithPath("applicantChildrenSections[]").description("The resource representing the children applicant sections."),
-            fieldWithPath("applicantQuestions[]").description("The resource representing the applicant question for this section.")
-    };
-
-    private static final FieldDescriptor[] sectionFieldsWithoutCurrentApplicant = {
-            fieldWithPath("application").description("The resource representing an application."),
-            fieldWithPath("competition").description("The resource representing a competition."),
-            fieldWithPath("currentApplicant").description("The resource representing the current applicant and their role and organisation on the application."),
-            fieldWithPath("currentUser").description("The resource representing the current user."),
-            fieldWithPath("applicants[]").description("The resources representing all applicants and their roles and organisations on the application."),
-
-            fieldWithPath("section").description("The resource representing an application section."),
-            fieldWithPath("applicantParentSection").description("The resource representing the parent applicant section."),
-            fieldWithPath("applicantChildrenSections[]").description("The resource representing the children applicant sections."),
-            fieldWithPath("applicantQuestions[]").description("The resource representing the applicant question for this section.")
-    };
 }

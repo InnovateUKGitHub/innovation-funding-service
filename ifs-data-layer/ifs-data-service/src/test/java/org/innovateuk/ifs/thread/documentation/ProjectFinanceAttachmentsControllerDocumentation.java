@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.function.Function;
@@ -66,7 +66,7 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseFileCo
         final Long id = 22L;
         when(projectFinanceAttachmentServiceMock.delete(id)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.delete("/project/finance/attachments/{attachmentId}", id)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/project/finance/attachments/{attachmentId}", id)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isNoContent());
 

@@ -5,7 +5,7 @@ import org.innovateuk.ifs.competition.controller.CompetitionResearchCategoryCont
 import org.innovateuk.ifs.competition.transactional.CompetitionResearchCategoryService;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.CompetitionResearchCategoryLinkDocs.competitionResearchCategoryLinkBuilder;
@@ -29,7 +29,7 @@ public class CompetitionResearchCategoryControllerDocumentation extends BaseCont
         when(competitionResearchCategoryService.findByCompetition(competitionId))
                 .thenReturn(serviceSuccess(competitionResearchCategoryLinkBuilder.build(3)));
 
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/competition-research-category/{id}", competitionId)
+        mockMvc.perform(MockMvcRequestBuilders.get("/competition-research-category/{id}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk());
 

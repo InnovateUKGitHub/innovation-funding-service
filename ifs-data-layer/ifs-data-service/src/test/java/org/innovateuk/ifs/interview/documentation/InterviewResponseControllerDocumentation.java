@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.function.Function;
@@ -65,7 +65,7 @@ public class InterviewResponseControllerDocumentation extends BaseFileController
         final long applicationId = 22L;
         when(interviewResponseService.deleteResponse(applicationId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.delete("/interview-response/{applicationId}", applicationId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/interview-response/{applicationId}", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isNoContent());
 
