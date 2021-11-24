@@ -34,12 +34,6 @@ public class AssessorCountOptionsControllerDocumentation extends BaseControllerM
 
         mockMvc.perform(get("/assessor-count-options/{id}", 1L)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("assessor-count-options/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the competition type")
-                        ),
-                        responseFields(assessorCountOptionResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 }

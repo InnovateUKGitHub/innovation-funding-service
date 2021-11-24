@@ -50,17 +50,7 @@ public class PublicContentItemControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(get("/public-content/items/find-by-filter?innovationAreaId=1&searchString=keyword&pageNumber=2&pageSize=20")
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("public-content/items/{method-name}",
-                        requestParameters(
-                                parameterWithName("innovationAreaId").description("Id of innovationArea where should be filtered on (Optional)"),
-                                parameterWithName("searchString").description("Keywords where should be filtered on (Optional)"),
-                                parameterWithName("pageNumber").description("Page number of the current page requesting (Optional)"),
-                                parameterWithName("pageSize").description("Page size of the current page requesting")
-                        ),
-                        responseFields(publicContentItemPageResourceFields)
-                        .andWithPrefix("content[].", PublicContentItemResourceDocs.publicContentItemResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
 
@@ -77,13 +67,6 @@ public class PublicContentItemControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(get("/public-content/items/by-competition-id/{id}", id)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("public-content/items/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("The competition id of the required public content item")
-                        ),
-                        responseFields(publicContentItemResourceFields)
-                        .andWithPrefix("publicContentResource.", PublicContentResourceDocs.publicContentResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 }

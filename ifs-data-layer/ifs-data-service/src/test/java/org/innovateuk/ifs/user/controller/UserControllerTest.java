@@ -125,8 +125,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(jsonPath("[2]firstName", is(testUser3.getFirstName())))
                 .andExpect(jsonPath("[2]lastName", is(testUser3.getLastName())))
                 .andExpect(jsonPath("[2]imageUrl", is(testUser3.getImageUrl())))
-                .andExpect(jsonPath("[2]uid", is(testUser3.getUid())))
-                .andDo(document("user/get-all-users"));
+                .andExpect(jsonPath("[2]uid", is(testUser3.getUid())));
     }
 
     @Test
@@ -141,8 +140,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(jsonPath("firstName", is(testUser1.getFirstName())))
                 .andExpect(jsonPath("lastName", is(testUser1.getLastName())))
                 .andExpect(jsonPath("imageUrl", is(testUser1.getImageUrl())))
-                .andExpect(jsonPath("uid", is(testUser1.getUid())))
-                .andDo(document("user/get-user"));
+                .andExpect(jsonPath("uid", is(testUser1.getUid())));
     }
 
     @Test
@@ -153,12 +151,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         mockMvc.perform(post("/user/" + URL_PASSWORD_RESET + "/{hash}", hash).content(password)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(""))
-                .andDo(document("user/update-password",
-                        pathParameters(
-                                parameterWithName("hash").description("The hash to validate the legitimacy of the request")
-                        )
-                ));
+                .andExpect(content().string(""));
     }
 
     @Test
@@ -180,12 +173,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(""))
-                .andDo(document("user/verify-email",
-                        pathParameters(
-                                parameterWithName("hash").description("The hash to validate the legitimacy of the request")
-                        ))
-                );
+                .andExpect(content().string(""));
 
         verify(crmService).syncCrmContact(userId, appId, compId);
     }
@@ -204,12 +192,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(""))
-                .andDo(document("user/verify-email",
-                        pathParameters(
-                                parameterWithName("hash").description("The hash to validate the legitimacy of the request")
-                        ))
-                );
+                .andExpect(content().string(""));
 
         verify(crmService).syncCrmContact(userId);
     }
@@ -244,8 +227,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         mockMvc.perform(post("/user/" + URL_PASSWORD_RESET + "/" + hash).content(password)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isNotFound())
-                .andExpect(contentError(error))
-                .andDo(document("user/update-password-token-not-found"));
+                .andExpect(contentError(error));
     }
 
     @Test
@@ -261,8 +243,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(jsonPath("firstName", is(testUser1.getFirstName())))
                 .andExpect(jsonPath("lastName", is(testUser1.getLastName())))
                 .andExpect(jsonPath("imageUrl", is(testUser1.getImageUrl())))
-                .andExpect(jsonPath("uid", is(testUser1.getUid())))
-                .andDo(document("user/get-user-by-token"));
+                .andExpect(jsonPath("uid", is(testUser1.getUid())));
     }
 
     @Test

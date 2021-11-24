@@ -43,15 +43,6 @@ public class AssessorCompetitionSummaryControllerDocumentation extends BaseContr
 
         mockMvc.perform(get("/assessor/{assessorId}/competition/{competitionId}/summary", assessorId, competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("assessor-competition-summary/{method-name}",
-                        pathParameters(
-                                parameterWithName("assessorId").description("Id of the assessor to get summary information for."),
-                                parameterWithName("competitionId").description("Id of the competition to refine the summary by.")
-                        ),
-                        responseFields(assessorCompetitionSummaryResourceFields)
-                                .andWithPrefix("assessor.", AssessorProfileResourceDocs.assessorProfileResourceFields)
-                                .andWithPrefix("assignedAssessments[].", AssessorAssessmentResourceDocs.assessorAssessmentResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 }

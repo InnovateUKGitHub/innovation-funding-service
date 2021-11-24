@@ -47,13 +47,7 @@ public class FileTypeControllerDocumentation extends BaseControllerMockMVCTest<F
         mockMvc.perform(get("/file/file-type/{fileTypeId}", fileTypeId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(fileTypeResource)))
-                .andDo(document("file/file-type/{method-name}",
-                        pathParameters(
-                                parameterWithName("fileTypeId").description("Id of the file type to be retrieved")
-                        ),
-                        responseFields(fileTypeResourceFields)
-                ));
+                .andExpect(content().json(toJson(fileTypeResource)));
 
         verify(fileTypeServiceMock, only()).findOne(fileTypeId);
     }
@@ -73,13 +67,7 @@ public class FileTypeControllerDocumentation extends BaseControllerMockMVCTest<F
         mockMvc.perform(get("/file/file-type/find-by-name/{name}", name)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(fileTypeResource)))
-                .andDo(document("file/file-type/{method-name}",
-                        pathParameters(
-                                parameterWithName("name").description("The name by which the file type should be retrieved")
-                        ),
-                        responseFields(fileTypeResourceFields)
-                ));
+                .andExpect(content().json(toJson(fileTypeResource)));
 
         verify(fileTypeServiceMock, only()).findByName(name);
     }

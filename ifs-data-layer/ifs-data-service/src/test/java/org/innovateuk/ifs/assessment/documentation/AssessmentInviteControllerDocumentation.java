@@ -74,13 +74,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         mockMvc.perform(get("/competitioninvite/get-all-invites-to-send/{competitionId}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competitioninvite/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition to get invites for")
-                        ),
-                        responseFields(assessorInvitesToSendResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(assessmentInviteServiceMock, only()).getAllInvitesToSend(competitionId);
     }
@@ -96,17 +90,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
         mockMvc.perform(get("/competitioninvite/get-all-invites-to-resend/{competitionId}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .param("inviteIds", simpleJoiner(inviteIds, ",")))
-                .andExpect(status().isOk())
-                .andDo(document("competitioninvite/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition to get invites for")
-                        ),
-                        requestParameters(
-                                parameterWithName("inviteIds")
-                                        .description("Ids of invites to resend")
-                        ),
-                        responseFields(assessorInvitesToSendResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(assessmentInviteServiceMock, only()).getAllInvitesToResend(competitionId, inviteIds);
     }
@@ -120,13 +104,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         mockMvc.perform(get("/competitioninvite/get-invite-to-send/{inviteId}", inviteId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competitioninvite/{method-name}",
-                        pathParameters(
-                                parameterWithName("inviteId").description("Id of the invite being requested")
-                        ),
-                        responseFields(assessorInvitesToSendResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -138,14 +116,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         mockMvc.perform(get("/competitioninvite/get-invite/{hash}", hash)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competitioninvite/{method-name}",
-                        pathParameters(
-                                parameterWithName("hash").description("hash of the invite being requested")
-                        ),
-                        responseFields(competitionInviteFields)
-                                .andWithPrefix("innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -157,14 +128,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         mockMvc.perform(post("/competitioninvite/open-invite/{hash}", hash)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competitioninvite/{method-name}",
-                        pathParameters(
-                                parameterWithName("hash").description("hash of the invite being opened")
-                        ),
-                        responseFields(competitionInviteFields)
-                                .andWithPrefix("innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -178,12 +142,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         mockMvc.perform(post("/competitioninvite/accept-invite/{hash}", hash)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competitioninvite/{method-name}",
-                        pathParameters(
-                                parameterWithName("hash").description("hash of the invite being accepted")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -197,13 +156,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(compRejection)))
-                .andExpect(status().isOk())
-                .andDo(document("competitioninvite/{method-name}",
-                        requestFields(competitionRejectionFields).andWithPrefix("rejectReason.", RejectionReasonResourceDocs.rejectionReasonResourceFields),
-                        pathParameters(
-                                parameterWithName("hash").description("hash of the invite being rejected")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -215,12 +168,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
         mockMvc.perform(get("/competitioninvite/check-existing-user/{hash}", hash)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("true"))
-                .andDo(document("competitioninvite/{method-name}",
-                        pathParameters(
-                                parameterWithName("hash").description("hash of the invite being checked")
-                        )
-                ));
+                .andExpect(content().string("true"));
     }
 
     @Test
@@ -239,24 +187,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                 .param("page", "0")
                 .param("sort", "firstName,asc")
                 .param("assessorNameFilter", assessorFilter))
-                .andExpect(status().isOk())
-                .andDo(document("competitioninvite/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition")
-                        ),
-                        requestParameters(
-                                parameterWithName("size").optional()
-                                        .description("Maximum number of elements in a single page. Defaults to 20."),
-                                parameterWithName("page").optional()
-                                        .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
-                                parameterWithName("sort").optional()
-                                        .description("The property to sort the elements on. For example `sort=firstName,asc`. Defaults to `firstName,asc`"),
-                                parameterWithName("assessorNameFilter").optional()
-                                        .description("Name to filter assessors by.")
-                        ),
-                        responseFields(availableAssessorPageResourceFields)
-                                .andWithPrefix("content[].", availableAssessorResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(assessmentInviteServiceMock, only()).getAvailableAssessors(competitionId, pageable, assessorFilter);
     }
@@ -274,22 +205,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "name,asc"))
-                .andExpect(status().isOk())
-                .andDo(document("competitioninvite/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition")
-                        ),
-                        requestParameters(
-                                parameterWithName("size").optional()
-                                        .description("Maximum number of elements in a single page. Defaults to 20."),
-                                parameterWithName("page").optional()
-                                        .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
-                                parameterWithName("sort").optional()
-                                        .description("The property to sort the elements on. For example `sort=name,asc`. Defaults to `name,asc`")
-                        ),
-                        responseFields(assessorCreatedInvitePageResourceFields)
-                                .andWithPrefix("content[]", assessorCreatedInviteResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(assessmentInviteServiceMock, only()).getCreatedInvites(competitionId, pageable);
     }

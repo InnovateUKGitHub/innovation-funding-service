@@ -47,15 +47,6 @@ public class CompetitionParticipantControllerDocumentation extends BaseControlle
 
         mockMvc.perform(get("/competitionparticipant/user/{userId}", userId, status)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competitionparticipant/{method-name}",
-                        pathParameters(
-                                parameterWithName("userId").description("User id of the competition participant")
-                        ),
-                        responseFields(fieldWithPath("[]").description("List of competition participants the user is allowed to see"))
-                                .andWithPrefix("[].", CompetitionParticipantResourceDocs.competitionParticipantResourceFields)
-                                .andWithPrefix("[].invite.", CompetitionInviteDocs.competitionInviteFields)
-                                .andWithPrefix("[].rejectionReason.", RejectionReasonResourceDocs.rejectionReasonResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 }

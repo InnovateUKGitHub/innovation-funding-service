@@ -84,13 +84,7 @@ public class ProjectInviteControllerDocumentation extends BaseControllerMockMVCT
 
         mockMvc.perform(put("/project-invite/accept-invite/{hash}/{userId}", hash,userId)
                 .accept(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(document("project-invite/{method-name}",
-                        pathParameters(
-                                parameterWithName("hash").description("The hash of the Project Invite being accepted"),
-                                parameterWithName("userId").description("The id of the User accepting the Project Invite")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -102,12 +96,7 @@ public class ProjectInviteControllerDocumentation extends BaseControllerMockMVCT
 
         mockMvc.perform(get("/project-invite/check-existing-user/{hash}", hash)
                 .accept(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(document("project-invite/{method-name}",
-                        pathParameters(
-                                parameterWithName("hash").description("The hash of the Project Invite being inspected for the presence of an existing User")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test

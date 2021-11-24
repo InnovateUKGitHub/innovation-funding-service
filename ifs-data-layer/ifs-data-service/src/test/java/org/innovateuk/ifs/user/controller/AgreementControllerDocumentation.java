@@ -30,9 +30,6 @@ public class AgreementControllerDocumentation extends BaseControllerMockMVCTest<
 
         mockMvc.perform(get("/agreement/find-current")
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("agreement/{method-name}",
-                        responseFields(agreementResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 }

@@ -31,14 +31,6 @@ public class CompetitionTypeControllerDocumentation extends BaseControllerMockMV
 
         mockMvc.perform(get("/competition-type/find-all")
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competition-type/{method-name}",
-                    responseFields(
-                            fieldWithPath("[].id").description("id of the competition type"),
-                            fieldWithPath("[].name").description("name of the competition type"),
-                            fieldWithPath("[].competitions").description("competition ids that have this type"),
-                            fieldWithPath("[].active").description("indicates if the competition type is active")
-                    )
-                ));
+                .andExpect(status().isOk());
     }
 }

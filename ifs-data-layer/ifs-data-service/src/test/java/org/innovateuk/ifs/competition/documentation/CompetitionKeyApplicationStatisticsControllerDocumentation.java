@@ -65,13 +65,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
                 .thenReturn(serviceSuccess(keyStatisticsResource));
         mockMvc.perform(get("/competition-application-statistics/{id}/open", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competition-application-statistics/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the competition the stats are for")
-                        ),
-                        responseFields(competitionOpenKeyApplicationStatisticsResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(competitionKeyApplicationStatisticsServiceMock, only()).getOpenKeyStatisticsByCompetition(competitionId);
     }
@@ -86,13 +80,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
                 .thenReturn(serviceSuccess(keyStatisticsResource));
         mockMvc.perform(get("/competition-application-statistics/{id}/closed", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competition-application-statistics/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the competition the stats are for")
-                        ),
-                        responseFields(competitionClosedKeyApplicationStatisticsResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(competitionKeyApplicationStatisticsServiceMock, only()).getClosedKeyStatisticsByCompetition
                 (competitionId);
@@ -108,13 +96,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
                 .thenReturn(serviceSuccess(keyStatisticsResource));
         mockMvc.perform(get("/competition-application-statistics/{id}/funded", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competition-application-statistics/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the competition the stats are for")
-                        ),
-                        responseFields(competitionFundedKeyApplicationStatisticsResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(competitionKeyApplicationStatisticsServiceMock, only()).getFundedKeyStatisticsByCompetition
                 (competitionId);
@@ -129,13 +111,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
                 .thenReturn(serviceSuccess(reviewKeyStatisticsResource));
         mockMvc.perform(get("/competition-application-statistics/{id}/review", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competition-application-statistics/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the competition the stats are for")
-                        ),
-                        responseFields(reviewKeyStatisticsResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(reviewStatisticsServiceMock, only()).getReviewPanelKeyStatistics(competitionId);
     }
@@ -149,13 +125,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
                 .thenReturn(serviceSuccess(reviewInviteStatisticsResource));
         mockMvc.perform(get("/competition-application-statistics/{id}/review-invites", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competition-application-statistics/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the competition the stats are for")
-                        ),
-                        responseFields(reviewInviteStatisticsResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(reviewStatisticsServiceMock, only()).getReviewInviteStatistics(competitionId);
     }
@@ -168,13 +138,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
 
         mockMvc.perform(get("/competition-application-statistics/{id}/interview-assignment", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competition-application-statistics/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the competition")
-                        ),
-                        responseFields(interviewAssignmentKeyStatisticsResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewStatisticsServiceMock, only()).getInterviewAssignmentPanelKeyStatistics(competitionId);
     }
@@ -187,13 +151,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
 
         mockMvc.perform(get("/competition-application-statistics/{id}/interview-invites", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competition-application-statistics/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the competition")
-                        ),
-                        responseFields(interviewInviteStatisticsResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewStatisticsServiceMock, only()).getInterviewInviteStatistics(competitionId);
     }
@@ -205,13 +163,7 @@ public class CompetitionKeyApplicationStatisticsControllerDocumentation extends
 
         mockMvc.perform(get("/competition-application-statistics/{id}/interview", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competition-application-statistics/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the competition")
-                        ),
-                        responseFields(INTERVIEW_STATISTICS_RESOURCE_FIELDS)
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewStatisticsServiceMock, only()).getInterviewStatistics(competitionId);
     }

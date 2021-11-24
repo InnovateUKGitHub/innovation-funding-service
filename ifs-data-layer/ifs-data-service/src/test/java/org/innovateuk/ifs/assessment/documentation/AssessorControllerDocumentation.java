@@ -53,14 +53,7 @@ public class AssessorControllerDocumentation extends BaseControllerMockMVCTest<A
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userRegistrationResource)))
-                .andExpect(status().isOk())
-                .andDo(document("assessor/register-assessor-by-hash",
-                        pathParameters(
-                                parameterWithName("hash").description("hash of the invite being accepted")
-                        ),
-                        requestFields(userRegistrationResourceFields)
-                        .andWithPrefix("address.", AddressDocs.addressResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(assessorServiceMock).registerAssessorByHash(hash, userRegistrationResource);
     }
@@ -75,17 +68,7 @@ public class AssessorControllerDocumentation extends BaseControllerMockMVCTest<A
 
         mockMvc.perform(get("/assessor/profile/{assessorId}", assessorId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("assessor/get-assessor-profile",
-                        pathParameters(
-                                parameterWithName("assessorId").description("Id of the assessor")
-                        ),
-                        responseFields(assessorProfileResourceFields)
-                        .andWithPrefix("profile.", ProfileResourceDocs.profileResourceFields)
-                                .andWithPrefix("profile.innovationAreas[].", InnovationAreaResourceDocs.innovationAreaResourceFields)
-                                .andWithPrefix("profile.affiliations[].", AffiliationDocs.affiliationResourceFields)
-                                .andWithPrefix("profile.address.", AddressDocs.addressResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -97,13 +80,7 @@ public class AssessorControllerDocumentation extends BaseControllerMockMVCTest<A
 
         mockMvc.perform(put("/assessor/notify-assessors/competition/{id}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "assessor/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the competition for the notifications")
-                        ))
-                );
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -116,13 +93,7 @@ public class AssessorControllerDocumentation extends BaseControllerMockMVCTest<A
         mockMvc.perform(get("/assessor/has-applications-assigned/{id}", userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("true"))
-                .andDo(document(
-                        "assessor/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the assessor")
-                        ))
-                );
+                .andExpect(content().string("true"));
     }
 
 }

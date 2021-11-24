@@ -40,13 +40,7 @@ public class CompetitionsBankDetailsControllerDocumentation extends BaseControll
         mockMvc.perform(get("/competitions/pending-bank-details-approvals")
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(pendingBankDetails)))
-                .andDo(document(
-                        "competitions/{method-name}",
-                        responseFields(
-                                fieldWithPath("[]").description("List organisations for which Bank Details Approval is pending")
-                        ).andWithPrefix("[].", BankDetailsReviewResourceDocs.bankDetailsReviewResourceFields)
-                ));
+                .andExpect(content().json(toJson(pendingBankDetails)));
 
         verify(bankDetailsServiceMock, only()).getPendingBankDetailsApprovals();
     }
@@ -60,10 +54,7 @@ public class CompetitionsBankDetailsControllerDocumentation extends BaseControll
         mockMvc.perform(get("/competitions/count-pending-bank-details-approvals")
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(pendingBankDetailsCount)))
-                .andDo(document(
-                        "competitions/{method-name}"
-                ));
+                .andExpect(content().json(toJson(pendingBankDetailsCount)));
 
         verify(bankDetailsServiceMock, only()).countPendingBankDetailsApprovals();
     }

@@ -50,14 +50,7 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         mockMvc.perform(get("/profile/id/{id}/get-profile-agreement", userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("profile/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Identifier of the user associated with the profile agreement being requested")
-                        ),
-                        responseFields(profileAgreementResourceFields)
-                        .andWithPrefix("agreement.", AgreementDocs.agreementResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -68,12 +61,7 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         mockMvc.perform(put("/profile/id/{id}/update-profile-agreement", userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("profile/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Identifier of the user to update the profile agreement for")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -85,14 +73,7 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         mockMvc.perform(get("/profile/id/{id}/get-profile-skills", userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("profile/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Identifier of the user associated with the profile skills being requested")
-                        ),
-                        responseFields(profileSkillsResourceFields)
-                        .andWithPrefix("innovationAreas[].", InnovationAreaResourceDocs.innovationAreaResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -106,13 +87,7 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(profileSkillsEditResource))
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("profile/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Identifier of the user to update the profile skills for")
-                        ),
-                        requestFields(profileSkillsEditResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -124,14 +99,7 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         mockMvc.perform(get("/profile/id/{id}/get-user-profile", userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("profile/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Identifier of the user associated with the profile being requested")
-                        ),
-                        responseFields(userProfileResourceFields)
-                                .andWithPrefix("address.", AddressDocs.addressResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -145,13 +113,6 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(profileDetails))
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("profile/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Identifier of the user to update the profile for")
-                        ),
-                        requestFields(userProfileResourceFields)
-                                .andWithPrefix("address.", AddressDocs.addressResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 }

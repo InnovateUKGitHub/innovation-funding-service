@@ -92,8 +92,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
-                .andExpect(status().isCreated())
-                .andDo(document("invite/create-application-invites/" + applicationId));
+                .andExpect(status().isCreated());
 
         verify(applicationInviteService, times(1)).createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
     }

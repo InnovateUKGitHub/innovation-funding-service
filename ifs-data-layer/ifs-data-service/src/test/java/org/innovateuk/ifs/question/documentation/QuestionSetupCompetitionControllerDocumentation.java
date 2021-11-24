@@ -52,13 +52,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseFileCon
 
         mockMvc.perform(get(baseUrl + "/get-by-id/{id}", questionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("question-setup-competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the question to be retrieved")
-                        ),
-                        responseFields(competitionSetupQuestionResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -70,10 +64,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseFileCon
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resource)))
-                .andExpect(status().isOk())
-                .andDo(document("question-setup-competition/{method-name}",
-                        requestFields(competitionSetupQuestionResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -84,13 +75,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseFileCon
 
         mockMvc.perform(post(baseUrl + "/add-default-to-competition/{id}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isCreated())
-                .andDo(document("question-setup-competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the competition to which the question will be added")
-                        ),
-                        responseFields(competitionSetupQuestionResourceFields)
-                ));
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -100,12 +85,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseFileCon
 
         mockMvc.perform(delete(baseUrl + "/delete-by-id/{id}", questionId)
                 .header("IFS_AUTH_TOKEN", "123abc")).
-                andExpect(status().isNoContent())
-                .andDo(document("question-setup-competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the question to be removed")
-                        )
-                ));
+                andExpect(status().isNoContent());
     }
 
     @Test
@@ -116,13 +96,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseFileCon
 
         mockMvc.perform(post(baseUrl + "/add-research-category-question-to-competition/{id}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isCreated())
-                .andDo(document("question-setup-competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the competition to which the " +
-                                        "research category question will be added")
-                        )
-                ));
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -132,10 +106,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseFileCon
 
         mockMvc.perform(RestDocumentationRequestBuilders.delete(baseUrl + "/template-file/{questionId}", questionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isNoContent())
-                .andDo(document("question-setup-competition/{method-name}",
-                        pathParameters(parameterWithName("questionId").description("Id of the question to have template file deleted")))
-                );
+                .andExpect(status().isNoContent());
 
         verify(questionFileSetupCompetitionService).deleteTemplateFile(questionId);
     }

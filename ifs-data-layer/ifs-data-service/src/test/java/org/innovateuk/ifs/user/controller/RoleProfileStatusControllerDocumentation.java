@@ -51,14 +51,7 @@ public class RoleProfileStatusControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(get("/user/{userId}/role-profile-status", userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("roleProfileStatus/{method-name}",
-                        pathParameters(
-                                parameterWithName("userId").description("Id of the user")
-                        ),
-                        responseFields(fieldWithPath("[]").description("List of Project Users the user is allowed to see"))
-                                .andWithPrefix("[].", roleProfileStatusResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -71,14 +64,7 @@ public class RoleProfileStatusControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(get("/user/{userId}/role-profile-status/{profileRole}", userId, profileRole)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("roleProfileStatus/{method-name}",
-                        pathParameters(
-                                parameterWithName("userId").description("Id of the user"),
-                                parameterWithName("profileRole").description("role of the user")
-                        ),
-                        responseFields(roleProfileStatusResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -97,9 +83,6 @@ public class RoleProfileStatusControllerDocumentation extends BaseControllerMock
         mockMvc.perform(put("/user/{userId}/role-profile-status", userId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(roleProfileStatusResource)))
-                .andExpect(status().isOk())
-                .andDo(document("roleProfileStatus/{method-name}",
-                        pathParameters(
-                                parameterWithName("userId").description("Id of the user"))));
+                .andExpect(status().isOk());
     }
 }

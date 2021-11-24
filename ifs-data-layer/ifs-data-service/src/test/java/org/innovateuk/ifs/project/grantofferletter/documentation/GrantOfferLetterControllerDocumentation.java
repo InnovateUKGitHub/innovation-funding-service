@@ -80,12 +80,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
 
         mockMvc.perform(delete("/project/{projectId}/grant-offer", projectId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isNoContent())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which Grant Offer Letter needs to be removed")
-                        )
-                ));
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -97,12 +92,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
 
         mockMvc.perform(delete("/project/{projectId}/signed-grant-offer-letter", projectId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isNoContent())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which Signed Grant Offer Letter needs to be removed")
-                        )
-                ));
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -217,12 +207,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
         when(grantOfferLetterServiceMock.submitGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{id}/grant-offer/submit", projectId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the project whos offer letter is being submitted")
-                        )
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -230,11 +215,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
         when(grantOfferLetterServiceMock.sendGrantOfferLetter(123L)).thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/grant-offer/send", 123L)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
-                        )));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -248,12 +229,6 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
                         .content(toJson(grantOfferLetterApprovalResource))
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the signed Grant Offer Letter is being approved/rejected.")
-                        ),
-                        requestFields(grantOfferLetterApprovalResourceFields)
-                ))
                 .andReturn();
     }
 
@@ -270,13 +245,6 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(stateInformation)))
-                .andDo(document("project/grant-offer-letter/current-state/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which Grant Offer Letter state information is being retrieved.")
-                        ),
-                        responseFields(grantOfferLetterStateResourceFields)
-                        )
-                )
                 .andReturn();
 
         verify(grantOfferLetterServiceMock).getGrantOfferLetterState(projectId);

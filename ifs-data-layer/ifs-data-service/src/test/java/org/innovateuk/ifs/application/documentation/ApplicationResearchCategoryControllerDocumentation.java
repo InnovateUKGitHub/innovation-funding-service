@@ -54,12 +54,7 @@ public class ApplicationResearchCategoryControllerDocumentation extends BaseCont
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(researchCategoryId)))
-                .andExpect(status().isOk())
-                .andDo(document("application-research-category/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("id of the application for which the research category should be marked as complete")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -83,12 +78,6 @@ public class ApplicationResearchCategoryControllerDocumentation extends BaseCont
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(researchCategoryId)))
-                .andExpect(status().isOk())
-                .andDo(document("application-research-category/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("id of the application for which the research category should be marked as complete"),
-                                parameterWithName("markedAsCompleteById").description("Id of the user that marked the application as complete")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 }

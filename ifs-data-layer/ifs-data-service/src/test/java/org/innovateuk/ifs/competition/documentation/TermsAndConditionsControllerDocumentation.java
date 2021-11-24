@@ -39,13 +39,7 @@ public class TermsAndConditionsControllerDocumentation extends BaseControllerMoc
 
         mockMvc.perform(get("/terms-and-conditions/get-by-id/{id}", termsAndConditionsId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("terms-and-conditions/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("The terms and conditions which need to be " +
-                                        "collected")
-                        ),
-                        responseFields(termsAndConditionsResourceFields)));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -56,14 +50,7 @@ public class TermsAndConditionsControllerDocumentation extends BaseControllerMoc
 
         mockMvc.perform(get("/terms-and-conditions/get-latest")
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "terms-and-conditions/{method-name}",
-                        responseFields(
-                                fieldWithPath("[]").description("List of latest versions for all terms and conditions" +
-                                        " the authenticated user has access to")
-                        ).andWithPrefix("[].", termsAndConditionsResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -75,9 +62,6 @@ public class TermsAndConditionsControllerDocumentation extends BaseControllerMoc
 
         mockMvc.perform(get("/terms-and-conditions/site")
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("terms-and-conditions/{method-name}",
-                        responseFields(termsAndConditionsResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 }

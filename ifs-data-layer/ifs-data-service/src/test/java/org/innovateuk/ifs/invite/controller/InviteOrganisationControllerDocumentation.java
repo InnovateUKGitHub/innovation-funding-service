@@ -38,14 +38,7 @@ public class InviteOrganisationControllerDocumentation extends BaseControllerMoc
 
         mockMvc.perform(get("/inviteorganisation/{id}", inviteOrganisationResource.getId())
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("invite-organisation/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the invite organisation that is being requested")
-                        ),
-                        responseFields(inviteOrganisationFields)
-                                .andWithPrefix("inviteResources[].", ApplicationInviteResourceDocs.applicationInviteResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -60,14 +53,6 @@ public class InviteOrganisationControllerDocumentation extends BaseControllerMoc
         mockMvc.perform(get("/inviteorganisation/organisation/{organisationId}/application/{applicationId}",
                 organisationId, applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("invite-organisation/{method-name}",
-                        pathParameters(
-                                parameterWithName("organisationId").description("Id of the organisation that invite organisations are being requested for"),
-                                parameterWithName("applicationId").description("Id of the application that invites are being requested for")
-                        ),
-                        responseFields(inviteOrganisationFields)
-                                .andWithPrefix("inviteResources[].", ApplicationInviteResourceDocs.applicationInviteResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 }

@@ -56,12 +56,7 @@ public class ProjectPartnerInviteDocumentation extends BaseControllerMockMVCTest
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(invite)))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of project that the project member is being invited to")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test

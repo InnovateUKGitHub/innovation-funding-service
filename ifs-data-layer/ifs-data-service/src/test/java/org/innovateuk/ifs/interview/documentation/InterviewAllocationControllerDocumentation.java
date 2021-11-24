@@ -71,22 +71,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "invite.name,asc"))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition")
-                        ),
-                        requestParameters(
-                                parameterWithName("size").optional()
-                                        .description("Maximum number of elements in a single page. Defaults to 20."),
-                                parameterWithName("page").optional()
-                                        .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
-                                parameterWithName("sort").optional()
-                                        .description("The property to sort the elements on. For example `sort=invite.name,asc`. Defaults to `invite.name,asc`")
-                        ),
-                        responseFields(interviewAssessorAllocateApplicationsPageResourceFields)
-                                .andWithPrefix("content[].", interviewAcceptedAssessorsResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewAllocationServiceMock, only()).getInterviewAcceptedAssessors(competitionId, pageable);
     }
@@ -112,23 +97,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "target.id,asc"))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition"),
-                                parameterWithName("userId").description("Id of the assessor")
-                        ),
-                        requestParameters(
-                                parameterWithName("size").optional()
-                                        .description("Maximum number of elements in a single page. Defaults to 20."),
-                                parameterWithName("page").optional()
-                                        .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
-                                parameterWithName("sort").optional()
-                                        .description("The property to sort the elements on. For example `sort=invite.name,asc`. Defaults to `invite.name,asc`")
-                        ),
-                        responseFields(InterviewApplicationPageResourceFields)
-                                .andWithPrefix("content[].", InterviewApplicationResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewAllocationServiceMock, only()).getAllocatedApplications(competitionId, userId, pageable);
     }
@@ -146,15 +115,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
 
         mockMvc.perform(get("/interview-panel/{competitionId}/allocated-applications-assessor-id/{userId}", competitionId, userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition"),
-                                parameterWithName("userId").description("Id of the assessor")
-                        ),
-                        responseFields(fieldWithPath("[]").description("List of interviews"))
-                                .andWithPrefix("[].", InterviewResourceDocs.interviewResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewAllocationServiceMock, only()).getAllocatedApplicationsByAssessorId(competitionId, userId);
     }
@@ -180,23 +141,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "target.id,asc"))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition"),
-                                parameterWithName("userId").description("Id of the assessor")
-                        ),
-                        requestParameters(
-                                parameterWithName("size").optional()
-                                        .description("Maximum number of elements in a single page. Defaults to 20."),
-                                parameterWithName("page").optional()
-                                        .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
-                                parameterWithName("sort").optional()
-                                        .description("The property to sort the elements on. For example `sort=invite.name,asc`. Defaults to `invite.name,asc`")
-                        ),
-                        responseFields(InterviewApplicationPageResourceFields)
-                                .andWithPrefix("content[].", InterviewApplicationResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewAllocationServiceMock, only()).getUnallocatedApplications(competitionId, userId, pageable);
     }
@@ -213,14 +158,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
 
         mockMvc.perform(get("/interview-panel/{competitionId}/unallocated-application-ids/{userId}", competitionId, userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition"),
-                                parameterWithName("userId").description("Id of the assessor")
-                        ),
-                        responseFields(fieldWithPath("[]").description("List of ids of applications"))
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewAllocationServiceMock, only()).getUnallocatedApplicationIds(competitionId, userId);
     }
@@ -233,12 +171,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
         when(interviewAllocationServiceMock.unallocateApplication(assessorId, applicationId)).thenReturn(serviceSuccess());
         mockMvc.perform(post("/interview-panel/allocated-applications/{assessorId}/unallocate/{applicationId}", assessorId, applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(
-                                parameterWithName("assessorId").description("Id of the assessor"),
-                                parameterWithName("applicationId").description("Id of the application to unassign from interview panel")
-                                )));
+                .andExpect(status().isOk());
 
         verify(interviewAllocationServiceMock, only()).unallocateApplication(assessorId, applicationId);
     }
@@ -253,14 +186,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
 
         mockMvc.perform(get("/interview-panel/{competitionId}/allocated-applications/{userId}/invite-to-send", competitionId, userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition"),
-                                parameterWithName("userId").description("Id of the assessor")
-                        ),
-                        responseFields(ASSESSOR_INVITES_TO_SEND_FIELDS)
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewAllocationServiceMock, only()).getInviteToSend(competitionId, userId);
     }
@@ -279,14 +205,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(interviewNotifyAllocationResource)))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition"),
-                                parameterWithName("userId").description("Id of the assessor")
-                        ),
-                        requestFields(INTERVIEW_ALLOCATION_RESOURCE_FIELDS)
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewAllocationServiceMock, only()).notifyAllocation(interviewNotifyAllocationResource);
     }
@@ -303,15 +222,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
 
         mockMvc.perform(get("/interview-panel/{competitionId}/unallocated-applications/all/{applicationIds}", competitionId, join(applicationIds, ','))
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition"),
-                                parameterWithName("applicationIds").description("Ids of applications")
-                        ),
-                        responseFields(fieldWithPath("[]").description("List of unallocated applications"))
-                        .andWithPrefix("[].", InterviewApplicationResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewAllocationServiceMock, only()).getUnallocatedApplicationsById(applicationIds);
 

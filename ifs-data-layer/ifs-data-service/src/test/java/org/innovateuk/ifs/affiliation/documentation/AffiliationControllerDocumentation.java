@@ -40,15 +40,7 @@ public class AffiliationControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(get("/affiliation/id/{id}/get-user-affiliations", userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("affiliation/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Identifier of the user associated with affiliations being requested")
-                        ),
-                        responseFields(
-                                fieldWithPath("affiliationResourceList[]").description("List of affiliations belonging to the user")
-                        ).andWithPrefix("affiliationResourceList[].", affiliationResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -65,13 +57,6 @@ public class AffiliationControllerDocumentation extends BaseControllerMockMVCTes
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(affiliationListResource)))
-                .andExpect(status().isOk())
-                .andDo(document("affiliation/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Identifier of the user associated with affiliations being updated")
-                        ),
-                        requestFields(fieldWithPath("affiliationResourceList[]").description("List of affiliations belonging to the user"))
-                                .andWithPrefix("affiliationResourceList[].", affiliationResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 }

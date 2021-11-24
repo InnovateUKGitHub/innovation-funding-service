@@ -43,16 +43,7 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
 
         mockMvc.perform(get("/public-content/find-by-competition-id/{competitionId}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("public-content/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("The competition id of the required public content")
-                        ),
-                        responseFields(publicContentResourceFields)
-                                .andWithPrefix("contentSections[].", PublicContentSectionResourceDocs.publicContentSectionResourceFields)
-                                .andWithPrefix("contentSections[].contentGroups[].", ContentGroupResourceDocs.contentGroupResourceFields)
-                                .andWithPrefix("contentEvents[].", ContentEventResourceDocs.contentEventResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -63,12 +54,7 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
 
         mockMvc.perform(post("/public-content/publish-by-competition-id/{competitionId}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("public-content/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("The competition id the public content to publish")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -81,17 +67,7 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(resource)))
-                .andExpect(status().isOk())
-                .andDo(document("public-content/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("The id of the public content to update"),
-                                parameterWithName("section").description("The section of the public content to update")
-                        ),
-                        requestFields(publicContentResourceFields)
-                                .andWithPrefix("contentSections[].", PublicContentSectionResourceDocs.publicContentSectionResourceFields)
-                                .andWithPrefix("contentSections[].contentGroups[].", ContentGroupResourceDocs.contentGroupResourceFields)
-                                .andWithPrefix("contentEvents[].", ContentEventResourceDocs.contentEventResourceFields)
-                ));
+                .andExpect(status().isOk());
 
     }
 
@@ -105,17 +81,7 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(resource)))
-                .andExpect(status().isOk())
-                .andDo(document("public-content/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("The id of the public content to update"),
-                                parameterWithName("section").description("The section of the public content to update")
-                        ),
-                        requestFields(publicContentResourceFields)
-                                .andWithPrefix("contentSections[].", PublicContentSectionResourceDocs.publicContentSectionResourceFields)
-                                .andWithPrefix("contentSections[].contentGroups[].", ContentGroupResourceDocs.contentGroupResourceFields)
-                                .andWithPrefix("contentEvents[].", ContentEventResourceDocs.contentEventResourceFields)
-                ));
+                .andExpect(status().isOk());
 
     }
 

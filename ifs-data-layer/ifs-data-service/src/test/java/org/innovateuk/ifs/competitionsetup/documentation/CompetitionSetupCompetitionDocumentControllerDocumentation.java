@@ -65,11 +65,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
                 .contentType(APPLICATION_JSON)
                 .content(toJson(competitionDocumentResource)))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(competitionDocumentResource)))
-                .andDo(document("competition/setup/project-document/{method-name}",
-                        requestFields(projectDocumentResourceFields),
-                        responseFields(projectDocumentResourceFields)
-                ));
+                .andExpect(content().json(toJson(competitionDocumentResource)));
 
         verify(competitionSetupDocumentServiceMock, only()).save(competitionDocumentResource);
     }
@@ -93,14 +89,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(competitionDocumentResources)))
-                .andExpect(status().isOk())
-                .andDo(document("competition/setup/project-document/{method-name}",
-                        requestFields(fieldWithPath("[]").description("List of Project Documents"))
-                                .andWithPrefix("[].", projectDocumentResourceFields),
-                        responseFields(
-                                fieldWithPath("[]").description("List of Project Documents which were just saved to the database")
-                        ).andWithPrefix("[].", projectDocumentResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(competitionSetupDocumentServiceMock, only()).saveAll(competitionDocumentResources);
     }
@@ -117,13 +106,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
         mockMvc.perform(get("/competition/setup/project-document/{projectDocumentId}", projectDocumentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(competitionDocumentResource)))
-                .andDo(document("competition/setup/project-document/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectDocumentId").description("Id of the Project Document to be retrieved")
-                        ),
-                        responseFields(projectDocumentResourceFields)
-                ));
+                .andExpect(content().json(toJson(competitionDocumentResource)));
 
         verify(competitionSetupDocumentServiceMock, only()).findOne(projectDocumentId);
     }
@@ -140,14 +123,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
         mockMvc.perform(get("/competition/setup/project-document/find-by-competition-id/{competitionId}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(competitionDocumentResources)))
-                .andDo(document("competition/setup/project-document/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("The competition id for which Project Documents need to be retrieved")
-                        ),
-                        responseFields(
-                        ).andWithPrefix("[].", projectDocumentResourceFields)
-                ));
+                .andExpect(content().json(toJson(competitionDocumentResources)));
 
         verify(competitionSetupDocumentServiceMock, only()).findByCompetitionId(competitionId);
     }
@@ -160,12 +136,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
 
         mockMvc.perform(RestDocumentationRequestBuilders.delete("/competition/setup/project-document/{projectDocumentId}", projectDocumentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competition/setup/project-document/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectDocumentId").description("Id of the Project Document to be deleted")
-                        )
-                ));
+                .andExpect(status().isOk());
 
         verify(competitionSetupDocumentServiceMock, only()).delete(projectDocumentId);
     }

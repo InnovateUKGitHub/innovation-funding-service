@@ -40,11 +40,7 @@ public class PendingPartnerProgressDocumentation extends BaseControllerMockMVCTe
         when(pendingPartnerProgressService.getPendingPartnerProgress(id(projectId, organisationId))).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(get(baseUrl, projectId, organisationId))
-                .andExpect(status().isOk())
-                .andDo(document("pending-partner-progress/{method-name}",
-                                pathParameters(
-                                        parameterWithName("projectId").description("Id of project to get the partner progress of"),
-                                        parameterWithName("organisationId").description("Id of the organisation to get the partner progress of"))));
+                .andExpect(status().isOk());
 
         verify(pendingPartnerProgressService).getPendingPartnerProgress(id(projectId, organisationId));
     }

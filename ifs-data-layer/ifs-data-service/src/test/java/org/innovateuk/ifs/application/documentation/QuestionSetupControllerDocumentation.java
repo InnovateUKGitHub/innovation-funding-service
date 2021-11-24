@@ -37,15 +37,7 @@ public class QuestionSetupControllerDocumentation extends BaseControllerMockMVCT
 
         mockMvc.perform(put("/question/setup/mark-as-complete/{competitionId}/{parentSection}/{questionId}", competitionId, parentSection, questionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "question/setup/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("id of the competition on which the section should be marked as complete"),
-                                parameterWithName("questionId").description("the id of the question to mark as complete"),
-                                parameterWithName("parentSection").description("the parent section of the section that needs to be marked as complete")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test

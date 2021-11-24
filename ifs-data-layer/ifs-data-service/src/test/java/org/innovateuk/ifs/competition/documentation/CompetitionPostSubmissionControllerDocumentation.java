@@ -48,13 +48,7 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
 
         mockMvc.perform(put("/competition/post-submission/{id}/release-feedback", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the competition for the notifications")
-                        ))
-                );
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -63,13 +57,7 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
 
         mockMvc.perform(get("/competition/post-submission/{id}/queries/open/count", 321L)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the competition whose open queries are being counted")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -80,16 +68,7 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
 
         mockMvc.perform(get("/competition/post-submission/{id}/queries/open", 321L)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the competition whose open queries are being retrieved")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("list of open queries")
-                        ).andWithPrefix("[].", CompetitionOpenQueryResourceDocs.competitionOpenQueryFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -105,17 +84,7 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
         mockMvc.perform(get("/competition/post-submission/{competitionId}/pending-spend-profiles", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(pendingSpendProfiles)))
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition, whose Projects, which are pending Spend Profile generation, are being retrieved")
-                        )
-                        ,
-                        responseFields(
-                                fieldWithPath("[]").description("List of projects for which Spend Profile generation is pending, for a given competition")
-                        ).andWithPrefix("[].", SpendProfileStatusResourceDocs.spendProfileStatusFields)
-                ));
+                .andExpect(content().json(toJson(pendingSpendProfiles)));
 
         verify(competitionService, only()).getPendingSpendProfiles(competitionId);
     }
@@ -131,13 +100,7 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
         mockMvc.perform(get("/competition/post-submission/{competitionId}/count-pending-spend-profiles", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(pendingSpendProfileCount)))
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition, whose count of Projects, which are pending Spend Profile generation, is being retrieved")
-                        )
-                ));
+                .andExpect(content().json(toJson(pendingSpendProfileCount)));
 
         verify(competitionService, only()).countPendingSpendProfiles(competitionId);
     }
@@ -149,13 +112,7 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
 
         mockMvc.perform(put("/competition/post-submission/{id}/close-assessment", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the competition to close the assessment of")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -165,12 +122,6 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
 
         mockMvc.perform(put("/competition/post-submission/{id}/reopen-assessment-period", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the competition to reopen the assessment period of")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 }

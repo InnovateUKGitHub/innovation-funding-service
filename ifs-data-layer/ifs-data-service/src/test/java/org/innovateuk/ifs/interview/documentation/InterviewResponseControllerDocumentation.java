@@ -50,10 +50,7 @@ public class InterviewResponseControllerDocumentation extends BaseFileController
         mockMvc.perform(get("/interview-response/details/{applicationId}", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(fileEntryResource)))
-                .andDo(document("interview-response/{method-name}",
-                        pathParameters(parameterWithName("applicationId").description("Id of the Attachment to be fetched")),
-                        responseFields(fileEntryResourceFields)));
+                .andExpect(content().json(toJson(fileEntryResource)));
 
         verify(interviewResponseService).findResponse(applicationId);
     }
@@ -77,10 +74,7 @@ public class InterviewResponseControllerDocumentation extends BaseFileController
 
         mockMvc.perform(RestDocumentationRequestBuilders.delete("/interview-response/{applicationId}", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isNoContent())
-                .andDo(document("interview-response/{method-name}",
-                        pathParameters(parameterWithName("applicationId").description("Id of the application to have attachment deleted")))
-                );
+                .andExpect(status().isNoContent());
 
         verify(interviewResponseService).deleteResponse(applicationId);
     }
@@ -94,14 +88,7 @@ public class InterviewResponseControllerDocumentation extends BaseFileController
         mockMvc.perform(post("/interview-response/{applicationId}", applicationId)
                 .param("filename", "randomFile.pdf")
                 .headers(createFileUploadHeader("application/pdf", 1234)))
-                .andExpect(status().isCreated())
-                .andDo(document("interview-response/{method-name}",
-                        pathParameters(parameterWithName("applicationId").description("The application in which the feedback will be attached.")),
-                        requestParameters(parameterWithName("filename").description("The filename of the file being uploaded")),
-                        requestHeaders(
-                                headerWithName("Content-Type").description("The Content Type of the file being uploaded e.g. application/pdf")
-                        )
-                ));
+                .andExpect(status().isCreated());
 
         verify(interviewResponseService).uploadResponse(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
                 eq(applicationId), any(HttpServletRequest.class));

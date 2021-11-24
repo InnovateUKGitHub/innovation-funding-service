@@ -36,15 +36,7 @@ public class ApplicationNotificationTemplateControllerDocumentation extends Base
 
         mockMvc.perform(get("/application-notification-template/successful/{competitionId}", competitionId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("application-notification-template/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Competition ID to get the template of.")
-                        ),
-                        responseFields(
-                                fieldWithPath("messageBody").description("The body of the template"))
-                        )
-                );
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -56,15 +48,7 @@ public class ApplicationNotificationTemplateControllerDocumentation extends Base
 
         mockMvc.perform(get("/application-notification-template/unsuccessful/{competitionId}", competitionId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("application-notification-template/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Competition ID to get the template of.")
-                        ),
-                        responseFields(
-                                fieldWithPath("messageBody").description("The body of the template"))
-                        )
-                );
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -77,15 +61,7 @@ public class ApplicationNotificationTemplateControllerDocumentation extends Base
 
         mockMvc.perform(get("/application-notification-template/ineligible/{competitionId}", competitionId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("application-notification-template/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Competition ID to get the template of.")
-                        ),
-                        responseFields(
-                                fieldWithPath("messageBody").description("The body of the template"))
-                        )
-                );
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
 }

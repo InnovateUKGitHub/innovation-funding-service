@@ -38,14 +38,7 @@ public class CompetitionSearchControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(get("/competition/live")
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        responseFields(
-                                fieldWithPath("[]").description("list of live competitions the authenticated user has access to")
-                        ).andWithPrefix("[].", CompetitionSearchResultItemDocs.competitionSearchResultItemFields)
-
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -59,15 +52,7 @@ public class CompetitionSearchControllerDocumentation extends BaseControllerMock
                 .param("page", String.valueOf(page))
                 .param("size", String.valueOf(size))
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        requestParameters(
-                                parameterWithName("page").description("The page number to be requested"),
-                                parameterWithName("size").description("The number of competitions per page")
-                        ),
-                        responseFields(CompetitionSearchResultDocs.competitionSearchResultFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -76,13 +61,7 @@ public class CompetitionSearchControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(get("/competition/upcoming")
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        responseFields(
-                                fieldWithPath("[]").description("list of upcoming competitions the authenticated user has access to")
-                        ).andWithPrefix("[].", CompetitionSearchResultItemDocs.competitionSearchResultItemFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -96,15 +75,7 @@ public class CompetitionSearchControllerDocumentation extends BaseControllerMock
                 .param("page", String.valueOf(page))
                 .param("size", String.valueOf(size))
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        requestParameters(
-                                parameterWithName("page").description("The page number to be requested"),
-                                parameterWithName("size").description("The number of competitions per page")
-                        ),
-                        responseFields(CompetitionSearchResultDocs.competitionSearchResultFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -114,11 +85,7 @@ public class CompetitionSearchControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(get("/competition/count")
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        responseFields(CompetitionCountResourceDocs.competitionCountResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -134,15 +101,7 @@ public class CompetitionSearchControllerDocumentation extends BaseControllerMock
                 .param("page", String.valueOf(page))
                 .param("size", String.valueOf(size))
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        requestParameters(parameterWithName("searchQuery").description("The search query to lookup"),
-                                parameterWithName("page").description("The page number to be requested"),
-                                parameterWithName("size").description("The number of competitions per page")
-                        ),
-                        responseFields(CompetitionSearchResultDocs.competitionSearchResultFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -156,14 +115,6 @@ public class CompetitionSearchControllerDocumentation extends BaseControllerMock
                 .param("page", String.valueOf(page))
                 .param("size", String.valueOf(size))
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        requestParameters(
-                                parameterWithName("page").description("The page number to be requested"),
-                                parameterWithName("size").description("The number of competitions per page")
-                        ),
-                        responseFields(CompetitionSearchResultDocs.competitionSearchResultFields)
-                ));
+                .andExpect(status().isOk());
     }
 }

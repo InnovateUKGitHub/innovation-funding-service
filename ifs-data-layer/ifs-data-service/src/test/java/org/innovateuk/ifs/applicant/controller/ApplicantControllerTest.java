@@ -72,43 +72,7 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
 
         mockMvc.perform(get("/applicant/{user}/{application}/question/{question}", USER_ID, APPLICATION_ID, QUESTION_ID)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("applicant/{method-name}",
-                        pathParameters(
-                                parameterWithName("user").description("Id of the user"),
-                                parameterWithName("application").description("Id of the application"),
-                                parameterWithName("question").description("Id of the question")
-                        ),
-                        responseFields(questionFields)
-                        .andWithPrefix("application.", ApplicationDocs.applicationResourceFields)
-                        .andWithPrefix("competition.", CompetitionResourceDocs.competitionResourceFields)
-                        .andWithPrefix("currentApplicant.", ApplicantDocs.applicantResourceFields)
-                        .andWithPrefix("currentApplicant.processRole.", ProcessRoleDocs.processRoleResourceFields)
-                        .andWithPrefix("currentApplicant.organisation.", OrganisationDocs.organisationResourceFields)
-                        .andWithPrefix("currentUser.", UserDocs.userResourceFields)
-                        .andWithPrefix("applicants[].", ApplicantDocs.applicantResourceFields)
-                        .andWithPrefix("applicants[].processRole.", ProcessRoleDocs.processRoleResourceFields)
-                        .andWithPrefix("applicants[].organisation.", OrganisationDocs.organisationResourceFields)
-                        .andWithPrefix("question.", QuestionDocs.questionFields)
-                        .andWithPrefix("applicantFormInputs[].", ApplicationFormInputDocs.applicationFormResourceFields)
-                        .andWithPrefix("applicantFormInputs[].formInput.", FormInputResourceDocs.formInputResourceFields)
-                        .andWithPrefix("applicantFormInputs[].applicantResponses[].", ApplicantFormInputResponseResourceDocs.applicantFormInputResponseResourceFields)
-                        .andWithPrefix("applicantFormInputs[].applicantResponses[].applicant.", ApplicantDocs.applicantResourceFields)
-                        .andWithPrefix("applicantFormInputs[].applicantResponses[].applicant.processRole.", ProcessRoleDocs.processRoleResourceFields)
-                        .andWithPrefix("applicantFormInputs[].applicantResponses[].applicant.organisation.", OrganisationDocs.organisationResourceFields)
-                        .andWithPrefix("applicantFormInputs[].applicantResponses[].response.", FormInputResponseResourceDocs.formInputResponseResourceFields)
-                        .andWithPrefix("applicantQuestionStatuses[].", ApplicantQuestionStatusResourceDocs.applicantQuestionStatusResourceFields)
-                        .andWithPrefix("applicantQuestionStatuses[].status.", QuestionStatusResourceDocs.questionStatusResourceFields)
-                        .andWithPrefix("applicantQuestionStatuses[].markedAsCompleteBy.", ApplicantDocs.applicantResourceFields)
-                        .andWithPrefix("applicantQuestionStatuses[].markedAsCompleteBy.processRole.", ProcessRoleDocs.processRoleResourceFields)
-                        .andWithPrefix("applicantQuestionStatuses[].markedAsCompleteBy.organisation.", OrganisationDocs.organisationResourceFields)
-                        .andWithPrefix("applicantQuestionStatuses[].assignee.", ApplicantDocs.applicantResourceFields)
-                        .andWithPrefix("applicantQuestionStatuses[].assignee.processRole.", ProcessRoleDocs.processRoleResourceFields)
-                        .andWithPrefix("applicantQuestionStatuses[].assignee.organisation.", OrganisationDocs.organisationResourceFields)
-                        .andWithPrefix("applicantQuestionStatuses[].assignedBy.", ApplicantDocs.applicantResourceFields)
-                        .andWithPrefix("applicantQuestionStatuses[].assignedBy.processRole.", ProcessRoleDocs.processRoleResourceFields)
-                        .andWithPrefix("applicantQuestionStatuses[].assignedBy.organisation.", OrganisationDocs.organisationResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -118,55 +82,7 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
 
         mockMvc.perform(get("/applicant/{user}/{application}/section/{section}", USER_ID, APPLICATION_ID, QUESTION_ID)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("applicant/{method-name}",
-                        pathParameters(
-                                parameterWithName("user").description("Id of the user"),
-                                parameterWithName("application").description("Id of the application"),
-                                parameterWithName("section").description("Id of the section")
-                        ),
-                        responseFields(sectionFields)
-                        .andWithPrefix("application.", ApplicationDocs.applicationResourceFields)
-                        .andWithPrefix("competition.", CompetitionResourceDocs.competitionResourceFields)
-                        .andWithPrefix("currentApplicant.", ApplicantDocs.applicantResourceFields)
-                        .andWithPrefix("currentApplicant.processRole.", ProcessRoleDocs.processRoleResourceFields)
-                        .andWithPrefix("currentApplicant.organisation.", OrganisationDocs.organisationResourceFields)
-                        .andWithPrefix("currentUser.", UserDocs.userResourceFields)
-                        .andWithPrefix("applicants[].", ApplicantDocs.applicantResourceFields)
-                        .andWithPrefix("applicants[].processRole.", ProcessRoleDocs.processRoleResourceFields)
-                        .andWithPrefix("applicants[].organisation.", OrganisationDocs.organisationResourceFields)
-                        .andWithPrefix("section.", SectionDocs.sectionResourceFields)
-                        .andWithPrefix("applicantQuestions[].application.", ApplicationDocs.applicationResourceFields)
-                        .andWithPrefix("applicantQuestions[].competition.", CompetitionResourceDocs.competitionResourceFields)
-                        .andWithPrefix("applicantQuestions[].currentApplicant.", ApplicantDocs.applicantResourceFields)
-                        .andWithPrefix("applicantQuestions[].currentApplicant.processRole.", ProcessRoleDocs.processRoleResourceFields)
-                        .andWithPrefix("applicantQuestions[].currentApplicant.organisation.", OrganisationDocs.organisationResourceFields)
-                        .andWithPrefix("applicantQuestions[].currentUser.", UserDocs.userResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicants[].", ApplicantDocs.applicantResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicants[].processRole.", ProcessRoleDocs.processRoleResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicants[].organisation.", OrganisationDocs.organisationResourceFields)
-                        .andWithPrefix("applicantQuestions[].question.", QuestionDocs.questionFields)
-                        .andWithPrefix("applicantQuestions[].applicantFormInputs[].", ApplicationFormInputDocs.applicationFormResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicantFormInputs[].formInput.", FormInputResourceDocs.formInputResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicantFormInputs[].applicantResponses[].", ApplicantFormInputResponseResourceDocs.applicantFormInputResponseResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicantFormInputs[].applicantResponses[].applicant.", ApplicantDocs.applicantResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicantFormInputs[].applicantResponses[].applicant.processRole.", ProcessRoleDocs.processRoleResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicantFormInputs[].applicantResponses[].applicant.organisation.", OrganisationDocs.organisationResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicantFormInputs[].applicantResponses[].response.", FormInputResponseResourceDocs.formInputResponseResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicantQuestionStatuses[].", ApplicantQuestionStatusResourceDocs.applicantQuestionStatusResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicantQuestionStatuses[].status.", QuestionStatusResourceDocs.questionStatusResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicantQuestionStatuses[].markedAsCompleteBy.", ApplicantDocs.applicantResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicantQuestionStatuses[].markedAsCompleteBy.processRole.", ProcessRoleDocs.processRoleResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicantQuestionStatuses[].markedAsCompleteBy.organisation.", OrganisationDocs.organisationResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicantQuestionStatuses[].assignee.", ApplicantDocs.applicantResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicantQuestionStatuses[].assignee.processRole.", ProcessRoleDocs.processRoleResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicantQuestionStatuses[].assignee.organisation.", OrganisationDocs.organisationResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicantQuestionStatuses[].assignedBy.", ApplicantDocs.applicantResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicantQuestionStatuses[].assignedBy.processRole.", ProcessRoleDocs.processRoleResourceFields)
-                        .andWithPrefix("applicantQuestions[].applicantQuestionStatuses[].assignedBy.organisation.", OrganisationDocs.organisationResourceFields)
-                        .andWithPrefix("applicantParentSection.", sectionFieldsWithoutCurrentApplicant)
-                        .andWithPrefix("applicantChildrenSections[].", sectionFieldsWithoutCurrentApplicant)
-                ));
+                .andExpect(status().isOk());
 
     }
 

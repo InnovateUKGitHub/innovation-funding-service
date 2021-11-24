@@ -72,13 +72,6 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
                         .content(toJson(bankDetailsResource))
                         .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to be updated with bank details")
-                        ),
-                        requestFields(bankDetailsResourceFields)
-                        .andWithPrefix("address.", addressResourceFields)
-                ))
                 .andReturn();
     }
 
@@ -110,13 +103,6 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
                         .content(toJson(bankDetailsResource)))
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(expectedErrors)))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to be updated with bank details")
-                        ),
-                        requestFields(bankDetailsResourceFields)
-                        .andWithPrefix("address.", addressResourceFields)
-                ))
                 .andReturn();
     }
 
@@ -129,13 +115,6 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
         mockMvc.perform(get("/project/{projectId}/bank-details/status-summary", projectId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(bankDetailsStatusSummary)))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of project that bank details status summary is requested for")
-                        ),
-                        responseFields(projectBankDetailsStatusSummaryFields)
-                        .andWithPrefix("bankDetailsStatusResources[].", BankDetailsStatusResourceDocs.bankDetailsStatusResourcesFields)
-                ));
+                .andExpect(content().json(toJson(bankDetailsStatusSummary)));
     }
 }

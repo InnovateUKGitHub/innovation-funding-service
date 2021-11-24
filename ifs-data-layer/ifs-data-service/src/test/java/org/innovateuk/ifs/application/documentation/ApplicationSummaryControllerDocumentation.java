@@ -63,18 +63,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                         .param("sendFilter", sendFilter.toString())
                         .param("fundingFilter", fundingFilter.toString())
                         .contentType(APPLICATION_JSON)
-                        .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("application-summary/{method-name}",
-                        pathParameters(parameterWithName("competitionId").description("The competition id")),
-                        requestParameters(
-                                parameterWithName("sort").description("Sort on entity field name"),
-                                parameterWithName("page").description("Page number - zero indexed"),
-                                parameterWithName("size").description("Page size"),
-                                parameterWithName("filter").description("String based filter"),
-                                parameterWithName("sendFilter").description("Filter on the send state"),
-                                parameterWithName("fundingFilter").description("Filter on the funding state")
-                        ),
-                        responseFields(ApplicationSummaryDocs.APPLICATION_SUMMARY_PAGE_RESOURCE_FIELDS)));
+                        .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -94,16 +83,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                         .param("sendFilter", sendFilter.toString())
                         .param("fundingFilter", fundingFilter.toString())
                         .contentType(APPLICATION_JSON)
-                        .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("application-summary/{method-name}",
-                        pathParameters(parameterWithName("competitionId").description("The competition id")),
-                        requestParameters(
-                                parameterWithName("all").description("To retrieve all records"),
-                                parameterWithName("filter").description("String based filter"),
-                                parameterWithName("sendFilter").description("Filter on the send state"),
-                                parameterWithName("fundingFilter").description("Filter on the funding state")
-                        ),
-                        responseFields(fieldWithPath("[]").description("List of funding decision changeable application ids"))));
+                        .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -121,15 +101,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                         .param("filter", filter)
                         .param("fundingFilter", fundingFilter.toString())
                         .contentType(APPLICATION_JSON)
-                        .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("application-summary/{method-name}",
-                        pathParameters(parameterWithName("competitionId").description("The competition id")),
-                        requestParameters(
-                                parameterWithName("all").description("To retrieve all records"),
-                                parameterWithName("filter").description("String based filter"),
-                                parameterWithName("fundingFilter").description("Filter on the funding state")
-                        ),
-                        responseFields(fieldWithPath("[]").description("List of submitted application ids"))));
+                        .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test

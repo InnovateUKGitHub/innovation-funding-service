@@ -38,16 +38,7 @@ public class CompetitionResearchCategoryControllerDocumentation extends BaseCont
 
         mockMvc.perform(RestDocumentationRequestBuilders.get("/competition-research-category/{id}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition-research-category/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the competition we want the chosen research categories from")
-                        ),
-                        responseFields(competitionResearchCategoryLinkResourceFields)
-                                .andWithPrefix("[].category.", ResearchCategoryResourceDocs.researchCategoryResourceFields)
-                                .andWithPrefix("[].entity.", CompetitionResourceDocs.competitionResourceFields)
-                ));
+                .andExpect(status().isOk());
 
 
     }

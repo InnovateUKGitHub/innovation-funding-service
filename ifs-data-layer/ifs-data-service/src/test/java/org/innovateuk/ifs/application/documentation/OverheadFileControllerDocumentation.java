@@ -56,13 +56,7 @@ public class OverheadFileControllerDocumentation extends BaseControllerMockMVCTe
         mockMvc.perform(get(OVERHEAD_BASE_URL + "/project-overhead-calculation-document-details?overheadId={overHeadIdSuccess}", overHeadIdSuccess)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(objectMapper.writeValueAsString(fileEntryResource)))
-                .andDo(document("overheadcalculation/{method-name}",
-                        requestParameters(
-                                parameterWithName("overheadId").description("Id of overhead cost in project finances")
-                        ),
-                        responseFields(fileEntryResourceFields)
-        ));
+                .andExpect(content().string(objectMapper.writeValueAsString(fileEntryResource)));
     }
 
     @Test
@@ -80,11 +74,6 @@ public class OverheadFileControllerDocumentation extends BaseControllerMockMVCTe
         mockMvc.perform(get(OVERHEAD_BASE_URL + "/project-overhead-calculation-document?overheadId={overHeadIdSuccess}", overHeadIdSuccess)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(objectMapper.writeValueAsString(successResult)))
-                .andDo(document("overheadcalculation/{method-name}",
-                        requestParameters(
-                                parameterWithName("overheadId").description("Id of overhead cost in project finances")
-                        ),
-                        responseFields(fileAndContentsFields).andWithPrefix("fileEntry.", FileEntryDocs.fileEntryResourceFields)));
+                .andExpect(content().string(objectMapper.writeValueAsString(successResult)));
     }
 }

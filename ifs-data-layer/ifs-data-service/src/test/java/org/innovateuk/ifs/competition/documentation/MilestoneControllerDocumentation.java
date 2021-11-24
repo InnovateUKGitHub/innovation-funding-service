@@ -44,15 +44,7 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
 
         mockMvc.perform(get("/milestone/{id}/public", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("milestone/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the competition where milestones should be from retrieved")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("list of milestones for all users")
-                        ).andWithPrefix("[].", MilestoneResourceDocs.milestoneResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -63,15 +55,7 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
 
         mockMvc.perform(get("/milestone/{id}/", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("milestone/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the competition where milestones should be from retrieved")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("list of milestones for the authenticated user")
-                        ).andWithPrefix("[].", MilestoneResourceDocs.milestoneResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -81,16 +65,7 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
 
         mockMvc.perform(get("/milestone/{competitionId}/get-by-type?type=" + MilestoneType.OPEN_DATE, competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("milestone/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("id of the competition where milestone should be from retrieved")
-                        ),
-                        requestParameters(
-                                parameterWithName("type").description("milestone type that is being requested")
-                        ),
-                        responseFields(milestoneResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -104,12 +79,7 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(milestoneResources))
                 .header("IFS_AUTH_TOKEN", "123abc"))
-            .andExpect(status().isOk())
-            .andDo(document("milestone/{method-name}",
-                requestFields(
-                        fieldWithPath("[]").description("list of milestones that should be saved")
-                ).andWithPrefix("[].", MilestoneResourceDocs.milestoneResourceFields)
-            ));
+            .andExpect(status().isOk());
     }
 
     @Test
@@ -122,10 +92,7 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(milestoneResource)))
-                .andExpect(status().isOk())
-                .andDo(document("milestone/{method-name}",
-                        requestFields(milestoneResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -139,16 +106,7 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
         mockMvc.perform(put("/milestone/competition/{competitionId}/completion-stage?completionStage=" +
                     CompetitionCompletionStage.PROJECT_SETUP, competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("milestone/{method-name}",
-                        pathParameters(
-                            parameterWithName("competitionId").
-                                description("The id of the competition that is having its completion stage updated")
-                        ),
-                        requestParameters(
-                            parameterWithName("completionStage").
-                                description("The selected completion stage value to update")
-                        )));
+                .andExpect(status().isOk());
 
         verify(milestoneService).updateCompletionStage(123L, CompetitionCompletionStage.PROJECT_SETUP);
     }

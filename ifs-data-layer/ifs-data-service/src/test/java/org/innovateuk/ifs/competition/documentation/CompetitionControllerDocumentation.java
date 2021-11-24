@@ -37,16 +37,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(get("/competition/{id}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the competition to be retrieved")
-                        ),
-                        responseFields(competitionResourceFields)
-                                .andWithPrefix("termsAndConditions.", TermsAndConditionsResourceDocs.termsAndConditionsResourceFields)
-                        )
-                );
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -56,14 +47,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(get("/competition/find-all")
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        relaxedResponseFields(
-                                fieldWithPath("[]").description("list of Competitions the authenticated user has access to")
-                        ).andWithPrefix("[].", CompetitionResourceDocs.competitionResourceFields)
-                        .andWithPrefix("[].termsAndConditions.", TermsAndConditionsResourceDocs.termsAndConditionsResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -75,14 +59,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(put("/competition/{id}/update-terms-and-conditions/{tcId}", competitionId, termsAndConditionsId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("The competition for which the terms and conditions need to be updated"),
-                                parameterWithName("tcId").description("The terms and conditions id to update it to")
-                        )
-                ));
+                .andExpect(status().isOk());
 
         verify(competitionService, only()).updateTermsAndConditionsForCompetition(competitionId, termsAndConditionsId);
     }

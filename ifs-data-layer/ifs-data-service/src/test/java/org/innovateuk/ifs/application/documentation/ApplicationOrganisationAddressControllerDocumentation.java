@@ -43,15 +43,7 @@ public class ApplicationOrganisationAddressControllerDocumentation extends BaseC
 
         mockMvc.perform(get("/application/{applicationId}/organisation/{organisationId}/address/{addressType}", applicationId, organisationId, type)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("application/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("Id of the application the address is linked to."),
-                                parameterWithName("organisationId").description("Id of the organisation the address is linked to."),
-                                parameterWithName("addressType").description("The type of address being requested.")
-                        ),
-                        responseFields(addressResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -67,15 +59,7 @@ public class ApplicationOrganisationAddressControllerDocumentation extends BaseC
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(address))
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("application/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("Id of the application the address is linked to."),
-                                parameterWithName("organisationId").description("Id of the organisation the address is linked to."),
-                                parameterWithName("addressType").description("The type of address being requested.")
-                        ),
-                        relaxedRequestFields(addressResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
 }

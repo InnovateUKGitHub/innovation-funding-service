@@ -86,12 +86,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(stagedApplicationInviteListResource)))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        requestFields(
-                                fieldWithPath("invites[]").description("List of applications to be invited to the interview panel")
-                        ).andWithPrefix("invites[].", stagedApplicationResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewAssignmentServiceMock, only()).assignApplications(stagedInviteResources);
     }

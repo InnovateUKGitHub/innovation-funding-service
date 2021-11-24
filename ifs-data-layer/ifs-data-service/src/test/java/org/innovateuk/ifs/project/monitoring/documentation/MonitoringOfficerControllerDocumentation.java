@@ -43,11 +43,7 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
         when(projectMonitoringOfficerServiceMock.findAll()).thenReturn(serviceSuccess(newSimpleUserResource().build(1)));
 
         mockMvc.perform(get("/monitoring-officer/find-all"))
-                .andExpect(status().isOk())
-                .andDo(document("monitoring-officer/{method-name}",
-                                responseFields(fieldWithPath("[]").description("List of monitoring officers"))
-                                        .andWithPrefix("[].", simpleUserResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(projectMonitoringOfficerServiceMock).findAll();
     }
@@ -62,15 +58,7 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
         when(projectMonitoringOfficerServiceMock.getProjectMonitoringOfficer(userId)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/monitoring-officer/{userId}", userId))
-                .andExpect(status().isOk())
-                .andDo(document("monitoring-officer/{method-name}",
-                        pathParameters(
-                                parameterWithName("userId").description("Id of the monitoring officer user")
-                        ),
-                        responseFields(projectMonitoringOfficerResourceFields)
-                                .andWithPrefix("unassignedProjects[].", monitoringOfficerUnassignedProjectResourceFields)
-                                .andWithPrefix("assignedProjects[].", monitoringOfficerAssignedProjectResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(projectMonitoringOfficerServiceMock, only()).getProjectMonitoringOfficer(userId);
     }
@@ -83,13 +71,7 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
         when(projectMonitoringOfficerServiceMock.assignProjectToMonitoringOfficer(userId, projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/monitoring-officer/{userId}/assign/{projectId}", userId, projectId))
-                .andExpect(status().is2xxSuccessful())
-                .andDo(document("monitoring-officer/{method-name}",
-                        pathParameters(
-                                parameterWithName("userId").description("Id of the monitoring officer user"),
-                                parameterWithName("projectId").description("Id of the project to assign ")
-                        )
-                ));
+                .andExpect(status().is2xxSuccessful());
 
         verify(projectMonitoringOfficerServiceMock, only()).assignProjectToMonitoringOfficer(userId, projectId);
     }
@@ -102,13 +84,7 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
         when(projectMonitoringOfficerServiceMock.unassignProjectFromMonitoringOfficer(userId, projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/monitoring-officer/{userId}/unassign/{projectId}", userId, projectId))
-                .andExpect(status().is2xxSuccessful())
-                .andDo(document("monitoring-officer/{method-name}",
-                        pathParameters(
-                                parameterWithName("userId").description("Id of the monitoring officer user"),
-                                parameterWithName("projectId").description("Id of the project to unassign ")
-                        )
-                ));
+                .andExpect(status().is2xxSuccessful());
 
         verify(projectMonitoringOfficerServiceMock, only()).unassignProjectFromMonitoringOfficer(userId, projectId);
     }
@@ -121,15 +97,7 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(get("/monitoring-officer/{userId}/projects", userId).contentType(APPLICATION_JSON).accept(APPLICATION_JSON)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().is2xxSuccessful())
-                .andDo(document("monitoring-officer/{method-name}",
-                        pathParameters(
-                                parameterWithName("userId").description("Id of the monitoring officer user")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("List of projects the user is allowed to monitor")
-                        ).andWithPrefix("[].", projectResourceFields)
-                ));
+                .andExpect(status().is2xxSuccessful());
 
         verify(projectMonitoringOfficerServiceMock, only()).getMonitoringOfficerProjects(userId);
     }

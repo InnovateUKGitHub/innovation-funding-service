@@ -41,11 +41,7 @@ public class CategoryControllerDocumentation extends BaseControllerMockMVCTest<C
         when(categoryServiceMock.getInnovationAreas()).thenReturn(serviceSuccess(innovationAreaResources));
 
         mockMvc.perform(get("/category/find-innovation-areas")
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("category/{method-name}",
-                        responseFields(
-                        ).andWithPrefix("[].", InnovationAreaResourceDocs.innovationAreaResourceFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -55,11 +51,7 @@ public class CategoryControllerDocumentation extends BaseControllerMockMVCTest<C
         when(categoryServiceMock.getInnovationAreas()).thenReturn(serviceSuccess(innovationAreaResources));
 
         mockMvc.perform(get("/category/find-innovation-areas-excluding-none")
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("category/{method-name}",
-                        responseFields(
-                        ).andWithPrefix("[].", InnovationAreaResourceDocs.innovationAreaResourceFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -69,12 +61,7 @@ public class CategoryControllerDocumentation extends BaseControllerMockMVCTest<C
         when(categoryServiceMock.getInnovationSectors()).thenReturn(serviceSuccess(innovationSectorResources));
 
         mockMvc.perform(get("/category/find-innovation-sectors")
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("category/{method-name}",
-                        responseFields(
-                        ).andWithPrefix("[].", InnovationSectorResourceDocs.innovationSectorResourceFields)
-                        .andWithPrefix("[].children[].", InnovationAreaResourceDocs.innovationAreaResourceFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -84,11 +71,7 @@ public class CategoryControllerDocumentation extends BaseControllerMockMVCTest<C
         when(categoryServiceMock.getResearchCategories()).thenReturn(serviceSuccess(researchCategoryResources));
 
         mockMvc.perform(get("/category/find-research-categories")
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("category/{method-name}",
-                        responseFields()
-                                .andWithPrefix("[].", ResearchCategoryResourceDocs.researchCategoryResourceFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -98,13 +81,6 @@ public class CategoryControllerDocumentation extends BaseControllerMockMVCTest<C
         when(categoryServiceMock.getInnovationAreasBySector(anyLong())).thenReturn(serviceSuccess(innovationAreaResources));
 
         mockMvc.perform(get("/category/find-by-innovation-sector/{sectorId}", 1L)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("category/{method-name}",
-                        pathParameters(
-                                parameterWithName("sectorId").description("sector id to filter on")
-                        ),
-                        responseFields(
-                        ).andWithPrefix("[].", InnovationAreaResourceDocs.innovationAreaResourceFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 }

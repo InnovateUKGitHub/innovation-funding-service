@@ -53,10 +53,7 @@ public class EuGrantTransferControllerDocumentation extends BaseFileControllerMo
         mockMvc.perform(get("/eu-grant-transfer/grant-agreement-details/{applicationId}", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(fileEntryResource)))
-                .andDo(document("eu-grant-transfer/{method-name}",
-                        pathParameters(parameterWithName("applicationId").description("Id of the application the grant agreement is attached to.")),
-                        responseFields(fileEntryResourceFields)));
+                .andExpect(content().json(toJson(fileEntryResource)));
 
         verify(euGrantTransferService).findGrantAgreement(applicationId);
     }
@@ -81,10 +78,7 @@ public class EuGrantTransferControllerDocumentation extends BaseFileControllerMo
 
         mockMvc.perform(RestDocumentationRequestBuilders.delete("/eu-grant-transfer/grant-agreement/{applicationId}", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isNoContent())
-                .andDo(document("eu-grant-transfer/{method-name}",
-                        pathParameters(parameterWithName("applicationId").description("Id of the application to have grant agreement deleted")))
-                );
+                .andExpect(status().isNoContent());
 
         verify(euGrantTransferService).deleteGrantAgreement(applicationId);
     }
@@ -99,14 +93,7 @@ public class EuGrantTransferControllerDocumentation extends BaseFileControllerMo
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .param("filename", "randomFile.pdf")
                 .headers(createFileUploadHeader("application/pdf", 1234)))
-                .andExpect(status().isCreated())
-                .andDo(document("eu-grant-transfer/{method-name}",
-                        pathParameters(parameterWithName("applicationId").description("The application in which the grant agreement will be attached.")),
-                        requestParameters(parameterWithName("filename").description("The filename of the file being uploaded")),
-                        requestHeaders(
-                                headerWithName("Content-Type").description("The Content Type of the file being uploaded e.g. application/pdf")
-                        )
-                ));
+                .andExpect(status().isCreated());
 
         verify(euGrantTransferService).uploadGrantAgreement(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
                 eq(applicationId), any(HttpServletRequest.class));
@@ -120,10 +107,7 @@ public class EuGrantTransferControllerDocumentation extends BaseFileControllerMo
         mockMvc.perform(get("/eu-grant-transfer/{applicationId}", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(EU_GRANT_TRANSFER_RESOURCE)))
-                .andDo(document("eu-grant-transfer/{method-name}",
-                        pathParameters(parameterWithName("applicationId").description("Id of the application the grant transfer details are attached to.")),
-                        responseFields(euGrantTransferResourceFields)));
+                .andExpect(content().json(toJson(EU_GRANT_TRANSFER_RESOURCE)));
 
         verify(euGrantTransferService).getGrantTransferByApplicationId(applicationId);
     }
@@ -137,10 +121,7 @@ public class EuGrantTransferControllerDocumentation extends BaseFileControllerMo
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(EU_GRANT_TRANSFER_RESOURCE)))
-                .andExpect(status().isOk())
-                .andDo(document("eu-grant-transfer/{method-name}",
-                        pathParameters(parameterWithName("applicationId").description("Id of the application the grant transfer details are attached to.")),
-                        requestFields(euGrantTransferResourceFields)));
+                .andExpect(status().isOk());
 
         verify(euGrantTransferService).updateGrantTransferByApplicationId(EU_GRANT_TRANSFER_RESOURCE, applicationId);
     }
