@@ -60,8 +60,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
         BiFunction<GrantOfferLetterService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service, fileToUpload) -> service.createSignedGrantOfferLetterFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        assertFileUploadProcess("/project/" + projectId + "/signed-grant-offer", fileValidatorMock, mediaTypes, grantOfferLetterServiceMock, serviceCallToUpload).
-                andDo(documentFileUploadMethod("project/{method-name}"));
+        assertFileUploadProcess("/project/" + projectId + "/signed-grant-offer", fileValidatorMock, mediaTypes, grantOfferLetterServiceMock, serviceCallToUpload);
     }
 
     @Test
@@ -96,8 +95,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
         BiFunction<GrantOfferLetterService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service, fileToUpload) -> service.createGrantOfferLetterFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        assertFileUploadProcess("/project/" + projectId + "/grant-offer", fileValidatorMock, mediaTypes, grantOfferLetterServiceMock, serviceCallToUpload).
-                andDo(documentFileUploadMethod("project/{method-name}"));
+        assertFileUploadProcess("/project/" + projectId + "/grant-offer", fileValidatorMock, mediaTypes, grantOfferLetterServiceMock, serviceCallToUpload);
     }
 
     @Test
@@ -108,8 +106,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
         BiFunction<GrantOfferLetterService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service, fileToUpload) -> service.createAdditionalContractFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        assertFileUploadProcess("/project/" + projectId + "/additional-contract", fileValidatorMock, mediaTypes, grantOfferLetterServiceMock, serviceCallToUpload).
-                andDo(documentFileUploadMethod("project/{method-name}"));
+        assertFileUploadProcess("/project/" + projectId + "/additional-contract", fileValidatorMock, mediaTypes, grantOfferLetterServiceMock, serviceCallToUpload);
     }
 
     @Test
@@ -121,8 +118,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
                 (service) -> service.getSignedGrantOfferLetterFileEntryDetails(projectId);
 
         assertGetFileDetails("/project/{projectId}/signed-grant-offer/details", new Object[]{projectId}, emptyMap(),
-                grantOfferLetterServiceMock, serviceCallToUpload).
-                andDo(documentFileGetDetailsMethod("project/{method-name}"));
+                grantOfferLetterServiceMock, serviceCallToUpload);
     }
 
     @Test
@@ -134,8 +130,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
                 (service) -> service.getGrantOfferLetterFileEntryDetails(projectId);
 
         assertGetFileDetails("/project/{projectId}/grant-offer/details", new Object[]{projectId}, emptyMap(),
-                grantOfferLetterServiceMock, serviceCallToUpload).
-                andDo(documentFileGetDetailsMethod("project/{method-name}"));
+                grantOfferLetterServiceMock, serviceCallToUpload);
     }
 
 
@@ -148,8 +143,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
                 (service) -> service.getAdditionalContractFileEntryDetails(projectId);
 
         assertGetFileDetails("/project/{projectId}/additional-contract/details", new Object[]{projectId}, emptyMap(),
-                grantOfferLetterServiceMock, serviceCallToUpload).
-                andDo(documentFileGetDetailsMethod("project/{method-name}"));
+                grantOfferLetterServiceMock, serviceCallToUpload);
     }
 
     @Test
@@ -161,8 +155,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
                 (service) -> service.getAdditionalContractFileAndContents(projectId);
 
         assertGetFileContents("/project/{projectId}/additional-contract", new Object[]{projectId},
-                emptyMap(), grantOfferLetterServiceMock, serviceCallToUpload).
-                andDo(documentFileGetContentsMethod("project/{method-name}"));
+                emptyMap(), grantOfferLetterServiceMock, serviceCallToUpload);
     }
 
     @Test
@@ -175,8 +168,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
 
 
         assertGetFileContents("/project/{projectId}/signed-grant-offer", new Object[]{projectId},
-                emptyMap(), grantOfferLetterServiceMock, serviceCallToUpload).
-                andDo(documentFileGetContentsMethod("project/{method-name}"));
+                emptyMap(), grantOfferLetterServiceMock, serviceCallToUpload);
     }
 
     @Test
@@ -189,8 +181,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseFileControllerM
 
 
         assertGetFileContents("/project/{projectId}/grant-offer", new Object[]{projectId},
-                emptyMap(), grantOfferLetterServiceMock, serviceCallToUpload).
-                andDo(documentFileGetContentsMethod("project/{method-name}"));
+                emptyMap(), grantOfferLetterServiceMock, serviceCallToUpload);
     }
 
     @Test
