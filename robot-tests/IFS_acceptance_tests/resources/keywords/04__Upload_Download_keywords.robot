@@ -19,7 +19,7 @@ the user can remove the uploaded file
 
 the user can remove file with multiple uploads
     [Arguments]  ${name}  ${file_name}
-    Click Button                                             name=${name}
+    the user clicks the button/link                          name=${name}
     Wait Until Page Does Not Contain Without Screenshots     Removing
     Wait Until Page Does Not Contain Without Screenshots     Remove
     Page Should Contain                                      Upload

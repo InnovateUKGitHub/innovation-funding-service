@@ -32,6 +32,8 @@ spec:
                 configMapKeyRef:
                   key: SP_DOMAIN
                   name: shibboleth-config
+            - name: BAMBOO_TESTSUITE
+              value: BAMBOO_TESTSUITE_VAR
           resources:
             limits:
               cpu: 2000m
