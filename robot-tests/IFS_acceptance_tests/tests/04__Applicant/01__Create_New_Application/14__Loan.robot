@@ -48,6 +48,7 @@ Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
 Resource        ../../../resources/common/Applicant_Commons.robot
 Resource        ../../../resources/common/PS_Common.robot
+Resource          ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
 ${loan_comp_PS}                            Project setup loan comp
@@ -126,7 +127,7 @@ Loan application finance overview
     Then the user should see the element   jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00%") ~ td:contains("2,468") ~ td:contains("140,632")
 
 Loan application submission
-    [Documentation]  IFS-6237  IFS-6238  IFS-9483 IFS-10753
+    [Documentation]  IFS-6237  IFS-6238  IFS-9483 IFS-10825
     Given the user submits the loan application
     When the user clicks the button/link            link = View application
     Then the user should see the element            jQuery = h1:contains("Application overview")
@@ -136,24 +137,20 @@ Loan application submission
     And the user should see the element             jQuery = p:contains("We will make our decision based on: Suitability of your business to receive a loan and the quality of the project.")
     And the user reads his email                    ${lead_applicant_credentials["email"]}   Complete your application for Loan Competition   You have completed your application for Loan Competition.
 
-
-Assessor can view BFI question in application
-    [Setup]  log in as a different user         &{internal_finance_credentials}
-   Given moving competition to Closed                ${loan_comp_PS_Id}
-   When the user navigates to the page                                     ${server}/management/competition/${competitionId}/assessors/find
-   And the user invites assessors to assess the Loan competition
-   And the assessors accept the invitation to assess the loans competition
-   And the application is assigned to a assessor
-   And The user clicks the button/link        link = ${loanApplicationName}
-    And The user clicks the button/link       link = Business and financial information
-
-
-
-
+#Assessor can view BFI question in application
+#   [Documentation]   IFS-10825
+#   [Setup]  log in as a different user         &{internal_finance_credentials}
+#   Given moving competition to Closed          ${loan_comp_appl_id}
+#   When the user navigates to the page         ${server}/management/competition/${loan_comp_appl_id}/assessors/find
+#   And the user invites assessors to assess the loan competition
+#   And the assessors accept the invitation to assess the loans competition
+#   And the application is assigned to a assessor
+#   And The user clicks the button/link        link = ${loanApplicationName}
+#   And The user clicks the button/link       link = Business and financial information
+#   Then The user should see the element     jQuery = h1:contains("Business and financial information")
 
 Applicant complete the project setup details
-    [Documentation]  IFS-6369  IFS-6285  IFS-9483
-       Given Log in as a different user     &{lead_applicant_credentials}
+    [Documentation]  IFS-6369  IFS-6285  IFS-9483  IFS-10825
     When the user completes the project details
     And the user completes the project team details
     Then the user should not see the element    jQuery = h2:contains("Bank details")
@@ -201,7 +198,7 @@ Internal user can see application details in project setup
     And the user should see the element      jQuery = h2:contains("Project finance")
 
 IFS Admin can mark project as successful
-    [Documentation]  IFS-6363  IFS-9679
+    [Documentation]  IFS-6363  IFS-9679 
     Given Log in as a different user              &{ifs_admin_user_credentials}
     And the user navigates to the page            ${spend_profile}
     When the IFS Admin approves to SP
@@ -221,6 +218,18 @@ Applicant checks successful and unsuccessful project status
     Given log in as a different user                          &{lead_applicant_credentials}
     And the user clicks the application tile if displayed
     Then the applicant checks for project status
+
+Assessor can view BFI question in application
+   [Documentation]   IFS-10825
+   [Setup]  log in as a different user         &{internal_finance_credentials}
+   Given moving competition to Closed          ${loan_comp_appl_id}
+   When the user navigates to the page         ${server}/management/competition/${loan_comp_appl_id}/assessors/find
+   And the user invites assessors to assess the loan competition
+   And the assessors accept the invitation to assess the loans competition
+   And the application is assigned to a assessor
+   And The user clicks the button/link        link = ${loanApplicationName}
+   And The user clicks the button/link       link = Business and financial information
+   Then The user should see the element     jQuery = h1:contains("Business and financial information")
 
 *** Keywords ***
 Custom suite setup
@@ -244,10 +253,6 @@ the user submits the loan application
     the user clicks the button/link           id = submit-application-button
     the user should see the element           link = Reopen application
 
-the user assign the loan assessor
-
-the user invite an assessor
-
 the user completes the project details
     log in as a different user            &{lead_applicant_credentials}
     the user navigates to the page        ${loan_PS}
@@ -257,6 +262,7 @@ the user completes the project details
     the user should see the element       jQuery = h2:contains("Applicant details")
     the user should see the element       jQuery = h2:contains("Project finance")
     the user clicks the button/link       link = Back to set up your project
+    the user clicks the button/link        link = Project details
     the user clicks the button/link       link = Correspondence address
     the user enter the Correspondence address
     the user clicks the button/link       link = Return to set up your project
@@ -436,16 +442,16 @@ the comp admin logs in and invite loan assessor
     the user logs-in in new browser     &{Comp_admin1_credentials}
     the user clicks the button/link     link = Loan Competition
     the user clicks the button/link     jQuery = a:contains("Invite assessors to assess the competition")
-    the user clicks the button/link		jQuery = a:contains("81 to ")
+    the user clicks the button/link		jQuery = a:contains("81 to 100")
 	the user selects the checkbox       assessor-row-10
 	the user clicks the button/link     jQuery = button:contains("Add selected to invite list")
 	the user clicks the button/link     jQuery = a:contains("Review and send invites")
 	the user clicks the button/link     jQuery = .govuk-button:contains("Send invitation")
 
 
-the user invites assessors to assess the Loan competition
-    the user clicks the button/link     link = 81 to 100
-    the user selects the checkbox       jQuery = tr:contains("Paul Plum") label[for^="assessor-row"]
+the user invites assessors to assess the loan competition
+    the user clicks the button/link     jQuery = a:contains("81 to 100")
+    the user selects the checkbox       assessor-row-10
     the user clicks the button/link     jQuery = button:contains("Add selected to invite list")
     the user should see the element     jQuery = td:contains("Paul Plum")
     the user clicks the button/link     jQuery = a:contains("Review and send invites")
@@ -460,14 +466,14 @@ the assessors accept the invitation to assess the loans competition
 
 the application is assigned to a assessor
     log in as a different user            &{Comp_admin1_credentials}
-    the user navigates to the page        ${server}/management/assessment/competition/${loan_comp_PS_Id}/applications
+    the user navigates to the page        ${server}/management/assessment/competition/${loan_comp_appl_id}/applications
     the user clicks the button/link       link = Assign
     the user selects the checkbox         assessor-row-1
     the user clicks the button/link       jQuery = button:contains("Add to application")
-    the user navigates to the page        ${server}/management/competition/${loan_comp_PS_Id}
+    the user navigates to the page        ${server}/management/competition/${loan_comp_appl_id}
     the user clicks the button/link       jQuery = button:contains("Notify assessors")
     log in as a different user            &{assessor_credentials}
-    the user navigates to the page        ${server}/assessment/assessor/dashboard/competition/${loan_comp_PS_Id}
+    the user navigates to the page        ${server}/assessment/assessor/dashboard/competition/${loan_comp_appl_id}
     the user clicks the button/link       link = ${loanApplicationName}
     the user selects the radio button     assessmentAccept  true
     the user clicks the button/link       jQuery = button:contains("Confirm")
