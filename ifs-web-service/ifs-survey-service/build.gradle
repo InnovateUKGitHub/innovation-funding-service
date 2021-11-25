@@ -10,8 +10,6 @@ buildscript {
 group 'innovateuk'
 version project.version
 
-ext.ifsSurveyDataServiceRestBaseURL = "http://survey-data-service:8080"
-
 dependencies {
     implementation project(':ifs-web-service:ifs-web-core')
     implementation "org.innovateuk.ifs.libraries:ifs-resources"
