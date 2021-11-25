@@ -57,7 +57,7 @@ public class ApplicantDashboardController {
 
         if (isLoanPartBEnabled) {
             String referer = request.getHeader("referer");
-            if (referer != null && referer.contains("loansCommunity")) {
+            if (referer != null && referer.contains("loans-innovateuk")) {
                 return redirectToApplicationOverviewPage(request, response, model, user);
             }
         }
