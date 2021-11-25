@@ -1,0 +1,4 @@
+first_name|MASK(2, 'x')
+last_name|MASK(2, 'y')
+email|EMAIL('x')
+phone_number|MASK(4, 'x')
