@@ -314,7 +314,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
                 );
     }
 
-    private boolean isLoansBusinessAndFinancialInformationQuestion(long questionId) {
+    protected boolean isLoansBusinessAndFinancialInformationQuestion(long questionId) {
         QuestionSetupType questionSetupType = questionService.getQuestionById(questionId).getSuccess().getQuestionSetupType();
         return questionSetupType != null && questionSetupType.equals(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
     }
