@@ -37,7 +37,31 @@ public class AssessorCompetitionDashboardModelPopulator {
                 assessorCompetitionDashboard.getCompetitionName(),
                 assessorCompetitionDashboard.getInnovationLead(),
                 assessorCompetitionDashboard.getOpenEndCompetition(),
-                assessorCompetitionDashboard.getAssessmentPeriodId(),
+                assessorCompetitionDashboard.getBatchIndex(),
+                assessorCompetitionDashboard.getAssessorAcceptDate(),
+                assessorCompetitionDashboard.getAssessorDeadlineDate(),
+                submitted,
+                outstanding,
+                submitVisible
+        );
+    }
+
+    public AssessorCompetitionDashboardViewModel populateModel(Long competitionId, Long assessmentPeriodId, Long userId) {
+
+        AssessorCompetitionDashboardResource assessorCompetitionDashboard = assessorCompetitionDashboardRestService.getAssessorCompetitionDashboard(competitionId, assessmentPeriodId, userId).getSuccess();
+
+        List<AssessorCompetitionDashboardApplicationViewModel> outstanding = getOutstandingAssessments(assessorCompetitionDashboard.getApplicationAssessments());
+        List<AssessorCompetitionDashboardApplicationViewModel> submitted = getSubmittedAssessments(assessorCompetitionDashboard.getApplicationAssessments());
+
+        boolean submitVisible = outstanding.stream()
+                .anyMatch(AssessorCompetitionDashboardApplicationViewModel::isReadyToSubmit);
+
+        return new AssessorCompetitionDashboardViewModel(
+                assessorCompetitionDashboard.getCompetitionId(),
+                assessorCompetitionDashboard.getCompetitionName(),
+                assessorCompetitionDashboard.getInnovationLead(),
+                assessorCompetitionDashboard.getOpenEndCompetition(),
+                assessorCompetitionDashboard.getBatchIndex(),
                 assessorCompetitionDashboard.getAssessorAcceptDate(),
                 assessorCompetitionDashboard.getAssessorDeadlineDate(),
                 submitted,

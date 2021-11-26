@@ -117,6 +117,7 @@ public class AssessorDashboardModelPopulator {
                         cpr.getAssessmentDaysLeft(),
                         cpr.getAssessmentDaysLeftPercentage(),
                         cpr.isCompetitionAlwaysOpen(),
+                        cpr.getAssessmentPeriod().getId(),
                         cpr.getAssessmentPeriodNumber()
                 ))
                 .collect(toList());

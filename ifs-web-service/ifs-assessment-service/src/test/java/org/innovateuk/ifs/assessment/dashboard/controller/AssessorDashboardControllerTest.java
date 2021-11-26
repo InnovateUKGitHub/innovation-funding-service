@@ -113,6 +113,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .build();
 
         AssessmentPeriodResource assessmentPeriodResource = newAssessmentPeriodResource()
+                .withId(1L)
                 .withOpen(true)
                 .withInAssessment(true)
                 .withAssessmentClosed(false)
@@ -198,6 +199,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         3,
                         50,
                         false,
+                        1L,
                         0
                 )
         );
@@ -294,6 +296,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         5,
                         16,
                         false,
+                        1L,
                         0
                 )
         );
@@ -367,6 +370,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         0,
                         100,
                         false,
+                        1L,
                         0
                 )
         );
@@ -575,6 +579,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         0,
                         100,
                         false,
+                        1L,
                         0
                 )
         );

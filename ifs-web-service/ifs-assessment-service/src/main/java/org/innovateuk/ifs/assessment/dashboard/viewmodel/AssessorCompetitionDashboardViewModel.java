@@ -16,19 +16,19 @@ public class AssessorCompetitionDashboardViewModel {
     private String competitionTitle;
     private String leadTechnologist;
     private boolean openEndCompetition;
-    private Long assessmentPeriodId;
+    private Long batchIndex;
     private ZonedDateTime acceptDeadline;
     private ZonedDateTime submitDeadline;
     private List<AssessorCompetitionDashboardApplicationViewModel> submitted;
     private List<AssessorCompetitionDashboardApplicationViewModel> outstanding;
     private boolean submitVisible;
 
-    public AssessorCompetitionDashboardViewModel(long competitionId, String competitionTitle, String leadTechnologist, boolean openEndCompetition, Long assessmentPeriodId, ZonedDateTime acceptDeadline, ZonedDateTime submitDeadline, List<AssessorCompetitionDashboardApplicationViewModel> submitted, List<AssessorCompetitionDashboardApplicationViewModel> outstanding, boolean submitVisible) {
+    public AssessorCompetitionDashboardViewModel(long competitionId, String competitionTitle, String leadTechnologist, boolean openEndCompetition, Long batchIndex, ZonedDateTime acceptDeadline, ZonedDateTime submitDeadline, List<AssessorCompetitionDashboardApplicationViewModel> submitted, List<AssessorCompetitionDashboardApplicationViewModel> outstanding, boolean submitVisible) {
         this.competitionId = competitionId;
         this.competitionTitle = competitionTitle;
         this.leadTechnologist = leadTechnologist;
         this.openEndCompetition = openEndCompetition;
-        this.assessmentPeriodId = assessmentPeriodId;
+        this.batchIndex = batchIndex;
         this.acceptDeadline = acceptDeadline;
         this.submitDeadline = submitDeadline;
         this.submitted = submitted;

@@ -47,6 +47,17 @@ public class AssessorCompetitionDashboardController {
         return "assessor-competition-dashboard";
     }
 
+    @GetMapping("/dashboard/competition/{competitionId}/period/{assessmentPeriodId}")
+    public String competitionDashboard(final Model model,
+                                       UserResource loggedInUser,
+                                       @PathVariable("competitionId") final Long competitionId,
+                                       @PathVariable("assessmentPeriodId") final Long assessmentPeriodId,
+                                       @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessorCompetitionDashboardAssessmentForm form) {
+
+        model.addAttribute("model", assessorCompetitionDashboardModelPopulator.populateModel(competitionId, assessmentPeriodId, loggedInUser.getId()));
+        return "assessor-competition-dashboard";
+    }
+
     @PostMapping("/dashboard/competition/{competitionId}")
     public String submitAssessments(Model model,
                                     @PathVariable("competitionId") Long competitionId,
