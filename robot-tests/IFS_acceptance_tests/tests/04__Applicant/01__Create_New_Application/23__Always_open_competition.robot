@@ -174,7 +174,7 @@ Comp admin updates the assessment period
 
 Internal user notify the assessors of their assigned applications
     [Documentation]  IFS-9008  IFS-8852  IFS-8853  IFS-9758
-    Given assign the application to assessor
+    Given assign the application to assessor                 1   Always open application decision pending
     When the user clicks the button/link                     jQuery = button:contains("Notify assessors")
     And the user logs out if they are logged in
     Then the user reads his email and clicks the link        ${assessorEmail}  Applications assigned to you for competition '${webTestCompName}'  We have assigned applications for you to assess for this competition:   1
@@ -197,9 +197,20 @@ Internal user closes assessment period one
     Then the user should not see the element     jQuery = button:contains("Close assessment")
     And the user should see the element          jQuery = button:contains("Notify assessors")
 
+Assessor should see batch assessment number and valid assessment dates related to assessment periods
+    [Documentation]  IFS-9729
+    Given assign the application to assessor    2   	Always open application awaiting assessment
+    When the user clicks the button/link        jQuery = button:contains("Notify assessors")
+    And log in as a different user              ${assessorEmail}   ${short_password}
+    And the user navigates to the page          ${server}/assessment/assessor/dashboard/competition/${webTestCompID}
+    Then the user should see the element        jQuery = dt:contains("Batch assessment:")
+    And the user should see the element         jQuery = dt:contains("Accept applications deadline:")+ dd:contains("20 April 2021")
+    And the user should see the element         jQuery = dt:contains("Submit applications deadline:")+ dd:contains("20 June 2021")
+
 Internal user sees valid information on dashboard
     [Documentation]  IFS-8849
-    When the user clicks the button/link                       link = Competition
+    Given log in as a different user                            &{ifs_admin_user_credentials}
+    When the user navigates to the page                         ${server}/management/competition/${webTestCompID}
     Then the user sees valid open ended competition details
 
 internal user inputs the decision and send the notification with feedback
@@ -208,12 +219,6 @@ internal user inputs the decision and send the notification with feedback
     When the user sends notification and releases feedback
     And the user navigates to the page                               ${server}/project-setup-management/competition//${webTestCompID}/status/all
     Then the user refreshes until element appears on page            jQuery = tr div:contains("${webTestAppName}")
-
-Assessor has been assigned to the competition
-    [Documentation]  IFS-8852
-    Given log in as a different user             ${assessorEmail}   ${short_password}
-    When the user clicks the button/link         jQuery = a:contains('${webTestCompName}')
-    Then the user should see the element         jQuery = h2:contains('Assessing open-ended competitions')
 
 Comp admin manages the assessors
     [Documentation]  IFS-8852
@@ -358,10 +363,11 @@ the user adds a partner organisation and application details
     partner applicant completes the project finances     ${applicationName}  no  ${collaborator1_credentials["email"]}  ${short_password}
 
 assign the application to assessor
+    [Arguments]  ${assessmentPeriod}   ${applicationName}
     the user clicks the button/link     link = Manage applications
-    the user clicks the button twice    jQuery = label:contains("Assessment period 1")
+    the user clicks the button twice    jQuery = label:contains("Assessment period ${assessmentPeriod}")
     the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user clicks the button/link     jQuery = td:contains("Always open application decision pending") ~ td a:contains("View progress")
+    the user clicks the button/link     jQuery = td:contains("${applicationName}") ~ td a:contains("View progress")
     the user selects the checkbox       assessor-row-1
     the user clicks the button/link     jQuery = button:contains("Add to application")
     the user clicks the button/link     link = Back to manage applications
