@@ -42,6 +42,9 @@ public class ApplicantDashboardController {
     @Autowired
     private PageHistoryService pageHistoryService;
 
+    @Value("${ifs.loan.partb.enabled}")
+    private boolean isLoanPartBEnabled;
+
     @SecuredBySpring(value = "ApplicantDashboardController", description = "applicant and kta has permission to view their own dashboard")
     @PreAuthorize("hasAnyAuthority('applicant', 'knowledge_transfer_adviser')")
     @GetMapping
@@ -73,10 +76,12 @@ public class ApplicantDashboardController {
                             UserResource user,
                             HttpServletRequest request) {
 
-        Optional<String> url = pageHistoryService.getPreviousPage(request)
-                .map(PageHistory::buildUrl);
-        if (url.isPresent()) {
-            return "redirect:" + url.get();
+        if (isLoanPartBEnabled) {
+            Optional<String> url = pageHistoryService.getPreviousPage(request)
+                    .map(PageHistory::buildUrl);
+            if (url.isPresent()) {
+                return "redirect:" + url.get();
+            }
         }
 
         model.addAttribute("model", applicantDashboardPopulator.populate(user.getId()));
