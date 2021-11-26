@@ -27,6 +27,6 @@ public class ApplicantDashboardControllerSecurityTest extends BaseControllerSecu
         HttpServletRequest request = mock(HttpServletRequest.class);
         MockHttpServletResponse response = new MockHttpServletResponse();
 
-        assertRolesCanPerform(() -> classUnderTest.dashboard(null, null, request, response), roles);
+        assertRolesCanPerform(() -> classUnderTest.dashboard(null, null), roles);
     }
 }

@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 import static java.lang.String.format;
@@ -43,24 +42,13 @@ public class ApplicantDashboardController {
     @Autowired
     private PageHistoryService pageHistoryService;
 
-    @Value("${ifs.loan.partb.enabled}")
-    private boolean isLoanPartBEnabled;
-
     @SecuredBySpring(value = "ApplicantDashboardController", description = "applicant and kta has permission to view their own dashboard")
     @PreAuthorize("hasAnyAuthority('applicant', 'knowledge_transfer_adviser')")
     @GetMapping
     @NavigationRoot
     public String dashboard(Model model,
-                            UserResource user,
-                            HttpServletRequest request,
-                            HttpServletResponse response) {
+                            UserResource user) {
 
-        if (isLoanPartBEnabled) {
-            String referer = request.getHeader("referer");
-            if (referer != null && referer.contains("loans-innovateuk")) {
-                return redirectToApplicationOverviewPage(request, response, model, user);
-            }
-        }
         model.addAttribute("model", applicantDashboardPopulator.populate(user.getId()));
         return "applicant-dashboard";
     }
@@ -78,8 +66,13 @@ public class ApplicantDashboardController {
         return format("redirect:/applicant/dashboard");
     }
 
-    private String redirectToApplicationOverviewPage(HttpServletRequest request, HttpServletResponse response, Model model, UserResource user) {
-        //using this existing API itself works ok now.
+    @SecuredBySpring(value = "LOANS_COMMUNITY_TO_APPLICATION_OVERVIEW", description = "Loans applicant will be redirected to application overview from SalesForce")
+    @PreAuthorize("hasAuthority('applicant')")
+    @GetMapping("/loansCommunity")
+    public String loansToApplicationsOverviewPage(Model model,
+                            UserResource user,
+                            HttpServletRequest request) {
+
         Optional<String> url = pageHistoryService.getPreviousPage(request)
                 .map(PageHistory::buildUrl);
         if (url.isPresent()) {
