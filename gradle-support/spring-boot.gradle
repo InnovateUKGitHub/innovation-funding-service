@@ -4,6 +4,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.springframework.boot'
 
 dependencies {
+
     // Enforced platform is composite of IFS libraries, spring boot and spring cloud
     implementation enforcedPlatform ('org.innovateuk.ifs.libraries:bom:2.0.IFS-9729.7-SNAPSHOT')
 
@@ -17,17 +18,9 @@ dependencies {
     // is a best practice that prevents devtools from being transitively applied to other modules using your project.
     compileOnly "org.springframework.boot:spring-boot-devtools"
 
-    //Sleuth
-    implementation "org.springframework.cloud:spring-cloud-starter-sleuth:3.0.1"
-
-    // logstash
-    implementation "net.logstash.logback:logstash-logback-encoder:5.3"
-    implementation "ch.qos.logback:logback-core:1.2.3"
-
-    implementation "io.projectreactor:reactor-core:3.4.10"
-
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.innovateuk.ifs.libraries:ifs-starter-logging"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

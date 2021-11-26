@@ -642,8 +642,7 @@ the user goes to documents page
 Search for MO
     [Arguments]  ${MO_name}  ${MO_fullname}
     the element should be disabled      jQuery = button:contains("View Monitoring Officer")
-    input text                          id = userId    ${MO_name}
-    the user should see mo in dropdown  id = userId    ${MO_name}
+    input text                          id = userId   ${MO_name}
     the user clicks the button/link     jQuery = ul li:contains("${MO_fullname}")
     the user clicks the button/link     jQuery = button:contains("View Monitoring Officer")
 
@@ -661,14 +660,6 @@ the user should see project in dropdown
     \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots  element should be visible  jQuery = ul li:contains("${labelOrId} - ${actualName}")
     \  Exit For Loop If  '${status}'=='PASS'
     \  run keyword if  '${status}'=='FAIL'   retry entering the project     ${locator}   ${labelOrId}
-    \  ${i} =  Set Variable  ${i + 1}
-
-the user should see mo in dropdown
-    [Arguments]  ${locator}  ${actualName}
-    :FOR    ${i}    IN RANGE  10
-    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots  element should be visible  jQuery = ul li:contains("${actualName}")
-    \  Exit For Loop If  '${status}'=='PASS'
-    \  run keyword if  '${status}'=='FAIL'   retry entering the project     ${locator}   ${actualName}
     \  ${i} =  Set Variable  ${i + 1}
 
 the user should see country in dropdown
