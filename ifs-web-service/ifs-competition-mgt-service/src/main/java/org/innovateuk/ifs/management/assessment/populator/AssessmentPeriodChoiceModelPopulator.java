@@ -4,6 +4,7 @@ import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.assessment.service.AssessmentPeriodService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessmentPeriodChoiceViewModel;
@@ -45,6 +46,13 @@ public class AssessmentPeriodChoiceModelPopulator {
                     AssessmentPeriodViewModel assessmentPeriodViewModel = new AssessmentPeriodViewModel();
                     assessmentPeriodViewModel.setAssessmentPeriodId(e.getKey());
                     assessmentPeriodViewModel.setMilestoneEntries(milestoneFormEntries);
+                    for (Map.Entry<String, MilestoneViewModel> assessmentPeriodsList : milestoneFormEntries.entrySet()) {
+                        String typeDesc = assessmentPeriodsList.getKey();
+                        if (typeDesc.equals(MilestoneType.ASSESSMENT_CLOSED.getMilestoneDescription())) {
+                            assessmentPeriodViewModel.setAssessmentClosed(true);
+                            break;
+                        }
+                    }
 
                     String displayName = assessmentPeriodService.displayName(e.getKey(), competitionId);
                     assessmentPeriodViewModel.setDisplayName(displayName);
