@@ -159,7 +159,7 @@ spec:
           - name: JAVA_TOOL_OPTIONS
             value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
-            value: "ifs-application-service (${openshiftEnv})"
+            value: "ifs-application-service (${openshiftEnvKey})"
         ports:
           - containerPort: 8080
         resources:

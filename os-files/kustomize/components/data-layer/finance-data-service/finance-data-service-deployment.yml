@@ -100,7 +100,7 @@ spec:
           - name: JAVA_TOOL_OPTIONS
             value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
-            value: "ifs-finance-data-service (${openshiftEnv})"
+            value: "ifs-finance-data-service (${openshiftEnvKey})"
         ports:
           - containerPort: 8080
         resources:
