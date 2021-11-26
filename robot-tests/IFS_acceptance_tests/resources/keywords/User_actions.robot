@@ -2,6 +2,7 @@
 Resource          ../defaultResources.robot
 
 *** Keywords ***
+clear
 The user clicks the button/link
     [Arguments]    ${BUTTON}
     Wait Until Element Is Enabled  ${BUTTON}
