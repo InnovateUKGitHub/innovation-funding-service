@@ -76,7 +76,7 @@ spec:
                 configMapKeyRef:
                   name: new-relic-config
                   key: NEW_RELIC_LOG
-            - name: JAVA_OPTS
+            - name: JAVA_TOOL_OPTIONS
               value: -Xms384M -Xmx768M -javaagent:/newrelic.jar
             - name: NEW_RELIC_APP_NAME
               value: "ifs-idp-service (${openshiftEnv})"

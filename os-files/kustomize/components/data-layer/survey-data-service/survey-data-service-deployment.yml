@@ -92,7 +92,7 @@ spec:
               configMapKeyRef:
                 name: web-config
                 key: IFS_WEB_SYSTEM_USER_UID
-          - name: JAVA_OPTS
+          - name: JAVA_TOOL_OPTIONS
             value: -Xms800m -Xmx800m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
             value: "ifs-survey-data-service (${openshiftEnv})"

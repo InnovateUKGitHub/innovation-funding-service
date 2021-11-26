@@ -97,7 +97,7 @@ spec:
               configMapKeyRef:
                 name: spring-config
                 key: SPRING_PROFILES_ACTIVE
-          - name: JAVA_OPTS
+          - name: JAVA_TOOL_OPTIONS
             value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
             value: "ifs-finance-data-service (${openshiftEnv})"

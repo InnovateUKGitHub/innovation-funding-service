@@ -106,7 +106,7 @@ spec:
                 configMapKeyRef:
                   name: web-config
                   key: IFS_WEB_BASEURL
-            - name: JAVA_OPTS
+            - name: JAVA_TOOL_OPTIONS
               value: -Xms1000m -Xmx1000m -javaagent:/newrelic.jar
             - name: NEW_RELIC_APP_NAME
               value: "ifs-project-setup-service (${openshiftEnv})"

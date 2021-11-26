@@ -93,7 +93,7 @@ spec:
                   key: IFS_WEB_BASEURL
             - name: NEW_RELIC_APP_NAME
               value: "ifs-front-door-service (${openshiftEnv})"
-            - name: JAVA_OPTS
+            - name: JAVA_TOOL_OPTIONS
               value: -Xms1000m -Xmx1000m -javaagent:/newrelic.jar
           ports:
             - containerPort: 8080
