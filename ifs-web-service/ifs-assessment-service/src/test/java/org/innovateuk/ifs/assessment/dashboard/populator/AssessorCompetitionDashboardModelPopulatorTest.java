@@ -75,7 +75,7 @@ public class AssessorCompetitionDashboardModelPopulatorTest {
         assertEquals(viewModel.getCompetitionTitle(), assessorCompetitionDashboardResource.getCompetitionName());
         assertEquals(viewModel.getLeadTechnologist(), assessorCompetitionDashboardResource.getInnovationLead());
         assertEquals(viewModel.isOpenEndCompetition(), assessorCompetitionDashboardResource.getOpenEndCompetition());
-        assertEquals(viewModel.getAssessmentPeriodId(), assessorCompetitionDashboardResource.getAssessmentPeriodId());
+        assertEquals(viewModel.getBatchIndex(), assessorCompetitionDashboardResource.getBatchIndex());
         assertEquals(viewModel.getAcceptDeadline(), assessorCompetitionDashboardResource.getAssessorAcceptDate());
         assertEquals(viewModel.getSubmitDeadline(), assessorCompetitionDashboardResource.getAssessorDeadlineDate());
         assertEquals(viewModel.getSubmitted().size(), 2);
