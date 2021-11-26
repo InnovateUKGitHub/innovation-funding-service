@@ -61,7 +61,7 @@ public class AssessorCompetitionDashboardModelPopulatorTest {
                 .withCompetitionName("Competition Name")
                 .withInnovationLead("Innovation Lead")
                 .withOpenEndCompetition(false)
-                .withAssessmentPeriodId(null)
+                .withBatchIndex(null)
                 .withAssessorAcceptDate(ZonedDateTime.now().minusDays(2))
                 .withAssessorDeadlineDate(ZonedDateTime.now().plusDays(4))
                 .withApplicationAssessments(combineLists(submittedAssessments, outstandingAssessments))
@@ -82,6 +82,60 @@ public class AssessorCompetitionDashboardModelPopulatorTest {
         assertEquals(viewModel.getOutstanding().size(), 2);
 
         verify(assessorCompetitionDashboardRestService, times(1)).getAssessorCompetitionDashboard(compId, userId);
+        verifyNoMoreInteractions(assessorCompetitionDashboardRestService);
+    }
+
+    @Test
+    public void populateModelWithAssessmentPeriod() {
+        long compId = 1L;
+        long userId = 1L;
+        long assessmentPeriodId = 1L;
+
+        List<ApplicationAssessmentResource> submittedAssessments = newApplicationAssessmentResource()
+                .withApplicationId(1L, 2L)
+                .withAssessmentId(1L, 2L)
+                .withApplicationName("Application Name")
+                .withLeadOrganisation("Organisation 1", "Organisation 2")
+                .withState(SUBMITTED, SUBMITTED)
+                .withOverallScore(50, 55)
+                .withRecommended(TRUE, TRUE)
+                .build(2);
+
+        List<ApplicationAssessmentResource> outstandingAssessments = newApplicationAssessmentResource()
+                .withApplicationId(3L, 4L)
+                .withAssessmentId(3L, 4L)
+                .withApplicationName("Application Name")
+                .withLeadOrganisation("Organisation 3", "Organisation 4")
+                .withState(PENDING, PENDING)
+                .build(2);
+
+
+        AssessorCompetitionDashboardResource assessorCompetitionDashboardResource = newAssessorCompetitionDashboardResource()
+                .withCompetitionId(compId)
+                .withCompetitionName("Competition Name")
+                .withInnovationLead("Innovation Lead")
+                .withOpenEndCompetition(true)
+                .withBatchIndex(1L)
+                .withAssessorAcceptDate(ZonedDateTime.now().minusDays(2))
+                .withAssessorDeadlineDate(ZonedDateTime.now().plusDays(4))
+                .withApplicationAssessments(combineLists(submittedAssessments, outstandingAssessments))
+                .build();
+
+        when(assessorCompetitionDashboardRestService.getAssessorCompetitionDashboard(compId, assessmentPeriodId, userId))
+                .thenReturn(restSuccess(assessorCompetitionDashboardResource));
+
+        AssessorCompetitionDashboardViewModel viewModel = assessorCompetitionDashboardModelPopulator.populateModel(compId, assessmentPeriodId, userId);
+        assertEquals(viewModel.getCompetitionId(), assessorCompetitionDashboardResource.getCompetitionId());
+        assertEquals(viewModel.getCompetitionTitle(), assessorCompetitionDashboardResource.getCompetitionName());
+        assertEquals(viewModel.getLeadTechnologist(), assessorCompetitionDashboardResource.getInnovationLead());
+        assertEquals(viewModel.isOpenEndCompetition(), assessorCompetitionDashboardResource.getOpenEndCompetition());
+        assertEquals(viewModel.getBatchIndex(), assessorCompetitionDashboardResource.getBatchIndex());
+        assertEquals(viewModel.getAcceptDeadline(), assessorCompetitionDashboardResource.getAssessorAcceptDate());
+        assertEquals(viewModel.getSubmitDeadline(), assessorCompetitionDashboardResource.getAssessorDeadlineDate());
+        assertEquals(viewModel.getSubmitted().size(), 2);
+        assertEquals(viewModel.getOutstanding().size(), 2);
+
+        verify(assessorCompetitionDashboardRestService, times(1)).getAssessorCompetitionDashboard(compId, assessmentPeriodId, userId);
         verifyNoMoreInteractions(assessorCompetitionDashboardRestService);
     }
 }
