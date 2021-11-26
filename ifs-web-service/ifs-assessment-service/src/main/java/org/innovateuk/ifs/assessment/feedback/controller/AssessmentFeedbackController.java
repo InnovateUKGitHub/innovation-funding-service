@@ -29,6 +29,7 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -88,6 +89,9 @@ public class AssessmentFeedbackController {
     @Autowired
     private AssessmentFeedbackSubsidyBasisModelPopulator assessmentFeedbackSubsidyBasisModelPopulator;
 
+    @Value("${ifs.loan.partb.enabled}")
+    private boolean ifsLoanPartBEnabled;
+
     @GetMapping("/question/{questionId}")
     public String getQuestion(Model model,
                               @ModelAttribute(name = FORM_ATTR_NAME, binding = false) Form form,
@@ -102,6 +106,10 @@ public class AssessmentFeedbackController {
 
         if (question.getQuestionSetupType().equals(QuestionSetupType.SUBSIDY_BASIS)) {
             return getSubsidyBasis(model, assessmentId, question);
+        }
+
+        if (question.getQuestionSetupType().equals(QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION) && ifsLoanPartBEnabled) {
+            return getLoanBusinessAndFinancialInfo(model, assessmentId, question);
         }
 
         populateQuestionForm(form, assessmentId, questionId);
@@ -220,13 +228,17 @@ public class AssessmentFeedbackController {
         model.addAttribute("model", viewModel);
         model.addAttribute("navigation", navigationViewModel);
 
-//        List<ProcessRoleResource> userApplicationRoles = processRoleRestService.findProcessRole(viewModel.getApplicationId()).getSuccess();
-//        organisationDetailsModelPopulator.populateModel(model, viewModel.getApplicationId(), userApplicationRoles);
-
         return "assessment/subsidy-basis";
     }
 
+    private String getLoanBusinessAndFinancialInfo(Model model, long assessmentId, QuestionResource question) {
+        AssessmentFeedbackNavigationViewModel navigationViewModel = assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, question);
+        AssessmentFeedbackViewModel viewModel = assessmentFeedbackModelPopulator.populateModel(assessmentId, question);
+        model.addAttribute("model", viewModel);
+        model.addAttribute("navigation", navigationViewModel);
 
+        return "assessment/loan-business-and-financial";
+    }
 
     private Optional<FormInputResource> getScopeFormInput(List<FormInputResource> formInputs) {
         return formInputs.stream()
