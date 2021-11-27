@@ -39,6 +39,8 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-9882 download permission error
 ...
+...               IFS-9739 Always open competitions: limit applications that appear in Funding decision
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -203,8 +205,10 @@ Internal user sees valid information on dashboard
     Then the user sees valid open ended competition details
 
 internal user inputs the decision and send the notification with feedback
-    [Documentation]  IFS-8855
+    [Documentation]  IFS-8855 IFS-9739
     Given the user inputs the funding decision for applications
+    And The user clicks the button/link                              link = Input and review funding decision
+    And the user should see the element                              jQuery =a:contains("${webTestAppID}")
     When the user sends notification and releases feedback
     And the user navigates to the page                               ${server}/project-setup-management/competition//${webTestCompID}/status/all
     Then the user refreshes until element appears on page            jQuery = tr div:contains("${webTestAppName}")
