@@ -209,7 +209,7 @@ internal user inputs the decision and send the notification with feedback
     Given the user inputs the funding decision for applications
     And The user clicks the button/link                              link = Input and review funding decision
     And the user should see the element                              jQuery =a:contains("${webTestAppID}")
-    And The user should not see the element                          jQuery =a:contains("${webTestAppID}")
+    And The user should not see the element                          jQuery =a:contains("${applicationName}")
     And The user navigates to the page                               ${server}/management/competition/${webTestCompID}
     When the user sends notification and releases feedback
     And the user navigates to the page                               ${server}/project-setup-management/competition//${webTestCompID}/status/all

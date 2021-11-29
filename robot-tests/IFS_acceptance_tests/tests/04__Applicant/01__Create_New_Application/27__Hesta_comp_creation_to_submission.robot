@@ -63,7 +63,6 @@ The Application Summary page must not include the Reopen Application link when t
     Given Log in as a different user                                                &{Comp_admin1_credentials}
     And Requesting IDs of this competition                                          ${hestaCompetitionName}
     And Competition admin creates an assessment period                              ${competitionId}
-    And the
     When the internal team mark the application as successful / unsuccessful        ${hestaApplicationName}   FUNDED
     And Log in as a different user                                                  email=${leadApplicantEmail}   password=${short_password}
     Then the application summary page must not include the reopen application link
