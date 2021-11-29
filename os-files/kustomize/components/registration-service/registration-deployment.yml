@@ -111,7 +111,7 @@ spec:
             - name: JAVA_TOOL_OPTIONS
               value: -Xms256m -Xmx650m -javaagent:/newrelic.jar
             - name: NEW_RELIC_APP_NAME
-              value: "ifs-registration-service (${openshiftEnvKey})"
+              value: "ifs-registration-service"
           ports:
             - containerPort: 8080
           resources:

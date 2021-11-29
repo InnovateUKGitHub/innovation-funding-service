@@ -79,7 +79,7 @@ spec:
             - name: JAVA_TOOL_OPTIONS
               value: -Xms384M -Xmx768M -javaagent:/newrelic.jar
             - name: NEW_RELIC_APP_NAME
-              value: "ifs-idp-service (${openshiftEnvKey})"
+              value: "ifs-idp-service"
             - name: HTTPS_PORT
               value: "9443"
             - name: HTTP_PORT
