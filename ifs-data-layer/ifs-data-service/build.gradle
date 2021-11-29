@@ -25,6 +25,11 @@ afterEvaluate {
 
 }
 
+jib {
+    // data-service has extra permissions set for gluster
+    from.image = 'docker-ifs.devops.innovateuk.org/releases/openjdk-data-service:1.0@sha256:af1308427c82c317ec67822274a17553335262588b9dc904e3aa670ee8e3dc30'
+}
+
 dependencies {
     implementation "org.innovateuk.ifs.libraries:ifs-data-service-file"
     implementation "org.innovateuk.ifs.libraries:ifs-data-service-commons"
