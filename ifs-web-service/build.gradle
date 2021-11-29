@@ -16,6 +16,4 @@ endpointDocumentation.dependsOn "ifs-project-setup-mgt-service:test"
 endpointDocumentation.dependsOn "ifs-project-setup-service:test"
 endpointDocumentation.dependsOn "ifs-front-door-service:test"
 
-ext.ifsIdpLogoutUrl="https://ifs.local-dev/Logout"
 ext.ifsWebGoogleanalyticsTrackingid=""
-ext.ifsSystemUserUUID="c0d02979-e66e-11e7-ac43-0242ac120002"
