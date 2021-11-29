@@ -5,9 +5,6 @@ apply from: rootProject.file("gradle-support/jib.gradle")
 group 'innovateuk'
 version project.version
 
-processResources.dependsOn applyProfiles
-
-
 dependencies {
     implementation "org.innovateuk.ifs.libraries:ifs-commons"
     implementation "org.innovateuk.ifs.libraries:ifs-sil-resources"

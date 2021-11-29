@@ -6,9 +6,6 @@ apply from: rootProject.file("gradle-support/mapstruct.gradle")
 apply from: rootProject.file("gradle-support/profile-handler.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
 
-processResources.dependsOn applyProfiles
-
-
 apply from: "../flyway.gradle"
 
 afterEvaluate {
@@ -45,9 +42,6 @@ test {
         exclude "${project.excludeTests}"
     }
 }
-
-flywayClean.dependsOn applyProfiles
-flywayMigrate.dependsOn processResources
 
 ext.serverPort = 8080
 ext.ifsFlywayLocations = "db/migration"

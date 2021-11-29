@@ -63,7 +63,7 @@ do_baseline () {
     # navigate to project root
     cd ${project_root_dir}
 
-    ./gradlew -PopenshiftEnv=unused $profile -Pcloud=automated -Pifs.companies.house.key=unused clean processResources processTestResources
+    ./gradlew -PopenshiftEnv=unused $profile -Pcloud=automated -Pifs.companies.house.key=unused clean
 
     # run generator test class
     IFS_GENERATE_TEST_DATA_EXECUTION=SINGLE_THREADED IFS_GENERATE_TEST_DATA_COMPETITION_FILTER=ALL_COMPETITIONS ./gradlew -PopenshiftEnv=unused $profile -Pcloud=automated -Pifs.companies.house.key=unused -PtestGroups=generatetestdata :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData

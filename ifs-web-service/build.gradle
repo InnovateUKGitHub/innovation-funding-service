@@ -6,8 +6,6 @@ apply plugin: 'idea'
 group 'innovateuk'
 version project.version
 
-processResources.dependsOn applyProfiles
-
 apply from: "documentation.gradle"
 
 endpointDocumentation.dependsOn "ifs-application-service:test"

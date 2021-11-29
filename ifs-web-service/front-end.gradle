@@ -10,8 +10,6 @@ gulp_default.dependsOn 'npmInstall'
 // makes sure on each build that gulp is installed
 gulp_default.dependsOn 'installGulp'
 
-processResources.dependsOn gulp_default
-
 // javascript unit testing
 task testUnit(type: NpmTask) {
     args = ['run', 'test']
