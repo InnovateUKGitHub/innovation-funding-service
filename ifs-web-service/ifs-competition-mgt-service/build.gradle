@@ -1,12 +1,6 @@
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
 
-buildscript {
-    ext {
-        serverContext = '/management'
-    }
-}
-
 group 'innovateuk'
 version project.version
 
