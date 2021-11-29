@@ -33,9 +33,9 @@ function section() {
 }
 
 function startPybot() {
-    section "=> STARTING PYBOT FOR ${1}"
+    section "=> STARTING PYBOT FOR ${BAMBOO_TESTSUITE}"
 
-    targetDir=`basename ${1}`
+    targetDir=`basename ${BAMBOO_TESTSUITE}`
 
     if [[ "$happyPath" ]]
       then
@@ -99,7 +99,7 @@ function startPybot() {
     $excludeBespokeTags \
     $includeAtsTags \
     $includeZapTags \
-    --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
+    --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${BAMBOO_TESTSUITE} &
 }
 
 function runTests() {
