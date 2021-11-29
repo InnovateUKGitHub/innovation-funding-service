@@ -24,23 +24,6 @@ afterEvaluate {
     }
 
 }
-ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
-
-ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
-
-ext.companiesHouseLookupEnabled = ext.has('ifs.companies.house.enabled') ? ext.get('ifs.companies.house.enabled') : false
-ext.companiesHouseKey = ext.has('ifs.companies.house.key') ? ext.get('ifs.companies.house.key') : 'mock-key'
-
-ext.docusignAccountId = ext.has('ifs.docusign.api.account') ? ext.get('ifs.docusign.api.account') : 'mock-key'
-ext.docusignUserId = ext.has('ifs.docusign.auth.user') ? ext.get('ifs.docusign.auth.user') : 'mock-key'
-ext.docusignClientId = ext.has('ifs.docusign.auth.client') ? ext.get('ifs.docusign.auth.client') : 'mock-key'
-ext.docusignAuthKey = ext.has('ifs.docusign.auth.key') ? ext.get('ifs.docusign.auth.key') : 'mock-key'
-
-
-ext {
-    ifsFinanceTotalsBaseURL = 'http://finance-data-service:8080'
-}
-
 
 dependencies {
     implementation "org.innovateuk.ifs.libraries:ifs-data-service-file"
