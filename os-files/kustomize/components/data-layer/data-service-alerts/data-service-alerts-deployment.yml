@@ -9,6 +9,7 @@ metadata:
     pullSecrets: pullSecrets
     waitForDs: waitForDs
     slow: slow
+    newRelic: newRelic
 spec:
   replicas: 1
   selector:
@@ -46,16 +47,6 @@ spec:
             value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
             value: "ifs-data-service-alerts"
-          - name: NEW_RELIC_LICENSE_KEY
-            valueFrom:
-              configMapKeyRef:
-                name: new-relic-config
-                key: NEW_RELIC_LICENSE_KEY
-          - name: NEW_RELIC_LOG
-            valueFrom:
-              configMapKeyRef:
-                name: new-relic-config
-                key: NEW_RELIC_LOG
           - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
             value: "100"
           - name: SPRING_DATASOURCE_URL

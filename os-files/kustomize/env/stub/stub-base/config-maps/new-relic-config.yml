@@ -5,3 +5,4 @@ metadata:
 data:
   NEW_RELIC_LICENSE_KEY: ""
   NEW_RELIC_LOG: "STDOUT"
+  NEW_RELIC_LABELS: "stub"

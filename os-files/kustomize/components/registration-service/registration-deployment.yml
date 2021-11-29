@@ -5,6 +5,7 @@ metadata:
   annotations:
     monitor: monitor
     pullSecrets: pullSecrets
+    newRelic: newRelic
 spec:
   replicas: 1
   selector:
@@ -58,16 +59,6 @@ spec:
                 configMapKeyRef:
                   name: web-config
                   key: SPRING_APPLICATION_JSON
-            - name: NEW_RELIC_LICENSE_KEY
-              valueFrom:
-                configMapKeyRef:
-                  name: new-relic-config
-                  key: NEW_RELIC_LICENSE_KEY
-            - name: NEW_RELIC_LOG
-              valueFrom:
-                configMapKeyRef:
-                  name: new-relic-config
-                  key: NEW_RELIC_LOG
             - name: LDAP_URL
               valueFrom:
                 configMapKeyRef:
@@ -98,11 +89,6 @@ spec:
                 configMapKeyRef:
                   name: shibboleth-config
                   key: SHIBBOLETH_API_KEYS
-            - name: SPRING_PROFILES_ACTIVE
-              valueFrom:
-                configMapKeyRef:
-                  name: spring-config
-                  key: SPRING_PROFILES_ACTIVE
             - name: IFS_WEB_BASEURL
               valueFrom:
                 configMapKeyRef:
