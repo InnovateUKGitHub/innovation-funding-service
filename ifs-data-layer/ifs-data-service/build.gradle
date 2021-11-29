@@ -126,7 +126,3 @@ task syncUser() {
 task prepareAnonymisedDB(dependsOn: [":docker:ifs-mysql:ifs-database:updateIfsWebUser", syncShib]) {
     syncShib.mustRunAfter ":docker:ifs-mysql:ifs-database:updateIfsWebUser"
 }
-
-ext.ifsDataServiceRestBaseURL = "http://data-service:8080"
-ext.serverPort = 8080
-

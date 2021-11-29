@@ -11,8 +11,6 @@ apply from: "../flyway.gradle"
 group 'innovateuk'
 version project.version
 
-ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
-
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation "org.springframework.boot:spring-boot-starter-security"
@@ -44,6 +42,3 @@ test {
     }
 
 }
-
-ext.serverPort = 8080
-ext.ifsFlywayLocations = "db/migration"
