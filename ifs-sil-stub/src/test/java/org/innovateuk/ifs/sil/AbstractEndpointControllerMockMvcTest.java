@@ -8,7 +8,6 @@ import org.junit.Rule;
 import org.mockito.InjectMocks;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.HandlerAdapter;
@@ -18,7 +17,6 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 @SuppressWarnings("unchecked")
@@ -37,9 +35,6 @@ public abstract class AbstractEndpointControllerMockMvcTest<T> {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
     }
-
-    @Rule
-    public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("build/generated-snippets");// having to "fake" the request body as JSON because Spring Restdocs does not support other content types other
 
     @Before
     public void setupMockMvc() {
@@ -62,11 +57,6 @@ public abstract class AbstractEndpointControllerMockMvcTest<T> {
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setMessageConverters(newListOfConvertersArray)
-                .apply(documentationConfiguration(this.restDocumentation)
-                        .uris()
-                        .withScheme("http")
-                        .withHost("localhost")
-                        .withPort(8090))
                 .build();
     }
 }

@@ -45,12 +45,6 @@ import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.*;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -113,23 +107,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 content(dummyContent)
                         ).
                 andExpect(status().isCreated()).
-                andDo(document("forminputresponsefileupload/file_fileUpload",
-                        requestParameters(
-                                parameterWithName("formInputId").description("Id of the FormInput that the user is responding to"),
-                                parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
-                                parameterWithName("processRoleId").description("Id of the ProcessRole that is responding to the FormInput"),
-                                parameterWithName("filename").description("The filename of the file being uploaded")
-                        ),
-                        requestHeaders(
-                                headerWithName("Content-Type").description("The Content Type of the file being uploaded e.g. application/pdf"),
-                                headerWithName("Content-Length").description("The Content Length of the binary file data being uploaded in bytes"),
-                                headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
-                        ),
-                        requestFields(fieldWithPath("description").description("The body of the request should be the binary data of the file being uploaded (and NOT JSON as shown in example)")),
-                        responseFields(
-                                fieldWithPath("fileEntryId").description("Id of the FileEntry that was created")
-                        ))
-                ).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -181,7 +158,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Length", "1000").
                                 content("My PDF content")).
                 andExpect(status().isInternalServerError()).
-                andDo(document("forminputresponsefileupload/file_fileUpload_internalServerError")).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -222,7 +198,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Length", "99999999").
                                 content("My PDF content")).
                 andExpect(status().isPayloadTooLarge()).
-                andDo(document("forminputresponsefileupload/file_fileUpload_payloadTooLarge")).
                 andReturn();
 
         assertResponseErrorKeyEqual(PAYLOAD_TOO_LARGE.name(), payloadTooLargeError(5000), response);
@@ -244,7 +219,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Type", "application/pdf").
                                 content("My PDF content")).
                 andExpect(status().isLengthRequired()).
-                andDo(document("forminputresponsefileupload/file_fileUpload_missingContentLength")).
                 andReturn();
 
         assertResponseErrorKeyEqual(LENGTH_REQUIRED.name(), lengthRequiredError(5000), response);
@@ -266,7 +240,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Length", "1000").
                                 content("My PDF content")).
                 andExpect(status().isUnsupportedMediaType()).
-                andDo(document("forminputresponsefileupload/file_fileUpload_unsupportedContentType")).
                 andReturn();
 
         assertResponseErrorKeyEqual(UNSUPPORTED_MEDIA_TYPE.name(), unsupportedMediaTypeByNameError(asList("application/pdf", "application/json")), response);
@@ -287,7 +260,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Length", "1000").
                                 content("My PDF content")).
                 andExpect(status().isUnsupportedMediaType()).
-                andDo(document("forminputresponsefileupload/file_fileUpload_missingContentType")).
                 andReturn();
 
         assertResponseErrorKeyEqual(UNSUPPORTED_MEDIA_TYPE.name(), unsupportedMediaTypeByNameError(asList("application/pdf", "application/json")), response);
@@ -330,17 +302,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("fileEntryId", String.valueOf(fileEntryId)).
                                 header("IFS_AUTH_TOKEN", "123abc")).
                 andExpect(status().isNoContent()).
-                andDo(document("forminputresponsefileupload/file_fileDelete",
-                        requestParameters(
-                                parameterWithName("formInputId").description("Id of the FormInput that the user is responding to"),
-                                parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
-                                parameterWithName("processRoleId").description("Id of the ProcessRole that is responding to the FormInput"),
-                                parameterWithName("fileEntryId").description("Id file entry to delete")
-                        ),
-                        requestHeaders(
-                                headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
-                        ))
-                ).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -362,7 +323,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("processRoleId", "789").
                                 param("fileEntryId", String.valueOf(fileEntryId))).
                 andExpect(status().isInternalServerError()).
-                andDo(document("forminputresponsefileupload/file_fileDelete_internalServerError")).
                 andReturn();
 
         assertResponseErrorKeyEqual(GENERAL_UNEXPECTED_ERROR.name(), internalServerErrorError(), response);
@@ -414,17 +374,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("IFS_AUTH_TOKEN", "123abc")
                 ).
                 andExpect(status().isOk()).
-                andDo(document("forminputresponsefileupload/file_fileEntry",
-                        requestParameters(
-                                parameterWithName("formInputId").description("Id of the FormInput that the user is requesting the file details for"),
-                                parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
-                                parameterWithName("processRoleId").description("Id of the ProcessRole that owns the FormInputResponse"),
-                                parameterWithName("fileEntryId").description("Id of the file entry to get")
-                        ),
-                        requestHeaders(
-                                headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
-                        ))
-                ).
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
@@ -446,7 +395,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("fileEntryId", String.valueOf(fileEntryId)).
                                 header("IFS_AUTH_TOKEN", "123abc")).
                 andExpect(status().isInternalServerError()).
-                andDo(document("forminputresponsefileupload/file_fileEntry_internalServerError")).
                 andReturn();
 
         assertResponseErrorKeyEqual(GENERAL_UNEXPECTED_ERROR.name(), internalServerErrorError(), response);
@@ -497,17 +445,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("IFS_AUTH_TOKEN", "123abc")
                 ).
                 andExpect(status().isOk()).
-                andDo(document("forminputresponsefileupload/file_fileDownload",
-                        requestParameters(
-                                parameterWithName("formInputId").description("Id of the FormInput that the user is requesting the file for"),
-                                parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
-                                parameterWithName("processRoleId").description("Id of the ProcessRole that owns the FormInputResponse"),
-                                parameterWithName("fileEntryId").description("Id of the file entry to get")
-                        ),
-                        requestHeaders(
-                                headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
-                        ))
-                ).
                 andReturn();
 
         assertEquals("The returned binary file data", response.getResponse().getContentAsString());
@@ -527,7 +464,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("fileEntryId", String.valueOf(fileEntryId)).
                                 header("IFS_AUTH_TOKEN", "123abc")).
                 andExpect(status().isInternalServerError()).
-                andDo(document("forminputresponsefileupload/file_fileDownload_internalServerError")).
                 andReturn();
 
         assertResponseErrorKeyEqual(GENERAL_UNEXPECTED_ERROR.name(), internalServerErrorError(), response);
@@ -604,17 +540,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("IFS_AUTH_TOKEN", "123abc")
                 ).
                 andExpect(status().isOk()).
-                andDo(document("forminputresponsefileupload/file_fileEntry",
-                        requestParameters(
-                                parameterWithName("formInputId").description("Id of the FormInput that the user is requesting the file entry for"),
-                                parameterWithName("applicationId").description("Id of the Application that the FormInputResponse is related to"),
-                                parameterWithName("processRoleId").description("Id of the ProcessRole that owns the FormInputResponse"),
-                                parameterWithName("fileEntryId").description("Id of the file entry to get")
-                        ),
-                        requestHeaders(
-                                headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
-                        ))
-                ).
                 andReturn();
 
         FormInputResponseFileEntryResource returnedFileEntryDetails = objectMapper.readValue(response.getResponse().getContentAsString(), FormInputResponseFileEntryResource.class);
@@ -634,7 +559,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("fileEntryId", String.valueOf(fileEntryId)).
                                 header("IFS_AUTH_TOKEN", "123abc")).
                 andExpect(status().isNotFound()).
-                andDo(document("forminputresponsefileupload/file_fileDownload_" + documentationSuffix)).
                 andReturn();
 
         assertResponseErrorKeyEqual(GENERAL_NOT_FOUND.name(), notFoundError(entityTypeNotFound), response);
@@ -652,7 +576,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("fileEntryId", String.valueOf(fileEntryId)).
                                 header("IFS_AUTH_TOKEN", "123abc")).
                 andExpect(status().isNotFound()).
-                andDo(document("forminputresponsefileupload/file_fileEntry_" + documentationSuffix)).
                 andReturn();
 
         assertResponseErrorKeyEqual(GENERAL_NOT_FOUND.name(), notFoundError(entityTypeNotFound), response);
@@ -679,7 +602,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 header("Content-Type", "application/pdf").
                                 header("Content-Length", "1000").
                                 content("My PDF content")).
-                andDo(document("forminputresponsefileupload/file_fileUpload_" + documentationSuffix)).
                 andReturn();
 
         assertEquals(expectedStatus.value(), response.getResponse().getStatus());
@@ -707,7 +629,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("applicationId", "456").
                                 param("processRoleId", "789").
                                 param("fileEntryId", String.valueOf(fileEntryId))).
-                andDo(document("forminputresponsefileupload/file_fileDelete_" + documentationSuffix)).
                 andReturn();
 
         assertEquals(expectedStatus.value(), response.getResponse().getStatus());

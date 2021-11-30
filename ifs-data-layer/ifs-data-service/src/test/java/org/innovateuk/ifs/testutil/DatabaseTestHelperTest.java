@@ -6,9 +6,6 @@ import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 /**
  * Tests to ensure that {@link DatabaseTestHelper} is successfully able to identify changes to the database when they
  * occur, and is successfully able to identify when no changes have occurred as well.

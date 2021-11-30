@@ -13,11 +13,8 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,13 +38,7 @@ public class CompetitionSetupInnovationLeadControllerDocumentationTest extends B
         mockMvc.perform(get("/competition/setup/{id}/innovation-leads", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(innovationLeads)))
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("The competition for which innovation leads need to be found")
-                        )
-                ));
+                .andExpect(content().json(toJson(innovationLeads)));
     }
 
     @Test
@@ -60,13 +51,7 @@ public class CompetitionSetupInnovationLeadControllerDocumentationTest extends B
         mockMvc.perform(get("/competition/setup/{id}/innovation-leads/find-added", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(innovationLeads)))
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("The competition for which innovation leads need to be found")
-                        )
-                ));
+                .andExpect(content().json(toJson(innovationLeads)));
     }
 
     @Test
@@ -78,14 +63,7 @@ public class CompetitionSetupInnovationLeadControllerDocumentationTest extends B
 
         mockMvc.perform(post("/competition/setup/{id}/add-innovation-lead/{innovationLeadUserId}", competitionId, innovationLeadUserId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("The competition for which innovation lead needs to be added"),
-                                parameterWithName("innovationLeadUserId").description("The id of the innovation lead which is being added")
-                        )
-                ));
+                .andExpect(status().isOk());
 
         verify(competitionSetupInnovationLeadService, only()).addInnovationLead(competitionId, innovationLeadUserId);
     }
@@ -99,14 +77,7 @@ public class CompetitionSetupInnovationLeadControllerDocumentationTest extends B
 
         mockMvc.perform(post("/competition/setup/{id}/remove-innovation-lead/{innovationLeadUserId}", competitionId, innovationLeadUserId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("The competition for which innovation lead needs to be deleted"),
-                                parameterWithName("innovationLeadUserId").description("The id of the innovation lead which is being deleted")
-                        )
-                ));
+                .andExpect(status().isOk());
 
         verify(competitionSetupInnovationLeadService, only()).removeInnovationLead(competitionId, innovationLeadUserId);
     }

@@ -11,15 +11,12 @@ import org.mockito.Mock;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.AffiliationDocs.*;
+import static org.innovateuk.ifs.documentation.AffiliationDocs.affiliationListResourceBuilder;
+import static org.innovateuk.ifs.documentation.AffiliationDocs.affiliationResourceBuilder;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AffiliationControllerDocumentation extends BaseControllerMockMVCTest<AffiliationController> {
@@ -40,15 +37,7 @@ public class AffiliationControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(get("/affiliation/id/{id}/get-user-affiliations", userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("affiliation/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Identifier of the user associated with affiliations being requested")
-                        ),
-                        responseFields(
-                                fieldWithPath("affiliationResourceList[]").description("List of affiliations belonging to the user")
-                        ).andWithPrefix("affiliationResourceList[].", affiliationResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -65,13 +54,6 @@ public class AffiliationControllerDocumentation extends BaseControllerMockMVCTes
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(affiliationListResource)))
-                .andExpect(status().isOk())
-                .andDo(document("affiliation/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Identifier of the user associated with affiliations being updated")
-                        ),
-                        requestFields(fieldWithPath("affiliationResourceList[]").description("List of affiliations belonging to the user"))
-                                .andWithPrefix("affiliationResourceList[].", affiliationResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 }

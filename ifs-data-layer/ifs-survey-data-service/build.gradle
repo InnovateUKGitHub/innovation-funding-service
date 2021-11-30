@@ -26,8 +26,6 @@ dependencies {
     implementation "org.innovateuk.ifs.libraries:ifs-survey-resources"
     implementation "org.innovateuk.ifs.libraries:ifs-security"
 
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-
     testImplementation "org.innovateuk.ifs.libraries:ifs-commons-test"
     testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
 

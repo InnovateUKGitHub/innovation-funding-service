@@ -6,7 +6,7 @@ import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
@@ -85,7 +85,7 @@ public class FormInputControllerTest extends BaseControllerMockMVCTest<FormInput
 
         when(formInputServiceMock.delete(formInputId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.delete("/forminput/{id}", formInputId))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/forminput/{id}", formInputId))
                 .andExpect(status().is2xxSuccessful());
     }
 }

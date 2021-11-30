@@ -6,14 +6,4 @@ apply plugin: 'idea'
 group 'innovateuk'
 version project.version
 
-apply from: "documentation.gradle"
-
-endpointDocumentation.dependsOn "ifs-application-service:test"
-endpointDocumentation.dependsOn "ifs-survey-service:test"
-endpointDocumentation.dependsOn "ifs-assessment-service:test"
-endpointDocumentation.dependsOn "ifs-competition-mgt-service:test"
-endpointDocumentation.dependsOn "ifs-project-setup-mgt-service:test"
-endpointDocumentation.dependsOn "ifs-project-setup-service:test"
-endpointDocumentation.dependsOn "ifs-front-door-service:test"
-
 ext.ifsWebGoogleanalyticsTrackingid=""

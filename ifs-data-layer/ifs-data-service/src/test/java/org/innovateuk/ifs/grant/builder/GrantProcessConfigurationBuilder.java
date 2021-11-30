@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.grant.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.grant.domain.GrantProcessConfiguration;
 
 import java.util.List;

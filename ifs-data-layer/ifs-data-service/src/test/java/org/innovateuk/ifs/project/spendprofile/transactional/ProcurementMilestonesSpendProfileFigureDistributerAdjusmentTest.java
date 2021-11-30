@@ -15,7 +15,8 @@ import static org.innovateuk.ifs.finance.resource.cost.ProcurementCostCategoryGe
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileCostCategorySummariesBuilder.newSpendProfileCostCategorySummaries;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileCostCategorySummaryBuilder.newSpendProfileCostCategorySummary;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.springframework.util.ReflectionUtils.*;
 
 public class ProcurementMilestonesSpendProfileFigureDistributerAdjusmentTest {

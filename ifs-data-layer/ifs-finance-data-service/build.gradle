@@ -24,8 +24,6 @@ dependencies {
     implementation 'org.innovateuk.ifs.libraries:ifs-error-util'
     implementation 'org.innovateuk.ifs.libraries:ifs-rest-util'
 
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-
     testImplementation "org.innovateuk.ifs.libraries:ifs-commons-test"
     testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
 
