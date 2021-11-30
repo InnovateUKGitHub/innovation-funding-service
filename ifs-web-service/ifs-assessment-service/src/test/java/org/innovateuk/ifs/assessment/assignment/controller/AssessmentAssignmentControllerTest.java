@@ -179,6 +179,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(ASSESSMENT_ID))
                 .withCompetition(COMPETITION_ID)
+                .withApplication(APPLICATION_ID)
                 .build();
 
         when(assessmentService.getAssignableById(ASSESSMENT_ID)).thenReturn(assessment);
@@ -205,6 +206,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(ASSESSMENT_ID))
                 .withCompetition(COMPETITION_ID)
+                .withApplication(APPLICATION_ID)
                 .build();
 
         when(assessmentService.getAssignableById(ASSESSMENT_ID)).thenReturn(assessment);
