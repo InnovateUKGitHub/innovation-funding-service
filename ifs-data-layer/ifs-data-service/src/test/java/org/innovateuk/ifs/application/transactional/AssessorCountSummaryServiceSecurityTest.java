@@ -5,9 +5,6 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
-import java.util.Collections;
-import java.util.Optional;
-
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 
 /**

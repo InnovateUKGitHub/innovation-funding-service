@@ -66,20 +66,10 @@ spec:
                 configMapKeyRef:
                   name: shibboleth-config
                   key: IDP_DOMAIN
-            - name: NEW_RELIC_LICENSE_KEY
-              valueFrom:
-                configMapKeyRef:
-                  name: new-relic-config
-                  key: NEW_RELIC_LICENSE_KEY
-            - name: NEW_RELIC_LOG
-              valueFrom:
-                configMapKeyRef:
-                  name: new-relic-config
-                  key: NEW_RELIC_LOG
-            - name: JAVA_OPTS
+            - name: JAVA_TOOL_OPTIONS
               value: -Xms384M -Xmx768M -javaagent:/newrelic.jar
             - name: NEW_RELIC_APP_NAME
-              value: "ifs-idp-service (${openshiftEnv})"
+              value: "ifs-idp-service"
             - name: HTTPS_PORT
               value: "9443"
             - name: HTTP_PORT

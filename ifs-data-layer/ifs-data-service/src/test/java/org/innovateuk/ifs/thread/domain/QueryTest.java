@@ -17,7 +17,8 @@ import java.util.Optional;
 import static java.util.Collections.singleton;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.junit.Assert.*;
 
 public class QueryTest {

@@ -3,8 +3,6 @@ package org.innovateuk.ifs.publiccontent.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
-import org.innovateuk.ifs.documentation.PublicContentItemResourceDocs;
-import org.innovateuk.ifs.documentation.PublicContentResourceDocs;
 import org.innovateuk.ifs.publiccontent.controller.PublicContentItemController;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentItemService;
 import org.junit.Test;
@@ -14,16 +12,11 @@ import java.time.ZonedDateTime;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.PublicContentItemResourceDocs.publicContentItemPageResourceFields;
-import static org.innovateuk.ifs.documentation.PublicContentItemResourceDocs.publicContentItemResourceFields;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class PublicContentItemControllerDocumentation extends BaseControllerMockMVCTest<PublicContentItemController> {
@@ -50,17 +43,7 @@ public class PublicContentItemControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(get("/public-content/items/find-by-filter?innovationAreaId=1&searchString=keyword&pageNumber=2&pageSize=20")
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("public-content/items/{method-name}",
-                        requestParameters(
-                                parameterWithName("innovationAreaId").description("Id of innovationArea where should be filtered on (Optional)"),
-                                parameterWithName("searchString").description("Keywords where should be filtered on (Optional)"),
-                                parameterWithName("pageNumber").description("Page number of the current page requesting (Optional)"),
-                                parameterWithName("pageSize").description("Page size of the current page requesting")
-                        ),
-                        responseFields(publicContentItemPageResourceFields)
-                        .andWithPrefix("content[].", PublicContentItemResourceDocs.publicContentItemResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
 
@@ -77,13 +60,6 @@ public class PublicContentItemControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(get("/public-content/items/by-competition-id/{id}", id)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("public-content/items/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("The competition id of the required public content item")
-                        ),
-                        responseFields(publicContentItemResourceFields)
-                        .andWithPrefix("publicContentResource.", PublicContentResourceDocs.publicContentResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 }

@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
@@ -63,7 +63,7 @@ public class TermsAndConditionsControllerTest extends BaseControllerMockMVCTest<
 
         when(termsAndConditionsService.getLatestSiteTermsAndConditions()).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/terms-and-conditions/site"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/terms-and-conditions/site"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expected)));
 

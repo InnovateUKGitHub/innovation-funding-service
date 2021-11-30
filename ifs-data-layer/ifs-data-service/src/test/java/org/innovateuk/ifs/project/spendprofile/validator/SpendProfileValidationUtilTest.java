@@ -4,8 +4,8 @@ import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResourc
 import org.innovateuk.ifs.project.spendprofile.validation.SpendProfileCostValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
