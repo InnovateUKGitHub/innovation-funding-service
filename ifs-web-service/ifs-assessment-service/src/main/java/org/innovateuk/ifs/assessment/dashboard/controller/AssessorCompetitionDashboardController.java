@@ -79,6 +79,28 @@ public class AssessorCompetitionDashboardController {
         );
     }
 
+    @PostMapping("/dashboard/competition/{competitionId}/period/{assessmentPeriodId}")
+    public String submitAssessments(Model model,
+                                    @PathVariable("competitionId") Long competitionId,
+                                    @PathVariable("assessmentPeriodId") Long assessmentPeriodId,
+                                    UserResource loggedInUser,
+                                    @ModelAttribute(FORM_ATTR_NAME) @Valid AssessorCompetitionDashboardAssessmentForm form,
+                                    @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
+                                    ValidationHandler validationHandler) {
+
+        Supplier<String> renderDashboard = () -> competitionDashboard(model, loggedInUser, competitionId, assessmentPeriodId, form);
+
+        return validationHandler.failNowOrSucceedWith(
+                renderDashboard,
+                () -> {
+                    ServiceResult<Void> serviceResult = assessmentService.submitAssessments(form.getAssessmentIds());
+
+                    return validationHandler.addAnyErrors(serviceResult, asGlobalErrors())
+                            .failNowOrSucceedWith(renderDashboard, renderDashboard);
+                }
+        );
+    }
+
     @PostMapping("/dashboard/confirm-competition/{competitionId}")
     public String confirmSubmitAssessments(Model model,
                                            @PathVariable("competitionId") final Long competitionId,
