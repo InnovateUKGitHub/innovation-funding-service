@@ -10,18 +10,12 @@ import org.mockito.Mock;
 import java.util.Map;
 import java.util.Set;
 
-
 import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class SectionStatusControllerDocumentation extends BaseControllerMockMVCTest<SectionStatusController> {
@@ -47,15 +41,7 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
 
         mockMvc.perform(get(baseURI + "/get-completed-sections-by-organisation/{applicationId}", id)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("section/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("Id of an application")
-                        ),
-                        responseFields(
-                                fieldWithPath("1.[]").description("completed sections belonging to organisation with id 1")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -70,16 +56,7 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
 
         mockMvc.perform(get(baseURI + "/get-completed-sections/{applicationId}/{organisationId}", applicationId, organisationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("section/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("Id of an application"),
-                                parameterWithName("organisationId").description("Id of an organisation")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("completed sections belonging to one organisation")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -93,14 +70,7 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
         mockMvc.perform(post(baseURI + "/mark-as-complete/{sectionId}/{applicationId}/{markedAsCompleteById}",
                 sectionId, applicationId, markedAsCompleteById)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("section/{method-name}",
-                        pathParameters(
-                                parameterWithName("sectionId").description("Id of the section"),
-                                parameterWithName("applicationId").description("Id of the application"),
-                                parameterWithName("markedAsCompleteById").description("Id of the process role marking the section as complete")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -114,14 +84,7 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
         mockMvc.perform(post(baseURI + "/mark-as-not-required/{sectionId}/{applicationId}/{markedAsNotRequiredById}",
                 sectionId, applicationId, markedAsNotRequiredById)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("section/{method-name}",
-                        pathParameters(
-                                parameterWithName("sectionId").description("Id of the section"),
-                                parameterWithName("applicationId").description("Id of the application"),
-                                parameterWithName("markedAsNotRequiredById").description("Id of the process role marking the section as not required")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -135,14 +98,7 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
         mockMvc.perform(post(baseURI + "/mark-as-in-complete/{sectionId}/{applicationId}/{markedAsInCompleteById}",
                 sectionId, applicationId, markedAsInCompleteById)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("section/{method-name}",
-                        pathParameters(
-                                parameterWithName("sectionId").description("Id of the section"),
-                                parameterWithName("applicationId").description("Id of the application"),
-                                parameterWithName("markedAsInCompleteById").description("Id of the process role marking the section as incomplete")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -152,11 +108,6 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
         when(sectionStatusServiceMock.sectionsCompleteForAllOrganisations(id)).thenReturn(serviceSuccess(true));
         mockMvc.perform(get(baseURI + "/all-sections-marked-as-complete/{applicationId}", id)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("section/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("id of the application")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 }

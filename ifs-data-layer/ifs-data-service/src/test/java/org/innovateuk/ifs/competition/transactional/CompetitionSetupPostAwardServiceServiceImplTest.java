@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionPostAwardServiceResource;
 import org.innovateuk.ifs.competition.resource.PostAwardService;
-import org.innovateuk.ifs.grant.builder.GrantProcessConfigurationBuilder;
 import org.innovateuk.ifs.grant.domain.GrantProcessConfiguration;
 import org.innovateuk.ifs.grant.repository.GrantProcessConfigurationRepository;
 import org.junit.Test;

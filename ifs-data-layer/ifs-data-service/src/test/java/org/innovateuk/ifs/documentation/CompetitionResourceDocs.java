@@ -2,95 +2,17 @@ package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
+import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.ZonedDateTime;
 
 import static com.google.common.primitives.Longs.asList;
 import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class CompetitionResourceDocs {
-    public static final FieldDescriptor[] competitionResourceFields = {
-            fieldWithPath("id").description("Id of the competitionResource").optional(),
-            fieldWithPath("name").description("name of the competition").optional(),
-            fieldWithPath("startDate").description("date the competition opens for submissions").optional(),
-            fieldWithPath("endDate").description("date the submissions phase of the competition closes").optional(),
-            fieldWithPath("registrationDate").description("date on which the registration closes").optional(),
-            fieldWithPath("assessorAcceptsDate").description("date by which assessors should accept or reject invitations to assess applications").optional(),
-            fieldWithPath("assessorDeadlineDate").description("date by which assessors should submit their application feedback").optional(),
-            fieldWithPath("assessorBriefingDate").description("date on which assessors will be briefed on the competition").optional(),
-            fieldWithPath("fundersPanelDate").description("date on which the funders panel begins").optional(),
-            fieldWithPath("fundersPanelEndDate").description("date on which the funders panel ended").optional(),
-            fieldWithPath("assessorFeedbackDate").description("date on which applicants can expect to receive feedback from the assessments").optional(),
-            fieldWithPath("releaseFeedbackDate").description("date on which the feedback is intended to be released").optional(),
-            fieldWithPath("feedbackReleasedDate").description("date on which the feedback is released").optional(),
-            fieldWithPath("competitionStatus").description("the current status of the competition").optional(),
-            fieldWithPath("maxResearchRatio").description("maximum ratio of research participation").optional(),
-            fieldWithPath("academicGrantPercentage").description("grant claim percentage for the academics").optional(),
-            fieldWithPath("milestones").description("List of milestone ids").optional(),
-            fieldWithPath("competitionType").description("the competition type this competition belongs to").optional(),
-            fieldWithPath("competitionTypeName").description("the name of the competition type this competition belongs to").optional(),
-            fieldWithPath("competitionTypeEnum").description("the enum of the competition type this competition belongs to").optional(),
-            fieldWithPath("executive").description("the user id of the competition executive").optional(),
-            fieldWithPath("executiveName").description("the name of the competition executive").optional(),
-            fieldWithPath("leadTechnologist").description("the user id of the competition leadTechnologist").optional(),
-            fieldWithPath("leadTechnologistName").description("the name of the competition leadTechnologist").optional(),
-            fieldWithPath("innovationSector").description("the Innovation sector this competition belongs to").optional(),
-            fieldWithPath("innovationSectorName").description("the Innovation sector name this competition belongs to").optional(),
-            fieldWithPath("innovationAreas").description("the Innovation areas this competition belongs to").optional(),
-            fieldWithPath("innovationAreaNames").description("the names of the Innovation areas this competition belongs to").optional(),
-            fieldWithPath("pafCode").description("the paf code entered during competition setup").optional(),
-            fieldWithPath("budgetCode").description("the budget code entered during competition setup").optional(),
-            fieldWithPath("code").description("the unique competition code entered during competition setup").optional(),
-            fieldWithPath("resubmission").description("indicates if the competition has the ability to do a resubmission").optional(),
-            fieldWithPath("multiStream").description("indicates if the competition has multiple streams").optional(),
-            fieldWithPath("streamName").description("the name of the stream"),
-            fieldWithPath("financeRowTypes").description("The finance types supported by this competition").optional(),
-            fieldWithPath("collaborationLevel").description("collaboration level (single, collaborative...)").optional(),
-            fieldWithPath("leadApplicantTypes").description("permitted organisation types of lead applicant (business, research...)").optional(),
-            fieldWithPath("researchCategories").description("the research categories entered during competition setup").optional(),
-            fieldWithPath("activityCode").description("the activity code entered during competition setup").optional(),
-            fieldWithPath("funders").description("the funders for this competition").optional(),
-            fieldWithPath("useResubmissionQuestion").description("should applications include the default resubmission question").optional(),
-            fieldWithPath("applicationFinanceType").description("The type of finances for the application").optional(),
-            fieldWithPath("setupComplete").description("Has the setup been completed and will move to open once past the open date").optional(),
-            fieldWithPath("completionStage").description("The stage at which the Competition is deemed closed").optional(),
-            fieldWithPath("nonIfs").description("Is this competition a non-ifs competition (not managed via IFS)").optional(),
-            fieldWithPath("nonIfsUrl").description("The URL to apply to the competition if it is a non-ifs competition").optional(),
-            fieldWithPath("assessorFinanceView").description("Indicates if the competition will display an overview or a detailed view of the finances for the assessor").optional(),
-            fieldWithPath("termsAndConditions").description("The terms and conditions template that applies to this competition").optional(),
-            fieldWithPath("otherFundingRulesTermsAndConditions").description("The terms and conditions template that applies to this competition for its other funding rules").optional(),
-            fieldWithPath("minProjectDuration").description("The minimum amount of weeks that projects under this competition should last").optional(),
-            fieldWithPath("maxProjectDuration").description("The maximum amount of weeks that projects under this competition projects should last").optional(),
-            fieldWithPath("fundingRules").description("Indicates if the competition has state aid eligibility, subsidy control eligibility, or none").optional(),
-            fieldWithPath("grantClaimMaximums").description("List of grant claim maximums belonging to the competition").optional(),
-            fieldWithPath("competitionDocuments").description("List of documents required during the project setup phase").optional(),
-            fieldWithPath("nonFinanceType").description("Does the competition have finance questions").optional(),
-            fieldWithPath("includeJesForm").description("Does the competition include the Je-S form for academics").optional(),
-            fieldWithPath("includeProjectGrowthTable").description("Indicate if the competition has a project growth table").optional(),
-            fieldWithPath("includeYourOrganisationSection").description("Indicates if the competition has a your organisation section").optional(),
-            fieldWithPath("fundingType").description("The FundingType of the competition").optional(),
-            fieldWithPath("projectSetupStages").description("The stages an applicant most complete when application is in project setup").optional(),
-            fieldWithPath("competitionTerms").description("Any competition-specific terms").optional(),
-            fieldWithPath("createdBy").description("user who created this competition").optional(),
-            fieldWithPath("createdOn").description("when the competition was created").optional(),
-            fieldWithPath("modifiedBy").description("user who modified this competition").optional(),
-            fieldWithPath("modifiedOn").description("when the competition was modified").optional(),
-            fieldWithPath("hasAssessmentStage").description("Does the competition has assessors.").optional(),
-            fieldWithPath("covidType").description("The type of covid comp if any").optional(),
-            fieldWithPath("golTemplate").description("template").optional(),
-            fieldWithPath("alwaysOpen").description("Competition always open").optional(),
-            fieldWithPath("procurementMilestones").description("Does the competition have procurement milestones").optional(),
-            fieldWithPath("subsidyControl").description("Is the competition subsidy controlled").optional(),
-            fieldWithPath("hasBusinessAndFinancialInformationQuestion").description("Does the competition have the business and financial information question").optional(),
-            fieldWithPath("assessmentPeriods").description("The assessment periods on the competition").optional(),
-            fieldWithPath("competitionThirdPartyConfigResource").description("Third Party competition config resource").optional(),
-    };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
             .withId(1L)

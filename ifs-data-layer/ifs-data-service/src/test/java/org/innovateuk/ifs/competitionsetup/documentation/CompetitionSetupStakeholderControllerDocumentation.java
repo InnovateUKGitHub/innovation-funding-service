@@ -3,9 +3,6 @@ package org.innovateuk.ifs.competitionsetup.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupStakeholderController;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupStakeholderService;
-import org.innovateuk.ifs.documentation.CompetitionInviteDocs;
-import org.innovateuk.ifs.documentation.InviteUserResourceDocs;
-import org.innovateuk.ifs.documentation.UserRegistrationResourceDocs;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.resource.StakeholderInviteResource;
@@ -28,16 +25,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import static org.innovateuk.ifs.documentation.UserDocs.userResourceFields;
 
 public class CompetitionSetupStakeholderControllerDocumentation extends BaseControllerMockMVCTest<CompetitionSetupStakeholderController> {
 
@@ -79,14 +70,7 @@ public class CompetitionSetupStakeholderControllerDocumentation extends BaseCont
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(inviteUserResource)))
-                .andExpect(status().isOk())
-                .andDo(document("competition/setup/stakeholder/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the Competition to which the Stakeholder is being invited")
-                        ),
-                        requestFields(InviteUserResourceDocs.inviteUserResourceFields)
-                        .andWithPrefix("invitedUser.", userResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(competitionSetupStakeholderService).inviteStakeholder(inviteUserResource.getInvitedUser(), competitionId);
     }
@@ -103,15 +87,7 @@ public class CompetitionSetupStakeholderControllerDocumentation extends BaseCont
         mockMvc.perform(get("/competition/setup/{competitionId}/stakeholder/find-all", competitionId)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(stakeholderUsers)))
-                .andDo(document("competition/setup/stakeholder/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("The competition id for which stakeholders need to be retrieved")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("List of stakeholders assigned to the competition")
-                        ).andWithPrefix("[].", userResourceFields)
-                ));
+                .andExpect(content().json(toJson(stakeholderUsers)));
 
         verify(competitionSetupStakeholderService).findStakeholders(competitionId);
     }
@@ -128,13 +104,7 @@ public class CompetitionSetupStakeholderControllerDocumentation extends BaseCont
         when(competitionSetupStakeholderService.getInviteByHash(TEST_HASH)).thenReturn(serviceSuccess(invite));
 
         mockMvc.perform(get("/competition/setup/get-stakeholder-invite/{inviteHash}", TEST_HASH))
-                .andExpect(status().isOk())
-                .andDo(document("competition/setup/{method-name}",
-                                pathParameters(
-                                        parameterWithName("inviteHash").description("Hash of the invite being requested")
-                                ),
-                                responseFields(CompetitionInviteDocs.stakeholderInviteResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -151,13 +121,7 @@ public class CompetitionSetupStakeholderControllerDocumentation extends BaseCont
         mockMvc.perform(post("/competition/setup/stakeholder/create/{inviteHash}", TEST_HASH)
                                 .contentType(APPLICATION_JSON)
                                 .content(toJson(resource)))
-                .andExpect(status().is2xxSuccessful())
-                .andDo(document("competition/setup/stakeholder/{method-name}",
-                                pathParameters(
-                                        parameterWithName("inviteHash").description("Hash of the invite to create a user for")
-                                ),
-                                requestFields(UserRegistrationResourceDocs.stakeholderRegistrationResourceFields)
-                                ));
+                .andExpect(status().is2xxSuccessful());
     }
 
     @Test
@@ -170,13 +134,7 @@ public class CompetitionSetupStakeholderControllerDocumentation extends BaseCont
 
         mockMvc.perform(post("/competition/setup/{competitionId}/stakeholder/{stakeholderUserId}/add", competitionId, stakeholderUserId)
                 )
-                .andExpect(status().isOk())
-                .andDo(document("competition/setup/stakeholder/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the Competition to which the Stakeholder is being added"),
-                                parameterWithName("stakeholderUserId").description("User id of the Stakeholder which is being added")
-                        )
-                ));
+                .andExpect(status().isOk());
 
         verify(competitionSetupStakeholderService).addStakeholder(competitionId, stakeholderUserId);
     }
@@ -191,13 +149,7 @@ public class CompetitionSetupStakeholderControllerDocumentation extends BaseCont
 
         mockMvc.perform(post("/competition/setup/{competitionId}/stakeholder/{stakeholderUserId}/remove", competitionId, stakeholderUserId)
         )
-                .andExpect(status().isOk())
-                .andDo(document("competition/setup/stakeholder/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the Competition from which the Stakeholder is being removed"),
-                                parameterWithName("stakeholderUserId").description("User id of the Stakeholder which is being removed")
-                        )
-                ));
+                .andExpect(status().isOk());
 
         verify(competitionSetupStakeholderService).removeStakeholder(competitionId, stakeholderUserId);
     }
@@ -214,15 +166,7 @@ public class CompetitionSetupStakeholderControllerDocumentation extends BaseCont
         mockMvc.perform(get("/competition/setup/{competitionId}/stakeholder/pending-invites", competitionId)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(pendingStakeholderInvites)))
-                .andDo(document("competition/setup/stakeholder/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("The competition id for which pending stakeholder invites need to be retrieved")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("List of pending stakeholder invites for the competition")
-                        ).andWithPrefix("[].", userResourceFields)
-                ));
+                .andExpect(content().json(toJson(pendingStakeholderInvites)));
 
         verify(competitionSetupStakeholderService).findPendingStakeholderInvites(competitionId);
     }
