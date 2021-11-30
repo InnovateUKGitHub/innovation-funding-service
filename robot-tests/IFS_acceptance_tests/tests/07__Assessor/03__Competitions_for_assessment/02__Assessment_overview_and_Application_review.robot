@@ -274,6 +274,7 @@ the uesr should see assessment overview details
     the user should see the element      jQuery = h2:contains("Finances")
     the user should see the element      jQuery = h2:contains("Terms and conditions")
 
+
 the user navigate to previous pages
     the user clicks previous and goes to the page   Project exploitation
     the user clicks previous and goes to the page   Potential market
