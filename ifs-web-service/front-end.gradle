@@ -11,11 +11,11 @@ gulp_default.dependsOn 'npmInstall'
 gulp_default.dependsOn 'installGulp'
 
 // javascript unit testing
-//task testUnit(type: NpmTask) {
-//    args = ['run', 'test']
-//}
+task testUnit(type: NpmTask) {
+    args = ['run', 'test']
+}
 //include js unit tests into project build lifecycle
-//test.dependsOn testUnit
+test.dependsOn testUnit
 
 
 node {
