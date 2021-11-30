@@ -19,7 +19,6 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
-import org.innovateuk.ifs.testdata.services.CsvUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -288,9 +287,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     public CompetitionDataBuilder moveCompetitionIntoOpenStatus() {
         return asCompAdmin(data -> {
             shiftMilestoneToTomorrow(data, MilestoneType.SUBMISSION_DATE);
-            if (!data.getCompetition().isAlwaysOpen()) {
-                shiftOpenDateToYesterday(data);
-            }
+            shiftOpenDateToYesterday(data);
         });
     }
 
@@ -322,7 +319,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     private void shiftOpenDateToYesterday(CompetitionData data) {
         List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(data.getCompetition().getId()).getSuccess();
         MilestoneResource openDate = simpleFindFirst(milestones, m -> OPEN_DATE.equals(m.getType())).get();
+        if (data.getCompetition().isAlwaysOpen()) {
+            openDate.setDate(ZonedDateTime.parse("2021-11-01T12:00:00+01:00"));
+        } else {
             openDate.setDate(now().minusDays(1));
+        }
         milestoneService.updateMilestone(openDate).getSuccess();
     }
 
