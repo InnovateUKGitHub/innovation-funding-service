@@ -147,15 +147,6 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         }
     }
 
-//    public void moveCompetitionIntoOpenStatus(CompetitionData competition) {
-//
-//        List<CsvUtils.AssessmentPeriodLine> assessmentPeriodLines = simpleFilter(competitionAssessmentPeriodLines, l ->
-//                competition.getCompetition().getName().equals(l.competition));
-//
-//        CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competition);
-//        basicCompetitionInformation.moveCompetitionIntoOpenStatus(assessmentPeriodLines.get(0)).build();
-//    }
-
     public void moveCompetitionIntoOpenStatus(CompetitionData competition) {
 
         CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competition);

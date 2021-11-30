@@ -19,6 +19,7 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
+import org.innovateuk.ifs.testdata.services.CsvUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -284,17 +285,12 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         competitionSetupService.markAsSetup(data.getCompetition().getId());
     }
 
-//    public CompetitionDataBuilder moveCompetitionIntoOpenStatus(CsvUtils.AssessmentPeriodLine line) {
-//        return asCompAdmin(data -> {
-//            shiftMilestoneToTomorrow(data, MilestoneType.SUBMISSION_DATE);
-//            shiftOpenDateToYesterday(data, line);
-//        });
-//    }
-
     public CompetitionDataBuilder moveCompetitionIntoOpenStatus() {
         return asCompAdmin(data -> {
             shiftMilestoneToTomorrow(data, MilestoneType.SUBMISSION_DATE);
-            shiftOpenDateToYesterday(data);
+            if (!data.getCompetition().isAlwaysOpen()) {
+                shiftOpenDateToYesterday(data);
+            }
         });
     }
 
@@ -322,17 +318,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
         });
     }
-
-//    private void shiftOpenDateToYesterday(CompetitionData data, CsvUtils.AssessmentPeriodLine line) {
-//        List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(data.getCompetition().getId()).getSuccess();
-//        MilestoneResource openDate = simpleFindFirst(milestones, m -> OPEN_DATE.equals(m.getType())).get();
-//        if (data.getCompetition().isAlwaysOpen()) {
-//            openDate.setDate(line.assessorBriefing.minusDays(1));
-//        } else {
-//            openDate.setDate(now().minusDays(1));
-//        }
-//        milestoneService.updateMilestone(openDate).getSuccess();
-//    }
 
     private void shiftOpenDateToYesterday(CompetitionData data) {
         List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(data.getCompetition().getId()).getSuccess();
