@@ -101,7 +101,8 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("filter", "filter");
         mockMvc.perform(get(buildPaginationUri("/user/active", 0, 5, null, params))
-                .header("IFS_AUTH_TOKEN", "123abc"));
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk());
     }
 
     @Test
