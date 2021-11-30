@@ -22,6 +22,7 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.navigation.PageHistoryService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
@@ -35,6 +36,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
@@ -88,6 +90,9 @@ public class GenericQuestionApplicationController {
     @Autowired
     private GenericQuestionApplicationFormValidator validator;
 
+    @Autowired
+    private PageHistoryService pageHistoryService;
+
     @GetMapping
     public String view(@ModelAttribute(name = "form", binding = false) GenericQuestionApplicationForm form,
                        @SuppressWarnings("unused") BindingResult bindingResult,
@@ -95,9 +100,15 @@ public class GenericQuestionApplicationController {
                        @PathVariable long applicationId,
                        @PathVariable Optional<Long> organisationId,
                        @PathVariable long questionId,
-                       UserResource user) {
+                       UserResource user, HttpServletRequest request,
+                       HttpServletResponse response) {
+
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
         formPopulator.populate(form, organisationId, question);
+       //TODO need to do only for loans
+        if (question.getQuestion().getQuestionSetupType().getShortName().equals("Business and financial information")) {
+           pageHistoryService.recordLoanApplicationOverviewPageHistory(request, response,"Application Overview", "/application/" + applicationId);
+        }
         return getView(model, organisationId, question);
     }
 
