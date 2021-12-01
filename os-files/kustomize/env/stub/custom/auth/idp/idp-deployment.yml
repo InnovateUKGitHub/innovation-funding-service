@@ -29,4 +29,3 @@ spec:
               mountPath: /var/sp-metadata/mo/
             - name: sp-metadata-loans-volume
               mountPath: /var/sp-metadata/loans/
-
