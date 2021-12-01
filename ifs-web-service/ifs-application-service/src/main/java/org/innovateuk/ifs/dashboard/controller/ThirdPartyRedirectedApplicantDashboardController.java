@@ -44,7 +44,7 @@ public class ThirdPartyRedirectedApplicantDashboardController extends ApplicantD
                                                   HttpServletRequest request) {
 
         if (isLoanPartBEnabled) {
-            Optional<String> url = pageHistoryService.getApplicationOverviewPage(request)
+            Optional<String> url = pageHistoryService.getPreviousPage(request)
                     .map(PageHistory::buildUrl);
             if (url.isPresent()) {
                 return "redirect:" + url.get();
