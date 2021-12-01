@@ -264,6 +264,4 @@ the assessor accepts an invite to an application
     the user clicks the button/link       link = ${hestaCompetitionName}
     the user selects the radio button     acceptInvitation  true
     the user clicks the button/link       jQuery = button:contains("Confirm")
-    the user clicks the button/link       link = Assessments
-    the user should see the element       jQuery = strong:contains("Batch assessment 1") ~ h3:contains("${webTestCompName}")
     the user logs out if they are logged in
