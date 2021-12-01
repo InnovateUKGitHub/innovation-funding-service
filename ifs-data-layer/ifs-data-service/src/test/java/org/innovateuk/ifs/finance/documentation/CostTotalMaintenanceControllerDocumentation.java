@@ -9,7 +9,6 @@ import org.mockito.Mock;
 import static org.hamcrest.Matchers.isEmptyString;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,9 +30,6 @@ public class CostTotalMaintenanceControllerDocumentation extends MockMvcTest<Cos
         mockMvc.perform(put("/cost/send-all")
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(isEmptyString()))
-                .andDo(document(
-                        "cost-totals/{method-name}"
-                ));
+                .andExpect(content().string(isEmptyString()));
     }
 }

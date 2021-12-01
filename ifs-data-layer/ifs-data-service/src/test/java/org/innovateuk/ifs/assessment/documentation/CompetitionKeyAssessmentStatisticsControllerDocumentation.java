@@ -12,19 +12,11 @@ import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.CompetitionClosedKeyAssessmentStatisticsResourceDocs.competitionClosedKeyAssessmentStatisticsResourceBuilder;
-import static org.innovateuk.ifs.documentation.CompetitionClosedKeyAssessmentStatisticsResourceDocs.competitionClosedKeyAssessmentStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInAssessmentKeyAssessmentStatisticsResourceDocs.competitionInAssessmentKeyAssessmentStatisticsResourceBuilder;
-import static org.innovateuk.ifs.documentation.CompetitionInAssessmentKeyAssessmentStatisticsResourceDocs.competitionInAssessmentKeyAssessmentStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionOpenKeyAssessmentStatisticsResourceDocs.competitionOpenKeyAssessmentStatisticsResourceBuilder;
-import static org.innovateuk.ifs.documentation.CompetitionOpenKeyAssessmentStatisticsResourceDocs.competitionOpenKeyAssessmentStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionReadyToOpenKeyAssessmentStatisticsResourceDocs.competitionReadyToOpenKeyAssessmentStatisticsResourceBuilder;
-import static org.innovateuk.ifs.documentation.CompetitionReadyToOpenKeyAssessmentStatisticsResourceDocs.competitionReadyToOpenKeyAssessmentStatisticsResourceFields;
 import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionKeyAssessmentStatisticsControllerDocumentation extends
@@ -49,13 +41,7 @@ public class CompetitionKeyAssessmentStatisticsControllerDocumentation extends
 
         mockMvc.perform(get("/competition-assessment-statistics/{id}/ready-to-open", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competition-assessment-statistics/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the competition the stats are for")
-                        ),
-                        responseFields(competitionReadyToOpenKeyAssessmentStatisticsResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(competitionKeyAssessmentStatisticsService, only()).getReadyToOpenKeyStatisticsByCompetition
                 (competitionId);
@@ -72,13 +58,7 @@ public class CompetitionKeyAssessmentStatisticsControllerDocumentation extends
                 .thenReturn(serviceSuccess(keyStatisticsResource));
         mockMvc.perform(get("/competition-assessment-statistics/{id}/open", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competition-assessment-statistics/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the competition the stats are for")
-                        ),
-                        responseFields(competitionOpenKeyAssessmentStatisticsResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(competitionKeyAssessmentStatisticsService, only()).getOpenKeyStatisticsByCompetition(competitionId);
     }
@@ -93,13 +73,7 @@ public class CompetitionKeyAssessmentStatisticsControllerDocumentation extends
                 .thenReturn(serviceSuccess(keyStatisticsResource));
         mockMvc.perform(get("/competition-assessment-statistics/{id}/closed", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competition-assessment-statistics/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the competition the stats are for")
-                        ),
-                        responseFields(competitionClosedKeyAssessmentStatisticsResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(competitionKeyAssessmentStatisticsService, only()).getClosedKeyStatisticsByCompetition(competitionId);
     }
@@ -114,13 +88,7 @@ public class CompetitionKeyAssessmentStatisticsControllerDocumentation extends
                 .thenReturn(serviceSuccess(keyStatisticsResource));
         mockMvc.perform(get("/competition-assessment-statistics/{id}/in-assessment", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competition-assessment-statistics/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the competition the stats are for")
-                        ),
-                        responseFields(competitionInAssessmentKeyAssessmentStatisticsResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(competitionKeyAssessmentStatisticsService, only()).getInAssessmentKeyStatisticsByCompetition
                 (competitionId);

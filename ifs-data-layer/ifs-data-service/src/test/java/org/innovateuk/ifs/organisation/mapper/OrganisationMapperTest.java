@@ -2,17 +2,14 @@ package org.innovateuk.ifs.organisation.mapper;
 
 
 import org.innovateuk.ifs.organisation.domain.Organisation;
-
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-
-import static org.junit.Assert.assertEquals;
-
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import static org.junit.Assert.assertEquals;
 
 
 /**

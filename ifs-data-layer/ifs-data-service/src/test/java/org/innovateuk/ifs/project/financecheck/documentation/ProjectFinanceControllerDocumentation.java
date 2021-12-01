@@ -11,7 +11,6 @@ import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.restdocs.payload.PayloadDocumentation;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -36,10 +35,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -140,12 +136,6 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         mockMvc.perform(get("/project/{projectId}/project-finances", projectId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(expectedFinances)))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which finance totals are being retrieved")
-                        ),
-                        PayloadDocumentation.relaxedResponseFields(ProjectFinanceResponseFields.projectFinanceFields)
-                ));
+                .andExpect(content().json(toJson(expectedFinances)));
     }
 }

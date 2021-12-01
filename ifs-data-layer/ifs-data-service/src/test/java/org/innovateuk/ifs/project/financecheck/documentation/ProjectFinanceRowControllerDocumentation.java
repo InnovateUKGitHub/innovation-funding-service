@@ -13,17 +13,11 @@ import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.ValidationMessagesDocs.validationMessagesFields;
-import static org.innovateuk.ifs.project.financecheck.documentation.ProjectFinanceResponseFields.projectFinanceGrantClaimRowFields;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProjectFinanceRowControllerDocumentation extends BaseControllerMockMVCTest<ProjectFinanceRowController> {
@@ -46,13 +40,7 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
         mockMvc.perform(get(url, 123L)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(document("project/finance/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of cost item to be returned")
-                        ),
-                        responseFields(projectFinanceGrantClaimRowFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -65,13 +53,7 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(costItem)))
-                .andExpect(status().isOk()).
-                andDo(document("project/finance/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of cost item to be updated")
-                        ),
-                        responseFields(validationMessagesFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -82,12 +64,7 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
         mockMvc.perform(delete(BASE_URL + "/{id}", "123")
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent()).
-                andDo(document("project/finance/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of cost item to be deleted")
-                        )
-                ));
+                .andExpect(status().isNoContent());
     }
 
     @Override

@@ -33,7 +33,6 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.*;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -120,7 +119,6 @@ public class FileUploadControllerTest extends BaseControllerMockMVCTest<FileUplo
                                 header("Content-Length", "99999999").
                                 content("My CSV content")).
                 andExpect(status().isPayloadTooLarge()).
-                andDo(document("external-system-files/upload-file_payloadTooLarge")).
                 andReturn();
 
         assertResponseErrorKeyEqual(PAYLOAD_TOO_LARGE.name(), payloadTooLargeError(5000), response);
@@ -141,7 +139,6 @@ public class FileUploadControllerTest extends BaseControllerMockMVCTest<FileUplo
                                 header("Content-Type", "application/csv").
                                 content("My CSV content")).
                 andExpect(status().isLengthRequired()).
-                andDo(document("external-system-files/upload-file_missingContentLength")).
                 andReturn();
 
         assertResponseErrorKeyEqual(LENGTH_REQUIRED.name(), lengthRequiredError(5000), response);
@@ -162,7 +159,6 @@ public class FileUploadControllerTest extends BaseControllerMockMVCTest<FileUplo
                                 header("Content-Length", "1000").
                                 content("My CSV content")).
                 andExpect(status().isUnsupportedMediaType()).
-                andDo(document("external-system-files/upload-file_unsupportedContentType")).
                 andReturn();
 
         assertResponseErrorKeyEqual(UNSUPPORTED_MEDIA_TYPE.name(), unsupportedMediaTypeByNameError(asList("application/csv", "application/json")), response);
@@ -182,7 +178,6 @@ public class FileUploadControllerTest extends BaseControllerMockMVCTest<FileUplo
                                 header("Content-Length", "1000").
                                 content("My CSV content")).
                 andExpect(status().isUnsupportedMediaType()).
-                andDo(document("forminputresponsefileupload/file_fileUpload_missingContentType")).
                 andReturn();
 
         assertResponseErrorKeyEqual(UNSUPPORTED_MEDIA_TYPE.name(), unsupportedMediaTypeByNameError(asList("application/pdf", "application/json")), response);
@@ -219,7 +214,6 @@ public class FileUploadControllerTest extends BaseControllerMockMVCTest<FileUplo
                                 header("Content-Type", "application/csv").
                                 header("Content-Length", "1000").
                                 content("My CSV content")).
-                andDo(document("external-system-files/upload-file_" + documentationSuffix)).
                 andReturn();
 
         assertEquals(expectedStatus.value(), response.getResponse().getStatus());

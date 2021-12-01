@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 

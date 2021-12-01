@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.domain.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;

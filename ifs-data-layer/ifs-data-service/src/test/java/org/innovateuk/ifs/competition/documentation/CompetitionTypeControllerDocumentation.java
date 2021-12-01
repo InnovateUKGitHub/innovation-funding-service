@@ -10,10 +10,7 @@ import org.mockito.Mock;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionTypeControllerDocumentation extends BaseControllerMockMVCTest<CompetitionTypeController> {
@@ -31,14 +28,6 @@ public class CompetitionTypeControllerDocumentation extends BaseControllerMockMV
 
         mockMvc.perform(get("/competition-type/find-all")
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competition-type/{method-name}",
-                    responseFields(
-                            fieldWithPath("[].id").description("id of the competition type"),
-                            fieldWithPath("[].name").description("name of the competition type"),
-                            fieldWithPath("[].competitions").description("competition ids that have this type"),
-                            fieldWithPath("[].active").description("indicates if the competition type is active")
-                    )
-                ));
+                .andExpect(status().isOk());
     }
 }

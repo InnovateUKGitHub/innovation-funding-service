@@ -10,9 +10,7 @@ import org.springframework.validation.DataBinder;
 import org.springframework.validation.Validator;
 
 import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Mark as complete validator test class for application research category section
