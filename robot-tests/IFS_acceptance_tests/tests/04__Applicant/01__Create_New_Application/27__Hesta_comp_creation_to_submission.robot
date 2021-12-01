@@ -261,7 +261,7 @@ comp admin sends invite to assesor
 
 the assessor accepts an invite to an application
     logging in and error checking         ${webTestAssessorEmailAddress}   ${short_password}
-    the user clicks the button/link       link = ${webTestAppName}
+    the user clicks the button/link       link = ${hestaCompetitionName}
     the user selects the radio button     assessmentAccept  true
     the user clicks the button/link       jQuery = button:contains("Confirm")
     the user clicks the button/link       link = Assessments
