@@ -22,10 +22,13 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.navigation.PageHistoryService;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,6 +38,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
@@ -88,6 +92,13 @@ public class GenericQuestionApplicationController {
     @Autowired
     private GenericQuestionApplicationFormValidator validator;
 
+    @Autowired
+    private PageHistoryService pageHistoryService;
+
+    @Value("${ifs.loan.partb.enabled}")
+    private boolean isLoanPartBEnabled;
+    private static final String APPLICATION_OVERVIEW_PAGE = "Application Overview";
+
     @GetMapping
     public String view(@ModelAttribute(name = "form", binding = false) GenericQuestionApplicationForm form,
                        @SuppressWarnings("unused") BindingResult bindingResult,
@@ -95,9 +106,12 @@ public class GenericQuestionApplicationController {
                        @PathVariable long applicationId,
                        @PathVariable Optional<Long> organisationId,
                        @PathVariable long questionId,
-                       UserResource user) {
+                       UserResource user, HttpServletRequest request,
+                       HttpServletResponse response) {
+
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
         formPopulator.populate(form, organisationId, question);
+        recordApplicationOverviewPageHistory(applicationId, request, response, question);
         return getView(model, organisationId, question);
     }
 
@@ -342,4 +356,11 @@ public class GenericQuestionApplicationController {
     private String redirectToApplicationOverview(long applicationId) {
         return String.format("redirect:/application/%d", applicationId);
     }
+
+    private void recordApplicationOverviewPageHistory(long applicationId, HttpServletRequest request, HttpServletResponse response, ApplicantQuestionResource question) {
+        if (isLoanPartBEnabled && QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION == question.getQuestion().getQuestionSetupType()) {
+            pageHistoryService.recordLoanApplicationOverviewPageHistory(request, response,APPLICATION_OVERVIEW_PAGE, "/application/" + applicationId);
+        }
+    }
+
 }

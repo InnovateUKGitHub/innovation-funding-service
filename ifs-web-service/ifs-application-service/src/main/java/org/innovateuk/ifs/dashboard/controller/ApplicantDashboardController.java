@@ -77,7 +77,7 @@ public class ApplicantDashboardController {
                             HttpServletRequest request) {
 
         if (isLoanPartBEnabled) {
-            Optional<String> url = pageHistoryService.getPreviousPage(request)
+            Optional<String> url = pageHistoryService.getApplicationOverviewPage(request)
                     .map(PageHistory::buildUrl);
             if (url.isPresent()) {
                 return "redirect:" + url.get();
