@@ -148,7 +148,6 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
     }
 
     public void moveCompetitionIntoOpenStatus(CompetitionData competition) {
-
         CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competition);
         basicCompetitionInformation.moveCompetitionIntoOpenStatus().build();
     }

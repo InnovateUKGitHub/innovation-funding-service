@@ -320,7 +320,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(data.getCompetition().getId()).getSuccess();
         MilestoneResource openDate = simpleFindFirst(milestones, m -> OPEN_DATE.equals(m.getType())).get();
         if (data.getCompetition().isAlwaysOpen()) {
-            openDate.setDate(ZonedDateTime.parse("2021-11-01T12:00:00+01:00"));
+            openDate.setDate(ZonedDateTime.parse("2021-01-01T12:00:00+01:00"));
         } else {
             openDate.setDate(now().minusDays(1));
         }
