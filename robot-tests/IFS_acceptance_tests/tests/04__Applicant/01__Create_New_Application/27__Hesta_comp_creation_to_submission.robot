@@ -67,7 +67,7 @@ The Application Summary page must not include the Reopen Application link when t
     And Competition admin creates an assessment period                              ${competitionId}
     And comp admin sends invite to assesor
     And the assessor accepts an invite to an application
-    And Log in as a different user                                                  &{Comp_admin1_credentials}
+    And Log in as a IFS admin                                                       &{Comp_admin1_credentials}
     And assign the application to assessor
     When the internal team mark the application as successful / unsuccessful        ${hestaApplicationName}   FUNDED
     And Log in as a different user                                                  email=${leadApplicantEmail}   password=${short_password}
@@ -265,3 +265,8 @@ the assessor accepts an invite to an application
     the user selects the radio button     acceptInvitation  true
     the user clicks the button/link       jQuery = button:contains("Confirm")
     the user logs out if they are logged in
+
+Log in as a IFS admin
+    [Arguments]    ${email}    ${password}
+    the guest user inserts user email and password    ${email}    ${password}
+    the user clicks the button/link                   jQuery = button:contains("Sign in")
