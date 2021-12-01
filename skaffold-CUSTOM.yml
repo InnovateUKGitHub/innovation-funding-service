@@ -4,11 +4,11 @@ metadata:
   name: innovation-funding-service
 build:
   artifacts:
-    - image: competition-mgt-service
+    - image: data-service
       context: .
       jib:
         type: gradle
-        project: ifs-web-service:ifs-competition-mgt-service
+        project: ifs-data-layer:ifs-data-service
         args:
           - "-DskipTests"
   local:
