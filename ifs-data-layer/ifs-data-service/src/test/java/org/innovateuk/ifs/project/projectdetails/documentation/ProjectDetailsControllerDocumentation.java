@@ -21,9 +21,7 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVCTest<ProjectDetailsController> {
@@ -44,8 +42,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
         mockMvc.perform(post("/project/{id}/startdate", 123L)
                 .param("projectStartDate", "2017-02-01")
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}"));
+                .andExpect(status().isOk());
 
         verify(projectDetailsServiceMock).updateProjectStartDate(123L, LocalDate.of(2017, 2, 1));
     }
@@ -58,8 +55,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
         mockMvc.perform(post("/project/{id}/startdate", 123L)
                 .param("projectStartDate", "2015-01-01")
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isBadRequest())
-                .andDo(document("project/{method-name}"));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -70,8 +66,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
         mockMvc.perform(post("/project/{id}/startdate", 123L)
                 .param("projectStartDate", "2015-01-05")
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isBadRequest())
-                .andDo(document("project/{method-name}"));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -85,13 +80,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which project duration is being updated"),
-                                parameterWithName("durationInMonths").description("The new project duration to be set")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -103,13 +92,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(post("/project/{id}/project-manager/{projectManagerId}", project1Id, projectManagerId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the project"),
-                                parameterWithName("projectManagerId").description("User id of the Project Manager being assigned")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -121,13 +104,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(post("/project/{id}/project-manager/{projectManagerId}", project1Id, projectManagerId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isBadRequest())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the project"),
-                                parameterWithName("projectManagerId").description("User id of the Project Manager being assigned")
-                        )
-                ));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -137,16 +114,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the Project that is having a Finance Contact applied to"),
-                                parameterWithName("organisationId").description("Id of the Organisation that is having its Finance Contact set")
-                        ),
-                        requestParameters(
-                                parameterWithName("financeContact").description("Id of the user who is to be the Finance Contact for the given Project and Organisation")
-                        ))
-                );
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -163,13 +131,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
                 .contentType(APPLICATION_JSON)
                 .content(toJson(postcodeAndTown))
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the Project"),
-                                parameterWithName("organisationId").description("Id of the Organisation")
-                        ))
-                );
+                .andExpect(status().isOk());
 
         verify(projectDetailsServiceMock).updatePartnerProjectLocation(composite, postcodeAndTown);
     }
@@ -182,8 +144,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isBadRequest())
-                .andDo(document("project/{method-name}"));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -194,8 +155,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isBadRequest())
-                .andDo(document("project/{method-name}"));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -207,12 +167,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(invite)))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of project that the project manager is being invited to")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -224,12 +179,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(invite)))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of project that the finance contact is being invited to")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -246,12 +196,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(address)))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of project that the project address is being set on")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 }
 

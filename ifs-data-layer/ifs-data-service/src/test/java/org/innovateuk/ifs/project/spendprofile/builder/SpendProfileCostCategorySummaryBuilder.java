@@ -2,8 +2,6 @@ package org.innovateuk.ifs.project.spendprofile.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
-import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
-import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileCostCategorySummaries;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileCostCategorySummary;
 
 import java.math.BigDecimal;

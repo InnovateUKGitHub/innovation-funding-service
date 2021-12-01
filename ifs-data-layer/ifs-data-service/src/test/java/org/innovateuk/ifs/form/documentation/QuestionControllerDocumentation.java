@@ -1,29 +1,23 @@
 package org.innovateuk.ifs.form.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.controller.QuestionController;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.documentation.QuestionDocs.questionBuilder;
-import static org.innovateuk.ifs.documentation.QuestionDocs.questionFields;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<QuestionController> {
 
@@ -42,15 +36,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
         when(questionService.getQuestionById(id)).thenReturn(serviceSuccess(questionBuilder.build()));
 
         mockMvc.perform(get("/question/id/{id}", id)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("question/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the question to be found")
-                        ),
-                        responseFields(
-                                questionFields
-                        )
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -60,15 +46,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
         when(questionService.findByCompetition(competitionId)).thenReturn(serviceSuccess(questionBuilder.build(2)));
 
         mockMvc.perform(get("/question/find-by-competition/{competitionId}", competitionId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("question/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition for which the questions are requested")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("List of questions belonging to the competition")
-                        ).andWithPrefix("[].", questionFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -78,13 +56,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
         when(questionService.getNextQuestion(questionId)).thenReturn(serviceSuccess(questionBuilder.build()));
 
         mockMvc.perform(get("/question/get-next-question/{questionId}", questionId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("question/{method-name}",
-                        pathParameters(
-                                parameterWithName("questionId").description("Id of the current question")
-                        ),
-                        responseFields(questionFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -94,13 +66,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
         when(questionService.getNextQuestionBySection(sectionId)).thenReturn(serviceSuccess(questionBuilder.build()));
 
         mockMvc.perform(get("/question/get-next-question-by-section/{sectionId}", sectionId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("question/{method-name}",
-                        pathParameters(
-                                parameterWithName("sectionId").description("Id of the current section")
-                        ),
-                        responseFields(questionFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -110,13 +76,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
         when(questionService.getPreviousQuestion(questionId)).thenReturn(serviceSuccess(questionBuilder.build()));
 
         mockMvc.perform(get("/question/get-previous-question/{questionId}", questionId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("question/{method-name}",
-                        pathParameters(
-                                parameterWithName("questionId").description("Id of the current question")
-                        ),
-                        responseFields(questionFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -126,13 +86,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
         when(questionService.getPreviousQuestionBySection(sectionId)).thenReturn(serviceSuccess(questionBuilder.build()));
 
         mockMvc.perform(get("/question/get-previous-question-by-section/{sectionId}", sectionId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("question/{method-name}",
-                        pathParameters(
-                                parameterWithName("sectionId").description("Id of the current section")
-                        ),
-                        responseFields(questionFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -143,14 +97,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
         when(questionService.getQuestionResourceByCompetitionIdAndFormInputType(competitionId, formInputType)).thenReturn(serviceSuccess(questionBuilder.build()));
 
         mockMvc.perform(get("/question/get-question-by-competition-id-and-form-input-type/{competitionId}/{formInputType}", competitionId, formInputType)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("question/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("The id of the competition to which the returned Question will belong"),
-                                parameterWithName("formInputType").description("form input type")
-                        ),
-                        responseFields(questionFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -162,10 +109,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
         mockMvc.perform(put("/question/")
                     .contentType(APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(questionResource))
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("question/{method-name}",
-                        responseFields(questionFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
 
     }
 
@@ -176,15 +120,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
         when(questionService.getQuestionsByAssessmentId(assessmentId)).thenReturn(serviceSuccess(asList(questionBuilder.build())));
 
         mockMvc.perform(get("/question/get-questions-by-assessment/{assessmentId}", assessmentId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("question/{method-name}",
-                        pathParameters(
-                                parameterWithName("assessmentId").description("Id of the assessment for which questions should be returned for")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("An array of the questions which are visible for the specified assessment")
-                        ).andWithPrefix("[].", questionFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -197,13 +133,6 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
 
         mockMvc.perform(get("/question/get-question-by-competition-id-and-question-setup-type/{competitionId}/{type}",
                             competitionId, setupQuestionType)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("question/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition for which a question should be returned for"),
-                                parameterWithName("type").description("QuestionSetupType of the question we want to be returned")
-                        ),
-                        responseFields(questionFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 }
