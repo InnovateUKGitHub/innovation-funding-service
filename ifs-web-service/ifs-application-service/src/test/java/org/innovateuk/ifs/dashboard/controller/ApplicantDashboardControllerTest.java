@@ -6,18 +6,13 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.dashboard.populator.ApplicantDashboardPopulator;
 import org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel;
-import org.innovateuk.ifs.navigation.PageHistory;
-import org.innovateuk.ifs.navigation.PageHistoryService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.context.TestPropertySource;
 
-import java.util.Optional;
-
 import static java.lang.String.valueOf;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -34,9 +29,6 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
 
     @Mock
     private ApplicantDashboardPopulator populator;
-
-    @Mock
-    private PageHistoryService pageHistoryService;
 
     @Before
     public void setUpData() {
@@ -106,20 +98,5 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
 
         mockMvc.perform(post("/applicant/dashboard").param("delete-application", valueOf(applicationId)))
                 .andExpect(status().is3xxRedirection());
-    }
-
-    @Test
-    public void dashloansToApplicationsOverviewPageboard() throws Exception {
-        setLoggedInUser(applicant);
-
-        ApplicantDashboardViewModel viewModel = mock(ApplicantDashboardViewModel.class);
-        String redirect = "/application/1";
-        when(populator.populate(applicant.getId())).thenReturn(viewModel);
-        when(pageHistoryService.getApplicationOverviewPage(any())).thenReturn(Optional.of(new PageHistory(redirect)));
-
-        mockMvc.perform(get("/applicant/dashboard/loansCommunity"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("applicant-dashboard"))
-                .andExpect(model().attribute("model", viewModel));
     }
 }
