@@ -25,6 +25,8 @@ ${hestaApplicationUnsuccessfulEmailSubject}     update about your Horizon Europe
 ${hestaApplicationSubmissionEmail}              We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
 ${hestaApplicationUnsuccessfulEmail}            We have been advised you were unsuccessful in your grant application for Horizon Europe funding from The European Commission
 ${assessorEmail}                                another.person@gmail.com
+${webTestAssessor}                              Angel Witt
+${webTestAssessorEmailAddress}                  angel.witt@gmail.com
 
 *** Test Cases ***
 Comp admin can select the competition type option Hesta in Initial details on competition setup
@@ -63,6 +65,10 @@ The Application Summary page must not include the Reopen Application link when t
     Given Log in as a different user                                                &{Comp_admin1_credentials}
     And Requesting IDs of this competition                                          ${hestaCompetitionName}
     And Competition admin creates an assessment period                              ${competitionId}
+    And comp admin sends invite to assesor
+    And the assessor accepts an invite to an application
+    And Log in as a different user                                                  &{Comp_admin1_credentials}
+    And assign the application to assessor
     When the internal team mark the application as successful / unsuccessful        ${hestaApplicationName}   FUNDED
     And Log in as a different user                                                  email=${leadApplicantEmail}   password=${short_password}
     Then the application summary page must not include the reopen application link
@@ -213,7 +219,6 @@ Competition admin creates an assessment period
     the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.month  12
     the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.year  2100
     the user clicks the button/link         jQuery = button:contains('Save and return to manage assessments')
-    assign the application to assessor
     the user clicks the button/link         jQuery = button:contains("Notify assessors")
     update assessment batch 1 milestone to yesterday   ${competitionId}  ASSESSOR_DEADLINE
     the user clicks the button/link         jQuery = button:contains("Close assessment")
@@ -233,3 +238,32 @@ Custom Suite Setup
 Custom Suite Teardown
     the user closes the browser
     Disconnect from database
+
+assign the application to assessor
+    the user clicks the button/link     link = Manage applications
+    the user clicks the button/link     jQuery = td:contains("Always open application decision pending") ~ td a:contains("View progress")
+    the user selects the checkbox       assessor-row-1
+    the user clicks the button/link     jQuery = button:contains("Add to application")
+    the user clicks the button/link     link = Back to manage applications
+    the user clicks the button/link     link = Back to choose an assessment period to manage applications
+    the user clicks the button/link     link = Back to manage assessments
+
+comp admin sends invite to assesor
+    the user clicks the button/link          link = Invite assessors to assess the competition
+    the user enters text to a text field     id = assessorNameFilter  ${webTestAssessor}
+    the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
+    the user clicks the button/link          jQuery = tr:contains("${webTestAssessor}") label[for^="assessor-row"]
+    the user clicks the button/link          jQuery = .govuk-button:contains("Add selected to invite list")
+    the user clicks the button/link          link = Invite
+    the user clicks the button/link          link = Review and send invites
+    the user clicks the button/link          jQuery = .govuk-button:contains("Send invitation")
+    the user logs out if they are logged in
+
+the assessor accepts an invite to an application
+    logging in and error checking         ${webTestAssessorEmailAddress}   ${short_password}
+    the user clicks the button/link       link = ${webTestAppName}
+    the user selects the radio button     assessmentAccept  true
+    the user clicks the button/link       jQuery = button:contains("Confirm")
+    the user clicks the button/link       link = Assessments
+    the user should see the element       jQuery = strong:contains("Batch assessment 1") ~ h3:contains("${webTestCompName}")
+    the user logs out if they are logged in
