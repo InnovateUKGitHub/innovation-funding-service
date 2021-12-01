@@ -8,6 +8,7 @@ metadata:
     pullSecrets: pullSecrets
     waitForDs: waitForDs
     slow: slow
+    newRelic: newRelic
 spec:
   replicas: 1
   selector:
@@ -61,16 +62,6 @@ spec:
                 configMapKeyRef:
                   name: web-config
                   key: IFS_WEB_SYSTEM_USER_UID
-            - name: NEW_RELIC_LICENSE_KEY
-              valueFrom:
-                configMapKeyRef:
-                  name: new-relic-config
-                  key: NEW_RELIC_LICENSE_KEY
-            - name: NEW_RELIC_LOG
-              valueFrom:
-                configMapKeyRef:
-                  name: new-relic-config
-                  key: NEW_RELIC_LOG
             - name: IFS_SUBSIDY_CONTROL_NORTHERN_IRELAND_ENABLED
               valueFrom:
                 configMapKeyRef:
@@ -81,19 +72,14 @@ spec:
                 configMapKeyRef:
                   name: feature-toggle-config
                   key: IFS_LOAN_PARTB_ENABLED
-            - name: SPRING_PROFILES_ACTIVE
-              valueFrom:
-                configMapKeyRef:
-                  name: spring-config
-                  key: SPRING_PROFILES_ACTIVE
             - name: IFS_WEB_BASEURL
               valueFrom:
                 configMapKeyRef:
                   name: web-config
                   key: IFS_WEB_BASEURL
             - name: NEW_RELIC_APP_NAME
-              value: "ifs-front-door-service (${openshiftEnv})"
-            - name: JAVA_OPTS
+              value: "ifs-front-door-service"
+            - name: JAVA_TOOL_OPTIONS
               value: -Xms1000m -Xmx1000m -javaagent:/newrelic.jar
           ports:
             - containerPort: 8080

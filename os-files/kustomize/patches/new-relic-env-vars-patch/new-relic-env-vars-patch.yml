@@ -6,14 +6,20 @@ spec:
   template:
     spec:
       containers:
-        env:
-          - name: NEW_RELIC_LICENSE_KEY
-            valueFrom:
-              configMapKeyRef:
-                name: new-relic-config
-                key: NEW_RELIC_LICENSE_KEY
-          - name: NEW_RELIC_LOG
-            valueFrom:
-              configMapKeyRef:
-                name: new-relic-config
-                key: NEW_RELIC_LOG
+        - name: spring-boot-service-container
+          env:
+            - name: NEW_RELIC_LICENSE_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: new-relic-config
+                  key: NEW_RELIC_LICENSE_KEY
+            - name: NEW_RELIC_LOG
+              valueFrom:
+                configMapKeyRef:
+                  name: new-relic-config
+                  key: NEW_RELIC_LOG
+            - name: NEW_RELIC_LABELS
+              valueFrom:
+                configMapKeyRef:
+                  name: new-relic-config
+                  key: NEW_RELIC_LABELS
