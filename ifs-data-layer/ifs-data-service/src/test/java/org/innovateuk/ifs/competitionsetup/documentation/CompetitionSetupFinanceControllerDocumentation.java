@@ -10,17 +10,11 @@ import org.mockito.Mock;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionSetupFinanceResourceBuilder.newCompetitionSetupFinanceResource;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.NO_FINANCES;
-import static org.innovateuk.ifs.documentation.CompetitionSetupFinanceDocs.COMPETITION_SETUP_FINANCE_RESOURCE_FIELDS;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 public class CompetitionSetupFinanceControllerDocumentation extends BaseControllerMockMVCTest<CompetitionSetupFinanceController> {
 
@@ -48,10 +42,7 @@ public class CompetitionSetupFinanceControllerDocumentation extends BaseControll
                 put(baseUrl + "/{competitionId}", competitionId).
                         contentType(APPLICATION_JSON).
                         content(toJson(resource))
-                        .header("IFS_AUTH_TOKEN", "123abc")).
-                andDo(document("competition-setup-finance/{method-name}", pathParameters(parameterWithName("competitionId").description("The competition id")), requestFields(
-                        COMPETITION_SETUP_FINANCE_RESOURCE_FIELDS
-                )));
+                        .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -65,9 +56,6 @@ public class CompetitionSetupFinanceControllerDocumentation extends BaseControll
                 .build();
         when(competitionSetupFinanceService.getForCompetition(competitionId)).thenReturn(serviceSuccess(resource));
         mockMvc.perform(
-                get(baseUrl + "/{competitionId}", competitionId)).
-                andDo(document("competition-setup-finance/{method-name}",
-                        pathParameters(parameterWithName("competitionId").description("The competition id")),
-                        responseFields(COMPETITION_SETUP_FINANCE_RESOURCE_FIELDS)));
+                get(baseUrl + "/{competitionId}", competitionId));
     }
 }

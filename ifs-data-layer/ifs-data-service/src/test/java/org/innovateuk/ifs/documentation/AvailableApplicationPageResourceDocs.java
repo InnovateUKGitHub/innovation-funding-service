@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder;
-import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
 
-public class AvailableApplicationPageResourceDocs extends PageResourceDocs {
-        public static final FieldDescriptor[] availableApplicationPageResourceFields = pageResourceFields;
+public class AvailableApplicationPageResourceDocs {
 
         public static final AvailableApplicationPageResourceBuilder availableApplicationPageResourceBuilder =
                 newAvailableApplicationPageResource()

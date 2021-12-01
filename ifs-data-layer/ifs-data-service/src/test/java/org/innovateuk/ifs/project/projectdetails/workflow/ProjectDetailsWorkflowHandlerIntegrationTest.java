@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.projectdetails.workflow;
 
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.projectdetails.domain.ProjectDetailsProcess;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.Repository;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 

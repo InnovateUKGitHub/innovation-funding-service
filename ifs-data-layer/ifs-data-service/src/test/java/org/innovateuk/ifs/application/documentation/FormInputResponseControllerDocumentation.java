@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.restdocs.payload.PayloadDocumentation;
 
 import java.util.List;
 
@@ -15,12 +14,7 @@ import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBu
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.PROJECT_SUMMARY;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 public class FormInputResponseControllerDocumentation extends BaseControllerMockMVCTest<FormInputResponseController> {
 
@@ -42,15 +36,7 @@ public class FormInputResponseControllerDocumentation extends BaseControllerMock
         when(formInputResponseServiceMock.findResponsesByApplication(applicationId)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/forminputresponse/find-responses-by-application/{applicationId}", applicationId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("forminputresponse/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("Id of the application")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("List of formInputResponses")
-                        ).andWithPrefix("[].", FormInputResponseResourceDocs.formInputResponseResourceFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -63,16 +49,7 @@ public class FormInputResponseControllerDocumentation extends BaseControllerMock
         when(formInputResponseServiceMock.findResponsesByFormInputIdAndApplicationId(formInputId, applicationId)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/forminputresponse/find-response-by-form-input-id-and-application-id/{formInputId}/{applicationId}", formInputId, applicationId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("forminputresponse/{method-name}",
-                        pathParameters(
-                                parameterWithName("formInputId").description("Id of the form input"),
-                                parameterWithName("applicationId").description("The id of the application")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("List of formInputResponses")
-                        ).andWithPrefix("[].", FormInputResponseResourceDocs.formInputResponseResourceFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -85,14 +62,7 @@ public class FormInputResponseControllerDocumentation extends BaseControllerMock
         when(formInputResponseServiceMock.findResponseByApplicationIdAndQuestionSetupType(applicationId, questionSetupType)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/forminputresponse/find-by-application-id-and-question-setup-type/{applicationId}/{questionSetupType}", applicationId, questionSetupType)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("forminputresponse/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("The id of the application"),
-                                parameterWithName("questionSetupType").description("The setup type of the question")
-                        ),
-                        PayloadDocumentation.responseFields(FormInputResponseResourceDocs.formInputResponseResourceFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -105,16 +75,7 @@ public class FormInputResponseControllerDocumentation extends BaseControllerMock
         when(formInputResponseServiceMock.findResponseByApplicationIdAndQuestionId(applicationId, questionId)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/forminputresponse/find-by-application-id-and-question-id/{applicationId}/{questionId}", applicationId, questionId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("forminputresponse/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("The id of the application"),
-                                parameterWithName("questionId").description("The id of the question")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("List of formInputResponses")
-                        ).andWithPrefix("[].", FormInputResponseResourceDocs.formInputResponseResourceFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
 }

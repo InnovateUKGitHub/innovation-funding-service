@@ -9,7 +9,7 @@ import org.innovateuk.ifs.user.transactional.RoleProfileStatusService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -82,7 +82,7 @@ public class RoleProfileStatusControllerTest extends BaseControllerMockMVCTest<R
         when(roleProfileStatusServiceMock.findByRoleProfile(eq(roleProfileState), eq(profileRole), eq(filter), any(PageRequest.class)))
                 .thenReturn(serviceSuccess(userPageResource));
 
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/user/role-profile-status/{roleProfileState}/{profileRole}", roleProfileState, profileRole)
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/role-profile-status/{roleProfileState}/{profileRole}", roleProfileState, profileRole)
                 .param("filter", filter))
                 .andExpect(status().isOk());
     }

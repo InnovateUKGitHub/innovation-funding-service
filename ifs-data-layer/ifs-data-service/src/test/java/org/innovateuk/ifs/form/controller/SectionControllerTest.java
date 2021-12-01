@@ -7,7 +7,7 @@ import org.innovateuk.ifs.form.transactional.SectionService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
@@ -71,7 +71,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
 
         when(sectionService.getByCompetitionIdVisibleForAssessment(competitionId)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/section/get-by-competition-id-visible-for-assessment/{competitionId}", competitionId))
+        mockMvc.perform(MockMvcRequestBuilders.get("/section/get-by-competition-id-visible-for-assessment/{competitionId}", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expected)));
 

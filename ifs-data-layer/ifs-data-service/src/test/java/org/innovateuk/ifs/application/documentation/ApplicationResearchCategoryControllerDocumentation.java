@@ -17,11 +17,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
 public class ApplicationResearchCategoryControllerDocumentation extends BaseControllerMockMVCTest<ApplicationResearchCategoryController> {
 
@@ -54,12 +51,7 @@ public class ApplicationResearchCategoryControllerDocumentation extends BaseCont
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(researchCategoryId)))
-                .andExpect(status().isOk())
-                .andDo(document("application-research-category/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("id of the application for which the research category should be marked as complete")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -83,12 +75,6 @@ public class ApplicationResearchCategoryControllerDocumentation extends BaseCont
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(researchCategoryId)))
-                .andExpect(status().isOk())
-                .andDo(document("application-research-category/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("id of the application for which the research category should be marked as complete"),
-                                parameterWithName("markedAsCompleteById").description("Id of the user that marked the application as complete")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 }
