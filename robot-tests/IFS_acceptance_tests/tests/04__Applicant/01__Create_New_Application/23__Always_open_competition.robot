@@ -213,6 +213,16 @@ Assessor should see batch assessment number and valid assessment dates related t
     And the user should see the element         jQuery = a:contains("Always open application awaiting assessment")
     And the user should not see the element     jQuery = a:contains("Always open application decision pending")
 
+Assessor assess the application in assessment period 2
+    [Documentation]  IFS-9729
+    Given the user clicks the button/link                           link = Always open application awaiting assessment
+    And the user selects the radio button                           assessmentAccept  true
+    And the user clicks the button/link                             jQuery = button:contains("Confirm")
+    When the user clicks the button/link                            link = Always open application awaiting assessment
+    And the assessor adds score and feedback for every question     11
+    And Assessor submits the assessment
+    Then the user should see the element                            jQuery = li:contains("Always open application awaiting assessment") strong:contains("Recommended")
+
 Internal user sees valid information on dashboard
     [Documentation]  IFS-8849
     Given log in as a different user                            &{ifs_admin_user_credentials}
@@ -455,3 +465,12 @@ the user should see assessment period 1
     the user should see the element     jQuery = button:contains("Notify assessors")
     the user clicks the button/link     link = Manage assessment period
     the user should see the element     jQuery = button:contains("+ Add new assessment period")
+
+Assessor submits the assessment
+    the user clicks the button/link         link = Review and complete your assessment
+    the user selects the radio button       fundingConfirmation  true
+    the user enters text to a text field    id = feedback    Assessor as a service application assessed
+    the user clicks the button/link         jQuery = .govuk-button:contains("Save assessment")
+    the user clicks the button/link         jQuery = li:contains("Always open application awaiting assessment") label[for^="assessmentIds"]
+    the user clicks the button/link         jQuery = .govuk-button:contains("Submit assessments")
+    the user clicks the button/link         jQuery = button:contains("Yes I want to submit the assessments")
