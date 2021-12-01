@@ -72,9 +72,8 @@
             <div th:if="${model.questionType == model.getLoansBusinessAndFinancialInformation()}">
                <div th:if="${model.isLoansPartBEnabled()}">
                    <a class="govuk-button"
-                      target="_blank"
                       th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}" value="open-salesforce"
-                      type="Continue">Continue (opens in new tab)</a>
+                      type="Continue">Continue</a>
                </div>
                 <div th:unless="${model.isLoansPartBEnabled()}">
                     <a class="govuk-link"
@@ -104,9 +103,8 @@
             </div>
             <div>
                 <a class="govuk-button"
-                   target="_blank"
                    th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}" value="open-salesforce"
-                   type="Continue">Continue (opens in new tab)</a>
+                   type="Continue">Continue</a>
             </div>
         </th:block>
 
