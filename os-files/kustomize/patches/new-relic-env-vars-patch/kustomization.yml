@@ -4,4 +4,4 @@ patches:
 - path: new-relic-env-vars-patch.yml
   target:
     kind: Deployment
-    annotationSelector: "newrelic=newrelic"
+    annotationSelector: "newRelic=newRelic"

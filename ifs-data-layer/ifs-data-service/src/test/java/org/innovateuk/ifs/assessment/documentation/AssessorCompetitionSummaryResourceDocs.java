@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.documentation;
 
 import org.innovateuk.ifs.assessment.builder.AssessorCompetitionSummaryResourceBuilder;
-import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.innovateuk.ifs.assessment.builder.AssessorAssessmentResourceBuilder.newAssessorAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorCompetitionSummaryResourceBuilder.newAssessorCompetitionSummaryResource;
@@ -11,18 +10,8 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentState.ACCEPTED;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class AssessorCompetitionSummaryResourceDocs {
-
-    public static final FieldDescriptor[] assessorCompetitionSummaryResourceFields = {
-            fieldWithPath("assessor").description("The assessor's profile."),
-            fieldWithPath("competitionId").description("Id of the competition that the summary is refined by."),
-            fieldWithPath("competitionName").description("Name of the competition."),
-            fieldWithPath("competitionStatus").description("Status of the competition."),
-            fieldWithPath("assignedAssessments").description("List of the assessments that have assigned to the assessor."),
-            fieldWithPath("totalApplications").description("Total number of applications for the assessor across all competitions.")
-    };
 
     public static final AssessorCompetitionSummaryResourceBuilder assessorCompetitionSummaryResourceBuilder =
             newAssessorCompetitionSummaryResource()

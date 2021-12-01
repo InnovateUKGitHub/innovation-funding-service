@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.supporter.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
-import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationPageResource;
-import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationResource;
-import org.innovateuk.ifs.supporter.resource.SupporterState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
+import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationPageResource;
+import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationResource;
+import org.innovateuk.ifs.supporter.resource.SupporterState;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
