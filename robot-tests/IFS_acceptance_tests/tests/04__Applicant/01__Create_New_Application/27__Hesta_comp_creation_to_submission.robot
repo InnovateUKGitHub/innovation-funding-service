@@ -68,6 +68,7 @@ The Application Summary page must not include the Reopen Application link when t
     And comp admin sends invite to assesor
     And the assessor accepts an invite to an application
     And Log in as a IFS admin                                                       &{Comp_admin1_credentials}
+    And The user clicks the button/link                                             ${compTitle}
     And assign the application to assessor
     When the internal team mark the application as successful / unsuccessful        ${hestaApplicationName}   FUNDED
     And Log in as a different user                                                  email=${leadApplicantEmail}   password=${short_password}
