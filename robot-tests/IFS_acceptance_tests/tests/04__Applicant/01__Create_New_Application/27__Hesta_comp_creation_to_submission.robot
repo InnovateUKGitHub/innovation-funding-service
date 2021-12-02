@@ -250,8 +250,8 @@ assign the application to assessor
     the user clicks the button/link     link = Back to manage assessments
     the user clicks the button/link     link = Competition
     the user clicks the button/link     link = Input and review funding decision
-    the user should see the element     jQuery =a:contains("${hestaApplicationName}")
-    The user should not see the element   jQuery =a:contains("${newHestaApplicationName}")
+    the user should see the element     jQuery =td:contains("${hestaApplicationName}")
+    The user should not see the element   jQuery =td:contains("${newHestaApplicationName}")
 
 comp admin sends invite to assesor
     the user clicks the button/link          link = Invite assessors to assess the competition
