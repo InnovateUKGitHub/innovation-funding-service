@@ -50,7 +50,7 @@ Comp admin creates Hesta competition
 Lead applicant can submit application
     [Documentation]  IFS-8751
     Given the user logs out if they are logged in
-    When the user successfully completes application          tim   timmy   ${leadApplicantEmail}   ${applicationName}
+    When the user successfully completes application          tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
     And the user clicks the button/link                       link = Your project finances
     Then the user marks the finances as complete              ${hestaApplicationName}  labour costs  54,000  no
     Then the user can submit the application
