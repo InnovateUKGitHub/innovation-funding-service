@@ -6,9 +6,6 @@ apply from: rootProject.file("gradle-support/mapstruct.gradle")
 apply from: rootProject.file("gradle-support/profile-handler.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
 
-processResources.dependsOn applyProfiles
-
-
 apply from: "../flyway.gradle"
 
 afterEvaluate {
@@ -16,9 +13,6 @@ afterEvaluate {
         dockerDir = file("$project.parent.projectDir/docker/")
     }
 }
-
-ext.ifsWebSystemUserId = "c0d02979-e66e-11e7-ac43-0242ac120002"
-
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -43,10 +37,3 @@ test {
         exclude "${project.excludeTests}"
     }
 }
-
-flywayClean.dependsOn applyProfiles
-flywayMigrate.dependsOn processResources
-
-ext.serverPort = 8080
-ext.ifsFlywayLocations = "db/migration"
-
