@@ -84,9 +84,9 @@ Lead applicant receives email notifiction when internal user marks application u
     And the user marks the finances as complete                                     ${newHestaApplicationName}  labour costs  54,000  no
     And the user can submit the application
     And log in as a different user                                                  &{Comp_admin1_credentials}
-    When the internal team mark the application as successful / unsuccessful        ${hestaCompetitionName}   UNFUNDED
+    When the internal team mark the application as successful / unsuccessful        ${newHestaApplicationName}   UNFUNDED
     And the user clicks the button/link                                             link = Competition
-    And Requesting IDs of this application                                          ${hestaCompetitionName}
+    And Requesting IDs of this application                                          ${newHestaApplicationName}
     And the internal team notifies all applicants                                   ${ApplicationID}
     Then the user reads his email                                                   ${newLeadApplicantEmail}  ${ApplicationID}: ${hestaApplicationUnsuccessfulEmailSubject}  ${hestaApplicationUnsuccessfulEmail}
 
