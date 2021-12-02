@@ -8,6 +8,7 @@ metadata:
     pullSecrets: pullSecrets
     waitForDs: waitForDs
     slow: slow
+    newRelic: newRelic
 spec:
   replicas: 1
   selector:
@@ -46,16 +47,6 @@ spec:
             successThreshold: 1
             failureThreshold: 1
           env:
-              - name: NEW_RELIC_LICENSE_KEY
-                valueFrom:
-                  configMapKeyRef:
-                    name: new-relic-config
-                    key: NEW_RELIC_LICENSE_KEY
-              - name: NEW_RELIC_LOG
-                valueFrom:
-                  configMapKeyRef:
-                    name: new-relic-config
-                    key: NEW_RELIC_LOG
               - name: IFS_WEB_SYSTEM_USER_UID
                 valueFrom:
                   configMapKeyRef:
@@ -76,10 +67,10 @@ spec:
                   configMapKeyRef:
                     name: web-config
                     key: IFS_WEB_BASEURL
-              - name: JAVA_OPTS
+              - name: JAVA_TOOL_OPTIONS
                 value: -Xms400m -Xmx400m -javaagent:/newrelic.jar
               - name: NEW_RELIC_APP_NAME
-                value: "ifs-survey-service (${openshiftEnv})"
+                value: "ifs-survey-service"
           ports:
             - containerPort: 8080
           resources:

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.documentation.*;
 import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
@@ -29,10 +28,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -68,11 +64,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(inviteUserResource)))
-                .andExpect(status().isOk())
-                .andDo(document("inviteUser/saveInvite/{method-name}",
-                        requestFields(InviteUserResourceDocs.inviteUserResourceFields)
-                        .andWithPrefix("invitedUser.", UserDocs.userResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(inviteUserServiceMock).saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole(), inviteUserResource.getOrganisation());
     }
@@ -91,13 +83,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(get("/invite-user/get-invite/{inviteHash}", "SomeHashString")
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("inviteUser/get-invite/{method-name}",
-                        pathParameters(
-                                parameterWithName("inviteHash").description("hash of the invite being requested")
-                        ),
-                        responseFields(InviteUserResourceDocs.roleInviteResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(inviteUserServiceMock).getInvite("SomeHashString");
     }
@@ -110,12 +96,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
         mockMvc.perform(get("/invite-user/check-existing-user/{inviteHash}", "SomeHashString")
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("true"))
-                .andDo(document("inviteUser/checkExistingUser/{method-name}",
-                        pathParameters(
-                                parameterWithName("inviteHash").description("hash of the invite being checked")
-                        )
-                ));
+                .andExpect(content().string("true"));
 
         verify(inviteUserServiceMock).checkExistingUser("SomeHashString");
     }
@@ -128,11 +109,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
         params.add("filter", "");
         mockMvc.perform(get(buildPaginationUri("/invite-user/internal/pending", 0, 5, null, params))
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("inviteUser/internal/pending/{method-name}",
-                        responseFields(PageResourceDocs.pageResourceFields)
-                        .andWithPrefix("content[].", RoleInviteResourceDocs.roleInviteResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -148,18 +125,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
         mockMvc.perform(get("/invite-user/find-external-invites?searchString=" + searchString + "&searchCategory=" + searchCategory.name())
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(externalInviteResources)))
-                .andDo(document(
-                        "inviteUser/findExternalInvites/{method-name}",
-                        requestParameters(
-                                parameterWithName("searchString").description("The string to search"),
-                                parameterWithName("searchCategory").description("The category to search")
-                        )
-                        ,
-                        responseFields(
-                                fieldWithPath("[]").description("List of external pending invites with associated organisations, which contain the search string and match the search category")
-                        ).andWithPrefix("[].", ExternalInviteResourceDocs.externalInviteResourceFields)
-                ));
+                .andExpect(content().json(toJson(externalInviteResources)));
 
         verify(inviteUserServiceMock).findExternalInvites(searchString, searchCategory);
     }
@@ -171,11 +137,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(put("/invite-user/internal/pending/{inviteId}/resend", 123L)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("inviteUser/internal/pending/inviteId/{method-name}",
-                        pathParameters(
-                                parameterWithName("inviteId").description("The id of the pre-existing invite to resend")
-                        )));
+                .andExpect(status().isOk());
 
         verify(inviteUserServiceMock).resendInvite(123L);
     }

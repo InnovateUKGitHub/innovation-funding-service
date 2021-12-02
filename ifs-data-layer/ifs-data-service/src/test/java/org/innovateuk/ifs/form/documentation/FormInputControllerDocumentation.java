@@ -15,19 +15,12 @@ import java.util.function.Function;
 
 import static java.util.Collections.emptyMap;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.FileEntryDocs.fileEntryResourceFields;
 import static org.innovateuk.ifs.form.documentation.FormInputResourceDocs.formInputResourceBuilder;
-import static org.innovateuk.ifs.form.documentation.FormInputResourceDocs.formInputResourceFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -48,15 +41,7 @@ public class FormInputControllerDocumentation extends BaseFileControllerMockMVCT
         when(formInputServiceMock.findFormInput(1L)).thenReturn(serviceSuccess(testResource));
 
         mockMvc.perform(get(baseURI + "/{id}", 1L)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("forminput/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the forminput to be fetched")
-                        ),
-                        responseFields(
-                                formInputResourceFields
-                        )
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -65,17 +50,7 @@ public class FormInputControllerDocumentation extends BaseFileControllerMockMVCT
         when(formInputServiceMock.findByQuestionId(1L)).thenReturn(serviceSuccess(testResource));
 
         mockMvc.perform(get(baseURI + "/find-by-question-id/{id}", 1L)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("forminput/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the question")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("List of formInputs the user is allowed to see")
-                        ).andWithPrefix(
-                                "[].", formInputResourceFields)
-                        )
-                );
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -84,17 +59,7 @@ public class FormInputControllerDocumentation extends BaseFileControllerMockMVCT
         when(formInputServiceMock.findByCompetitionId(1L)).thenReturn(serviceSuccess(testResource));
 
         mockMvc.perform(get(baseURI + "/find-by-competition-id/{id}", 1L)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("forminput/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the competition")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("List of formInputs the user is allowed to see")
-                        ).andWithPrefix(
-                                "[].", formInputResourceFields)
-                        )
-                );
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -102,12 +67,7 @@ public class FormInputControllerDocumentation extends BaseFileControllerMockMVCT
         when(formInputServiceMock.delete(1L)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete(baseURI + "/{id}", 1L)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("forminput/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the forminput")
-                        )
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
 
@@ -120,10 +80,7 @@ public class FormInputControllerDocumentation extends BaseFileControllerMockMVCT
         mockMvc.perform(get(baseURI + "/file-details/{formInputId}", formInputId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(fileEntryResource)))
-                .andDo(document("forminput/{method-name}",
-                        pathParameters(parameterWithName("formInputId").description("Id of the question to get template file of")),
-                        responseFields(fileEntryResourceFields)));
+                .andExpect(content().json(toJson(fileEntryResource)));
 
         verify(formInputServiceMock).findFile(formInputId);
     }
@@ -137,8 +94,7 @@ public class FormInputControllerDocumentation extends BaseFileControllerMockMVCT
 
         assertGetFileContents(baseURI + "/file/{formInputId}", new Object[]{formInputId},
                 emptyMap(), formInputServiceMock, serviceCallToDownload)
-                .andExpect(status().isOk())
-                .andDo(documentFileGetContentsMethod("forminput/{method-name}"));
+                .andExpect(status().isOk());
     }
 
 }

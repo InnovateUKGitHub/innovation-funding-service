@@ -3,20 +3,13 @@ package org.innovateuk.ifs.competition.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.controller.CompetitionResearchCategoryController;
 import org.innovateuk.ifs.competition.transactional.CompetitionResearchCategoryService;
-import org.innovateuk.ifs.documentation.CompetitionResourceDocs;
-import org.innovateuk.ifs.documentation.ResearchCategoryResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.CompetitionResearchCategoryLinkDocs.competitionResearchCategoryLinkBuilder;
-import static org.innovateuk.ifs.documentation.CompetitionResearchCategoryLinkDocs.competitionResearchCategoryLinkResourceFields;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionResearchCategoryControllerDocumentation extends BaseControllerMockMVCTest<CompetitionResearchCategoryController> {
@@ -36,18 +29,9 @@ public class CompetitionResearchCategoryControllerDocumentation extends BaseCont
         when(competitionResearchCategoryService.findByCompetition(competitionId))
                 .thenReturn(serviceSuccess(competitionResearchCategoryLinkBuilder.build(3)));
 
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/competition-research-category/{id}", competitionId)
+        mockMvc.perform(MockMvcRequestBuilders.get("/competition-research-category/{id}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition-research-category/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the competition we want the chosen research categories from")
-                        ),
-                        responseFields(competitionResearchCategoryLinkResourceFields)
-                                .andWithPrefix("[].category.", ResearchCategoryResourceDocs.researchCategoryResourceFields)
-                                .andWithPrefix("[].entity.", CompetitionResourceDocs.competitionResourceFields)
-                ));
+                .andExpect(status().isOk());
 
 
     }

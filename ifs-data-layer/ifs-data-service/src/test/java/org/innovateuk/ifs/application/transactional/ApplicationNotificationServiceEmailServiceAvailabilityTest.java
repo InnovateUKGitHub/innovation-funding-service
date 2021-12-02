@@ -8,11 +8,9 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.sil.AbstractEmailServiceAvailabilityIntegrationTest;
 import org.innovateuk.ifs.testdata.services.TestService;
 import org.innovateuk.ifs.testutil.DatabaseTestHelper;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.sql.SQLException;
 import java.util.function.Consumer;
 
 import static java.util.Collections.singleton;

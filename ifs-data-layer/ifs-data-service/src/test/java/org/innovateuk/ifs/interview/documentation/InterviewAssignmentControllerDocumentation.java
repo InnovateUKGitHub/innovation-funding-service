@@ -20,7 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.ZonedDateTime;
@@ -32,28 +32,15 @@ import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AvailableApplicationPageResourceDocs.availableApplicationPageResourceBuilder;
-import static org.innovateuk.ifs.documentation.AvailableApplicationPageResourceDocs.availableApplicationPageResourceFields;
-import static org.innovateuk.ifs.documentation.AvailableApplicationResourceDocs.availableApplicationResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.stagedApplicationListResourceBuilder;
-import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.stagedApplicationResourceFields;
-import static org.innovateuk.ifs.documentation.FileEntryDocs.fileEntryResourceFields;
-import static org.innovateuk.ifs.documentation.InterviewAssignmentApplicationResourceDocs.interviewAssignmentAssignedResourceFields;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentAssignedPageResourceDocs.interviewAssignmentAssignedPageResourceBuilder;
-import static org.innovateuk.ifs.documentation.InterviewAssignmentAssignedPageResourceDocs.interviewAssignmentAssignedPageResourceFields;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInvitePageResourceDocs.interviewAssignmentCreatedInvitePageResourceBuilder;
-import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInvitePageResourceDocs.interviewAssignmentCreatedInvitePageResourceFields;
-import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInviteResourceDocs.interviewAssignmentCreatedInviteResourceFields;
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationSentInviteResourceBuilder.newInterviewApplicationSentInviteResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -86,12 +73,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(stagedApplicationInviteListResource)))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        requestFields(
-                                fieldWithPath("invites[]").description("List of applications to be invited to the interview panel")
-                        ).andWithPrefix("invites[].", stagedApplicationResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewAssignmentServiceMock, only()).assignApplications(stagedInviteResources);
     }
@@ -107,22 +89,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "name,asc"))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition")
-                        ),
-                        requestParameters(
-                                parameterWithName("size").optional()
-                                        .description("Maximum number of elements in a single page. Defaults to 20."),
-                                parameterWithName("page").optional()
-                                        .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
-                                parameterWithName("sort").optional()
-                                        .description("The property to sort the elements on. For example `sort=name,asc`. Defaults to `name,asc`")
-                        ),
-                        responseFields(availableApplicationPageResourceFields)
-                                .andWithPrefix("content[].", availableApplicationResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewAssignmentServiceMock, only()).getAvailableApplications(competitionId, pageable);
     }
@@ -138,22 +105,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "name,asc"))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition")
-                        ),
-                        requestParameters(
-                                parameterWithName("size").optional()
-                                        .description("Maximum number of elements in a single page. Defaults to 20."),
-                                parameterWithName("page").optional()
-                                        .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
-                                parameterWithName("sort").optional()
-                                        .description("The property to sort the elements on. For example `sort=name,asc`. Defaults to `name,asc`")
-                        ),
-                        responseFields(interviewAssignmentCreatedInvitePageResourceFields)
-                                .andWithPrefix("content[].", interviewAssignmentCreatedInviteResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewAssignmentServiceMock, only()).getStagedApplications(competitionId, pageable);
     }
@@ -169,22 +121,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "name,asc"))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition")
-                        ),
-                        requestParameters(
-                                parameterWithName("size").optional()
-                                        .description("Maximum number of elements in a single page. Defaults to 20."),
-                                parameterWithName("page").optional()
-                                        .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
-                                parameterWithName("sort").optional()
-                                        .description("The property to sort the elements on. For example `sort=name,asc`. Defaults to `name,asc`")
-                        ),
-                        responseFields(interviewAssignmentAssignedPageResourceFields)
-                                .andWithPrefix("content[].", interviewAssignmentAssignedResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewAssignmentServiceMock, only()).getAssignedApplications(competitionId, pageable);
     }
@@ -195,13 +132,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
 
         mockMvc.perform(get("/interview-panel/available-application-ids/{competitionId}", 1L)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition")
-                        ),
-                        responseFields(fieldWithPath("[].").description("List of available application ids"))
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewAssignmentServiceMock, only()).getAvailableApplicationIds(competitionId);
     }
@@ -213,12 +144,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
 
         mockMvc.perform(post("/interview-panel/unstage-application/{applicationId}", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("Id of the application to unstage")
-                        )
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewAssignmentServiceMock, only()).unstageApplication(applicationId);
     }
@@ -230,12 +156,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
 
         mockMvc.perform(post("/interview-panel/unstage-applications/{competitionId}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition to unstage all applications on")
-                        )
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewAssignmentServiceMock, only()).unstageApplications(competitionId);
     }
@@ -246,10 +167,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
 
         mockMvc.perform(get("/interview-panel/email-template")
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        responseFields(fieldWithPath("content").description("The content of the email template sent to applicants"))
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewApplicationInviteServiceMock, only()).getEmailTemplate();
     }
@@ -263,16 +181,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(sendResource)))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition to send invites of")
-                        ),
-                        requestFields(
-                                fieldWithPath("subject").description("Subject of the email to send to applicants"),
-                                fieldWithPath("content").description("Content of the email to send to applicants")
-                        )
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewApplicationInviteServiceMock, only()).sendInvites(competitionId, sendResource);
     }
@@ -285,12 +194,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
         mockMvc.perform(get("/interview-panel/is-assigned/{applicationId}", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("Id of the application to check")
-                        )
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewAssignmentServiceMock, only()).isApplicationAssigned(applicationId);
     }
@@ -304,10 +208,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
         mockMvc.perform(get("/interview-panel/feedback-details/{applicationId}", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(fileEntryResource)))
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(parameterWithName("applicationId").description("Id of the Attachment to be fetched")),
-                        responseFields(fileEntryResourceFields)));
+                .andExpect(content().json(toJson(fileEntryResource)));
 
         verify(interviewApplicationFeedbackServiceMock).findFeedback(applicationId);
     }
@@ -321,8 +222,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
 
         assertGetFileContents("/interview-panel/feedback/{applicationId}", new Object[]{applicationId},
                 emptyMap(), interviewApplicationFeedbackServiceMock, serviceCallToDownload)
-                .andExpect(status().isOk())
-                .andDo(documentFileGetContentsMethod("interview-panel/{method-name}"));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -330,12 +230,9 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
         final long applicationId = 22L;
         when(interviewApplicationFeedbackServiceMock.deleteFeedback(applicationId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.delete("/interview-panel/feedback/{applicationId}", applicationId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/interview-panel/feedback/{applicationId}", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isNoContent())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(parameterWithName("applicationId").description("Id of the application to have attachment deleted")))
-                );
+                .andExpect(status().isNoContent());
 
         verify(interviewApplicationFeedbackServiceMock).deleteFeedback(applicationId);
     }
@@ -350,14 +247,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .param("filename", "randomFile.pdf")
                 .headers(createFileUploadHeader("application/pdf", 1234)))
-                .andExpect(status().isCreated())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(parameterWithName("applicationId").description("The application in which the feedback will be attached.")),
-                        requestParameters(parameterWithName("filename").description("The filename of the file being uploaded")),
-                        requestHeaders(
-                                headerWithName("Content-Type").description("The Content Type of the file being uploaded e.g. application/pdf")
-                        )
-                ));
+                .andExpect(status().isCreated());
 
         verify(interviewApplicationFeedbackServiceMock).uploadFeedback(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
                 eq(applicationId), any(HttpServletRequest.class));
@@ -377,17 +267,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
         mockMvc.perform(get("/interview-panel/sent-invite/{applicationId}", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("Id of the application to get invite of")
-                        ),
-                        responseFields(
-                                fieldWithPath("subject").type("String").description("Subject of the invite"),
-                                fieldWithPath("content").type("String").description("Content of the message sent"),
-                                fieldWithPath("assigned").type("Date").description("The date the message was sent")
-                        )
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewApplicationInviteServiceMock, only()).getSentInvite(applicationId);
     }
@@ -402,16 +282,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(sendResource)))
-                .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("Id of the application to resend invite of")
-                        ),
-                        requestFields(
-                                fieldWithPath("subject").description("Subject of the email to send to applicants"),
-                                fieldWithPath("content").description("Content of the email to send to applicants")
-                        )
-                ));
+                .andExpect(status().isOk());
 
         verify(interviewApplicationInviteServiceMock, only()).resendInvite(applicationId, sendResource);
     }

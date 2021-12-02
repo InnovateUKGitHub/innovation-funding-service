@@ -15,12 +15,9 @@ import java.util.Map;
 
 import static org.innovateuk.ifs.application.resource.FundingDecision.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.FundingNotificationResourceDocs.fundingNotificationResourceFields;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedRequestFields;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 public class ApplicationFundingDecisionControllerDocumentation extends BaseControllerMockMVCTest<ApplicationFundingDecisionController> {
 
@@ -45,8 +42,7 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
         mockMvc.perform(put("/applicationfunding/1")
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(decision)))
-                .andDo(document("applicationfunding/{method-name}"));
+                .content(objectMapper.writeValueAsString(decision)));
     }
 
     @Test
@@ -59,9 +55,6 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
         mockMvc.perform(post("/applicationfunding/send-notifications")
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(notification)))
-                .andDo( document("applicationfunding/{method-name}",
-                        relaxedRequestFields(fundingNotificationResourceFields)
-                ));
+                .content(objectMapper.writeValueAsString(notification)));
     }
 }

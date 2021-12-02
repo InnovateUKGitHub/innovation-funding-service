@@ -15,17 +15,10 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.ApplicationAssessmentSummaryResourceDocs.applicationAssessmentSummaryFields;
 import static org.innovateuk.ifs.documentation.ApplicationAssessmentSummaryResourceDocs.applicationAssessmentSummaryResourceBuilder;
-import static org.innovateuk.ifs.documentation.ApplicationAssessorResourceDocs.applicationAssessorFields;
 import static org.innovateuk.ifs.documentation.ApplicationAssessorResourceDocs.applicationAssessorResourceBuilder;
-import static org.innovateuk.ifs.documentation.PageResourceDocs.pageResourceFields;
 import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationAssessmentSummaryControllerDocumentation extends BaseControllerMockMVCTest<ApplicationAssessmentSummaryController> {
@@ -47,14 +40,7 @@ public class ApplicationAssessmentSummaryControllerDocumentation extends BaseCon
 
         mockMvc.perform(get("/application-assessment-summary/{id}/assigned-assessors", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("applicationassessmentsummary/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the application")
-                        ),
-                        responseFields(fieldWithPath("[]").description("List of assessors participating on the competition of the application"))
-                                .andWithPrefix("[].", applicationAssessorFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(applicationAssessmentSummaryServiceMock, only()).getAssignedAssessors(applicationId);
     }
@@ -68,13 +54,7 @@ public class ApplicationAssessmentSummaryControllerDocumentation extends BaseCon
 
         mockMvc.perform(get("/application-assessment-summary/{id}", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("applicationassessmentsummary/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the application")
-                        ),
-                        responseFields(applicationAssessmentSummaryFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(applicationAssessmentSummaryServiceMock, only()).getApplicationAssessmentSummary(applicationId);
     }
@@ -92,21 +72,7 @@ public class ApplicationAssessmentSummaryControllerDocumentation extends BaseCon
 
         mockMvc.perform(get("/application-assessment-summary/{applicationId}/available-assessors?page={page}&size={size}&assessorNameFilter={assessorNameFilter}&sort={sort}", applicationId, pageIndex, pageSize, assessorNameFilter, sort)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("applicationassessmentsummary/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("Id of the application")
-                        ),
-                        requestParameters(
-                                parameterWithName("page").description("Index of the page to get"),
-                                parameterWithName("size").description("Size of the page"),
-                                parameterWithName("assessorNameFilter").description("Assessor name filter"),
-                                parameterWithName("sort").description("Sort order")
-                        ),
-                        responseFields(
-                                pageResourceFields
-                        )
-                ));
+                .andExpect(status().isOk());
 
         verify(applicationAssessmentSummaryServiceMock, only()).getAvailableAssessors(applicationId, pageIndex, pageSize, assessorNameFilter, sort);
     }
@@ -120,18 +86,7 @@ public class ApplicationAssessmentSummaryControllerDocumentation extends BaseCon
 
         mockMvc.perform(get("/application-assessment-summary/{applicationId}/available-assessors-ids?assessorNameFilter={assessorNameFilter}", applicationId, assessorNameFilter)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("applicationassessmentsummary/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("Id of the application")
-                        ),
-                        requestParameters(
-                                parameterWithName("assessorNameFilter").description("Assessor name filter")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("ids")
-                        )
-                ));
+                .andExpect(status().isOk());
 
         verify(applicationAssessmentSummaryServiceMock, only()).getAvailableAssessorIds(applicationId, assessorNameFilter);
     }
