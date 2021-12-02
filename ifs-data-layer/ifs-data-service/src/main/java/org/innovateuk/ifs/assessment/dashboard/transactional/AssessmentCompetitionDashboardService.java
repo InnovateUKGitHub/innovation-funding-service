@@ -8,4 +8,7 @@ public interface AssessmentCompetitionDashboardService {
 
     @PostFilter("hasPermission(filterObject, 'READ_DASHBOARD')")
     ServiceResult<AssessorCompetitionDashboardResource> getAssessorCompetitionDashboardResource(long userId, long competitionId);
+
+    @PostFilter("hasPermission(filterObject, 'READ_DASHBOARD')")
+    ServiceResult<AssessorCompetitionDashboardResource> getAssessorCompetitionDashboardResource(long userId, long competitionId, long assessmentPeriodId);
 }

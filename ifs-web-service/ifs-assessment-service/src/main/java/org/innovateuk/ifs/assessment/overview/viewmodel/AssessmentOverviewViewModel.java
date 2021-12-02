@@ -20,6 +20,8 @@ public class AssessmentOverviewViewModel {
     private final String competitionName;
     private final long daysLeftPercentage;
     private final long daysLeft;
+    private final boolean alwaysOpen;
+    private final Long assessmentPeriodId;
     private final List<AssessmentOverviewSectionViewModel> sections;
     private final List<AssessmentOverviewAppendixViewModel> appendices;
 
@@ -36,6 +38,8 @@ public class AssessmentOverviewViewModel {
                                        String competitionName,
                                        long daysLeftPercentage,
                                        long daysLeft,
+                                       boolean alwaysOpen,
+                                       Long assessmentPeriodId,
                                        List<AssessmentOverviewSectionViewModel> sections,
                                        List<AssessmentOverviewAppendixViewModel> appendices,
                                        String termsAndConditionsTerminology,
@@ -50,6 +54,8 @@ public class AssessmentOverviewViewModel {
         this.competitionName = competitionName;
         this.daysLeftPercentage = daysLeftPercentage;
         this.daysLeft = daysLeft;
+        this.alwaysOpen = alwaysOpen;
+        this.assessmentPeriodId = assessmentPeriodId;
         this.sections = sections;
         this.appendices = appendices;
         this.termsAndConditionsTerminology = termsAndConditionsTerminology;
@@ -111,6 +117,10 @@ public class AssessmentOverviewViewModel {
 
     public CompetitionThirdPartyConfigResource getThirdPartyConfig() { return thirdPartyConfig; }
 
+    public boolean isAlwaysOpen() { return alwaysOpen; }
+
+    public Long getAssessmentPeriodId() { return assessmentPeriodId; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -125,6 +135,8 @@ public class AssessmentOverviewViewModel {
                 .append(competitionId, that.competitionId)
                 .append(daysLeftPercentage, that.daysLeftPercentage)
                 .append(daysLeft, that.daysLeft)
+                .append(alwaysOpen, that.alwaysOpen)
+                .append(assessmentPeriodId, that.assessmentPeriodId)
                 .append(dualTermsAndConditions, that.dualTermsAndConditions)
                 .append(applicationName, that.applicationName)
                 .append(competitionName, that.competitionName)
@@ -146,6 +158,8 @@ public class AssessmentOverviewViewModel {
                 .append(competitionName)
                 .append(daysLeftPercentage)
                 .append(daysLeft)
+                .append(alwaysOpen)
+                .append(assessmentPeriodId)
                 .append(sections)
                 .append(appendices)
                 .append(termsAndConditionsTerminology)
@@ -165,6 +179,8 @@ public class AssessmentOverviewViewModel {
                 .append("competitionName", competitionName)
                 .append("daysLeftPercentage", daysLeftPercentage)
                 .append("daysLeft", daysLeft)
+                .append("alwaysOpen", alwaysOpen)
+                .append("assessmentPeriodId", assessmentPeriodId)
                 .append("sections", sections)
                 .append("appendices", appendices)
                 .append("termsAndConditionsTerminology", termsAndConditionsTerminology)
