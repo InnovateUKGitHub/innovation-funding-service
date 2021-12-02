@@ -246,9 +246,9 @@ assign the application to assessor
     the user clicks the button/link     jQuery = td:contains("Hesta application") ~ td a:contains("View progress")
     the user selects the checkbox       assessor-row-1
     the user clicks the button/link     jQuery = button:contains("Add to application")
-    the user clicks the button/link     link = Back to manage applications
-    the user clicks the button/link     link = Back to choose an assessment period to manage applications
+    the user clicks the button/link     link = Allocate applications
     the user clicks the button/link     link = Back to manage assessments
+    the user clicks the button/link     link = Competition
     the user clicks the button/link     link = Input and review funding decision
     the user should see the element     jQuery =a:contains("${hestaApplicationName}")
     The user should not see the element   jQuery =a:contains("${newHestaApplicationName}")
