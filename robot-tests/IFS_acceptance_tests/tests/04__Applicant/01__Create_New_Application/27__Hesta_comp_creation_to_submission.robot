@@ -243,12 +243,15 @@ Custom Suite Teardown
 assign the application to assessor
     the user clicks the button/link     link = Manage assessments
     the user clicks the button/link     link = Manage applications
-    the user clicks the button/link     jQuery = td:contains("Always open application decision pending") ~ td a:contains("View progress")
+    the user clicks the button/link     jQuery = td:contains("Hesta application") ~ td a:contains("View progress")
     the user selects the checkbox       assessor-row-1
     the user clicks the button/link     jQuery = button:contains("Add to application")
     the user clicks the button/link     link = Back to manage applications
     the user clicks the button/link     link = Back to choose an assessment period to manage applications
     the user clicks the button/link     link = Back to manage assessments
+    the user clicks the button/link     link = Input and review funding decision
+    the user should see the element     jQuery =a:contains("${hestaApplicationName}")
+    The user should not see the element   jQuery =a:contains("${newHestaApplicationName}")
 
 comp admin sends invite to assesor
     the user clicks the button/link          link = Invite assessors to assess the competition
