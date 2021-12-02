@@ -241,6 +241,7 @@ Custom Suite Teardown
     Disconnect from database
 
 assign the application to assessor
+    the user clicks the button/link     link = Manage assessments
     the user clicks the button/link     link = Manage applications
     the user clicks the button/link     jQuery = td:contains("Always open application decision pending") ~ td a:contains("View progress")
     the user selects the checkbox       assessor-row-1
