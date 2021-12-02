@@ -84,10 +84,15 @@
                                 <div class="task">
                                     <th:block th:if="${activeCompetition.competitionAlwaysOpen}">
                                         <strong class="govuk-heading-s govuk-!-margin-0 govuk-!-margin-bottom-2" th:text="|Batch assessment ${activeCompetition.batchIndex}|">Batch assessment 1</strong>
+                                        <h3 class="govuk-heading-s"><a class="govuk-link"
+                                           th:href="@{/assessor/dashboard/competition/{competitionId}/period/{period}(competitionId=${activeCompetition.competitionId},period=${activeCompetition.assessmentPeriodId})}"
+                                           th:text="${activeCompetition.displayLabel}"/></h3>
                                     </th:block>
-                                    <h3 class="govuk-heading-s"><a class="govuk-link"
-                                        th:href="@{/assessor/dashboard/competition/{competitionId}(competitionId=${activeCompetition.competitionId})}"
-                                        th:text="${activeCompetition.displayLabel}"/></h3>
+                                    <th:block th:unless="${activeCompetition.competitionAlwaysOpen}">
+                                        <h3 class="govuk-heading-s"><a class="govuk-link"
+                                            th:href="@{/assessor/dashboard/competition/{competitionId}(competitionId=${activeCompetition.competitionId})}"
+                                            th:text="${activeCompetition.displayLabel}"/></h3>
+                                    </th:block>
                                     <div th:if="${!activeCompetition.hasPendingAssessments() && !activeCompetition.hasApplicationsToAssess()}">
                                             There are currently no assessments for you to review.
                                     </div>

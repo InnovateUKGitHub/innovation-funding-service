@@ -16,6 +16,7 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
     private long progressAssessed;
     private long progressTotal;
     private long pendingAssessments;
+    private long assessmentPeriodId;
     private long batchIndex;
 
     @Test
@@ -25,6 +26,7 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
         progressAssessed = 1L;
         progressTotal = 1L;
         pendingAssessments = 0L;
+        assessmentPeriodId = 0L;
         batchIndex = 0L;
 
         ZonedDateTime submitDeadline = ZonedDateTime.now();
@@ -38,6 +40,7 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
                 0,
                 0,
                 false,
+                assessmentPeriodId,
                 batchIndex);
 
         assertEquals(competitionId, (long) viewModel.getCompetitionId());
@@ -56,6 +59,7 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
         progressAssessed = 0L;
         progressTotal = 0L;
         pendingAssessments = 1L;
+        assessmentPeriodId = 0L;
         batchIndex = 1L;
 
         ZonedDateTime submitDeadline = ZonedDateTime.now();
@@ -69,6 +73,7 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
                 0,
                 0,
                 false,
+                assessmentPeriodId,
                 batchIndex);
 
         assertEquals(false, viewModel.hasApplicationsToAssess());
@@ -83,6 +88,7 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
         progressAssessed = 1L;
         progressTotal = 0L;
         pendingAssessments = 0L;
+        assessmentPeriodId = 0L;
         batchIndex = 1L;
 
         ZonedDateTime submitDeadline = ZonedDateTime.now();
@@ -96,6 +102,7 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
                 0,
                 0,
                 false,
+                assessmentPeriodId,
                 batchIndex);
 
         assertEquals(true, viewModel.hasApplicationsToAssess());
@@ -110,6 +117,7 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
         progressAssessed = 1L;
         progressTotal = 0L;
         pendingAssessments = 1L;
+        assessmentPeriodId = 0L;
         batchIndex = 1L;
 
         ZonedDateTime submitDeadline = ZonedDateTime.now();
@@ -123,6 +131,7 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
                 0,
                 0,
                 false,
+                assessmentPeriodId,
                 batchIndex);
 
         assertEquals(true, viewModel.hasApplicationsToAssess());
