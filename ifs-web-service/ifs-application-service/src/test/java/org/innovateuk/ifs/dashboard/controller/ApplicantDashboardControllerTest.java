@@ -115,7 +115,7 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
         ApplicantDashboardViewModel viewModel = mock(ApplicantDashboardViewModel.class);
         String redirectURL = "/application/1";
         when(populator.populate(applicant.getId())).thenReturn(viewModel);
-        when(pageHistoryService.getPreviousPage(any())).thenReturn(Optional.of(new PageHistory(redirectURL)));
+        when(pageHistoryService.getApplicationOverviewPage(any())).thenReturn(Optional.of(new PageHistory(redirectURL)));
 
         mockMvc.perform(get("/applicant/dashboard/loansCommunity"))
                 .andExpect(status().is3xxRedirection())
@@ -129,7 +129,7 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
         ApplicantDashboardViewModel viewModel = mock(ApplicantDashboardViewModel.class);
         String redirectURL = null;
         when(populator.populate(applicant.getId())).thenReturn(viewModel);
-        when(pageHistoryService.getPreviousPage(any())).thenReturn(Optional.of(new PageHistory(redirectURL)));
+        when(pageHistoryService.getApplicationOverviewPage(any())).thenReturn(Optional.of(new PageHistory(redirectURL)));
 
         mockMvc.perform(get("/applicant/dashboard/loansCommunity"))
                 .andExpect(status().isOk())
