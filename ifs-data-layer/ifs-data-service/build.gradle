@@ -72,7 +72,6 @@ dependencies {
     implementation 'javax.mail:mail'
     implementation "org.apache.httpcomponents:httpasyncclient"
     implementation "com.google.guava:guava"
-    implementation "commons-io:commons-io"
     implementation 'org.jsoup:jsoup'
     implementation "com.opencsv:opencsv"
 
