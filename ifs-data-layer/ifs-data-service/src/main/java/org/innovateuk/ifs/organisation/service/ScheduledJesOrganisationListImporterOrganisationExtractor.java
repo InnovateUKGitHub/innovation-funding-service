@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.organisation.service;
 
-import org.apache.commons.io.FileUtils;
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -20,7 +20,7 @@ public class ScheduledJesOrganisationListImporterOrganisationExtractor {
 
     ServiceResult<List<String>> extractOrganisationsFromFile(File downloadedFile) {
         try {
-            List<String> organisationNames = FileUtils.readLines(downloadedFile, Charset.defaultCharset());
+            List<String> organisationNames = Files.readLines(downloadedFile, Charsets.UTF_8);
             return serviceSuccess(organisationNames.subList(1, organisationNames.size()));
         } catch (IOException e) {
             return createServiceFailureFromIoException(e);

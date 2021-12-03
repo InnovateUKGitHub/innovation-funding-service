@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.organisation.service;
 
-import org.apache.commons.io.FileUtils;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.junit.Test;
 
