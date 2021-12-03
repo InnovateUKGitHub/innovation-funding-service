@@ -13,6 +13,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
+
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;
@@ -43,7 +45,7 @@ public class CompressedCookieServiceTest {
 
 
     @Test
-    public void saveToCompressedCookie() {
+    public void saveToCompressedCookie() throws IOException {
         String fieldName =  "cookie_fieldname";
         String value =  "cookieValue";
 
@@ -58,7 +60,7 @@ public class CompressedCookieServiceTest {
 
 
     @Test
-    public void getCompressedCookieValue() {
+    public void getCompressedCookieValue() throws IOException {
         String fieldName = "cookie_fieldname";
         String value =  "cookieValue";
 

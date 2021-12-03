@@ -43,7 +43,6 @@ dependencies {
     testImplementation "org.innovateuk.ifs.libraries:ifs-web-commons-test"
 
     testImplementation "com.opencsv:opencsv"
-    testImplementation 'com.jayway.awaitility:awaitility'
     testImplementation 'junit:junit'
 }
 
