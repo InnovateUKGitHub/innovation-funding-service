@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.competition.setup.core.service;
 
-import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
@@ -117,16 +116,16 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     }
 
     public void sortMilestones(MilestonesForm milestoneForm) {
-        LinkedMap<String, GenericMilestoneRowForm> milestoneEntries = milestoneForm.getMilestoneEntries();
+        Map<String, GenericMilestoneRowForm> milestoneEntries = milestoneForm.getMilestoneEntries();
         milestoneForm.setMilestoneEntries(sortMilestoneEntries(milestoneEntries.values()));
     }
 
-    private LinkedMap<String, GenericMilestoneRowForm> sortMilestoneEntries(Collection<GenericMilestoneRowForm> milestones) {
+    private Map<String, GenericMilestoneRowForm> sortMilestoneEntries(Collection<GenericMilestoneRowForm> milestones) {
         List<GenericMilestoneRowForm> sortedMilestones =
                 sort(milestones,
                      Comparator.comparingInt(o -> o.getMilestoneType().ordinal()));
 
-        LinkedMap<String, GenericMilestoneRowForm> milestoneFormEntries = new LinkedMap<>();
+        Map<String, GenericMilestoneRowForm> milestoneFormEntries = new LinkedHashMap<>();
         sortedMilestones.stream().forEachOrdered(milestone ->
                 milestoneFormEntries.put(milestone.getMilestoneType().name(), milestone)
         );
