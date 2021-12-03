@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.status.controller;
 
-import org.apache.commons.io.IOUtils;
+import com.google.common.io.ByteStreams;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
@@ -116,7 +116,7 @@ public class CompetitionStatusController {
         response.setHeader("Content-Transfer-Encoding", "binary");
         response.setHeader("Content-Disposition", "attachment;filename=" + filename);
         final ByteArrayResource resource = bankDetailsRestService.downloadByCompetition(competitionId).getSuccess();
-        IOUtils.copy(resource.getInputStream(), response.getOutputStream());
+        ByteStreams.copy(resource.getInputStream(), response.getOutputStream());
         response.flushBuffer();
     }
 }

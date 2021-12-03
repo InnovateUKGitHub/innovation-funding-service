@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.organisation.service;
 
-import org.apache.commons.io.FileUtils;
+import com.google.common.io.Files;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.junit.Test;
@@ -28,7 +28,7 @@ public class ScheduledJesOrganisationListImporterFileDownloaderTest {
 
         File dummyFile = fileDownloadResult.getSuccess();
 
-        List<String> fileContents = FileUtils.readLines(dummyFile, Charset.defaultCharset());
+        List<String> fileContents = Files.readLines(dummyFile, Charset.defaultCharset());
 
         assertThat(fileContents).containsExactly(
                 "Organisation name",

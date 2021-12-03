@@ -1,11 +1,12 @@
 package org.innovateuk.ifs.config.security;
 
-import org.apache.commons.io.IOUtils;
+import com.google.common.io.CharStreams;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.servlet.ServletInputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 
 import static org.junit.Assert.assertEquals;
@@ -26,23 +27,29 @@ public class AuthenticationRequestWrapperTest {
 
     @Test
     public void getInputStream() throws Exception {
-        ServletInputStream first = authenticationRequestWrapper.getInputStream();
-        assertEquals("First call to getInputStream should match request content",
-                content, IOUtils.toString(first, "UTF-8"));
+        try (Reader reader = new InputStreamReader(authenticationRequestWrapper.getInputStream())) {
+            assertEquals("First call to getInputStream should match request content",
+                    content, CharStreams.toString(reader));
+        }
 
-        ServletInputStream second = authenticationRequestWrapper.getInputStream();
-        assertEquals("Subsequent calls to getInputStream should match request content",
-                content, IOUtils.toString(second, "UTF-8"));
+        try (Reader reader = new InputStreamReader(authenticationRequestWrapper.getInputStream())) {
+            assertEquals("Subsequent calls to getInputStream should match request content",
+                    content, CharStreams.toString(reader));
+        }
     }
 
     @Test
     public void getReader() throws Exception {
-        Reader first = authenticationRequestWrapper.getReader();
-        assertEquals("First call to getInputStream should match request content",
-                content, IOUtils.toString(first));
 
-        Reader second = authenticationRequestWrapper.getReader();
-        assertEquals("Subsequent calls to getInputStream should match request content",
-                content, IOUtils.toString(second));
+        try (Reader reader = authenticationRequestWrapper.getReader()) {
+            assertEquals("First call to getReader should match request content",
+                    content, CharStreams.toString(reader));
+        }
+
+        try (Reader reader = authenticationRequestWrapper.getReader()) {
+            assertEquals("Subsequent calls to getReader should match request content",
+                    content, CharStreams.toString(reader));
+        }
+
     }
 }
