@@ -40,11 +40,14 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...             IFS-10705  B&FI question submitted
 ...
 ...             IFS-10753 Loans - Application Overview business and financial information Content
-
+...
 ...             IFS-10825 Assessor Dashboard Business and Financial Overview
 ...
 ...             IFS-10757 Loans - Application summary and Overview Content
 ...
+...             IFS-10869 Loans Part B: remove unnecessary banner
+...
+
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -253,6 +256,7 @@ the user enters empty funding amount
 the user submits the loan application
     the user clicks the button/link           link = Application overview
     the user clicks the button/link           link = Review and submit
+    the user should not see the element       jQuery = p:contains("You must ensure that the business information and financial spreadsheet have been completed before you click submit below. Your loan application cannot be considered without these.")
     the user clicks the button/link           id = submit-application-button
     the user should see the element           link = Reopen application
 
