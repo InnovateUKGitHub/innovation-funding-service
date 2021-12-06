@@ -79,19 +79,20 @@ The Application Summary page must not include the Reopen Application link when t
 Lead applicant receives email notifiction when internal user marks application unsuccessful
     [Documentation]  IFS-10695
     Given the user logs out if they are logged in
+    And Requesting IDs of this competition                                          ${hestaCompetitionName}
     And the user successfully completes application                                 barry   barrington   ${newLeadApplicantEmail}   ${newHestaApplicationName}
     And the user clicks the button/link                                             link = Your project finances
     And the user marks the finances as complete                                     ${newHestaApplicationName}  labour costs  54,000  no
     And the user can submit the application
-    And Competition admin creates an assessment period                              ${competitionId}
-    And comp admin sends invite to assesor
-    And the assessor accepts an invite to an application
+    And the user logs out if they are logged in
+    And Log in as a IFS admin                                                       &{Comp_admin1_credentials}
+    And The user clicks the button/link                                             link = ${hestaCompetitionName}
     And assign the application to assessor                                          ${newHestaApplicationName}
     And log in as a different user                                                  &{Comp_admin1_credentials}
     When the internal team mark the application as successful / unsuccessful        ${newHestaApplicationName}   UNFUNDED
     And the user clicks the button/link                                             link = Competition
     And Requesting IDs of this application                                          ${newHestaApplicationName}
-    And the internal team notifies all applicants                                    ${ApplicationID}
+    And the internal team notifies all applicants                                   ${ApplicationID}
     Then the user reads his email                                                   ${newLeadApplicantEmail}  ${ApplicationID}: ${hestaApplicationUnsuccessfulEmailSubject}  ${hestaApplicationUnsuccessfulEmail}
 
 
@@ -245,6 +246,7 @@ Custom Suite Teardown
     Disconnect from database
 
 assign the application to assessor
+    [Arguments]   ${applicationName}
     the user clicks the button/link     link = Manage assessments
     the user clicks the button/link     link = Manage applications
     the user clicks the button/link     jQuery = td:contains("${applicationName}") ~ td a:contains("View progress")
@@ -255,7 +257,7 @@ assign the application to assessor
     the user clicks the button/link     link = Competition
     the user clicks the button/link     link = Input and review funding decision
     the user should see the element     jQuery =td:contains("${hestaApplicationName}")
-    The user should not see the element   jQuery =td:contains("${newHestaApplicationName}")
+#    The user should not see the element   jQuery =td:contains("${newHestaApplicationName}")
 
 comp admin sends invite to assesor
     the user clicks the button/link          link = Invite assessors to assess the competition
