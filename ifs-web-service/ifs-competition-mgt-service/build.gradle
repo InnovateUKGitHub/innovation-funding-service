@@ -1,12 +1,6 @@
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
 
-buildscript {
-    ext {
-        serverContext = '/management'
-    }
-}
-
 group 'innovateuk'
 version project.version
 
@@ -41,15 +35,4 @@ dependencies {
 
 }
 
-processResources {
-    /*filesMatching("*.properties") {
-        expand project.properties
-    }*/
-    if (project.hasProperty("profile") && project.profile == "automated") {
-        //exclude '**/application.properties'
-    }
-}
-
-
 jar.dependsOn ":ifs-web-service:gulp_default"
-processResources.dependsOn ":ifs-web-service:applyProfiles"

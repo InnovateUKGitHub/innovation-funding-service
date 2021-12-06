@@ -1,11 +1,16 @@
 package org.innovateuk.ifs.assessment.summary.controller;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.summary.form.AssessmentSummaryForm;
 import org.innovateuk.ifs.assessment.summary.populator.AssessmentSummaryModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,6 +38,12 @@ public class AssessmentSummaryController {
 
     @Autowired
     private AssessmentService assessmentService;
+
+    @Autowired
+    private CompetitionRestService competitionService;
+
+    @Autowired
+    private ApplicationRestService applicationService;
 
     @Autowired
     private AssessmentSummaryModelPopulator assessmentSummaryModelPopulator;
@@ -67,7 +78,15 @@ public class AssessmentSummaryController {
     }
 
     private String redirectToCompetitionOfAssessment(Long assessmentId) {
-        return "redirect:/assessor/dashboard/competition/" + getAssessment(assessmentId).getCompetition();
+        AssessmentResource assessment = getAssessment(assessmentId);
+        CompetitionResource competition = competitionService.getCompetitionById(assessment.getCompetition()).getSuccess();
+        ApplicationResource application = applicationService.getApplicationById(assessment.getApplication()).getSuccess();
+
+        if(competition.isAlwaysOpen() && application.getAssessmentPeriodId() != null) {
+            return String.format("redirect:/assessor/dashboard/competition/%d/period/%d", assessment.getCompetition(), application.getAssessmentPeriodId());
+        } else {
+            return "redirect:/assessor/dashboard/competition/" + assessment.getCompetition();
+        }
     }
 
     private void populateFormWithExistingValues(AssessmentSummaryForm form, AssessmentResource assessment) {

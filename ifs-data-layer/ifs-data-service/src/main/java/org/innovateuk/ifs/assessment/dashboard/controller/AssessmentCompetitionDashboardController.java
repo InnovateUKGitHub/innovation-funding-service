@@ -23,4 +23,13 @@ public class AssessmentCompetitionDashboardController {
 
         return assessorCompetitionDashboardService.getAssessorCompetitionDashboardResource(userId, competitionId).toGetResponse();
     }
+
+    @GetMapping("/user/{userId}/competition/{competitionId}/period/{assessmentPeriodId}/dashboard")
+    public RestResult<AssessorCompetitionDashboardResource> findByUserAndCompetition(
+            @PathVariable("userId") long userId,
+            @PathVariable("competitionId") long competitionId,
+            @PathVariable("assessmentPeriodId") long assessmentPeriodId) {
+
+        return assessorCompetitionDashboardService.getAssessorCompetitionDashboardResource(userId, competitionId, assessmentPeriodId).toGetResponse();
+    }
 }

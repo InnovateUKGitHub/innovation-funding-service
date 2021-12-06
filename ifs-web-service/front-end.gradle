@@ -12,6 +12,22 @@ gulp_default.dependsOn 'installGulp'
 
 processResources.dependsOn gulp_default
 
+processResources {
+    if(!project.hasProperty("skipExpansion")) {
+        filesMatching("*.properties") {
+            expand project.properties
+        }
+    }
+}
+
+processTestResources {
+    if(!project.hasProperty("skipExpansion")) {
+        filesMatching("*.properties") {
+            expand project.properties
+        }
+    }
+}
+
 // javascript unit testing
 task testUnit(type: NpmTask) {
     args = ['run', 'test']
@@ -52,6 +68,7 @@ node {
 
 npm_install {
     inputs.files file("${projectDir}/package.json")
+    inputs.files file("${projectDir}/package-lock.json")
     outputs.files file("${projectDir}/node_modules")
     args = ['--loglevel', 'warn']
     description = "Install Node.js packages"
