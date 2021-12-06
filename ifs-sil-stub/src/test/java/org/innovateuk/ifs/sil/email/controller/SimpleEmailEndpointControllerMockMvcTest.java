@@ -11,9 +11,6 @@ import java.util.List;
 
 import static java.lang.Boolean.FALSE;
 import static java.util.Collections.singletonList;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,13 +43,7 @@ public class SimpleEmailEndpointControllerMockMvcTest extends AbstractEndpointCo
                                 header("IFS_AUTH_TOKEN", "123abc").
                                 content(requestBody)
                 ).
-                andExpect(status().isAccepted()).
-                andDo(document("silstub/sendmail",
-                        requestHeaders(
-                                headerWithName("Content-Type").description("Needs to be application/json"),
-                                headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
-                        )
-                ));
+                andExpect(status().isAccepted());
     }
 }
 

@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.project.financecheck.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.documentation.CostCategoryResourceDocs;
-import org.innovateuk.ifs.documentation.CostGroupResourceDocs;
-import org.innovateuk.ifs.documentation.CostResourceDocs;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.controller.FinanceCheckController;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
@@ -16,9 +13,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.EligibilityDocs.eligibilityResourceFields;
-import static org.innovateuk.ifs.documentation.FinanceCheckDocs.*;
-import static org.innovateuk.ifs.documentation.ViabilityDocs.viabilityResourceFields;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
 import static org.innovateuk.ifs.project.builder.CostCategoryResourceBuilder.newCostCategoryResource;
 import static org.innovateuk.ifs.project.builder.CostGroupResourceBuilder.newCostGroupResource;
@@ -29,12 +23,8 @@ import static org.innovateuk.ifs.project.financecheck.builder.CostResourceBuilde
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -62,17 +52,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
 
         mockMvc.perform(get(url, 123L, 456L)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to which the Finance Check is linked"),
-                                parameterWithName("organisationId").description("Id of the organisation to which the Finance Check is linked")
-                        ),
-                        responseFields(financeCheckResourceFields)
-                                .andWithPrefix("costGroup.", CostGroupResourceDocs.costGroupResourceFields)
-                                .andWithPrefix("costGroup.costs[].", CostResourceDocs.costResourceFields)
-                                .andWithPrefix("costGroup.costs[].costCategory.", CostCategoryResourceDocs.costCategoryResourceFields)
-                ));
+                .andExpect(status().isOk());
 
         verify(financeCheckServiceMock).getByProjectAndOrganisation(projectOrganisationCompositeId);
     }
@@ -98,13 +78,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
         mockMvc.perform(get(url, 123L)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(expected)))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to which the Finance Check is linked")
-                        ),
-                        responseFields(financeCheckOverviewResourceFields)
-                ));
+                .andExpect(content().json(toJson(expected)));
 
         verify(financeCheckServiceMock).getFinanceCheckOverview(123L);
     }
@@ -133,14 +107,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
         mockMvc.perform(get(url, 123L, 456L)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(expected)))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to which the Finance Check eligibility is linked"),
-                                parameterWithName("organisationId").description("Id of the organisation to which the Finance Check eligibility is linked")
-                        ),
-                        responseFields(financeCheckEligibilityResourceFields)
-                ));
+                .andExpect(content().json(toJson(expected)));
 
         verify(financeCheckServiceMock).getFinanceCheckEligibilityDetails(123L, 456L);
     }
@@ -163,14 +130,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/viability", projectId, organisationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(expectedViabilityResource)))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which viability is being retrieved"),
-                                parameterWithName("organisationId").description("Organisation Id for which viability is being retrieved")
-                        ),
-                        responseFields(viabilityResourceFields)
-                ));
+                .andExpect(content().json(toJson(expectedViabilityResource)));
     }
 
     @Test
@@ -187,15 +147,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/viability/{viability}/{viabilityRagStatus}", projectId, organisationId, viability, viabilityRagStatus)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which viability is being saved"),
-                                parameterWithName("organisationId").description("Organisation Id for which viability is being saved"),
-                                parameterWithName("viability").description("The viability being saved"),
-                                parameterWithName("viabilityRagStatus").description("The viability RAG status being saved")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -216,15 +168,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/eligibility", projectId, organisationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(expectedEligibilityResource)))
-                .andDo(document("project/partner-organisation/eligibility/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which eligibility is being retrieved"),
-                                parameterWithName("organisationId").description("Organisation Id for which eligibility is being retrieved")
-                        ),
-                        responseFields(eligibilityResourceFields)
-                        )
-                );
+                .andExpect(content().json(toJson(expectedEligibilityResource)));
     }
 
     @Test
@@ -242,15 +186,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/eligibility/{eligibility}/{eligibilityRagStatus}", projectId, organisationId, eligibility, eligibilityRagStatus)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("project/partner-organisation/eligibility/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which eligibility is being saved"),
-                                parameterWithName("organisationId").description("Organisation Id for which eligibility is being saved"),
-                                parameterWithName("eligibility").description("The eligibility being saved"),
-                                parameterWithName("eligibilityRagStatus").description("The eligibility RAG status being saved")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -260,13 +196,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
         mockMvc.perform(get(url, 123L, 234L)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("true"))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to which the credit report flag is linked"),
-                                parameterWithName("organisationId").description("Id of the organisation to which the credit report flag is linked")
-                        )
-                ));
+                .andExpect(content().string("true"));
     }
 
     @Test
@@ -275,14 +205,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
         when(financeCheckServiceMock.saveCreditReport(123L, 234L, Boolean.TRUE)).thenReturn(serviceSuccess());
         mockMvc.perform(post(url, 123L, 234L, Boolean.TRUE)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to which the credit report flag is linked"),
-                                parameterWithName("organisationId").description("Id of the organisation to which the credit report flag is linked"),
-                                parameterWithName("reportPresent").description("The credit report flag")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
 

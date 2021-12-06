@@ -7,10 +7,10 @@ import org.innovateuk.ifs.application.transactional.QuestionStatusService;
 import org.innovateuk.ifs.commons.security.SecuritySetter;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.mapper.QuestionMapper;
-import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +30,6 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
     @Autowired
     private QuestionStatusRepository questionStatusRepository;
     @Autowired
-    private FormInputRepository formInputRepository;
-    @Autowired
     private QuestionService questionService;
     @Autowired
     private QuestionRepository questionRepository;
@@ -46,7 +44,6 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
     private Question question;
     private static final long newAssigneeProcessRoleId = 5L;
     private static final long organisationId = 3L;
-    private static final long competitionId = 1L;
     private static final long QUESTION_ID_WITH_MULTIPLE = 28L;
 
     @Before
@@ -64,7 +61,7 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
     }
 
     @Test
-    public void testMarkAsComplete() {
+    public void markAsComplete() {
         controller.markAsComplete(questionId, applicationId, userId);
 
 
@@ -76,7 +73,7 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
     }
 
     @Test
-    public void testMarkAsInComplete() {
+    public void markAsInComplete() {
         controller.markAsInComplete(questionId, applicationId, userId);
 
         List<QuestionStatus> statuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
@@ -88,7 +85,7 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
     }
 
      @Test
-     public void testAssign() {
+     public void assign() {
         controller.assign(questionId, applicationId, newAssigneeProcessRoleId, userId);
 
         List<QuestionStatus> statuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
@@ -99,7 +96,7 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
     }
 
     @Test
-    public void testGetMarkedAsComplete() {
+    public void getMarkedAsComplete() {
         // Start with zero completed
         Set<Long> markedAsComplete = controller.getMarkedAsComplete(applicationId, organisationId).getSuccess();
         assertNotNull(markedAsComplete);
@@ -119,7 +116,7 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
     }
 
     @Test
-    public void testUpdateNotification() {
+    public void updateNotification() {
         QuestionStatus questionStatus = questionStatusRepository.findByQuestionIdAndApplicationIdAndAssigneeId(questionId, applicationId, userId);
 
         controller.updateNotification(questionStatus.getId(), true);
@@ -134,7 +131,7 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
     }
 
     @Test
-    public void testIsMarkedAsComplete() {
+    public void isMarkedAsComplete() {
         assertFalse(questionStatusService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
 
         controller.markAsComplete(questionId, applicationId, userId);
@@ -143,8 +140,9 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
     }
 
     @Test
-    public void testIsMarkedAsCompleteMultiple() {
+    public void isMarkedAsCompleteMultiple() {
         question = questionRepository.findById(QUESTION_ID_WITH_MULTIPLE).get();
+        question.setQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION);
         controller.markAsInComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, userId);
 
         assertFalse(questionStatusService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
@@ -157,8 +155,18 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
         assertTrue(questionStatusService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
     }
 
+    public void isMarkedAsCompleteLoanBusinessAndFinancialInformationQuestion() {
+        question.setQuestionSetupType(QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
+
+        assertFalse(questionStatusService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
+
+        controller.markAsComplete(questionId, applicationId, userId);
+
+        assertFalse(questionStatusService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
+    }
+
     @Test
-    public void testGetQuestionByIdAndAssessmentId() {
+    public void getQuestionByIdAndAssessmentId() {
         loginFelixWilson();
         Long questionId = 1L;
         Long assessmentId = 7L;
@@ -168,7 +176,7 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
     }
 
     @Test
-    public void testGetQuestionsByAssessmentId() {
+    public void getQuestionsByAssessmentId() {
         loginFelixWilson();
         Long assessmentId = 7L;
 

@@ -28,8 +28,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -61,8 +60,7 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
                 (service) -> service.getGrantOfferLetterFileAndContents(projectId);
 
         assertGetFileContents("/project/{projectId}/grant-offer", new Object[] {projectId},
-                emptyMap(), grantOfferLetterService, serviceCallToUpload).
-                andDo(documentFileGetContentsMethod("project/{method-name}"));
+                emptyMap(), grantOfferLetterService, serviceCallToUpload);
     }
 
     @Test
@@ -72,8 +70,7 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
                 (service) -> service.getAdditionalContractFileAndContents(projectId);
 
         assertGetFileContents("/project/{projectId}/additional-contract", new Object[] {projectId},
-                emptyMap(), grantOfferLetterService, serviceCallToUpload).
-                andDo(documentFileGetContentsMethod("project/{method-name}"));
+                emptyMap(), grantOfferLetterService, serviceCallToUpload);
     }
 
     @Test
@@ -83,8 +80,7 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
                 (service) -> service.getSignedAdditionalContractFileAndContents(projectId);
 
         assertGetFileContents("/project/{projectId}/signed-additional-contract", new Object[] {projectId},
-                emptyMap(), grantOfferLetterService, serviceCallToUpload).
-                andDo(documentFileGetContentsMethod("project/{method-name}"));
+                emptyMap(), grantOfferLetterService, serviceCallToUpload);
     }
 
     @Test
@@ -95,8 +91,7 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
 
         assertGetFileDetails("/project/{projectId}/signed-grant-offer/details", new Object[] {projectId},
                 emptyMap(),
-                grantOfferLetterService, serviceCallToUpload).
-                andDo(documentFileGetDetailsMethod("project/{method-name}"));
+                grantOfferLetterService, serviceCallToUpload);
     }
 
     @Test
@@ -107,8 +102,7 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
 
         assertGetFileDetails("/project/{projectId}/additional-contract/details", new Object[] {projectId},
                 emptyMap(),
-                grantOfferLetterService, serviceCallToUpload).
-                andDo(documentFileGetDetailsMethod("project/{method-name}"));
+                grantOfferLetterService, serviceCallToUpload);
     }
 
     @Test
@@ -119,8 +113,7 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
 
         assertGetFileDetails("/project/{projectId}/signed-additional-contract/details", new Object[] {projectId},
                 emptyMap(),
-                grantOfferLetterService, serviceCallToUpload).
-                andDo(documentFileGetDetailsMethod("project/{method-name}"));
+                grantOfferLetterService, serviceCallToUpload);
     }
 
     @Test
@@ -129,8 +122,7 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
         BiFunction<GrantOfferLetterService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service, fileToUpload) -> service.createSignedGrantOfferLetterFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        assertFileUploadProcess("/project/" + projectId + "/signed-grant-offer/", fileValidator, mediaTypes, grantOfferLetterService, serviceCallToUpload).
-                andDo(documentFileUploadMethod("project/{method-name}"));
+        assertFileUploadProcess("/project/" + projectId + "/signed-grant-offer/", fileValidator, mediaTypes, grantOfferLetterService, serviceCallToUpload);
     }
 
     @Test
@@ -139,8 +131,7 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
         BiFunction<GrantOfferLetterService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service, fileToUpload) -> service.createAdditionalContractFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        assertFileUploadProcess("/project/" + projectId + "/additional-contract/", fileValidator, mediaTypes, grantOfferLetterService, serviceCallToUpload).
-                andDo(documentFileUploadMethod("project/{method-name}"));
+        assertFileUploadProcess("/project/" + projectId + "/additional-contract/", fileValidator, mediaTypes, grantOfferLetterService, serviceCallToUpload);
 
     }
 
@@ -150,8 +141,7 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
         when(grantOfferLetterService.removeGrantOfferLetterFileEntry(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/project/{projectId}/grant-offer", projectId)).
-                andExpect(status().isNoContent()).
-                andDo(document("project/{method-name}"));
+                andExpect(status().isNoContent());
     }
 
     @Test
@@ -160,8 +150,7 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
         when(grantOfferLetterService.resetGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/project/{projectId}/grant-offer/reset", projectId)).
-                andExpect(status().isNoContent()).
-                andDo(document("project/{method-name}"));
+                andExpect(status().isNoContent());
     }
 
     @Test
@@ -170,8 +159,7 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
         when(grantOfferLetterService.removeSignedGrantOfferLetterFileEntry(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/project/{projectId}/signed-grant-offer-letter", projectId)).
-                andExpect(status().isNoContent()).
-                andDo(document("project/{method-name}"));
+                andExpect(status().isNoContent());
     }
 
     @Test
@@ -180,8 +168,7 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
         when(grantOfferLetterService.removeSignedAdditionalContractFileEntry(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/project/{projectId}/signed-additional-contract", projectId)).
-                andExpect(status().isNoContent()).
-                andDo(document("project/{method-name}"));
+                andExpect(status().isNoContent());
     }
 
     @Test
@@ -210,7 +197,6 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(stateInformation)))
-                .andDo(document("project/grant-offer-letter/current-state/{method-name}"))
                 .andReturn();
 
         verify(grantOfferLetterService).getGrantOfferLetterState(projectId);

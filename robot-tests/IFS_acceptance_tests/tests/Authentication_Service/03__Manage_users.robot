@@ -22,7 +22,9 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...               IFS-7160  CSS & Admins cannot amend email addresses if there are pending invites in the service
 ...
 ...               IFS-7483 Inactive innovation lead appearing in list of available innovation leads
-Suite Setup       Custom suite setup
+...
+...                IFS-10511 Permit alternative email domain for internal user accounts
+
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin  AuthServiceTests
 Resource          ../../resources/defaultResources.robot
@@ -33,6 +35,7 @@ Resource          ../../resources/common/PS_Common.robot
 *** Variables ***
 ${localEmailInvtedUser}      ifs.innovationLead@innovateuk.ukri.test
 ${remoteEmailInvtedUser}     ifs.innovationLead@innovateuk.ukri.org
+${alternativeEmailInvtedUser}     ifs.innovationLead@iuk.ukri.org
 ${invalidEmail}              test@test.com
 ${adminChangeEmailOld}       aaron.powell@example.com
 ${adminChangeEmailNew}       aaron.powell2@example.com

@@ -13,21 +13,15 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
 import static org.innovateuk.ifs.assessment.documentation.AssessmentFundingDecisionOutcomeDocs.assessmentFundingDecisionOutcomeResourceBuilder;
-import static org.innovateuk.ifs.assessment.documentation.AssessmentFundingDecisionOutcomeDocs.assessmentFundingDecisionOutcomeResourceFields;
 import static org.innovateuk.ifs.assessment.documentation.AssessmentRejectOutcomeDocs.assessmentRejectOutcomeResourceBuilder;
-import static org.innovateuk.ifs.assessment.documentation.AssessmentRejectOutcomeDocs.assessmentRejectOutcomeResourceFields;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.AssessmentDocs.*;
+import static org.innovateuk.ifs.documentation.AssessmentDocs.assessmentResourceBuilder;
+import static org.innovateuk.ifs.documentation.AssessmentDocs.assessmentSubmissionsResourceBuilder;
 import static org.innovateuk.ifs.documentation.AssessmentTotalScoreResourceDocs.assessmentTotalScoreResourceBuilder;
-import static org.innovateuk.ifs.documentation.AssessmentTotalScoreResourceDocs.assessmentTotalScoreResourceFields;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest<AssessmentController> {
@@ -49,15 +43,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(get("/assessment/{id}", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("assessment/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the assessment that is being requested")
-                        ),
-                        responseFields(assessmentFields)
-                                .andWithPrefix("rejection.", AssessmentRejectOutcomeDocs.assessmentRejectOutcomeResourceFields)
-                                .andWithPrefix("fundingDecision.", AssessmentFundingDecisionOutcomeDocs.assessmentFundingDecisionOutcomeResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -69,15 +55,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(get("/assessment/{id}/assign", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("assessment/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the assessment that is being requested")
-                        ),
-                        responseFields(assessmentFields)
-                                .andWithPrefix("rejection.", AssessmentRejectOutcomeDocs.assessmentRejectOutcomeResourceFields)
-                                .andWithPrefix("fundingDecision.", AssessmentFundingDecisionOutcomeDocs.assessmentFundingDecisionOutcomeResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -89,15 +67,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(get("/assessment/{id}/rejectable", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("assessment/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the assessment that is being requested")
-                        ),
-                        responseFields(assessmentFields)
-                                .andWithPrefix("rejection.", AssessmentRejectOutcomeDocs.assessmentRejectOutcomeResourceFields)
-                                .andWithPrefix("fundingDecision.", AssessmentFundingDecisionOutcomeDocs.assessmentFundingDecisionOutcomeResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -110,18 +80,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(get("/assessment/user/{userId}/competition/{competitionId}", userId, competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("assessment/{method-name}",
-                        pathParameters(
-                                parameterWithName("userId").description("Id of the user whose assessments are being requested"),
-                                parameterWithName("competitionId").description("Id of the competition associated with the user's assessments")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("List of assessments the user is allowed to see")
-                        ).andWithPrefix("[].", assessmentFields)
-                                .andWithPrefix("[].rejection.", AssessmentRejectOutcomeDocs.assessmentRejectOutcomeResourceFields)
-                                .andWithPrefix("[].fundingDecision.", AssessmentFundingDecisionOutcomeDocs.assessmentFundingDecisionOutcomeResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -134,18 +93,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(get("/assessment/user/{userId}/application/{applicationId}", userId, applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("assessment/{method-name}",
-                        pathParameters(
-                                parameterWithName("userId").description("Id of the user whose assessments are being requested"),
-                                parameterWithName("applicationId").description("Id of the application being requested")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("List of assessments the user is allowed to see")
-                        ).andWithPrefix("[].", assessmentFields)
-                                .andWithPrefix("[].rejection.", AssessmentRejectOutcomeDocs.assessmentRejectOutcomeResourceFields)
-                                .andWithPrefix("[].fundingDecision.", AssessmentFundingDecisionOutcomeDocs.assessmentFundingDecisionOutcomeResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
 
@@ -159,13 +107,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(get("/assessment/{id}/score", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("assessment/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the assessment that is being requested")
-                        ),
-                        responseFields(assessmentTotalScoreResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -180,13 +122,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(assessmentFundingDecisionOutcomeResource)))
-                .andExpect(status().isOk())
-                .andDo(document("assessment/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the assessment for which to recommend")
-                        ),
-                        requestFields(assessmentFundingDecisionOutcomeResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -201,15 +137,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(get("/assessment/application/{id}/feedback", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("assessment/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the application to retrieve assessment feedback for")
-                        ),
-                        responseFields(
-                                fieldWithPath("feedback[]").description("List of assessor feedback items for the application")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -223,13 +151,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(assessmentRejectOutcomeResource)))
-                .andExpect(status().isOk())
-                .andDo(document("assessment/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the assessment for which to reject")
-                        ),
-                        requestFields(assessmentRejectOutcomeResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -240,12 +162,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(put("/assessment/{id}/accept-invitation", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("assessment/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the assessment for which to accept")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -256,12 +173,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(put("/assessment/{id}/withdraw", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("assessment/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the assessment for which to withdraw")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -272,12 +184,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(put("/assessment/{id}/unsubmit", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("assessment/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the assessment for which to unsubmit")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
 
@@ -290,7 +197,6 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(assessmentSubmissions)))
-                .andExpect(status().isOk())
-                .andDo(document("assessment/{method-name}", requestFields(assessmentSubmissionsFields)));
+                .andExpect(status().isOk());
     }
 }

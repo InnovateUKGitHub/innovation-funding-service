@@ -12,6 +12,8 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.transactional.UserService;
@@ -30,6 +32,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSIGNEE_SHOULD_BE_APPLICANT;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -43,22 +46,25 @@ public class QuestionStatusServiceTest extends BaseUnitTestMocksTest {
     protected QuestionStatusService questionStatusService = new QuestionStatusServiceImpl();
 
     @Mock
-    private UserService userServiceMock;
+    private UserService userService;
 
     @Mock
-    private QuestionRepository questionRepositoryMock;
+    private QuestionRepository questionRepository;
 
     @Mock
-    private QuestionStatusRepository questionStatusRepositoryMock;
+    private QuestionStatusRepository questionStatusRepository;
 
     @Mock
-    private ProcessRoleRepository processRoleRepositoryMock;
+    private ProcessRoleRepository processRoleRepository;
 
     @Mock
-    private ApplicationRepository applicationRepositoryMock;
+    private ApplicationRepository applicationRepository;
 
     @Mock
-    private ApplicationProgressService applicationProgressServiceMock;
+    private ApplicationProgressService applicationProgressService;
+
+    @Mock
+    private QuestionService questionService;
 
     @Test
     public void assignTest() {
@@ -68,24 +74,24 @@ public class QuestionStatusServiceTest extends BaseUnitTestMocksTest {
         final long assignedById = 72834L;
         QuestionApplicationCompositeId questionApplicationCompositeId = new QuestionApplicationCompositeId(questionId, applicationId);
 
-        when(questionRepositoryMock.findById(questionId)).thenReturn(Optional.of(newQuestion().build()));
-        when(processRoleRepositoryMock.findById(assigneeId)).thenReturn(Optional.of(newProcessRole().withUser(newUser().withId(assigneeId).build()).withApplication(newApplication().withId(applicationId).build()).build()));
-        when(processRoleRepositoryMock.findById(assignedById)).thenReturn(Optional.of(newProcessRole().build()));
+        when(questionRepository.findById(questionId)).thenReturn(Optional.of(newQuestion().build()));
+        when(processRoleRepository.findById(assigneeId)).thenReturn(Optional.of(newProcessRole().withUser(newUser().withId(assigneeId).build()).withApplication(newApplication().withId(applicationId).build()).build()));
+        when(processRoleRepository.findById(assignedById)).thenReturn(Optional.of(newProcessRole().build()));
         Competition competitionMock = mock(Competition.class);
         when(competitionMock.getCompetitionStatus()).thenReturn(CompetitionStatus.OPEN);
         Application application = newApplication().withCompetition(competitionMock).build();
-        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
-        when(userServiceMock.findAssignableUsers(applicationId)).thenReturn(serviceSuccess(new HashSet(newUserResource().withId(assigneeId).build(1))));
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(userService.findAssignableUsers(applicationId)).thenReturn(serviceSuccess(new HashSet(newUserResource().withId(assigneeId).build(1))));
 
         ServiceResult<Void> result = questionStatusService.assign(questionApplicationCompositeId, assigneeId, assignedById);
 
         assertTrue(result.isSuccess());
 
         Long differentApplicationId = 1233L;
-        when(processRoleRepositoryMock.findById(assigneeId))
+        when(processRoleRepository.findById(assigneeId))
                 .thenReturn(Optional.of(newProcessRole().withUser(newUser().withId(2L).build()).withApplication(newApplication().withId(differentApplicationId).build()).build()));
 
-        when(userServiceMock.findAssignableUsers(applicationId)).thenReturn(serviceSuccess(new HashSet(newUserResource().withId(1L).build(1))));
+        when(userService.findAssignableUsers(applicationId)).thenReturn(serviceSuccess(new HashSet(newUserResource().withId(1L).build(1))));
 
         ServiceResult<Void> resultTwo = questionStatusService.assign(questionApplicationCompositeId, assigneeId, assignedById);
 
@@ -98,16 +104,18 @@ public class QuestionStatusServiceTest extends BaseUnitTestMocksTest {
         ProcessRole markedAsInCompleteBy = newProcessRole().build();
         Application application = newApplication().build();
         Question question = newQuestion().build();
+        QuestionResource questionResource = newQuestionResource().build();
 
         QuestionApplicationCompositeId questionApplicationCompositeId = new QuestionApplicationCompositeId
                 (question.getId(), application.getId());
 
-        when(processRoleRepositoryMock.findById(markedAsInCompleteBy.getId())).thenReturn(Optional.of(markedAsInCompleteBy));
-        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
-        when(questionRepositoryMock.findById(question.getId())).thenReturn(Optional.of(question));
-        when(questionStatusRepositoryMock.findByQuestionIdAndApplicationId(question.getId(), application.getId()))
+        when(questionService.getQuestionById(question.getId())).thenReturn(serviceSuccess(questionResource));
+        when(processRoleRepository.findById(markedAsInCompleteBy.getId())).thenReturn(Optional.of(markedAsInCompleteBy));
+        when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
+        when(questionRepository.findById(question.getId())).thenReturn(Optional.of(question));
+        when(questionStatusRepository.findByQuestionIdAndApplicationId(question.getId(), application.getId()))
                 .thenReturn(null);
-        when(applicationProgressServiceMock.updateApplicationProgress(application.getId())).thenReturn(serviceSuccess
+        when(applicationProgressService.updateApplicationProgress(application.getId())).thenReturn(serviceSuccess
                 (new BigDecimal("33.33")));
 
         ServiceResult<List<ValidationMessages>> result = questionStatusService.markTeamAsInComplete
@@ -116,15 +124,15 @@ public class QuestionStatusServiceTest extends BaseUnitTestMocksTest {
         assertTrue(result.isSuccess());
         assertTrue(result.getSuccess().isEmpty());
 
-        InOrder inOrder = inOrder(processRoleRepositoryMock, applicationRepositoryMock, questionRepositoryMock,
-                questionStatusRepositoryMock, applicationProgressServiceMock);
-        inOrder.verify(processRoleRepositoryMock).findById(markedAsInCompleteBy.getId());
-        inOrder.verify(applicationRepositoryMock).findById(application.getId());
-        inOrder.verify(questionRepositoryMock).findById(question.getId());
-        inOrder.verify(questionStatusRepositoryMock).findByQuestionIdAndApplicationId(question.getId(), application.getId());
-        inOrder.verify(questionStatusRepositoryMock).save(createQuestionStatusLambdaMatcher(question,
+        InOrder inOrder = inOrder(processRoleRepository, applicationRepository, questionRepository,
+                questionStatusRepository, applicationProgressService);
+        inOrder.verify(processRoleRepository).findById(markedAsInCompleteBy.getId());
+        inOrder.verify(applicationRepository).findById(application.getId());
+        inOrder.verify(questionRepository).findById(question.getId());
+        inOrder.verify(questionStatusRepository).findByQuestionIdAndApplicationId(question.getId(), application.getId());
+        inOrder.verify(questionStatusRepository).save(createQuestionStatusLambdaMatcher(question,
                 application, null, false));
-        inOrder.verify(applicationProgressServiceMock).updateApplicationProgress(application.getId());
+        inOrder.verify(applicationProgressService).updateApplicationProgress(application.getId());
         inOrder.verifyNoMoreInteractions();
     }
 

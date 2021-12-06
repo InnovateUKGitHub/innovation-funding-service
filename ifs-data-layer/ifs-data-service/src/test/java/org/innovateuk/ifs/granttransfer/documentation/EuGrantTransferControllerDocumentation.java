@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.function.Function;
@@ -19,18 +19,10 @@ import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.EuGrantTransferDocs.EU_GRANT_TRANSFER_RESOURCE;
-import static org.innovateuk.ifs.documentation.EuGrantTransferDocs.euGrantTransferResourceFields;
-import static org.innovateuk.ifs.documentation.FileEntryDocs.fileEntryResourceFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -53,10 +45,7 @@ public class EuGrantTransferControllerDocumentation extends BaseFileControllerMo
         mockMvc.perform(get("/eu-grant-transfer/grant-agreement-details/{applicationId}", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(fileEntryResource)))
-                .andDo(document("eu-grant-transfer/{method-name}",
-                        pathParameters(parameterWithName("applicationId").description("Id of the application the grant agreement is attached to.")),
-                        responseFields(fileEntryResourceFields)));
+                .andExpect(content().json(toJson(fileEntryResource)));
 
         verify(euGrantTransferService).findGrantAgreement(applicationId);
     }
@@ -70,8 +59,7 @@ public class EuGrantTransferControllerDocumentation extends BaseFileControllerMo
 
         assertGetFileContents("/eu-grant-transfer/grant-agreement/{applicationId}", new Object[]{applicationId},
                 emptyMap(), euGrantTransferService, serviceCallToDownload)
-                .andExpect(status().isOk())
-                .andDo(documentFileGetContentsMethod("eu-grant-transfer/{method-name}"));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -79,12 +67,9 @@ public class EuGrantTransferControllerDocumentation extends BaseFileControllerMo
         final long applicationId = 22L;
         when(euGrantTransferService.deleteGrantAgreement(applicationId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.delete("/eu-grant-transfer/grant-agreement/{applicationId}", applicationId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/eu-grant-transfer/grant-agreement/{applicationId}", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isNoContent())
-                .andDo(document("eu-grant-transfer/{method-name}",
-                        pathParameters(parameterWithName("applicationId").description("Id of the application to have grant agreement deleted")))
-                );
+                .andExpect(status().isNoContent());
 
         verify(euGrantTransferService).deleteGrantAgreement(applicationId);
     }
@@ -99,14 +84,7 @@ public class EuGrantTransferControllerDocumentation extends BaseFileControllerMo
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .param("filename", "randomFile.pdf")
                 .headers(createFileUploadHeader("application/pdf", 1234)))
-                .andExpect(status().isCreated())
-                .andDo(document("eu-grant-transfer/{method-name}",
-                        pathParameters(parameterWithName("applicationId").description("The application in which the grant agreement will be attached.")),
-                        requestParameters(parameterWithName("filename").description("The filename of the file being uploaded")),
-                        requestHeaders(
-                                headerWithName("Content-Type").description("The Content Type of the file being uploaded e.g. application/pdf")
-                        )
-                ));
+                .andExpect(status().isCreated());
 
         verify(euGrantTransferService).uploadGrantAgreement(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
                 eq(applicationId), any(HttpServletRequest.class));
@@ -120,10 +98,7 @@ public class EuGrantTransferControllerDocumentation extends BaseFileControllerMo
         mockMvc.perform(get("/eu-grant-transfer/{applicationId}", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(EU_GRANT_TRANSFER_RESOURCE)))
-                .andDo(document("eu-grant-transfer/{method-name}",
-                        pathParameters(parameterWithName("applicationId").description("Id of the application the grant transfer details are attached to.")),
-                        responseFields(euGrantTransferResourceFields)));
+                .andExpect(content().json(toJson(EU_GRANT_TRANSFER_RESOURCE)));
 
         verify(euGrantTransferService).getGrantTransferByApplicationId(applicationId);
     }
@@ -137,10 +112,7 @@ public class EuGrantTransferControllerDocumentation extends BaseFileControllerMo
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(EU_GRANT_TRANSFER_RESOURCE)))
-                .andExpect(status().isOk())
-                .andDo(document("eu-grant-transfer/{method-name}",
-                        pathParameters(parameterWithName("applicationId").description("Id of the application the grant transfer details are attached to.")),
-                        requestFields(euGrantTransferResourceFields)));
+                .andExpect(status().isOk());
 
         verify(euGrantTransferService).updateGrantTransferByApplicationId(EU_GRANT_TRANSFER_RESOURCE, applicationId);
     }

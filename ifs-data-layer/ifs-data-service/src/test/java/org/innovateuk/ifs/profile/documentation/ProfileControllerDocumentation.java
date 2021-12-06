@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.profile.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.documentation.AddressDocs;
-import org.innovateuk.ifs.documentation.AgreementDocs;
-import org.innovateuk.ifs.documentation.InnovationAreaResourceDocs;
 import org.innovateuk.ifs.profile.controller.ProfileController;
 import org.innovateuk.ifs.profile.transactional.ProfileService;
 import org.innovateuk.ifs.user.resource.ProfileAgreementResource;
@@ -15,20 +12,14 @@ import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ProfileAgreementDocs.profileAgreementResourceBuilder;
-import static org.innovateuk.ifs.documentation.ProfileAgreementDocs.profileAgreementResourceFields;
-import static org.innovateuk.ifs.documentation.ProfileSkillsDocs.*;
+import static org.innovateuk.ifs.documentation.ProfileSkillsDocs.profileSkillsEditResourceBuilder;
+import static org.innovateuk.ifs.documentation.ProfileSkillsDocs.profileSkillsResourceBuilder;
 import static org.innovateuk.ifs.documentation.UserProfileResourceDocs.userProfileResourceBuilder;
-import static org.innovateuk.ifs.documentation.UserProfileResourceDocs.userProfileResourceFields;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<ProfileController> {
@@ -50,14 +41,7 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         mockMvc.perform(get("/profile/id/{id}/get-profile-agreement", userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("profile/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Identifier of the user associated with the profile agreement being requested")
-                        ),
-                        responseFields(profileAgreementResourceFields)
-                        .andWithPrefix("agreement.", AgreementDocs.agreementResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -68,12 +52,7 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         mockMvc.perform(put("/profile/id/{id}/update-profile-agreement", userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("profile/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Identifier of the user to update the profile agreement for")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -85,14 +64,7 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         mockMvc.perform(get("/profile/id/{id}/get-profile-skills", userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("profile/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Identifier of the user associated with the profile skills being requested")
-                        ),
-                        responseFields(profileSkillsResourceFields)
-                        .andWithPrefix("innovationAreas[].", InnovationAreaResourceDocs.innovationAreaResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -106,13 +78,7 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(profileSkillsEditResource))
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("profile/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Identifier of the user to update the profile skills for")
-                        ),
-                        requestFields(profileSkillsEditResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -124,14 +90,7 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         mockMvc.perform(get("/profile/id/{id}/get-user-profile", userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("profile/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Identifier of the user associated with the profile being requested")
-                        ),
-                        responseFields(userProfileResourceFields)
-                                .andWithPrefix("address.", AddressDocs.addressResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -145,13 +104,6 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(profileDetails))
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("profile/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Identifier of the user to update the profile for")
-                        ),
-                        requestFields(userProfileResourceFields)
-                                .andWithPrefix("address.", AddressDocs.addressResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 }

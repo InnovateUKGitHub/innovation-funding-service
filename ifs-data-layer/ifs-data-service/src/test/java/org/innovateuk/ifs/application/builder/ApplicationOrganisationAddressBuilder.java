@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.activitylog.domain.ActivityLogBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;

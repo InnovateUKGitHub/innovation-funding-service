@@ -1,12 +1,8 @@
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
 
-ext.IFS_WEB_VIRTUALASSISTANT_BOTSECRET = ext.has('ifs.web.virtualAssistant.botSecret') ? ext.get('ifs.web.virtualAssistant.botSecret') : 'authSecretNotConfigured'
-ext.IFS_WEB_VIRTUALASSISTANT_BOTID = ext.has('ifs.web.virtualAssistant.botId') ? ext.get('ifs.web.virtualAssistant.botId') : 'ukridev-qnamaker-bot'
-
 group 'innovateuk'
 version project.version
-
 
 dependencies {
     implementation project(':ifs-web-service:ifs-web-core')
@@ -34,12 +30,3 @@ dependencies {
 }
 
 jar.dependsOn ":ifs-web-service:gulp_default"
-processResources.dependsOn ":ifs-web-service:applyProfiles"
-
-sourceSets {
-    main {
-        resources {
-            srcDirs = ["src/main/resources", "../../shared-resources"]
-        }
-    }
-}

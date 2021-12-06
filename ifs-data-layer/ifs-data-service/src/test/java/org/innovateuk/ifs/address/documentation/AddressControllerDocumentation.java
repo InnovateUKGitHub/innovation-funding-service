@@ -12,12 +12,7 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AddressDocs.addressResourceBuilder;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 public class AddressControllerDocumentation extends BaseControllerMockMVCTest<AddressController> {
 
@@ -36,12 +31,7 @@ public class AddressControllerDocumentation extends BaseControllerMockMVCTest<Ad
         when(addressLookupServiceMock.validatePostcode(postCode)).thenReturn(serviceSuccess(true));
 
         mockMvc.perform(get("/address/validate-postcode/?postcode=" +  postCode)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("address/{method-name}",
-                        requestParameters(
-                                parameterWithName("postcode").description("Postcode to validate")
-                        )
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
 
@@ -54,21 +44,6 @@ public class AddressControllerDocumentation extends BaseControllerMockMVCTest<Ad
         when(addressLookupServiceMock.doLookup(postCode)).thenReturn(serviceSuccess(addressResources));
 
         mockMvc.perform(get("/address/do-lookup/?lookup=" + postCode)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("address/{method-name}",
-                        requestParameters(
-                                parameterWithName("lookup").description("Postcode to look up")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]addressLine1").description("Address line1"),
-                                fieldWithPath("[]addressLine2").description("Address line2"),
-                                fieldWithPath("[]addressLine3").description("Address Line3"),
-                                fieldWithPath("[]town").description("Town"),
-                                fieldWithPath("[]county").description("County"),
-                                fieldWithPath("[]postcode").description("Postcode"),
-                                fieldWithPath("[]country").description("Country")
-
-                        )
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 }

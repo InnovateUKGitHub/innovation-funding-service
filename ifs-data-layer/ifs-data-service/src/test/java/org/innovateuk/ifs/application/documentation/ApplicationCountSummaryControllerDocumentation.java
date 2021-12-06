@@ -14,14 +14,9 @@ import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ApplicationCountDocs.applicationCountSummaryResourceBuilder;
-import static org.innovateuk.ifs.documentation.ApplicationCountDocs.applicationCountSummaryResourcesFields;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationCountSummaryControllerDocumentation extends BaseControllerMockMVCTest<ApplicationCountSummaryController> {
@@ -45,12 +40,7 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
 
         mockMvc.perform(get("/application-count-summary/find-by-competition-id/{competitionId}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("applicationCountSummary/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of competition")
-                        ),
-                        responseFields(applicationCountSummaryResourcesFields)));
+                .andExpect(status().isOk());
 
         verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, empty());
     }
@@ -70,18 +60,7 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
 
         mockMvc.perform(get("/application-count-summary/find-by-competition-id-and-assessor-id-and-assessment-period-id/{competitionId}/{assessorId}/{assessmentPeriodId}?sort={sortField}&filter={filter}", competitionId, assessorId, assessmentPeriodId, sortField, filter)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("applicationCountSummary/{method-name}",
-                        pathParameters(
-                                parameterWithName("assessorId").description("Id of assessor to exclude results for"),
-                                parameterWithName("competitionId").description("Id of competition"),
-                                parameterWithName("assessmentPeriodId").description("AssessmentPeriodId of application")
-                        ),
-                        requestParameters(
-                                parameterWithName("sort").description("Field to sort by"),
-                                parameterWithName("filter").description("String to filter applications")
-                        ),
-                        responseFields(applicationCountSummaryResourcesFields)));
+                .andExpect(status().isOk());
 
         verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId,assessmentPeriodId, 0, 20, sortField, "");
     }
@@ -97,17 +76,7 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
 
         mockMvc.perform(get("/application-count-summary/find-ids-by-competition-id-and-assessor-id-and-assessment-period-id/{competitionId}/{assessorId}/{assessmentPeriodId}?filter={filter}", competitionId, assessorId, assessmentPeriodId, filter)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("applicationCountSummary/{method-name}",
-                        pathParameters(
-                                parameterWithName("assessorId").description("Id of assessor to exclude results for"),
-                                parameterWithName("competitionId").description("Id of competition"),
-                                parameterWithName("assessmentPeriodId").description("AssessmentPeriodId of application")
-                        ),
-                        requestParameters(
-                                parameterWithName("filter").description("String to filter applications")
-                        ),
-                        responseFields(fieldWithPath("[]").description("Ids"))));
+                .andExpect(status().isOk());
 
         verify(applicationCountSummaryServiceMock).getApplicationIdsByCompetitionIdAndAssessorId(competitionId, assessorId, assessmentPeriodId,"");
     }

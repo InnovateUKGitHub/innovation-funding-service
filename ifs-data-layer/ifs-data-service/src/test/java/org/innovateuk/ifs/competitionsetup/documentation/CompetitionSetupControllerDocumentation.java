@@ -8,8 +8,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
-import org.innovateuk.ifs.documentation.CompetitionResourceDocs;
-import org.innovateuk.ifs.documentation.TermsAndConditionsResourceDocs;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
@@ -28,10 +26,7 @@ import static org.innovateuk.ifs.documentation.SetupStatusResourceDocs.setupStat
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionSetupControllerDocumentation extends BaseFileControllerMockMVCTest<CompetitionSetupController> {
@@ -64,14 +59,7 @@ public class CompetitionSetupControllerDocumentation extends BaseFileControllerM
 
         mockMvc.perform(put("/competition/setup/section-status/complete/{competitionId}/{section}", competitionId, section)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("id of the competition on which the section should be marked as complete"),
-                                parameterWithName("section").description("the section to mark as complete")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -82,14 +70,7 @@ public class CompetitionSetupControllerDocumentation extends BaseFileControllerM
 
         mockMvc.perform(put("/competition/setup/section-status/incomplete/{competitionId}/{section}", competitionId, section)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("id of the competition on which the section should be marked as incomplete"),
-                                parameterWithName("section").description("the section to mark as incomplete")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -101,15 +82,7 @@ public class CompetitionSetupControllerDocumentation extends BaseFileControllerM
 
         mockMvc.perform(put("/competition/setup/subsection-status/complete/{competitionId}/{parentSection}/{subsection}", competitionId, parentSection, subsection)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("id of the competition on which the section should be marked as complete"),
-                                parameterWithName("parentSection").description("the parent section of the section that needs to be marked as complete"),
-                                parameterWithName("subsection").description("the subsection to mark as complete")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -121,15 +94,7 @@ public class CompetitionSetupControllerDocumentation extends BaseFileControllerM
 
         mockMvc.perform(put("/competition/setup/subsection-status/incomplete/{competitionId}/{parentSection}/{subsection}", competitionId, parentSection, subsection)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("id of the competition on which the section should be marked as incomplete"),
-                                parameterWithName("parentSection").description("the parent section of the section that needs to be marked as incomplete"),
-                                parameterWithName("subsection").description("the subsection to mark as incomplete")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -140,14 +105,7 @@ public class CompetitionSetupControllerDocumentation extends BaseFileControllerM
 
         mockMvc.perform(post("/competition/setup/{competitionId}/initialise-form/{competitionTypeId}", competitionId, competitionTypeId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("id of the competition in competition setup on which the application form should be initialised"),
-                                parameterWithName("competitionTypeId").description("id of the competitionType that is being chosen on setup")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -163,15 +121,7 @@ public class CompetitionSetupControllerDocumentation extends BaseFileControllerM
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(competitionResource)))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the competition whose initial details are being updated")
-                        ),
-                        requestFields(CompetitionResourceDocs.competitionResourceFields)
-                                .andWithPrefix("termsAndConditions.", TermsAndConditionsResourceDocs.termsAndConditionsResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -182,10 +132,7 @@ public class CompetitionSetupControllerDocumentation extends BaseFileControllerM
 
         mockMvc.perform(delete("/competition/setup/{id}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isNoContent())
-                .andDo(document("competition/{method-name}",
-                        pathParameters(parameterWithName("id").description("Id of the competition to delete")))
-                );
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -206,13 +153,7 @@ public class CompetitionSetupControllerDocumentation extends BaseFileControllerM
                 .contentType(fileEntryResource.getMediaType())
                 .content("fileContent")
                 .header(HttpHeaders.CONTENT_LENGTH, 1234))
-                .andExpect(status().isCreated())
-                .andDo(document(
-                        "competition/competition-terms",
-                        requestParameters(
-                                parameterWithName("competitionId").description("The ID of the competition"),
-                                parameterWithName("filename").description("The name of the file"))
-                        ));
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -223,12 +164,7 @@ public class CompetitionSetupControllerDocumentation extends BaseFileControllerM
 
         mockMvc.perform(delete("/competition/setup/competition-terms")
                 .param("competitionId", String.valueOf(competitionId)))
-                .andExpect(status().isNoContent())
-                .andDo(document(
-                        "competition/competition-terms",
-                        requestParameters(
-                                parameterWithName("competitionId").description("The ID of the competition")
-                )));
+                .andExpect(status().isNoContent());
     }
 }
 

@@ -4,7 +4,6 @@ import org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.invite.builder.*;
 import org.innovateuk.ifs.invite.resource.CompetitionRejectionResource;
-import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.math.BigDecimal;
 
@@ -21,67 +20,8 @@ import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.n
 import static org.innovateuk.ifs.invite.builder.StagedApplicationListResourceBuilder.newStagedApplicationListResource;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class CompetitionInviteDocs {
-
-    public static final FieldDescriptor[] competitionInviteFields = {
-            fieldWithPath("id").description("Id of the competition invite"),
-            fieldWithPath("competitionId").description("Id of the competition"),
-            fieldWithPath("competitionName").description("Name of the competition").optional(),
-            fieldWithPath("competitionFundingType").description("Grant").optional(),
-            fieldWithPath("email").description("Email of the competition invitee").optional(),
-            fieldWithPath("hash").description("Hash id of the competition invite").optional(),
-            fieldWithPath("status").description("Status of the competition invite").optional(),
-            fieldWithPath("acceptsDate").description("Date of assessor accepting").optional(),
-            fieldWithPath("deadlineDate").description("Date of assessor deadline").optional(),
-            fieldWithPath("briefingDate").description("Date of assessor briefing").optional(),
-            fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess").optional(),
-            fieldWithPath("innovationArea").description("Innovation area of the invitee").optional(),
-            fieldWithPath("competitionAlwaysOpen").description("Always open state of competition")
-    };
-
-    public static final FieldDescriptor[] competitionRejectionFields = {
-            fieldWithPath("rejectReason").description("Information about why the invite was rejected"),
-            fieldWithPath("rejectComment").description("Optional comments about why the invite was rejected"),
-    };
-
-    public static final FieldDescriptor[] assessorInvitesToSendResourceFields = {
-            fieldWithPath("recipients").description("Names of the invite recipients"),
-            fieldWithPath("competitionId").description("The id of the competition"),
-            fieldWithPath("competitionName").description("The name of the competition"),
-            fieldWithPath("content").description("The read-only content that will be a part of every invite")
-    };
-
-    public static final FieldDescriptor[] assessorInviteSendResourceFields = {
-            fieldWithPath("subject").description("The subject of the invite email"),
-            fieldWithPath("content").description("The content body of the invite email")
-    };
-
-    public static final FieldDescriptor[] stakeholderInviteResourceFields = {
-            fieldWithPath("id").description("The id associated with this invite"),
-            fieldWithPath("hash").description("The hash associated with this invite"),
-            fieldWithPath("email").description("The email address used for the invite"),
-            fieldWithPath("competitionId").description("The id of the competition this user is invited to"),
-            fieldWithPath("status").description("The current status of the sent invite"),
-    };
-
-    public static final FieldDescriptor[] existingUserStagedInviteResourceFields = {
-            fieldWithPath("userId").description("User id of the recipient of the invite"),
-            fieldWithPath("competitionId").description("The id of the competition"),
-    };
-
-    public static final FieldDescriptor[] stagedApplicationResourceFields = {
-            fieldWithPath("applicationId").description("The id of the application"),
-            fieldWithPath("competitionId").description("The id of the competition"),
-    };
-
-    public static final FieldDescriptor[] newUserStagedInviteResourceFields = {
-            fieldWithPath("email").description("Email of the recipient of the invite"),
-            fieldWithPath("competitionId").description("The id of the competition"),
-            fieldWithPath("name").description("Name of the recipient of the invite"),
-            fieldWithPath("innovationAreaId").description("The id of the recipient's innovation area")
-    };
 
     public static final CompetitionInviteResourceBuilder competitionInviteResourceBuilder = newCompetitionInviteResource()
             .withIds(1L)

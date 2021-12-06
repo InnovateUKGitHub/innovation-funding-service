@@ -18,11 +18,3 @@ dependencies {
     testImplementation("org.springframework.ldap:spring-ldap-test")
     testImplementation("junit:junit")
 }
-
-sourceSets {
-    main {
-        resources {
-            srcDirs = ["src/main/resources", "../shared-resources"]
-        }
-    }
-}

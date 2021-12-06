@@ -1,12 +1,6 @@
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
 
-buildscript {
-    ext {
-        serverContext = '/assessment'
-    }
-}
-
 group 'innovateuk'
 version project.version
 
@@ -36,12 +30,3 @@ dependencies {
 }
 
 jar.dependsOn ":ifs-web-service:gulp_default"
-processResources.dependsOn ":ifs-web-service:applyProfiles"
-
-sourceSets {
-    main {
-        resources {
-            srcDirs = ["src/main/resources", "../../shared-resources"]
-        }
-    }
-}

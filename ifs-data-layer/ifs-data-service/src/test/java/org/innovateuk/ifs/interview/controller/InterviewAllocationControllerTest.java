@@ -10,7 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
@@ -212,7 +212,7 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
         long applicationId = 2L;
 
         when(interviewAllocationServiceMock.unallocateApplication(assessorId, applicationId)).thenReturn(serviceSuccess());
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/interview-panel/allocated-applications/{assessorId}/unallocate/{applicationId}", assessorId, applicationId))
+        mockMvc.perform(MockMvcRequestBuilders.post("/interview-panel/allocated-applications/{assessorId}/unallocate/{applicationId}", assessorId, applicationId))
                 .andExpect(status().isOk());
 
         verify(interviewAllocationServiceMock, only()).unallocateApplication(assessorId, applicationId);
