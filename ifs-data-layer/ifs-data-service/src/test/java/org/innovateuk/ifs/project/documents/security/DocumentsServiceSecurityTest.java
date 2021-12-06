@@ -8,9 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class DocumentsServiceSecurityTest extends BaseServiceSecurityTest<DocumentsService> {
 

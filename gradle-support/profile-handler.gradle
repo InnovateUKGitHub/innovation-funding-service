@@ -6,14 +6,3 @@ def apply(profiles) {
         }
     }
 }
-
-task applyProfiles() {
-    doFirst {
-        if (project.hasProperty("profile")) {
-            //Always apply docker, THEN automated and THEN the specific project profile.
-            apply(['docker', 'automated', project.profile])
-        } else {
-            apply(['docker'])
-        }
-    }
-}

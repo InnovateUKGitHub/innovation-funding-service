@@ -34,8 +34,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -61,8 +60,7 @@ public class SpendProfileControllerTest extends BaseControllerMockMVCTest<SpendP
         when(spendProfileService.deleteSpendProfile(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/project/{projectId}/spend-profile/reset", projectId))
-                .andExpect(status().isNoContent()).
-                andDo(document("project/{method-name}"));
+                .andExpect(status().isNoContent());
 
         verify(spendProfileService).deleteSpendProfile(projectId);
     }

@@ -39,6 +39,8 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...
 ...               IFS-8547 KTA application and project dashboards
 ...
+...               IFS-10511 Permit alternative email domain for internal user accounts
+
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
@@ -51,6 +53,7 @@ Resource          ../../resources/common/Competition_Commons.robot
 *** Variables ***
 ${localEmailInvtedUser}                  ifs.innovationLead@innovateuk.ukri.test
 ${remoteEmailInvtedUser}                 ifs.innovationLead@innovateuk.ukri.org
+${remoteEmailInvtedUser}                 ifs.innovationLead@iuk.ukri.org
 ${invalidEmail}                          test@test.com
 ${adminChangeEmailOld}                   aaron.powell@example.com
 ${adminChangeEmailNew}                   aaron.powell2@example.com
@@ -210,7 +213,7 @@ Support cannot see internal users
     And the user should not see the element       jQuery = p:contains("users matching the search")
 
 Server side validation for invite new internal user
-    [Documentation]  IFS-27 IFS-8095
+    [Documentation]  IFS-27 IFS-8095 IFS-10511
     [Setup]  Log in as a different user                     &{ifs_admin_user_credentials}
     Given the user navigates to the page                    ${server}/management/admin/users/active
     When the user clicks the button/link                    link = Invite a new internal user
@@ -227,12 +230,12 @@ The user must use an Innovate UK email
     [Teardown]  the user clicks the button/link           link = Cancel
 
 Client side validations for invite new internal user
-    [Documentation]  IFS-27
+    [Documentation]  IFS-27 IFS-10511
     When the user navigates to the page       ${server}/management/admin/invite-user
     Then the user validates the fields
 
 Administrator can successfully invite a new user
-    [Documentation]  IFS-27 IFS-983
+    [Documentation]  IFS-27 IFS-983 IFS-10511
     [Tags]  HappyPath
     Given the IFS admin send invite to internal user         Support  User  IFS Administrator
     Then the user cannot see a validation error in the page
@@ -241,7 +244,7 @@ Administrator can successfully invite a new user
     And the user should see the element                     jQuery = .govuk-tabs__list-item--selected:contains("Pending")
 
 Administrator can successfully finish the rest of the invitation
-    [Documentation]  IFS-27  IFS-983  IFS-2412  IFS-2842
+    [Documentation]  IFS-27  IFS-983  IFS-2412  IFS-2842 IFS-10511
     [Tags]  HappyPath
     Given the user resends the invite
     When the user should see the element  jQuery = td:contains("Support User") ~ td:contains("IFS Administrator") ~ td:contains("${email}")
@@ -616,6 +619,16 @@ the user enters the text and checks for validation message
     the user should see the element         jQuery = .govuk-error-message:contains("${error_message2}")
 
 the IFS admin send invite to internal user
+    [Arguments]  ${first_name}  ${last_name}  ${user_role}
+    the user navigates to the page              ${server}/management/admin/invite-user
+    the user enters text to a text field                 id = firstName  ${first_name}
+    the user enters text to a text field                 id = lastName  ${last_name}
+    the user enters text to a text field                 id = emailAddress  ${email}
+    the user selects the option from the drop-down menu  ${user_role}  id = role
+    the user clicks the button/link                      jQuery = .govuk-button:contains("Send invitation")
+
+
+the IFS admin send invite to internal user with alternative email
     [Arguments]  ${first_name}  ${last_name}  ${user_role}
     the user navigates to the page              ${server}/management/admin/invite-user
     the user enters text to a text field                 id = firstName  ${first_name}

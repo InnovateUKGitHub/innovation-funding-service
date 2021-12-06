@@ -6,21 +6,12 @@ apply from: rootProject.file("gradle-support/mapstruct.gradle")
 apply from: rootProject.file("gradle-support/profile-handler.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
 
-processResources.dependsOn applyProfiles
-
-
 apply from: "../flyway.gradle"
 
 afterEvaluate {
     ext {
         dockerDir = file("$project.parent.projectDir/docker/")
     }
-}
-
-ext.ifsWebSystemUserId = "c0d02979-e66e-11e7-ac43-0242ac120002"
-
-ext {
-    snippetsDir = file('build/generated-snippets')
 }
 
 dependencies {
@@ -35,8 +26,6 @@ dependencies {
     implementation "org.innovateuk.ifs.libraries:ifs-survey-resources"
     implementation "org.innovateuk.ifs.libraries:ifs-security"
 
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-
     testImplementation "org.innovateuk.ifs.libraries:ifs-commons-test"
     testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
 
@@ -44,15 +33,7 @@ dependencies {
 }
 
 test {
-    outputs.dir snippetsDir
     if (project.hasProperty('excludeTests')) {
         exclude "${project.excludeTests}"
     }
 }
-
-flywayClean.dependsOn applyProfiles
-flywayMigrate.dependsOn processResources
-
-ext.serverPort = 8080
-ext.ifsFlywayLocations = "db/migration"
-

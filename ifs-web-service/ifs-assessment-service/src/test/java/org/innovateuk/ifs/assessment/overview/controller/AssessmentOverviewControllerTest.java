@@ -417,6 +417,8 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                 "Super creative competition name",
                 50L,
                 3L,
+                false,
+                null,
                 expectedSections,
                 expectedAppendices,
                 "Award terms and conditions",
