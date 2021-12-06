@@ -220,10 +220,12 @@ Comp admin manages the assessors
     Given log in as a different user           &{ifs_admin_user_credentials}
     And the user navigates to the page         ${server}/management/assessment/competition/${webTestCompID}
     And the user clicks the button/link        link = Manage assessors
-    When the user clicks the button twice      jQuery = label:contains("Assessment period 1")
+    When the user clicks the button twice      jQuery = label:contains("Assessment period 2")
     And the user clicks the button/link        jQuery = button:contains("Save and continue")
     And the user clicks the button/link        jQuery = td:contains("Another Person") ~ td a:contains("View progress")
-    Then the user should see the element       jQuery = h2:contains('Assigned') ~ div td:contains('Always open application decision pending')
+    And the user selects the checkbox          assessor-row-1
+    And the user clicks the button/link        jQuery = button:contains("Add to assessor")
+    Then the user should see the element       jQuery = h2:contains('Assigned') ~ div td:contains('Always open application awaiting assessment')
     And the user clicks the button/link        link = Back to manage assessors
     And the user clicks the button/link        link = Back to choose an assessment period to manage assessors
     And the user clicks the button/link        link = Back to manage assessments
