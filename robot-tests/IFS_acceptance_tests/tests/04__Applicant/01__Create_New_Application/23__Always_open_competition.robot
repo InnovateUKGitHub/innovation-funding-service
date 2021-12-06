@@ -183,6 +183,7 @@ Internal user notify the assessors of their assigned applications
     And the user logs out if they are logged in
     Then the user reads his email and clicks the link        ${assessorEmail}  Applications assigned to you for competition '${webTestCompName}'  We have assigned applications for you to assess for this competition:   1
     And the assessor accepts an invite to an application
+    And the user should see the element                      link = ${webTestCompName}
 
 Internal user can not assign same application in two different assessment periods
     [Documentation]  IFS-9836
