@@ -52,13 +52,15 @@ public class AssessmentPeriodSaver {
                                                 if (matchingMilestoneResource.isPresent()) {
                                                     if (isEditable(matchingMilestoneResource.get())) {
                                                         matchingMilestoneResource.get().setDate(date);
+                                                        setMidday(matchingMilestoneResource.get());
                                                         return milestoneRestService.updateMilestone(matchingMilestoneResource.get()).toServiceResult();
                                                     }
                                                     return serviceSuccess();
                                                 } else {
                                                     MilestoneResource milestone = new MilestoneResource();
-                                                    milestone.setDate(date);
                                                     milestone.setType(milestoneRowForm.getMilestoneType());
+                                                    milestone.setDate(date);
+                                                    setMidday(milestone);
                                                     milestone.setCompetitionId(competitionId);
                                                     milestone.setAssessmentPeriodId(assessmentPeriodForm.getAssessmentPeriodId());
                                                     return milestoneRestService.create(milestone).toServiceResult().andOnSuccessReturnVoid();
@@ -72,6 +74,12 @@ public class AssessmentPeriodSaver {
 
     private boolean isEditable(MilestoneResource milestone) {
         return milestone.getDate() == null || milestone.getDate().isAfter(ZonedDateTime.now());
+    }
+
+    private void setMidday(MilestoneResource milestone) {
+        if(milestone.getType() == MilestoneType.ASSESSOR_ACCEPTS || milestone.getType() == MilestoneType.ASSESSOR_DEADLINE) {
+            milestone.setDate(milestone.getDate().plusHours(12));
+        }
     }
 
     private List<MilestoneResource> getExistingAssessmentPeriodMilestoneResources(long competitionId) {
