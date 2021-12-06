@@ -2,25 +2,13 @@ package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder;
 import org.innovateuk.ifs.competition.builder.SiteTermsAndConditionsResourceBuilder;
-import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class TermsAndConditionsResourceDocs {
 
-    public static final FieldDescriptor[] termsAndConditionsResourceFields = {
-            fieldWithPath("id").description("id of the terms and conditions").optional(),
-            fieldWithPath("name").description("name of the terms and conditions"),
-            fieldWithPath("template").description("template filename of the terms and conditions"),
-            fieldWithPath("version").description("version of the terms and conditions"),
-            fieldWithPath("createdBy").description("user who created this terms and conditions").optional(),
-            fieldWithPath("createdOn").description("when the terms and conditions was created").optional(),
-            fieldWithPath("modifiedBy").description("user who modified this terms and conditions").optional(),
-            fieldWithPath("modifiedOn").description("when the terms and conditions was modified").optional()
-    };
 
     public static final GrantTermsAndConditionsResourceBuilder grantTermsAndConditionsResourceBuilder =
             newGrantTermsAndConditionsResource()

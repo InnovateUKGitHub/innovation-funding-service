@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
-import org.innovateuk.ifs.documentation.BankDetailsStatusResourceDocs;
 import org.innovateuk.ifs.project.bankdetails.controller.ProjectBankDetailsController;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsStatusResource;
@@ -20,9 +19,6 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.AddressDocs.addressResourceFields;
-import static org.innovateuk.ifs.documentation.BankDetailsDocs.bankDetailsResourceFields;
-import static org.innovateuk.ifs.documentation.BankDetailsDocs.projectBankDetailsStatusSummaryFields;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsStatusResourceBuilder.newBankDetailsStatusResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
@@ -31,12 +27,7 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.PENDING;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -72,13 +63,6 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
                         .content(toJson(bankDetailsResource))
                         .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to be updated with bank details")
-                        ),
-                        requestFields(bankDetailsResourceFields)
-                        .andWithPrefix("address.", addressResourceFields)
-                ))
                 .andReturn();
     }
 
@@ -110,13 +94,6 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
                         .content(toJson(bankDetailsResource)))
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(expectedErrors)))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to be updated with bank details")
-                        ),
-                        requestFields(bankDetailsResourceFields)
-                        .andWithPrefix("address.", addressResourceFields)
-                ))
                 .andReturn();
     }
 
@@ -129,13 +106,6 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
         mockMvc.perform(get("/project/{projectId}/bank-details/status-summary", projectId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(bankDetailsStatusSummary)))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of project that bank details status summary is requested for")
-                        ),
-                        responseFields(projectBankDetailsStatusSummaryFields)
-                        .andWithPrefix("bankDetailsStatusResources[].", BankDetailsStatusResourceDocs.bankDetailsStatusResourcesFields)
-                ));
+                .andExpect(content().json(toJson(bankDetailsStatusSummary)));
     }
 }

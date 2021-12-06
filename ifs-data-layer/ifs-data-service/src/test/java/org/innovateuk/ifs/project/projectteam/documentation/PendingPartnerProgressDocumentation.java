@@ -11,11 +11,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId.id;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -40,11 +37,7 @@ public class PendingPartnerProgressDocumentation extends BaseControllerMockMVCTe
         when(pendingPartnerProgressService.getPendingPartnerProgress(id(projectId, organisationId))).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(get(baseUrl, projectId, organisationId))
-                .andExpect(status().isOk())
-                .andDo(document("pending-partner-progress/{method-name}",
-                                pathParameters(
-                                        parameterWithName("projectId").description("Id of project to get the partner progress of"),
-                                        parameterWithName("organisationId").description("Id of the organisation to get the partner progress of"))));
+                .andExpect(status().isOk());
 
         verify(pendingPartnerProgressService).getPendingPartnerProgress(id(projectId, organisationId));
     }
@@ -54,11 +47,7 @@ public class PendingPartnerProgressDocumentation extends BaseControllerMockMVCTe
         when(pendingPartnerProgressService.markYourOrganisationComplete(id(projectId, organisationId))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(baseUrl + "/your-organisation-complete", projectId, organisationId))
-                .andExpect(status().isOk())
-                .andDo(document("pending-partner-progress/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of project to change the status of"),
-                                parameterWithName("organisationId").description("Id of the organisation to change the status of"))));
+                .andExpect(status().isOk());
 
         verify(pendingPartnerProgressService).markYourOrganisationComplete(id(projectId, organisationId));
     }
@@ -68,11 +57,7 @@ public class PendingPartnerProgressDocumentation extends BaseControllerMockMVCTe
         when(pendingPartnerProgressService.markYourFundingComplete(id(projectId, organisationId))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(baseUrl + "/your-funding-complete", projectId, organisationId))
-                .andExpect(status().isOk())
-                .andDo(document("pending-partner-progress/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of project to change the status of"),
-                                parameterWithName("organisationId").description("Id of the organisation to change the status of"))));
+                .andExpect(status().isOk());
 
         verify(pendingPartnerProgressService).markYourFundingComplete(id(projectId, organisationId));
     }
@@ -82,11 +67,7 @@ public class PendingPartnerProgressDocumentation extends BaseControllerMockMVCTe
         when(pendingPartnerProgressService.markTermsAndConditionsComplete(id(projectId, organisationId))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(baseUrl + "/terms-and-conditions-complete", projectId, organisationId))
-                .andExpect(status().isOk())
-                .andDo(document("pending-partner-progress/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of project to change the status of"),
-                                parameterWithName("organisationId").description("Id of the organisation to change the status of"))));
+                .andExpect(status().isOk());
 
         verify(pendingPartnerProgressService).markTermsAndConditionsComplete(id(projectId, organisationId));
     }
@@ -96,11 +77,7 @@ public class PendingPartnerProgressDocumentation extends BaseControllerMockMVCTe
         when(pendingPartnerProgressService.markYourOrganisationIncomplete(id(projectId, organisationId))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(baseUrl + "/your-organisation-incomplete", projectId, organisationId))
-                .andExpect(status().isOk())
-                .andDo(document("pending-partner-progress/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of project to change the status of"),
-                                parameterWithName("organisationId").description("Id of the organisation to change the status of"))));
+                .andExpect(status().isOk());
 
         verify(pendingPartnerProgressService).markYourOrganisationIncomplete(id(projectId, organisationId));
     }
@@ -110,11 +87,7 @@ public class PendingPartnerProgressDocumentation extends BaseControllerMockMVCTe
         when(pendingPartnerProgressService.markYourFundingIncomplete(id(projectId, organisationId))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(baseUrl + "/your-funding-incomplete", projectId, organisationId))
-                .andExpect(status().isOk())
-                .andDo(document("pending-partner-progress/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of project to change the status of"),
-                                parameterWithName("organisationId").description("Id of the organisation to change the status of"))));
+                .andExpect(status().isOk());
 
         verify(pendingPartnerProgressService).markYourFundingIncomplete(id(projectId, organisationId));
     }
@@ -124,11 +97,7 @@ public class PendingPartnerProgressDocumentation extends BaseControllerMockMVCTe
         when(pendingPartnerProgressService.markTermsAndConditionsIncomplete(id(projectId, organisationId))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(baseUrl + "/terms-and-conditions-incomplete", projectId, organisationId))
-                .andExpect(status().isOk())
-                .andDo(document("pending-partner-progress/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of project to change the status of"),
-                                parameterWithName("organisationId").description("Id of the organisation to change the status of"))));
+                .andExpect(status().isOk());
 
         verify(pendingPartnerProgressService).markTermsAndConditionsIncomplete(id(projectId, organisationId));
     }
@@ -138,11 +107,7 @@ public class PendingPartnerProgressDocumentation extends BaseControllerMockMVCTe
         when(pendingPartnerProgressService.completePartnerSetup(id(projectId, organisationId))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(baseUrl, projectId, organisationId))
-                .andExpect(status().isOk())
-                .andDo(document("pending-partner-progress/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of project to change the status of"),
-                                parameterWithName("organisationId").description("Id of the organisation to change the status of"))));
+                .andExpect(status().isOk());
 
         verify(pendingPartnerProgressService).completePartnerSetup(id(projectId, organisationId));
     }

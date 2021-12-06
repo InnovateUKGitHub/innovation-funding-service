@@ -12,9 +12,6 @@ import java.util.Collection;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.sil.grant.resource.GrantBuilder.newGrant;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -44,12 +41,7 @@ public class GrantEndpointControllerMockMvcTest extends AbstractEndpointControll
                                 content(requestBody)
                 ).
                 andExpect(status().isOk()).
-                andExpect(content().string("{\"Success\":\"Accepted\"}")).
-                andDo(document("silstub/accprojects",
-                        requestHeaders(
-                                headerWithName("Content-Type").description("Needs to be application/json")
-                        )
-                ));
+                andExpect(content().string("{\"Success\":\"Accepted\"}"));
     }
 
     @Parameterized.Parameters

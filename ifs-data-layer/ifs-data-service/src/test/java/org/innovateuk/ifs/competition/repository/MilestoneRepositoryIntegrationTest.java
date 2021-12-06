@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competition.repository;
 
 import com.google.common.collect.ImmutableSet;
-import org.hibernate.validator.internal.util.CollectionHelper;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.junit.Test;

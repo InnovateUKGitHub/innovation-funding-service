@@ -9,16 +9,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.FileTypeResourceDocs.fileTypeResourceFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -47,13 +40,7 @@ public class FileTypeControllerDocumentation extends BaseControllerMockMVCTest<F
         mockMvc.perform(get("/file/file-type/{fileTypeId}", fileTypeId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(fileTypeResource)))
-                .andDo(document("file/file-type/{method-name}",
-                        pathParameters(
-                                parameterWithName("fileTypeId").description("Id of the file type to be retrieved")
-                        ),
-                        responseFields(fileTypeResourceFields)
-                ));
+                .andExpect(content().json(toJson(fileTypeResource)));
 
         verify(fileTypeServiceMock, only()).findOne(fileTypeId);
     }
@@ -73,13 +60,7 @@ public class FileTypeControllerDocumentation extends BaseControllerMockMVCTest<F
         mockMvc.perform(get("/file/file-type/find-by-name/{name}", name)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(fileTypeResource)))
-                .andDo(document("file/file-type/{method-name}",
-                        pathParameters(
-                                parameterWithName("name").description("The name by which the file type should be retrieved")
-                        ),
-                        responseFields(fileTypeResourceFields)
-                ));
+                .andExpect(content().json(toJson(fileTypeResource)));
 
         verify(fileTypeServiceMock, only()).findByName(name);
     }

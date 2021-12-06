@@ -8,14 +8,9 @@ import org.innovateuk.ifs.competitionsetup.transactional.AssessorCountOptionServ
 import org.junit.Test;
 import org.mockito.Mock;
 
-import static org.innovateuk.ifs.documentation.AssessorCountOptionResourceDocs.assessorCountOptionResourceFields;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AssessorCountOptionsControllerDocumentation extends BaseControllerMockMVCTest<AssessorCountOptionsController> {
@@ -34,12 +29,6 @@ public class AssessorCountOptionsControllerDocumentation extends BaseControllerM
 
         mockMvc.perform(get("/assessor-count-options/{id}", 1L)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("assessor-count-options/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the competition type")
-                        ),
-                        responseFields(assessorCountOptionResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 }

@@ -42,6 +42,10 @@
                         <dd th:text="${model.competitionTitle}"></dd>
                         <dt>Innovation Lead:</dt>
                         <dd th:text="${model.leadTechnologist}"></dd>
+                        <th:block th:if="${model.openEndCompetition}">
+                            <dt>Batch assessment:</dt>
+                            <dd th:text="${model.batchIndex}?: '-'"></dd>
+                        </th:block>
                         <dt>Accept applications deadline:</dt>
                         <dd th:text="|${#strings.toLowerCase(#temporals.format(model.acceptDeadline, 'hh:mma'))} ${#temporals.format(model.acceptDeadline, 'EEEE d MMMM yyyy')}|"></dd>
                         <dt>Submit applications deadline:</dt>

@@ -15,6 +15,9 @@ spec:
         - name: sp-metadata-mo-volume
           configMap:
             name: sp-metadata-mo-config
+        - name: sp-metadata-loans-volume
+          configMap:
+            name: sp-metadata-loans-config
       containers:
         - name: idp
           volumeMounts:
@@ -24,3 +27,5 @@ spec:
               mountPath: /var/sp-metadata/acc/
             - name: sp-metadata-mo-volume
               mountPath: /var/sp-metadata/mo/
+            - name: sp-metadata-loans-volume
+              mountPath: /var/sp-metadata/loans/
