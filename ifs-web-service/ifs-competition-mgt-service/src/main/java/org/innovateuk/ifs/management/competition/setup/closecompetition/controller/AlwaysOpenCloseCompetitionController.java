@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.competition.setup.closecompetition.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
@@ -37,14 +38,14 @@ public class AlwaysOpenCloseCompetitionController {
 
     @GetMapping
     public String viewPage(Model model,
-                           @PathVariable long competitionId) {
+                           @PathVariable("competitionId") long competitionId) {
         model.addAttribute("model", populator.populate(competitionId));
         return "competition/setup/close-always-open-competition";
     }
 
     @PostMapping
     public String closeCompetition(Model model,
-                                   @PathVariable long competitionId,
+                                   @PathVariable("competitionId") long competitionId,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler) {
         MilestoneResource milestone = new MilestoneResource();
@@ -52,8 +53,8 @@ public class AlwaysOpenCloseCompetitionController {
         milestone.setDate(now());
         milestone.setType(FEEDBACK_RELEASED); // not sure if this is what's required
         milestoneRestService.create(milestone);
-//        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
-//        competitionResource.setFeedbackReleasedDate(now()); // temporarily set to now(). I assume this should match the last notifications entry in milestone table
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        competitionResource.setFeedbackReleasedDate(now()); // temporarily set to now(). I assume this should match the last notifications entry in milestone table
 
         return String.format("redirect:/management/competition/%d", competitionId);
     }

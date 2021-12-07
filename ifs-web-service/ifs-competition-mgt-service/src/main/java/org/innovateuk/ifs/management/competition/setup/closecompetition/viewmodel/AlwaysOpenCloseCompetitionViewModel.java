@@ -47,7 +47,7 @@ public class AlwaysOpenCloseCompetitionViewModel {
     }
 
     // need to see if the manage_email_funding_date can be used after the bug fix tickets/ web test data fixes
-    public boolean showCloseCompetitionButton() {
+    public boolean closeCompetitionButtonEnabled() {
         return submissionDateIsPresentAndHadPassed() && feedbackReleasedForAllApplications();
     }
 

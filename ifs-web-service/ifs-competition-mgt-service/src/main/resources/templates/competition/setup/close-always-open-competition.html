@@ -34,29 +34,16 @@
                 applications, add funding decisions or release feedback.</p>
         </div>
 
-<!--        <div class="govuk-form-group govuk-!-margin-top-6">-->
-<!--            <button th:if="${model.submissionDateIsPresentAndHadPassed}" class="govuk-button">submission in the past</button>-->
-<!--            <button th:if="${model.feedbackReleasedForAllApplications}" class="govuk-button">feedbackReleasedForAllApplications</button>-->
-<!--            <button th:if="${model.allApplicationsHadBeenNotified}" class="govuk-button">allApplicationsHadBeenNotified</button>-->
-<!--            <button th:if="${model.notAllApplicationsHadBeenNotified}" class="govuk-button">notAllApplicationsHadBeenNotified</button>-->
-
-<!--            <tbody class="govuk-table__body">-->
-<!--            <tr class="govuk-table__row" th:each="app : ${model.submittedApplications}">-->
-<!--                <td class="govuk-table__cell" th:text="${app.id}" />-->
-<!--            </tr>-->
-<!--            </tbody>-->
-
-
-<!--        </div>-->
-
         <div class="govuk-form-group govuk-!-margin-top-6">
-            <button th:if="${!model.showCloseCompetitionButton}"
-                    disabled=disabled
-                    class="govuk-button">Close competition</button>
-            <button th:unless="${!model.showCloseCompetitionButton}"
-                    type="submit"
-                    class="govuk-button"
-                    th:formaction="@{/management/competition/{competitionId}/(competitionId=model.competitionId)}">Close competition</button>
+            <form>
+                <button th:disabled="${!model.closeCompetitionButtonEnabled}"
+                        type="submit"
+                        class="govuk-button"
+                        id="close-always-open-competition"
+                        th:formaction="@{/competition/{competitionId}(competitionId=${model.competitionId})}">
+                    Close competition
+                </button>
+            </form>
         </div>
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
