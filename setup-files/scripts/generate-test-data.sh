@@ -15,18 +15,14 @@ get_current_patch_level () {
 
 new_version_or_current=`get_current_patch_level`
 force=""
-profile=""
 
-while getopts ":f :v: :a" opt ; do
+while getopts ":f :v" opt ; do
     case ${opt} in
         v)
             new_version_or_current="$OPTARG"
         ;;
         f)
             force="true"
-        ;;
-        a)
-            profile="-Pprofile=automated"
         ;;
     esac
 done
@@ -37,7 +33,7 @@ run_flyway_clean () {
 
     cd ${project_root_dir}
 
-    ./gradlew -PopenshiftEnv=unused $profile -Pcloud=automated -Pifs.companies.house.key=unused ifs-data-layer:ifs-data-service:flywayClean
+    ./gradlew -PopenshiftEnv=unused -Pifs.companies.house.key=unused ifs-data-layer:ifs-data-service:flywayClean
 
     cd -
 }
@@ -46,7 +42,7 @@ run_flyway_migrate() {
 
     cd ${project_root_dir}
 
-    ./gradlew -PopenshiftEnv=unused $profile -Pcloud=automated -Pifs.companies.house.key=unused ifs-data-layer:ifs-data-service:flywayMigrate
+    ./gradlew -PopenshiftEnv=unused -Pifs.companies.house.key=unused ifs-data-layer:ifs-data-service:flywayMigrate
 
     cd -
 }
@@ -63,10 +59,10 @@ do_baseline () {
     # navigate to project root
     cd ${project_root_dir}
 
-    ./gradlew -PopenshiftEnv=unused $profile -Pcloud=automated -Pifs.companies.house.key=unused clean
+    ./gradlew -PopenshiftEnv=unused -Pifs.companies.house.key=unused clean
 
     # run generator test class
-    IFS_GENERATE_TEST_DATA_EXECUTION=SINGLE_THREADED IFS_GENERATE_TEST_DATA_COMPETITION_FILTER=ALL_COMPETITIONS ./gradlew -PopenshiftEnv=unused $profile -Pcloud=automated -Pifs.companies.house.key=unused -PtestGroups=generatetestdata :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData
+    IFS_GENERATE_TEST_DATA_EXECUTION=SINGLE_THREADED IFS_GENERATE_TEST_DATA_COMPETITION_FILTER=ALL_COMPETITIONS ./gradlew -PopenshiftEnv=unused -Pifs.companies.house.key=unused -PtestGroups=generatetestdata :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData
 
     # extract the current version of the webtest data
     current_version="`get_current_patch_level`_"
