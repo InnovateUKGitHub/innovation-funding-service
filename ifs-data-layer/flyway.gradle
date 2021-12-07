@@ -28,4 +28,7 @@ flyway {
     user = 'root'
     password = 'password'
     schemas = ['ifs', 'ifs_test']
+    placeholders = [
+            'ifs.system.user.uuid': 'c0d02979-e66e-11e7-ac43-0242ac120002'
+    ]
 }
