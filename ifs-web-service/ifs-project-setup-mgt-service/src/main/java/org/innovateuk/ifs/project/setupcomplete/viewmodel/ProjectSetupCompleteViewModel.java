@@ -1,14 +1,21 @@
 package org.innovateuk.ifs.project.setupcomplete.viewmodel;
 
+import lombok.Getter;
+import lombok.ToString;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 
+import java.time.LocalDate;
+
+@Getter
+@ToString
 public class ProjectSetupCompleteViewModel {
 
     private final long projectId;
     private final long applicationId;
     private final long competitionId;
     private final String projectName;
+    private final LocalDate targetStartDate;
 
     private final ProjectState state;
 
@@ -18,26 +25,7 @@ public class ProjectSetupCompleteViewModel {
         this.competitionId = project.getCompetition();
         this.projectName = project.getName();
         this.state = project.getProjectState();
-    }
-
-    public long getProjectId() {
-        return projectId;
-    }
-
-    public long getApplicationId() {
-        return applicationId;
-    }
-
-    public long getCompetitionId() {
-        return competitionId;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public ProjectState getState() {
-        return state;
+        this.targetStartDate = project.getTargetStartDate();
     }
 
     public boolean isReadonly() {

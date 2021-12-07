@@ -1,13 +1,19 @@
 package org.innovateuk.ifs.project.state.transactional;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
+import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsServiceImpl;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.state.OnHoldReasonResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -21,6 +27,9 @@ public class ProjectStateServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private ProjectStateCommentsService projectStateCommentsService;
+
+    @Autowired
+    private ProjectDetailsService projectDetailsService;
 
     @Override
     @Transactional
@@ -80,6 +89,17 @@ public class ProjectStateServiceImpl extends BaseTransactionalService implements
                 project -> getCurrentlyLoggedInUser().andOnSuccess(user ->
                         projectWorkflowHandler.markAsSuccessful(project, user) ?
                                 serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_MARKED_AS_SUCCESSFUL))
+        ).andOnSuccessReturnVoid(() -> projectStateCommentsService.create(projectId, ProjectState.LIVE));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> markAsSuccessful(long projectId, LocalDate projectStartDate) {
+        return getProject(projectId).andOnSuccess(
+                project -> getCurrentlyLoggedInUser().andOnSuccess(user ->
+                        projectWorkflowHandler.markAsSuccessful(project, user) ?
+                            projectDetailsService.updateProjectStartDate(projectId, projectStartDate) :
+                            serviceFailure(PROJECT_CANNOT_BE_MARKED_AS_SUCCESSFUL))
         ).andOnSuccessReturnVoid(() -> projectStateCommentsService.create(projectId, ProjectState.LIVE));
     }
 
