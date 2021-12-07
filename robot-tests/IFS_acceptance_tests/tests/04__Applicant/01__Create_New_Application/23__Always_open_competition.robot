@@ -244,8 +244,7 @@ Comp admin manages the assessors
     When the user clicks the button twice      jQuery = label:contains("Assessment period 2")
     And the user clicks the button/link        jQuery = button:contains("Save and continue")
     And the user clicks the button/link        jQuery = td:contains("Another Person") ~ td a:contains("View progress")
-    And the user selects the checkbox          assessor-row-1
-    And the user clicks the button/link        jQuery = button:contains("Add to assessor")
+    And the user adds an application to an assessor     jQuery = tr:contains("Always open application awaiting assessment") :checkbox
     Then the user should see the element       jQuery = h2:contains('Assigned') ~ div td:contains('Always open application awaiting assessment')
     And the user clicks the button/link        link = Back to manage assessors
     And the user clicks the button/link        link = Back to choose an assessment period to manage assessors
