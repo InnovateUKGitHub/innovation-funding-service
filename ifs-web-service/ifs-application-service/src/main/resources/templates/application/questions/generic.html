@@ -100,7 +100,7 @@
             </details>
         </th:block>
 
-        <th:block th:if="${model.complete and  (model.questionType == model.getLoansBusinessAndFinancialInformation())}">
+        <th:block th:if="${model.isLoansPartBEnabled() and model.complete and  (model.questionType == model.getLoansBusinessAndFinancialInformation())}">
             <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}"
                  ifs:utext="${model.questionDescription}"/>
             <div class="govuk-hint wysiwyg-styles">
