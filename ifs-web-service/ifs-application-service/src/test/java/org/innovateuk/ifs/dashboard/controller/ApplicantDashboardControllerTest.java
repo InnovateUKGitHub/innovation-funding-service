@@ -110,29 +110,30 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
 
     @Test
     public void redirectToApplicationOverviewWhenCorrectURLReturns() throws Exception {
-        setLoggedInUser(applicant);
-        ReflectionTestUtils.setField(controller, "isLoanPartBEnabled", true);
-        ApplicantDashboardViewModel viewModel = mock(ApplicantDashboardViewModel.class);
-        String redirectURL = "/application/1";
-        when(populator.populate(applicant.getId())).thenReturn(viewModel);
-        when(pageHistoryService.getApplicationOverviewPage(any())).thenReturn(Optional.of(new PageHistory(redirectURL)));
+        setLoansFeatureToggleAndRedirectionURL("/application/1");
 
         mockMvc.perform(get("/applicant/dashboard/loansCommunity"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/application/1"));
     }
 
+
     @Test
     public void redirectToApplicantDashboardWhenInCorrectURLReturns() throws Exception {
-        setLoggedInUser(applicant);
-        ReflectionTestUtils.setField(controller, "isLoanPartBEnabled", true);
-        ApplicantDashboardViewModel viewModel = mock(ApplicantDashboardViewModel.class);
-        String redirectURL = null;
-        when(populator.populate(applicant.getId())).thenReturn(viewModel);
-        when(pageHistoryService.getApplicationOverviewPage(any())).thenReturn(Optional.of(new PageHistory(redirectURL)));
+        setLoansFeatureToggleAndRedirectionURL(null);
 
         mockMvc.perform(get("/applicant/dashboard/loansCommunity"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("applicant-dashboard"));
     }
+
+    private void setLoansFeatureToggleAndRedirectionURL(String redirectionURL) {
+        setLoggedInUser(applicant);
+        ReflectionTestUtils.setField(controller, "isLoanPartBEnabled", true);
+        ApplicantDashboardViewModel viewModel = mock(ApplicantDashboardViewModel.class);
+        String redirectURL = redirectionURL;
+        when(populator.populate(applicant.getId())).thenReturn(viewModel);
+        when(pageHistoryService.getApplicationOverviewPage(any())).thenReturn(Optional.of(new PageHistory(redirectURL)));
+    }
+
 }
