@@ -19,12 +19,13 @@ public class AssessorDashboardActiveCompetitionViewModel {
     private long daysLeft;
     private long daysLeftPercentage;
     private boolean competitionAlwaysOpen;
+    private long assessmentPeriodId;
     private long batchIndex;
 
     public AssessorDashboardActiveCompetitionViewModel(long competitionId, String displayLabel, long progressAssessed,
                                                        long progressTotal, long pendingAssessments, LocalDate submitDeadline,
                                                        long daysLeft, long daysLeftPercentage, boolean competitionAlwaysOpen,
-                                                       long batchIndex) {
+                                                       long assessmentPeriodId, long batchIndex) {
         this.competitionId = competitionId;
         this.displayLabel = displayLabel;
         this.progressAssessed = progressAssessed;
@@ -34,6 +35,7 @@ public class AssessorDashboardActiveCompetitionViewModel {
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
         this.competitionAlwaysOpen = competitionAlwaysOpen;
+        this.assessmentPeriodId = assessmentPeriodId;
         this.batchIndex = batchIndex;
     }
 
@@ -113,9 +115,11 @@ public class AssessorDashboardActiveCompetitionViewModel {
         return competitionAlwaysOpen;
     }
 
-    public long getBatchIndex() {
-        return batchIndex;
-    }
+    public long getAssessmentPeriodId() { return assessmentPeriodId; }
+
+    public void setAssessmentPeriodId(long assessmentPeriodId) { this.assessmentPeriodId = assessmentPeriodId; }
+
+    public long getBatchIndex() { return batchIndex; }
 
     public void setBatchIndex(long batchIndex) {
         this.batchIndex = batchIndex;
@@ -139,6 +143,7 @@ public class AssessorDashboardActiveCompetitionViewModel {
                 .append(displayLabel, that.displayLabel)
                 .append(submitDeadline, that.submitDeadline)
                 .append(competitionAlwaysOpen, that.competitionAlwaysOpen)
+                .append(assessmentPeriodId, that.assessmentPeriodId)
                 .append(batchIndex, that.batchIndex)
                 .isEquals();
     }
@@ -155,6 +160,7 @@ public class AssessorDashboardActiveCompetitionViewModel {
                 .append(daysLeft)
                 .append(daysLeftPercentage)
                 .append(competitionAlwaysOpen)
+                .append(assessmentPeriodId)
                 .append(batchIndex)
                 .toHashCode();
     }

@@ -10,12 +10,7 @@ import org.mockito.Mock;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 public class ProjectStateControllerDocumentation extends BaseControllerMockMVCTest<ProjectStateController> {
 
@@ -33,12 +28,7 @@ public class ProjectStateControllerDocumentation extends BaseControllerMockMVCTe
         when(projectStateService.withdrawProject(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/withdraw", projectId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to withdraw")
-                        )
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -47,12 +37,7 @@ public class ProjectStateControllerDocumentation extends BaseControllerMockMVCTe
         when(projectStateService.handleProjectOffline(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/handle-offline", projectId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to handle offline")
-                        )
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -61,12 +46,7 @@ public class ProjectStateControllerDocumentation extends BaseControllerMockMVCTe
         when(projectStateService.completeProjectOffline(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/complete-offline", projectId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to complete offline")
-                        )
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -78,16 +58,7 @@ public class ProjectStateControllerDocumentation extends BaseControllerMockMVCTe
         mockMvc.perform(post("/project/{projectId}/on-hold", projectId)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(reason))
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to put on hold")
-                        ),
-                        requestFields(
-                                fieldWithPath("title").description("Title of the reason the project is being put on hold"),
-                                fieldWithPath("body").description("Body of the reason the project is being put on hold")
-                        )
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -96,12 +67,7 @@ public class ProjectStateControllerDocumentation extends BaseControllerMockMVCTe
         when(projectStateService.resumeProject(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/resume", projectId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to resume from on hold")
-                        )
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
     @Test
     public void markAsSuccessful() throws Exception {
@@ -109,12 +75,7 @@ public class ProjectStateControllerDocumentation extends BaseControllerMockMVCTe
         when(projectStateService.markAsSuccessful(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/successful", projectId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to resume from on hold")
-                        )
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -123,11 +84,6 @@ public class ProjectStateControllerDocumentation extends BaseControllerMockMVCTe
         when(projectStateService.markAsUnsuccessful(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/unsuccessful", projectId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to resume from on hold")
-                        )
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 }

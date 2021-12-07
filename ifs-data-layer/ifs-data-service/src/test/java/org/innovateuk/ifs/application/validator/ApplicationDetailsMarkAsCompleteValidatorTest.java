@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
 import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindingResult;
@@ -15,7 +14,6 @@ import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
 import java.util.stream.IntStream;
-
 
 import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertEquals;

@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.function.Function;
@@ -19,19 +19,13 @@ import static java.time.ZonedDateTime.now;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.AttachmentDocs.attachmentFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,10 +45,7 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseFileCo
         mockMvc.perform(get("/project/finance/attachments/{attachmentId}", id)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(attachmentResource)))
-                .andDo(document(identifier,
-                        pathParameters(parameterWithName("attachmentId").description("Id of the Attachment to be fetched")),
-                        responseFields(attachmentFields())));
+                .andExpect(content().json(toJson(attachmentResource)));
 
         verify(projectFinanceAttachmentServiceMock).findOne(id);
     }
@@ -67,8 +58,7 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseFileCo
                 (service) -> service.attachmentFileAndContents(id);
 
         assertGetFileContents("/project/finance/attachments/download/{attachmentId}", new Object[]{id},
-                emptyMap(), projectFinanceAttachmentServiceMock, serviceCallToDownload)
-                .andDo(documentFileGetContentsMethod(identifier));
+                emptyMap(), projectFinanceAttachmentServiceMock, serviceCallToDownload);
     }
 
     @Test
@@ -76,12 +66,9 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseFileCo
         final Long id = 22L;
         when(projectFinanceAttachmentServiceMock.delete(id)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.delete("/project/finance/attachments/{attachmentId}", id)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/project/finance/attachments/{attachmentId}", id)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isNoContent())
-                .andDo(document(identifier,
-                        pathParameters(parameterWithName("attachmentId").description("Id of the Attachment to be deleted")))
-                );
+                .andExpect(status().isNoContent());
 
         verify(projectFinanceAttachmentServiceMock).delete(id);
     }
@@ -98,15 +85,7 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseFileCo
                 .param("filename", attachmentResource.name)
                 .headers(createFileUploadHeader("application/pdf", 1234)))
                 .andExpect(content().json(toJson(attachmentResource)))
-                .andExpect(status().isCreated())
-                .andDo(document(identifier,
-                        pathParameters(parameterWithName("projectId").description("The Id of the Project under which this Attachment is being uploaded.")),
-                        requestParameters(parameterWithName("filename").description("The filename of the file being uploaded")),
-                        requestHeaders(
-                                headerWithName("Content-Type").description("The Content Type of the file being uploaded e.g. application/pdf")
-                        ),
-                        responseFields(attachmentFields())
-                ));
+                .andExpect(status().isCreated());
 
         verify(projectFinanceAttachmentServiceMock).upload(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
                 eq(projectId), any(HttpServletRequest.class));

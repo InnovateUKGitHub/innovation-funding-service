@@ -6,14 +6,10 @@ apply from: rootProject.file("gradle-support/mapstruct.gradle")
 apply from: rootProject.file("gradle-support/profile-handler.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
 
-processResources.dependsOn applyProfiles
-
 apply from: "../flyway.gradle"
 
 group 'innovateuk'
 version project.version
-
-ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -27,8 +23,6 @@ dependencies {
     implementation 'org.innovateuk.ifs.libraries:ifs-security'
     implementation 'org.innovateuk.ifs.libraries:ifs-error-util'
     implementation 'org.innovateuk.ifs.libraries:ifs-rest-util'
-
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
     testImplementation "org.innovateuk.ifs.libraries:ifs-commons-test"
     testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
@@ -46,9 +40,3 @@ test {
     }
 
 }
-
-flywayClean.dependsOn applyProfiles
-flywayMigrate.dependsOn processResources
-
-ext.serverPort = 8080
-ext.ifsFlywayLocations = "db/migration"

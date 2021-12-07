@@ -114,6 +114,8 @@ public class AssessmentOverviewModelPopulator {
                 competition.getName(),
                 competition.getAssessmentDaysLeftPercentage(),
                 competition.getAssessmentDaysLeft(),
+                competition.isAlwaysOpen(),
+                application.getAssessmentPeriodId(),
                 getSections(assessment, assessorViewQuestions, competition),
                 getAppendices(assessment.getApplication(), assessorViewQuestions),
                 termsAndConditionsTerminology,

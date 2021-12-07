@@ -23,12 +23,7 @@ import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsBuilder.
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -76,13 +71,7 @@ public class CompetitionBankDetailsControllerDocumentation extends BaseControlle
                 .andExpect(status().isOk())
                 .andExpect(content().string("\"Company name\",\"Application Number\",\"Company address\",\"Company address 2\",\"Company address 3\",\"Company address 4\",\"Company town/city\",\"Company county\",\"Company postcode\",\"Bank account name\",\"Bank account number\",\"Bank sort code\"\n" +
                         "\"Hive IT\",\"1\",\"The Electric Works Concourse Way\",\"Sheaf St\",\"\",\"\",\"Sheffield\",\"South Yorkshire\",\"S1 2BJ\",\"Hive IT\",\"12345678\",\"123456\"\n" +
-                        "\"Worth Systems\",\"2\",\"4-5\",\"Bonhill Street\",\"\",\"\",\"London\",\"\",\"EC2A 4BX\",\"Worth Systems\",\"87654321\",\"654321\"\n"))
-                .andDo(document("competition/bank-details/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of competition")
-                        ),
-                        responseHeaders(
-                                headerWithName("Content-Type").description("Type of content in response body (plain text)"))));
+                        "\"Worth Systems\",\"2\",\"4-5\",\"Bonhill Street\",\"\",\"\",\"London\",\"\",\"EC2A 4BX\",\"Worth Systems\",\"87654321\",\"654321\"\n"));
 
         verify(bankDetailsRepositoryMock).findByProjectApplicationCompetitionId(competitionId);
     }

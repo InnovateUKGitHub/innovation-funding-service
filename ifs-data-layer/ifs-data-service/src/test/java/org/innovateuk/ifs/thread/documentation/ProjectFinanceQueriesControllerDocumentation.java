@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.thread.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.documentation.PostResourceDocs;
-import org.innovateuk.ifs.documentation.UserDocs;
 import org.innovateuk.ifs.project.queries.controller.ProjectFinanceQueriesController;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesService;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
@@ -17,18 +15,13 @@ import java.util.List;
 import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.QueryFieldsDocs.queryResourceFields;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -47,12 +40,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
         mockMvc.perform(get("/project/finance/queries/{queryId}", queryId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(objectMapper.writeValueAsString(query)))
-                .andDo(document("project/finance/queries/{method-name}",
-                        pathParameters(parameterWithName("queryId").description("Id of the Query to be fetched")),
-                        responseFields(queryResourceFields())
-                                .andWithPrefix("posts[].", PostResourceDocs.postResourceFields)
-                                .andWithPrefix("posts[].author.", UserDocs.userResourceFields)));
+                .andExpect(content().string(objectMapper.writeValueAsString(query)));
     }
 
     @Test
@@ -65,13 +53,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
         mockMvc.perform(get("/project/finance/queries/all/{projectFinanceId}", contextId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(asList(query))))
-                .andDo(document("project/finance/queries/{method-name}",
-                        responseFields(fieldWithPath("[]").description("List of Queries the authenticated user has access to"))
-                        .andWithPrefix("[].", queryResourceFields())
-                        .andWithPrefix("[].posts[].", PostResourceDocs.postResourceFields)
-                        .andWithPrefix("[].posts[].author.", UserDocs.userResourceFields),
-                        pathParameters(parameterWithName("projectFinanceId").description("The id of the project finance under which the expected queries live."))));
+                .andExpect(content().json(toJson(asList(query))));
     }
 
 
@@ -85,9 +67,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(post)))
-                .andExpect(status().isCreated())
-                .andDo(document("project/finance/queries/{method-name}",
-                        pathParameters(parameterWithName("queryId").description("Id of the Query to which the Post is to be added to."))));
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -102,11 +82,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(query)))
                 .andExpect(content().string(objectMapper.writeValueAsString(55L)))
-                .andExpect(status().isCreated())
-                .andDo(document("project/finance/queries/{method-name}",
-                        requestFields(queryResourceFields())
-                                .andWithPrefix("posts[].", PostResourceDocs.postResourceFields)
-                                .andWithPrefix("posts[].author.", UserDocs.userResourceFields)));
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -118,9 +94,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
         mockMvc.perform(post("/project/finance/queries/thread/{threadId}/close", threadId)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(document("project/finance/queries/{method-name}",
-                        pathParameters(parameterWithName("threadId").description("Id of the Query which needs to be closed."))));
+                .andExpect(status().isOk());
 
         verify(financeCheckQueriesService).close(threadId);
     }
