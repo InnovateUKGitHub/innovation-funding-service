@@ -206,13 +206,13 @@ Internal user closes assessment period one
 Internal user can not select the closed assessment periods to assign assessors
     [Documentation]  IFS-10860
     When the user clicks the button/link        link = Manage assessors
-    Then the user should see the element        css = [disabled="disabled"]
+    Then the element should be disabled        css = #assessment-period-0
 
 Internal user can not select the closed assessment periods to assign applications
     [Documentation]  IFS-10860
     Given the user clicks the button/link       link = Back to manage assessments
     When the user clicks the button/link        link = Manage applications
-    Then the user should see the element        css = [disabled="disabled"]
+    Then the element should be disabled         css = #assessment-period-0
 
 Assessor should see batch assessment number and valid assessment dates related to assessment periods
     [Documentation]  IFS-9729
