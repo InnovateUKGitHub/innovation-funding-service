@@ -27,4 +27,5 @@ flyway {
     table = 'schema_version'
     user = 'root'
     password = 'password'
+    schemas = ['ifs', 'ifs_test']
 }
