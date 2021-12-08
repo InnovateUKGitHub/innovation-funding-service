@@ -43,6 +43,9 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-9729 Always open competitions: assessor list of assigned applications
 ...
+...               IFS-10859 Always open competitions:Assessor view changes
+...
+
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -150,124 +153,132 @@ Comp admin creates a new assessment period
     [Documentation]  IFS-9759  IFS-9760
     Given the user clicks the button/link           link = Manage assessment period
     When the user create a new assessment period
+    And the user create a new assessment period 1
+    And the user create a new assessment period 2
+    And the user create a new assessment period 3
+    And the user create a new assessment period 4
+    And the user create a new assessment period 5
     Then the user should see assessment period 1
+    And The user clicks the button/link             link = Manage assessors
+    And the user selects the index from the drop-down menu   1 css = .govuk-select govuk-input--error
+    And The user should see the element             css = .govuk-select govuk-input--error
 
-Lead applicant checks the dashboard content and the guidance after an assessor is assigned to the application
-    [Documentation]  IFS-8850
-    Given Log in as a different user                                    &{lead_applicant_credentials}
-    And the user clicks the application tile if displayed
-    When the user clicks the button/link                                link = ${webTestAppName}
-    Then the user checks the status of the application in assessment
-
-Assessment period validations as internal user
-    [Documentation]  IFS-9757
-    Given Log in as a different user                       &{Comp_admin1_credentials}
-    And the user clicks the button/link                    link = ${webTestCompName}
-    When the user clicks the button/link                   link = Manage assessments
-    And the user clicks the button/link                    link = Manage assessors
-    And the user clicks the button/link                    jQuery = button:contains("Save and continue")
-    Then the user should see a field and summary error     Please select an assessment period
-
-Comp admin updates the assessment period
-    [Documentation]  IFS-8851
-    Given the user clicks the button/link                      link = Back to manage assessments
-    When the user clicks the button/link                       link = Manage assessment period
-    Then the user checks the milestone validation messages
-    And the user clicks the button/link                        link = Back to manage assessments
-    And the user should see the element                        jQuery = .govuk-table__cell:contains('20/01/2021')
-
-Internal user notify the assessors of their assigned applications
-    [Documentation]  IFS-9008  IFS-8852  IFS-8853  IFS-9758 IFS-10825
-    Given assign the application to assessor                 1   Always open application decision pending
-    When the user clicks the button/link                     jQuery = button:contains("Notify assessors")
-    And the user logs out if they are logged in
-    Then the user reads his email and clicks the link        ${assessorEmail}  Applications assigned to you for competition '${webTestCompName}'  We have assigned applications for you to assess for this competition:   1
-    And the assessor accepts an invite to an application
-
-Internal user can not assign same application in two different assessment periods
-    [Documentation]  IFS-9836
-    Given log in as a different user             &{ifs_admin_user_credentials}
-    And the user navigates to the page           ${server}/management/assessment/competition/${webTestCompID}
-    When the user clicks the button/link         link = Manage assessors
-    And the user clicks the button twice         jQuery = label:contains("Assessment period 2")
-    And the user clicks the button/link          jQuery = button:contains("Save and continue")
-    And the user clicks the button/link          jQuery = td:contains("Another Person") ~ td a:contains("View progress")
-    Then the user should not see the element     jQuery = td:contains('Always open application decision pending')
-
-Internal user closes assessment period one
-    [Documentation]  IFS-9008
-    Given the user navigates to the page         ${server}/management/assessment/competition/${webTestCompID}
-    When the user clicks the button/link         jQuery = button:contains("Close assessment")
-    Then the user should not see the element     jQuery = button:contains("Close assessment")
-    And the user should see the element          jQuery = button:contains("Notify assessors")
-
-Assessor should see batch assessment number and valid assessment dates related to assessment periods
-    [Documentation]  IFS-9729
-    Given assign the application to assessor    2   	Always open application awaiting assessment
-    When the user clicks the button/link        jQuery = button:contains("Notify assessors")
-    And log in as a different user              ${assessorEmail}   ${short_password}
-    And the user navigates to the page          ${server}/assessment/assessor/dashboard/competition/${webTestCompID}
-    Then the user should see the element        jQuery = dt:contains("Batch assessment:") + dd:contains("2")
-    And the user should see the element         jQuery = dt:contains("Accept applications deadline:")+ dd:contains("20 May 2021")
-    And the user should see the element         jQuery = dt:contains("Submit applications deadline:")+ dd:contains("20 June 2021")
-    And the user should see the element         jQuery = a:contains("Always open application awaiting assessment")
-    And the user should not see the element     jQuery = a:contains("Always open application decision pending")
-
-Assessor assess the application in assessment period 2
-    [Documentation]  IFS-9729
-    Given the user clicks the button/link                           link = Always open application awaiting assessment
-    And the user selects the radio button                           assessmentAccept  true
-    And the user clicks the button/link                             jQuery = button:contains("Confirm")
-    When the user clicks the button/link                            link = Always open application awaiting assessment
-    And the assessor adds score and feedback for every question     11
-    And Assessor submits the assessment
-    Then the user should see the element                            jQuery = li:contains("Always open application awaiting assessment") strong:contains("Recommended")
-
-Internal user sees valid information on dashboard
-    [Documentation]  IFS-8849
-    Given log in as a different user                            &{ifs_admin_user_credentials}
-    When the user navigates to the page                         ${server}/management/competition/${webTestCompID}
-    Then the user sees valid open ended competition details
-
-internal user inputs the decision and send the notification with feedback
-    [Documentation]  IFS-8855
-    Given the user inputs the funding decision for applications
-    When the user sends notification and releases feedback
-    And the user navigates to the page                               ${server}/project-setup-management/competition//${webTestCompID}/status/all
-    Then the user refreshes until element appears on page            jQuery = tr div:contains("${webTestAppName}")
-
-Comp admin manages the assessors
-    [Documentation]  IFS-8852
-    Given log in as a different user           &{ifs_admin_user_credentials}
-    And the user navigates to the page         ${server}/management/assessment/competition/${webTestCompID}
-    And the user clicks the button/link        link = Manage assessors
-    When the user clicks the button twice      jQuery = label:contains("Assessment period 1")
-    And the user clicks the button/link        jQuery = button:contains("Save and continue")
-    And the user clicks the button/link        jQuery = td:contains("Another Person") ~ td a:contains("View progress")
-    Then the user should see the element       jQuery = h2:contains('Assigned') ~ div td:contains('Always open application decision pending')
-    And the user clicks the button/link        link = Back to manage assessors
-    And the user clicks the button/link        link = Back to choose an assessment period to manage assessors
-    And the user clicks the button/link        link = Back to manage assessments
-
-Supporter can review open ended ktp competition applications
-    [Documentation]  IFS-9785
-    Given log in as a different user          &{supporter_credentials}
-    And the user clicks the button/link       id = dashboard-link-SUPPORTER
-    When supporter reviews an application
-    Then the user should see the element      jQuery = button:contains("Edit")
-    And the user should see the element       jQuery = dt:contains("Your feedback")+dd:contains("This is the comment from the supporter")
-    And the user should see the element       jQuery = dt:contains("Are you interested in supporting this application?")+dd:contains("Yes")
-
-Auditor can view j-ES form for the submitted application
-    [Documentation]  IFS-9882
-    Given Log in as a different user                     &{auditorCredentials}
-    And the user navigates to the page                   ${SERVER}/management/competition/${webTestCompID}/application/${webTestAppID}
-    And the user clicks the button/link                  jQuery = button:contains("Finances summary")
-    And The user should see the element                  jQuery = h2:contains("Funding breakdown")
-    And the user clicks the button/link                  jQuery = div:contains("EGGS") ~ a:contains("View finances")
-    And The user clicks the button/link                  jQuery = a:contains("Your project costs")
-    When the user clicks the button/link                 jQuery = a:contains(".pdf (opens in a new window)")
-    Then the user should not see an error in the page
+#Lead applicant checks the dashboard content and the guidance after an assessor is assigned to the application
+#    [Documentation]  IFS-8850
+#    Given Log in as a different user                                    &{lead_applicant_credentials}
+#    And the user clicks the application tile if displayed
+#    When the user clicks the button/link                                link = ${webTestAppName}
+#    Then the user checks the status of the application in assessment
+#
+#Assessment period validations as internal user
+#    [Documentation]  IFS-9757
+#    Given Log in as a different user                       &{Comp_admin1_credentials}
+#    And the user clicks the button/link                    link = ${webTestCompName}
+#    When the user clicks the button/link                   link = Manage assessments
+#    And the user clicks the button/link                    link = Manage assessors
+#    And the user clicks the button/link                    jQuery = button:contains("Save and continue")
+#    Then the user should see a field and summary error     Please select an assessment period
+#
+#Comp admin updates the assessment period
+#    [Documentation]  IFS-8851
+#    Given the user clicks the button/link                      link = Back to manage assessments
+#    When the user clicks the button/link                       link = Manage assessment period
+#    Then the user checks the milestone validation messages
+#    And the user clicks the button/link                        link = Back to manage assessments
+#    And the user should see the element                        jQuery = .govuk-table__cell:contains('20/01/2021')
+#
+#Internal user notify the assessors of their assigned applications
+#    [Documentation]  IFS-9008  IFS-8852  IFS-8853  IFS-9758 IFS-10825
+#    Given assign the application to assessor                 1   Always open application decision pending
+#    When the user clicks the button/link                     jQuery = button:contains("Notify assessors")
+#    And the user logs out if they are logged in
+#    Then the user reads his email and clicks the link        ${assessorEmail}  Applications assigned to you for competition '${webTestCompName}'  We have assigned applications for you to assess for this competition:   1
+#    And the assessor accepts an invite to an application
+#
+#Internal user can not assign same application in two different assessment periods
+#    [Documentation]  IFS-9836
+#    Given log in as a different user             &{ifs_admin_user_credentials}
+#    And the user navigates to the page           ${server}/management/assessment/competition/${webTestCompID}
+#    When the user clicks the button/link         link = Manage assessors
+#    And the user clicks the button twice         jQuery = label:contains("Assessment period 2")
+#    And the user clicks the button/link          jQuery = button:contains("Save and continue")
+#    And the user clicks the button/link          jQuery = td:contains("Another Person") ~ td a:contains("View progress")
+#    Then the user should not see the element     jQuery = td:contains('Always open application decision pending')
+#
+#Internal user closes assessment period one
+#    [Documentation]  IFS-9008
+#    Given the user navigates to the page         ${server}/management/assessment/competition/${webTestCompID}
+#    When the user clicks the button/link         jQuery = button:contains("Close assessment")
+#    Then the user should not see the element     jQuery = button:contains("Close assessment")
+#    And the user should see the element          jQuery = button:contains("Notify assessors")
+#
+#Assessor should see batch assessment number and valid assessment dates related to assessment periods
+#    [Documentation]  IFS-9729
+#    Given assign the application to assessor    2   	Always open application awaiting assessment
+#    When the user clicks the button/link        jQuery = button:contains("Notify assessors")
+#    And log in as a different user              ${assessorEmail}   ${short_password}
+#    And the user navigates to the page          ${server}/assessment/assessor/dashboard/competition/${webTestCompID}
+#    Then the user should see the element        jQuery = dt:contains("Batch assessment:") + dd:contains("2")
+#    And the user should see the element         jQuery = dt:contains("Accept applications deadline:")+ dd:contains("20 May 2021")
+#    And the user should see the element         jQuery = dt:contains("Submit applications deadline:")+ dd:contains("20 June 2021")
+#    And the user should see the element         jQuery = a:contains("Always open application awaiting assessment")
+#    And the user should not see the element     jQuery = a:contains("Always open application decision pending")
+#
+#Assessor assess the application in assessment period 2
+#    [Documentation]  IFS-9729
+#    Given the user clicks the button/link                           link = Always open application awaiting assessment
+#    And the user selects the radio button                           assessmentAccept  true
+#    And the user clicks the button/link                             jQuery = button:contains("Confirm")
+#    When the user clicks the button/link                            link = Always open application awaiting assessment
+#    And the assessor adds score and feedback for every question     11
+#    And Assessor submits the assessment
+#    Then the user should see the element                            jQuery = li:contains("Always open application awaiting assessment") strong:contains("Recommended")
+#
+#Internal user sees valid information on dashboard
+#    [Documentation]  IFS-8849
+#    Given log in as a different user                            &{ifs_admin_user_credentials}
+#    When the user navigates to the page                         ${server}/management/competition/${webTestCompID}
+#    Then the user sees valid open ended competition details
+#
+#internal user inputs the decision and send the notification with feedback
+#    [Documentation]  IFS-8855
+#    Given the user inputs the funding decision for applications
+#    When the user sends notification and releases feedback
+#    And the user navigates to the page                               ${server}/project-setup-management/competition//${webTestCompID}/status/all
+#    Then the user refreshes until element appears on page            jQuery = tr div:contains("${webTestAppName}")
+#
+#Comp admin manages the assessors
+#    [Documentation]  IFS-8852
+#    Given log in as a different user           &{ifs_admin_user_credentials}
+#    And the user navigates to the page         ${server}/management/assessment/competition/${webTestCompID}
+#    And the user clicks the button/link        link = Manage assessors
+#    When the user clicks the button twice      jQuery = label:contains("Assessment period 1")
+#    And the user clicks the button/link        jQuery = button:contains("Save and continue")
+#    And the user clicks the button/link        jQuery = td:contains("Another Person") ~ td a:contains("View progress")
+#    Then the user should see the element       jQuery = h2:contains('Assigned') ~ div td:contains('Always open application decision pending')
+#    And the user clicks the button/link        link = Back to manage assessors
+#    And the user clicks the button/link        link = Back to choose an assessment period to manage assessors
+#    And the user clicks the button/link        link = Back to manage assessments
+#
+#Supporter can review open ended ktp competition applications
+#    [Documentation]  IFS-9785
+#    Given log in as a different user          &{supporter_credentials}
+#    And the user clicks the button/link       id = dashboard-link-SUPPORTER
+#    When supporter reviews an application
+#    Then the user should see the element      jQuery = button:contains("Edit")
+#    And the user should see the element       jQuery = dt:contains("Your feedback")+dd:contains("This is the comment from the supporter")
+#    And the user should see the element       jQuery = dt:contains("Are you interested in supporting this application?")+dd:contains("Yes")
+#
+#Auditor can view j-ES form for the submitted application
+#    [Documentation]  IFS-9882
+#    Given Log in as a different user                     &{auditorCredentials}
+#    And the user navigates to the page                   ${SERVER}/management/competition/${webTestCompID}/application/${webTestAppID}
+#    And the user clicks the button/link                  jQuery = button:contains("Finances summary")
+#    And The user should see the element                  jQuery = h2:contains("Funding breakdown")
+#    And the user clicks the button/link                  jQuery = div:contains("EGGS") ~ a:contains("View finances")
+#    And The user clicks the button/link                  jQuery = a:contains("Your project costs")
+#    When the user clicks the button/link                 jQuery = a:contains(".pdf (opens in a new window)")
+#    Then the user should not see an error in the page
 
 *** Keywords ***
 Custom suite setup
@@ -455,6 +466,71 @@ the user create a new assessment period
     the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.year  2100
     the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.day  16
     the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.month  12
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.year  2100
+    the user clicks the button/link          jQuery = button:contains('Save and return to manage assessments')
+
+the user create a new assessment period 1
+    the user clicks the button/link          link = Manage assessment period
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.day  12
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.month  11
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.year  2100
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.day  14
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.month  11
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.year  2100
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.day  16
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.month  11
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.year  2100
+    the user clicks the button/link          jQuery = button:contains('Save and return to manage assessments')
+
+the user create a new assessment period 2
+    the user clicks the button/link          link = Manage assessment period
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.day  12
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.month  10
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.year  2100
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.day  14
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.month  10
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.year  2100
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.day  16
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.month  10
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.year  2100
+    the user clicks the button/link          jQuery = button:contains('Save and return to manage assessments')
+
+the user create a new assessment period 3
+    the user clicks the button/link          link = Manage assessment period
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.day  12
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.month  09
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.year  2100
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.day  14
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.month  09
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.year  2100
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.day  16
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.month  09
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.year  2100
+    the user clicks the button/link          jQuery = button:contains('Save and return to manage assessments')
+
+the user create a new assessment period 4
+    the user clicks the button/link          link = Manage assessment period
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.day  12
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.month  08
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.year  2100
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.day  14
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.month  08
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.year  2100
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.day  16
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.month  08
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.year  2100
+    the user clicks the button/link          jQuery = button:contains('Save and return to manage assessments')
+
+the user create a new assessment period 5
+    the user clicks the button/link          link = Manage assessment period
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.day  12
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.month  07
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.year  2100
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.day  14
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.month  07
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.year  2100
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.day  16
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.month  07
     the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.year  2100
     the user clicks the button/link          jQuery = button:contains('Save and return to manage assessments')
 
