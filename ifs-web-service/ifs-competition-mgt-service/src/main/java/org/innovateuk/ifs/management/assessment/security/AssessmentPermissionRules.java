@@ -24,7 +24,7 @@ public class AssessmentPermissionRules {
     public boolean assessment(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
         return isInternalAdmin(loggedInUser) &&
-                !competitionIsInInformOrLater(competition) &&  // how to handle for always open? Inform or Closed
+                !competitionIsInInformOrLater(competition) &&
                 competitionIsInReadyToOpenOrLater(competition);
     }
 
