@@ -5,7 +5,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.competition.setup.closecompetition.populator.AlwaysOpenCloseCompetitionViewModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,7 +32,7 @@ public class AlwaysOpenCloseCompetitionController {
     private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
 
     @GetMapping
-    public String viewPage(Model model,
+    public String viewCloseCompetitionPage(Model model,
                            @PathVariable("competitionId") long competitionId) {
         model.addAttribute("model", populator.populate(competitionId));
         return "competition/setup/close-always-open-competition";
