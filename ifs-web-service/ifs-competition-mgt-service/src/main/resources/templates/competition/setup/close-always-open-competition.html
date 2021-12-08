@@ -35,12 +35,12 @@
         </div>
 
         <div class="govuk-form-group govuk-!-margin-top-6">
-            <form>
+            <form id="close-always-open-competition-form" th:action="@{/competition}" method="post">
                 <button th:disabled="${!model.closeCompetitionButtonEnabled}"
                         type="submit"
                         class="govuk-button"
                         id="close-always-open-competition"
-                        th:formaction="@{/competition/{competitionId}(competitionId=${model.competitionId})}">
+                        th:formaction="@{/competition/{competitionId}/always-open/close(competitionId=${model.competitionId})}">
                     Close competition
                 </button>
             </form>

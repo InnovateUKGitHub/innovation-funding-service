@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.competition.setup.closecompetition.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.FundingDecision;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -46,9 +47,11 @@ public class AlwaysOpenCloseCompetitionViewModel {
         return submittedApplications.stream().allMatch(ApplicationResource::isFeedbackReleased);
     }
 
-    // need to see if the manage_email_funding_date can be used after the bug fix tickets/ web test data fixes
-    public boolean closeCompetitionButtonEnabled() {
-        return submissionDateIsPresentAndHadPassed() && feedbackReleasedForAllApplications();
+    public boolean competitionHasNoApplicationsOnHold() {
+        return submittedApplications.stream().noneMatch(application -> application.getFundingDecision().equals(FundingDecision.ON_HOLD));
     }
 
+    public boolean closeCompetitionButtonEnabled() {
+        return submissionDateIsPresentAndHadPassed() && feedbackReleasedForAllApplications() && competitionHasNoApplicationsOnHold();
+    }
 }
