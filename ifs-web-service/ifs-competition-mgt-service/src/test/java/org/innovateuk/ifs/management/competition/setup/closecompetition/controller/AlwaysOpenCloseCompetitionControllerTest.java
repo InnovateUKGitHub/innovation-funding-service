@@ -4,6 +4,8 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.management.competition.setup.closecompetition.populator.AlwaysOpenCloseCompetitionViewModelPopulator;
+import org.innovateuk.ifs.management.competition.setup.closecompetition.viewmodel.AlwaysOpenCloseCompetitionViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +16,7 @@ import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionCompletionStage.PROJECT_SETUP;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,6 +33,9 @@ public class AlwaysOpenCloseCompetitionControllerTest extends BaseControllerMock
 
     @Mock
     private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
+
+    @Mock
+    private AlwaysOpenCloseCompetitionViewModelPopulator populator;
 
     @Override
     protected AlwaysOpenCloseCompetitionController supplyControllerUnderTest() {
@@ -50,14 +56,20 @@ public class AlwaysOpenCloseCompetitionControllerTest extends BaseControllerMock
 
     @Test
     public void viewCloseCompetitionPage() throws Exception {
+        AlwaysOpenCloseCompetitionViewModel viewModel = mock(AlwaysOpenCloseCompetitionViewModel.class);
+
+        when(populator.populate(competitionId)).thenReturn(viewModel);
+
         mockMvc.perform(get(URL, competitionId))
                 .andExpect(status().isOk())
-                .andExpect(view().name("competition/setup/close-always-open-competition"));
+                .andExpect(view().name("competition/setup/close-always-open-competition"))
+                .andReturn();
     }
 
     @Test
     public void closeCompetition() throws Exception {
         when(competitionPostSubmissionRestService.releaseFeedback(competitionId)).thenReturn(restSuccess());
+
         mockMvc.perform(post(URL + "/close", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/dashboard/project-setup")));
