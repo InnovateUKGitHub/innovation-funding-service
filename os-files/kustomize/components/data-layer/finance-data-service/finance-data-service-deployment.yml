@@ -48,7 +48,7 @@ spec:
               configMapKeyRef:
                 name: finance-data-service-config
                 key: FINANCE_DB_URL
-          - name: FLYWAY_URL
+          - name: SPRING_FLYWAY_URL
             valueFrom:
               configMapKeyRef:
                 name: finance-data-service-config
@@ -58,7 +58,7 @@ spec:
               configMapKeyRef:
                 name: finance-data-service-config
                 key: FINANCE_DB_USER
-          - name: FLYWAY_USER
+          - name: SPRING_FLYWAY_USER
             valueFrom:
               configMapKeyRef:
                 name: finance-data-service-config
@@ -68,7 +68,7 @@ spec:
               configMapKeyRef:
                 name: finance-data-service-config
                 key: FINANCE_DB_PASS
-          - name: FLYWAY_PASSWORD
+          - name: SPRING_FLYWAY_PASSWORD
             valueFrom:
               configMapKeyRef:
                 name: finance-data-service-config

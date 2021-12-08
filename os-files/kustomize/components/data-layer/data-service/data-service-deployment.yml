@@ -62,7 +62,7 @@ spec:
             configMapKeyRef:
               name: db-config
               key: DB_URL
-        - name: FLYWAY_URL
+        - name: SPRING_FLYWAY_URL
           valueFrom:
             configMapKeyRef:
               name: db-config
@@ -72,7 +72,7 @@ spec:
             configMapKeyRef:
               name: db-config
               key: DB_USER
-        - name: FLYWAY_USER
+        - name: SPRING_FLYWAY_USER
           valueFrom:
             configMapKeyRef:
               name: db-config
@@ -82,12 +82,12 @@ spec:
             configMapKeyRef:
               name: db-config
               key: DB_PASS
-        - name: FLYWAY_PASSWORD
+        - name: SPRING_FLYWAY_PASSWORD
           valueFrom:
             configMapKeyRef:
               name: db-config
               key: DB_PASS
-        - name: FLYWAY_LOCATIONS
+        - name: SPRING_FLYWAY_LOCATIONS
           valueFrom:
             configMapKeyRef:
               name: flyway-config
