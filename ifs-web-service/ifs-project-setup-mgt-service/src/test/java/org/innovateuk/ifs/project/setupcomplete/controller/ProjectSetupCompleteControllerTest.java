@@ -98,7 +98,7 @@ public class ProjectSetupCompleteControllerTest extends BaseControllerMockMVCTes
     public void saveProjectStateLoan_success() throws Exception {
         when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
-        when(projectStateRestService.markAsSuccessful(projectId, projectStartDate)).thenReturn(restSuccess());
+        when(projectStateRestService.markAsSuccessful(projectId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/loan-setup-complete", competitionId, projectId)
                 .param("successful", "true")
@@ -108,7 +108,25 @@ public class ProjectSetupCompleteControllerTest extends BaseControllerMockMVCTes
                 .param("startDateDay", String.valueOf(projectStartDate.getDayOfMonth())))
                 .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/setup-complete", competitionId, projectId)));
 
-        verify(projectStateRestService).markAsSuccessful(projectId, projectStartDate);
+        verify(projectStateRestService).markAsSuccessful(projectId);
+    }
+
+    @Test
+    public void saveProjectStateLoanNewTargetStartDate_success() throws Exception {
+        LocalDate newTargetDate = projectStartDate.plusMonths(1).withDayOfMonth(1);
+        when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        when(projectStateRestService.markAsSuccessful(projectId, newTargetDate)).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/loan-setup-complete", competitionId, projectId)
+                .param("successful", "true")
+                .param("successfulConfirmation", "true")
+                .param("startDateYear", String.valueOf(newTargetDate.getYear()))
+                .param("startDateMonth", String.valueOf(newTargetDate.getMonthValue()))
+                .param("startDateDay", String.valueOf(newTargetDate.getDayOfMonth())))
+                .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/setup-complete", competitionId, projectId)));
+
+        verify(projectStateRestService).markAsSuccessful(projectId, newTargetDate);
     }
 
     @Test
