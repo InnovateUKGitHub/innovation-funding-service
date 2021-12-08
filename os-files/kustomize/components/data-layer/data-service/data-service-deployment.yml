@@ -283,7 +283,9 @@ spec:
               name: feature-toggle-config
               key: IFS_LOAN_PARTB_ENABLED
         - name: FLYWAY_BASELINE_ON_MIGRATE
-          value: "true"
+          value: "false"
+        - name: SPRING_FLYWAY_TABLE
+          value: "schema_version"
         - name: JAVA_TOOL_OPTIONS
           value: -Xms1500m -Xmx1500m -javaagent:/newrelic.jar
         - name: NEW_RELIC_APP_NAME

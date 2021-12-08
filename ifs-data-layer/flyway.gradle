@@ -36,5 +36,3 @@ flyway {
     ]
     baselineOnMigrate = 'false'
 }
-
-flywayMigrate.dependsOn flywayRepair
