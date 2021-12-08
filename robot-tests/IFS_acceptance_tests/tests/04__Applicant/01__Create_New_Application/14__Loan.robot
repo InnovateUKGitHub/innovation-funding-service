@@ -134,7 +134,7 @@ Loan application finance overview
     Then the user should see the element   jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00%") ~ td:contains("2,468") ~ td:contains("140,632")
 
 Loan application submission
-    [Documentation]  IFS-6237  IFS-6238  IFS-9483 IFS-10825
+    [Documentation]  IFS-6237  IFS-6238  IFS-9483 IFS-10825 IFS-10869
     Given the user submits the loan application
     When the user clicks the button/link            link = View application
     Then the user should see the element            jQuery = h1:contains("Application overview")
@@ -143,17 +143,17 @@ Loan application submission
     And the user should see the element             jQuery = p:contains("We will make our decision based on: Suitability of your business to receive a loan and the quality of the project.")
     And the user reads his email                    ${lead_applicant_credentials["email"]}   Complete your application for Loan Competition   You have completed your application for Loan Competition.
 
-#Assessor can view BFI question in application
-#   [Documentation]   IFS-10825
-#   [Setup]  log in as a different user         &{internal_finance_credentials}
-#   Given moving competition to Closed          ${loan_comp_appl_id}
-#   When the user navigates to the page         ${server}/management/competition/${loan_comp_appl_id}/assessors/find
-#   And the user invites assessors to assess the loan competition
-#   And the assessors accept the invitation to assess the loans competition
-#   And the application is assigned to a assessor
-#   And The user clicks the button/link        link = ${loanApplicationName}
-#   And The user clicks the button/link       link = Business and financial information
-#   Then The user should see the element     jQuery = h1:contains("Business and financial information")
+Assessor can view BFI question in application
+   [Documentation]   IFS-10825
+   [Setup]  log in as a different user         &{internal_finance_credentials}
+   Given moving competition to Closed          ${loan_comp_appl_id}
+   When the user navigates to the page         ${server}/management/competition/${loan_comp_appl_id}/assessors/find
+   And the user invites assessors to assess the loan competition
+   And the assessors accept the invitation to assess the loans competition
+   And the application is assigned to a assessor
+   And The user clicks the button/link        link = ${loanApplicationName}
+   And The user clicks the button/link       link = Business and financial information
+   Then The user should see the element     jQuery = h1:contains("Business and financial information")
 
 Applicant complete the project setup details
     [Documentation]  IFS-6369  IFS-6285  IFS-9483  IFS-10825
