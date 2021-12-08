@@ -7,7 +7,7 @@ bases:
 
 components:
   - ../../../../components/data-layer/data-service
-  #  - ../../../../components/web-layer/application-service
+#  - ../../../../components/web-layer/application-service
 
   - ../../../../patches/
   - ../patches/
