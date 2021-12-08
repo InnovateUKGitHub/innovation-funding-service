@@ -43,6 +43,9 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-9729 Always open competitions: assessor list of assigned applications
 ...
+...               IFS-10859 Always open competitions:Assessor view changes
+...
+
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -177,7 +180,7 @@ Comp admin updates the assessment period
     And the user should see the element                        jQuery = .govuk-table__cell:contains('20/01/2021')
 
 Internal user notify the assessors of their assigned applications
-    [Documentation]  IFS-9008  IFS-8852  IFS-8853  IFS-9758 IFS-10825
+    [Documentation]  IFS-9008  IFS-8852  IFS-8853  IFS-9758 IFS-10825 IFS-10859
     Given assign the application to assessor                 1   Always open application decision pending
     When the user clicks the button/link                     jQuery = button:contains("Notify assessors")
     And the user logs out if they are logged in
