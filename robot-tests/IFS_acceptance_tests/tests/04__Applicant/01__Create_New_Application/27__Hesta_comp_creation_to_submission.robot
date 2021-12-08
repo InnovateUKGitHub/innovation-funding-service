@@ -65,7 +65,11 @@ The Application Summary page must not include the Reopen Application link when t
     Given Log in as a different user                                                &{Comp_admin1_credentials}
     And Requesting IDs of this competition                                          ${hestaCompetitionName}
     And Competition admin creates an assessment period                              ${competitionId}
-    And Login and error checking
+    And comp admin sends invite to assesor
+    And the assessor accepts an invite to an application
+    And Logging in and Error Checking                                               ${email}  ${password}
+    And The user clicks the button/link                                             link = ${hestaCompetitionName}
+    And assign the application to assessor                                          ${hestaApplicationName}
     When the internal team mark the application as successful / unsuccessful        ${hestaApplicationName}   FUNDED
     And Log in as a different user                                                  email=${leadApplicantEmail}   password=${short_password}
     Then the application summary page must not include the reopen application link
@@ -81,7 +85,7 @@ Lead applicant receives email notifiction when internal user marks application u
     And the user marks the finances as complete                                     ${newHestaApplicationName}  labour costs  54,000  no
     And the user can submit the application
     And the user logs out if they are logged in
-    And Log in as a IFS admin                                                       &{Comp_admin1_credentials}
+    And Logging in and Error Checking                                               ${email}  ${password}
     And The user clicks the button/link                                             link = ${hestaCompetitionName}
     And assign the application to assessor                                          ${newHestaApplicationName}
     And log in as a different user                                                  &{Comp_admin1_credentials}
@@ -273,15 +277,4 @@ the assessor accepts an invite to an application
     the user clicks the button/link       jQuery = button:contains("Confirm")
     the user logs out if they are logged in
 
-Login and error checking
-    comp admin sends invite to assesor
-    the assessor accepts an invite to an application
-    Log in as a IFS admin                                                       &{Comp_admin1_credentials}
-    The user clicks the button/link                                             link = ${hestaCompetitionName}
-    assign the application to assessor                                          ${hestaApplicationName}
-
-Log in as a IFS admin
-    [Arguments]    ${email}    ${password}
-    the guest user inserts user email and password    ${email}    ${password}
-    the user clicks the button/link                   jQuery = button:contains("Sign in")
 
