@@ -34,5 +34,5 @@ flyway {
     locations= [
             'db/migration', 'db/reference', ' db/setup', 'db/webtest'
     ]
-    baselineOnMigrate = 'true'
+    baselineOnMigrate = 'false'
 }
