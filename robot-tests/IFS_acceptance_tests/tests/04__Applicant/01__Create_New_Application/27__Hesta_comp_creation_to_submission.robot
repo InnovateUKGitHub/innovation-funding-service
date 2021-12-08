@@ -65,11 +65,7 @@ The Application Summary page must not include the Reopen Application link when t
     Given Log in as a different user                                                &{Comp_admin1_credentials}
     And Requesting IDs of this competition                                          ${hestaCompetitionName}
     And Competition admin creates an assessment period                              ${competitionId}
-    And comp admin sends invite to assesor
-    And the assessor accepts an invite to an application
-    And Log in as a IFS admin                                                       &{Comp_admin1_credentials}
-    And The user clicks the button/link                                             link = ${hestaCompetitionName}
-    And assign the application to assessor                                          ${hestaApplicationName}
+    And Login and error checking
     When the internal team mark the application as successful / unsuccessful        ${hestaApplicationName}   FUNDED
     And Log in as a different user                                                  email=${leadApplicantEmail}   password=${short_password}
     Then the application summary page must not include the reopen application link
@@ -277,7 +273,15 @@ the assessor accepts an invite to an application
     the user clicks the button/link       jQuery = button:contains("Confirm")
     the user logs out if they are logged in
 
+Login and error checking
+    comp admin sends invite to assesor
+    the assessor accepts an invite to an application
+    Log in as a IFS admin                                                       &{Comp_admin1_credentials}
+    The user clicks the button/link                                             link = ${hestaCompetitionName}
+    assign the application to assessor                                          ${hestaApplicationName}
+
 Log in as a IFS admin
     [Arguments]    ${email}    ${password}
     the guest user inserts user email and password    ${email}    ${password}
     the user clicks the button/link                   jQuery = button:contains("Sign in")
+
