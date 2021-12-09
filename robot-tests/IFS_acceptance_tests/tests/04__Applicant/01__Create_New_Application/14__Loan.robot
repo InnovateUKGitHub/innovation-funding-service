@@ -87,7 +87,7 @@ The user create new application
     Then the user clicks the button/link                           jQuery = a:contains("Continue")
     And the guest user inserts user email and password             &{lead_applicant_credentials}
     And the user clicks the button/link                            id = sign-in-cta
-    Then the user clicks the button/link                           link = Back to Application Overview
+    Then the user clicks the button/link                            link = Back to Application Overview
     Then the user clicks the button/link                           link = Back to applications
 
 The user can see b&fi application question as complete and shows edit online survey button
