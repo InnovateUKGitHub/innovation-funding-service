@@ -45,8 +45,8 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
         mockMvc.perform(put("/competition/post-submission/{id}/release-feedback", competitionId))
                 .andExpect(status().isOk());
 
-        verify(competitionService, only()).getCompetitionById(competitionId);
-        verify(competitionService, only()).releaseFeedback(competitionId);
+        verify(competitionService).getCompetitionById(competitionId);
+        verify(competitionService).releaseFeedback(competitionId);
         verify(applicationNotificationService).notifyApplicantsByCompetition(competitionId);
     }
 
@@ -61,8 +61,8 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
         mockMvc.perform(put("/competition/post-submission/{id}/release-feedback", competitionId))
                 .andExpect(status().isOk());
 
-        verify(competitionService, only()).getCompetitionById(competitionId);
-        verify(competitionService, only()).releaseFeedback(competitionId);
+        verify(competitionService).getCompetitionById(competitionId);
+        verify(competitionService).releaseFeedback(competitionId);
     }
 
     @Test
