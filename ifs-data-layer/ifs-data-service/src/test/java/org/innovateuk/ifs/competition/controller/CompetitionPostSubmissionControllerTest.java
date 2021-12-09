@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.junit.Test;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -34,27 +36,33 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
     @Test
     public void releaseFeedback() throws Exception {
         final Long competitionId = 1L;
+        CompetitionResource competition = newCompetitionResource().withId(competitionId).withAlwaysOpen(false).build();
 
+        when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competition));
         when(competitionService.releaseFeedback(competitionId)).thenReturn(serviceSuccess());
         when(applicationNotificationService.notifyApplicantsByCompetition(competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/competition/post-submission/{id}/release-feedback", competitionId))
                 .andExpect(status().isOk());
 
+        verify(competitionService, only()).getCompetitionById(competitionId);
         verify(competitionService, only()).releaseFeedback(competitionId);
         verify(applicationNotificationService).notifyApplicantsByCompetition(competitionId);
     }
 
     @Test
-    public void setReleaseFeedbackDate() throws Exception {
+    public void releaseFeedbackAlwaysOpenCompetition() throws Exception {
         final Long competitionId = 1L;
+        CompetitionResource competition = newCompetitionResource().withId(competitionId).withAlwaysOpen(true).build();
 
+        when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competition));
         when(competitionService.releaseFeedback(competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/competition/post-submission/{id}/set-release-feedback", competitionId))
+        mockMvc.perform(put("/competition/post-submission/{id}/release-feedback", competitionId))
                 .andExpect(status().isOk());
 
-        verify(competitionService).releaseFeedback(competitionId);
+        verify(competitionService, only()).getCompetitionById(competitionId);
+        verify(competitionService, only()).releaseFeedback(competitionId);
     }
 
     @Test

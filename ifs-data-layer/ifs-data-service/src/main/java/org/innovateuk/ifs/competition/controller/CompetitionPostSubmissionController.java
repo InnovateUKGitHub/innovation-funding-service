@@ -25,23 +25,11 @@ public class CompetitionPostSubmissionController {
 
     @PutMapping("/{id}/release-feedback")
     public RestResult<Void> releaseFeedback(@PathVariable("id") final long competitionId) {
-        return competitionService.releaseFeedback(competitionId)
+        boolean isAlwaysOpen = competitionService.getCompetitionById(competitionId).getSuccess().isAlwaysOpen();
+
+        return isAlwaysOpen ? alwaysOpenReleaseFeedback(competitionId) : competitionService.releaseFeedback(competitionId)
                 .andOnSuccess(() -> applicationNotificationService.notifyApplicantsByCompetition(competitionId))
                 .toPutResponse();
-    }
-
-//    @PutMapping("/{id}/release-feedback")
-//    public RestResult<Void> releaseFeedback(@PathVariable("id") final long competitionId) {
-//        boolean isAlwaysOpen = competitionService.getCompetitionById(competitionId).getSuccess().isAlwaysOpen();
-//
-//        return isAlwaysOpen ? alwaysOpenReleaseFeedback(competitionId) : competitionService.releaseFeedback(competitionId)
-//                .andOnSuccess(() -> applicationNotificationService.notifyApplicantsByCompetition(competitionId))
-//                .toPutResponse();
-//    }
-
-    @PutMapping("/{id}/set-release-feedback")
-    public RestResult<Void> setReleaseFeedbackDate(@PathVariable("id") final long competitionId) {
-        return competitionService.releaseFeedback(competitionId).toPutResponse();
     }
 
     @PutMapping("/{id}/close-assessment")
@@ -72,5 +60,9 @@ public class CompetitionPostSubmissionController {
     @GetMapping("/{competitionId}/count-pending-spend-profiles")
     public RestResult<Long> countPendingSpendProfiles(@PathVariable(value = "competitionId") Long competitionId) {
         return competitionService.countPendingSpendProfiles(competitionId).toGetResponse();
+    }
+
+    private RestResult<Void> alwaysOpenReleaseFeedback(long competitionId) {
+        return competitionService.releaseFeedback(competitionId).toPutResponse();
     }
 }
