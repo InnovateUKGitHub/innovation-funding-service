@@ -40,7 +40,7 @@ public class AlwaysOpenCloseCompetitionController {
 
     @PostMapping("/close")
     public String closeCompetition(@PathVariable("competitionId") long competitionId) {
-        competitionPostSubmissionRestService.releaseFeedback(competitionId);
+        competitionPostSubmissionRestService.setReleaseFeedbackDate(competitionId);
 
         if (isReleaseFeedbackCompletionStage(competitionId)) {
             return "redirect:/dashboard/previous";

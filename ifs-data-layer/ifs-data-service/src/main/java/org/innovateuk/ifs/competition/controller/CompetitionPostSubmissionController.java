@@ -30,6 +30,20 @@ public class CompetitionPostSubmissionController {
                 .toPutResponse();
     }
 
+//    @PutMapping("/{id}/release-feedback")
+//    public RestResult<Void> releaseFeedback(@PathVariable("id") final long competitionId) {
+//        boolean isAlwaysOpen = competitionService.getCompetitionById(competitionId).getSuccess().isAlwaysOpen();
+//
+//        return isAlwaysOpen ? alwaysOpenReleaseFeedback(competitionId) : competitionService.releaseFeedback(competitionId)
+//                .andOnSuccess(() -> applicationNotificationService.notifyApplicantsByCompetition(competitionId))
+//                .toPutResponse();
+//    }
+
+    @PutMapping("/{id}/set-release-feedback")
+    public RestResult<Void> setReleaseFeedbackDate(@PathVariable("id") final long competitionId) {
+        return competitionService.releaseFeedback(competitionId).toPutResponse();
+    }
+
     @PutMapping("/{id}/close-assessment")
     public RestResult<Void> closeAssessment(@PathVariable("id") final Long id) {
         return competitionService.closeAssessment(id).toPutResponse();

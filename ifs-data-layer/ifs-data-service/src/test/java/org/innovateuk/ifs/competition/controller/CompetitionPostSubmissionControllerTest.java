@@ -46,6 +46,18 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
     }
 
     @Test
+    public void setReleaseFeedbackDate() throws Exception {
+        final Long competitionId = 1L;
+
+        when(competitionService.releaseFeedback(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/competition/post-submission/{id}/set-release-feedback", competitionId))
+                .andExpect(status().isOk());
+
+        verify(competitionService).releaseFeedback(competitionId);
+    }
+
+    @Test
     public void closeAssessment() throws Exception {
         final long competitionId = 1L;
 
