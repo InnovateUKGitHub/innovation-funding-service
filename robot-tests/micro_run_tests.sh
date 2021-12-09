@@ -82,7 +82,7 @@ function addTestFiles() {
     echo "***********Adding standard file upload location ***********"
     kubectl exec $DATASERVICE_POD -- mkdir -p ${storedFileFolder}/000000000_999999999/000000_999999/000_999
 
-    echo "***********Creating file entry for each db entry***********"
+    echo "***********Creating file entry for each db entry 1111***********"
     MYSQL_POD=$(kubectl get pod -l app=ifs-database -o jsonpath="{.items[0].metadata.name}")
     max_file_entry_id=$(kubectl exec $MYSQL_POD -- mysql ifs -uroot -ppassword -hifs-database -s -e 'select max(id) from file_entry;')
     for i in `seq 1 ${max_file_entry_id}`;
@@ -92,7 +92,7 @@ function addTestFiles() {
         kubectl exec $DATASERVICE_POD -- cp /tmp/testing.pdf ${storedFileFolder}/000000000_999999999/000000_999999/000_999/${i}
       fi
     done
-    echo "*********** Done Creating file entry for each db entry***********"
+    echo "*********** Done Creating file entry for each db entry 2222***********"
 }
 
 k8s_delete() {
