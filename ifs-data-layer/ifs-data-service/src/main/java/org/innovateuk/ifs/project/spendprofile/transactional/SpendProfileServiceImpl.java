@@ -181,7 +181,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                                 .map(po -> markSpendProfileComplete(ProjectOrganisationCompositeId.id(project.getId(), po.getOrganisation().getId())))
                                 .collect(toList());
                         return aggregate(markAsCompleteResults)
-                                .andOnSuccess(() -> completeSpendProfilesReview(projectId))
+                                .andOnSuccess(() -> completeSpendProfilesReview(projectId, false))
                                 .andOnSuccess(() -> approveOrRejectSpendProfile(projectId, APPROVED));
                     }
                     return serviceSuccess();
@@ -564,7 +564,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
+    public ServiceResult<Void> completeSpendProfilesReview(Long projectId, boolean sendEmailNotification) {
         return getProject(projectId).andOnSuccess(project -> {
             if (project.getSpendProfiles().stream().anyMatch(spendProfile -> !spendProfile.isMarkedAsComplete())) {
                 return serviceFailure(SPEND_PROFILES_MUST_BE_COMPLETE_BEFORE_SUBMISSION);
@@ -572,7 +572,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
             if (spendProfileWorkflowHandler.submit(project)) {
                 project.setSpendProfileSubmittedDate(ZonedDateTime.now());
                 updateApprovalOfSpendProfile(projectId, ApprovalType.UNSET);
-                if (isMOSpendProfileUpdateEnabled) {
+                if (isMOSpendProfileUpdateEnabled && sendEmailNotification) {
                   sendSpendProfileReviewNotification(project);
                 }
                 return serviceSuccess();
