@@ -33,6 +33,7 @@ public class AssessmentPeriodChoiceViewModel {
         private Long assessmentPeriodId;
         private LinkedMap<String, MilestoneViewModel> milestoneEntries;
         private String displayName;
+        private boolean isAssessmentClosed;
 
         public Long getAssessmentPeriodId() {
             return assessmentPeriodId;
@@ -56,6 +57,14 @@ public class AssessmentPeriodChoiceViewModel {
 
         public void setDisplayName(String displayName) {
             this.displayName = displayName;
+        }
+
+        public boolean isAssessmentClosed() {
+            return isAssessmentClosed;
+        }
+
+        public void setAssessmentClosed(boolean assessmentClosed) {
+            isAssessmentClosed = assessmentClosed;
         }
     }
 

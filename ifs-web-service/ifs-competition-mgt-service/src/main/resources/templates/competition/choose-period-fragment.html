@@ -20,6 +20,7 @@
                                type="radio"
                                name="assessmentPeriodId"
                                required="required"
+                               th:disabled="${assessmentPeriod.isAssessmentClosed}"
                                th:attr="data-required-errormessage=#{validation.assessmentPeriodForm.assessmentPeriodId.required}">
                         <label th:for="${'assessment-period-' + index.index}" class="govuk-label govuk-radios__label">
                             <strong>Assessment period <th:block th:text="${index.index + 1}" /></strong>
@@ -36,7 +37,8 @@
                         <option th:each="assessmentPeriod, index : ${model.assessmentPeriods}"
                                 th:value="${assessmentPeriod.assessmentPeriodId}"
                                 th:field="*{assessmentPeriodId}"
-                                th:text="${'Assessment period ' + (index.index + 1) + ': ' + assessmentPeriod.displayName}"/>
+                                th:text="${'Assessment period ' + (index.index + 1) + ': ' + assessmentPeriod.displayName}"
+                                th:disabled="${assessmentPeriod.isAssessmentClosed}"/>
                     </select>
                 </div>
             </fieldset>
