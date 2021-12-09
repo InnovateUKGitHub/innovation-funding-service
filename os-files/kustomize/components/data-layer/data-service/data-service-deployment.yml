@@ -285,7 +285,10 @@ spec:
         - name: FLYWAY_BASELINE_ON_MIGRATE
           value: "false"
         - name: SPRING_FLYWAY_TABLE
-          value: "schema_version"
+          valueFrom:
+            configMapKeyRef:
+              name: flyway-config
+              key: FLYWAY_TABLE
         - name: JAVA_TOOL_OPTIONS
           value: -Xms1500m -Xmx1500m -javaagent:/newrelic.jar
         - name: NEW_RELIC_APP_NAME
