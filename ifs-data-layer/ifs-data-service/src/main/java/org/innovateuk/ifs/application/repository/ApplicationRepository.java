@@ -46,6 +46,19 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             ") " +
             "AND (:inAssessmentReviewPanel IS NULL OR a.inAssessmentReviewPanel = :inAssessmentReviewPanel)";
 
+
+    String ASSESSED_APPLICATION_FILTER_WHERE = "WHERE " +
+            "a.competition.id = :compId " +
+            "AND (a.assessmentPeriod.id IN :closedAssessmentPeriods) " +
+            "AND (a.applicationProcess.activityState IN :states) " +
+            "AND (:filter IS NULL OR str(a.id) LIKE CONCAT('%', :filter, '%') ) " +
+            "AND (:funding IS NULL " +
+            "OR ( str(:funding) = 'UNDECIDED' AND a.fundingDecision IS NULL AND a.applicationProcess.activityState <> org.innovateuk.ifs.application.resource.ApplicationState.APPROVED ) " +
+            "OR a.fundingDecision = :funding " +
+            "   OR ( str(:funding) = 'FUNDED' AND a.applicationProcess.activityState = org.innovateuk.ifs.application.resource.ApplicationState.APPROVED ) " +
+            ") " +
+            "AND (:inAssessmentReviewPanel IS NULL OR a.inAssessmentReviewPanel = :inAssessmentReviewPanel)";
+
     String COMP_FUNDING_FILTER = "WHERE " +
             "a.competition.id = :compId " +
             "AND (a.fundingDecision IS NOT NULL) " +
@@ -272,4 +285,31 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     List<Application> findAllowedApplicationsForCompetition(Set<Long> ids, long competitionId);
 
     Optional<Application> findByPreviousApplicationId(long previousApplicationId);
+
+    @Query(APPLICATION_ID_SELECT + ASSESSED_APPLICATION_FILTER_WHERE)
+    List<Long> findApplicationIdsByClosedAssessmentPeriodAndWaitingForFunding(@Param("compId") long competitionId,
+                                                                                            @Param("states") Collection<ApplicationState> applicationStates,
+                                                                                            @Param("filter") String filter,
+                                                                                            @Param("funding") FundingDecisionStatus funding,
+                                                                                            @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
+                                                                                            @Param("closedAssessmentPeriods") List<Long> closedAssessmentPeriods);
+    @Query(APPLICATION_SELECT + ASSESSED_APPLICATION_FILTER_WHERE)
+    List<Application> findApplicationsByClosedAssesmentPeriodAndWaitingForFunding(@Param("compId") long competitionId,
+                                                                                      @Param("states") Collection<ApplicationState> applicationStates,
+                                                                                      @Param("filter") String filter,
+                                                                                      @Param("funding") FundingDecisionStatus funding,
+                                                                                      @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
+                                                                                      @Param("closedAssessmentPeriods") List<Long> closedAssessmentPeriods);
+
+
+
+    @Query(APPLICATION_SELECT + ASSESSED_APPLICATION_FILTER_WHERE)
+    Page<Application> findApplicationsByClosedAssesmentPeriodAndWaitingForFunding(@Param("compId") long competitionId,
+                                                                                      @Param("states") Collection<ApplicationState> applicationStates,
+                                                                                      @Param("filter") String filter,
+                                                                                      @Param("funding") FundingDecisionStatus funding,
+                                                                                      @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
+                                                                                      @Param("closedAssessmentPeriods") List<Long> closedAssessmentPeriods,
+                                                                                      Pageable pageable);
+
 }
