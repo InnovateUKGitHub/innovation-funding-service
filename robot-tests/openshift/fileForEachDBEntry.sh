@@ -1,4 +1,4 @@
-echo "***********Creating file entry for each db entry 3333***********"
+echo "***********Creating file entry for each db entry 4444***********"
 max_file_entry_id=$(mysql ifs -uroot -ppassword -hifs-database -s -e 'select max(id) from file_entry;')
 
 TEST_FILES_DIR="/mnt/ifs_storage/ifs/000000000_999999999/000000_999999/000_999"
