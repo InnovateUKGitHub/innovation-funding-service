@@ -118,7 +118,7 @@
                                                                data-autosave-disabled=""
                                                                th:classappend="${#fields.hasErrors('startDateDay')} ? 'govuk-input--error'"
                                                                th:field="*{startDateDay}"
-                                                               th:attr="data-required-errormessage=#{validation.standard.date.day}"
+                                                               th:attr="data-required-errormessage=#{validation.standard.date.format}"
                                                                />
                                                     </div>
 
@@ -137,7 +137,7 @@
                                                                data-autosave-disabled=""
                                                                th:classappend="${#fields.hasErrors('startDateMonth')} ? 'govuk-input--error'"
                                                                th:field="*{startDateMonth}"
-                                                               th:attr="data-required-errormessage=#{validation.standard.date.month}" />
+                                                               th:attr="data-required-errormessage=#{validation.standard.date.format}" />
                                                     </div>
 
                                                     <div class="year">
@@ -153,7 +153,7 @@
                                                                data-autosave-disabled=""
                                                                th:classappend="${#fields.hasErrors('startDateYear')} ? 'govuk-input--error'"
                                                                th:field="*{startDateYear}"
-                                                               th:attr="data-required-errormessage=#{validation.standard.date.year}" />
+                                                               th:attr="data-required-errormessage=#{validation.standard.date.format}" />
                                                     </div>
                                                 </div>
                                             </fieldset>
