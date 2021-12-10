@@ -47,6 +47,17 @@ public class AssessorCompetitionDashboardController {
         return "assessor-competition-dashboard";
     }
 
+    @GetMapping("/dashboard/competition/{competitionId}/period/{assessmentPeriodId}")
+    public String competitionDashboard(final Model model,
+                                       UserResource loggedInUser,
+                                       @PathVariable("competitionId") final Long competitionId,
+                                       @PathVariable("assessmentPeriodId") final Long assessmentPeriodId,
+                                       @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessorCompetitionDashboardAssessmentForm form) {
+
+        model.addAttribute("model", assessorCompetitionDashboardModelPopulator.populateModel(competitionId, assessmentPeriodId, loggedInUser.getId()));
+        return "assessor-competition-dashboard";
+    }
+
     @PostMapping("/dashboard/competition/{competitionId}")
     public String submitAssessments(Model model,
                                     @PathVariable("competitionId") Long competitionId,
@@ -56,6 +67,28 @@ public class AssessorCompetitionDashboardController {
                                     ValidationHandler validationHandler) {
 
         Supplier<String> renderDashboard = () -> competitionDashboard(model, loggedInUser, competitionId, form);
+
+        return validationHandler.failNowOrSucceedWith(
+                renderDashboard,
+                () -> {
+                    ServiceResult<Void> serviceResult = assessmentService.submitAssessments(form.getAssessmentIds());
+
+                    return validationHandler.addAnyErrors(serviceResult, asGlobalErrors())
+                            .failNowOrSucceedWith(renderDashboard, renderDashboard);
+                }
+        );
+    }
+
+    @PostMapping("/dashboard/competition/{competitionId}/period/{assessmentPeriodId}")
+    public String submitAssessments(Model model,
+                                    @PathVariable("competitionId") Long competitionId,
+                                    @PathVariable("assessmentPeriodId") Long assessmentPeriodId,
+                                    UserResource loggedInUser,
+                                    @ModelAttribute(FORM_ATTR_NAME) @Valid AssessorCompetitionDashboardAssessmentForm form,
+                                    @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
+                                    ValidationHandler validationHandler) {
+
+        Supplier<String> renderDashboard = () -> competitionDashboard(model, loggedInUser, competitionId, assessmentPeriodId, form);
 
         return validationHandler.failNowOrSucceedWith(
                 renderDashboard,

@@ -1,11 +1,15 @@
 package org.innovateuk.ifs.assessment.assignment.controller;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.assessment.assignment.form.AssessmentAssignmentForm;
 import org.innovateuk.ifs.assessment.assignment.populator.AssessmentAssignmentModelPopulator;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,6 +40,11 @@ public class AssessmentAssignmentController {
     @Autowired
     private AssessmentService assessmentService;
 
+    @Autowired
+    private CompetitionRestService competitionService;
+
+    @Autowired
+    private ApplicationRestService applicationService;
 
     @GetMapping("assignment")
     public String viewAssignment(@PathVariable("assessmentId") Long assessmentId,
@@ -62,11 +71,19 @@ public class AssessmentAssignmentController {
                 updateResult = assessmentService.rejectInvitation(assessment.getId(), form.getRejectReason(), form.getRejectComment());
             }
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                    failNowOrSucceedWith(failureView, () -> redirectToAssessorCompetitionDashboard(assessment.getCompetition()));
+                    failNowOrSucceedWith(failureView, () -> redirectToAssessorCompetitionDashboard(assessment));
         });
     }
 
-    private String redirectToAssessorCompetitionDashboard(Long competitionId) {
-        return format("redirect:/assessor/dashboard/competition/%s", competitionId);
+    private String redirectToAssessorCompetitionDashboard(AssessmentResource assessment) {
+        CompetitionResource competition = competitionService.getCompetitionById(assessment.getCompetition()).getSuccess();
+        ApplicationResource application = applicationService.getApplicationById(assessment.getApplication()).getSuccess();
+
+        if(competition.isAlwaysOpen() && application.getAssessmentPeriodId() != null) {
+            return format("redirect:/assessor/dashboard/competition/%d/period/%d", assessment.getCompetition(), application.getAssessmentPeriodId());
+        } else {
+            return format("redirect:/assessor/dashboard/competition/%d", assessment.getCompetition());
+        }
+
     }
 }

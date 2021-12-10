@@ -551,6 +551,36 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         verify(cookieUtil).saveToCookie(any(), any(), eq(getSerializedObject(expectedCookie)));
     }
 
+    @Test
+    public void testGetAssessedApplications() throws Exception {
+        ReflectionTestUtils.setField(controller, "alwaysOpenCompetitionEnabled", true);
+        ReflectionTestUtils.setField(competitionManagementFundingDecisionModelPopulator, "alwaysOpenCompetitionEnabled", true);
+
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
+        CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).withAlwaysOpen(true).build();
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
+        when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(competitionSummaryResource));
+        when(applicationSummaryRestService.getAllAssessedApplicationIds(COMPETITION_ID, empty(), empty())).thenReturn(restSuccess(asList(1L, 2L)));
+
+        List<ApplicationSummaryResource> expectedSummaries = newApplicationSummaryResource()
+                .build(3);
+        ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource(50, 3, expectedSummaries, 1, 20);
+        when(applicationSummaryRestService.getAssessedApplications(COMPETITION_ID, "id", 0, 20, empty(), empty())).thenReturn(restSuccess(summary));
+
+        Map<String, Object> model = mockMvc.perform(get("/competition/{competitionId}/funding", COMPETITION_ID))
+                .andExpect(status().isOk())
+                .andExpect(view().name("comp-mgt-funders-panel"))
+                .andReturn().getModelAndView().getModel();
+
+        ManageFundingApplicationsViewModel viewModel = (ManageFundingApplicationsViewModel) model.get("model");
+
+        assertEquals(viewModel.getCompetitionSummary(), competitionSummaryResource);
+        assertEquals(viewModel.getResults(), summary);
+
+        verify(applicationSummaryRestService).getAssessedApplications(COMPETITION_ID, "id", 0, 20, empty(), empty());
+        verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
+    }
+
 
     private Cookie createFormCookie(FundingDecisionSelectionCookie form) throws Exception {
         String cookieContent = JsonUtil.getSerializedObject(form);

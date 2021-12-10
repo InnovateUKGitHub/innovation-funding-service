@@ -40,20 +40,22 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...             IFS-10705  B&FI question submitted
 ...
 ...             IFS-10753 Loans - Application Overview business and financial information Content
-
+...
 ...             IFS-10825 Assessor Dashboard Business and Financial Overview
 ...
 ...             IFS-10757 Loans - Application summary and Overview Content
 ...
 ...             IFS-10761 Loans - Implement redirection to Application Overview from SF using single tab
 ...
+...             IFS-10869 Loans Part B: remove unnecessary banner
+...
+
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
 Resource        ../../../resources/common/Applicant_Commons.robot
 Resource        ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Competition_Commons.robot
-
 
 *** Variables ***
 ${loan_comp_PS}                            Project setup loan comp
@@ -107,7 +109,6 @@ the user can open the sales force new tab on clicking conitnue button in incompl
     Then Select Window                                      title = Sign in - Innovation Funding Service
     And the user closes the last opened tab
 
-
 The user will not be able to mark the application as complete without completing business and financial information
     [Documentation]    IFS-9484  IFS-10705 IFS-10757
     Given the user clicks the button/link                       link = Back to application overview
@@ -152,7 +153,7 @@ Loan application finance overview
     Then the user should see the element   jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00%") ~ td:contains("2,468") ~ td:contains("140,632")
 
 Loan application submission
-    [Documentation]  IFS-6237  IFS-6238  IFS-9483 IFS-10825
+    [Documentation]  IFS-6237  IFS-6238  IFS-9483 IFS-10825 IFS-10869
     Given the user submits the loan application
     When the user clicks the button/link            link = View application
     Then the user should see the element            jQuery = h1:contains("Application overview")
@@ -161,17 +162,17 @@ Loan application submission
     And the user should see the element             jQuery = p:contains("We will make our decision based on: Suitability of your business to receive a loan and the quality of the project.")
     And the user reads his email                    ${lead_applicant_credentials["email"]}   Complete your application for Loan Competition   You have completed your application for Loan Competition.
 
-#Assessor can view BFI question in application
-#   [Documentation]   IFS-10825
-#   [Setup]  log in as a different user         &{internal_finance_credentials}
-#   Given moving competition to Closed          ${loan_comp_appl_id}
-#   When the user navigates to the page         ${server}/management/competition/${loan_comp_appl_id}/assessors/find
-#   And the user invites assessors to assess the loan competition
-#   And the assessors accept the invitation to assess the loans competition
-#   And the application is assigned to a assessor
-#   And The user clicks the button/link        link = ${loanApplicationName}
-#   And The user clicks the button/link       link = Business and financial information
-#   Then The user should see the element     jQuery = h1:contains("Business and financial information")
+Assessor can view BFI question in application
+   [Documentation]   IFS-10825
+   [Setup]  log in as a different user         &{internal_finance_credentials}
+   Given moving competition to Closed          ${loan_comp_appl_id}
+   When the user navigates to the page         ${server}/management/competition/${loan_comp_appl_id}/assessors/find
+   And the user invites assessors to assess the loan competition
+   And the assessors accept the invitation to assess the loans competition
+   And the application is assigned to a assessor
+   And The user clicks the button/link        link = ${loanApplicationName}
+   And The user clicks the button/link       link = Business and financial information
+   Then The user should see the element     jQuery = h1:contains("Business and financial information")
 
 Applicant complete the project setup details
     [Documentation]  IFS-6369  IFS-6285  IFS-9483  IFS-10825
@@ -241,7 +242,6 @@ Applicant checks successful and unsuccessful project status
     [Documentation]  IFS-6294
     Given log in as a different user                          &{lead_applicant_credentials}
     And the user clicks the application tile if displayed
-
     Then the applicant checks for project status
 
 Assessor can view BFI question in application
@@ -275,6 +275,7 @@ the user enters empty funding amount
 the user submits the loan application
     the user clicks the button/link           link = Application overview
     the user clicks the button/link           link = Review and submit
+    the user should not see the element       jQuery = p:contains("You must ensure that the business information and financial spreadsheet have been completed before you click submit below. Your loan application cannot be considered without these.")
     the user clicks the button/link           id = submit-application-button
     the user should see the element           link = Reopen application
 

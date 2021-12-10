@@ -109,4 +109,25 @@ public class ApplicationSummaryController {
             @PathVariable long competitionId) {
         return applicationSummaryService.getPreviousApplications(competitionId).toGetResponse();
     }
+
+    @GetMapping("/find-by-competition/{competitionId}/all-assessed")
+    public RestResult<List<Long>> getAllAssessedApplicationIdsByAssessmentPeriodId(
+            @PathVariable("competitionId") long competitionId,
+            @RequestParam(value = "filter", required = false) Optional<String> filter,
+            @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter) {
+        return applicationSummaryService.getAllAssessedApplicationIdsByAssessmentPeriodId(competitionId, filter, fundingFilter).toGetResponse();
+    }
+
+    @GetMapping("/find-by-competition/{competitionId}/assessed")
+    public RestResult<ApplicationSummaryPageResource> getAssessedApplicationSummariesByAssessmentPeriodId(
+            @PathVariable("competitionId") long competitionId,
+            @RequestParam(value = "sort", required = false) String sortBy,
+            @RequestParam(value = "page", defaultValue = "0") int pageIndex,
+            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+            @RequestParam(value = "filter", required = false) Optional<String> filter,
+            @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter,
+            @RequestParam(value = "inAssessmentReviewPanel", required = false) Optional<Boolean> inAssessmentReviewPanel) {
+        return applicationSummaryService.getAssessedApplicationSummariesByAssessmentPeriodId(competitionId, sortBy, pageIndex, pageSize, filter, fundingFilter, inAssessmentReviewPanel).toGetResponse();
+    }
+
 }

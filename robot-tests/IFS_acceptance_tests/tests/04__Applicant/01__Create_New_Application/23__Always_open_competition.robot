@@ -39,7 +39,13 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-9882 download permission error
 ...
+...               IFS-9739 Always open competitions: limit applications that appear in Funding decision
+...
 ...               IFS-10826 Loans Bug Bash - Assessor view throws ISE
+...
+...               IFS-9729 Always open competitions: assessor list of assigned applications
+...
+...               IFS-10860 Always open competitions:Assessment period display changes
 ...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -176,7 +182,7 @@ Comp admin updates the assessment period
 
 Internal user notify the assessors of their assigned applications
     [Documentation]  IFS-9008  IFS-8852  IFS-8853  IFS-9758 IFS-10825
-    Given assign the application to assessor
+    Given assign the application to assessor                 1   Always open application decision pending
     When the user clicks the button/link                     jQuery = button:contains("Notify assessors")
     And the user logs out if they are logged in
     Then the user reads his email and clicks the link        ${assessorEmail}  Applications assigned to you for competition '${webTestCompName}'  We have assigned applications for you to assess for this competition:   1
@@ -199,33 +205,66 @@ Internal user closes assessment period one
     Then the user should not see the element     jQuery = button:contains("Close assessment")
     And the user should see the element          jQuery = button:contains("Notify assessors")
 
+Internal user can not select the closed assessment periods to assign assessors
+    [Documentation]  IFS-10860
+    When the user clicks the button/link        link = Manage assessors
+    Then the element should be disabled        css = #assessment-period-0
+
+Internal user can not select the closed assessment periods to assign applications
+    [Documentation]  IFS-10860
+    Given the user clicks the button/link       link = Back to manage assessments
+    When the user clicks the button/link        link = Manage applications
+    Then the element should be disabled         css = #assessment-period-0
+
+Assessor should see batch assessment number and valid assessment dates related to assessment periods
+    [Documentation]  IFS-9729
+    Given the user clicks the button/link       link = Back to manage assessments
+    And assign the application to assessor      2   	Always open application awaiting assessment
+    When the user clicks the button/link        jQuery = button:contains("Notify assessors")
+    And log in as a different user              ${assessorEmail}   ${short_password}
+    And the user navigates to the page          ${server}/assessment/assessor/dashboard/competition/${webTestCompID}
+    Then the user should see the element        jQuery = dt:contains("Batch assessment:") + dd:contains("2")
+    And the user should see the element         jQuery = dt:contains("Accept applications deadline:")+ dd:contains("20 May 2021")
+    And the user should see the element         jQuery = dt:contains("Submit applications deadline:")+ dd:contains("20 June 2021")
+    And the user should see the element         jQuery = a:contains("Always open application awaiting assessment")
+    And the user should not see the element     jQuery = a:contains("Always open application decision pending")
+
+Assessor assess the application in assessment period 2
+    [Documentation]  IFS-9729
+    Given the user clicks the button/link                           link = Always open application awaiting assessment
+    And the user selects the radio button                           assessmentAccept  true
+    And the user clicks the button/link                             jQuery = button:contains("Confirm")
+    When the user clicks the button/link                            link = Always open application awaiting assessment
+    And the assessor adds score and feedback for every question     11
+    And Assessor submits the assessment
+    Then the user should see the element                            jQuery = li:contains("Always open application awaiting assessment") strong:contains("Recommended")
+
 Internal user sees valid information on dashboard
     [Documentation]  IFS-8849
-    When the user clicks the button/link                       link = Competition
+    Given log in as a different user                            &{ifs_admin_user_credentials}
+    When the user navigates to the page                         ${server}/management/competition/${webTestCompID}
     Then the user sees valid open ended competition details
 
 internal user inputs the decision and send the notification with feedback
-    [Documentation]  IFS-8855
+    [Documentation]  IFS-8855 IFS-9739
     Given the user inputs the funding decision for applications
+    And The user clicks the button/link                              link = Input and review funding decision
+    And the user should see the element                              jQuery =a:contains("${webTestAppID}")
+    And The user should not see the element                          jQuery =a:contains("${applicationName}")
+    And The user navigates to the page                               ${server}/management/competition/${webTestCompID}
     When the user sends notification and releases feedback
     And the user navigates to the page                               ${server}/project-setup-management/competition//${webTestCompID}/status/all
     Then the user refreshes until element appears on page            jQuery = tr div:contains("${webTestAppName}")
 
-Assessor has been assigned to the competition
-    [Documentation]  IFS-8852
-    Given log in as a different user             ${assessorEmail}   ${short_password}
-    When the user clicks the button/link         jQuery = a:contains('${webTestCompName}')
-    Then the user should see the element         jQuery = h2:contains('Assessing open-ended competitions')
-
 Comp admin manages the assessors
-    [Documentation]  IFS-8852
+    [Documentation]  IFS-8852  IFS-10860
     Given log in as a different user           &{ifs_admin_user_credentials}
     And the user navigates to the page         ${server}/management/assessment/competition/${webTestCompID}
     And the user clicks the button/link        link = Manage assessors
-    When the user clicks the button twice      jQuery = label:contains("Assessment period 1")
+    When the user clicks the button twice      jQuery = label:contains("Assessment period 2")
     And the user clicks the button/link        jQuery = button:contains("Save and continue")
     And the user clicks the button/link        jQuery = td:contains("Another Person") ~ td a:contains("View progress")
-    Then the user should see the element       jQuery = h2:contains('Assigned') ~ div td:contains('Always open application decision pending')
+    Then the user should see the element       jQuery = h2:contains('Assigned') ~ div td:contains('Always open application awaiting assessment')
     And the user clicks the button/link        link = Back to manage assessors
     And the user clicks the button/link        link = Back to choose an assessment period to manage assessors
     And the user clicks the button/link        link = Back to manage assessments
@@ -360,10 +399,11 @@ the user adds a partner organisation and application details
     partner applicant completes the project finances     ${applicationName}  no  ${collaborator1_credentials["email"]}  ${short_password}
 
 assign the application to assessor
+    [Arguments]  ${assessmentPeriod}   ${applicationName}
     the user clicks the button/link     link = Manage applications
-    the user clicks the button twice    jQuery = label:contains("Assessment period 1")
+    the user clicks the button twice    jQuery = label:contains("Assessment period ${assessmentPeriod}")
     the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user clicks the button/link     jQuery = td:contains("Always open application decision pending") ~ td a:contains("View progress")
+    the user clicks the button/link     jQuery = td:contains("${applicationName}") ~ td a:contains("View progress")
     the user selects the checkbox       assessor-row-1
     the user clicks the button/link     jQuery = button:contains("Add to application")
     the user clicks the button/link     link = Back to manage applications
@@ -445,3 +485,12 @@ the user should see assessment period 1
     the user should see the element     jQuery = button:contains("Notify assessors")
     the user clicks the button/link     link = Manage assessment period
     the user should see the element     jQuery = button:contains("+ Add new assessment period")
+
+Assessor submits the assessment
+    the user clicks the button/link         link = Review and complete your assessment
+    the user selects the radio button       fundingConfirmation  true
+    the user enters text to a text field    id = feedback    Assessor as a service application assessed
+    the user clicks the button/link         jQuery = .govuk-button:contains("Save assessment")
+    the user clicks the button/link         jQuery = li:contains("Always open application awaiting assessment") label[for^="assessmentIds"]
+    the user clicks the button/link         jQuery = .govuk-button:contains("Submit assessments")
+    the user clicks the button/link         jQuery = button:contains("Yes I want to submit the assessments")
