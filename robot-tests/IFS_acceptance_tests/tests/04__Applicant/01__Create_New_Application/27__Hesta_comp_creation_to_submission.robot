@@ -240,7 +240,6 @@ Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
     Connect to database  @{database}
-
 Custom Suite Teardown
     the user closes the browser
     Disconnect from database
@@ -257,7 +256,7 @@ assign the application to assessor
     the user clicks the button/link     link = Competition
     the user clicks the button/link     link = Input and review funding decision
     the user should see the element     jQuery =td:contains("${hestaApplicationName}")
-#    The user should not see the element   jQuery =td:contains("${newHestaApplicationName}")
+    The user should not see the element   jQuery =td:contains("${newHestaApplicationName}")
 
 comp admin sends invite to assesor
     the user clicks the button/link          link = Invite assessors to assess the competition
