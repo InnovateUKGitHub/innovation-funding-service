@@ -28,18 +28,18 @@ spec:
             - containerPort: 3000
           resources:
             limits:
-              cpu: 5000m
-              memory: 5000M
+              cpu: 3000m
+              memory: 3000M
             requests:
-              cpu: 4000m
-              memory: 4000M
+              cpu: 400m
+              memory: 400M
           env:
             - name: NODE_MAX_SESSION
               value: "20"
             - name: NODE_MAX_INSTANCES
               value: "20"
             - name: NODE_REGISTER_CYCLE
-              value: "5000"
+              value: "600"
             - name: DBUS_SESSION_BUS_ADDRESS
               value: "/dev/null"
             - name: SCREEN_WIDTH
@@ -47,6 +47,6 @@ spec:
             - name: SCREEN_HEIGHT
               value: "5000"
             - name: JAVA_TOOL_OPTIONS
-              value: "-Xms1536m -Xmx1536m"
+              value: "-Xms1024m -Xmx1024m"
             - name: POOL_MAX
               value: "30000"
