@@ -31,8 +31,8 @@ spec:
               cpu: 3000m
               memory: 3000M
             requests:
-              cpu: 2000m
-              memory: 1200M
+              cpu: 800m
+              memory: 800M
           env:
             - name: NODE_MAX_SESSION
               value: "20"
