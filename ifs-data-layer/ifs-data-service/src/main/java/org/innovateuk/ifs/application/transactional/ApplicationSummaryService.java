@@ -71,4 +71,22 @@ public interface ApplicationSummaryService {
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @SecuredBySpring(value = "READ", description = "Internal users can see all previous applications across the whole system", securedType = ApplicationSummaryPageResource.class)
     ServiceResult<List<PreviousApplicationResource>> getPreviousApplications(long competitionId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
+    @SecuredBySpring(value = "READ", description = "Internal users can see all submitted Application ids across the whole system", securedType = ApplicationSummaryPageResource.class)
+    ServiceResult<List<Long>> getAllAssessedApplicationIdsByAssessmentPeriodId(long competitionId,
+                                                                           Optional<String> filter,
+                                                                           Optional<FundingDecisionStatus> fundingFilter);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
+    @SecuredBySpring(value = "READ", description = "Internal users can see all submitted Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)
+    ServiceResult<ApplicationSummaryPageResource> getAssessedApplicationSummariesByAssessmentPeriodId(long competitionId,
+                                                                                                  String sortBy,
+                                                                                                  int pageIndex,
+                                                                                                  int pageSize,
+                                                                                                  Optional<String> filter,
+                                                                                                  Optional<FundingDecisionStatus> fundingFilter,
+                                                                                                  Optional<Boolean> inAssessmentReviewPanel);
+
+
 }

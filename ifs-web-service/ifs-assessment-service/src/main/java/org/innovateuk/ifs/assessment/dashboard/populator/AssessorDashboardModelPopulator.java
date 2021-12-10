@@ -106,7 +106,7 @@ public class AssessorDashboardModelPopulator {
     private List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions(List<CompetitionParticipantResource> participantListWithAssessmentPeriod) {
         return participantListWithAssessmentPeriod.stream()
                 .filter(CompetitionParticipantResource::isAccepted)
-                .filter(competitionParticipant -> isInAssessment(competitionParticipant))
+                .filter(competitionParticipant -> isInAssessment(competitionParticipant) && isInAssessmentPeriod(competitionParticipant))
                 .map(cpr -> new AssessorDashboardActiveCompetitionViewModel(
                         cpr.getCompetitionId(),
                         cpr.getCompetitionName(),
@@ -125,6 +125,13 @@ public class AssessorDashboardModelPopulator {
 
     private boolean isInAssessment(CompetitionParticipantResource competitionParticipant) {
         return competitionParticipant.getAssessmentPeriod().isInAssessment();
+    }
+
+    private boolean isInAssessmentPeriod(CompetitionParticipantResource competitionParticipant) {
+        return !competitionParticipant.isCompetitionAlwaysOpen() || (
+                        competitionParticipant.getSubmittedAssessments() > 0 ||
+                        competitionParticipant.getTotalAssessments() - competitionParticipant.getPendingAssessments() > 0 ||
+                        competitionParticipant.getPendingAssessments() > 0);
     }
 
     private List<AssessorDashboardUpcomingCompetitionViewModel> getUpcomingCompetitions(List<CompetitionParticipantResource> participantListWithAssessmentPeriod) {
