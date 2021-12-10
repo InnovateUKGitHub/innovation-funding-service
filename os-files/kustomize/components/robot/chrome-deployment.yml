@@ -31,8 +31,8 @@ spec:
               cpu: 3000m
               memory: 3000M
             requests:
-              cpu: 400m
-              memory: 400M
+              cpu: 2000m
+              memory: 1200M
           env:
             - name: NODE_MAX_SESSION
               value: "20"
@@ -47,6 +47,6 @@ spec:
             - name: SCREEN_HEIGHT
               value: "5000"
             - name: JAVA_TOOL_OPTIONS
-              value: "-Xms1024m -Xmx1024m"
+              value: "-Xms1536m -Xmx1536m"
             - name: POOL_MAX
               value: "30000"
