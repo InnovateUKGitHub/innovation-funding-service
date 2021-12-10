@@ -83,8 +83,8 @@ function startPybot() {
         local includeZapTags='--exclude ZAPTests'
     fi
 
-    echo "**********TEST 4444**********"
-    pabot --processes 4 --xunit output-xunit.xml --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs \
+    echo "**********TEST 5555**********"
+    pabot --processes 5 --xunit output-xunit.xml --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs \
     -v docker:1 \
     -v SERVER_BASE:${webBase} \
     -v PROTOCOL:'https://' \
