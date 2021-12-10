@@ -357,7 +357,7 @@ dryRun=0
 openReports=1
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":q :h :t :r :c :w :d: :x :R :B :I: :E: :a :o :p" opt ; do
+while getopts ":q :h :t :r :c :w :d: :x :R :B :I: :E: :a :o" opt ; do
     case ${opt} in
         q)
             quickTest=1
