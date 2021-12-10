@@ -239,7 +239,7 @@ The internal user is able to progress an application to project set up
     the user clicks the button/link                             css = button[data-js-modal="send-to-all-applicants-modal"]
     the user clicks the button/link                             jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
     #The sleep is necessary as the email is not delivering even after specified time
-    sleep  120s
+    sleep  300s
     the user refreshes until h2020 element appears on page      jQuery = td:contains("Project name") ~ td:contains("Sent")
     the user clicks the button/link                             link = Competition
     the user clicks the button/link                             link = Manage funding notifications
@@ -561,7 +561,7 @@ the user is able to filter on status
 
 the user refreshes until h2020 element appears on page
     [Arguments]  ${selector}
-    Wait Until Keyword Succeeds Without Screenshots     120s   1s   reload and check if h2020 element appears    ${selector}
+    Wait Until Keyword Succeeds Without Screenshots     240s   1s   reload and check if h2020 element appears    ${selector}
 
 reload and check if h2020 element appears
     [Arguments]  ${selector}
