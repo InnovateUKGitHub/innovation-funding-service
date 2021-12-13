@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.assessmentperiod.populator;
 
-import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.commons.resource.PageResource;
 import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,7 +32,7 @@ public class AssessmentPeriodFormPopulator {
         List<AssessmentPeriodForm> assessmentPeriods = IntStream.range(0, assessmentPeriodResources.getContent().size())
                 .mapToObj(index -> {
                     AssessmentPeriodResource assessmentPeriod = assessmentPeriodResources.getContent().get(index);
-                    LinkedMap<String, MilestoneRowForm> milestoneFormEntries = new LinkedMap<>();
+                    Map<String, MilestoneRowForm> milestoneFormEntries = new LinkedHashMap<>();
                     periodIdToMilestoneMap.get(assessmentPeriod.getId()).forEach(milestone ->
                             milestoneFormEntries.put(milestone.getType().name(), populateMilestoneFormEntries(milestone))
                     );

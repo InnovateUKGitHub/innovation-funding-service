@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.competition.setup.milestone.populator;
 
-import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -17,7 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -51,7 +52,7 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
                     .collect(Collectors.toList());
         }
 
-        LinkedMap<String, GenericMilestoneRowForm> milestoneFormEntries = new LinkedMap<>();
+        Map<String, GenericMilestoneRowForm> milestoneFormEntries = new LinkedHashMap<>();
         milestonesByCompetition.stream().forEachOrdered(milestone ->
             milestoneFormEntries.put(milestone.getType().name(), populateMilestoneFormEntries(milestone, competitionResource))
         );
