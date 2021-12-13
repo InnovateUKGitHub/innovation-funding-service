@@ -334,4 +334,41 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
 
         verify(applicationSummaryService).getIneligibleApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, of(strFilter), of(informFilter));
     }
+
+    @Test
+    public void getAllAssessedApplicationIdsByAssessmentPeriodId() throws Exception {
+        long competitionId = 3L;
+        String strFilter = "filter";
+        FundingDecisionStatus fundingFilter = FUNDED;
+
+        List<Long> applicationIds = asList(1L, 2L);
+
+        when(applicationSummaryService.getAllAssessedApplicationIdsByAssessmentPeriodId(competitionId, of(strFilter), of(fundingFilter))).thenReturn(serviceSuccess(applicationIds));
+
+        mockMvc.perform(get("/application-summary/find-by-competition/{compId}/all-assessed",competitionId)
+                .param("all", "")
+                .param("filter", strFilter)
+                .param("fundingFilter", fundingFilter.toString()))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(applicationIds)));
+
+        verify(applicationSummaryService).getAllAssessedApplicationIdsByAssessmentPeriodId(competitionId, of(strFilter), of(fundingFilter));
+    }
+
+    @Test
+    public void getAssessedApplicationSummariesByAssessmentPeriodId() throws Exception {
+        long competitionId = 3L;
+        int page = 6;
+
+        ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+
+        when(applicationSummaryService.getAssessedApplicationSummariesByAssessmentPeriodId(competitionId, null, page, PAGE_SIZE, empty(), empty(), empty())).thenReturn(serviceSuccess(resource));
+
+        mockMvc.perform(get("/application-summary/find-by-competition/{compId}/assessed",competitionId)
+                .param("page",Integer.toString(page)))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(resource)));
+
+        verify(applicationSummaryService).getAssessedApplicationSummariesByAssessmentPeriodId(competitionId, null, page, PAGE_SIZE, empty(), empty(), empty());
+    }
 }

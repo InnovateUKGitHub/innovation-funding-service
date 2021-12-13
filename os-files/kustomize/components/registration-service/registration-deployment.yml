@@ -64,6 +64,11 @@ spec:
                 configMapKeyRef:
                   name: ldap-config
                   key: LDAP_URL
+            - name: SHIBBOLETH_LDAP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: ldap-config
+                  key: LDAP_URL
             - name: SHIBBOLETH_LDAP_PORT
               valueFrom:
                 configMapKeyRef:
@@ -80,6 +85,11 @@ spec:
                   name: shibboleth-config
                   key: SHIBBOLETH_LDAP_USER
             - name: LDAP_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: ldap-config
+                  key: LDAP_PASSWORD
+            - name: SHIBBOLETH_LDAP_PASSWORD
               valueFrom:
                 configMapKeyRef:
                   name: ldap-config

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.testdata.services;
 
 import com.google.common.base.Splitter;
 import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
@@ -781,11 +782,11 @@ public class CsvUtils {
     public static List<List<String>> readCsvLines(String csvName) {
         try {
             File file = new File(CsvUtils.class.getResource("/testdata/" + csvName + ".csv").toURI());
-            CSVReader reader = new CSVReader(new FileReader(file), ',', '"');
+            CSVReader reader = new CSVReader(new FileReader(file));
             List<String[]> data = reader.readAll();
             List<List<String>> lists = simpleMap(data, Arrays::asList);
             return lists.subList(1, lists.size());
-        } catch (URISyntaxException | IOException e) {
+        } catch (URISyntaxException | IOException | CsvException e) {
             throw new RuntimeException(e);
         }
     }

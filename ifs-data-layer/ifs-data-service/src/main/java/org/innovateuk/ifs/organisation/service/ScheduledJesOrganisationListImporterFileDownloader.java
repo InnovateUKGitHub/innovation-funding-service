@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.organisation.service;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
@@ -8,9 +7,12 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -38,7 +40,9 @@ class ScheduledJesOrganisationListImporterFileDownloader {
         return createTemporaryDownloadFile().andOnSuccess(temporaryDownloadFile -> {
 
             try {
-                FileUtils.copyURLToFile(jesSourceFile, temporaryDownloadFile, connectionTimeoutMillis, readTimeoutMillis);
+                ReadableByteChannel readableByteChannel = Channels.newChannel(jesSourceFile.openStream());
+                FileOutputStream fileOutputStream = new FileOutputStream(temporaryDownloadFile);
+                fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
                 return serviceSuccess(temporaryDownloadFile);
             } catch (IOException e) {
                 return createServiceFailureFromIoException(e);
