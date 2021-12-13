@@ -49,4 +49,7 @@ public interface ProjectDetailsService {
 
     @PreAuthorize("hasPermission(#inviteResource, 'SEND_PROJECT_INVITE')")
     ServiceResult<Void> inviteProjectManager(Long projectId, ProjectUserInviteResource inviteResource);
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_PROJECT_SETUP_COMPLETE_DATE')")
+    ServiceResult<Void> updateLoansProjectSetupCompleteDate(Long projectId);
 }

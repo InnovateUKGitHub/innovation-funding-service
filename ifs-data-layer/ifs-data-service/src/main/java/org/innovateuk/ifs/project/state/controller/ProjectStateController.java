@@ -52,8 +52,7 @@ public class ProjectStateController {
     @PostMapping("/{projectId}/successful")
     public RestResult<Void> markAsSuccessful(@PathVariable("projectId") final long projectId,
                                              @RequestParam(value="projectStartDate", required=false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate projectStartDate) {
-        return projectStartDate == null ? projectStateService.markAsSuccessful(projectId).toPostWithBodyResponse() :
-                projectStateService.markAsSuccessful(projectId, projectStartDate).toPostWithBodyResponse();
+        return  projectStateService.markAsSuccessful(projectId, projectStartDate).toPostWithBodyResponse();
     }
 
     @PostMapping("/{projectId}/unsuccessful")

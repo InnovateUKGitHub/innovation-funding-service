@@ -44,5 +44,12 @@ public class ProjectDetailsPermissionRules extends BasePermissionRules {
     public boolean partnersCanUpdateProjectLocationForTheirOwnOrganisation(ProjectOrganisationCompositeId composite, UserResource user) {
         return partnerBelongsToOrganisation(composite.getProjectId(), user.getId(), composite.getOrganisationId());
     }
+
+    @PermissionRule(
+            value = "UPDATE_PROJECT_SETUP_COMPLETE_DATE",
+            description = "The IFS Administrator can update the project setup complete date")
+    public boolean ifsAdministratorCanUpdateTheProjectSetupCompleteDate(ProjectResource project, UserResource user) {
+        return hasIFSAdminAuthority(user) && isProjectActive(project.getId());
+    }
 }
 

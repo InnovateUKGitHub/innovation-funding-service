@@ -42,4 +42,51 @@ public class ProjectSetupCompleteForm {
         }
     }
 
+    public Boolean getSuccessful() {
+        return successful;
+    }
+
+    public void setSuccessful(Boolean successful) {
+        this.successful = successful;
+    }
+
+    public boolean isSuccessfulConfirmation() {
+        return successfulConfirmation;
+    }
+
+    public void setSuccessfulConfirmation(boolean successfulConfirmation) {
+        this.successfulConfirmation = successfulConfirmation;
+    }
+
+    public boolean isUnsuccessfulConfirmation() {
+        return unsuccessfulConfirmation;
+    }
+
+    public void setUnsuccessfulConfirmation(boolean unsuccessfulConfirmation) {
+        this.unsuccessfulConfirmation = unsuccessfulConfirmation;
+    }
+
+    public Integer getStartDateYear() {
+        return startDateYear;
+    }
+
+    public void setStartDateYear(Integer startDateYear) {
+        this.startDateYear = startDateYear;
+    }
+
+    public Integer getStartDateMonth() {
+        return startDateMonth;
+    }
+
+    public void setStartDateMonth(Integer startDateMonth) {
+        this.startDateMonth = startDateMonth;
+    }
+
+    public Integer getStartDateDay() {
+        return startDateDay;
+    }
+
+    public void setStartDateDay(Integer startDateDay) {
+        this.startDateDay = startDateDay;
+    }
 }

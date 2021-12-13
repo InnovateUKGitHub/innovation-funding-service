@@ -1,11 +1,8 @@
 package org.innovateuk.ifs.project.state.transactional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
-import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsServiceImpl;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.state.OnHoldReasonResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -98,9 +95,15 @@ public class ProjectStateServiceImpl extends BaseTransactionalService implements
         return getProject(projectId).andOnSuccess(
                 project -> getCurrentlyLoggedInUser().andOnSuccess(user ->
                         projectWorkflowHandler.markAsSuccessful(project, user) ?
-                            projectDetailsService.updateProjectStartDate(projectId, projectStartDate) :
-                            serviceFailure(PROJECT_CANNOT_BE_MARKED_AS_SUCCESSFUL))
+                                updateProjectStartAndSetupCompleteDate(projectId, projectStartDate)
+                                : serviceFailure(PROJECT_CANNOT_BE_MARKED_AS_SUCCESSFUL))
         ).andOnSuccessReturnVoid(() -> projectStateCommentsService.create(projectId, ProjectState.LIVE));
+    }
+
+    private ServiceResult<Void> updateProjectStartAndSetupCompleteDate(long projectId, LocalDate projectStartDate) {
+        return projectStartDate != null ? projectDetailsService.updateProjectStartDate(projectId, projectStartDate)
+                .andOnSuccess(() -> projectDetailsService.updateLoansProjectSetupCompleteDate(projectId))
+                : projectDetailsService.updateLoansProjectSetupCompleteDate(projectId);
     }
 
     @Override
