@@ -7,10 +7,14 @@ import org.innovateuk.ifs.project.state.transactional.ProjectStateService;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.time.LocalDate;
+
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProjectStateControllerDocumentation extends BaseControllerMockMVCTest<ProjectStateController> {
 
@@ -85,5 +89,18 @@ public class ProjectStateControllerDocumentation extends BaseControllerMockMVCTe
 
         mockMvc.perform(post("/project/{projectId}/unsuccessful", projectId)
                 .header("IFS_AUTH_TOKEN", "123abc"));
+    }
+
+    @Test
+    public void markLoansProjectAsSuccessful() throws Exception {
+        long projectId = 456L;
+        LocalDate now = LocalDate.now();
+        LocalDate projectStartDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
+
+        when(projectStateService.markAsSuccessful(projectId, projectStartDate)).thenReturn(serviceSuccess());
+        mockMvc.perform(post("/project/{projectId}/loans-successful", projectId)
+                .param("projectStartDate", String.valueOf(projectStartDate))
+                .header("IFS_AUTH_TOKEN", "123abc"));
+
     }
 }
