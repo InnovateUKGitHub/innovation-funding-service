@@ -1191,6 +1191,28 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         verify(projectInviteMapperMock).mapToDomain(inviteResource);
     }
 
+    @Test
+    public void updateLoanProjectSetupCompleteDate() {
+
+        Competition competition = newCompetition()
+                .withFundingType(FundingType.LOAN)
+                .build();
+        Application application = newApplication()
+                .withCompetition(competition)
+                .build();
+        Project existingProject = newProject()
+                .withApplication(application)
+                .build();
+        assertNull(existingProject.getOfferSubmittedDate());
+
+        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(existingProject));
+        ServiceResult<Void> updateResult = service.updateLoansProjectSetupCompleteDate(123L);
+        assertTrue(updateResult.isSuccess());
+
+        verify(projectRepositoryMock, times(1)).findById(123L);
+        assertNotNull(existingProject.getOfferSubmittedDate());
+    }
+
     @Override
     protected ProjectDetailsService supplyServiceUnderTest() {
         ProjectDetailsServiceImpl projectDetailsService =  new ProjectDetailsServiceImpl();
