@@ -151,17 +151,17 @@ Comp admin can see default empty assessment periods
 
 Comp admin creates a new assessment period
     [Documentation]  IFS-9759  IFS-9760  IFS-10943
-    Given the user clicks the button/link                    link = Manage assessment period
+    Given the user clicks the button/link                   link = Manage assessment period
     When the user create a new assessment period
-    And the user create a new assessment period 1            1  12  14  16   11  2100
-    And the user create a new assessment period 2            2  12  14  16   10  2100
-    And the user create a new assessment period 3            3  12  14  16   9  2100
-    And the user create a new assessment period 4            4  12  14  16   8  2100
-    And the user create a new assessment period 5            5  12  14  16   7  2100
+    And the user create a new assessment period 1           1  12  14  16   11  2100
+    And the user create a new assessment period 1           2  12  14  16   10  2100
+    And the user create a new assessment period 1           3  12  14  16   9  2100
+    And the user create a new assessment period 1           4  12  14  16   8  2100
+    And the user create a new assessment period 1           5  12  14  16   7  2100
     Then the user should see assessment period 1
-    And The user clicks the button/link                      link = Manage assessors
-    And the user selects the index from the drop-down menu   1 css = .govuk-select govuk-input--error
-    And The user should see the element                      css = .govuk-select govuk-input--error
+    And The user clicks the button/link                     link = Manage assessors
+    And the user selects the index from the drop-down menu  1 css = .govuk-select govuk-input--error
+    And The user should see the element                     css = .govuk-select govuk-input--error
 
 Internal user should see the same dates entered in choose assessment period dropdowns even after notify assessor
     [Documentation]  IFS-10943
@@ -491,58 +491,6 @@ the user create a new assessment period 1
     the user enters text to a text field     assessmentPeriods${assessmentNumber}.milestoneEntriesASSESSOR_DEADLINE.year    ${year}
     the user clicks the button/link          jQuery = button:contains('Save and return to manage assessments')
 
-#the user create a new assessment period 2
-#    the user clicks the button/link          link = Manage assessment period
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.day  12
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.month  10
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.year  2100
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.day  14
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.month  10
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.year  2100
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.day  16
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.month  10
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.year  2100
-#    the user clicks the button/link          jQuery = button:contains('Save and return to manage assessments')
-#
-#the user create a new assessment period 3
-#    the user clicks the button/link          link = Manage assessment period
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.day  12
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.month  09
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.year  2100
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.day  14
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.month  09
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.year  2100
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.day  16
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.month  09
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.year  2100
-#    the user clicks the button/link          jQuery = button:contains('Save and return to manage assessments')
-#
-#the user create a new assessment period 4
-#    the user clicks the button/link          link = Manage assessment period
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.day  12
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.month  08
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.year  2100
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.day  14
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.month  08
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.year  2100
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.day  16
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.month  08
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.year  2100
-#    the user clicks the button/link          jQuery = button:contains('Save and return to manage assessments')
-#
-#the user create a new assessment period 5
-#    the user clicks the button/link          link = Manage assessment period
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.day  12
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.month  07
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.year  2100
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.day  14
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.month  07
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.year  2100
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.day  16
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.month  07
-#    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.year  2100
-#    the user clicks the button/link          jQuery = button:contains('Save and return to manage assessments')
-
 the user should see assessment period 1
     the user should see the element     jQuery = td:contains("1. Assessor briefing") ~ td:contains("12/12/2100")
     the user should see the element     jQuery = td:contains("2. Assessor accepts") ~ td:contains("14/12/2100")
@@ -550,6 +498,7 @@ the user should see assessment period 1
     the user should see the element     jQuery = button:contains("Notify assessors")
     the user clicks the button/link     link = Manage assessment period
     the user should see the element     jQuery = button:contains("+ Add new assessment period")
+    the user clicks the button/link     link = Back to manage assessments
 
 Assessor submits the assessment
     the user clicks the button/link         link = Review and complete your assessment
