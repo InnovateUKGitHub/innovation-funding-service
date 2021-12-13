@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.assessmentperiod.form;
 
-import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestoneRowForm;
 
@@ -10,9 +9,9 @@ public class AssessmentPeriodForm extends BaseBindingResultTarget {
 
     private Long assessmentPeriodId;
     private int index;
-    private LinkedMap<String, MilestoneRowForm> milestoneEntries;
+    private Map<String, MilestoneRowForm> milestoneEntries;
 
-    public void setMilestoneEntries(LinkedMap<String, MilestoneRowForm> milestoneEntries) {
+    public void setMilestoneEntries(Map<String, MilestoneRowForm> milestoneEntries) {
         this.milestoneEntries = milestoneEntries;
     }
 
