@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.registration.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
@@ -42,7 +43,6 @@ import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.Re
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorRegistrationController.class)
 @PreAuthorize("permitAll")
 public class AssessorRegistrationController {
-    private static final Log LOG = LogFactory.getLog(AssessorRegistrationController.class);
 
     private static final String FORM_ATTR_NAME = "form";
 
