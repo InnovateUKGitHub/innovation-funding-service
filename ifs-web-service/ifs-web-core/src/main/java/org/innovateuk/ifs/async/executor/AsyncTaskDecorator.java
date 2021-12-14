@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.async.executor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskDecorator;
 import org.springframework.stereotype.Component;
@@ -18,10 +19,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.zip;
  * for copying over a specific ThreadLocal property onto a child thread, and then also for cleaning up afterwards.
  * This lifecycle is controlled by {@link AsyncTaskDecorator} as new @Async handling Threads are produced.
  */
+@Slf4j
 @Component
 public class AsyncTaskDecorator implements TaskDecorator {
-
-    private static final Log LOG = LogFactory.getLog(AsyncTaskDecorator.class);
 
     @Autowired
     private List<AsyncThreadLocalCopier<?>> threadLocalCopiers;
@@ -36,9 +36,9 @@ public class AsyncTaskDecorator implements TaskDecorator {
         return () -> {
             try {
 
-                if (LOG.isTraceEnabled()) {
+                if (log.isTraceEnabled()) {
                     String childThreadName = Thread.currentThread().getName();
-                    LOG.trace("Thread " + parentThreadName + " spawning Thread " + childThreadName + "...");
+                    log.trace("Thread " + parentThreadName + " spawning Thread " + childThreadName + "...");
                 }
 
                 copyParentThreadLocalsToChildThread(originalThreadLocalValues);
@@ -64,7 +64,7 @@ public class AsyncTaskDecorator implements TaskDecorator {
             try {
                 copier.clearCopiedValueFromAsyncThread();
             } catch (Exception e) {
-                LOG.error("Error whilst clearing ThreadLocal from async Thread - continuing to next clearance", e);
+                log.error("Error whilst clearing ThreadLocal from async Thread - continuing to next clearance", e);
             }
         });
     }

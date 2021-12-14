@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.workflow;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.domain.Process;
@@ -25,14 +26,13 @@ import static org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction.testi
  * workflows
  */
 @SuppressWarnings("unchecked")
+@Slf4j
 public abstract class BaseWorkflowEventHandler<
         ProcessType extends Process<ParticipantType, TargetType, StateType>,
         StateType extends ProcessState,
         EventType extends ProcessEvent,
         TargetType extends ProcessActivity,
         ParticipantType> {
-
-    private static final Log LOG = LogFactory.getLog(BaseWorkflowEventHandler.class);
 
     protected GenericPersistStateMachineHandler<StateType, EventType> stateHandler;
 
@@ -57,11 +57,11 @@ public abstract class BaseWorkflowEventHandler<
                               Transition<StateType, EventType> transition, StateMachine<StateType, EventType> stateMachine) {
 
             if (testingStateTransition(message)) {
-                LOG.debug("TESTING STATE CHANGE: " + state.getId() + " transition: " + transition + " message: " + message + " transition: " + transition + " stateMachine " + stateMachine.getClass().getName());
+                log.debug("TESTING STATE CHANGE: " + state.getId() + " transition: " + transition + " message: " + message + " transition: " + transition + " stateMachine " + stateMachine.getClass().getName());
                 return;
             }
 
-            LOG.debug("STATE: " + state.getId() + " transition: " + transition + " message: " + message + " transition: " + transition + " stateMachine " + stateMachine.getClass().getName());
+            log.debug("STATE: " + state.getId() + " transition: " + transition + " message: " + message + " transition: " + transition + " stateMachine " + stateMachine.getClass().getName());
 
             ProcessType processToUpdate = getOrCreateProcess(message);
             getParticipant(message).ifPresent(processToUpdate::setParticipant);

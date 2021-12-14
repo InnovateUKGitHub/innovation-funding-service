@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.validator;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.validation.ApplicationValidatorService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
@@ -19,8 +20,8 @@ import static org.innovateuk.ifs.commons.error.Error.globalError;
 
 @SuppressWarnings("unchecked")
 @Component
+@Slf4j
 public class FinanceValidationUtil {
-    private final static Log LOG = LogFactory.getLog(FinanceValidationUtil.class);
 
     @Autowired
     private ApplicationValidatorService applicationValidatorService;
@@ -66,10 +67,10 @@ public class FinanceValidationUtil {
 
     private ValidationMessages buildValidationMessages(FinanceRowItem costItem, BeanPropertyBindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("validated, with messages: ");
-                bindingResult.getFieldErrors().stream().forEach(e -> LOG.debug("Field Error: " + e.getRejectedValue() + e.getDefaultMessage()));
-                bindingResult.getAllErrors().stream().forEach(e -> LOG.debug("Error: " + e.getObjectName() + e.getDefaultMessage()));
+            if (log.isDebugEnabled()) {
+                log.debug("validated, with messages: ");
+                bindingResult.getFieldErrors().stream().forEach(e -> log.debug("Field Error: " + e.getRejectedValue() + e.getDefaultMessage()));
+                bindingResult.getAllErrors().stream().forEach(e -> log.debug("Error: " + e.getObjectName() + e.getDefaultMessage()));
             }
             return new ValidationMessages(costItem.getId(), bindingResult);
         } else {

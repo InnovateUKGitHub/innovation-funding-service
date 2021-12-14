@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.supporters.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.supporter.resource.AssignSupportersResource;
 import org.innovateuk.ifs.supporter.service.SupporterAssignmentRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -26,13 +27,12 @@ import java.util.function.Supplier;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
+@Slf4j
 @Controller
 @RequestMapping("/competition/{competitionId}/supporters/assign/{applicationId}")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = AssignSupportersController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSIGN_SUPPORTERS')")
 public class AssignSupportersController extends CompetitionManagementCookieController<SupporterSelectionForm> {
-
-    private static final Log LOG = LogFactory.getLog(AssignSupportersController.class);
 
     private static final String SELECTION_FORM = "supporterSelectionForm";
 
@@ -141,7 +141,7 @@ public class AssignSupportersController extends CompetitionManagementCookieContr
             saveFormToCookie(response, applicationId, selectionForm);
             return createJsonObjectNode(selectionForm.getSelectedSupporterIds().size(), selectionForm.isAllSelected(), limitExceeded);
         } catch (Exception e) {
-            LOG.error("exception thrown selecting supporters for list", e);
+            log.error("exception thrown selecting supporters for list", e);
             return createFailureResponse();
         }
     }
@@ -171,7 +171,7 @@ public class AssignSupportersController extends CompetitionManagementCookieContr
 
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedSupporterIds().size(), selectionForm.isAllSelected(), false);
         } catch (Exception e) {
-            LOG.error("exception thrown adding supporters to list", e);
+            log.error("exception thrown adding supporters to list", e);
 
             return createFailureResponse();
         }

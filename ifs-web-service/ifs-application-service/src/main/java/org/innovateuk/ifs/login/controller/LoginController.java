@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.login.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -25,7 +26,7 @@ import java.util.List;
  * This controller handles user login, logout and authentication / authorization.
  * It will also redirect the user after the login/logout is successful.
  */
-
+@Slf4j
 @Controller
 @Configuration
 @SecuredBySpring(value = "Controller", description = "Anyone can access the login controller", securedType = LoginController.class)
@@ -36,8 +37,6 @@ public class LoginController {
     public static final String RESET_PASSWORD_FORM = "reset-password-form";
     public static final String RESET_PASSWORD_NOTIFICATION_SEND = "reset-password-notification-send";
     public static final String PASSWORD_CHANGED = "password-changed";
-
-    private static final Log LOG = LogFactory.getLog(LoginController.class);
 
     private UserService userService;
     private UserRestService userRestService;
@@ -62,7 +61,7 @@ public class LoginController {
             model.addAttribute("resetPasswordRequestForm", resetPasswordRequestForm);
             return LOGIN_BASE + "/" + RESET_PASSWORD;
         } else {
-            LOG.warn("Reset password for: " + resetPasswordRequestForm.getEmail());
+            log.warn("Reset password for: " + resetPasswordRequestForm.getEmail());
             userService.sendPasswordResetNotification(resetPasswordRequestForm.getEmail());
             return LOGIN_BASE + "/" + RESET_PASSWORD_NOTIFICATION_SEND;
         }

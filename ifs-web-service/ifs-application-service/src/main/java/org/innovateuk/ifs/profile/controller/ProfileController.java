@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.profile.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
@@ -29,13 +30,12 @@ import static java.util.Optional.ofNullable;
 /**
  * This controller will handle all requests that are related to a user profile.
  */
-
+@Slf4j
 @Controller
 @RequestMapping("/profile")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ProfileController.class)
 @PreAuthorize("hasAnyAuthority('applicant, monitoring_officer')")
 public class ProfileController {
-    private static final Log LOG = LogFactory.getLog(ProfileController.class);
 
     private UserService userService;
 

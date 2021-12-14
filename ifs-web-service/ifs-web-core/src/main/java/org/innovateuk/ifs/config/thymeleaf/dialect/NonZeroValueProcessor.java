@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.config.thymeleaf.dialect;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.exception.IntegerNumberFormatException;
 import org.innovateuk.ifs.util.NumberUtils;
 import org.thymeleaf.context.ITemplateContext;
@@ -25,11 +26,10 @@ import java.math.BigDecimal;
  *
  * Basically the same as org.thymeleaf.spring4.processor.attr.SpringValueAttrProcessor but the with replacing the zero.
  */
+@Slf4j
 public final class NonZeroValueProcessor
         extends AbstractStandardExpressionAttributeTagProcessor
         implements IAttributeDefinitionsAware {
-
-    private static final Log LOG = LogFactory.getLog(NonZeroValueProcessor.class);
 
     // This is 1010 in order to make sure it is executed after "name" and "type"
     public static final int PRECEDENCE = 1010;
@@ -98,7 +98,7 @@ public final class NonZeroValueProcessor
             decimal = NumberUtils.getBigDecimalValue(newValue, BigDecimal.ZERO);
         } catch (IntegerNumberFormatException e) {
             // Ignore number format exceptions..
-            LOG.trace(e);
+            log.trace(e.getMessage(), e);
         }
 
         if (StringUtils.isEmpty(newValue) || decimal.equals(BigDecimal.ZERO)) {

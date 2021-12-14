@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.registration.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
@@ -28,6 +29,7 @@ import java.util.concurrent.Executor;
 
 import static java.lang.String.format;
 
+@Slf4j
 @Component
 public class OrganisationJourneyEnd {
 
@@ -65,13 +67,11 @@ public class OrganisationJourneyEnd {
     @Value("${ifs.new.organisation.search.enabled:false}")
     private Boolean newOrganisationSearchEnabled;
 
-    private static final Log LOG = LogFactory.getLog(OrganisationJourneyEnd.class);
-
     public String completeProcess(HttpServletRequest request, HttpServletResponse response, UserResource user, long organisationId) {
 
         if (user != null) {
             if(newOrganisationSearchEnabled) {
-                LOG.error("JE: " +Thread.currentThread().getName());
+                log.error("JE: " +Thread.currentThread().getName());
                 updateExistingCompaniesHouseData(organisationId);
             }
             return handleExistingUser(request, response, user, organisationId);

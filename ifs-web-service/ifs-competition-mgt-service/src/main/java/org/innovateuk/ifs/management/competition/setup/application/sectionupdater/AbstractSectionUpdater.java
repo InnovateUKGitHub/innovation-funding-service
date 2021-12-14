@@ -16,8 +16,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
  */
 public abstract class AbstractSectionUpdater implements CompetitionSetupUpdater {
 
-    private static final Log LOG = LogFactory.getLog(AbstractSectionUpdater.class);
-
     public ServiceResult<Void> saveSection(CompetitionResource competitionResource, CompetitionSetupForm competitionSetupForm, UserResource loggedInUser) {
         if(!sectionToSave().preventEdit(competitionResource, loggedInUser)) {
             return doSaveSection(competitionResource, competitionSetupForm, loggedInUser);

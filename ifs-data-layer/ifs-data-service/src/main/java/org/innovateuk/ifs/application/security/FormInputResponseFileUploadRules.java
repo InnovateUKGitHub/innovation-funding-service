@@ -16,9 +16,6 @@ import org.springframework.stereotype.Component;
 @PermissionRules
 public class FormInputResponseFileUploadRules extends BasePermissionRules {
 
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(FormInputResponseFileUploadRules.class);
-
     @Autowired
     private ApplicationSecurityHelper applicationSecurityHelper;
 
