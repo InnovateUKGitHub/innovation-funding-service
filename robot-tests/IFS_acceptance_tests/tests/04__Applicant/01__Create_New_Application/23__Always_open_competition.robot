@@ -169,14 +169,14 @@ Comp admin creates a new assessment period
     And the user create a new assessment period 1           5  12  14  16   7  2100
     Then the user should see assessment period 1
     And The user clicks the button/link                     link = Manage assessors
-    And the user selects the index from the drop-down menu  1  css = .govuk-select govuk-input--error
+    And the user clicks the button/link                     jQuery = button:contains("Save and continue")
     And The user should see the element                     css = .govuk-select govuk-input--error
 
 Internal user should see the same dates entered in choose assessment period dropdowns even after notify assessor
     [Documentation]  IFS-10943
-    Given the user clicks the button/link   jQuery = Back to manage assessments
+    Given the user clicks the button/link   link = Back to manage assessments
     When the user clicks the button/link    jQuery = button:contains("Notify assessors")
-    And the user clicks the button/link     jQuery = Manage applications
+    And the user clicks the button/link     link = Manage applications
     Then the user should see the element    jQuery = option:contains("Assessment period 1: 12 December to 16 December 2100")
 
 Lead applicant checks the dashboard content and the guidance after an assessor is assigned to the application
