@@ -23,7 +23,6 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 public class SectionServiceImplTest extends BaseUnitTestMocksTest {
-    private final Log log = LogFactory.getLog(getClass());
 
     @Mock
     SectionMapper sectionMapper;

@@ -25,8 +25,6 @@ public class DatabaseTestHelper {
     @Value("${spring.flyway.password}")
     private String databasePassword;
 
-    private static final Log LOG = LogFactory.getLog(DatabaseTestHelper.class);
-
     /**
      * Assert that no database changes occur during the running of the given action
      */
