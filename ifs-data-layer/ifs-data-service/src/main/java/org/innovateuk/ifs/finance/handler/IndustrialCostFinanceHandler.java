@@ -26,7 +26,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  */
 @Component
 public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHandler implements OrganisationTypeFinanceHandler {
-    private static final Log LOG = LogFactory.getLog(IndustrialCostFinanceHandler.class);
 
     private Map<FinanceRowType, FinanceRowHandler<?>> financeRowHandlers;
 

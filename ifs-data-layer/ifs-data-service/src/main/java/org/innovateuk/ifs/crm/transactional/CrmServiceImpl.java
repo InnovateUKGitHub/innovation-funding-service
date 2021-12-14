@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.crm.transactional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
@@ -52,10 +53,10 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 
+@Slf4j
 @Service
 public class CrmServiceImpl implements CrmService {
 
-    private static final Log LOG = LogFactory.getLog(CrmServiceImpl.class);
     @Autowired
     private BaseUserService userService;
 
@@ -166,7 +167,7 @@ public class CrmServiceImpl implements CrmService {
         } else {
             if (isLoanPartBEnabled) {
                 SilLoanApplication loanApplication = setLoanApplication(application);
-                LOG.info(format("Updating CRM application for appId:%s state:%s, payload:%s", loanApplication.getApplicationID(), application.getApplicationState(), loanApplication));
+                log.info(format("Updating CRM application for appId:%s state:%s, payload:%s", loanApplication.getApplicationID(), application.getApplicationState(), loanApplication));
                 return silCrmEndpoint.updateLoanApplicationState(loanApplication);
             } else {
                 return serviceSuccess();
@@ -192,7 +193,7 @@ public class CrmServiceImpl implements CrmService {
 
     private FailingOrSucceedingResult<Void, ServiceFailure> getSilContactEmailAndOrganisationNameAndUpdateContact(SilContact silContact) {
         stripAttributesNotNeeded(silContact, () -> !FundingType.LOAN.getDisplayName().equals(silContact.getExperienceType()));
-        LOG.info(format("Updating CRM contact %s and organisation %s %nPayload is:%s ",
+        log.info(format("Updating CRM contact %s and organisation %s %nPayload is:%s ",
                 silContact.getEmail(), silContact.getOrganisation().getName(), silContact));
         return silCrmEndpoint.updateContact(silContact);
     }
@@ -217,7 +218,7 @@ public class CrmServiceImpl implements CrmService {
                 });
                 silLoanAssessment.setApplications(silLoanAssessmentRows);
                 if (isLoanPartBEnabled) {
-                    LOG.info(format("Updating CRM application for compId:%s,  payload:%s", competition.getId(), silLoanAssessment));
+                    log.info(format("Updating CRM application for compId:%s,  payload:%s", competition.getId(), silLoanAssessment));
                     return silCrmEndpoint.updateLoanAssessment(silLoanAssessment);
                 } else {
                     return serviceSuccess();
