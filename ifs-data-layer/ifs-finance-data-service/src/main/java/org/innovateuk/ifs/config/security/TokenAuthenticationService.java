@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.config.security;
 
-import org.apache.commons.io.IOUtils;
+import com.google.common.io.CharStreams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.security.InvalidKeyException;
 
 /**
@@ -61,6 +63,8 @@ public class TokenAuthenticationService {
     }
 
     private String getContentAsString(HttpServletRequest request) throws IOException {
-        return IOUtils.toString(request.getReader());
+        try (Reader reader = new InputStreamReader(request.getInputStream())) {
+            return CharStreams.toString(reader);
+        }
     }
 }

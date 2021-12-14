@@ -1,21 +1,23 @@
 package org.innovateuk.ifs.management.competition.setup.milestone.form;
 
-import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.GenericMilestoneRowForm;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * List of Milestone Form Entries for the Milestone form.
  */
 public class MilestonesForm extends CompetitionSetupForm {
 
-    private LinkedMap<String, GenericMilestoneRowForm> milestoneEntries = new LinkedMap<>();
+    private Map<String, GenericMilestoneRowForm> milestoneEntries = new LinkedHashMap<>();
 
-    public LinkedMap<String, GenericMilestoneRowForm> getMilestoneEntries() {
+    public Map<String, GenericMilestoneRowForm> getMilestoneEntries() {
         return milestoneEntries;
     }
 
-    public void setMilestoneEntries(LinkedMap<String, GenericMilestoneRowForm> milestoneEntries) {
+    public void setMilestoneEntries(Map<String, GenericMilestoneRowForm> milestoneEntries) {
         this.milestoneEntries = milestoneEntries;
     }
 }

@@ -1,15 +1,12 @@
 package org.innovateuk.ifs.config.security;
 
-import org.apache.commons.io.IOUtils;
+import com.google.common.io.CharStreams;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 
 /**
  * {@link HttpServletRequest} wrapper that caches all content read from
@@ -22,8 +19,8 @@ public class AuthenticationRequestWrapper extends HttpServletRequestWrapper {
 
     AuthenticationRequestWrapper(HttpServletRequest request) {
         super(request);
-        try {
-            body = IOUtils.toString(request.getInputStream(), "UTF-8");
+        try (Reader reader = new InputStreamReader(request.getInputStream())) {
+            body = CharStreams.toString(reader);
         } catch (IOException e) {
             throw new IllegalStateException("Error reading the request payload", e);
         }

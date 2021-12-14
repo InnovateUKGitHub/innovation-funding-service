@@ -55,6 +55,20 @@ public class ApplicationAssessmentServiceImpl implements ApplicationAssessmentSe
                 .collect(toList()));
     }
 
+    @Override
+    public ServiceResult<List<ApplicationAssessmentResource>> getApplicationAssessmentResource(long userId, long competitionId, long assessmentPeriodId) {
+        Set<AssessmentState> allowedStates = EnumSet.of(PENDING, OPEN, ACCEPTED, READY_TO_SUBMIT, SUBMITTED);
+
+        List<Assessment> assessments = assessmentRepository.findByTargetAssessmentPeriodIdAndAndActivityStateIn(assessmentPeriodId, allowedStates);
+
+        return serviceSuccess(assessments.stream()
+                .filter(assessment -> assessment.getParticipant().getUser().getId() == userId &&
+                        assessment.getTarget().getCompetition().getId() == competitionId)
+                .map(this::mapToResource)
+                .sorted()
+                .collect(toList()));
+    }
+
     private ApplicationAssessmentResource mapToResource(Assessment assessment) {
         Optional<Organisation> leadOrganisation = organisationRepository.findById(assessment.getTarget().getLeadOrganisationId());
         AssessmentTotalScoreResource assessmentTotalScore = assessmentRepository.getTotalScore(assessment.getId());

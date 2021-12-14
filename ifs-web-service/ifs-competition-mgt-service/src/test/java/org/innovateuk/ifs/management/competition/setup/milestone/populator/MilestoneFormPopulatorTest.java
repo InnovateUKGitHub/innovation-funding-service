@@ -16,6 +16,7 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -64,7 +65,7 @@ public class MilestoneFormPopulatorTest extends BaseUnitTest {
         assertTrue(result instanceof MilestonesForm);
 
         MilestonesForm form = (MilestonesForm) result;
-        LinkedMap<String, GenericMilestoneRowForm> milestoneEntryLinkedMap = form.getMilestoneEntries();
+        Map<String, GenericMilestoneRowForm> milestoneEntryLinkedMap = form.getMilestoneEntries();
 
         assertFalse(form.getMilestoneEntries().isEmpty());
         assertTrue(milestoneEntryLinkedMap.get(MilestoneType.OPEN_DATE.name()).getMilestoneType().equals(MilestoneType.OPEN_DATE));
