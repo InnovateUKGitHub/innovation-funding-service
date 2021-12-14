@@ -169,7 +169,7 @@ Comp admin creates a new assessment period
     And the user create a new assessment period 1           5  12  14  16   7  2100
     Then the user should see assessment period 1
     And The user clicks the button/link                     link = Manage assessors
-    And the user selects the index from the drop-down menu  1 css = .govuk-select govuk-input--error
+    And the user selects the index from the drop-down menu  1  css = .govuk-select govuk-input--error
     And The user should see the element                     css = .govuk-select govuk-input--error
 
 Internal user should see the same dates entered in choose assessment period dropdowns even after notify assessor
