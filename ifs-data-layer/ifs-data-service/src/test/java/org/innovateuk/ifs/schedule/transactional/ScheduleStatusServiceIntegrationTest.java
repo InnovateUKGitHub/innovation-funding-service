@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.schedule.transactional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.BaseAuthenticationAwareIntegrationTest;
 import org.innovateuk.ifs.schedule.repository.ScheduleStatusRepository;
 import org.junit.After;

@@ -8,8 +8,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;

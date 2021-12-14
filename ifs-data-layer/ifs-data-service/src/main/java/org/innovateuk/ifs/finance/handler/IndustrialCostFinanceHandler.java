@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.finance.handler;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;

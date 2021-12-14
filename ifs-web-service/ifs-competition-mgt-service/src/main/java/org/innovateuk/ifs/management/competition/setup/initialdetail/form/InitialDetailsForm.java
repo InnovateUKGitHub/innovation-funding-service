@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.management.competition.setup.initialdetail.form;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import org.innovateuk.ifs.commons.validation.constraints.FutureZonedDateTime;

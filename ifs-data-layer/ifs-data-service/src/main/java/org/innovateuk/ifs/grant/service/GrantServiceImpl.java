@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.grant.service;
 
 import com.newrelic.api.agent.Trace;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;

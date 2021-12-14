@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.management.assessment.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource.Sort;
 import org.innovateuk.ifs.application.service.ApplicationAssessmentSummaryRestService;
 import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;

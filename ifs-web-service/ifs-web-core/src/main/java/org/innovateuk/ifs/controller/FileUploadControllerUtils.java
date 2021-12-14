@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.exception.UnableToReadUploadedFile;
 import org.springframework.web.multipart.MultipartFile;
 

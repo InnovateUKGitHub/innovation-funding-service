@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.management.supporters.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.supporter.resource.AssignSupportersResource;
 import org.innovateuk.ifs.supporter.service.SupporterAssignmentRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;

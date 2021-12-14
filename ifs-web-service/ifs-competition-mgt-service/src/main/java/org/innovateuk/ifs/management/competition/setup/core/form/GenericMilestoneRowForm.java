@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.core.form;
 
 import com.google.common.collect.ImmutableSet;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.util.DateUtil;
 import org.innovateuk.ifs.util.TimeZoneUtil;

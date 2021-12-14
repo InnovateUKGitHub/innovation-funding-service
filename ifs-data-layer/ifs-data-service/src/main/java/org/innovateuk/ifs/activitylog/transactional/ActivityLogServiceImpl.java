@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.activitylog.transactional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.activitylog.domain.ActivityLog;
 import org.innovateuk.ifs.activitylog.resource.ActivityLogResource;
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
@@ -33,11 +32,10 @@ import static java.util.stream.Collectors.toList;
 import static org.hibernate.Hibernate.initialize;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
+@Slf4j
 @Service
 @Transactional
 public class ActivityLogServiceImpl implements ActivityLogService {
-
-    private static final Log LOG = LogFactory.getLog(ActivityLogServiceImpl.class);
 
     @Autowired
     private ActivityLogRepository activityLogRepository;
@@ -70,7 +68,7 @@ public class ActivityLogServiceImpl implements ActivityLogService {
             ActivityLog log = new ActivityLog(application.get(), activityType);
             activityLogRepository.save(log);
         } else {
-            LOG.error(format("application %d not found", applicationId));
+            log.error(format("application %d not found", applicationId));
         }
     }
 
@@ -83,10 +81,10 @@ public class ActivityLogServiceImpl implements ActivityLogService {
                 ActivityLog log = new ActivityLog(application.get(), activityType, null, user.get());
                 activityLogRepository.save(log);
             } else {
-                LOG.error(format("author %d not found", authorId));
+                log.error(format("author %d not found", authorId));
             }
         } else {
-            LOG.error(format("application %d not found", applicationId));
+            log.error(format("application %d not found", applicationId));
         }
     }
 
@@ -97,7 +95,7 @@ public class ActivityLogServiceImpl implements ActivityLogService {
             ActivityLog log = new ActivityLog(project.get().getApplication(), activityType);
             activityLogRepository.save(log);
         } else {
-            LOG.error(format("project %d not found", projectId));
+            log.error(format("project %d not found", projectId));
         }
     }
 
@@ -112,13 +110,13 @@ public class ActivityLogServiceImpl implements ActivityLogService {
                     ActivityLog log = new ActivityLog(project.get().getApplication(), activityType, organisation.get(), user.get());
                     activityLogRepository.save(log);
                 } else {
-                    LOG.error(format("authorId %d not found", authorId));
+                    log.error(format("authorId %d not found", authorId));
                 }
             } else {
-                LOG.error(format("organisation %d not found", organisationId));
+                log.error(format("organisation %d not found", organisationId));
             }
         } else {
-            LOG.error(format("project %d not found", projectId));
+            log.error(format("project %d not found", projectId));
         }
     }
 
@@ -131,10 +129,10 @@ public class ActivityLogServiceImpl implements ActivityLogService {
                 ActivityLog log = new ActivityLog(project.get().getApplication(), activityType, organisation.get());
                 activityLogRepository.save(log);
             } else {
-                LOG.error(format("organisation %d not found", organisationId));
+                log.error(format("organisation %d not found", organisationId));
             }
         } else {
-            LOG.error(format("project %d not found", projectId));
+            log.error(format("project %d not found", projectId));
         }
     }
 
@@ -147,10 +145,10 @@ public class ActivityLogServiceImpl implements ActivityLogService {
                 ActivityLog log = new ActivityLog(project.get().getApplication(), activityType, document.get());
                 activityLogRepository.save(log);
             } else {
-                LOG.error(format("document %d not found", documentConfigId));
+                log.error(format("document %d not found", documentConfigId));
             }
         } else {
-            LOG.error(format("project %d not found", projectId));
+            log.error(format("project %d not found", projectId));
         }
     }
 
@@ -163,10 +161,10 @@ public class ActivityLogServiceImpl implements ActivityLogService {
                 ActivityLog log = new ActivityLog(projectFinance.get().getProject().getApplication(), activityType, query.get(), projectFinance.get().getOrganisation());
                 activityLogRepository.save(log);
             } else {
-                LOG.error(format("query %d not found", threadId));
+                log.error(format("query %d not found", threadId));
             }
         } else {
-            LOG.error(format("project finance %d not found", projectFinanceId));
+            log.error(format("project finance %d not found", projectFinanceId));
         }
     }
 
@@ -179,20 +177,20 @@ public class ActivityLogServiceImpl implements ActivityLogService {
     }
 
     private static ActivityLogResource toResource(ActivityLog activityLog) {
-        initialize(activityLog.getAuthor().getRoles());
+        initialize(activitylog.getAuthor().getRoles());
         return new ActivityLogResource(
-                activityLog.getType(),
-                activityLog.getAuthor().getId(),
-                activityLog.getAuthor().getName(),
-                activityLog.getAuthor().getRoles(),
-                activityLog.getCreatedOn(),
-                activityLog.getOrganisation().map(Organisation::getId).orElse(null),
-                activityLog.getOrganisation().map(Organisation::getName).orElse(null),
-                activityLog.getCompetitionDocument().map(CompetitionDocument::getId).orElse(null),
-                activityLog.getCompetitionDocument().map(CompetitionDocument::getTitle).orElse(null),
-                activityLog.getQuery().map(Query::id).orElse(null),
-                activityLog.getQuery().map(Query::section).orElse(null),
-                activityLog.isOrganisationRemoved()
+                activitylog.getType(),
+                activitylog.getAuthor().getId(),
+                activitylog.getAuthor().getName(),
+                activitylog.getAuthor().getRoles(),
+                activitylog.getCreatedOn(),
+                activitylog.getOrganisation().map(Organisation::getId).orElse(null),
+                activitylog.getOrganisation().map(Organisation::getName).orElse(null),
+                activitylog.getCompetitionDocument().map(CompetitionDocument::getId).orElse(null),
+                activitylog.getCompetitionDocument().map(CompetitionDocument::getTitle).orElse(null),
+                activitylog.getQuery().map(Query::id).orElse(null),
+                activitylog.getQuery().map(Query::section).orElse(null),
+                activitylog.isOrganisationRemoved()
         );
     }
 }

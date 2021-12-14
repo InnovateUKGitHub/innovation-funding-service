@@ -3,8 +3,6 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.controlle
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.controller.ApplicationProcurementMilestonesController;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.LabourForm;

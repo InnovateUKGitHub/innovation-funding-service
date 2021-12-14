@@ -2,8 +2,6 @@ package org.innovateuk.ifs.project.spendprofile.transactional;
 
 import com.google.common.collect.Lists;
 import com.opencsv.CSVWriter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;

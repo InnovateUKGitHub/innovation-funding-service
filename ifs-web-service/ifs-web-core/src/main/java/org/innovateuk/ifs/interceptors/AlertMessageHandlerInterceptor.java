@@ -3,8 +3,6 @@ package org.innovateuk.ifs.interceptors;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.util.concurrent.UncheckedExecutionException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.alert.service.AlertRestService;
 import org.springframework.beans.factory.annotation.Autowired;

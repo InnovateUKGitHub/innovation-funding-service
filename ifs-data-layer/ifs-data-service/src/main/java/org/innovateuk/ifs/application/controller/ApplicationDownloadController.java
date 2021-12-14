@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.usermodel.*;
 import org.innovateuk.ifs.application.domain.Application;

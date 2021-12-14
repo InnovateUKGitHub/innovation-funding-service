@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.config.thymeleaf.dialect;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.exception.IntegerNumberFormatException;
 import org.innovateuk.ifs.util.NumberUtils;
 import org.thymeleaf.context.ITemplateContext;

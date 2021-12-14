@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.address.transactional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.utils.URIBuilder;
 import org.innovateuk.ifs.address.mapper.PostcodeWebMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
@@ -24,9 +23,9 @@ import java.util.List;
 /**
  * Postcode web API implementation
  */
+@Slf4j
 @Service
 public class PostcoderWeb implements AddressLookupService {
-    private static final Log LOG = LogFactory.getLog(PostcoderWeb.class);
 
     @Value("${ifs.data.postcode-lookup.url}")
     private String postcodeLookupUrl = null;
@@ -87,14 +86,14 @@ public class PostcoderWeb implements AddressLookupService {
                 } else {
                     failure = null;
                 }
-                LOG.error(failure);
+                log.error(failure);
                 return ServiceResult.serviceFailure(new Error(failure, HttpStatus.INTERNAL_SERVER_ERROR));
             }
         } catch (HttpClientErrorException cle) {
-            LOG.error(cle);
+            log.error(cle);
             return ServiceResult.serviceFailure(new Error(cle.getMessage(), cle.getStatusCode()));
         } catch (URISyntaxException e) {
-            LOG.error(e);
+            log.error(e);
             return ServiceResult.serviceFailure(new Error(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
         }
     }
@@ -114,14 +113,14 @@ public class PostcoderWeb implements AddressLookupService {
                 } else {
                     failure = null;
                 }
-                LOG.error(failure);
+                log.error(failure);
                 return ServiceResult.serviceFailure(new Error(failure, HttpStatus.INTERNAL_SERVER_ERROR));
             }
         } catch (HttpClientErrorException cle) {
-            LOG.error(cle);
+            log.error(cle);
             return ServiceResult.serviceFailure(new Error(cle.getMessage(), cle.getStatusCode()));
         } catch (URISyntaxException e) {
-            LOG.error(e);
+            log.error(e);
             return ServiceResult.serviceFailure(new Error(e.getReason(), HttpStatus.INTERNAL_SERVER_ERROR));
         }
     }

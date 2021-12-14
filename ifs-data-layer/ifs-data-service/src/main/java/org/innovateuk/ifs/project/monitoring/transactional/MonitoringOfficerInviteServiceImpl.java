@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.project.monitoring.transactional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.mapper.MonitoringOfficerInviteMapper;

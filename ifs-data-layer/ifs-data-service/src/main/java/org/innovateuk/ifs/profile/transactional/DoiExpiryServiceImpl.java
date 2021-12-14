@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.profile.transactional;
 
 import com.newrelic.api.agent.Trace;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;

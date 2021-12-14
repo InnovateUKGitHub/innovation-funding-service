@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application.validator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.springframework.stereotype.Component;

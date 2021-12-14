@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.application.validation;
 
 import com.google.common.collect.ImmutableSet;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
@@ -35,9 +34,9 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
+@Slf4j
 @Component
 public class ApplicationValidationUtil {
-    private final static Log LOG = LogFactory.getLog(ApplicationValidationUtil.class);
 
     @Autowired
     private ApplicationContext context;
@@ -84,9 +83,9 @@ public class ApplicationValidationUtil {
                             binder.addValidators(validator);
                         }
                     } catch (Exception e) {
-                        LOG.error("Could not find validator class: " + v.getClazzName());
-                        LOG.error("Exception message: " + e.getMessage());
-                        LOG.error(e);
+                        log.error("Could not find validator class: " + v.getClazzName());
+                        log.error("Exception message: " + e.getMessage());
+                        log.error(e);
                     }
                 }
         );
