@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.sil.grant.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -21,9 +22,9 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.JsonMappingDeprecatedUtil.toJson;
 
+@Slf4j
 @Component
 public class RestGrantEndpoint implements GrantEndpoint {
-    private static final Log LOG = LogFactory.getLog(RestGrantEndpoint.class);
 
     @Autowired
     @Qualifier("sil_adaptor")
@@ -46,11 +47,11 @@ public class RestGrantEndpoint implements GrantEndpoint {
 
         return response.mapLeftOrRight(
                 failure -> {
-                    LOG.debug("Sent grant FAILURE : " + toJson(grant));
+                    log.debug("Sent grant FAILURE : " + toJson(grant));
                     return serviceFailure(new Error(GRANT_PROCESS_SEND_FAILED, failure.getStatusCode()));
                 },
                 success -> {
-                    LOG.debug("Sent grant SUCCESS : " + toJson(grant));
+                    log.debug("Sent grant SUCCESS : " + toJson(grant));
                     return serviceSuccess();
                 }
         );

@@ -177,20 +177,20 @@ public class ActivityLogServiceImpl implements ActivityLogService {
     }
 
     private static ActivityLogResource toResource(ActivityLog activityLog) {
-        initialize(activitylog.getAuthor().getRoles());
+        initialize(activityLog.getAuthor().getRoles());
         return new ActivityLogResource(
-                activitylog.getType(),
-                activitylog.getAuthor().getId(),
-                activitylog.getAuthor().getName(),
-                activitylog.getAuthor().getRoles(),
-                activitylog.getCreatedOn(),
-                activitylog.getOrganisation().map(Organisation::getId).orElse(null),
-                activitylog.getOrganisation().map(Organisation::getName).orElse(null),
-                activitylog.getCompetitionDocument().map(CompetitionDocument::getId).orElse(null),
-                activitylog.getCompetitionDocument().map(CompetitionDocument::getTitle).orElse(null),
-                activitylog.getQuery().map(Query::id).orElse(null),
-                activitylog.getQuery().map(Query::section).orElse(null),
-                activitylog.isOrganisationRemoved()
+                activityLog.getType(),
+                activityLog.getAuthor().getId(),
+                activityLog.getAuthor().getName(),
+                activityLog.getAuthor().getRoles(),
+                activityLog.getCreatedOn(),
+                activityLog.getOrganisation().map(Organisation::getId).orElse(null),
+                activityLog.getOrganisation().map(Organisation::getName).orElse(null),
+                activityLog.getCompetitionDocument().map(CompetitionDocument::getId).orElse(null),
+                activityLog.getCompetitionDocument().map(CompetitionDocument::getTitle).orElse(null),
+                activityLog.getQuery().map(Query::id).orElse(null),
+                activityLog.getQuery().map(Query::section).orElse(null),
+                activityLog.isOrganisationRemoved()
         );
     }
 }

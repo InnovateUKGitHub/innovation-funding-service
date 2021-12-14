@@ -90,10 +90,10 @@ public class PostcoderWeb implements AddressLookupService {
                 return ServiceResult.serviceFailure(new Error(failure, HttpStatus.INTERNAL_SERVER_ERROR));
             }
         } catch (HttpClientErrorException cle) {
-            log.error(cle);
+            log.error(cle.getMessage(), cle);
             return ServiceResult.serviceFailure(new Error(cle.getMessage(), cle.getStatusCode()));
         } catch (URISyntaxException e) {
-            log.error(e);
+            log.error(e.getMessage(), e);
             return ServiceResult.serviceFailure(new Error(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
         }
     }
@@ -117,10 +117,10 @@ public class PostcoderWeb implements AddressLookupService {
                 return ServiceResult.serviceFailure(new Error(failure, HttpStatus.INTERNAL_SERVER_ERROR));
             }
         } catch (HttpClientErrorException cle) {
-            log.error(cle);
+            log.error(cle.getMessage(), cle);
             return ServiceResult.serviceFailure(new Error(cle.getMessage(), cle.getStatusCode()));
         } catch (URISyntaxException e) {
-            log.error(e);
+            log.error(e.getMessage(), e);
             return ServiceResult.serviceFailure(new Error(e.getReason(), HttpStatus.INTERNAL_SERVER_ERROR));
         }
     }

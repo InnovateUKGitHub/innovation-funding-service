@@ -85,7 +85,7 @@ public class ApplicationValidationUtil {
                     } catch (Exception e) {
                         log.error("Could not find validator class: " + v.getClazzName());
                         log.error("Exception message: " + e.getMessage());
-                        log.error(e);
+                        log.error(e.getMessage(), e);
                     }
                 }
         );

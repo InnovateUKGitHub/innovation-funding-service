@@ -52,8 +52,6 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
 
     public static final Integer MAX_ALLOWED_KEYWORDS = 10;
 
-    private static Log LOG = LogFactory.getLog(PublicContentItemServiceImpl.class);
-
     @Override
     public ServiceResult<PublicContentItemPageResource> findFilteredItems(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Integer pageSize) {
         Page<Competition> publicContentPage = getPublicContentPage(innovationAreaId, searchString, pageNumber, pageSize);

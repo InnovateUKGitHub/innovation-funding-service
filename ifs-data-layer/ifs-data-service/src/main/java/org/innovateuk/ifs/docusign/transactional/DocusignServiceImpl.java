@@ -76,7 +76,7 @@ public class DocusignServiceImpl extends RootTransactionalService implements Doc
         try {
             return serviceSuccess(doSend(request));
         } catch (ApiException | IOException e) {
-            log.error(e);
+            log.error(e.getMessage(), e);
             return serviceFailure(COULD_NOT_SEND_FILE_TO_DOCUSIGN);
         }
     }
@@ -253,7 +253,7 @@ public class DocusignServiceImpl extends RootTransactionalService implements Doc
             }
             return null;
         } catch (ApiException e) {
-            log.error(e);
+            log.error(e.getMessage(), e);
             return null;
         }
     }

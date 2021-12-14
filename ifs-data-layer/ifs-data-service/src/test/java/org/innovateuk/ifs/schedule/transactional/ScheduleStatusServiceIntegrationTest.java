@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.schedule.transactional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.BaseAuthenticationAwareIntegrationTest;
 import org.innovateuk.ifs.schedule.repository.ScheduleStatusRepository;
 import org.junit.After;
@@ -13,8 +14,8 @@ import java.util.concurrent.ExecutionException;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+@Slf4j
 public class ScheduleStatusServiceIntegrationTest extends BaseAuthenticationAwareIntegrationTest {
-    public static final Log LOG = LogFactory.getLog(ScheduleStatusServiceIntegrationTest.class);
 
     @Autowired
     private ScheduleStatusService scheduleStatusService;
@@ -65,15 +66,15 @@ public class ScheduleStatusServiceIntegrationTest extends BaseAuthenticationAwar
         @Override
         public void run() {
             try {
-                LOG.debug("Attempting to start " + name);
+                log.debug("Attempting to start " + name);
                 scheduleStatusService.startJob(JOB_NAME);
-                LOG.debug("Started " + name);
+                log.debug("Started " + name);
                 Thread.sleep(   500);
                 scheduleStatusService.endJob(JOB_NAME);
-                LOG.debug("Ended " + name);
+                log.debug("Ended " + name);
                 future.complete(Optional.empty());
             } catch (Exception e) {
-                LOG.debug("Failed to start " + name);
+                log.debug("Failed to start " + name);
                 future.complete(Optional.of(e));
             }
         }
