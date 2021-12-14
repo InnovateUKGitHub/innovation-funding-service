@@ -41,8 +41,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class MonitoringOfficerServiceImpl extends RootTransactionalService implements MonitoringOfficerService {
 
-    private static final Log LOG = LogFactory.getLog(MonitoringOfficerInviteService.class);
-
     @Autowired
     private MonitoringOfficerRepository monitoringOfficerRepository;
 

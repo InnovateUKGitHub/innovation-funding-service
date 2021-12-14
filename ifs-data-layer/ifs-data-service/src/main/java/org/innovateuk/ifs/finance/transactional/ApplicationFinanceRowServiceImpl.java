@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.transactional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -36,9 +37,8 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @SuppressWarnings("unchecked")
 @Service
+@Slf4j
 public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService implements ApplicationFinanceRowService {
-
-    private static final Log LOG = LogFactory.getLog(ApplicationFinanceRowServiceImpl.class);
 
     @Autowired
     private OrganisationFinanceDelegate organisationFinanceDelegate;
@@ -63,7 +63,7 @@ public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService i
             return organisationFinanceHandler.toResource(applicationFinanceRow);
         });
         if (!financeRowItem.isPresent()) {
-            LOG.error("IFS-5593 unable to find a FinanceRowItem for financeRowId: " + financeRowId);
+            log.error("IFS-5593 unable to find a FinanceRowItem for financeRowId: " + financeRowId);
         }
         return financeRowItem.map(item -> serviceSuccess(item)).orElse(serviceFailure(GENERAL_NOT_FOUND));
     }
@@ -189,7 +189,7 @@ public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService i
 
     private void updateOrCreateCostValue(FinanceRowMetaValue newMetaValue, FinanceRow savedCost) {
         if (newMetaValue.getFinanceRowMetaField() == null) {
-            LOG.error("FinanceRowMetaField is null");
+            log.error("FinanceRowMetaField is null");
             return;
         }
         newMetaValue.setFinanceRowId(savedCost.getId());

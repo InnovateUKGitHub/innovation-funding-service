@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.Finance;
 import org.innovateuk.ifs.finance.handler.item.*;
@@ -16,9 +17,9 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 
+@Slf4j
 @Component
 public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implements OrganisationTypeFinanceHandler {
-    private static final Log LOG = LogFactory.getLog(JesFinanceHandler.class);
 
     @Autowired
     private GrantClaimPercentageHandler grantClaimHandler;
@@ -94,7 +95,7 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
         if (handler != null) {
             return handler;
         }
-        LOG.error("Not a valid FinanceType: " + costType);
+        log.error("Not a valid FinanceType: " + costType);
         throw new IllegalArgumentException("Not a valid FinanceType: " + costType);
     }
 

@@ -27,7 +27,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class MonitoringOfficerReviewNotificationServiceImpl extends RootTransactionalService implements MonitoringOfficerReviewNotificationService {
 
-    private static final Log LOG = LogFactory.getLog(MonitoringOfficerReviewNotificationService.class);
     @Autowired
     private ProjectRepository projectRepository;
     @Value("${ifs.web.baseURL}")

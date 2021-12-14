@@ -2,6 +2,7 @@ package org.innovateuk.ifs.invite.transactional;
 
 
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
@@ -39,9 +40,8 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
+@Slf4j
 public class ProjectInviteServiceImpl extends InviteService<ProjectUserInvite> implements ProjectInviteService {
-
-    private static final Log LOG = LogFactory.getLog(ProjectInviteServiceImpl.class);
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -116,7 +116,7 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectUserInvite> i
                     return serviceSuccess();
                 });
             }
-            LOG.error(format("Invited email address not the same as the users email address %s => %s ", user.getEmail(), invite.getEmail()));
+            log.error(format("Invited email address not the same as the users email address %s => %s ", user.getEmail(), invite.getEmail()));
             Error e = new Error("Invited email address not the same as the users email address", HttpStatus.NOT_ACCEPTABLE);
             return serviceFailure(e);
         });

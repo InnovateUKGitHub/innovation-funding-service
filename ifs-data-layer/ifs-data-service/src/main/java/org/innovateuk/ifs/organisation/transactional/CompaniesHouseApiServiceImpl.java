@@ -2,6 +2,7 @@ package org.innovateuk.ifs.organisation.transactional;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -31,12 +32,11 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
  *
  * @see <a href="https://developer.companieshouse.gov.uk/api/docs/">Companies House API site</a>
  */
+@Slf4j
 @SuppressWarnings("unchecked")
 @Service
 @ConditionalOnProperty(name = "ifs.data.companies.house.lookup.enabled", havingValue = "", matchIfMissing = true)
 public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
-
-    private static final Log LOG = LogFactory.getLog(CompaniesHouseApiServiceImpl.class);
 
     @Value("${ifs.data.companies.house.url}")
     private String companiesHouseUrl = null;
@@ -76,7 +76,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
     @Override
     public ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText, int indexPos) {
-        LOG.debug("searchOrganisations " + encodedSearchText);
+        log.debug("searchOrganisations " + encodedSearchText);
         return decodeString(encodedSearchText).andOnSuccess(decodedSearchText ->
         {
             if (isImprovedSearchEnabled) {
@@ -103,7 +103,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
     @Override
     public ServiceResult<OrganisationSearchResult> getOrganisationById(String id) {
-        LOG.debug("getOrganisationById " + id);
+        log.debug("getOrganisationById " + id);
         if (isImprovedSearchEnabled) {
             return getOrganisationDetailsWithSicCodesAndDirectors(id);
         }
@@ -239,7 +239,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
         try {
             return adaptor.restGetEntity(companiesHouseUrl + path, c, variables).getBody();
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-            LOG.error(e);
+            log.error(e.getMessage(), e);
             return null;
         }
     }
@@ -338,7 +338,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
         try {
             return serviceSuccess(UriUtils.decode(encodedSearchText, "UTF-8"));
         } catch (Exception e) {
-            LOG.error("Unable to decode search string " + encodedSearchText, e);
+            log.error("Unable to decode search string " + encodedSearchText, e);
             return serviceFailure(COMPANIES_HOUSE_UNABLE_TO_DECODE_SEARCH_STRING);
         }
     }

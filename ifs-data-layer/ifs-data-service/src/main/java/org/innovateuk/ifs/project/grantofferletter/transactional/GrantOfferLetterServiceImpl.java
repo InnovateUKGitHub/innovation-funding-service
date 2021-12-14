@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.grantofferletter.transactional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
@@ -50,9 +51,8 @@ import static org.innovateuk.ifs.project.resource.ProjectState.ON_HOLD;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Service
+@Slf4j
 public class GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOfferLetterService {
-
-    private static final Log LOG = LogFactory.getLog(GrantOfferLetterServiceImpl.class);
 
     private static final String GOL_STATE_ERROR = "Set Grant Offer Letter workflow status to sent failed for project %s";
 
@@ -447,7 +447,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
             if (golWorkflowHandler.grantOfferLetterSent(project, user)) {
                 return serviceSuccess();
             } else {
-                LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
+                log.error(String.format(GOL_STATE_ERROR, project.getId()));
                 return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
             }
         });
@@ -490,7 +490,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     private ServiceResult<Void> moveProjectToLiveState(Project project) {
 
         if (!projectWorkflowHandler.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))) {
-            LOG.error(String.format(PROJECT_STATE_ERROR, project.getId()));
+            log.error(String.format(PROJECT_STATE_ERROR, project.getId()));
             return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
         }
         return notifyProjectIsLive(project.getId());
@@ -503,7 +503,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
             if (golWorkflowHandler.grantOfferLetterApproved(project, user)) {
                 return serviceSuccess();
             } else {
-                LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
+                log.error(String.format(GOL_STATE_ERROR, project.getId()));
                 return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
             }
         });
@@ -523,7 +523,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                 }
                 return serviceSuccess();
             } else {
-                LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
+                log.error(String.format(GOL_STATE_ERROR, project.getId()));
                 return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
             }
         });
