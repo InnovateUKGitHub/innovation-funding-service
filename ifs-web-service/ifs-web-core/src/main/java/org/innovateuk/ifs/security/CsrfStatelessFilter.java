@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -48,11 +49,10 @@ import java.util.regex.Pattern;
  * </p>
  */
 @Service
+@Slf4j
 final class CsrfStatelessFilter extends OncePerRequestFilter {
 
     private static final String CSRF_COOKIE_NAME = "CSRF-TOKEN";
-
-    private static final Log LOG = LogFactory.getLog(CsrfStatelessFilter.class);
 
     @Autowired
     private CsrfTokenService tokenService;
@@ -100,7 +100,7 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
         try {
             tokenService.validateToken(request);
         } catch (final CsrfException e) {
-            LOG.warn("Handling access denied for exception", e);
+            log.warn("Handling access denied for exception", e);
             accessDeniedHandler.handle(request, response, e);
             return;
         }

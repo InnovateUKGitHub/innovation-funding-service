@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.config.thymeleaf.IfsThymeleafExpressionObjectFactory;
 import org.springframework.validation.Errors;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -24,8 +25,8 @@ import static org.innovateuk.ifs.util.StringFunctions.countWords;
  * <p>
  * #ifsUtil is added to the evaluation context by {@link IfsThymeleafExpressionObjectFactory}.
  */
+@Slf4j
 public class ThymeleafUtil {
-    private static final Log LOG = LogFactory.getLog(ThymeleafUtil.class);
 
     private IExpressionContext context;
 
@@ -43,7 +44,7 @@ public class ThymeleafUtil {
         if (request == null) {
             throw new IllegalArgumentException("Cannot determine request URI with query string for null request.");
         }
-        LOG.debug("Creating URI for request " + request.getClass() + " with URI " + request.getRequestURI());
+        log.debug("Creating URI for request " + request.getClass() + " with URI " + request.getRequestURI());
         return UriComponentsBuilder.fromPath(request.getServletPath()).build().normalize().toUriString();
     }
 

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.metrics;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,8 +10,9 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
+@Slf4j
 public class ConnectionCountService {
-    private static final Log LOG = LogFactory.getLog(ConnectionCountService.class);
+
     private final PoolingHttpClientConnectionManager connManager;
 
     @Autowired
@@ -22,7 +24,7 @@ public class ConnectionCountService {
         int max = connManager.getMaxTotal();
         int connections = connManager.getTotalStats().getLeased();
         boolean healthy = max > connections;
-        LOG.trace("outgoing connection used = " + connections + "/" + max + " healthy = "+ healthy);
+        log.trace("outgoing connection used = " + connections + "/" + max + " healthy = "+ healthy);
         return healthy;
     }
 

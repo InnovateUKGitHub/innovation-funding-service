@@ -3,6 +3,7 @@ package org.innovateuk.ifs.interceptors;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.util.concurrent.UncheckedExecutionException;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.alert.service.AlertRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,8 @@ import static java.util.Collections.emptyList;
 /**
  * Look for alertmessages on every page that has a modelAndView
  */
+@Slf4j
 public class AlertMessageHandlerInterceptor extends HandlerInterceptorAdapter {
-
-    private static final Log LOG = LogFactory.getLog(AlertMessageHandlerInterceptor.class);
 
     private static final String ALERT_MESSAGES = "alertMessages";
 
@@ -44,7 +44,7 @@ public class AlertMessageHandlerInterceptor extends HandlerInterceptorAdapter {
         try {
             alerts = alertCache.get(ALERT_MESSAGES, () -> alertRestService.findAllVisible().getSuccess());
         } catch (ExecutionException | UncheckedExecutionException e) {
-            LOG.error("exception thrown getting alert messages", e);
+            log.error("exception thrown getting alert messages", e);
             alerts = emptyList();
         }
 

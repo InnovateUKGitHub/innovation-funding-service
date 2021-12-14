@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.user.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -25,9 +26,9 @@ import static java.util.Collections.emptyList;
  * through the RestService {@link UserRestService}.
  */
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
-    private static final Log LOG = LogFactory.getLog(UserServiceImpl.class);
 
     @Autowired
     private UserRestService userRestService;
@@ -84,7 +85,7 @@ public class UserServiceImpl implements UserService {
             userRestService.resendEmailVerificationNotification(email).getSuccess();
         } catch (ObjectNotFoundException e) {
             // Do nothing. We don't want to reveal that the address was not recognised
-            LOG.debug(format("Purposely ignoring ObjectNotFoundException for email address: [%s] when resending email verification notification.", email), e);
+            log.debug(format("Purposely ignoring ObjectNotFoundException for email address: [%s] when resending email verification notification.", email), e);
         }
     }
 
