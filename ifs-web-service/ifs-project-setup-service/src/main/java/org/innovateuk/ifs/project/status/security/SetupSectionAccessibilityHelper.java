@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.sections.SectionAccess;
@@ -9,9 +10,8 @@ import static org.innovateuk.ifs.sections.SectionAccess.*;
 /**
  * This is a helper class for determining whether or not a given Project Setup section is available to access
  */
+@Slf4j
 public class SetupSectionAccessibilityHelper {
-
-    private static final Log LOG = LogFactory.getLog(SetupSectionAccessibilityHelper.class);
 
     private SetupProgressChecker setupProgressChecker;
 
@@ -28,7 +28,7 @@ public class SetupSectionAccessibilityHelper {
             return ACCESSIBLE;
         }
 
-        LOG.debug("No need to access Companies House section if not a Business Organisation");
+        log.debug("No need to access Companies House section if not a Business Organisation");
         return NOT_REQUIRED;
     }
 
@@ -321,7 +321,7 @@ public class SetupSectionAccessibilityHelper {
     }
 
     private SectionAccess fail(String message) {
-        LOG.info(message);
+        log.info(message);
         return NOT_ACCESSIBLE;
     }
 
@@ -335,7 +335,7 @@ public class SetupSectionAccessibilityHelper {
             return true;
         }
 
-        LOG.info(failureMessage);
+        log.info(failureMessage);
         return false;
     }
 }

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.financechecks.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -83,11 +84,10 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 /**
  * This controller will handle requests related to finance checks for external users
  */
+@Slf4j
 @Controller
 @RequestMapping(ProjectFinanceChecksController.PROJECT_FINANCE_CHECKS_BASE_URL)
 public class ProjectFinanceChecksController {
-
-    private static final Log LOG = LogFactory.getLog(ProjectFinanceChecksController.class);
 
     static final String PROJECT_FINANCE_CHECKS_BASE_URL = "/project/{projectId}/finance-check";
 
@@ -480,7 +480,7 @@ public class ProjectFinanceChecksController {
                 return attachments;
             } catch (IOException e) {
                 //ignored
-                LOG.trace(e);
+                log.trace(e.getMessage(), e);
             }
         }
         return attachments;
