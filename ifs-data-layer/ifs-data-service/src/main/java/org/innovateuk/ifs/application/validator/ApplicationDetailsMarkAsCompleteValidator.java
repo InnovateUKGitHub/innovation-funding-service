@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.validator;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.springframework.stereotype.Component;
@@ -15,9 +16,9 @@ import static org.springframework.util.StringUtils.isEmpty;
 /**
  * Validates the inputs in the application details, if valid on the markAsComplete action
  */
+@Slf4j
 @Component
 public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
-    private static final Log LOG = LogFactory.getLog(ApplicationDetailsMarkAsCompleteValidator.class);
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -27,7 +28,7 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        LOG.debug("do ApplicationDetailsMarkAsComplete Validation");
+        log.debug("do ApplicationDetailsMarkAsComplete Validation");
 
         Application application = (Application) target;
 
@@ -50,18 +51,18 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
 
     private void validateResubmission(Errors errors, Application application, Competition competition) {
         if (competition.getResubmission() && application.getResubmission() == null) {
-            LOG.debug("MarkAsComplete application details validation message for resubmission indicator: " + application.getResubmission());
+            log.debug("MarkAsComplete application details validation message for resubmission indicator: " + application.getResubmission());
             rejectValue(errors, "resubmission", "validation.application.must.indicate.resubmission.or.not");
         }
 
         if (application.getResubmission() != null) {
             if (application.getResubmission()) {
                 if (isEmpty(application.getPreviousApplicationNumber())) {
-                    LOG.debug("MarkAsComplete application details validation message for previous application number: " + application.getPreviousApplicationNumber());
+                    log.debug("MarkAsComplete application details validation message for previous application number: " + application.getPreviousApplicationNumber());
                     rejectValue(errors, "previousApplicationNumber", "validation.application.previous.application.number.required");
                 }
                 if (isEmpty(application.getPreviousApplicationTitle())) {
-                    LOG.debug("MarkAsComplete application details validation message for previous application title: " + application.getPreviousApplicationTitle());
+                    log.debug("MarkAsComplete application details validation message for previous application title: " + application.getPreviousApplicationTitle());
                     rejectValue(errors, "previousApplicationTitle", "validation.application.previous.application.title.required");
                 }
             }
@@ -70,7 +71,7 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
 
     private void validateInnovationArea(Errors errors, Application application) {
         if (!applicationInnovationAreaIsInCorrectState(application)) {
-            LOG.debug("MarkAsComplete application details validation message for innovation area: " + application.getInnovationArea());
+            log.debug("MarkAsComplete application details validation message for innovation area: " + application.getInnovationArea());
             rejectValue(errors, "innovationArea", "validation.application.innovationarea.category.required");
         }
     }
@@ -81,7 +82,7 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
 
         if (isEmpty(application.getStartDate()) || (application.getStartDate().isBefore(currentDate))) {
             if (!(application.getCompetition().isAlwaysOpen() && application.getCompetition().isKtp())) {
-                LOG.debug("MarkAsComplete application details validation message for start date: " + application.getStartDate());
+                log.debug("MarkAsComplete application details validation message for start date: " + application.getStartDate());
                 rejectValue(errors, "startDate", "validation.project.start.date.not.in.future");
             }
         }
@@ -89,24 +90,24 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
 
     private void validateName(Errors errors, Application application) {
         if (isEmpty(application.getName())) {
-            LOG.debug("MarkAsComplete application details validation message for name: " + application.getName());
+            log.debug("MarkAsComplete application details validation message for name: " + application.getName());
             rejectValue(errors, "name", "validation.project.name.must.not.be.empty");
         }
     }
 
     private void validateProcurement(Errors errors, Application application) {
         if (isEmpty(application.getCompetitionReferralSource())) {
-            LOG.debug("MarkAsComplete application details validation message for competition Referral Source: " + application.getName());
+            log.debug("MarkAsComplete application details validation message for competition Referral Source: " + application.getName());
             rejectValue(errors, "competitionReferralSource", "validation.application.procurement.competitionreferralsource.required");
         }
 
         if (isEmpty(application.getCompanyAge())) {
-            LOG.debug("MarkAsComplete application details validation message for company age: " + application.getName());
+            log.debug("MarkAsComplete application details validation message for company age: " + application.getName());
             rejectValue(errors, "companyAge", "validation.application.procurement.companyage.required");
         }
 
         if (isEmpty(application.getCompanyPrimaryFocus())) {
-            LOG.debug("MarkAsComplete application details validation message for company primary focus: " + application.getName());
+            log.debug("MarkAsComplete application details validation message for company primary focus: " + application.getName());
             rejectValue(errors, "companyPrimaryFocus", "validation.application.procurement.companyprimaryfocus.required");
         }
     }
