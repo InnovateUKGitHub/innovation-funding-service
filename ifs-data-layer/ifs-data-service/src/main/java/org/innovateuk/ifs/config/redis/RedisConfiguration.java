@@ -3,6 +3,7 @@ package org.innovateuk.ifs.config.redis;
 import io.lettuce.core.ClientOptions;
 import io.lettuce.core.ClientOptions.DisconnectedBehavior;
 import io.lettuce.core.cluster.ClusterClientOptions;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.data.redis.LettuceClientConfigurationBuilderCustomizer;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.cache.Cache;
@@ -12,9 +13,9 @@ import org.springframework.cache.interceptor.SimpleCacheErrorHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@Slf4j
 @Configuration
 public class RedisConfiguration extends CachingConfigurerSupport {
-    private static final Log LOG = LogFactory.getLog(RedisConfiguration.class);
     private RedisProperties redisProperties;
 
     /*
@@ -49,17 +50,17 @@ public class RedisConfiguration extends CachingConfigurerSupport {
         return new SimpleCacheErrorHandler() {
             @Override
             public void handleCacheGetError(RuntimeException exception, Cache cache, Object key) {
-                LOG.debug("Failed to get cache item with key " + key.toString(), exception);
+                log.debug("Failed to get cache item with key " + key.toString(), exception);
             }
 
             @Override
             public void handleCachePutError(RuntimeException exception, Cache cache, Object key, Object value) {
-                LOG.error("Failed to put cache item with key " + key.toString(), exception);
+                log.error("Failed to put cache item with key " + key.toString(), exception);
             }
 
             @Override
             public void handleCacheEvictError(RuntimeException exception, Cache cache, Object key) {
-                LOG.error("Failed to evict cache item with key " + key.toString(), exception);
+                log.error("Failed to evict cache item with key " + key.toString(), exception);
 
             }
         };

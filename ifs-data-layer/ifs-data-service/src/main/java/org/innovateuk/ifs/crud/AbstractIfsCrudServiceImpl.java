@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.crud;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.mapper.BaseResourceMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.RootTransactionalService;
@@ -15,8 +16,8 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
+@Slf4j
 public abstract class AbstractIfsCrudServiceImpl<Resource, Domain, Id> extends RootTransactionalService implements IfsCrudService<Resource, Id> {
-    private final Log LOG = LogFactory.getLog(this.getClass());
 
     protected abstract CrudRepository<Domain, Id> crudRepository();
 
@@ -64,7 +65,7 @@ public abstract class AbstractIfsCrudServiceImpl<Resource, Domain, Id> extends R
         try {
             domain = getDomainClazz().newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
-            LOG.error(e);
+            log.error(e.getMessage(), e);
         }
         mapToDomain(domain, resource);
         return serviceSuccess(crudRepository().save(domain))

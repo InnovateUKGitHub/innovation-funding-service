@@ -58,7 +58,6 @@ import static org.springframework.util.ReflectionUtils.*;
  */
 @Service
 public class CompetitionSetupServiceImpl extends BaseTransactionalService implements CompetitionSetupService {
-    private static final Log LOG = LogFactory.getLog(CompetitionSetupServiceImpl.class);
 
     @Autowired
     private CompetitionMapper competitionMapper;
