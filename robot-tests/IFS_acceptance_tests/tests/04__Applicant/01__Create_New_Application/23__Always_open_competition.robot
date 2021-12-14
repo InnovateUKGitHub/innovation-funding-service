@@ -170,7 +170,7 @@ Comp admin creates a new assessment period
     Then the user should see assessment period 1
     And The user clicks the button/link                     link = Manage assessors
     And the user clicks the button/link                     jQuery = button:contains("Save and continue")
-    And The user should see the element                     css = .govuk-select govuk-input--error
+    And The user should see the element                     css = .govuk-error-message
 
 Internal user should see the same dates entered in choose assessment period dropdowns even after notify assessor
     [Documentation]  IFS-10943
