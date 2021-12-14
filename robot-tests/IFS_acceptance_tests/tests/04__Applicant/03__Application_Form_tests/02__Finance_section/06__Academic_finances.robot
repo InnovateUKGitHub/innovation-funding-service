@@ -48,7 +48,7 @@ Large pdf upload not allowed
     [Setup]  the user clicks the button/link         jQuery = .button-clear:contains("Edit your project costs")
     Given the user can remove the uploaded file      remove_jes  ${5mb_pdf}
     When the academic partner uploads a file         ${too_large_pdf}
-    Then the user should see a field error           ${too_large_10MB_validation_error}
+    Then the user should see a field error           ${too_large_32MB_validation_error}
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-2720
