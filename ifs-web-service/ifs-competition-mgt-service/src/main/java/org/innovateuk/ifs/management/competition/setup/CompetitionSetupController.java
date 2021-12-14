@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.CharMatcher;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
@@ -61,11 +62,12 @@ import static org.innovateuk.ifs.management.competition.setup.projectdocument.co
  */
 @SuppressWarnings("unchecked")
 @Controller
+@Slf4j
 @RequestMapping("/competition/setup")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionSetupController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin')")
 public class CompetitionSetupController {
-    private static final Log LOG = LogFactory.getLog(CompetitionSetupController.class);
+
     public static final String COMPETITION_ID_KEY = "competitionId";
     public static final String COMPETITION_SETUP_FORM_KEY = "competitionSetupForm";
     private static final String SECTION_PATH_KEY = "sectionPath";
@@ -125,7 +127,7 @@ public class CompetitionSetupController {
                                          UserResource loggedInUser) {
         CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
         if (section == null) {
-            LOG.error("Invalid section path specified: " + sectionPath);
+            log.error("Invalid section path specified: " + sectionPath);
             return DASHBOARD_REDIRECT;
         }
 
@@ -163,7 +165,7 @@ public class CompetitionSetupController {
         }
 
         if (section == null) {
-            LOG.error("Invalid section path specified: " + sectionPath);
+            log.error("Invalid section path specified: " + sectionPath);
             return DASHBOARD_REDIRECT;
         } else if (section == CompetitionSetupSection.APPLICATION_FORM) {
             return format(APPLICATION_LANDING_REDIRECT, competitionId);

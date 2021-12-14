@@ -46,7 +46,6 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public class InitialDetailsSectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater {
 
     public final static String OPENINGDATE_FIELDNAME = "openingDate";
-    private static Log LOG = LogFactory.getLog(InitialDetailsSectionUpdater.class);
 
     @Autowired
     private CompetitionSetupService competitionSetupService;

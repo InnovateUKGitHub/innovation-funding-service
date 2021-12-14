@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.assessment.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -40,13 +41,12 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 /**
  * This controller will handle all Competition Management requests related to inviting assessors to a Competition.
  */
+@Slf4j
 @Controller
 @RequestMapping("/competition/{competitionId}/assessors")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = InviteAssessorsController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSMENT')")
 public class InviteAssessorsController extends CompetitionManagementCookieController<AssessorSelectionForm> {
-
-    private static final Log LOG = LogFactory.getLog(InviteAssessorsController.class);
 
     private static final String FORM_ATTR_NAME = "form";
     private static final String SELECTION_FORM = "assessorSelectionForm";
@@ -157,7 +157,7 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
             saveFormToCookie(response, competitionId, selectionForm);
             return createJsonObjectNode(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected(), limitExceeded);
         } catch (Exception e) {
-            LOG.error("exception thrown selecting assessor for invite list", e);
+            log.error("exception thrown selecting assessor for invite list", e);
             return createFailureResponse();
         }
     }
@@ -186,7 +186,7 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
 
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected(), false);
         } catch (Exception e) {
-            LOG.error("exception thrown adding assessors to invite list", e);
+            log.error("exception thrown adding assessors to invite list", e);
 
             return createFailureResponse();
         }

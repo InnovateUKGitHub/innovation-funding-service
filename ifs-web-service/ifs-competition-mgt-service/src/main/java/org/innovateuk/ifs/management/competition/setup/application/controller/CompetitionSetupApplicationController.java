@@ -59,7 +59,6 @@ import static org.innovateuk.ifs.management.competition.setup.CompetitionSetupCo
 @PreAuthorize("hasAnyAuthority('comp_admin')")
 public class CompetitionSetupApplicationController {
 
-    private static final Log LOG = LogFactory.getLog(CompetitionSetupApplicationController.class);
     public static final String APPLICATION_LANDING_REDIRECT = "redirect:/competition/setup/%d/section/application/landing-page";
     public static final String QUESTION_REDIRECT = "redirect:/competition/setup/%d/section/application/question/%d/edit";
     private static final String QUESTION_VIEW = "competition/setup/question";

@@ -34,8 +34,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 @Service
 public class MilestonesSectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater {
 
-    private static Log LOG = LogFactory.getLog(MilestonesSectionUpdater.class);
-
     @Autowired
     private MilestoneRestService milestoneRestService;
 

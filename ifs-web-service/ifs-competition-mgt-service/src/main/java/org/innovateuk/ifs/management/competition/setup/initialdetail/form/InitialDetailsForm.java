@@ -2,6 +2,8 @@ package org.innovateuk.ifs.management.competition.setup.initialdetail.form;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.validation.constraints.FutureZonedDateTime;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.FundingRules;
@@ -17,9 +19,8 @@ import java.util.List;
 /**
  * Form for the initial details competition setup section.
  */
+@Slf4j
 public class InitialDetailsForm extends CompetitionSetupForm {
-
-    private static final Log LOG = LogFactory.getLog(InitialDetailsForm.class);
 
     /**
      * Validation group for when the user input is 'unrestricted'
@@ -79,7 +80,7 @@ public class InitialDetailsForm extends CompetitionSetupForm {
         try {
             return TimeZoneUtil.fromUkTimeZone(openingDateYear, openingDateMonth, openingDateDay);
         } catch (DateTimeException e) {
-            LOG.trace("invalid opening date", e);
+            log.trace("invalid opening date", e);
             return null;
         }
     }

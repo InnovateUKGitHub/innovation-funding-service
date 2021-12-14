@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.core.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.error.Error;
@@ -33,9 +34,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.*;
 
 @Service
+@Slf4j
 public class CompetitionSetupServiceImpl implements CompetitionSetupService {
-
-    private static final Log LOG = LogFactory.getLog(CompetitionSetupServiceImpl.class);
 
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
@@ -129,7 +129,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     public CompetitionSetupFormPopulator getSectionFormPopulator(CompetitionSetupSection section) {
         CompetitionSetupFormPopulator populator = formPopulators.get(section);
         if (populator == null) {
-            LOG.error("unable to populate form for section " + section);
+            log.error("unable to populate form for section " + section);
             throw new IllegalArgumentException();
         }
         return populator;
@@ -143,7 +143,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
         checkIfSubsectionIsInSection(section, subsection);
         CompetitionSetupSubsectionFormPopulator populator = subsectionFormPopulators.get(subsection);
         if (populator == null) {
-            LOG.error("unable to populate form for subsection " + subsection);
+            log.error("unable to populate form for subsection " + subsection);
             throw new IllegalArgumentException();
         }
 
@@ -159,7 +159,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
         CompetitionSetupSectionUpdater saver = sectionSavers.get(section);
         if (saver == null || !saver.supportsForm(competitionSetupForm.getClass())) {
-            LOG.error("unable to save section " + section);
+            log.error("unable to save section " + section);
             throw new IllegalArgumentException();
         }
 
@@ -191,7 +191,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
         CompetitionSetupSubsectionUpdater saver = subsectionSavers.get(subsection);
         if (saver == null || !saver.supportsForm(competitionSetupForm.getClass())) {
-            LOG.error("unable to save subsection " + subsection);
+            log.error("unable to save subsection " + subsection);
             throw new IllegalArgumentException();
         }
 
@@ -306,7 +306,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
     private void checkIfSubsectionIsInSection(CompetitionSetupSection section, CompetitionSetupSubsection subsection) {
         if (!section.getSubsections().contains(subsection)) {
-            LOG.error("Subsection(" + subsection + ") not found on section " + section);
+            log.error("Subsection(" + subsection + ") not found on section " + section);
             throw new IllegalArgumentException();
         }
     }

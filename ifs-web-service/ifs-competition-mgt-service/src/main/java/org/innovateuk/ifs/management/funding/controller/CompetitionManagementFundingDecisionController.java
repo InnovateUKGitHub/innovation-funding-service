@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.funding.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
@@ -33,13 +34,12 @@ import static java.util.Collections.emptyList;
 /**
  * Handles the Competition Management Funding decision views and submission of funding decision.
  */
+@Slf4j
 @Controller
 @RequestMapping("/competition/{competitionId}/funding")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementFundingDecisionController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin')")
 public class CompetitionManagementFundingDecisionController extends CompetitionManagementCookieController<FundingDecisionSelectionCookie> {
-
-    private static final Log log = LogFactory.getLog(CompetitionManagementFundingDecisionController.class);
 
     private ApplicationSummaryRestService applicationSummaryRestService;
     private ApplicationFundingDecisionService applicationFundingDecisionService;
@@ -138,7 +138,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         try {
             selectionCookie = getSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
         } catch (Exception e) {
-            log.error(e);
+            log.error(e.getMessage(), e);
             return createFailureResponse();
         }
 
@@ -202,7 +202,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
             saveFormToCookie(response, competitionId, cookieForm);
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getApplicationIds().size(), selectionForm.isAllSelected(), limitExceeded);
         } catch (Exception e) {
-            log.error(e);
+            log.error(e.getMessage(), e);
             return createFailureResponse();
         }
     }

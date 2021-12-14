@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.assessment.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource.Sort;
 import org.innovateuk.ifs.application.service.ApplicationAssessmentSummaryRestService;
 import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
@@ -27,13 +28,14 @@ import static java.lang.String.format;
 /**
  * This controller will handle all Competition Management requests related to allocating assessors to an Application.
  */
+@Slf4j
 @Controller
 @RequestMapping("/assessment/competition/{competitionId}/application/{applicationId}/period/{assessmentPeriodId}/assessors")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentApplicationProgressController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
 public class AssessmentApplicationProgressController extends CompetitionManagementCookieController<AvailableAssessorForm> {
+
     private static final String SELECTION_FORM = "availableAssessorsSelectionForm";
-    private static final Log LOG = LogFactory.getLog(AssessmentApplicationProgressController.class);
 
     @Autowired
     private ApplicationAssessmentProgressModelPopulator applicationAssessmentProgressModelPopulator;
@@ -155,7 +157,7 @@ public class AssessmentApplicationProgressController extends CompetitionManageme
             saveFormToCookie(response, competitionId, selectionForm);
             return createJsonObjectNode(selectionForm.getSelectedAssessors().size(), selectionForm.isAllSelected(), limitExceeded);
         } catch (Exception e) {
-            LOG.error("exception thrown selecting assessor for resend list", e);
+            log.error("exception thrown selecting assessor for resend list", e);
             return createFailureResponse();
         }
     }
@@ -182,7 +184,7 @@ public class AssessmentApplicationProgressController extends CompetitionManageme
 
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedAssessors().size(), selectionForm.isAllSelected(), false);
         } catch (Exception e) {
-            LOG.error("exception thrown adding assessors to list", e);
+            log.error("exception thrown adding assessors to list", e);
             return createFailureResponse();
         }
     }

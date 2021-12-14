@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.funding.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
@@ -36,14 +37,12 @@ import java.util.stream.Collectors;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-
+@Slf4j
 @Controller
 @RequestMapping("/competition/{competitionId}")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementFundingNotificationsController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin')")
 public class CompetitionManagementFundingNotificationsController extends CompetitionManagementCookieController<FundingNotificationSelectionCookie> {
-
-    private static final Log LOG = LogFactory.getLog(CompetitionManagementFundingNotificationsController.class);
 
     private static final String MANAGE_FUNDING_APPLICATIONS_VIEW = "comp-mgt-manage-funding-applications";
     private static final String FUNDING_DECISION_NOTIFICATION_VIEW = "comp-mgt-send-notifications";
@@ -249,7 +248,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
 
             return createSuccessfulResponseWithSelectionStatus(selectionCookie.getFundingNotificationSelectionForm().getIds().size(), selectionCookie.getFundingNotificationSelectionForm().isAllSelected(), limitIsExceeded);
         } catch (Exception e) {
-            LOG.error("exception thrown selecting application for email list", e);
+            log.error("exception thrown selecting application for email list", e);
             return createFailureResponse();
         }
     }
@@ -288,7 +287,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
             saveFormToCookie(response, competitionId, selectionCookie);
             return createSuccessfulResponseWithSelectionStatus(selectionCookie.getFundingNotificationSelectionForm().getIds().size(), selectionCookie.getFundingNotificationSelectionForm().isAllSelected(), false);
         } catch (Exception e) {
-            LOG.error("exception thrown adding applications to email list", e);
+            log.error("exception thrown adding applications to email list", e);
 
             return createFailureResponse();
         }

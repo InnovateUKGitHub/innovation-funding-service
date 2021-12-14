@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.review.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -36,14 +37,13 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 /**
  * This controller will handle all Competition Management requests related to inviting assessors to an Assessment Panel.
  */
+@Slf4j
 @Controller
 @RequestMapping("/assessment/panel/competition/{competitionId}/assessors")
 @SecuredBySpring(value = "Controller", description = "Only comp admin and project finance users can setup assessment" +
         " panels if they competition supports them", securedType = ReviewInviteAssessorsController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'REVIEW')")
 public class ReviewInviteAssessorsController extends CompetitionManagementCookieController<ReviewSelectionForm> {
-
-    private static final Log LOG = LogFactory.getLog(ReviewInviteAssessorsController.class);
 
     private static final String SELECTION_FORM = "reviewSelectionForm";
     private static final String FORM_ATTR_NAME = "form";
@@ -150,7 +150,7 @@ public class ReviewInviteAssessorsController extends CompetitionManagementCookie
             saveFormToCookie(response, competitionId, selectionForm);
             return createJsonObjectNode(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected(), limitExceeded);
         } catch (Exception e) {
-            LOG.error("exception thrown selecting assessors for invite list", e);
+            log.error("exception thrown selecting assessors for invite list", e);
             return createFailureResponse();
         }
     }
@@ -176,7 +176,7 @@ public class ReviewInviteAssessorsController extends CompetitionManagementCookie
 
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected(), false);
         } catch (Exception e) {
-            LOG.error("exception thrown adding assessors to invite list", e);
+            log.error("exception thrown adding assessors to invite list", e);
             return createFailureResponse();
         }
     }

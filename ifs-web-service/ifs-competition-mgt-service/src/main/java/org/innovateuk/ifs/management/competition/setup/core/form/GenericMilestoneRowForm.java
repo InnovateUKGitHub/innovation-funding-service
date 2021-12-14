@@ -18,8 +18,6 @@ import java.util.Set;
  */
 public class GenericMilestoneRowForm {
 
-    private static final Log LOG = LogFactory.getLog(GenericMilestoneRowForm.class);
-
     public static final Set<MilestoneType> WITH_TIME_TYPES = ImmutableSet.of(MilestoneType.SUBMISSION_DATE, MilestoneType.REGISTRATION_DATE);
     public static final Set<MilestoneType> WITH_MIDDAY_TIME = ImmutableSet.of(MilestoneType.ASSESSOR_ACCEPTS, MilestoneType.ASSESSOR_DEADLINE);
 
