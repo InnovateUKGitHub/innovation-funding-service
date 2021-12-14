@@ -1,6 +1,7 @@
 
 package org.innovateuk.ifs.management.competition.setup.application.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -53,6 +54,7 @@ import static org.innovateuk.ifs.management.competition.setup.CompetitionSetupCo
  * Controller to manage the Application Questions and it's sub-sections in the
  * competition setup process
  */
+@Slf4j
 @Controller
 @RequestMapping("/competition/setup/{competitionId}/section/application")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionSetupApplicationController.class)
@@ -516,7 +518,7 @@ public class CompetitionSetupApplicationController {
                                                                   Optional<Long> questionIdOpt,
                                                                   UserResource loggedInUser) {
         if (CompetitionSetupSection.APPLICATION_FORM.preventEdit(competition, loggedInUser)) {
-            LOG.error(String.format("Competition with id %1$d cannot edit section %2$s: ", competition.getId(), CompetitionSetupSection.APPLICATION_FORM));
+            log.error(String.format("Competition with id %1$d cannot edit section %2$s: ", competition.getId(), CompetitionSetupSection.APPLICATION_FORM));
             return "redirect:/dashboard";
         } else {
             questionIdOpt.ifPresent(questionId -> questionSetupRestService.markQuestionSetupIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM, questionId));
