@@ -203,13 +203,6 @@ function startPybot() {
       else
         local includeAtsTags='--exclude AuthServiceTests'
     fi
-    if [[ ${zapTest} -eq 1 ]]
-      then
-        local includeZapTags='--include ZAPTests'
-      else
-        local includeZapTags='--exclude ZAPTests'
-    fi
-
 
     python3 -m robot --outputdir target/${targetDir} ${rerunString} ${dryRunString} --pythonpath IFS_acceptance_tests/libs \
     -v docker:1 \
@@ -228,7 +221,6 @@ function startPybot() {
     $excludeBespokeTags \
     $includeEuTags \
     $includeAtsTags \
-    $includeZapTags \
     --exclude Failing --exclude Pending --name ${targetDir} ${1} &
 }
 
@@ -273,10 +265,6 @@ function clearOldReports() {
   mkdir target
 }
 
-function getZAPReport() {
-    curl --silent ifs.local-dev:9000/OTHER/core/other/htmlreport/ -o target/${targetDir}/ZAPReport.html
-}
-
 function saveResultsToCompressedFolder() {
   # compresses the results as a tar using the current branch name
   branchName=$(git rev-parse --abbrev-ref HEAD)
@@ -294,18 +282,10 @@ function openReports() {
 if [[ $(which google-chrome) ]]
 then
    google-chrome target/${targetDir}/log.html &
-   if [[ ${showZapReport} -eq 1 ]]
-   then
-        google-chrome target/${targetDir}/ZAPReport.html &
-   fi
 else
    wd=$(pwd)
    logs="target/${targetDir}"
    open "file://${wd}/${logs}/log.html"
-   if [[ ${showZapReport} -eq 1 ]]
-   then
-       open "file://${wd}/${logs}/ZAPReport.html"
-   fi
 fi
 }
 
@@ -370,16 +350,14 @@ unset useBespokeExcludeTag
 quickTest=0
 rerunFailed=0
 stopGrid=0
-showZapReport=0
 compress=0
 eu=0
 ats=0
 dryRun=0
 openReports=1
-zapTest=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":q :h :t :r :c :w :z :d: :x :R :B :I: :E: :a :o :p" opt ; do
+while getopts ":q :h :t :r :c :w :d: :x :R :B :I: :E: :a :o" opt ; do
     case ${opt} in
         q)
             quickTest=1
@@ -393,9 +371,6 @@ while getopts ":q :h :t :r :c :w :z :d: :x :R :B :I: :E: :a :o :p" opt ; do
         r)
 		    rerunFailed=1
     	;;
-    	z)
-    	    showZapReport=1
-        ;;
     	d)
             testDirectory="$OPTARG"
         ;;
@@ -424,9 +399,6 @@ while getopts ":q :h :t :r :c :w :z :d: :x :R :B :I: :E: :a :o :p" opt ; do
         ;;
         a)
           ats=1
-        ;;
-        p)
-          zapTest=1
         ;;
 	o)
 	  openReports=0
@@ -473,8 +445,6 @@ else
     deleteEmails
     runTests
 fi
-
-getZAPReport
 
 if [[ ${stopGrid} -eq 1 ]]
 then

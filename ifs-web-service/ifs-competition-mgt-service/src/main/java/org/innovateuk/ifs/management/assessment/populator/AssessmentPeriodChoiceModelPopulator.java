@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.management.assessment.populator;
 
-import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.assessment.service.AssessmentPeriodService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessmentPeriodChoiceViewModel;
@@ -12,6 +12,7 @@ import org.innovateuk.ifs.management.assessment.viewmodel.AssessmentPeriodChoice
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,13 +39,20 @@ public class AssessmentPeriodChoiceModelPopulator {
                 .collect(Collectors.groupingBy(MilestoneResource::getAssessmentPeriodId));
         List<AssessmentPeriodViewModel> assessmentPeriods = periodIdToMilestoneMap.entrySet().stream()
                 .map(e -> {
-                    LinkedMap<String, MilestoneViewModel> milestoneFormEntries = new LinkedMap<>();
+                    Map<String, MilestoneViewModel> milestoneFormEntries = new LinkedHashMap<>();
                     e.getValue().forEach(milestone ->
                             milestoneFormEntries.put(milestone.getType().getMilestoneDescription(), populateMilestoneFormEntries(milestone))
                     );
                     AssessmentPeriodViewModel assessmentPeriodViewModel = new AssessmentPeriodViewModel();
                     assessmentPeriodViewModel.setAssessmentPeriodId(e.getKey());
                     assessmentPeriodViewModel.setMilestoneEntries(milestoneFormEntries);
+                    for (Map.Entry<String, MilestoneViewModel> assessmentPeriodsList : milestoneFormEntries.entrySet()) {
+                        String typeDesc = assessmentPeriodsList.getKey();
+                        if (typeDesc.equals(MilestoneType.ASSESSMENT_CLOSED.getMilestoneDescription())) {
+                            assessmentPeriodViewModel.setAssessmentClosed(true);
+                            break;
+                        }
+                    }
 
                     String displayName = assessmentPeriodService.displayName(e.getKey(), competitionId);
                     assessmentPeriodViewModel.setDisplayName(displayName);
