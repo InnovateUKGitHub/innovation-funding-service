@@ -44,7 +44,7 @@ public class AppendixViewModel extends FileEntryResource {
 
     @JsonIgnore
     public String getHumanReadableFileSize() {
-        return DataSize.of(getFilesizeBytes(), DataUnit.BYTES).toString();
+        return DataSize.of(getFilesizeBytes(), DataUnit.BYTES).toMegabytes().toString();
     }
 
     public void setApplicationId(Long applicationId) {
