@@ -33,7 +33,7 @@
                 <p class="govuk-body">Project setup is complete and was unsuccessful.</p>
             </div>
             <p class="govuk-body">Innovate UK and the organisation can view the project but can no longer make changes online.</p>
-            <p class="govuk-body"><span class="govuk-!-font-weight-bold">Project Start Date:</span> <th:block th:text="${#temporals.format(model.targetStartDate, 'd MMMM yyyy')}">-</th:block></p>
+            <p class="govuk-body" th:unless="${model.isUnsuccessful()}"><span class="govuk-!-font-weight-bold">Project Start Date:</span> <th:block th:text="${#temporals.format(model.targetStartDate, 'd MMMM yyyy')}">-</th:block></p>
             <p class="govuk-body"><a th:href="@{/competition/{id}/status(id=${model.competitionId})}">Return to project setup</a></p>
         </th:block>
         <th:block th:unless="${model.readonly}">
@@ -98,11 +98,12 @@
                                                     You can change the project start date if required.
                                                 </p>
                                                 <th:block th:if="${#fields.hasErrors('startDate*')}">
-                                                    <span class="govuk-error-message" th:each="err : ${#fields.errors('startDate*')}"
+                                                    <span id="startDate" class="govuk-error-message"
+                                                          th:each="err : ${#fields.errors('startDate*')}"
                                                           th:text="${err}"></span>
                                                 </th:block>
                                                 <div class="date-group"
-                                                     th:attr="data-date-invalid-errormessage=#{validation.standard.date.format}">
+                                                     th:attr="data-date-invalid-errormessage=#{validation.project.start.date.format}">
                                                     <div class="day">
                                                         <label class="govuk-label" for="startDateDay">
                                                             <span>Day</span>
@@ -118,7 +119,7 @@
                                                                data-autosave-disabled=""
                                                                th:classappend="${#fields.hasErrors('startDateDay')} ? 'govuk-input--error'"
                                                                th:field="*{startDateDay}"
-                                                               th:attr="data-required-errormessage=#{validation.standard.date.format}"
+                                                               th:attr="data-required-errormessage=#{validation.project.start.date.format}"
                                                                />
                                                     </div>
 
@@ -137,7 +138,7 @@
                                                                data-autosave-disabled=""
                                                                th:classappend="${#fields.hasErrors('startDateMonth')} ? 'govuk-input--error'"
                                                                th:field="*{startDateMonth}"
-                                                               th:attr="data-required-errormessage=#{validation.standard.date.format}" />
+                                                               th:attr="data-required-errormessage=#{validation.project.start.date.format}" />
                                                     </div>
 
                                                     <div class="year">
@@ -153,7 +154,7 @@
                                                                data-autosave-disabled=""
                                                                th:classappend="${#fields.hasErrors('startDateYear')} ? 'govuk-input--error'"
                                                                th:field="*{startDateYear}"
-                                                               th:attr="data-required-errormessage=#{validation.standard.date.format}" />
+                                                               th:attr="data-required-errormessage=#{validation.project.start.date.format}" />
                                                     </div>
                                                 </div>
                                             </fieldset>
@@ -173,7 +174,9 @@
                                     <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
                                          id="project-conditional-unsuccessful"></div>
                                 </div>
-
+                                <br/>
+                                <br/>
+                                <br/>
                                 <fieldset class="govuk-fieldset" aria-describedby="successful-hint">
                                     <th:block th:if="${#fields.hasErrors('successfulConfirmation')}">
                                                     <span class="govuk-error-message"

@@ -25,8 +25,8 @@ public class GenericMilestoneRowForm {
     public static final Set<MilestoneType> WITH_TIME_TYPES = ImmutableSet.of(MilestoneType.SUBMISSION_DATE, MilestoneType.REGISTRATION_DATE);
     public static final Set<MilestoneType> WITH_MIDDAY_TIME = ImmutableSet.of(MilestoneType.ASSESSOR_ACCEPTS, MilestoneType.ASSESSOR_DEADLINE);
 
-    @Min(value = 2000, message = "{validation.standard.date.format}")
-    @Max(value = 9999, message = "{validation.standard.date.format}")
+    @Min(value = 2000, message = "{validation.project.start.date.format}")
+    @Max(value = 9999, message = "{validation.project.start.date.format}")
     protected Integer year;
     protected Integer month;
     protected Integer day;
