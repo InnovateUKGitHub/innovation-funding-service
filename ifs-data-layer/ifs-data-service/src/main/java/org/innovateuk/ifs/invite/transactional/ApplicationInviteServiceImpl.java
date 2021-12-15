@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.invite.transactional;
 
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
@@ -12,10 +13,13 @@ import org.innovateuk.ifs.finance.repository.EmployeesAndTurnoverRepository;
 import org.innovateuk.ifs.finance.repository.GrowthTableRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
+import org.innovateuk.ifs.invite.domain.Invite;
+import org.innovateuk.ifs.invite.domain.InviteHistory;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.mapper.ApplicationInviteMapper;
 import org.innovateuk.ifs.invite.mapper.InviteOrganisationMapper;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
+import org.innovateuk.ifs.invite.repository.InviteHistoryRepository;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -31,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -106,6 +111,10 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     @Autowired
     private ApplicationProcurementMilestoneRepository applicationProcurementMilestoneRepository;
 
+    @Autowired
+    private InviteHistoryRepository inviteHistoryRepository;
+
+
     @Override
     protected Class<ApplicationInvite> getInviteClass() {
         return ApplicationInvite.class;
@@ -121,6 +130,11 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         return getByHash(hash);
     }
 
+
+    @Autowired
+    private ApplicationInviteService applicationInviteService;
+
+
     @Override
     @Transactional
     public ServiceResult<Void> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource, Optional<Long> applicationId) {
@@ -135,7 +149,24 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
 
     @Override
     public ServiceResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash) {
+
+        ApplicationInviteResource applicationInviteResource = applicationInviteService.getInviteByHash(hash).toGetResponse().getSuccess();
+        InviteHistory inviteHistory = getInviteHistory(applicationInviteResource);
+        inviteHistoryRepository.save(inviteHistory);
+
         return getByHash(hash).andOnSuccessReturn(invite -> inviteOrganisationMapper.mapToResource(inviteOrganisationRepository.findById(invite.getInviteOrganisation().getId()).orElse(null)));
+    }
+
+    private InviteHistory getInviteHistory(ApplicationInviteResource applicationInviteResource) {
+        Invite invite = mapInviteResourceToInvite(applicationInviteResource, null);
+
+        InviteHistory inviteHistory = new InviteHistory();
+        inviteHistory.setStatus(InviteStatus.OPENED);
+        inviteHistory.setUpdatedOn(ZonedDateTime.now());
+        inviteHistory.setUpdatedBy(null);
+        inviteHistory.setId(RandomUtils.nextLong());
+        inviteHistory.setInvite(invite);
+        return inviteHistory;
     }
 
     @Override
