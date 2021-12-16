@@ -1,0 +1,133 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    deployedWith: kustomize
+    environment: at
+  labels:
+    app: chrome
+  name: chrome
+spec:
+  ports:
+  - name: 4444-tcp
+    port: 4444
+    targetPort: 4444
+  selector:
+    app: chrome
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployedWith: kustomize
+    environment: at
+  name: chrome
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chrome
+  template:
+    metadata:
+      annotations:
+        deployedWith: kustomize
+        environment: at
+      labels:
+        app: chrome
+    spec:
+      containers:
+      - env:
+        - name: NODE_MAX_SESSION
+          value: "20"
+        - name: NODE_MAX_INSTANCES
+          value: "20"
+        - name: NODE_REGISTER_CYCLE
+          value: "600"
+        - name: DBUS_SESSION_BUS_ADDRESS
+          value: /dev/null
+        - name: SCREEN_WIDTH
+          value: "1920"
+        - name: SCREEN_HEIGHT
+          value: "5000"
+        - name: JAVA_TOOL_OPTIONS
+          value: -Xms1024m -Xmx1024m
+        - name: POOL_MAX
+          value: "30000"
+        image: selenium/standalone-chrome:3.14.0-arsenic
+        imagePullPolicy: IfNotPresent
+        name: chrome
+        ports:
+        - containerPort: 4444
+        - containerPort: 3000
+        resources:
+          limits:
+            cpu: 3000m
+            memory: 3000M
+          requests:
+            cpu: 400m
+            memory: 400M
+        volumeMounts:
+        - mountPath: /dev/shm
+          name: dshm
+      volumes:
+      - emptyDir:
+          medium: Memory
+        name: dshm
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployedWith: kustomize
+    environment: at
+    pullSecrets: pullSecrets
+  name: robot-framework
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: robot-service
+  template:
+    metadata:
+      annotations:
+        deployedWith: kustomize
+        environment: at
+      labels:
+        run: robot-service
+    spec:
+      containers:
+      - env:
+        - name: BAMBOO_CREDS
+          value: BAMBOO_CREDS_VAR
+        - name: BAMBOO_URL
+          value: BAMBOO_URL_VAR
+        - name: BAMBOO_PLAN_PROJ
+          value: BAMBOO_PLAN_PROJ_VAR
+        - name: BAMBOO_BUILD_NO
+          value: BAMBOO_BUILD_NO_VAR
+        - name: BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              key: SP_DOMAIN
+              name: shibboleth-config
+        - name: BAMBOO_TESTSUITE
+          value: BAMBOO_TESTSUITE_VAR
+        image: docker-ifs.devops.innovateuk.org/snapshots/robot-framework:v0.1-1069-g5f82991@sha256:f079599e6640933677e8cdddf2159e9c8312884746f75052f1142b4cc31179ef
+        imagePullPolicy: IfNotPresent
+        name: robot-framework
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 2000M
+          requests:
+            cpu: 100m
+            memory: 400M
+        volumeMounts:
+        - mountPath: /mnt/ifs_storage
+          name: dir-1
+      imagePullSecrets:
+      - name: regcred
+      volumes:
+      - name: dir-1
+        persistentVolumeClaim:
+          claimName: file-upload-claim
