@@ -362,7 +362,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
 
         Long projectId = 1L;
 
-        when(spendProfileServiceMock.completeSpendProfilesReview(projectId)).thenReturn(serviceSuccess());
+        when(spendProfileServiceMock.completeSpendProfilesReview(projectId, true)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/complete-spend-profiles-review", projectId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -374,6 +374,22 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
                 ));
     }
 
+    @Test
+    public void completeSpendProfilesReviewWithoutEmailNotification() throws Exception {
+
+        Long projectId = 1L;
+
+        when(spendProfileServiceMock.completeSpendProfilesReview(projectId, false)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/complete-spend-profiles-review?email=false", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the Spend Profiles review is being completed")
+                        )
+                ));
+    }
 
     private Map<Long, List<BigDecimal>> buildSpendProfileCostsPerCategoryMap() {
 

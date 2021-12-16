@@ -80,8 +80,10 @@ public class SpendProfileController {
     }
 
     @PostMapping("/complete-spend-profiles-review")
-    public RestResult<Void> completeSpendProfilesReview(@PathVariable("projectId") final Long projectId) {
-        return spendProfileService.completeSpendProfilesReview(projectId).toPostResponse();
+    public RestResult<Void> completeSpendProfilesReview(
+            @PathVariable("projectId") final Long projectId,
+            @RequestParam(value = "email", defaultValue = "true") final boolean sendEmailNotification) {
+        return spendProfileService.completeSpendProfilesReview(projectId, sendEmailNotification).toPostResponse();
     }
 
     @DeleteMapping("/spend-profile/reset")

@@ -141,7 +141,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
 
     private void submitSpendProfile(ProjectData data) {
         doAs(data.getProjectManager(), () -> {
-            spendProfileService.completeSpendProfilesReview(data.getProject().getId());
+            spendProfileService.completeSpendProfilesReview(data.getProject().getId(), true);
         });
     }
 

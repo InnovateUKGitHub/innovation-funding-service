@@ -190,12 +190,21 @@ public class SpendProfileControllerTest extends BaseControllerMockMVCTest<SpendP
     public void completeSpendProfilesReview() throws Exception {
         final Long projectId = 1L;
 
-        when(spendProfileService.completeSpendProfilesReview(projectId)).thenReturn(serviceSuccess());
+        when(spendProfileService.completeSpendProfilesReview(projectId, true)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/complete-spend-profiles-review", projectId))
                 .andExpect(status().isOk());
     }
 
+    @Test
+    public void completeSpendProfilesReviewWithoutEmailNotification() throws Exception {
+        final Long projectId = 1L;
+
+        when(spendProfileService.completeSpendProfilesReview(projectId, false)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/complete-spend-profiles-review?email=false", projectId))
+                .andExpect(status().isOk());
+    }
 
     private String generateTestCSVDataUsing(SpendProfileTableResource spendProfileTableResource) throws IOException {
         // Build the expectedCategoryToActualTotal map based on the input
