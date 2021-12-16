@@ -2,23 +2,15 @@ package org.innovateuk.ifs.assessment.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.AssessorCompetitionSummaryController;
-import org.innovateuk.ifs.assessment.resource.AssessorAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource;
 import org.innovateuk.ifs.assessment.transactional.AssessorCompetitionSummaryService;
-import org.innovateuk.ifs.documentation.AssessorAssessmentResourceDocs;
-import org.innovateuk.ifs.documentation.AssessorProfileResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.innovateuk.ifs.assessment.documentation.AssessorCompetitionSummaryResourceDocs.assessorCompetitionSummaryResourceBuilder;
-import static org.innovateuk.ifs.assessment.documentation.AssessorCompetitionSummaryResourceDocs.assessorCompetitionSummaryResourceFields;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AssessorCompetitionSummaryControllerDocumentation extends BaseControllerMockMVCTest<AssessorCompetitionSummaryController> {
@@ -43,15 +35,6 @@ public class AssessorCompetitionSummaryControllerDocumentation extends BaseContr
 
         mockMvc.perform(get("/assessor/{assessorId}/competition/{competitionId}/summary", assessorId, competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("assessor-competition-summary/{method-name}",
-                        pathParameters(
-                                parameterWithName("assessorId").description("Id of the assessor to get summary information for."),
-                                parameterWithName("competitionId").description("Id of the competition to refine the summary by.")
-                        ),
-                        responseFields(assessorCompetitionSummaryResourceFields)
-                                .andWithPrefix("assessor.", AssessorProfileResourceDocs.assessorProfileResourceFields)
-                                .andWithPrefix("assignedAssessments[].", AssessorAssessmentResourceDocs.assessorAssessmentResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 }

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.grant.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.grant.domain.GrantProcess;
@@ -21,13 +20,11 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
-import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
@@ -36,10 +33,10 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;

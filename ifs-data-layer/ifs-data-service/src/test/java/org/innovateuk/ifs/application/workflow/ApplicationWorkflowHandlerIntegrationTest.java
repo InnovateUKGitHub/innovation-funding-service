@@ -9,7 +9,6 @@ import org.innovateuk.ifs.application.transactional.AutoCompleteSectionsUtil;
 import org.innovateuk.ifs.application.workflow.actions.AutoCompleteSectionsAction;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
 import org.junit.Test;

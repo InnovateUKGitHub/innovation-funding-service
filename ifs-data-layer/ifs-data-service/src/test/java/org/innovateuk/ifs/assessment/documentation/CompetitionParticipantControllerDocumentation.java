@@ -3,9 +3,6 @@ package org.innovateuk.ifs.assessment.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.CompetitionParticipantController;
 import org.innovateuk.ifs.assessment.transactional.CompetitionParticipantService;
-import org.innovateuk.ifs.documentation.CompetitionInviteDocs;
-import org.innovateuk.ifs.documentation.CompetitionParticipantResourceDocs;
-import org.innovateuk.ifs.documentation.RejectionReasonResourceDocs;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
@@ -17,12 +14,7 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.CompetitionParticipantResourceDocs.competitionParticipantResourceBuilder;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionParticipantControllerDocumentation extends BaseControllerMockMVCTest<CompetitionParticipantController> {
@@ -47,15 +39,6 @@ public class CompetitionParticipantControllerDocumentation extends BaseControlle
 
         mockMvc.perform(get("/competitionparticipant/user/{userId}", userId, status)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("competitionparticipant/{method-name}",
-                        pathParameters(
-                                parameterWithName("userId").description("User id of the competition participant")
-                        ),
-                        responseFields(fieldWithPath("[]").description("List of competition participants the user is allowed to see"))
-                                .andWithPrefix("[].", CompetitionParticipantResourceDocs.competitionParticipantResourceFields)
-                                .andWithPrefix("[].invite.", CompetitionInviteDocs.competitionInviteFields)
-                                .andWithPrefix("[].rejectionReason.", RejectionReasonResourceDocs.rejectionReasonResourceFields)
-                ));
+                .andExpect(status().isOk());
     }
 }

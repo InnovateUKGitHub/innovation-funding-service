@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.core.transactional;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.junit.Test;
 
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.SYSTEM_MAINTAINER;
 
 public class KtpProjectNotificationServiceSecurityTest extends BaseServiceSecurityTest<KtpProjectNotificationService> {
 

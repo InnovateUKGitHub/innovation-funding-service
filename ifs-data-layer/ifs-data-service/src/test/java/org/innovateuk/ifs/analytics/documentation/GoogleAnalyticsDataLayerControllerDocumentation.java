@@ -14,10 +14,7 @@ import java.util.UUID;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControllerMockMVCTest<GoogleAnalyticsDataLayerController> {
@@ -43,12 +40,7 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
 
         mockMvc.perform(get("/analytics/application/{application}/competition-name", APPLICATION_ID)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("analytics/{method-name}",
-                        pathParameters(
-                                parameterWithName("application").description("Id of the application")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -59,12 +51,7 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
 
         mockMvc.perform(get("/analytics/invite/{inviteHash}/competition-name", inviteHash)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("analytics/{method-name}",
-                        pathParameters(
-                                parameterWithName("inviteHash").description("Hash of the invite")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -73,12 +60,7 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
 
         mockMvc.perform(get("/analytics/competition/{competition}/competition-name", COMPETITION_ID)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("analytics/{method-name}",
-                        pathParameters(
-                                parameterWithName("competition").description("Id of the competition")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -87,12 +69,7 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
 
         mockMvc.perform(get("/analytics/project/{project}/competition-name", PROJECT_ID)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("analytics/{method-name}",
-                        pathParameters(
-                                parameterWithName("project").description("Id of the project")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -101,12 +78,7 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
 
         mockMvc.perform(get("/analytics/assessment/{assessment}/competition-name", ASSESSMENT_ID)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("analytics/{method-name}",
-                        pathParameters(
-                                parameterWithName("assessment").description("Id of the assessment")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -115,12 +87,7 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
 
         mockMvc.perform(get("/analytics/application/{applicationId}/user-roles", APPLICATION_ID)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("analytics/{method-name}",
-                                pathParameters(
-                                        parameterWithName("applicationId").description("Id of the application")
-                                )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -129,12 +96,7 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
 
         mockMvc.perform(get("/analytics/project/{projectId}/user-roles", PROJECT_ID)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("analytics/{method-name}",
-                                pathParameters(
-                                         parameterWithName("projectId").description("Id of the project")
-                                )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -143,12 +105,7 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
 
         mockMvc.perform(get("/analytics/project/{projectId}/application-id", PROJECT_ID)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("analytics/{method-name}",
-                                pathParameters(
-                                        parameterWithName("projectId").description("Id of the project")
-                                )
-                ));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -157,12 +114,7 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
 
         mockMvc.perform(get("/analytics/assessment/{assessmentId}/application-id", ASSESSMENT_ID)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("analytics/{method-name}",
-                        pathParameters(
-                                parameterWithName("assessmentId").description("Id of the assessment")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     private static String competitionName() {

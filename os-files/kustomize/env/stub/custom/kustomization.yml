@@ -10,7 +10,6 @@ components:
   - ../../../components/sil-stub
   - ../../../components/ifs-database
   - ../../../components/cache-provider
-  - ../../../components/auth
   - ../../../components/registration-service
   - ../../../components/data-layer
   - ../../../components/web-layer
@@ -20,14 +19,10 @@ components:
   - ../../../patches/spring-profile-patch
 
 resources:
-  - routes/idp-route.yml
-  - routes/shib-route.yml
   - routes/mail-route.yml
-
   - storage/gluster.yml
   - storage/gluster-ep.yml
   - storage/persistent-volume-claim.yml
 
 patchesStrategicMerge:
   - registration-service/registration-deployment.yml
-  - auth/idp/idp-deployment.yml

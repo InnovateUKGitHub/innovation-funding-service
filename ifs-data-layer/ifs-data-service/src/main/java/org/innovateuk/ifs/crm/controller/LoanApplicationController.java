@@ -13,21 +13,23 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.sil.crm.resource.SilLoanApplicationStatus;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UsersRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_INVALID_ARGUMENT;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
 
 @RestController
 @RequestMapping("/application-update")
@@ -116,16 +118,34 @@ public class LoanApplicationController {
     private RestResult<Void> markQuestionStatus(UserResource user, SilLoanApplicationStatus silStatus, QuestionApplicationCompositeId ids, Long processRoleId)  {
         LOG.debug(String.format("application-update: application=%d, question=%s, processrole=%d", ids.applicationId, silStatus.getQuestionSetupType() , processRoleId));
         if(silStatus.isStatusComplete()) {
+            String questionName = silStatus.getQuestionSetupType().getShortName();
+            String logError = String.format("application-update error: %s on application %d mark as complete failed", questionName, ids.applicationId);
+            String logInfo = String.format("application-update: %s application %d marked complete", questionName, ids.applicationId);
+
+            QuestionSetupType questionSetupType = questionService.getQuestionById(ids.questionId).getSuccess().getQuestionSetupType();
+            if (questionSetupType.equals(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION)) {
+                return questionStatusService.markAsCompleteNoValidate(ids, user.getId()).handleSuccessOrFailure(
+                        failure -> {
+                            LOG.error(logError);
+                            return RestResult.restFailure(failure.getErrors(), HttpStatus.BAD_REQUEST);
+                        },
+                        success -> {
+                            LOG.info(logInfo);
+                            activityLogService.recordActivityByApplicationId(ids.applicationId, user.getId(), ActivityType.APPLICATION_DETAILS_UPDATED);
+                            return RestResult.restSuccess(HttpStatus.NO_CONTENT);
+                        }
+                );
+            }
             return questionStatusService.markAsComplete(ids, processRoleId, silStatus.getCompletionDate()).handleSuccessOrFailure(
                     failure -> {
-                        LOG.error(String.format("application-update error: application %d mark as complete failed", ids.applicationId));
+                        LOG.error(logError);
                         return RestResult.restFailure(failure.getErrors(), HttpStatus.BAD_REQUEST);
                     },
                     success -> {
-                        LOG.info(String.format("application-update: application %d marked complete", ids.applicationId));
+                        LOG.info(logInfo);
                         activityLogService.recordActivityByApplicationId(ids.applicationId, user.getId(), ActivityType.APPLICATION_DETAILS_UPDATED);
                         return RestResult.restSuccess(HttpStatus.NO_CONTENT);
-                }
+                    }
             );
         } else if(silStatus.isStatusIncomplete()) {
             return questionStatusService.markAsInComplete(ids, processRoleId).handleSuccessOrFailure(
@@ -140,7 +160,7 @@ public class LoanApplicationController {
                     }
             );
         } else {
-            LOG.error("application-update error: invalid complete status");
+            LOG.error(String.format("application-update error: invalid complete status %s", silStatus.getCompletionStatus().getDisplayName()));
             return RestResult.restFailure(new Error(CommonFailureKeys.GENERAL_INCORRECT_TYPE, "completionStatus"));
         }
     }

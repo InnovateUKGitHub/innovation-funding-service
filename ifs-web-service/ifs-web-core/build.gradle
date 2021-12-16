@@ -1,7 +1,5 @@
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 
-apply plugin: 'idea'
-
 bootJar.enabled=false
 jar.enabled=true
 
@@ -20,42 +18,40 @@ artifacts {
 }
 
 dependencies {
-    compile "org.springframework.boot:spring-boot-starter-thymeleaf"
-    compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity5"
-    compile "org.springframework.boot:spring-boot-starter-security"
-    compile "org.springframework.boot:spring-boot-starter-validation"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-    compile "org.springframework.boot:spring-boot-starter-aop"
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+    implementation "org.thymeleaf.extras:thymeleaf-extras-springsecurity5"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    implementation "org.springframework.boot:spring-boot-starter-aop"
 
-    compile "org.apache.httpcomponents:httpclient"
-    compile "org.apache.httpcomponents:httpasyncclient"
-    compile 'org.jsoup:jsoup'
+    implementation "org.apache.httpcomponents:httpclient"
+    implementation "org.apache.httpcomponents:httpasyncclient"
+    implementation 'org.jsoup:jsoup'
+    implementation "org.apache.commons:commons-lang3"
 
+    implementation "org.innovateuk.ifs.libraries:ifs-web-commons"
+    implementation "org.innovateuk.ifs.libraries:ifs-resources"
+    implementation 'org.innovateuk.ifs.libraries:ifs-rest-api-service'
+    implementation "org.innovateuk.ifs.libraries:ifs-rest-util"
+    implementation "org.innovateuk.ifs.libraries:ifs-error-util"
 
-    compile "org.innovateuk.ifs.libraries:ifs-web-commons"
-    compile "org.innovateuk.ifs.libraries:ifs-resources"
-    compile 'org.innovateuk.ifs.libraries:ifs-rest-api-service'
-    compile "org.innovateuk.ifs.libraries:ifs-rest-util"
+    implementation "org.innovateuk.ifs.libraries:ifs-commons"
+    implementation "org.innovateuk.ifs.libraries:ifs-security"
 
-    compile "org.innovateuk.ifs.libraries:ifs-commons"
-    compile "org.innovateuk.ifs.libraries:ifs-security"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
+    testImplementation "org.innovateuk.ifs.libraries:ifs-web-commons-test"
 
-    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
-    testCompile "org.innovateuk.ifs.libraries:ifs-web-commons-test"
-
-    testCompile "com.opencsv:opencsv"
-    testCompile 'com.jayway.awaitility:awaitility'
-    testCompile 'junit:junit'
+    testImplementation "com.opencsv:opencsv"
+    testImplementation 'junit:junit'
 }
 
-// enabling Spring dev tools has security consequences so only do so for local development
-ext.ifsEnableDevTools = (project.hasProperty("cloud") && project.cloud == "development")
-
-project.properties['idp.rest.key'] ?:"123456789"
-ext.csrfEncryptionPassword=project.properties['ifs.csrf.encryption.password'] ?: "edd14b4c-6bbd-43df-807d-1d80276bce97"
-ext.encryptionSalt=project.properties['ifs.csrf.encryption.salt'] ?: "fa7814848e5f2691"
-
-ext.ifsWebSystemUserUid=project.properties['ifs.web.system.user.id'] ?: "8394d970-b250-4b15-9621-3534325691b4"
-
 jar.dependsOn ":ifs-web-service:gulp_default"
-processResources.dependsOn ":ifs-web-service:applyProfiles"
+
+sourceSets {
+    main {
+        resources {
+            srcDirs = ["src/main/resources"]
+        }
+    }
+}

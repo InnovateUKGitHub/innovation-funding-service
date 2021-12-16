@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.assignment.viewmodel;
 
+import lombok.Getter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -9,11 +10,14 @@ import java.util.SortedSet;
 /**
  * Holder of model attributes for the acceptance of an application by an Assessor
  */
+@Getter
 public class AssessmentAssignmentViewModel {
 
     private Long assessmentId;
     private Long competitionId;
     private String applicationName;
+    private final boolean alwaysOpen;
+    private final Long assessmentPeriodId;
     private SortedSet<OrganisationResource> partners;
     private OrganisationResource leadPartner;
     private String projectSummary;
@@ -21,39 +25,19 @@ public class AssessmentAssignmentViewModel {
     public AssessmentAssignmentViewModel(Long assessmentId,
                                          Long competitionId,
                                          String applicationName,
+                                         boolean alwaysOpen,
+                                         Long assessmentPeriodId,
                                          SortedSet<OrganisationResource> partners,
                                          OrganisationResource leadPartner,
                                          String projectSummary) {
         this.assessmentId = assessmentId;
         this.competitionId = competitionId;
         this.applicationName = applicationName;
+        this.alwaysOpen = alwaysOpen;
+        this.assessmentPeriodId = assessmentPeriodId;
         this.partners = partners;
         this.leadPartner = leadPartner;
         this.projectSummary = projectSummary;
-    }
-
-    public Long getAssessmentId() {
-        return assessmentId;
-    }
-
-    public Long getCompetitionId() {
-        return competitionId;
-    }
-
-    public String getApplicationName() {
-        return applicationName;
-    }
-
-    public SortedSet<OrganisationResource> getPartners() {
-        return partners;
-    }
-
-    public OrganisationResource getLeadPartner() {
-        return leadPartner;
-    }
-
-    public String getProjectSummary() {
-        return projectSummary;
     }
 
     @Override
@@ -72,6 +56,8 @@ public class AssessmentAssignmentViewModel {
                 .append(assessmentId, that.assessmentId)
                 .append(competitionId, that.competitionId)
                 .append(applicationName, that.applicationName)
+                .append(alwaysOpen, that.alwaysOpen)
+                .append(assessmentPeriodId, that.assessmentPeriodId)
                 .append(partners, that.partners)
                 .append(leadPartner, that.leadPartner)
                 .append(projectSummary, that.projectSummary)
@@ -84,6 +70,8 @@ public class AssessmentAssignmentViewModel {
                 .append(assessmentId)
                 .append(competitionId)
                 .append(applicationName)
+                .append(alwaysOpen)
+                .append(assessmentPeriodId)
                 .append(partners)
                 .append(leadPartner)
                 .append(projectSummary)

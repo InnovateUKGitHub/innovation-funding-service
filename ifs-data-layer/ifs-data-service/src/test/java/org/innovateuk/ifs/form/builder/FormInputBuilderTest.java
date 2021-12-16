@@ -24,7 +24,8 @@ import static org.innovateuk.ifs.form.builder.GuidanceRowBuilder.newFormInputGui
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
-import static org.innovateuk.ifs.form.resource.FormInputType.*;
+import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
+import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
 import static org.junit.Assert.assertEquals;
 
 /**

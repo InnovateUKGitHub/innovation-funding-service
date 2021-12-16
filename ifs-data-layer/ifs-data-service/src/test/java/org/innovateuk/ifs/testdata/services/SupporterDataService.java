@@ -2,8 +2,8 @@ package org.innovateuk.ifs.testdata.services;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.supporter.resource.SupporterState;
-import org.innovateuk.ifs.testdata.builders.SupporterDataBuilder;
 import org.innovateuk.ifs.testdata.builders.ServiceLocator;
+import org.innovateuk.ifs.testdata.builders.SupporterDataBuilder;
 import org.innovateuk.ifs.testdata.services.CsvUtils.ExternalUserLine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;

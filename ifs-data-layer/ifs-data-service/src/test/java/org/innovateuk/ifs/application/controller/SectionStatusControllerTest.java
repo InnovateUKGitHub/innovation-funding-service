@@ -7,7 +7,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.form.domain.Section;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 
@@ -24,12 +24,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -74,21 +68,9 @@ public class SectionStatusControllerTest extends BaseControllerMockMVCTest<Secti
 
         when(sectionStatusServiceMock.markSectionAsComplete(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess(noErrors()));
 
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/section-status/mark-as-complete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
+        mockMvc.perform(MockMvcRequestBuilders.post("/section-status/mark-as-complete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(toJson(noErrors())))
-                .andDo(
-                        document(
-                                "section/mark-as-complete",
-                                preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
-                                pathParameters(
-                                        parameterWithName("sectionId").description("id of section to mark as complete"),
-                                        parameterWithName("applicationId").description("id of the application to mark the section as complete on"),
-                                        parameterWithName("processRoleId").description("id of ProcessRole of the current user, (for user specific sections, finance sections)")
-                                )
-                        )
-                );
+                .andExpect(content().string(toJson(noErrors())));
     }
 
     @Test
@@ -99,20 +81,8 @@ public class SectionStatusControllerTest extends BaseControllerMockMVCTest<Secti
 
         when(sectionStatusServiceMock.markSectionAsInComplete(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/section-status/mark-as-in-complete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
-                .andExpect(status().isOk())
-                .andDo(
-                        document(
-                                "section/mark-as-incomplete",
-                                preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
-                                pathParameters(
-                                        parameterWithName("sectionId").description("id of section to mark as incomplete"),
-                                        parameterWithName("applicationId").description("id of the application to mark the section as incomplete on"),
-                                        parameterWithName("processRoleId").description("id of ProcessRole of the current user, (for user specific sections, finance sections)")
-                                )
-                        )
-                );
+        mockMvc.perform(MockMvcRequestBuilders.post("/section-status/mark-as-in-complete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -123,20 +93,8 @@ public class SectionStatusControllerTest extends BaseControllerMockMVCTest<Secti
 
         when(sectionStatusServiceMock.markSectionAsNotRequired(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/section-status/mark-as-not-required/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
-                .andExpect(status().isOk())
-                .andDo(
-                        document(
-                                "section/mark-as-not-required",
-                                preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
-                                pathParameters(
-                                        parameterWithName("sectionId").description("id of section to mark as not required"),
-                                        parameterWithName("applicationId").description("id of the application to mark the section as not required"),
-                                        parameterWithName("processRoleId").description("id of ProcessRole of the current user, (for user specific sections, finance sections)")
-                                )
-                        )
-                );
+        mockMvc.perform(MockMvcRequestBuilders.post("/section-status/mark-as-not-required/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -151,30 +109,9 @@ public class SectionStatusControllerTest extends BaseControllerMockMVCTest<Secti
         when(sectionStatusServiceMock.markSectionAsComplete(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess(messages));
 
 
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/section-status/mark-as-complete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
+        mockMvc.perform(MockMvcRequestBuilders.post("/section-status/mark-as-complete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(toJson(messages)))
-                .andDo(
-                        document(
-                                "section/mark-as-complete-invalid",
-                                preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
-                                pathParameters(
-                                        parameterWithName("sectionId").description("id of section to mark as complete"),
-                                        parameterWithName("applicationId").description("id of the application to mark the section as complete on"),
-                                        parameterWithName("processRoleId").description("id of ProcessRole of the current user, (for user specific sections, finance sections)")
-                                ),
-                                responseFields(
-                                        fieldWithPath("objectName").description("name of the object type"),
-                                        fieldWithPath("objectId").description("identifier of the object, for example the FinanceRow.id"),
-                                        fieldWithPath("errors").description("list of Error objects, containing the validation messages"),
-                                        fieldWithPath("errors[0].fieldName").description("the name of the field that is invalid"),
-                                        fieldWithPath("errors[0].fieldRejectedValue").description("the value of the field that is invalid"),
-                                        fieldWithPath("errors[0].errorKey").description("the key to identity the type of validation message"),
-                                        fieldWithPath("errors[0].arguments").description("array of arguments used to validate this object")
-                                )
-                        )
-                );
+                .andExpect(content().string(toJson(messages)));
     }
 
 }

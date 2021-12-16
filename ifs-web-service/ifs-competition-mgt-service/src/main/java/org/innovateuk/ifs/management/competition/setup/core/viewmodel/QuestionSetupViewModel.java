@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.competition.setup.core.viewmodel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.competition.resource.ApplicationFinanceType;
+import org.springframework.beans.factory.annotation.Value;
 
 public class QuestionSetupViewModel extends CompetitionSetupViewModel {
     private CompetitionSetupSubsectionViewModel subsectionViewModel;
@@ -9,18 +10,22 @@ public class QuestionSetupViewModel extends CompetitionSetupViewModel {
     private boolean editable;
     private String templateFilename;
     private boolean displayAssessmentOptions;
+    private boolean ifsLoanPartBEnabled;
 
     public QuestionSetupViewModel(GeneralSetupViewModel generalSetupViewModel,
                                   CompetitionSetupSubsectionViewModel subsectionViewModel,
                                   String competitionName, boolean editable,
                                   String templateFilename,
-                                  boolean displayAssessmentOptions) {
+                                  boolean displayAssessmentOptions,
+                                  boolean ifsLoanPartBEnabled
+                                  ) {
         this.generalSetupViewModel = generalSetupViewModel;
         this.subsectionViewModel = subsectionViewModel;
         this.competitionName = competitionName;
         this.editable = editable;
         this.templateFilename = templateFilename;
         this.displayAssessmentOptions = displayAssessmentOptions;
+        this.ifsLoanPartBEnabled = ifsLoanPartBEnabled;
     }
 
     public CompetitionSetupSubsectionViewModel getSubsection() {
@@ -55,5 +60,9 @@ public class QuestionSetupViewModel extends CompetitionSetupViewModel {
     @JsonIgnore
     public ApplicationFinanceType noFinancesApplicationFinanceType() {
         return ApplicationFinanceType.NO_FINANCES;
+    }
+
+    public boolean isIFSLoanPartBEnabled() {
+        return ifsLoanPartBEnabled;
     }
 }
