@@ -10,9 +10,9 @@ public class AppendixViewModelTest {
 
     @Test
     public void getHumanReadableFileSize() {
-        assertThat(buildAppendixViewModel(1048576L).getHumanReadableFileSize(), equalTo("1"));
-        assertThat(buildAppendixViewModel(1000000L).getHumanReadableFileSize(), equalTo("0"));
-        assertThat(buildAppendixViewModel(5242880L).getHumanReadableFileSize(), equalTo("5"));
+        assertThat(buildAppendixViewModel(1048576L).getHumanReadableFileSize(), equalTo("1MB"));
+        assertThat(buildAppendixViewModel(1000000L).getHumanReadableFileSize(), equalTo("0MB"));
+        assertThat(buildAppendixViewModel(5242880L).getHumanReadableFileSize(), equalTo("5MB"));
     }
 
     private AppendixViewModel buildAppendixViewModel(Long sizeBytes) {
