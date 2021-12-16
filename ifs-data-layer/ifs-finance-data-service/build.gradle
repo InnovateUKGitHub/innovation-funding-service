@@ -16,7 +16,6 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "org.springframework.boot:spring-boot-starter-validation"
     implementation 'commons-codec:commons-codec'
-    implementation 'commons-io:commons-io'
 
     implementation "org.innovateuk.ifs.libraries:ifs-commons"
     implementation 'org.innovateuk.ifs.libraries:ifs-resources'

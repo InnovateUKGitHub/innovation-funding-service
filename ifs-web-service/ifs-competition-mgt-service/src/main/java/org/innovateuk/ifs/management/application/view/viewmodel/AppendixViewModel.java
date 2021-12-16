@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.management.application.view.viewmodel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.io.FileUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.springframework.util.unit.DataSize;
+import org.springframework.util.unit.DataUnit;
 
 /**
  * This is used for displaying a list of appendix files at the bottom of comp admin read only application view
@@ -43,7 +44,7 @@ public class AppendixViewModel extends FileEntryResource {
 
     @JsonIgnore
     public String getHumanReadableFileSize() {
-        return FileUtils.byteCountToDisplaySize(getFilesizeBytes());
+        return DataSize.of(getFilesizeBytes(), DataUnit.BYTES).toString();
     }
 
     public void setApplicationId(Long applicationId) {

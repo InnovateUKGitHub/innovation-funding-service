@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.management.assessment.viewmodel;
 
-import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 
 public class AssessmentPeriodChoiceViewModel {
     private final long competitionId;
@@ -31,8 +31,9 @@ public class AssessmentPeriodChoiceViewModel {
 
     public static class AssessmentPeriodViewModel {
         private Long assessmentPeriodId;
-        private LinkedMap<String, MilestoneViewModel> milestoneEntries;
+        private Map<String, MilestoneViewModel> milestoneEntries;
         private String displayName;
+        private boolean isAssessmentClosed;
 
         public Long getAssessmentPeriodId() {
             return assessmentPeriodId;
@@ -42,11 +43,11 @@ public class AssessmentPeriodChoiceViewModel {
             this.assessmentPeriodId = assessmentPeriodId;
         }
 
-        public LinkedMap<String, MilestoneViewModel> getMilestoneEntries() {
+        public Map<String, MilestoneViewModel> getMilestoneEntries() {
             return milestoneEntries;
         }
 
-        public void setMilestoneEntries(LinkedMap<String, MilestoneViewModel> milestoneEntries) {
+        public void setMilestoneEntries(Map<String, MilestoneViewModel> milestoneEntries) {
             this.milestoneEntries = milestoneEntries;
         }
 
@@ -56,6 +57,14 @@ public class AssessmentPeriodChoiceViewModel {
 
         public void setDisplayName(String displayName) {
             this.displayName = displayName;
+        }
+
+        public boolean isAssessmentClosed() {
+            return isAssessmentClosed;
+        }
+
+        public void setAssessmentClosed(boolean assessmentClosed) {
+            isAssessmentClosed = assessmentClosed;
         }
     }
 

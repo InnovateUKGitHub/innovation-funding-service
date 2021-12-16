@@ -337,6 +337,23 @@ public class CompetitionWebTestData {
                         .withName("Procurement Competition"),
                 loanCompetition()
                         .withName("Loan Competition"),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp -1")
+                        .withAssessorCount(5),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp -2")
+                        .withAssessorCount(5),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp -3")
+                        .withAssessorCount(5),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp without Project Setup - 1")
+                        .withAssessorCount(5)
+                        .withCompetitionCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp without Project Setup - 2")
+                        .withAssessorCount(5)
+                        .withCompetitionCompletionStage(CompetitionCompletionStage.COMPETITION_CLOSE),
                 grantCompetition()
                         .withName("H2020 Performance testing competition")
                         .withCompetitionType(HORIZON_2020)
