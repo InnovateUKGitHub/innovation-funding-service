@@ -16,7 +16,6 @@ dependencies {
     implementation "org.innovateuk.ifs.libraries:ifs-security"
     implementation "org.innovateuk.ifs.libraries:ifs-rest-api-service"
 
-    implementation 'commons-io:commons-io'
     implementation 'org.apache.commons:commons-lang3'
     implementation "org.springframework.boot:spring-boot-starter-validation"
     implementation "org.springframework.boot:spring-boot-starter-security"
@@ -28,7 +27,6 @@ dependencies {
 
     testImplementation "com.opencsv:opencsv"
     testImplementation "junit:junit"
-    testImplementation 'com.jayway.awaitility:awaitility'
 }
 
 jar.dependsOn ":ifs-web-service:gulp_default"

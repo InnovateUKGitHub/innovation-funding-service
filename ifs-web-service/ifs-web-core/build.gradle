@@ -29,7 +29,6 @@ dependencies {
     implementation "org.apache.httpcomponents:httpasyncclient"
     implementation 'org.jsoup:jsoup'
     implementation "org.apache.commons:commons-lang3"
-    implementation "commons-beanutils:commons-beanutils"
 
     implementation "org.innovateuk.ifs.libraries:ifs-web-commons"
     implementation "org.innovateuk.ifs.libraries:ifs-resources"
@@ -44,7 +43,6 @@ dependencies {
     testImplementation "org.innovateuk.ifs.libraries:ifs-web-commons-test"
 
     testImplementation "com.opencsv:opencsv"
-    testImplementation 'com.jayway.awaitility:awaitility'
     testImplementation 'junit:junit'
 }
 
