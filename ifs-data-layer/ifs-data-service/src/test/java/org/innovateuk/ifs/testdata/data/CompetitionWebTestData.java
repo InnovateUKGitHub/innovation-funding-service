@@ -337,6 +337,65 @@ public class CompetitionWebTestData {
                         .withName("Procurement Competition"),
                 loanCompetition()
                         .withName("Loan Competition"),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp -1")
+                        .withAssessorCount(5),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp -2")
+                        .withAssessorCount(5),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp -3")
+                        .withAssessorCount(5),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp -4")
+                        .withAssessorCount(5),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp -5")
+                        .withAssessorCount(5),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp -6")
+                        .withAssessorCount(5),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp -7")
+                        .withAssessorCount(5),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp -8")
+                        .withAssessorCount(3),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp -9")
+                        .withAssessorCount(5)
+                        .withCompetitionCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp -10")
+                        .withAssessorCount(5)
+                        .withCompetitionCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp -11")
+                        .withAssessorCount(5)
+                        .withCompetitionCompletionStage(CompetitionCompletionStage.COMPETITION_CLOSE),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp -12")
+                        .withAssessorCount(5)
+                        .withCompetitionCompletionStage(CompetitionCompletionStage.COMPETITION_CLOSE),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp -13")
+                        .withAssessorCount(3),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp without Project Setup - 1")
+                        .withAssessorCount(5)
+                        .withCompetitionCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp without Project Setup - 2")
+                        .withAssessorCount(5)
+                        .withCompetitionCompletionStage(CompetitionCompletionStage.COMPETITION_CLOSE),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp without Project Setup - 3")
+                        .withAssessorCount(5)
+                        .withCompetitionCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK),
+                loanCompetition()
+                        .withName("SF Loans Integration Testing Comp without Project Setup - 4")
+                        .withAssessorCount(5)
+                        .withCompetitionCompletionStage(CompetitionCompletionStage.COMPETITION_CLOSE),
                 grantCompetition()
                         .withName("H2020 Performance testing competition")
                         .withCompetitionType(HORIZON_2020)

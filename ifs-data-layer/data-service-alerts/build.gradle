@@ -17,8 +17,6 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "org.springframework.boot:spring-boot-starter-validation"
-
-    implementation "org.apache.httpcomponents:httpasyncclient"
     implementation "org.mariadb.jdbc:mariadb-java-client"
 
     testImplementation "org.innovateuk.ifs.libraries:ifs-commons"
