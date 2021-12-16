@@ -300,7 +300,6 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
 
     protected ServiceResult<List<ValidationMessages>> setComplete(long questionId, long applicationId, long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus, ZonedDateTime markedAsCompleteOn) {
 
-
         return find(processRole(processRoleId), openApplication(applicationId), getQuestionSupplier(questionId))
                 .andOnSuccess((markedAsCompleteBy, application, question) -> {
                             List<ValidationMessages> validation = validateApplicationQuestion(markAsComplete, question, application, processRoleId);

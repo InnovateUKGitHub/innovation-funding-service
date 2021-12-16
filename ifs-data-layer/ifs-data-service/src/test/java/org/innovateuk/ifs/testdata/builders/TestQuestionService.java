@@ -36,12 +36,4 @@ public class TestQuestionService extends QuestionStatusServiceImpl {
         return setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true, false, ZonedDateTime.now());
     }
 
-    /*
-     * Avoid blockage when updating testing loan application question status
-     */
-    @Override
-    protected boolean isLoansBusinessAndFinancialInformationQuestion(long questionId) {
-        return false;
-    }
-
 }
