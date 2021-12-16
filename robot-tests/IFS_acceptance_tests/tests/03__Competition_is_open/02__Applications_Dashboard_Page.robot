@@ -86,7 +86,7 @@ Comp admin can open the view mode of the application
     And the user clicks the button/link                                     link = ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
     Then the user should see the element                                    link = Print application
     And the user should see the element                                     jQuery = h1 span:contains("Climate science the history of Greenland's ice")
-    And the user should see the element                                     jQuery = h3:contains("Appendix") ~ a:contains("testing_5MB.pdf, 4 MB")
+    And the user should see the element                                     jQuery = h3:contains("Appendix") ~ a:contains("testing_5MB.pdf, 4MB")
     And open pdf link                                                       jQuery = a:contains(${5mb_pdf}, 4 MB)
 
 Comp admin can link to the comp page from application overview
