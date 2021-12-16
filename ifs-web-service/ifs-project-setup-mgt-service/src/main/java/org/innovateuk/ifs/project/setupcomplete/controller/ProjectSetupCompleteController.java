@@ -32,7 +32,7 @@ import static java.lang.String.format;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}")
-@PreAuthorize("hasAuthority('project_finance')")
+@PreAuthorize("hasAnyAuthority('project_finance','comp_admin')")
 @SecuredBySpring(value = "PROJECT_SETUP_COMPLETE", description = "Project finance can view the setup complete page and make changes")
 public class ProjectSetupCompleteController {
 
