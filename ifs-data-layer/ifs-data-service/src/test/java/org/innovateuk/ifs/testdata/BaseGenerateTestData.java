@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.testdata;
 
 import com.google.common.collect.ImmutableMap;
-import org.apache.commons.io.FileUtils;
 import org.flywaydb.core.Flyway;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
@@ -43,6 +42,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.util.FileSystemUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -279,7 +279,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     public void tearDownFiles() throws Exception {
         File f = new File(storageLocation);
         if (f.exists()) {
-            FileUtils.deleteDirectory(new File(storageLocation));
+            FileSystemUtils.deleteRecursively(f);
         }
     }
 

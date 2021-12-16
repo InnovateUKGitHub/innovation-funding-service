@@ -15,6 +15,7 @@ import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieControlle
 import org.innovateuk.ifs.management.funding.populator.CompetitionManagementFundingDecisionModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,6 +47,8 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     private ApplicationFundingDecisionService applicationFundingDecisionService;
     private CompetitionRestService competitionRestService;
     private CompetitionManagementFundingDecisionModelPopulator competitionManagementFundingDecisionModelPopulator;
+    @Value("${ifs.always.open.competition.enabled}")
+    private boolean alwaysOpenCompetitionEnabled;
 
     @Autowired
     public CompetitionManagementFundingDecisionController(ApplicationSummaryRestService applicationSummaryRestService,
@@ -207,6 +210,12 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     }
 
     private List<Long> getAllApplicationIdsByFilters(long competitionId, FundingDecisionFilterForm filterForm) {
+        if(alwaysOpenCompetitionEnabled) {
+            CompetitionResource competition = getCompetitionIfExist(competitionId);
+            if (competition.isAlwaysOpen()) {
+                return applicationSummaryRestService.getAllAssessedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
+            }
+        }
         return applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
     }
 

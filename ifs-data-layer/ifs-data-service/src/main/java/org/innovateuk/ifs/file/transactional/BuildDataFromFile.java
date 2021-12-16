@@ -4,6 +4,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.logging.Log;
@@ -164,6 +165,9 @@ public class BuildDataFromFile {
         } catch (IOException e) {
             LOG.error("Unable to open an input stream from request", e);
             throw new RuntimeException("Unable to open an input stream from request", e);
+        } catch (CsvException e) {
+            LOG.error("CSV Error", e);
+            throw new RuntimeException("CSV Error", e);
         }
     }
 

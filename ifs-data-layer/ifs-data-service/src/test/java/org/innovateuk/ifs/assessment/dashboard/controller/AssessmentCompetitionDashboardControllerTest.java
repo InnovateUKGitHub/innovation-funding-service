@@ -61,6 +61,8 @@ public class AssessmentCompetitionDashboardControllerTest extends BaseController
                 competition.getId(),
                 competition.getName(),
                 competition.getLeadTechnologist().getName(),
+                false,
+                null,
                 competition.getAssessorAcceptsDate(),
                 competition.getAssessorDeadlineDate(),
                 singletonList(assessments)
