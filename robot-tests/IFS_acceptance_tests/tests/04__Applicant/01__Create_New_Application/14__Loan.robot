@@ -45,8 +45,11 @@
 #...
 #...             IFS-10757 Loans - Application summary and Overview Content
 #...
+<<<<<<< HEAD
+=======
 #...             IFS-10761 Loans - Implement redirection to Application Overview from SF using single tab
 #...
+>>>>>>> development
 #...             IFS-10869 Loans Part B: remove unnecessary banner
 #...
 #
@@ -77,6 +80,14 @@
 #
 #
 #*** Test Cases ***
+<<<<<<< HEAD
+#The user can see b&fi application question as complete and shows edit online survey button
+#    [Documentation]    IFS-9484  IFS-10705  IFS-10703
+#    When the user clicks the button/link       link = Business and financial information
+#    And the user clicks the button/link        jQuery = a:contains("Continue (opens in new tab)")
+#    And Select Window                          title = Sign in - Innovation Funding Service
+#    And the user closes the last opened tab
+=======
 ##The user create new application
 ##    [Documentation]     IFS-10761
 ##    Given log in as a different user                               &{lead_applicant_credentials}
@@ -100,12 +111,17 @@
 #     And the guest user inserts user email and password     &{lead_applicant_credentials}
 #    And the user clicks the button/link                     jQuery = button:contains("Sign in")
 #    And the user clicks the button/link                     jQuery = a:contains("Back to Application Overview")
+>>>>>>> development
 #    Then the user should see b&fi question details
 #
 #the user can open the sales force new tab on clicking conitnue button in incomplete status of b&fi question
 #    [Documentation]   IFS-10703
 #    Given the sales force submits/unsubmits b&fi survey     0
+<<<<<<< HEAD
+#    When the user clicks the button/link                    jQuery = a:contains("Continue (opens in new tab)")
+=======
 #    When the user clicks the button/link                    jQuery = a:contains("Continue")
+>>>>>>> development
 #    Then Select Window                                      title = Sign in - Innovation Funding Service
 #    And the user closes the last opened tab
 #
