@@ -453,8 +453,6 @@ the comp admin logs in and invite loan assessor
 	the user clicks the button/link     jQuery = .govuk-button:contains("Send invitation")
 
 the user invites assessors to assess the loan competition
-#    the user clicks the button/link     jQuery = a:contains("81 to 100")
-#    the user clicks the button/link     jQuery = tr:contains("Paul Plum") label[for^="assessor-row"]
     the user enters text to a text field    id = assessorNameFilter   Paul Plum
     the user clicks the button/link         jQuery = .govuk-button:contains("Filter")
     the user clicks the button/link         jQuery = tr:contains("Paul Plum") label[for^="assessor-row"]
