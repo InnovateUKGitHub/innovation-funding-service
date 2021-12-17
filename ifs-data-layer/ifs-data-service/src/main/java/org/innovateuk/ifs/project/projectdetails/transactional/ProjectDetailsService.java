@@ -51,6 +51,6 @@ public interface ProjectDetailsService {
     ServiceResult<Void> inviteProjectManager(Long projectId, ProjectUserInviteResource inviteResource);
 
     @SecuredBySpring(value = "UPDATE_PROJECT_SETUP_COMPLETE_DATE", description = "Only project finance or IFS Admin or COMP admin can update the project setup complete date")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator', 'comp-admin')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator', 'comp_admin')")
     ServiceResult<Void> updateLoansProjectSetupCompleteDate(Long projectId);
 }

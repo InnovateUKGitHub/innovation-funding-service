@@ -22,8 +22,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -280,6 +279,42 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
         Project project = newProject().withId(projectId).build();
         UserResource loggedInUser = newUserResource()
                 .withRoleGlobal(PROJECT_FINANCE)
+                .withId(userId)
+                .build();
+        User user = newUser()
+                .withId(userId)
+                .build();
+        setLoggedInUser(loggedInUser);
+
+        LocalDate now = LocalDate.now();
+        LocalDate projectStartDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
+
+        when(userRepositoryMock.findById(userId)).thenReturn(Optional.ofNullable(user));
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.ofNullable(project));
+        when(projectWorkflowHandlerMock.markAsSuccessful(eq(project), any())).thenReturn(true);
+        when(projectDetailsServiceMock.updateLoansProjectSetupCompleteDate(projectId)).thenReturn(serviceSuccess());
+        when(projectDetailsServiceMock.updateProjectStartDate(projectId, projectStartDate)).thenReturn(serviceSuccess());
+        when(projectDetailsServiceMock.updateLoansProjectSetupCompleteDate(projectId)).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.markAsSuccessful(projectId, projectStartDate);
+        assertTrue(result.isSuccess());
+
+        verify(projectRepositoryMock).findById(projectId);
+        verify(userRepositoryMock).findById(userId);
+        verify(projectWorkflowHandlerMock).markAsSuccessful(eq(project), any());
+        verify(projectDetailsServiceMock).updateProjectStartDate(projectId,projectStartDate);
+        verify(projectDetailsServiceMock).updateLoansProjectSetupCompleteDate(projectId);
+        verify(projectStateCommentsService).create(projectId, ProjectState.LIVE);
+    }
+
+    //TODO currentlu master build is failing so need to test afer.
+    @Test
+    public void markLoansProjectAsSuccessful_UnAuthorisedUser() {
+        long projectId = 123L;
+        long userId = 456L;
+        Project project = newProject().withId(projectId).build();
+        UserResource loggedInUser = newUserResource()
+                .withRoleGlobal(ASSESSOR)
                 .withId(userId)
                 .build();
         User user = newUser()
