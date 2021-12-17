@@ -83,7 +83,7 @@ The user can navigate back to application overview in the same window from part 
     And the user clicks the button/link                           link = Business and financial information
     And the user clicks the button/link                           jQuery = a:contains("Continue")
     And the user logs in if username field present
-    Then title should be                                           Loans Community
+    Then title should be                                           Home
 
 The user can see b&fi application question as complete and shows edit online survey button
     [Documentation]    IFS-9484  IFS-10705  IFS-10703
@@ -234,18 +234,6 @@ Applicant checks successful and unsuccessful project status
     Given log in as a different user                          &{lead_applicant_credentials}
     And the user clicks the application tile if displayed
     Then the applicant checks for project status
-
-Assessor can view BFI question in application
-   [Documentation]   IFS-10825
-   [Setup]  log in as a different user         &{internal_finance_credentials}
-   Given moving competition to Closed          ${loan_comp_appl_id}
-   When the user navigates to the page         ${server}/management/competition/${loan_comp_appl_id}/assessors/find
-   And the user invites assessors to assess the loan competition
-   And the assessors accept the invitation to assess the loans competition
-   And the application is assigned to a assessor
-   And The user clicks the button/link        link = ${loanApplicationName}
-   And The user clicks the button/link       link = Business and financial information
-   Then The user should see the element     jQuery = h1:contains("Business and financial information")
 
 *** Keywords ***
 Custom suite setup
@@ -465,12 +453,15 @@ the comp admin logs in and invite loan assessor
 	the user clicks the button/link     jQuery = .govuk-button:contains("Send invitation")
 
 the user invites assessors to assess the loan competition
-    the user clicks the button/link     jQuery = a:contains("81 to 100")
-    the user clicks the button/link     jQuery = tr:contains("Paul Plum") label[for^="assessor-row"]
-    the user clicks the button/link     jQuery = button:contains("Add selected to invite list")
-    the user should see the element     jQuery = td:contains("Paul Plum")
-    the user clicks the button/link     jQuery = a:contains("Review and send invites")
-    the user clicks the button/link     jQuery = .govuk-button:contains("Send invitation")
+#    the user clicks the button/link     jQuery = a:contains("81 to 100")
+#    the user clicks the button/link     jQuery = tr:contains("Paul Plum") label[for^="assessor-row"]
+    the user enters text to a text field    id = assessorNameFilter   Paul Plum
+    the user clicks the button/link         jQuery = .govuk-button:contains("Filter")
+    the user clicks the button/link         jQuery = tr:contains("Paul Plum") label[for^="assessor-row"]
+    the user clicks the button/link         jQuery = button:contains("Add selected to invite list")
+    the user should see the element         jQuery = td:contains("Paul Plum")
+    the user clicks the button/link         jQuery = a:contains("Review and send invites")
+    the user clicks the button/link         jQuery = .govuk-button:contains("Send invitation")
 
 the assessors accept the invitation to assess the loans competition
     log in as a different user                            &{assessor_credentials}
@@ -510,3 +501,5 @@ the user logs in if username field present
     ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  id=username
     Run Keyword if  '${status}' == 'PASS'    run keywords  the guest user inserts user email and password    &{lead_applicant_credentials}
     ...             AND                      the user clicks the button/link   id = sign-in-cta
+    #waiting for sales force to load
+    Sleep  30s
