@@ -287,12 +287,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
 
         mockMvc.perform(post("/project/{projectId}/complete-spend-profiles-review?email=false", projectId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the Spend Profiles review is being completed")
-                        )
-                ));
+                .andExpect(status().isOk());
     }
 
     private Map<Long, List<BigDecimal>> buildSpendProfileCostsPerCategoryMap() {
