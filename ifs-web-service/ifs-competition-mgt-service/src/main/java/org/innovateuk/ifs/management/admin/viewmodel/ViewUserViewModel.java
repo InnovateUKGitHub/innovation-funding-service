@@ -58,7 +58,7 @@ public class ViewUserViewModel {
     }
 
     public boolean isLinkVisibleToIfsAdmin() {
-        return isIfsAdmin() && user.getRoles().stream().anyMatch(externalRolesToInvite()::contains) && isExternalRoleLinkEnabled();
+        return isIfsAdmin() && !user.getRoles().stream().anyMatch(externalRolesToInvite()::contains) && isExternalRoleLinkEnabled();
     }
 
     public boolean isCanEditUserDetails() {

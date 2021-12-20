@@ -5,7 +5,8 @@ apply plugin: 'org.springframework.boot'
 
 dependencies {
 
-    implementation enforcedPlatform ('org.innovateuk.ifs.libraries:bom:2.0.21-RELEASE')
+    // Enforced platform is composite of IFS libraries, spring boot and spring cloud
+    implementation enforcedPlatform ('org.innovateuk.ifs.libraries:bom:2.0.22-RELEASE')
 
     // version must match here and in ifs-libraries repo (bom and java.gradle)
     annotationProcessor "org.projectlombok:lombok:1.18.22"
