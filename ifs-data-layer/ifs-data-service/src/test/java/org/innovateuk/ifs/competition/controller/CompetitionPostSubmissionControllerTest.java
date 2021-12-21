@@ -33,9 +33,11 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
         return new CompetitionPostSubmissionController();
     }
 
+    private final Long competitionId = 1L;
+
     @Test
     public void releaseFeedback() throws Exception {
-        final Long competitionId = 1L;
+
         CompetitionResource competition = newCompetitionResource().withId(competitionId).withAlwaysOpen(false).build();
 
         when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competition));
@@ -52,7 +54,6 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
 
     @Test
     public void releaseFeedbackAlwaysOpenCompetition() throws Exception {
-        final Long competitionId = 1L;
         CompetitionResource competition = newCompetitionResource().withId(competitionId).withAlwaysOpen(true).build();
 
         when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competition));
@@ -67,8 +68,6 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
 
     @Test
     public void closeAssessment() throws Exception {
-        final long competitionId = 1L;
-
         when(competitionService.closeAssessment(competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/competition/post-submission/{id}/close-assessment", competitionId))
@@ -80,8 +79,6 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
 
     @Test
     public void reopenAssessment() throws Exception {
-        final long competitionId = 1L;
-
         when(competitionService.reopenAssessmentPeriod(competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/competition/post-submission/{id}/reopen-assessment-period", competitionId))
@@ -93,8 +90,6 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
 
     @Test
     public void getPendingSpendProfiles() throws Exception {
-        final Long competitionId = 1L;
-
         List<SpendProfileStatusResource> pendingSpendProfiles = new ArrayList<>();
         when(competitionService.getPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfiles));
 
@@ -103,7 +98,6 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
                 .andExpect(content().json(toJson(pendingSpendProfiles)));
 
         verify(competitionService, only()).getPendingSpendProfiles(competitionId);
-
     }
 
     @Test
@@ -118,6 +112,5 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
                 .andExpect(content().json(toJson(pendingSpendProfileCount)));
 
         verify(competitionService, only()).countPendingSpendProfiles(competitionId);
-
     }
 }
