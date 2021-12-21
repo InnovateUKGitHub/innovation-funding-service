@@ -1,0 +1,35 @@
+apiVersion: skaffold/v2beta11
+kind: Config
+metadata:
+  name: innovation-funding-service
+profiles:
+  - name: buildonly
+    build:
+      local:
+        useDockerCLI: false
+        useBuildkit: false
+        tryImportMissing: false
+        push: true
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
+      artifacts:
+        - image: robot-framework
+          context: robot-tests
+
+  - name: at
+    build:
+      local:
+        useDockerCLI: false
+        useBuildkit: false
+        tryImportMissing: true
+        push: true
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
+      artifacts: []
+    deploy:
+      kubeContext: at
+      kustomize:
+        paths:
+          - os-files/kustomize/env/stub/at
