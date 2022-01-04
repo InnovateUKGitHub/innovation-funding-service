@@ -63,7 +63,11 @@ IFS.core.upload = (function () {
       var formData = new window.FormData(wrapper.closest('form').get(0))
       formData.append(submitButton.attr('name'), submitButton.attr('value') || '')
 
-      if (wrapper.get(0).hasAttribute(s.oneAtATime)) {
+      var maxSize = wrapper.attr(s.maxSize)
+      if (maxSize && file.size >= maxSize) {
+        var errorMessage = 'Your upload must be less than ' + Math.floor(maxSize / 1024 / 1024) + 'MB in size.'
+        IFS.core.upload.handleUploadError(wrapper, file, pendingRow, errorMessage)
+      } else if (wrapper.get(0).hasAttribute(s.oneAtATime)) {
         promise = promise.then(IFS.core.upload.doAjaxUpload(wrapper, file, pendingRow, formData))
       } else {
         IFS.core.upload.doAjaxUpload(wrapper, file, pendingRow, formData)()
@@ -80,29 +84,32 @@ IFS.core.upload = (function () {
             IFS.core.upload.resetFileInput(wrapper)
           },
           error: function (error) {
-            pendingRow.remove()
             console.log(error)
             var errorMessage = 'Internal server error.'
             if (error.status === 413) {
               var maxSize = wrapper.attr(s.maxSize)
               if (maxSize) {
-                errorMessage = 'Your upload must be less than ' + maxSize + ' in size.'
+                errorMessage = 'Your upload must be less than ' + Math.floor(maxSize / 1024 / 1024) + 'MB in size.'
               } else {
                 errorMessage = 'The file you submitted is too large. Please limit it to the sizes specified.'
               }
             }
-            var row = IFS.core.template.replaceInTemplate(s.errorRow, {
-              text: file.name,
-              error: errorMessage
-            })
-            IFS.core.upload.addMessage(wrapper, row)
-            IFS.core.upload.resetFileInput(wrapper)
+            IFS.core.upload.handleUploadError(wrapper, file, pendingRow, errorMessage)
           },
           processData: false,
           contentType: false,
           data: formData
         })
       }
+    },
+    handleUploadError: function (wrapper, file, pendingRow, errorMessage) {
+      pendingRow.remove()
+      var row = IFS.core.template.replaceInTemplate(s.errorRow, {
+        text: file.name,
+        error: errorMessage
+      })
+      IFS.core.upload.addMessage(wrapper, row)
+      IFS.core.upload.resetFileInput(wrapper)
     },
     triggerFormSubmission: function (fileInput) {
       IFS.core.upload.getButton(fileInput).click()
