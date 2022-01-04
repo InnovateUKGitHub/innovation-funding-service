@@ -3,7 +3,6 @@ package org.innovateuk.ifs.docusign.api;
 import com.docusign.esign.client.ApiClient;
 import com.docusign.esign.client.ApiException;
 import com.docusign.esign.client.auth.OAuth;
-import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
