@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.config.thymeleaf;
 
-import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.config.thymeleaf.dialect.IfSThymeleafDialect;
 import org.innovateuk.ifs.config.thymeleaf.postprocessor.IfsThymeleafPostProcessorDialect;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import org.thymeleaf.templatemode.TemplateMode;
  * ThymeleafAutoConfiguration dialect refinements
  * {@link org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration}
  */
-@Slf4j
 @Configuration
 @ConditionalOnClass(TemplateMode.class)
 @EnableScheduling
