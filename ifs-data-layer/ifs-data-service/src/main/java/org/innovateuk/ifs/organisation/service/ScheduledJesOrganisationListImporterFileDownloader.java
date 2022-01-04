@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.organisation.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.stereotype.Component;
@@ -21,7 +20,6 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 /**
  * Component used to deal with the handling of the file download and cleanup exercises of refreshing the Je-S list of organisations
  */
-@Slf4j
 @Component
 class ScheduledJesOrganisationListImporterFileDownloader {
 
