@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.registration.controller;
 
-import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
