@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.organisation.transactional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
@@ -41,6 +42,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  * Represents operations surrounding the use of Organisations in the system
  */
 @Service
+@Slf4j
 public class OrganisationServiceImpl extends BaseTransactionalService implements OrganisationService {
 
     private static final Integer MAX_CHARACTER_DB_LENGTH = 255;
