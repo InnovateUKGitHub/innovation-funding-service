@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.core.form;
 
 import com.google.common.collect.ImmutableSet;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.util.DateUtil;
 import org.innovateuk.ifs.util.TimeZoneUtil;
@@ -19,8 +17,6 @@ import java.util.Set;
  * Default Milestone Form Entry without any validations for the Milestones form.
  */
 public class GenericMilestoneRowForm {
-
-    private static final Log LOG = LogFactory.getLog(GenericMilestoneRowForm.class);
 
     public static final Set<MilestoneType> WITH_TIME_TYPES = ImmutableSet.of(MilestoneType.SUBMISSION_DATE, MilestoneType.REGISTRATION_DATE);
     public static final Set<MilestoneType> WITH_MIDDAY_TIME = ImmutableSet.of(MilestoneType.ASSESSOR_ACCEPTS, MilestoneType.ASSESSOR_DEADLINE);

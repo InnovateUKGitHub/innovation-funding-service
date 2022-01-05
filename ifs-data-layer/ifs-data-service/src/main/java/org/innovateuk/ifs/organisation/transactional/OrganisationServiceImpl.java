@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.organisation.transactional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
@@ -45,7 +43,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class OrganisationServiceImpl extends BaseTransactionalService implements OrganisationService {
 
-    private static final Log log = LogFactory.getLog(OrganisationServiceImpl.class);
     private static final Integer MAX_CHARACTER_DB_LENGTH = 255;
 
     @Autowired

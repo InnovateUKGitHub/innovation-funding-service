@@ -8,8 +8,7 @@ import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import com.newrelic.api.agent.Trace;
 import com.sun.jersey.core.util.Base64;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
@@ -48,9 +47,9 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COULD_NOT_SEND_
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
+@Slf4j
 @Service
 public class DocusignServiceImpl extends RootTransactionalService implements DocusignService {
-    private static final Log LOG = LogFactory.getLog(DocusignServiceImpl.class);
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
     @Value("${ifs.docusign.api.account}")
@@ -77,7 +76,7 @@ public class DocusignServiceImpl extends RootTransactionalService implements Doc
         try {
             return serviceSuccess(doSend(request));
         } catch (ApiException | IOException e) {
-            LOG.error(e);
+            log.error(e.getMessage(), e);
             return serviceFailure(COULD_NOT_SEND_FILE_TO_DOCUSIGN);
         }
     }
@@ -206,7 +205,7 @@ public class DocusignServiceImpl extends RootTransactionalService implements Doc
     @Trace(dispatcher = true)
     public ServiceResult<ScheduleResponse> downloadFileIfSigned() {
         try {
-            LOG.info("Starting import of docusign documents.");
+            log.info("Starting import of docusign documents.");
             EnvelopesApi envelopesApi = new EnvelopesApi(docusignApi.getApiClient());
             ListStatusChangesOptions options = envelopesApi.new ListStatusChangesOptions();
             LocalDate date = LocalDate.now().minusDays(1);
@@ -254,7 +253,7 @@ public class DocusignServiceImpl extends RootTransactionalService implements Doc
             }
             return null;
         } catch (ApiException e) {
-            LOG.error(e);
+            log.error(e.getMessage(), e);
             return null;
         }
     }
@@ -278,7 +277,7 @@ public class DocusignServiceImpl extends RootTransactionalService implements Doc
     }
 
     private void importDocument(DocusignDocument docusignDocument) throws ApiException, IOException {
-        LOG.info("importing docusign document " + docusignDocument.getEnvelopeId());
+        log.info("importing docusign document " + docusignDocument.getEnvelopeId());
 
         EnvelopesApi envelopesApi = new EnvelopesApi(docusignApi.getApiClient());
         byte[] results = envelopesApi.getDocument(accountId, docusignDocument.getEnvelopeId(), String.valueOf(docusignDocument.getId()));

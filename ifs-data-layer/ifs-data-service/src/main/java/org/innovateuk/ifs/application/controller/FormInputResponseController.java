@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.transactional.FormInputResponseService;
@@ -21,6 +20,7 @@ import java.util.List;
 /**
  * ApplicationController exposes Application data and operations through a REST API.
  */
+@Slf4j
 @RestController
 @RequestMapping("/forminputresponse")
 public class FormInputResponseController {
@@ -30,8 +30,6 @@ public class FormInputResponseController {
 
     @Autowired
     private ApplicationValidationUtil validationUtil;
-
-    private static final Log LOG = LogFactory.getLog(FormInputResponseController.class);
 
     @GetMapping("/find-responses-by-application/{applicationId}")
     public RestResult<List<FormInputResponseResource>> findResponsesByApplication(@PathVariable("applicationId") final long applicationId) {
@@ -75,8 +73,8 @@ public class FormInputResponseController {
     private ValidationMessages buildBindingResultWithCheckErrors(FormInputResponseResource response, boolean ignoreEmpty) {
         BindingResult bindingResult = validationUtil.validateResponse(response, ignoreEmpty);
         if (bindingResult.hasErrors()) {
-            LOG.debug("Got validation errors: ");
-            bindingResult.getAllErrors().forEach(e -> LOG.debug("Validation: " + e.getDefaultMessage()));
+            log.debug("Got validation errors: ");
+            bindingResult.getAllErrors().forEach(e -> log.debug("Validation: " + e.getDefaultMessage()));
         }
 
         return new ValidationMessages(bindingResult);
