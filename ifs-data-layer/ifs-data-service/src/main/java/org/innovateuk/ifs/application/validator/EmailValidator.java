@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.validator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -15,13 +14,13 @@ import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
  * the specification of a valid email can be found in
  * <a href="http://www.faqs.org/rfcs/rfc2822.html">RFC 2822</a>
  */
+@Slf4j
 @Component
 public class EmailValidator extends BaseValidator {
-    private static final Log LOG = LogFactory.getLog(EmailValidator.class);
 
     @Override
     public void validate(Object target, Errors errors) {
-        LOG.debug("do Email validation ");
+        log.debug("do Email validation ");
         FormInputResponse response = (FormInputResponse) target;
         CharSequence responseValue = response.getValue();
 

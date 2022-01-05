@@ -3,8 +3,7 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.controlle
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.controller.ApplicationProcurementMilestonesController;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.LabourForm;
@@ -42,13 +41,14 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 
+@Slf4j
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}")
 @PreAuthorize("hasAuthority('applicant')")
 @SecuredBySpring(value = "YOUR_PROJECT_COSTS_APPLICANT", description = "Applicants can all fill out the Your project costs section of the application.")
 public class YourProjectCostsController extends AsyncAdaptor {
+
     private static final String VIEW = "application/sections/your-project-costs/your-project-costs";
-    private static final Log LOG = LogFactory.getLog(ApplicationProcurementMilestonesController.class);
 
     @Autowired
     private ApplicationYourProjectCostsFormPopulator formPopulator;
@@ -98,7 +98,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
         try {
             saver.save(form, applicationId, user);
         } catch (Exception e) {
-            LOG.error(e);
+            log.error(e.getMessage(), e);
         }
         return redirectToYourFinances(applicationId);
     }

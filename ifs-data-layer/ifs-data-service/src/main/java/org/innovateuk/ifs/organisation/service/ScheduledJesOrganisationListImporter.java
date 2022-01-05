@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.organisation.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -34,10 +33,9 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
  * Scheduled job to refresh the Je-S organisation lookup list periodically from the Je-S website's csv file of
  * academic organisations
  */
+@Slf4j
 @Component
 public class ScheduledJesOrganisationListImporter {
-
-    private static final Log LOG = LogFactory.getLog(ScheduledJesOrganisationListImporter.class);
 
     private AcademicRepository academicRepository;
     private ScheduledJesOrganisationListImporterFileDownloader fileDownloader;
@@ -80,7 +78,7 @@ public class ScheduledJesOrganisationListImporter {
     public ServiceResult<List<String>> importJesList() {
 
         if (!importEnabled) {
-            LOG.debug("Je-S organisation list import currently disabled");
+            log.debug("Je-S organisation list import currently disabled");
             return serviceSuccess(emptyList());
         }
 
@@ -89,12 +87,12 @@ public class ScheduledJesOrganisationListImporter {
 
 
         if (jesSourceFileUrlResult.isFailure()) {
-            LOG.warn("Could not determine Je-S organisation list file URI.  Got " + jesSourceFileUrlResult.getFailure());
+            log.warn("Could not determine Je-S organisation list file URI.  Got " + jesSourceFileUrlResult.getFailure());
             return serviceFailure(jesSourceFileUrlResult.getFailure());
         }
 
         if (archiveLocationUrlResult.isFailure()) {
-            LOG.warn("Could not determine archive file URI.  Got " + archiveLocationUrlResult.getFailure());
+            log.warn("Could not determine archive file URI.  Got " + archiveLocationUrlResult.getFailure());
             return serviceFailure(archiveLocationUrlResult.getFailure());
         }
 
@@ -102,11 +100,11 @@ public class ScheduledJesOrganisationListImporter {
         URL archiveFile = archiveLocationUrlResult.getSuccess();
 
         if (!fileDownloader.jesSourceFileExists(jesFileToDownload)) {
-            LOG.debug("No Je-S organisation list file to import");
+            log.debug("No Je-S organisation list file to import");
             return serviceSuccess(emptyList());
         }
 
-        LOG.info("Importing Je-S organisation list...");
+        log.info("Importing Je-S organisation list...");
 
         ServiceResult<List<String>> downloadResult = downloadFile(jesFileToDownload).
                 andOnSuccess(downloadedFile -> archiveJesSourceFileIfExists(jesFileToDownload, archiveFile).
@@ -130,7 +128,7 @@ public class ScheduledJesOrganisationListImporter {
     }
 
     private void logDownloadedOrganisations(List<String> organisationNames) {
-        organisationNames.forEach(name -> LOG.debug("Found Je-S organisation " + name + " to import..."));
+        organisationNames.forEach(name -> log.debug("Found Je-S organisation " + name + " to import..."));
     }
 
     private void importNewAcademicEntries(List<String> organisationNames) {
@@ -144,11 +142,11 @@ public class ScheduledJesOrganisationListImporter {
     }
 
     private void logSuccess(List<String> success) {
-        LOG.info("Imported " + success.size() + " Je-S organisations successfully!");
+        log.info("Imported " + success.size() + " Je-S organisations successfully!");
     }
 
     private void logFailure(ServiceFailure failure) {
-        LOG.error("Failed to import Je-S organisations.  Received errors: " + simpleMap(failure.getErrors(), Error::getDisplayString));
+        log.error("Failed to import Je-S organisations.  Received errors: " + simpleMap(failure.getErrors(), Error::getDisplayString));
     }
 
     private ServiceResult<List<String>> readDownloadedFile(File downloadedFile) {

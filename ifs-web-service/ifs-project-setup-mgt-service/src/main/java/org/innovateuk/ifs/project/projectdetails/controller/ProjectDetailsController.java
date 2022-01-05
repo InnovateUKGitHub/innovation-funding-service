@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -83,8 +81,6 @@ public class ProjectDetailsController {
         this.financeReviewerRestService = financeReviewerRestService;
         this.projectProcurementMilestoneRestService = projectProcurementMilestoneRestService;
     }
-
-    private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
     @SecuredBySpring(value = "VIEW_PROJECT_DETAILS", description = "Project finance, comp admin, support, innovation lead and stakeholders can view the project details")

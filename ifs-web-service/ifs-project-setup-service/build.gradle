@@ -25,7 +25,9 @@ dependencies {
     testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
     testImplementation "org.innovateuk.ifs.libraries:ifs-web-commons-test"
 
-    testImplementation "com.opencsv:opencsv"
+    testImplementation("com.opencsv:opencsv") {
+        exclude group: "commons-logging", module: "commons-logging"
+    }
     testImplementation "junit:junit"
     testImplementation "org.mockito:mockito-core"
 }
