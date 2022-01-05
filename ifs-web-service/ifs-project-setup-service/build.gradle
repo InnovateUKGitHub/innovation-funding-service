@@ -6,24 +6,24 @@ version project.version
 
 dependencies {
     implementation project(':ifs-web-service:ifs-web-core')
-    implementation "org.innovateuk.ifs.libraries:ifs-commons"
-    implementation "org.innovateuk.ifs.libraries:ifs-error-util"
-    implementation "org.innovateuk.ifs.libraries:ifs-rest-util"
-    implementation "org.innovateuk.ifs.libraries:ifs-resources"
-    implementation "org.innovateuk.ifs.libraries:ifs-security"
-    implementation "org.innovateuk.ifs.libraries:ifs-project-commons"
-    implementation "org.innovateuk.ifs.libraries:ifs-application-commons"
-    implementation 'org.innovateuk.ifs.libraries:ifs-assessment-commons'
-    implementation "org.innovateuk.ifs.libraries:ifs-web-commons"
-    implementation "org.innovateuk.ifs.libraries:ifs-rest-api-service"
+    implementation project(":common:ifs-commons")
+    implementation project(":common:ifs-error-util")
+    implementation project(":common:ifs-rest-util")
+    implementation project(":common:ifs-resources")
+    implementation project(":common:ifs-security")
+    implementation project(":common:ifs-project-commons")
+    implementation project(":common:ifs-application-commons")
+    implementation project(":common:ifs-assessment-commons")
+    implementation project(":common:ifs-web-commons")
+    implementation project(":common:ifs-rest-api-service")
 
     implementation 'org.apache.commons:commons-lang3'
     implementation "org.springframework.boot:spring-boot-starter-validation"
     implementation "org.springframework.boot:spring-boot-starter-security"
 
-    testImplementation "org.innovateuk.ifs.libraries:ifs-commons-test"
-    testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
-    testImplementation "org.innovateuk.ifs.libraries:ifs-web-commons-test"
+    testImplementation project(":common:ifs-commons-test")
+    testImplementation project(":common:ifs-security-test")
+    testImplementation project(":common:ifs-web-commons-test")
 
     testImplementation("com.opencsv:opencsv") {
         exclude group: "commons-logging", module: "commons-logging"
