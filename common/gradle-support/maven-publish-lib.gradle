@@ -1,0 +1,16 @@
+import groovy.lang.Closure
+import org.gradle.api.publish.maven.MavenPublication
+
+apply from: rootProject.file("common/gradle-support/repos.gradle")
+
+apply plugin: "java-library"
+apply plugin: "maven-publish"
+
+publishing {
+    publications {
+        myLibrary(MavenPublication) {
+            groupId = "org.innovateuk.ifs.libraries"
+            from components.java
+        }
+    }
+}

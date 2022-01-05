@@ -1,0 +1,22 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+apply from: rootProject.file("common/gradle-support/maven-publish-lib.gradle")
+
+dependencies {
+
+    api platform(project(":common:bom"))
+
+    implementation project(":common:ifs-error-util")
+    implementation project(":common:ifs-commons")
+
+    implementation "com.fasterxml.jackson.core:jackson-annotations"
+    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "javax.validation:validation-api"
+    implementation "org.springframework:spring-context"
+
+    implementation "org.apache.commons:commons-lang3"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-web"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.boot:spring-boot-starter-validation"
+    testImplementation "junit:junit"
+}

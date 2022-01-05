@@ -1,0 +1,11 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+apply from: rootProject.file("common/gradle-support/maven-publish-lib.gradle")
+
+dependencies {
+
+    api platform(project(":common:bom"))
+
+    implementation "org.mockito:mockito-core"
+    implementation "org.hamcrest:hamcrest-core"
+
+}

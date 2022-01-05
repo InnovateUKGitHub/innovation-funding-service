@@ -1,0 +1,29 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+apply from: rootProject.file("common/gradle-support/maven-publish-lib.gradle")
+
+dependencies {
+
+    api platform(project(":common:bom"))
+
+    implementation project(":common:ifs-commons")
+    implementation project(":common:ifs-web-commons")
+    implementation project(":common:ifs-resources")
+    implementation project(":common:ifs-rest-api-service")
+    implementation project(":common:ifs-rest-util")
+    implementation project(":common:ifs-error-util")
+    implementation project(":common:ifs-security")
+    implementation project(":common:ifs-security-test")
+
+    implementation "junit:junit"
+    implementation("com.opencsv:opencsv") {
+        exclude group: "commons-logging", module: "commons-logging"
+    }
+    implementation "org.mockito:mockito-core"
+    implementation "org.springframework:spring-webmvc"
+    implementation "org.springframework.security:spring-security-core"
+    implementation "org.springframework.boot:spring-boot-starter-test"
+    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "com.fasterxml.jackson.core:jackson-core"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    implementation "javax.servlet:javax.servlet-api"
+}

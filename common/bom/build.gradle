@@ -1,0 +1,77 @@
+apply plugin: "java-platform"
+apply from: rootProject.file("common/gradle-support/repos.gradle")
+
+javaPlatform {
+    allowDependencies()
+}
+
+dependencies {
+
+    // This BOM combines with these two boms - defer to these and only declare overrides and things not in these below
+    api platform("org.springframework.boot:spring-boot-dependencies:2.4.12")
+    api platform("org.springframework.cloud:spring-cloud-dependencies:2020.0.3")
+
+    // These will appear in referencing modules (actual deps so keep it light)
+    api("com.google.guava:guava")
+    api("org.slf4j:slf4j-api")
+    api("org.projectlombok:lombok")
+
+    // These are suggested versions
+    // (dependent modules will still need to declare the dependency (without version)
+    constraints {
+
+        api("org.jsoup:jsoup:1.14.3")
+        api("javax.mail:mail:1.4.7")
+        api("org.apache.commons:commons-text:1.9")
+        api("net.logstash.logback:logstash-logback-encoder:6.6")
+
+        // only used in -test modules
+        api("com.opencsv:opencsv:5.5.2")
+        api("net.sf.opencsv:opencsv:2.3")
+
+        // version must match gradle-support/java.gradle
+        // here and in IFS
+        api("org.projectlombok:lombok:1.18.22")
+        api("com.google.guava:guava:31.0.1-jre")
+        api("javax.validation:validation-api:2.0.1.Final")
+
+        // Api - keep it light, jackson and maybe some annotation libs at most
+        api project(":common:api:audit-api")
+
+        // Starters - keep it light, only targeted spring libs
+        api project(":common:starter:ifs-starter-logging")
+        api project(":common:starter:ifs-starter-audit")
+
+        api project(":common:ifs-commons")
+        api project(":common:ifs-commons-test")
+        api project(":common:ifs-data-service-commons")
+        api project(":common:ifs-data-service-commons-test")
+        api project(":common:ifs-data-service-file")
+        api project(":common:ifs-error-util")
+        api project(":common:ifs-resources")
+        api project(":common:ifs-survey-resources")
+        api project(":common:ifs-rest-util")
+        api project(":common:ifs-sil-resources")
+        api project(":common:ifs-security-test")
+        api project(":common:ifs-security")
+        api project(":common:ifs-rest-api-service")
+        api project(":common:ifs-survey-rest-api-service")
+        api project(":common:ifs-data-service-notifications")
+        api project(":common:ifs-data-service-notifications-test")
+        api project(":common:ifs-assessment-commons")
+        api project(":common:ifs-web-commons")
+        api project(":common:ifs-web-commons-test")
+        api project(":common:ifs-application-commons")
+        api project(":common:ifs-project-commons")
+    }
+
+}
+
+publishing {
+    publications {
+        myPlatform(MavenPublication) {
+            groupId = "org.innovateuk.ifs.libraries"
+            from components.javaPlatform
+        }
+    }
+}

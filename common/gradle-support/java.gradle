@@ -1,0 +1,62 @@
+apply from: rootProject.file("common/gradle-support/enforcer.gradle")
+
+apply plugin: "java-library"
+apply plugin: "jacoco"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    // version must match bom  here and in IFS
+    annotationProcessor "org.projectlombok:lombok:1.18.22"
+    testAnnotationProcessor  "org.projectlombok:lombok:1.18.22"
+}
+
+jacocoTestReport{
+    additionalSourceDirs.from = files(sourceSets.main.allJava.srcDirs)
+    reports {
+        html.enabled true
+        xml.enabled true
+        csv.enabled false
+        html.destination file("build/reports/jacoco/html")
+    }
+    executionData.from = files("build/jacoco/test.exec")
+}
+
+test {
+    beforeTest { desc ->
+        println "Executing test ${desc.className}.${desc.name}"
+    }
+}
+
+processResources {
+    filesMatching("*.properties") {
+        expand project.properties
+    }
+}
+
+processTestResources {
+    filesMatching("*.properties") {
+        expand project.properties
+    }
+}
+
+repositories {
+    maven { url "https://repo.spring.io/milestone" }
+    maven { url "https://plugins.gradle.org/m2/"}
+    mavenCentral()
+}
+
+jar {
+    manifest.attributes provider: "gradle"
+}
+
+compileJava {
+    options.compilerArgs += "-parameters"
+}
+
+compileTestJava {
+    options.compilerArgs += "-parameters"
+}
+
+test.finalizedBy jacocoTestReport

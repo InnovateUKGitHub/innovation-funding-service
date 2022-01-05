@@ -1,0 +1,14 @@
+
+apply from: rootProject.file("common/gradle-support/java.gradle")
+apply from: rootProject.file("common/gradle-support/maven-publish-lib.gradle")
+
+dependencies {
+
+    api platform(project(":common:bom"))
+
+    implementation "org.apache.commons:commons-lang3"
+    implementation "org.jsoup:jsoup"
+    implementation "org.apache.commons:commons-text"
+
+    testImplementation "junit:junit"
+}

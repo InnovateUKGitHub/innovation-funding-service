@@ -1,0 +1,16 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+apply from: rootProject.file("common/gradle-support/maven-publish-lib.gradle")
+
+dependencies {
+
+    api platform(project(":common:bom"))
+
+    implementation "org.springframework.boot:spring-boot-starter"
+
+    // These are for export
+    api "org.springframework.cloud:spring-cloud-starter-sleuth"
+    api "net.logstash.logback:logstash-logback-encoder"
+    api "ch.qos.logback:logback-core"
+    api "io.projectreactor:reactor-core"
+
+}

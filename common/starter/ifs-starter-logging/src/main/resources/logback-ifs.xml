@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<included>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+
+    <springProperty scope="context" name="application" source="spring.application.name"/>
+
+    <springProfile name="dev">
+        <include resource="org/springframework/boot/logging/logback/base.xml"/>
+        <logger name="org.innovateuk" level="DEBUG"/>
+        <logger name="ROOT" level="INFO"/>
+    </springProfile>
+
+    <springProfile name="!dev">
+        <logger name="org.innovateuk" level="INFO"/>
+        <logger name="ROOT" level="INFO"/>
+
+        <appender name="jsonConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+        </appender>
+
+        <root level="ERROR">
+            <appender-ref ref="jsonConsoleAppender"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="at | custom">
+        <logger name="org.innovateuk" level="DEBUG"/>
+        <logger name="ROOT" level="INFO"/>
+
+        <appender name="jsonConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+        </appender>
+
+        <root level="ERROR">
+            <appender-ref ref="jsonConsoleAppender"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="prod">
+        <logger name="org.innovateuk" level="WARN"/>
+        <logger name="ROOT" level="WARN"/>
+
+        <appender name="jsonConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+        </appender>
+
+        <root level="ERROR">
+            <appender-ref ref="jsonConsoleAppender"/>
+        </root>
+    </springProfile>
+
+</included>

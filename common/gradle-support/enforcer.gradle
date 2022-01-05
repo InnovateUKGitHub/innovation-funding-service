@@ -1,0 +1,15 @@
+// Prevent certain transitive dependencies being pulled in for security and other reasons
+project.getConfigurations().all { config ->
+    config.resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        // commons-logging is not required
+        if (details.requested.name.equalsIgnoreCase("commons-logging")) {
+            throw new GradleException(sprintf("commons-logging found %s.%s",
+                    [details.requested.group, details.requested.version]))
+        }
+        // we use slf4j
+        if (details.requested.name.equalsIgnoreCase("log4j-core")) {
+            throw new GradleException(sprintf("log4j-core found %s.%s",
+                    [details.requested.group, details.requested.version]))
+        }
+    }
+}
