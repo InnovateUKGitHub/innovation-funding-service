@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.metrics;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.health.Health;
@@ -12,10 +11,9 @@ import org.springframework.stereotype.Component;
 /**
  * Health indicator for keeping track of the executor thread pool size as used by @Async execution blocks
  */
+@Slf4j
 @Component
 public class AsyncExecutionConnectionCountHealthIndicator implements HealthIndicator {
-
-    private static final Log LOG = LogFactory.getLog(AsyncExecutionConnectionCountHealthIndicator.class);
 
     @Autowired
     private ThreadPoolTaskExecutor executor;
@@ -30,12 +28,12 @@ public class AsyncExecutionConnectionCountHealthIndicator implements HealthIndic
         int poolSize = executor.getPoolSize();
         int maxPoolSize = executor.getMaxPoolSize();
 
-        LOG.trace(activeExecutorThreads + " / " + poolSize + " active executor threads - max pool size " + maxPoolSize);
+        log.trace(activeExecutorThreads + " / " + poolSize + " active executor threads - max pool size " + maxPoolSize);
 
         if ((maxPoolSize - activeExecutorThreads) > maxThread) {
             return Health.up().build();
         } else {
-            LOG.warn("Running out of available async executor threads - reporting this service as unavailable");
+            log.warn("Running out of available async executor threads - reporting this service as unavailable");
             return Health.outOfService().build();
         }
     }

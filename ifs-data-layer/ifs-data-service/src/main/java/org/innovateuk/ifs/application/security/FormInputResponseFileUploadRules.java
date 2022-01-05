@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application.security;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.commons.security.PermissionRule;
@@ -17,9 +15,6 @@ import org.springframework.stereotype.Component;
 @Component
 @PermissionRules
 public class FormInputResponseFileUploadRules extends BasePermissionRules {
-
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(FormInputResponseFileUploadRules.class);
 
     @Autowired
     private ApplicationSecurityHelper applicationSecurityHelper;

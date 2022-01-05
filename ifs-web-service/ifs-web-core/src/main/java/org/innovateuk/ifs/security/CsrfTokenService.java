@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -48,10 +47,9 @@ import static java.util.UUID.randomUUID;
  * </p>
  */
 @Service
+@Slf4j
 @Configurable
 class CsrfTokenService {
-
-    private static final Log LOG = LogFactory.getLog(CsrfTokenService.class);
 
     private static final String CSRF_HEADER_NAME = "X-CSRF-TOKEN";
     private static final String CSRF_PARAMETER_NAME = "_csrf";
@@ -104,7 +102,7 @@ class CsrfTokenService {
         try {
             decryptedToken = encryptor.decrypt(token);
         } catch (final Exception e) {
-            LOG.error("unable to decrypt token", e);
+            log.error("unable to decrypt token", e);
             throw new CsrfException("CSRF Token could not be decrypted");
         }
 

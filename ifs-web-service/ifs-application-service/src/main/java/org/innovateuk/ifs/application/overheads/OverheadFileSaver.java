@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.overheads;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -23,7 +22,7 @@ import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 /**
  * A saver class intended to use for adding / removing files attached to overhead finance row
  */
-
+@Slf4j
 @Component
 public class OverheadFileSaver {
     public static final String OVERHEAD_FILE_SUBMIT = "overheadfilesubmit";
@@ -33,8 +32,6 @@ public class OverheadFileSaver {
 
     @Autowired
     private OverheadFileRestService overheadFileRestService;
-
-    private static final Log LOG = LogFactory.getLog(OverheadFileSaver.class);
 
     private ValidationMessages uploadOverheadFile(HttpServletRequest request) {
         ValidationMessages messages = new ValidationMessages();
@@ -47,7 +44,7 @@ public class OverheadFileSaver {
 
             handleRestResultUpload(fileEntryResult, messages);
         } catch(NumberFormatException | IOException e) {
-            LOG.error("Overheadfile cannot be saved :"  + e.getMessage(), e);
+            log.error("Overheadfile cannot be saved :"  + e.getMessage(), e);
         }
 
         return messages;
@@ -76,7 +73,7 @@ public class OverheadFileSaver {
                 messages.addAll(fileEntryResult);
             }
         } catch (NumberFormatException e) {
-            LOG.error("Overheadfile cannot be deleted :"  + e.getMessage());
+            log.error("Overheadfile cannot be deleted :"  + e.getMessage());
         }
 
         return messages;

@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.finance.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
@@ -26,9 +25,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * OrganisationFinanceDefaultHandler maintains the finances from
  * an organisation's perspective and calculates the totals
  */
+@Slf4j
 @Component
 public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHandler implements OrganisationTypeFinanceHandler {
-    private static final Log LOG = LogFactory.getLog(IndustrialCostFinanceHandler.class);
 
     private Map<FinanceRowType, FinanceRowHandler<?>> financeRowHandlers;
 
@@ -94,7 +93,7 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
         if (handler != null) {
             return handler;
         }
-        LOG.error("Not a valid FinanceType: " + costType);
+        log.error("Not a valid FinanceType: " + costType);
         throw new IllegalArgumentException("Not a valid FinanceType: " + costType);
     }
 
