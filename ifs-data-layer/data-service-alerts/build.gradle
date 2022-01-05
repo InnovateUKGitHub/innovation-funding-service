@@ -24,7 +24,9 @@ dependencies {
     testImplementation "org.innovateuk.ifs.libraries:ifs-data-service-commons-test"
 
     testImplementation "com.h2database:h2"
-    testImplementation "com.opencsv:opencsv"
+    testImplementation("com.opencsv:opencsv") {
+        exclude group: "commons-logging", module: "commons-logging"
+    }
     testImplementation "junit:junit"
 
 }

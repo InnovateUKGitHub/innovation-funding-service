@@ -3,8 +3,7 @@ package org.innovateuk.ifs.sil.crm.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.SneakyThrows;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -25,9 +24,8 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CONTACT_NOT_UPD
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 
 @Component
+@Slf4j
 public class RestSilCrmEndpoint implements SilCrmEndpoint {
-
-    private static final Log LOG = LogFactory.getLog(RestSilCrmEndpoint.class);
 
     protected static ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
     @Autowired
@@ -51,7 +49,7 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
         return handlingErrors(() -> {
                     final Either<ResponseEntity<SilCrmError>, ResponseEntity<Void>> response = adaptor.restPostWithEntity(silRestServiceUrl + silCrmContacts, silContact, Void.class, SilCrmError.class, HttpStatus.ACCEPTED);
                     return response.mapLeftOrRight(failure -> {
-                                LOG.error("Error updating SIL contact " + silContact);
+                                log.error("Error updating SIL contact " + silContact);
                                 return serviceFailure(new Error(CONTACT_NOT_UPDATED));
                             },
                             success -> serviceSuccess());
@@ -64,11 +62,11 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
     @Override
     public ServiceResult<Void> updateLoanApplicationState(SilLoanApplication silApplication) {
         String silApplicationJson = objectWriter.writeValueAsString(silApplication);
-        LOG.info("Json Payload: " + silApplicationJson);
+        log.info("Json Payload: " + silApplicationJson);
         return handlingErrors(() -> {
                     final Either<ResponseEntity<SilCrmError>, ResponseEntity<Void>> response = adaptor.restPostWithEntity(silRestServiceUrl + silCrmApplications, silApplicationJson, Void.class, SilCrmError.class, HttpStatus.ACCEPTED);
                     return response.mapLeftOrRight(failure -> {
-                                LOG.error("Error updating SIL Loan Application state: " + silApplication +
+                                log.error("Error updating SIL Loan Application state: " + silApplication +
                                         "Error: " + failure);
                                 return serviceFailure(new Error(APPLICATION_NOT_UPDATED));
                             },
@@ -81,11 +79,11 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
     @SneakyThrows
     public ServiceResult<Void> updateLoanAssessment(SilLoanAssessment silLoanAssessment) {
         String silApplicationJson = objectWriter.writeValueAsString(silLoanAssessment);
-        LOG.info("Json Payload: " + silApplicationJson);
+        log.info("Json Payload: " + silApplicationJson);
         return handlingErrors(() -> {
                     final Either<ResponseEntity<SilCrmError>, ResponseEntity<Void>> response = adaptor.restPostWithEntity(silRestServiceUrl + silmDecisionmatrix, silApplicationJson, Void.class, SilCrmError.class, HttpStatus.ACCEPTED);
                     return response.mapLeftOrRight(failure -> {
-                                LOG.error("Error updating SIL Loan Assessment: " + silLoanAssessment +
+                                log.error("Error updating SIL Loan Assessment: " + silLoanAssessment +
                                         "Error: " + failure);
                                 return serviceFailure(new Error(APPLICATION_NOT_UPDATED));
                             },
