@@ -111,6 +111,7 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
                             confirmOrganisationInviteModelPopulator.populate(invite, organisation,
                                     RegistrationController.BASE_URL);
                     model.addAttribute("model", viewModel);
+                    inviteRestService.acceptInvite(invite);
                     return "registration/confirm-invited-organisation";
                 })
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));

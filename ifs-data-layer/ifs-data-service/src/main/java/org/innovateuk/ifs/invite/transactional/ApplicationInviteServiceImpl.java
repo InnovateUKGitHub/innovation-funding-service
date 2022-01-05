@@ -151,22 +151,30 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     public ServiceResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash) {
 
         ApplicationInviteResource applicationInviteResource = applicationInviteService.getInviteByHash(hash).toGetResponse().getSuccess();
-        InviteHistory inviteHistory = getInviteHistory(applicationInviteResource);
+        InviteHistory inviteHistory = getInviteHistory(applicationInviteResource,InviteStatus.OPENED);
         inviteHistoryRepository.save(inviteHistory);
 
         return getByHash(hash).andOnSuccessReturn(invite -> inviteOrganisationMapper.mapToResource(inviteOrganisationRepository.findById(invite.getInviteOrganisation().getId()).orElse(null)));
     }
 
-    private InviteHistory getInviteHistory(ApplicationInviteResource applicationInviteResource) {
+    private InviteHistory getInviteHistory(ApplicationInviteResource applicationInviteResource, InviteStatus status) {
         Invite invite = mapInviteResourceToInvite(applicationInviteResource, null);
 
         InviteHistory inviteHistory = new InviteHistory();
-        inviteHistory.setStatus(InviteStatus.OPENED);
+        inviteHistory.setStatus(status);
         inviteHistory.setUpdatedOn(ZonedDateTime.now());
         inviteHistory.setUpdatedBy(null);
         inviteHistory.setId(RandomUtils.nextLong());
         inviteHistory.setInvite(invite);
         return inviteHistory;
+    }
+
+    private ApplicationInvite mapInviteResourceToInvite(ApplicationInviteResource inviteResource, InviteOrganisation newInviteOrganisation) {
+        Application application = applicationRepository.findById(inviteResource.getApplication()).orElse(null);
+        if (newInviteOrganisation == null && inviteResource.getInviteOrganisation() != null) {
+            newInviteOrganisation = inviteOrganisationRepository.findById(inviteResource.getInviteOrganisation()).orElse(null);
+        }
+        return new ApplicationInvite(inviteResource.getId(), inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
     }
 
     @Override
@@ -229,6 +237,14 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     public ServiceResult<Void> removeApplicationInvite(long applicationInviteId) {
         return find(applicationInviteMapper.mapIdToDomain(applicationInviteId), notFoundError(ApplicationInvite.class))
                 .andOnSuccessReturnVoid(this::removeApplicationInvite);
+    }
+
+    @Override
+    public ServiceResult<Void> updateInviteHistory(ApplicationInviteResource inviteResource) {
+        InviteHistory inviteHistory = getInviteHistory(inviteResource,InviteStatus.ACCEPTED);
+
+        inviteHistoryRepository.save(inviteHistory);
+        return serviceSuccess();
     }
 
     private void removeApplicationInvite(ApplicationInvite applicationInvite) {
@@ -318,15 +334,6 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         return applicationInviteResources.stream().map(inviteResource ->
                 applicationInviteRepository.save(mapInviteResourceToInvite(inviteResource, inviteOrganisation))).collect(toList());
     }
-
-    private ApplicationInvite mapInviteResourceToInvite(ApplicationInviteResource inviteResource, InviteOrganisation newInviteOrganisation) {
-        Application application = applicationRepository.findById(inviteResource.getApplication()).orElse(null);
-        if (newInviteOrganisation == null && inviteResource.getInviteOrganisation() != null) {
-            newInviteOrganisation = inviteOrganisationRepository.findById(inviteResource.getInviteOrganisation()).orElse(null);
-        }
-        return new ApplicationInvite(inviteResource.getId(), inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
-    }
-
 
 
     private ServiceResult<Void> validateInviteOrganisationResource(InviteOrganisationResource inviteOrganisationResource) {
