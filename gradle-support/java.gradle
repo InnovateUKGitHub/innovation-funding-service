@@ -7,6 +7,12 @@ apply plugin: 'idea'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
+dependencies {
+    // version must match here and in ifs-libraries repo (bom and java.gradle)
+    annotationProcessor "org.projectlombok:lombok:1.18.22"
+    testAnnotationProcessor  "org.projectlombok:lombok:1.18.22"
+}
+
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
@@ -39,27 +45,6 @@ repositories {
     maven { url "https://repo.spring.io/milestone" }
     maven { url "https://plugins.gradle.org/m2/"}
     mavenCentral()
-    maven {
-        name 'ifs-libraries-snapshots'
-        url "https://devops.innovateuk.org/binaries/repository/ifs-libraries-snapshots/"
-        credentials {
-            username project.findProperty("nexus_username")
-            password project.findProperty("nexus_password")
-        }
-    }
-    maven {
-        name 'ifs-libraries'
-        url "https://devops.innovateuk.org/binaries/repository/ifs-libraries/"
-        credentials {
-            username project.findProperty("nexus_username")
-            password project.findProperty("nexus_password")
-        }
-    }
-    maven {
-        name 'local'
-        // Users can specify maven_local in ~/.gradle/gradle.properties or let it default to $HOME/.m2/repository
-        url project.findProperty("maven_local") ?: System.getenv('HOME') + "/.m2/repository"
-    }
 }
 
 jar {
