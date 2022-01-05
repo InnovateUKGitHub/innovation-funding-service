@@ -1,5 +1,4 @@
 apply plugin: "java-platform"
-apply from: rootProject.file("common/gradle-support/repos.gradle")
 
 javaPlatform {
     allowDependencies()
@@ -67,11 +66,3 @@ dependencies {
 
 }
 
-publishing {
-    publications {
-        myPlatform(MavenPublication) {
-            groupId = "org.innovateuk.ifs.libraries"
-            from components.javaPlatform
-        }
-    }
-}

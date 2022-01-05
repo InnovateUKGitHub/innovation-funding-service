@@ -1,5 +1,4 @@
 apply from: rootProject.file("common/gradle-support/java.gradle")
-apply from: rootProject.file("common/gradle-support/maven-publish-lib.gradle")
 
 test {
     useJUnitPlatform {
