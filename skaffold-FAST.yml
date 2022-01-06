@@ -20,91 +20,91 @@ profiles:
             type: gradle
             project: ifs-data-layer:ifs-data-service
             args:
-              - "-Djib.serialize=true -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+              - ["test", "--debug", "-Djib.serialize=true", "-Pprofile=automated", "-Pcloud=automated", "-PtestGroups=dbpatch"]
         - image: finance-data-service
           context: .
           jib:
             type: gradle
             project: ifs-data-layer:ifs-finance-data-service
             args:
-              - "-Djib.serialize=true -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+              - ["test", "--debug", "-Djib.serialize=true", "-Pprofile=automated", "-Pcloud=automated", "-PtestGroups=dbpatch"]
         - image: survey-data-service
           context: .
           jib:
             type: gradle
             project: ifs-data-layer:ifs-survey-data-service
             args:
-              - "-Djib.serialize=true -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+              - ["test", "--debug", "-Djib.serialize=true", "-Pprofile=automated", "-Pcloud=automated", "-PtestGroups=dbpatch"]
         - image: data-service-alerts
           context: .
           jib:
             type: gradle
             project: ifs-data-layer:data-service-alerts
             args:
-              - "-Djib.serialize=true -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+              - ["test", "--debug", "-Djib.serialize=true", "-Pprofile=automated", "-Pcloud=automated", "-PtestGroups=dbpatch"]
         - image: sil-stub
           context: .
           jib:
             type: gradle
             project: ifs-sil-stub
             args:
-              - "-Djib.serialize=true -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+              - ["test", "--debug", "-Djib.serialize=true", "-Pprofile=automated", "-Pcloud=automated", "-PtestGroups=dbpatch"]
         - image: registration-service
           context: .
           jib:
             type: gradle
             project: ifs-registration-service
             args:
-              - "-Djib.serialize=true -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+              - ["test", "--debug", "-Djib.serialize=true", "-Pprofile=automated", "-Pcloud=automated", "-PtestGroups=dbpatch"]
         - image: survey-service
           context: .
           jib:
             type: gradle
             project: ifs-web-service:ifs-survey-service
             args:
-              - "-Djib.serialize=true -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+              - ["test", "--debug", "-Djib.serialize=true", "-Pprofile=automated", "-Pcloud=automated", "-PtestGroups=dbpatch"]
         - image: project-setup-service
           context: .
           jib:
             type: gradle
             project: ifs-web-service:ifs-project-setup-service
             args:
-              - "-Djib.serialize=true -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+              - ["test", "--debug", "-Djib.serialize=true", "-Pprofile=automated", "-Pcloud=automated", "-PtestGroups=dbpatch"]
         - image: project-setup-mgt-service
           context: .
           jib:
             type: gradle
             project: ifs-web-service:ifs-project-setup-mgt-service
             args:
-              - "-Djib.serialize=true -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+              - ["test", "--debug", "-Djib.serialize=true", "-Pprofile=automated", "-Pcloud=automated", "-PtestGroups=dbpatch"]
         - image: front-door-service
           context: .
           jib:
             type: gradle
             project: ifs-web-service:ifs-front-door-service
             args:
-              - "-Djib.serialize=true -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+              - ["test", "--debug", "-Djib.serialize=true", "-Pprofile=automated", "-Pcloud=automated", "-PtestGroups=dbpatch"]
         - image: competition-mgt-service
           context: .
           jib:
             type: gradle
             project: ifs-web-service:ifs-competition-mgt-service
             args:
-              - "-Djib.serialize=true -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+              - ["test", "--debug", "-Djib.serialize=true", "-Pprofile=automated", "-Pcloud=automated", "-PtestGroups=dbpatch"]
         - image: assessment-service
           context: .
           jib:
             type: gradle
             project: ifs-web-service:ifs-assessment-service
             args:
-              - "-Djib.serialize=true -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+              - ["test", "--debug", "-Djib.serialize=true", "-Pprofile=automated", "-Pcloud=automated", "-PtestGroups=dbpatch"]
         - image: application-service
           context: .
           jib:
             type: gradle
             project: ifs-web-service:ifs-application-service
             args:
-              - "-Djib.serialize=true -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+              - ["test", "--debug", "-Djib.serialize=true", "-Pprofile=automated", "-Pcloud=automated", "-PtestGroups=dbpatch"]
         - image: dbreset
           context: ifs-data-layer/ifs-data-service/src/main/resources
           docker:
