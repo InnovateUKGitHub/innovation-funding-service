@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.filter;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -18,10 +17,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * parallelisation, the data layer potentially needs to handle a deal more incoming connections than the web
  * layer accepts.
  */
+@Slf4j
 @Component
 public class ConnectionCountFilter extends OncePerRequestFilter {
-
-    private static final Log LOG = LogFactory.getLog(ConnectionCountFilter.class);
 
     private AtomicInteger count = new AtomicInteger(0);
 
@@ -41,7 +39,7 @@ public class ConnectionCountFilter extends OncePerRequestFilter {
     public boolean canAcceptConnection(){
         boolean healthy = max > count.intValue();
 
-        LOG.trace("incoming connection used = " + count + "/" + max + " healthy = "+ healthy);
+        log.trace("incoming connection used = " + count + "/" + max + " healthy = "+ healthy);
 
         return healthy;
     }

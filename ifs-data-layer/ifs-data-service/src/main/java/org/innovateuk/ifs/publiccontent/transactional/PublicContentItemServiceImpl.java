@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.publiccontent.transactional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.error.Error;
@@ -35,6 +34,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 /**
  * Service for operations around the usage and processing of Competitions
  */
+@Slf4j
 @Service
 public class PublicContentItemServiceImpl extends BaseTransactionalService implements PublicContentItemService {
 
@@ -51,8 +51,6 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
     private PublicContentMapper publicContentMapper;
 
     public static final Integer MAX_ALLOWED_KEYWORDS = 10;
-
-    private static Log LOG = LogFactory.getLog(PublicContentItemServiceImpl.class);
 
     @Override
     public ServiceResult<PublicContentItemPageResource> findFilteredItems(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Integer pageSize) {
@@ -145,7 +143,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
                 }
             }
         } catch (Exception e) {
-            LOG.warn("Unable to decode searchstring", e);
+            log.warn("Unable to decode searchstring", e);
         }
 
         keywords.forEach(keyword -> publicContentIds.add(keyword.getPublicContent().getId()));

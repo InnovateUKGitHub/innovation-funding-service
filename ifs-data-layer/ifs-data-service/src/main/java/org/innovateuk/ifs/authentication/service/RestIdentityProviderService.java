@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.authentication.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.authentication.resource.*;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
@@ -37,10 +36,9 @@ import static org.springframework.http.HttpStatus.OK;
 /**
  * RESTful implementation of the service that talks to the Identity Provider (in this case, via some API)
  */
+@Slf4j
 @Service
 public class RestIdentityProviderService implements IdentityProviderService, ApplicationEventPublisherAware {
-
-    private static final Log LOG = LogFactory.getLog(RestIdentityProviderService.class);
 
     static final String INVALID_PASSWORD_KEY = "INVALID_PASSWORD";
     static final String PASSWORD_MUST_NOT_BE_BLANK = "PASSWORD_MUST_NOT_BE_BLANK";
@@ -92,13 +90,13 @@ public class RestIdentityProviderService implements IdentityProviderService, App
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_ROLLBACK)
     protected void rollbackUser(UserCreationEvent userCreationEvent) {
-        LOG.info("Rolling back user in ldap: " + userCreationEvent.getEmailAddress());
+        log.info("Rolling back user in ldap: " + userCreationEvent.getEmailAddress());
         adaptor.restDelete(idpBaseURL + idpUserPath + userCreationEvent.getUuid());
     }
 
     private static List<Error> errors(HttpStatus code, IdentityProviderError... errors) {
         if (errors == null || errors.length == 0) {
-            LOG.warn("Expected to get some error messages in the response body from the IDP Rest API, but got none.  Returning an error with same HTTP status code");
+            log.warn("Expected to get some error messages in the response body from the IDP Rest API, but got none.  Returning an error with same HTTP status code");
             return singletonList(new Error(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR, code));
         }
         return simpleMap(asList(errors), e -> buildErrorFromIdentityProviderError(e, code));

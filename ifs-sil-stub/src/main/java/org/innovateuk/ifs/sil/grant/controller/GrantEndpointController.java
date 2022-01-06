@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.EvictingQueue;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.innovateuk.ifs.util.JsonMappingDeprecatedUtil;
@@ -25,10 +24,10 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
  * curl localhost:8080/silstub/accprojects/event/108
  * </code>
  */
+@Slf4j
 @RestController
 @RequestMapping("/silstub")
 public class GrantEndpointController {
-    private static final Log LOG = LogFactory.getLog(GrantEndpointController.class);
     private static final EvictingQueue<Event> history = EvictingQueue.create(100);
     private static final JsonNodeFactory jsonNodeFactory = JsonNodeFactory.instance;
 
@@ -37,10 +36,10 @@ public class GrantEndpointController {
 
         Grant grant = grantAsList.get(0);
 
-        LOG.info("Grant data send to stub : JSON = " + JsonMappingDeprecatedUtil.toJson(grant));
+        log.info("Grant data send to stub : JSON = " + JsonMappingDeprecatedUtil.toJson(grant));
         history.add(new Event(grant));
 
-        LOG.info("Grant data sent to stub : Summary = " + getSummary(grant));
+        log.info("Grant data sent to stub : Summary = " + getSummary(grant));
         JsonNode jsonNode = new ObjectNode(jsonNodeFactory);
         ((ObjectNode) jsonNode).put("Success", "Accepted");
         return serviceSuccess(jsonNode).toPostWithBodyResponse();
