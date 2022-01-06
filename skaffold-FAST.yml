@@ -17,7 +17,7 @@ profiles:
         - image: registration-service
           context: .
           custom:
-            buildCommand: './gradlew build -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch'
+            buildCommand: './gradlew build jib -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch'
 
   - name: custom
     build:
