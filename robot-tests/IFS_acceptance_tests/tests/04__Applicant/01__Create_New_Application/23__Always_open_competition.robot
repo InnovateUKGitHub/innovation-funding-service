@@ -45,16 +45,15 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-9729 Always open competitions: assessor list of assigned applications
 ...
-<<<<<<< HEAD
 ...               IFS-10943 Always Open Competition: On click Notify assessor assessment period dates are changing in dropdown
 ...
-
-=======
 ...               IFS-10859 Always open competitions:Assessor view changes
 ...
 ...               IFS-10860 Always open competitions:Assessment period display changes
 ...
->>>>>>> development
+...               IFS-10943 Always open competitions:On click Notify assessor assessment period dates are changing in dropdown
+...
+
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
