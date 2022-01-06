@@ -177,8 +177,8 @@ Internal user should see the same dates entered in choose assessment period drop
     Given the user clicks the button/link   link = Back to manage assessments
     When the user clicks the button/link    jQuery = button:contains("Notify assessors")
     And the user clicks the button/link     link = Manage applications
-    And the user should see the element    jQuery = option:contains("Assessment period 1: 12 July to 16 July 2100")
-    Then the user should see the element    jQuery = option:contains("Assessment period 6: 12 December to 16 December 2100")
+    And the user should see the element    jQuery = option:contains("Assessment period 1: 12 May to 16 May 2100")
+    Then the user should see the element    jQuery = option:contains("Assessment period 6: 12 November to 16 November 2100")
 
 Lead applicant checks the dashboard content and the guidance after an assessor is assigned to the application
     [Documentation]  IFS-8850
@@ -493,13 +493,13 @@ empty assessment periods should not be created on clicking back links
 
 the user create a new assessment period
     the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.day  12
-    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.month  7
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.month  5
     the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.year  2100
     the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.day  14
-    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.month  7
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.month  5
     the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.year  2100
     the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.day  16
-    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.month  7
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.month  5
     the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.year  2100
     the user clicks the button/link          jQuery = button:contains('Save and return to manage assessments')
 
