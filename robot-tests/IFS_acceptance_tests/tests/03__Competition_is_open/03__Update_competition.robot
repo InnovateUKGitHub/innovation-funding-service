@@ -230,7 +230,7 @@ Initial details editable before notify date (Open)
     And the user clicks the button/link                     jQuery = .govuk-button:contains("Edit")
     And the user should see the element                     jQuery = dt:contains("Funding type") ~ dd:contains("Grant")
     And the user should see the element                     jQuery = dt:contains("Competition type") ~ dd:contains("Programme")
-    And the user should see the element                     jQuery = dt:contains("Opening date") ~ dd:contains("2019")
+    And the user should see the element                     jQuery = dt:contains("Opening date") ~ dd:contains("2020")
     And the user should see that the element is disabled    id = innovationSectorCategoryId
     And the user should see that the element is disabled    name = innovationAreaCategoryIds[0]
     When the user selects option from type ahead            innovationLeadUserId  i  Peter Freeman
