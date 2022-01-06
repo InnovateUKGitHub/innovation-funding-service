@@ -41,7 +41,7 @@ public abstract class InviteService<T extends Invite> {
         return find(getInviteRepository().getByHash(hash), notFoundError(getInviteClass(), hash));
     }
 
-    protected ServiceResult<T> getById(long id) {
+    public ServiceResult<T> getById(long id) {
         return find(getInviteRepository().findById(id), notFoundError(getInviteClass(), id));
     }
 

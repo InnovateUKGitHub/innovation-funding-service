@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.user.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,9 +18,12 @@ import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.InviteHistoryRepository;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
+import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
+import org.innovateuk.ifs.invite.transactional.ApplicationInviteServiceImpl;
+import org.innovateuk.ifs.invite.transactional.InviteService;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
@@ -66,6 +70,8 @@ public class UserController {
 
     @Autowired
     private BaseUserService baseUserService;
+    @Autowired
+    private ApplicationInviteServiceImpl applicationInviteService;
 
     @Autowired
     private UserService userService;
@@ -79,15 +85,17 @@ public class UserController {
     @Autowired
     private CrmService crmService;
 
-    @Autowired
-    private InviteHistoryRepository inviteHistoryRepository;
-    @Autowired
-    private ApplicationInviteService applicationInviteService;
+
     @Autowired
     private ApplicationRepository applicationRepository;
 
     @Autowired
+    private InviteHistoryRepository inviteHistoryRepository;
+
+
+    @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
+
     @GetMapping("/uid/{uid}")
     public RestResult<UserResource> getUserByUid(@PathVariable String uid) {
         return baseUserService.getUserResourceByUid(uid).toGetResponse();
@@ -144,11 +152,11 @@ public class UserController {
     @PostMapping("/internal/create/{inviteHash}")
     public RestResult<Void> createInternalUser(@PathVariable("inviteHash") String inviteHash, @Valid @RequestBody InternalUserRegistrationResource internalUserRegistrationResource) {
         return registrationService.createUser(anUserCreationResource()
-                .withFirstName(internalUserRegistrationResource.getFirstName())
-                .withLastName(internalUserRegistrationResource.getLastName())
-                .withPassword(internalUserRegistrationResource.getPassword())
-                .withInviteHash(inviteHash)
-                .build())
+                        .withFirstName(internalUserRegistrationResource.getFirstName())
+                        .withLastName(internalUserRegistrationResource.getLastName())
+                        .withPassword(internalUserRegistrationResource.getPassword())
+                        .withInviteHash(inviteHash)
+                        .build())
                 .andOnSuccessReturnVoid()
                 .toPostCreateResponse();
     }
@@ -214,6 +222,7 @@ public class UserController {
         return userService.changePassword(hash, password)
                 .toPutResponse();
     }
+
     private ApplicationInvite mapInviteResourceToInvite(ApplicationInviteResource inviteResource, InviteOrganisation newInviteOrganisation) {
         Application application = applicationRepository.findById(inviteResource.getApplication()).orElse(null);
         if (newInviteOrganisation == null && inviteResource.getInviteOrganisation() != null) {
@@ -221,23 +230,23 @@ public class UserController {
         }
         return new ApplicationInvite(inviteResource.getId(), inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
     }
-    private InviteHistory getInviteHistory(ApplicationInviteResource applicationInviteResource) {
+
+    private InviteHistory getInviteHistory(ApplicationInviteResource applicationInviteResource, InviteStatus status) {
         Invite invite = mapInviteResourceToInvite(applicationInviteResource, null);
 
         InviteHistory inviteHistory = new InviteHistory();
-        inviteHistory.setStatus(InviteStatus.OPENED);
+        inviteHistory.setStatus(status);
         inviteHistory.setUpdatedOn(ZonedDateTime.now());
         inviteHistory.setUpdatedBy(null);
         inviteHistory.setId(RandomUtils.nextLong());
         inviteHistory.setInvite(invite);
         return inviteHistory;
     }
+
     @GetMapping("/" + URL_VERIFY_EMAIL + "/{hash}")
     public RestResult<Void> verifyEmail(@PathVariable String hash) {
         final ServiceResult<Token> result = tokenService.getEmailToken(hash);
-        ApplicationInviteResource applicationInviteResource =  applicationInviteService.getInviteByHash(hash).toGetResponse().getSuccess();
-        InviteHistory inviteHistory = getInviteHistory(applicationInviteResource);
-        inviteHistoryRepository.save(inviteHistory);
+
 
         LOG.debug(String.format("UserController verifyHash: %s", hash));
         return result.handleSuccessOrFailure(
@@ -245,6 +254,14 @@ public class UserController {
                 token -> {
                     registrationService.activateApplicantAndSendDiversitySurvey(token.getClassPk()).andOnSuccessReturnVoid(v -> {
                         ServiceResult<ApplicationResource> applicationResourceServiceResult = tokenService.handleExtraAttributes(token);
+                        JsonNode extraInfo = token.getExtraInfo();
+                        Long inviteId = extraInfo.get("inviteId").asLong();
+                        ApplicationInvite applicationInvite = applicationInviteService.getById(inviteId).getSuccess();
+
+                        ApplicationInviteResource applicationInviteResource = applicationInviteService.getInviteByHash(applicationInvite.getHash()).toGetResponse().getSuccess();
+                        InviteHistory inviteHistory = getInviteHistory(applicationInviteResource, InviteStatus.VERIFIED);
+                        inviteHistoryRepository.save(inviteHistory);
+
 
                         applicationResourceServiceResult.andOnSuccessReturnVoid(
                                 applicationResource -> crmService.syncCrmContact(token.getClassPk(), applicationResource.getCompetition(), applicationResource.getId()));
