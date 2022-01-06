@@ -96,6 +96,7 @@ public class RegistrationController {
     @Autowired
     private ProjectPartnerInviteRestService projectPartnerInviteRestService;
 
+
     private static final Log LOG = LogFactory.getLog(RegistrationController.class);
 
     private final static String EMAIL_FIELD_NAME = "email";
@@ -186,9 +187,20 @@ public class RegistrationController {
         model.addAttribute(BindingResult.MODEL_KEY_PREFIX + "form", bindingResult);
         ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
 
+        String hash = cookieUtil.getCookieValue(request, "invite_hash");
+
+        ApplicationInviteResource applicationInviteResource = inviteRestService.getInviteByHash(hash).getSuccess();
+        // ApplicationInviteResource applicationInviteResource =  applicationInviteService.getInviteByHash(hash).toGetResponse().getSuccess();
+        // InviteHistory inviteHistory = getInviteHistory(applicationInviteResource);
+        //  inviteHistoryRepository.save(inviteHistory);
+
+//        applicationInviteResource.setStatus(InviteStatus.VERIFIED);
+//        inviteRestService.acceptInvite(applicationInviteResource);
+
+        Long inviteId = applicationInviteResource.getId();
         return validationHandler.failNowOrSucceedWith(
                 () -> registerForm(registrationForm, model, user, request, response),
-                () -> createUser(registrationForm, getOrganisationId(request), getCompetitionId(request)).handleSuccessOrFailure(
+                () -> createUser(registrationForm, getOrganisationId(request), getCompetitionId(request), inviteId).handleSuccessOrFailure(
                         failure -> {
                             addValidationErrors(validationHandler, failure);
                             return registerForm(registrationForm, model, user, request, response);
@@ -201,6 +213,8 @@ public class RegistrationController {
                                         },
                                         success -> {
                                             removeInviteCookie(response);
+
+
                                             return "redirect:/registration/success";
                                         })));
     }
@@ -340,13 +354,14 @@ public class RegistrationController {
         }
     }
 
-    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId, Long competitionId) {
+    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId, Long competitionId, Long inviteId) {
         return userRestService.createUser(
-                registrationForm.constructUserCreationResource()
-                .withOrganisationId(organisationId)
-                .withCompetitionId(competitionId)
-                .withRole(Role.APPLICANT)
-                .build())
+                        registrationForm.constructUserCreationResource()
+                                .withOrganisationId(organisationId)
+                                .withCompetitionId(competitionId)
+                                .withRole(Role.APPLICANT)
+                                .withInviteId(inviteId)
+                                .build())
                 .toServiceResult();
     }
 
