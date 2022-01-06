@@ -19,7 +19,8 @@ profiles:
           jib:
             type: gradle
             project: ifs-web-service:ifs-application-service
-
+            args:
+              - "test"
   - name: custom
     build:
       local:
