@@ -102,7 +102,7 @@ the user should not see submission deadline date in public content dates
     And the user should see the element             jQuery = .wysiwyg-styles:contains("This is open-ended competition and applications can be submitted at any time.")
     And the user should see valid event details
 
-the user creates a new open ended competiton
+the user creates a new open ended competition
     [Documentation]  IFS-8848
     Given the user clicks the button/link                       link = Back to public content
     When the user clicks the button/link                        link = Competition details
@@ -162,11 +162,12 @@ Comp admin creates a new assessment period
     [Documentation]  IFS-9759  IFS-9760  IFS-10943
     Given the user clicks the button/link                   link = Manage assessment period
     When the user create a new assessment period
-    And the user create a new assessment period 1           1  12  14  16   11  2100
-    And the user create a new assessment period 1           2  12  14  16   10  2100
-    And the user create a new assessment period 1           3  12  14  16   9  2100
-    And the user create a new assessment period 1           4  12  14  16   8  2100
-    And the user create a new assessment period 1           5  12  14  16   7  2100
+    And the user create a new assessment period 1           1  12  14  16   6  2100
+    And the user create a new assessment period 1           2  12  14  16   7  2100
+    And the user create a new assessment period 1           3  12  14  16   8  2100
+    And the user create a new assessment period 1           4  12  14  16   9  2100
+    And the user create a new assessment period 1           5  12  14  16   10  2100
+    And the user create a new assessment period 1           6  12  14  16   11  2100
     Then the user should see assessment period 1
     And The user clicks the button/link                     link = Manage assessors
     And the user clicks the button/link                     jQuery = button:contains("Save and continue")
@@ -177,7 +178,8 @@ Internal user should see the same dates entered in choose assessment period drop
     Given the user clicks the button/link   link = Back to manage assessments
     When the user clicks the button/link    jQuery = button:contains("Notify assessors")
     And the user clicks the button/link     link = Manage applications
-    Then the user should see the element    jQuery = option:contains("Assessment period 1: 12 December to 16 December 2100")
+    And the user should see the element    jQuery = option:contains("Assessment period 1: 12 July to 16 July 2100")
+    Then the user should see the element    jQuery = option:contains("Assessment period 6: 12 December to 16 December 2100")
 
 Lead applicant checks the dashboard content and the guidance after an assessor is assigned to the application
     [Documentation]  IFS-8850
