@@ -493,13 +493,13 @@ empty assessment periods should not be created on clicking back links
 
 the user create a new assessment period
     the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.day  12
-    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.month  12
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.month  7
     the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.year  2100
     the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.day  14
-    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.month  12
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.month  7
     the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.year  2100
     the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.day  16
-    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.month  12
+    the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.month  7
     the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.year  2100
     the user clicks the button/link          jQuery = button:contains('Save and return to manage assessments')
 
