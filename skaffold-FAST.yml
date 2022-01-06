@@ -15,12 +15,9 @@ profiles:
           ignoreChanges: true
       artifacts:
         - image: application-service
+          custom:
+            buildCommand: "gradlew :ifs-web-service:ifs-application-service:test jib"
           context: .
-          jib:
-            type: gradle
-            project: ifs-web-service:ifs-application-service
-            args:
-              - "ifs-web-service:ifs-application-service:test"
   - name: custom
     build:
       local:
