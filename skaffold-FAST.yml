@@ -16,7 +16,7 @@ profiles:
       artifacts:
         - image: application-service
           custom:
-            buildCommand: "gradlew :ifs-web-service:ifs-application-service:test jib"
+            buildCommand: "gradle :ifs-web-service:ifs-application-service:test jib"
           context: .
   - name: custom
     build:
