@@ -66,6 +66,15 @@ profiles:
           context: .
           custom:
             buildCommand: "gradle :ifs-web-service:ifs-application-service:test jib --image=$IMAGE"
+        - image: dbreset
+          context: ifs-data-layer/ifs-data-service/src/main/resources
+          docker:
+            dockerfile: Dockerfile-dbreset
+        - image: anonymised-db-data
+          context: ifs-data-layer/ifs-data-service/src/main/docker/proxysql
+          docker:
+            dockerfile: Dockerfile-proxysql
+
   - name: custom
     build:
       local:
