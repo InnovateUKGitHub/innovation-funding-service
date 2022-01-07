@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.organisation.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -39,13 +38,12 @@ import static org.springframework.web.util.UriUtils.encodeQueryParam;
  * - Finding your company or research type organisation through Companies House or JES search.
  * - Verifying or amending the address attached to the organisation.
  */
+@Slf4j
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL)
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationCreationSearchController.class)
 @PreAuthorize("permitAll")
 public class OrganisationCreationSearchController extends AbstractOrganisationCreationController {
-
-    private static final Log LOG = LogFactory.getLog(OrganisationCreationSearchController.class);
 
     private static final String SELECTED_ORGANISATION = "selected-organisation";
     private static final String SEARCH_RESULT_ORGANISATION = "search-organisation-results";
@@ -324,7 +322,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         try {
             return messageSource.getMessage(key, null, locale);
         } catch (NoSuchMessageException e) {
-            LOG.error("unable to get message for key: " + key + " and local: " + locale);
+            log.error("unable to get message for key: " + key + " and local: " + locale);
             return messageSource.getMessage(improvedSearchEnabled ? String.format("improved.registration.DEFAULT.%s", textKey)
                             : String.format("registration.DEFAULT.%s", textKey),
                     null, locale);

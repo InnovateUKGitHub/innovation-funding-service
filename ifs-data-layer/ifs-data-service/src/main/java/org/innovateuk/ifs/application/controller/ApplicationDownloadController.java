@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.usermodel.*;
 import org.innovateuk.ifs.application.domain.Application;
@@ -34,10 +33,10 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 
+@Slf4j
 @RestController
 @RequestMapping("/application/download")
 public class ApplicationDownloadController {
-    private static final Log LOG = LogFactory.getLog(ApplicationDownloadController.class);
     private static final String APPLICATION_SUMMARY_QUESTION_NAME = "Project summary";
     private static final int PROJECT_SUMMARY_COLUMN_WITH = 50; // the width in amount of letters.
     private static final String FONT_NAME = "Arial";
@@ -66,11 +65,11 @@ public class ApplicationDownloadController {
         if (applicationsResult.isSuccess()) {
             applications = applicationsResult.getSuccess();
         } else {
-            LOG.error("failed call to get application summaries by competition and status for the download");
+            log.error("failed call to get application summaries by competition and status for the download");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        LOG.info(String.format("Generate download for %s applications with status ", applications.size()));
+        log.info(String.format("Generate download for %s applications with status ", applications.size()));
 
         try (XSSFWorkbook wb = new XSSFWorkbook()) {
             populateExcelWorkbook(wb, applications);
@@ -85,7 +84,7 @@ public class ApplicationDownloadController {
             httpHeaders.add("Expires", "0");
             return new ResponseEntity<>(new ByteArrayResource(baos.toByteArray()), httpHeaders, HttpStatus.OK);
         } catch (SummaryDataUnavailableException e) {
-            LOG.error("unable to retrieve data required for the excel workbook", e);
+            log.error("unable to retrieve data required for the excel workbook", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

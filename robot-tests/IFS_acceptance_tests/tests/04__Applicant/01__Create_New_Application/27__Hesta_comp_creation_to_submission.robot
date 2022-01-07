@@ -271,5 +271,3 @@ the assessor accepts an invite to an application
     the user clicks the button/link       link = ${hestaCompetitionName}
     the user selects the radio button     acceptInvitation  true
     the user clicks the button/link       jQuery = button:contains("Confirm")
-
-
