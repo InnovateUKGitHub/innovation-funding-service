@@ -515,9 +515,9 @@ the user create a new assessment period 1
     the user clicks the button/link          jQuery = button:contains('Save and return to manage assessments')
 
 the user should see assessment period 1
-    the user should see the element     jQuery = td:contains("1. Assessor briefing") ~ td:contains("12/12/2100")
-    the user should see the element     jQuery = td:contains("2. Assessor accepts") ~ td:contains("14/12/2100")
-    the user should see the element     jQuery = td:contains("3. Assessor deadline") ~ td:contains("16/12/2100")
+    the user should see the element     jQuery = td:contains("1. Assessor briefing") ~ td:contains("12/1/2100")
+    the user should see the element     jQuery = td:contains("2. Assessor accepts") ~ td:contains("14/1/2100")
+    the user should see the element     jQuery = td:contains("3. Assessor deadline") ~ td:contains("16/1/2100")
     the user should see the element     jQuery = button:contains("Notify assessors")
     the user clicks the button/link     link = Manage assessment period
     the user should see the element     jQuery = button:contains("+ Add new assessment period")
