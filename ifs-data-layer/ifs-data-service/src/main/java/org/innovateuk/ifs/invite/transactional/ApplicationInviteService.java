@@ -56,4 +56,8 @@ public interface ApplicationInviteService {
 
     @PreAuthorize("hasPermission(#applicationInviteId, 'org.innovateuk.ifs.invite.resource.ApplicationInviteResource', 'DELETE')")
     ServiceResult<Void> removeApplicationInvite(long applicationInviteId);
+
+
+    //@PreAuthorize("hasPermission(#inviteResource, 'SAVE')")
+    ServiceResult<Void> updateInviteHistory(ApplicationInviteResource inviteResource);
 }
