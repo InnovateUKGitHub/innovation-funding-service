@@ -67,7 +67,7 @@ The Application Summary page must not include the Reopen Application link when t
     And Competition admin creates an assessment period                              ${competitionId}
     And comp admin sends invite to assesor
     And the assessor accepts an invite to an application
-    And Log in as a different user                                                 &{Comp_admin1_credentials}
+    And Log in as a different user                                                  &{Comp_admin1_credentials}
     And The user clicks the button/link                                             link = ${hestaCompetitionName}
     And assign the application to assessor                                          ${hestaApplicationName}
     When the internal team mark the application as successful / unsuccessful        ${hestaApplicationName}   FUNDED
@@ -87,7 +87,6 @@ Lead applicant receives email notifiction when internal user marks application u
     And Log in as a different user                                                  &{Comp_admin1_credentials}
     And The user clicks the button/link                                             link = ${hestaCompetitionName}
     And assign the application to assessor                                          ${newHestaApplicationName}
-    And log in as a different user                                                  &{Comp_admin1_credentials}
     When the internal team mark the application as successful / unsuccessful        ${newHestaApplicationName}   UNFUNDED
     And the user clicks the button/link                                             link = Competition
     And Requesting IDs of this application                                          ${newHestaApplicationName}
