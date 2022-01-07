@@ -16,56 +16,69 @@ profiles:
       artifacts:
         - image: data-service
           context: .
-          custom:
-            buildCommand: "gradle :ifs-data-layer:ifs-data-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+          jib:
+            type: gradle
+            project: ifs-data-layer:ifs-data-service
         - image: finance-data-service
           context: .
-          custom:
-            buildCommand: "gradle :ifs-data-layer:ifs-finance-data-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+          jib:
+            type: gradle
+            project: ifs-data-layer:ifs-finance-data-service
         - image: survey-data-service
           context: .
-          custom:
-            buildCommand: "gradle :ifs-data-layer:ifs-survey-data-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+          jib:
+            type: gradle
+            project: ifs-data-layer:ifs-survey-data-service
         - image: data-service-alerts
           context: .
-          custom:
-            buildCommand: "gradle :ifs-data-layer:data-service-alerts:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+          jib:
+            type: gradle
+            project: ifs-data-layer:data-service-alerts
         - image: sil-stub
           context: .
-          custom:
-            buildCommand: "gradle :ifs-sil-stub:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+          jib:
+            type: gradle
+            project: ifs-sil-stub
         - image: registration-service
           context: .
-          custom:
-            buildCommand: "gradle :ifs-registration-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+          jib:
+            type: gradle
+            project: ifs-registration-service
         - image: survey-service
           context: .
-          custom:
-            buildCommand: "gradle :ifs-web-service:ifs-survey-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-survey-service
         - image: project-setup-service
           context: .
-          custom:
-            buildCommand: "gradle :ifs-web-service:ifs-project-setup-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-project-setup-service
         - image: project-setup-mgt-service
           context: .
-          custom:
-            buildCommand: "gradle :ifs-web-service:ifs-project-setup-mgt-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-project-setup-mgt-service
         - image: front-door-service
           context: .
-          custom:
-            buildCommand: "gradle :ifs-web-service:ifs-front-door-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-front-door-service
         - image: competition-mgt-service
           context: .
-          custom:
-            buildCommand: "gradle :ifs-web-service:ifs-competition-mgt-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-competition-mgt-service
         - image: assessment-service
           context: .
-          custom:
-            buildCommand: "gradle :ifs-web-service:ifs-assessment-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-assessment-service
         - image: application-service
           context: .
-          custom:
-            buildCommand: "gradle :ifs-web-service:ifs-application-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -PtestGroups=dbpatch"
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-application-service
         - image: dbreset
           context: ifs-data-layer/ifs-data-service/src/main/resources
           docker:
