@@ -159,11 +159,11 @@ Comp admin creates a new assessment period
     [Documentation]  IFS-9759  IFS-9760  IFS-10943
     Given the user clicks the button/link                   link = Manage assessment period
     When the user create a new assessment period
-    And the user create a new assessment period 1           1  12  14  16   2  2100
-    And the user create a new assessment period 1           2  12  14  16   3  2100
-    And the user create a new assessment period 1           3  12  14  16   4  2100
-    And the user create a new assessment period 1           4  12  14  16   5  2100
-    And the user create a new assessment period 1           5  12  14  16   6  2100
+    And the user create next assessment period           2  12  14  16   2  2100
+    And the user create next assessment period           3  12  14  16   3  2100
+    And the user create next assessment period           4  12  14  16   4  2100
+    And the user create next assessment period           5  12  14  16   5  2100
+    And the user create next assessment period           6  12  14  16   6  2100
     Then the user should see assessment period 1
     And The user clicks the button/link                     link = Manage assessors
     And the user clicks the button/link                     jQuery = button:contains("Save and continue")
@@ -499,7 +499,7 @@ the user create a new assessment period
     the user enters text to a text field     assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.year  2100
     the user clicks the button/link          jQuery = button:contains('Save and return to manage assessments')
 
-the user create a new assessment period 1
+the user create next assessment period
     [Arguments]  ${assessmentNumber}  ${briefingDay}  ${acceptsDay}  ${deadLineDay}  ${month}  ${year}
     the user clicks the button/link          link = Manage assessment period
     the user clicks the button/link          jQuery = button:contains("+ Add new assessment period")
