@@ -17,55 +17,55 @@ profiles:
         - image: data-service
           context: .
           custom:
-            buildCommand: "gradle :ifs-data-layer:ifs-data-service:test jib --image=$IMAGE"
+            buildCommand: "gradle :ifs-data-layer:ifs-data-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -Dsonar.login=${bamboo.ifs_sonar_token} -PtestGroups=dbpatch"
         - image: finance-data-service
           context: .
           custom:
-            buildCommand: "gradle :ifs-data-layer:ifs-finance-data-service:test jib --image=$IMAGE"
+            buildCommand: "gradle :ifs-data-layer:ifs-finance-data-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -Dsonar.login=${bamboo.ifs_sonar_token} -PtestGroups=dbpatch"
         - image: survey-data-service
           context: .
           custom:
-            buildCommand: "gradle :ifs-data-layer:ifs-survey-data-service:test jib --image=$IMAGE"
+            buildCommand: "gradle :ifs-data-layer:ifs-survey-data-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -Dsonar.login=${bamboo.ifs_sonar_token} -PtestGroups=dbpatch"
         - image: data-service-alerts
           context: .
           custom:
-            buildCommand: "gradle :ifs-data-layer:data-service-alerts:test jib --image=$IMAGE"
+            buildCommand: "gradle :ifs-data-layer:data-service-alerts:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -Dsonar.login=${bamboo.ifs_sonar_token} -PtestGroups=dbpatch"
         - image: sil-stub
           context: .
           custom:
-            buildCommand: "gradle :ifs-sil-stub:test jib --image=$IMAGE"
+            buildCommand: "gradle :ifs-sil-stub:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -Dsonar.login=${bamboo.ifs_sonar_token} -PtestGroups=dbpatch"
         - image: registration-service
           context: .
           custom:
-            buildCommand: "gradle :ifs-registration-service:test jib --image=$IMAGE"
+            buildCommand: "gradle :ifs-registration-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -Dsonar.login=${bamboo.ifs_sonar_token} -PtestGroups=dbpatch"
         - image: survey-service
           context: .
           custom:
-            buildCommand: "gradle :ifs-web-service:ifs-survey-service:test jib --image=$IMAGE"
+            buildCommand: "gradle :ifs-web-service:ifs-survey-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -Dsonar.login=${bamboo.ifs_sonar_token} -PtestGroups=dbpatch"
         - image: project-setup-service
           context: .
           custom:
-            buildCommand: "gradle :ifs-web-service:ifs-project-setup-service:test jib --image=$IMAGE"
+            buildCommand: "gradle :ifs-web-service:ifs-project-setup-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -Dsonar.login=${bamboo.ifs_sonar_token} -PtestGroups=dbpatch"
         - image: project-setup-mgt-service
           context: .
           custom:
-            buildCommand: "gradle :ifs-web-service:ifs-project-setup-mgt-service:test jib --image=$IMAGE"
+            buildCommand: "gradle :ifs-web-service:ifs-project-setup-mgt-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -Dsonar.login=${bamboo.ifs_sonar_token} -PtestGroups=dbpatch"
         - image: front-door-service
           context: .
           custom:
-            buildCommand: "gradle :ifs-web-service:ifs-front-door-service:test jib --image=$IMAGE"
+            buildCommand: "gradle :ifs-web-service:ifs-front-door-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -Dsonar.login=${bamboo.ifs_sonar_token} -PtestGroups=dbpatch"
         - image: competition-mgt-service
           context: .
           custom:
-            buildCommand: "gradle :ifs-web-service:ifs-competition-mgt-service:test jib --image=$IMAGE"
+            buildCommand: "gradle :ifs-web-service:ifs-competition-mgt-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -Dsonar.login=${bamboo.ifs_sonar_token} -PtestGroups=dbpatch"
         - image: assessment-service
           context: .
           custom:
-            buildCommand: "gradle :ifs-web-service:ifs-assessment-service:test jib --image=$IMAGE"
+            buildCommand: "gradle :ifs-web-service:ifs-assessment-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -Dsonar.login=${bamboo.ifs_sonar_token} -PtestGroups=dbpatch"
         - image: application-service
           context: .
           custom:
-            buildCommand: "gradle :ifs-web-service:ifs-application-service:test jib --image=$IMAGE"
+            buildCommand: "gradle :ifs-web-service:ifs-application-service:test jib --image=$IMAGE -Pprofile=automated -Pcloud=automated -Dsonar.login=${bamboo.ifs_sonar_token} -PtestGroups=dbpatch"
         - image: dbreset
           context: ifs-data-layer/ifs-data-service/src/main/resources
           docker:
