@@ -14,10 +14,58 @@ profiles:
         gitCommit:
           ignoreChanges: true
       artifacts:
-        - image: application-service
+        - image: data-service
+          context: .
           custom:
             buildCommand: "gradle :ifs-web-service:ifs-application-service:test jib --image=$IMAGE"
+        - image: finance-data-service
           context: .
+          custom:
+            buildCommand: "gradle :ifs-web-service:ifs-application-service:test jib --image=$IMAGE"
+        - image: survey-data-service
+          context: .
+          custom:
+            buildCommand: "gradle :ifs-web-service:ifs-application-service:test jib --image=$IMAGE"
+        - image: data-service-alerts
+          context: .
+          custom:
+            buildCommand: "gradle :ifs-web-service:ifs-application-service:test jib --image=$IMAGE"
+        - image: sil-stub
+          context: .
+          custom:
+            buildCommand: "gradle :ifs-web-service:ifs-application-service:test jib --image=$IMAGE"
+        - image: registration-service
+          context: .
+          custom:
+            buildCommand: "gradle :ifs-web-service:ifs-application-service:test jib --image=$IMAGE"
+        - image: survey-service
+          context: .
+          custom:
+            buildCommand: "gradle :ifs-web-service:ifs-application-service:test jib --image=$IMAGE"
+        - image: project-setup-service
+          context: .
+          custom:
+            buildCommand: "gradle :ifs-web-service:ifs-application-service:test jib --image=$IMAGE"
+        - image: project-setup-mgt-service
+          context: .
+          custom:
+            buildCommand: "gradle :ifs-web-service:ifs-application-service:test jib --image=$IMAGE"
+        - image: front-door-service
+          context: .
+          custom:
+            buildCommand: "gradle :ifs-web-service:ifs-application-service:test jib --image=$IMAGE"
+        - image: competition-mgt-service
+          context: .
+          custom:
+            buildCommand: "gradle :ifs-web-service:ifs-application-service:test jib --image=$IMAGE"
+        - image: assessment-service
+          context: .
+          custom:
+            buildCommand: "gradle :ifs-web-service:ifs-application-service:test jib --image=$IMAGE"
+        - image: application-service
+          context: .
+          custom:
+            buildCommand: "gradle :ifs-web-service:ifs-application-service:test jib --image=$IMAGE"
   - name: custom
     build:
       local:
