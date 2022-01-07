@@ -45,11 +45,9 @@
 #...
 #...             IFS-10757 Loans - Application summary and Overview Content
 #...
-<<<<<<< HEAD
-=======
+
 #...             IFS-10761 Loans - Implement redirection to Application Overview from SF using single tab
 #...
->>>>>>> development
 #...             IFS-10869 Loans Part B: remove unnecessary banner
 #...
 #
@@ -513,7 +511,7 @@
 #    the user selects the checkbox         assessor-row-1
 #    the user clicks the button/link       jQuery = button:contains("Add to application")
 #    the user navigates to the page        ${server}/management/competition/${loan_comp_appl_id}
-#    the user clicks the button/link       jQuery = button:contains("Notify assessors")
+#    the usgit er clicks the button/link       jQuery = button:contains("Notify assessors")
 #    log in as a different user            &{assessor_credentials}
 #    the user navigates to the page        ${server}/assessment/assessor/dashboard/competition/${loan_comp_appl_id}
 #    the user clicks the button/link       link = ${loanApplicationName}
