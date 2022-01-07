@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.competitionsetup.transactional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -60,7 +58,6 @@ import static org.springframework.util.ReflectionUtils.*;
  */
 @Service
 public class CompetitionSetupServiceImpl extends BaseTransactionalService implements CompetitionSetupService {
-    private static final Log LOG = LogFactory.getLog(CompetitionSetupServiceImpl.class);
 
     @Autowired
     private CompetitionMapper competitionMapper;

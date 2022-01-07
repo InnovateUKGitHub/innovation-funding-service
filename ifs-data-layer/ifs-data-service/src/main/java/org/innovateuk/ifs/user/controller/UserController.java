@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.user.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -36,6 +35,7 @@ import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
  * {org.innovateuk.ifs.user.service.UserRestServiceImpl} and other REST-API users
  * to manage {@link User} related data.
  */
+@Slf4j
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -44,7 +44,6 @@ public class UserController {
             new Sort.Order(Sort.Direction.ASC, "firstName"),
             new Sort.Order(Sort.Direction.ASC, "lastName")
     );
-    private static final Log LOG = LogFactory.getLog(UserController.class);
 
     private static final String DEFAULT_PAGE_NUMBER = "0";
 
@@ -197,7 +196,7 @@ public class UserController {
         final ServiceResult<Token> result = tokenService.getEmailToken(hash);
 
 
-        LOG.debug(String.format("UserController verifyHash: %s", hash));
+        log.debug(String.format("UserController verifyHash: %s", hash));
         return result.handleSuccessOrFailure(
                 failure -> restFailure(failure.getErrors()),
                 token -> {

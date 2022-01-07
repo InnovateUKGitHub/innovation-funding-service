@@ -14,7 +14,9 @@ buildscript {
 }
 
 dependencies {
-    implementation enforcedPlatform("org.flywaydb:flyway-core:7.2.1")
+    implementation enforcedPlatform("org.flywaydb:flyway-core:7.2.1") {
+        exclude group: "commons-logging", module: "commons-logging"
+    }
     implementation enforcedPlatform("com.h2database:h2:1.4.199")
 
     implementation "org.flywaydb:flyway-core"

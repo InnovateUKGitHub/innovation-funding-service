@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.organisation.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.stereotype.Component;
@@ -24,8 +22,6 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
  */
 @Component
 class ScheduledJesOrganisationListImporterFileDownloader {
-
-    private static final Log LOG = LogFactory.getLog(ScheduledJesOrganisationListImporterFileDownloader.class);
 
     boolean jesSourceFileExists(URL jesSourceFile) {
         try {
