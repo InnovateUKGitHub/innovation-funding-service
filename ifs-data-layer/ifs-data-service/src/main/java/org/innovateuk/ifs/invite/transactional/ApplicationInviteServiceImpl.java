@@ -149,19 +149,14 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
 
     @Override
     public ServiceResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash) {
-
-        ApplicationInviteResource applicationInviteResource = applicationInviteService.getInviteByHash(hash).toGetResponse().getSuccess();
-        InviteHistory inviteHistory = getInviteHistory(applicationInviteResource,InviteStatus.OPENED);
-        inviteHistoryRepository.save(inviteHistory);
-
         return getByHash(hash).andOnSuccessReturn(invite -> inviteOrganisationMapper.mapToResource(inviteOrganisationRepository.findById(invite.getInviteOrganisation().getId()).orElse(null)));
     }
 
-    private InviteHistory getInviteHistory(ApplicationInviteResource applicationInviteResource, InviteStatus status) {
+    private InviteHistory getInviteHistory(ApplicationInviteResource applicationInviteResource) {
         Invite invite = mapInviteResourceToInvite(applicationInviteResource, null);
 
         InviteHistory inviteHistory = new InviteHistory();
-        inviteHistory.setStatus(status);
+        inviteHistory.setStatus(applicationInviteResource.getStatus());
         inviteHistory.setUpdatedOn(ZonedDateTime.now());
         inviteHistory.setUpdatedBy(null);
         inviteHistory.setId(RandomUtils.nextLong());
@@ -241,7 +236,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
 
     @Override
     public ServiceResult<Void> updateInviteHistory(ApplicationInviteResource inviteResource) {
-        InviteHistory inviteHistory = getInviteHistory(inviteResource,InviteStatus.ACCEPTED);
+        InviteHistory inviteHistory = getInviteHistory(inviteResource);
 
         inviteHistoryRepository.save(inviteHistory);
         return serviceSuccess();

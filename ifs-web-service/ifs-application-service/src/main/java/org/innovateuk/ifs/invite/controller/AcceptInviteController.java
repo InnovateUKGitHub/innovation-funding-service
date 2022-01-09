@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.registration.controller.RegistrationController;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static org.innovateuk.ifs.exception.ErrorControllerAdvice.URL_HASH_INVALID_TEMPLATE;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 
 
@@ -81,6 +83,8 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
                             CompetitionOrganisationConfigResource organisationConfigResource = organisationConfigRestService.findByCompetitionId(acceptRejectApplicationInviteViewModel.getCompetitionId()).getSuccess();
                             boolean international = organisationConfigResource.areInternationalApplicantsAllowed();
                             model.addAttribute("internationalCompetition", international);
+                            invite.setStatus(InviteStatus.OPENED);
+                            inviteRestService.acceptInvite(invite);
                             return invite.getUser() == null ? ACCEPT_INVITE_NEW_USER_VIEW : ACCEPT_INVITE_EXISTING_USER_VIEW;
                         }
                 )
@@ -111,6 +115,7 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
                             confirmOrganisationInviteModelPopulator.populate(invite, organisation,
                                     RegistrationController.BASE_URL);
                     model.addAttribute("model", viewModel);
+                    invite.setStatus(ACCEPTED);
                     inviteRestService.acceptInvite(invite);
                     return "registration/confirm-invited-organisation";
                 })
