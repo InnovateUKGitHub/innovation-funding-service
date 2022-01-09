@@ -291,7 +291,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         CompetitionInviteStatisticsResource statisticsResource = new CompetitionInviteStatisticsResource();
         statisticsResource.setInvited(assessmentInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
         statisticsResource.setInviteList(assessmentInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(CREATED)));
-        statisticsResource.setAccepted(assessmentParticipantRepository.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ACCEPTED));
+        statisticsResource.setAccepted(assessmentParticipantRepository.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR,  ParticipantStatus.ACCEPTED));
         statisticsResource.setDeclined(assessmentParticipantRepository.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, REJECTED));
         return serviceSuccess(statisticsResource);
     }
@@ -683,7 +683,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                 return serviceSuccess(invite);
             }
 
-            if (participant.getStatus() == ACCEPTED || participant.getStatus() == REJECTED) {
+            if (participant.getStatus() ==  ParticipantStatus.ACCEPTED || participant.getStatus() == REJECTED) {
                 return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_CLOSED, invite.getTarget().getName()));
             }
             return serviceSuccess(invite);
@@ -701,7 +701,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     private ServiceResult<AssessmentParticipant> accept(AssessmentParticipant participant, User user) {
         if (participant.getInvite().getStatus() != OPENED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
-        } else if (participant.getStatus() == ACCEPTED) {
+        } else if (participant.getStatus() ==  ParticipantStatus.ACCEPTED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE, getInviteCompetitionName(participant)));
         } else if (participant.getStatus() == REJECTED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
@@ -731,7 +731,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     private ServiceResult<CompetitionParticipant> reject(AssessmentParticipant participant, RejectionReason rejectionReason, Optional<String> rejectionComment) {
         if (participant.getInvite().getStatus() != OPENED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
-        } else if (participant.getStatus() == ACCEPTED) {
+        } else if (participant.getStatus() ==  ParticipantStatus.ACCEPTED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE, getInviteCompetitionName(participant)));
         } else if (participant.getStatus() == REJECTED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
