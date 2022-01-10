@@ -8,7 +8,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
-    // version must match here and in ifs-libraries repo (bom and java.gradle)
+    // version must match here and in common module
     annotationProcessor "org.projectlombok:lombok:1.18.22"
     testAnnotationProcessor  "org.projectlombok:lombok:1.18.22"
 }
