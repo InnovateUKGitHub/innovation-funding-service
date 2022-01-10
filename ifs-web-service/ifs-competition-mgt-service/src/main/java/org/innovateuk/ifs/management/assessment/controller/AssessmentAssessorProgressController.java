@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.management.assessment.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource.Sort;
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
 import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
@@ -30,13 +29,14 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
+@Slf4j
 @Controller
 @RequestMapping("/assessment/competition/{competitionId}/assessors/{assessorId}")
 @SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can manage assessments", securedType = AssessmentAssessorProgressController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSMENT')")
 public class AssessmentAssessorProgressController extends CompetitionManagementCookieController<ApplicationSelectionForm> {
+    
     private static final String SELECTION_FORM = "applicationSelectionForm";
-    private static final Log LOG = LogFactory.getLog(AssessmentApplicationProgressController.class);
 
     @Autowired
     private AssessorAssessmentProgressModelPopulator assessorAssessmentProgressModelPopulator;
@@ -220,7 +220,7 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
             saveFormToCookie(response, competitionId, selectionForm);
             return createJsonObjectNode(selectionForm.getSelectedApplications().size(), selectionForm.isAllSelected(), limitExceeded);
         } catch (Exception e) {
-            LOG.error("exception thrown selecting assessor for resend list", e);
+            log.error("exception thrown selecting assessor for resend list", e);
             return createFailureResponse();
         }
     }
@@ -248,7 +248,7 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
 
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedApplications().size(), selectionForm.isAllSelected(), false);
         } catch (Exception e) {
-            LOG.error("exception thrown adding assessors to list", e);
+            log.error("exception thrown adding assessors to list", e);
             return createFailureResponse();
         }
     }

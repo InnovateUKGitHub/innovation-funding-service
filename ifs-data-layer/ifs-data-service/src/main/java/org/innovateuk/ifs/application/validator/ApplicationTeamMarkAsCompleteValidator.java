@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.validator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -24,10 +23,9 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
  * Validates the inputs in the application team page, if valid on the markAsComplete action
  *
  */
- @Component
- public class ApplicationTeamMarkAsCompleteValidator implements Validator {
-
-    private static final Log LOG = LogFactory.getLog(ApplicationTeamMarkAsCompleteValidator.class);
+@Slf4j
+@Component
+public class ApplicationTeamMarkAsCompleteValidator implements Validator {
 
     @Autowired
     private ApplicationInviteService applicationInviteService;
@@ -44,7 +42,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
     @Override
     public void validate(Object target, Errors errors) {
 
-        LOG.debug("do ApplicationTeamMarkAsComplete Validation");
+        log.debug("do ApplicationTeamMarkAsComplete Validation");
 
         Application application = (Application) target;
 

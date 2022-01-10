@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.handler;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
@@ -22,8 +21,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @SuppressWarnings("unchecked")
+@Slf4j
 public abstract class AbstractOrganisationFinanceHandler implements OrganisationTypeFinanceHandler {
-    private static final Log LOG = LogFactory.getLog(AbstractOrganisationFinanceHandler.class);
 
     @Autowired
     protected QuestionService questionService;
@@ -57,7 +56,7 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
                 });
                 return applicationFinanceRowRepository.saveAll(cost);
             } catch (IllegalArgumentException e) {
-                LOG.error(String.format("No FinanceRowHandler for type: %s", costType.getType()), e);
+                log.error(String.format("No FinanceRowHandler for type: %s", costType.getType()), e);
             }
         }
         return null;
@@ -74,7 +73,7 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
                 });
                 return projectFinanceRowRepository.saveAll(cost);
             } catch (IllegalArgumentException e) {
-                LOG.error(String.format("No FinanceRowHandler for type: %s", costType.getType()), e);
+                log.error(String.format("No FinanceRowHandler for type: %s", costType.getType()), e);
             }
         }
         return null;

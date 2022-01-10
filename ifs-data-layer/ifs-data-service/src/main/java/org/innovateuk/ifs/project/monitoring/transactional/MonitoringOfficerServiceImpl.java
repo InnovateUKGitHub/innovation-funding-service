@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.monitoring.transactional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -42,8 +40,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class MonitoringOfficerServiceImpl extends RootTransactionalService implements MonitoringOfficerService {
-
-    private static final Log LOG = LogFactory.getLog(MonitoringOfficerInviteService.class);
 
     @Autowired
     private MonitoringOfficerRepository monitoringOfficerRepository;
