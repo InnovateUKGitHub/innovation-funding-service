@@ -1,0 +1,22 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+
+dependencies {
+    api platform(project(":common:bom"))
+
+    implementation "javax.servlet:javax.servlet-api"
+
+    implementation project(":common:ifs-security")
+    implementation project(":common:ifs-resources")
+    implementation project(":common:ifs-rest-util")
+    implementation project(":common:ifs-commons")
+
+    implementation "junit:junit"
+    implementation "org.mockito:mockito-core"
+    implementation "org.springframework:spring-beans"
+    implementation "org.springframework.boot:spring-boot-starter-test"
+    implementation "org.springframework.security:spring-security-core"
+    implementation("com.opencsv:opencsv") {
+        exclude group: "commons-logging", module: "commons-logging"
+    }
+}
+

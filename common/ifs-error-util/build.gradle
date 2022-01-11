@@ -1,0 +1,16 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+
+dependencies {
+
+    api platform(project(":common:bom"))
+
+    implementation project(":common:ifs-commons")
+
+    implementation "com.fasterxml.jackson.core:jackson-annotations"
+    implementation "javax.validation:validation-api"
+    implementation "org.springframework:spring-context"
+    implementation "org.springframework:spring-web"
+
+    testImplementation "junit:junit"
+
+}

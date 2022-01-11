@@ -1,0 +1,10 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+
+dependencies {
+
+    api platform(project(":common:bom"))
+
+    implementation "org.mockito:mockito-core"
+    implementation "org.hamcrest:hamcrest-core"
+
+}

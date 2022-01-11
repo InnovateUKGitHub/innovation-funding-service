@@ -1,0 +1,21 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+
+dependencies {
+    api platform(project(":common:bom"))
+
+    implementation project(":common:ifs-rest-api-service")
+    implementation project(":common:ifs-rest-util")
+    implementation project(":common:ifs-error-util")
+    implementation project(":common:ifs-resources")
+    implementation project(":common:ifs-survey-resources")
+    implementation project(":common:ifs-security")
+
+    implementation "org.springframework:spring-context"
+    implementation "org.springframework:spring-web"
+
+    testImplementation "junit:junit"
+    testImplementation "org.mockito:mockito-core"
+}
+
+ext.ifsSurveyAuthSecretKey="supersecretkey"
+ext.ifsSurveyDataSericeBaseUrl="survey-data-service"

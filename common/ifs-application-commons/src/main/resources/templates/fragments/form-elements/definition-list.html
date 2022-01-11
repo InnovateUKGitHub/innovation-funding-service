@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!--/*
+
+A fragment to render a dl with a single dt / dd pair.
+
+Available parameters:
+
+  Mandatory
+
+    * label
+    * value
+
+*/-->
+<th:block th:fragment="definition-list(label, value)">
+
+    <dl class="govuk-list readonly-data">
+        <dt th:text="${label}">Label</dt>
+        <dd th:text="${value}">Value</dd>
+    </dl>
+
+</th:block>
