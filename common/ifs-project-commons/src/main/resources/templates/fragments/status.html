@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="status-table(model)">
+    <th:block th:if="${#lists.isEmpty(model.rows) && param.applicationSearchString == null}">
+        <p class="govuk-body" th:text="${model.emptyTableText}"></p>
+    </th:block>
+
+    <th:block th:unless="${#lists.isEmpty(model.rows)}">
+        <div class="table-overflow">
+            <table id="table-project-status" class="govuk-table icon-table">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Project</th>
+                    <th:block th:each="column : ${model.columns}">
+                        <th class="govuk-table__header status" scope="col">
+                            <th:block th:if="${model.isLoan && column == model.projectSetupCompleteStage}">Complete project setup</th:block>
+                            <th:block th:if="${model.procurement && column == model.grantOfferLetterStage}">Contract</th:block>
+                            <th:block th:unless="${(model.procurement && column == model.grantOfferLetterStage) or
+                            (model.isLoan && column == model.projectSetupCompleteStage)}"
+                                      th:text="${column.shortName}"></th:block>
+
+                        </th>
+                    </th:block>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body cell-border-right">
+                <tr class="govuk-table__row" th:each="row : ${model.rows}">
+                    <th class="govuk-table__header" scope="row">
+                        <div class="govuk-grid-row govuk-!-padding-right-0">
+                            <div class="govuk-grid-column-two-thirds">
+                                <div class="govuk-heading-s govuk-!-margin-0" th:text="${row.projectName}" />
+                            </div>
+                            <div class="govuk-grid-column-one-third alignright">
+                                <th:block th:if="${row.projectState.withdrawn}">
+                                    <strong class="ifs-project-status-withdrawn">Withdrawn</strong>
+                                </th:block>
+                                <th:block th:if="${row.projectState.handledOffline}">
+                                    <strong class="ifs-project-status-managed-offline">Managed offline</strong>
+                                </th:block>
+                                <th:block th:if="${row.projectState.completedOffline}">
+                                    <strong class="ifs-project-status-completed-offline">Completed offline</strong>
+                                </th:block>
+                                <th:block th:if="${row.projectState.onHold}">
+                                    <strong class="ifs-project-status-on-hold">On hold</strong>
+                                </th:block>
+                                <th:block th:if="${row.projectState.live && model.isLoan}">
+                                    <strong class="ifs-project-status-successful">Successful</strong>
+                                </th:block>
+                                <th:block th:if="${row.projectState.unsuccessful}">
+                                    <strong class="ifs-project-status-unsuccessful">Unsuccessful</strong>
+                                </th:block>
+                            </div>
+                        </div>
+                        <a th:text="${row.applicationNumber}" th:href="@{~/management/competition/{competitionId}/application/{applicationId}(competitionId=${row.competitionId},applicationId=${row.applicationNumber})}" class="govuk-link"/>
+                        <small>
+                            <th:block th:text="${row.numberOfPartners > 1 ? row.numberOfPartners+' partners' : row.numberOfPartners+' partner'}" /><br/>
+                            <th:block th:text="${'Lead: '+row.projectLeadOrganisationName}" />
+                            <a th:unless="${model.externalFinanceUser}" th:href="@{~/project-setup-management/competition/{competitionId}/project/{projectId}/activity-log(competitionId=${row.competitionId},projectId=${row.projectId})}"
+                            class="govuk-link">View activity log</a>
+                        </small>
+                        <small th:if="${model.isProjectFinanceUser() && row.grantOfferLetterComplete && row.sentToIfsPa}">
+                            <p><a th:href="@{~/project-setup-management/project/{projectId}/grants/invite(projectId=${row.projectId})}"
+                                  class="govuk-link">Manage invitations to external users</a></p>
+                        </small>
+                    </th>
+
+                    <th:block th:each="state : ${row.states}">
+                        <td class="govuk-table__cell status" th:classappend="${state.stateStyle}">
+                            <th:block th:if="${state.accessible}">
+                                <a th:href="${state.url}" class="govuk-link" th:text="${state.text}">View</a>
+                            </th:block>
+                            <th:block th:unless="${state.accessible}">
+                                <span class="govuk-visually-hidden" th:unless="${state.visible}" th:text="${state.text}"></span>
+                                <th:block th:if="${state.visible}" th:text="${state.text}">View</th:block>
+                            </th:block>
+                        </td>
+                    </th:block>
+                </tr>
+                </tbody>
+                <tfoot class="govuk-table__foot bank-export">
+                <tr class="govuk-table__row" th:if="${model.canExportBankDetails}">
+                    <td class="govuk-table__cell" th:colspan="${model.columnsBeforeBankDetails}"></td>
+                    <td class="govuk-table__cell aligncentre">
+                        <a th:href="@{/competition/{competitionId}/status/bank-details/export(competitionId=${model.competitionId})}" class="govuk-link">Export all bank details</a>
+                    </td>
+                    <td class="govuk-table__cell" th:colspan="${model.columnsAfterBankDetails}"></td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </th:block>
+</th:block>
+
