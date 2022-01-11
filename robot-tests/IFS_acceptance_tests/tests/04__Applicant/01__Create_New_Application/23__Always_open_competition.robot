@@ -166,8 +166,8 @@ Comp admin creates a new assessment period
     And the user create next assessment period           5  12  14  16   6  2100
 
     And The user clicks the button/link                     link = Manage assessors
-    the user selects the index from the drop-down menu      1  jQuery = select:nth-of-type(1)
-    And the user clicks the button/link                     jQuery = button:contains("Save and continue")
+    And the user selects the index from the drop-down menu      1  jQuery = select:nth-of-type(1)
+    Then the user clicks the button/link                     jQuery = button:contains("Save and continue")
 
 Internal user should see the same dates entered in choose assessment period dropdowns even after notify assessor
     [Documentation]  IFS-10943
@@ -177,8 +177,8 @@ Internal user should see the same dates entered in choose assessment period drop
     Given the user clicks the button/link   link = Back to manage assessments
     When the user clicks the button/link    jQuery = button:contains("Notify assessors")
     And the user clicks the button/link     link = Manage applications
-    the user selects the index from the drop-down menu      1  jQuery = select:nth-of-type(1)
-    Then the user should see the element    jQuery = option:contains("Assessment period 1: 12 April to 16 April 2100")
+    And the user selects the value from the drop-down menu      125  name = assessmentPeriodId
+    Then the user should see the element    jQuery = option:contains("12 January to 16 January 2100")
 
 Lead applicant checks the dashboard content and the guidance after an assessor is assigned to the application
     [Documentation]  IFS-8850
