@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.monitoring;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
@@ -16,8 +15,8 @@ import java.nio.file.Path;
  * this class supplies the /health endpoint with the knowledge about if the file storage cluster is accessible.
  */
 @Component
+@Slf4j
 public class FileStorageHealthIndicator implements HealthIndicator {
-    private static final Log LOG = LogFactory.getLog(FileStorageHealthIndicator.class);
 
     @Value("${ifs.data.service.file.storage.base}")
     private String fileStoragePath;
@@ -41,7 +40,7 @@ public class FileStorageHealthIndicator implements HealthIndicator {
 
     @Override
     public Health health() {
-        LOG.debug("checking filesystem health");
+        log.debug("checking filesystem health");
 
         if (allowCreateStoragePath) {
             createStoragePathIfNotExist(fileStoragePath);
@@ -55,12 +54,12 @@ public class FileStorageHealthIndicator implements HealthIndicator {
         boolean isWritable = fileOperationsWrapper.isWritable(storagePath);
 
         if (isWritable) {
-            LOG.debug("storage path [" + fileStoragePath + "] is writable");
+            log.debug("storage path [" + fileStoragePath + "] is writable");
 
             return builder.up();
         }
 
-        LOG.debug("storage path [" + fileStoragePath + "] is not writable");
+        log.debug("storage path [" + fileStoragePath + "] is not writable");
 
         return builder.down();
     }
@@ -90,11 +89,11 @@ public class FileStorageHealthIndicator implements HealthIndicator {
             Path filePath = FileSystems.getDefault().getPath(location);
 
             try {
-                LOG.debug("trying to create directory");
+                log.debug("trying to create directory");
                 Files.createDirectory(filePath);
-                LOG.debug("directory created");
+                log.debug("directory created");
             } catch (IOException e) {
-                LOG.debug(e);
+                log.debug(e.getMessage(), e);
             }
         }
     }

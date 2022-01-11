@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.form.transactional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.Section;
@@ -25,7 +23,6 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 public class SectionServiceImplTest extends BaseUnitTestMocksTest {
-    private final Log log = LogFactory.getLog(getClass());
 
     @Mock
     SectionMapper sectionMapper;

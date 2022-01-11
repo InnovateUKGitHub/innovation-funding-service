@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.management.interview.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -39,13 +38,12 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 /**
  * This controller will handle all Competition Management requests related to allocating applications to assessors for interview panel.
  */
+@Slf4j
 @Controller
 @RequestMapping("/assessment/interview/competition/{competitionId}/assessors")
 @SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can assign application to assessors for an Interview Panel", securedType = InterviewAllocationController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'INTERVIEW')")
 public class InterviewAllocationController extends CompetitionManagementCookieController<InterviewAllocationSelectionForm> {
-
-    private static final Log LOG = LogFactory.getLog(InterviewAllocationController.class);
 
     static final String SELECTION_FORM = "interviewAllocationSelectionForm";
 
@@ -271,7 +269,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
 
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedIds().size(), selectionForm.getAllSelected(), false);
         } catch (Exception e) {
-            LOG.error("exception thrown adding assessors to invite list", e);
+            log.error("exception thrown adding assessors to invite list", e);
             return createFailureResponse();
         }
     }
@@ -306,7 +304,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
             saveFormToCookie(response, combineIds(competitionId, userId), selectionForm);
             return createJsonObjectNode(selectionForm.getSelectedIds().size(), selectionForm.getAllSelected(), limitExceeded);
         } catch (Exception e) {
-            LOG.error("exception thrown selecting assessors for invite list", e);
+            log.error("exception thrown selecting assessors for invite list", e);
             return createFailureResponse();
         }
     }
