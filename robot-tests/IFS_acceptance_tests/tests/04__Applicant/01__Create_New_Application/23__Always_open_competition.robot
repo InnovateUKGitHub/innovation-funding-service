@@ -176,9 +176,10 @@ Internal user should see the same dates entered in choose assessment period drop
     And The user should see the element     css = .govuk-error-message
     Given the user clicks the button/link   link = Back to manage assessments
     When the user clicks the button/link    jQuery = button:contains("Notify assessors")
-    And the user clicks the button/link     link = Manage applications
-    And the user selects the value from the drop-down menu      125  name = assessmentPeriodId
-    Then the user should see the element    jQuery = option:contains("12 January to 16 January 2100")
+    Then the user should see the element    jQuery = td:contains("Saturday") + td:contains("16/01/2100")
+   # And the user clicks the button/link     link = Manage applications
+   # And the user selects the value from the drop-down menu      125  name = assessmentPeriodId
+    #Then the user should see the element    jQuery = option:contains("12 January to 16 January 2100")
 
 Lead applicant checks the dashboard content and the guidance after an assessor is assigned to the application
     [Documentation]  IFS-8850
@@ -535,3 +536,4 @@ Assessor submits the assessment
     the user clicks the button/link         jQuery = li:contains("Always open application awaiting assessment") label[for^="assessmentIds"]
     the user clicks the button/link         jQuery = .govuk-button:contains("Submit assessments")
     the user clicks the button/link         jQuery = button:contains("Yes I want to submit the assessments")
+
