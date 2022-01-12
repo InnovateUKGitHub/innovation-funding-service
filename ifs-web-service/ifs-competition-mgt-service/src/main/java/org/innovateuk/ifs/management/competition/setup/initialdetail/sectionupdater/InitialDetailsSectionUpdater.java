@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.management.competition.setup.initialdetail.sectionupdater;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
@@ -48,7 +46,6 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public class InitialDetailsSectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater {
 
     public final static String OPENINGDATE_FIELDNAME = "openingDate";
-    private static Log LOG = LogFactory.getLog(InitialDetailsSectionUpdater.class);
 
     @Autowired
     private CompetitionSetupService competitionSetupService;

@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -40,13 +39,12 @@ import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessage
 /**
  * This controller will handle all Ajax requests that are related to the application form.
  */
+@Slf4j
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ApplicationAjaxController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationAjaxController {
-
-    private static final Log LOG = LogFactory.getLog(ApplicationAjaxController.class);
 
     @Autowired
     private MessageSource messageSource;
@@ -81,7 +79,7 @@ public class ApplicationAjaxController {
         Long fieldId = null;
         try {
             String fieldName = request.getParameter("fieldName");
-            LOG.info(String.format("saveFormElement: %s / %s", fieldName, value));
+            log.info(String.format("saveFormElement: %s / %s", fieldName, value));
 
             StoreFieldResult storeFieldResult = storeField(applicationId, user.getId(), competitionId, fieldName, inputIdentifier, value, multipleChoiceOptionId);
 
@@ -102,7 +100,7 @@ public class ApplicationAjaxController {
         if (e.getClass().equals(IntegerNumberFormatException.class) || e.getClass().equals(BigDecimalNumberFormatException.class)) {
             errors.add(lookupErrorMessageResourceBundleEntry(messageSource, e.getMessage(), args));
         } else {
-            LOG.debug("Got an exception on autosave : " + e.getMessage());
+            log.debug("Got an exception on autosave : " + e.getMessage());
             errors.add(ex.getErrorMessage());
         }
     }

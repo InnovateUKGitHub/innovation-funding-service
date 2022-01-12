@@ -1,0 +1,9 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+
+dependencies {
+
+    api platform(project(":common:bom"))
+
+    implementation project(":common:ifs-commons")
+    implementation project(":common:ifs-resources")
+}

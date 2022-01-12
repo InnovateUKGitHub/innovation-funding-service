@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.project.monitoring.transactional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.mapper.MonitoringOfficerInviteMapper;
@@ -47,8 +45,6 @@ import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
  */
 @Service
 public class MonitoringOfficerInviteServiceImpl extends InviteService<MonitoringOfficerInvite> implements MonitoringOfficerInviteService {
-
-    private static final Log LOG = LogFactory.getLog(MonitoringOfficerInviteServiceImpl.class);
 
     private static final String DEFAULT_INTERNAL_USER_EMAIL_DOMAIN = "innovateuk.ukri.org";
     private static final String WEB_CONTEXT = "/management/monitoring-officer";

@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.transactional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -47,10 +46,9 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
+@Slf4j
 @Service
 public class CompetitionSetupFinanceUserServiceImpl extends BaseTransactionalService implements CompetitionSetupFinanceUserService {
-
-    private static final Log LOG = LogFactory.getLog(CompetitionSetupFinanceUserServiceImpl.class);
 
     @Autowired
     private ExternalFinanceRepository externalFinanceRepository;
@@ -221,7 +219,7 @@ public class CompetitionSetupFinanceUserServiceImpl extends BaseTransactionalSer
 
 
     private ServiceResult<Void> handleInviteError(ExternalFinanceInvite i, ServiceFailure failure) {
-        LOG.error(String.format("Invite failed %s, %s, %s (error count: %s)", i.getId(), i.getEmail(), i.getTarget().getName(), failure.getErrors().size()));
+        log.error(String.format("Invite failed %s, %s, %s (error count: %s)", i.getId(), i.getEmail(), i.getTarget().getName(), failure.getErrors().size()));
         List<Error> errors = failure.getErrors();
         return serviceFailure(errors);
     }
