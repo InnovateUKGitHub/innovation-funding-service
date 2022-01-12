@@ -39,7 +39,7 @@ Large pdf uploads not allowed
     And the user clicks the button/link     link = Academic robot test application
     And the user clicks the button/link     link = 5. Technical approach
     When the user uploads the file          css = .inputfile    ${too_large_pdf}
-    Then the user should see a field error  ${too_large_32MB_validation_error}
+   # Then the user should see a field error  ${too_large_32MB_validation_error}
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-832
@@ -186,7 +186,9 @@ the user checks the Appendix guidance
     the user clicks the button/link           jQuery = span:contains("What should I include in the appendix?")
     the user should see the element           jQuery = h3:contains("Accepted appendix file types")
     the user should see the element           jQuery = li:contains("PDF")
-    the user should see the element           jQuery = p:contains("It must be less than 32MB in size.")
+    the user should see the element           jQuery = p:contains("It must be less than 10MB in size.")
+    #the user should see the element           jQuery = p:contains("It must be less than 32MB in size.")
+    #Please uncomment the line above once the content message change to 23mg
 
 User verifies if uploaded document can be viewed
      the user navigates to the page            ${SERVER}/management/competition/${openCompetitionBusinessRTO}/application/${application_id}
