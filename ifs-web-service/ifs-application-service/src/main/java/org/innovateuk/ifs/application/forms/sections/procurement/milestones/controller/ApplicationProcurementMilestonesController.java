@@ -3,8 +3,7 @@ package org.innovateuk.ifs.application.forms.sections.procurement.milestones.con
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ApplicationProcurementMilestoneViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ProcurementMilestoneFormPopulator;
@@ -33,13 +32,14 @@ import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 
+@Slf4j
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/procurement-milestones/organisation/{organisationId}/section/{sectionId}")
 @PreAuthorize("hasAuthority('applicant')")
 @SecuredBySpring(value = "UPDATE_PROCUREMENT_MILESTONE", description = "Applicants can update procurement milestones.")
 public class ApplicationProcurementMilestonesController extends AbstractProcurementMilestoneController {
+
     private static final String VIEW = "application/sections/procurement-milestones/application-procurement-milestones";
-    private static final Log LOG = LogFactory.getLog(ApplicationProcurementMilestonesController.class);
 
     @Autowired
     private ProcurementMilestoneFormPopulator formPopulator;
@@ -87,7 +87,7 @@ public class ApplicationProcurementMilestonesController extends AbstractProcurem
         try {
             saver.save(form, applicationId, organisationId).getSuccess();
         } catch (Exception e) {
-            LOG.error(e);
+            log.error(e.getMessage(), e);
         }
         return redirectToYourFinances(applicationId);
     }

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.funding.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestService;
 import org.innovateuk.ifs.commons.error.Error;
@@ -19,10 +18,9 @@ import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
+@Slf4j
 @Service
 public class ApplicationFundingDecisionServiceImpl implements ApplicationFundingDecisionService {
-
-    private static final Log LOG = LogFactory.getLog(ApplicationFundingDecisionServiceImpl.class);
 
     @Autowired
     private ApplicationFundingDecisionRestService applicationFundingDecisionRestService;
@@ -49,7 +47,7 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
         try {
             fundingDecision = Optional.of(FundingDecision.valueOf(val));
         } catch (IllegalArgumentException e) {
-            LOG.info("Funding decision string disallowed", e);
+            log.info("Funding decision string disallowed", e);
         }
         return fundingDecision;
     }

@@ -88,6 +88,38 @@ public class LoanApplicationControllerTest extends BaseControllerMockMVCTest<Loa
     }
 
     @Test
+    public void updateApplicationIncomplete() throws Exception {
+        long applicationId = 1L;
+        UserResource user = newUserResource().withId(1L).build();
+        ProcessRoleResource processRole = newProcessRoleResource().withId(1L).build();
+        CompetitionResource competition = newCompetitionResource().withId(1L).withFundingType(FundingType.LOAN).build();
+        QuestionResource question = newQuestionResource().withId(1L).withQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION).build();
+        QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(question.getId(), applicationId);
+
+        SilLoanApplicationStatus silStatus = new SilLoanApplicationStatus();
+        silStatus.setCompletionStatus(QuestionStatus.INCOMPLETE);
+        silStatus.setQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
+        silStatus.setCompletionDate(ZonedDateTime.now(ZoneId.of("UTC")));
+
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
+        when(usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId))
+                .thenReturn(serviceSuccess(processRole));
+        when(competitionService.getCompetitionByApplicationId(applicationId))
+                .thenReturn(serviceSuccess(competition));
+        when(questionService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), silStatus.getQuestionSetupType()))
+                .thenReturn(serviceSuccess(question));
+        when(questionService.getQuestionById(ids.questionId)).thenReturn(serviceSuccess(question));
+        when(questionStatusService.markAsCompleteNoValidate(ids, user.getId())).thenReturn(serviceSuccess());
+        when(questionStatusService.markAsInComplete(ids, processRole.getId()))
+                .thenReturn(serviceSuccess(Collections.emptyList()));
+
+        mockMvc.perform(patch("/application-update/{applicationId}", applicationId).contentType(APPLICATION_JSON).content(toJson(silStatus)))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+    }
+
+
+    @Test
     public void updateApplicationUnauthorized() throws Exception {
         long applicationId = 1L;
         SilLoanApplicationStatus silStatus = new SilLoanApplicationStatus();

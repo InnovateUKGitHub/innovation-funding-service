@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.management.interview.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
@@ -22,13 +21,12 @@ import java.util.List;
 /**
  * This controller handles the Overview tab for inviting assessors to an Interview Panel.
  */
+@Slf4j
 @Controller
 @RequestMapping("/assessment/interview/competition/{competitionId}/assessors")
 @SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can invite assessors to an Interview Panel", securedType = InterviewInviteAssessorsOverviewController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'INTERVIEW')")
 public class InterviewInviteAssessorsOverviewController extends CompetitionManagementCookieController<InterviewOverviewSelectionForm> {
-
-    private static final Log LOG = LogFactory.getLog(InterviewInviteAssessorsOverviewController.class);
 
     private static final String SELECTION_FORM = "interviewOverviewSelectionForm";
 
@@ -128,7 +126,7 @@ public class InterviewInviteAssessorsOverviewController extends CompetitionManag
             saveFormToCookie(response, competitionId, selectionForm);
             return createJsonObjectNode(selectionForm.getSelectedInviteIds().size(), selectionForm.getAllSelected(), limitExceeded);
         } catch (Exception e) {
-            LOG.error("exception thrown selecting assessors for resend list", e);
+            log.error("exception thrown selecting assessors for resend list", e);
             return createFailureResponse();
         }
     }
@@ -154,7 +152,7 @@ public class InterviewInviteAssessorsOverviewController extends CompetitionManag
 
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedInviteIds().size(), selectionForm.getAllSelected(), false);
         } catch (Exception e) {
-            LOG.error("exception thrown adding assessors to resend list", e);
+            log.error("exception thrown adding assessors to resend list", e);
 
             return createFailureResponse();
         }

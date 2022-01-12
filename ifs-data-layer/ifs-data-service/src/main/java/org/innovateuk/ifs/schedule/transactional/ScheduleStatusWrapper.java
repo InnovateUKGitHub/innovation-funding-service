@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.schedule.transactional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +8,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.Supplier;
 
+@Slf4j
 @Component
 public class ScheduleStatusWrapper {
-    private static final Log LOG = LogFactory.getLog(ScheduleStatusWrapper.class);
 
     @Autowired
     private ScheduleStatusService scheduleStatusService;
@@ -40,7 +39,7 @@ public class ScheduleStatusWrapper {
                 errorReporter.report("Schedule FAILURE " + jobName + " response: " + response.getFailure().toDisplayString());
             }
         } catch (Exception e) {
-            LOG.error("Error running scheduled job " + jobName, e);
+            log.error("Error running scheduled job " + jobName, e);
             errorReporter.report("Schedule FAILURE " + jobName + " response: " + e.getMessage());
         } finally {
             scheduleStatusService.endJob(jobName);

@@ -6,11 +6,7 @@ apply plugin: 'org.springframework.boot'
 dependencies {
 
     // Enforced platform is composite of IFS libraries, spring boot and spring cloud
-    implementation enforcedPlatform ('org.innovateuk.ifs.libraries:bom:2.0.19-RELEASE')
-
-    // version must match here and in ifs-libraries repo (bom and java.gradle)
-    annotationProcessor "org.projectlombok:lombok:1.18.22"
-    testAnnotationProcessor  "org.projectlombok:lombok:1.18.22"
+    implementation enforcedPlatform (project(':common:bom'))
 
     // Developer tools are automatically disabled when running a fully packaged application. If your application is
     // launched using java -jar or if it’s started using a special classloader, then it is considered a
@@ -20,7 +16,7 @@ dependencies {
 
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation "org.innovateuk.ifs.libraries:ifs-starter-logging"
+    implementation project(":common:starter:ifs-starter-logging")
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

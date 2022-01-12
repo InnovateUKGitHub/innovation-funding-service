@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.grant.service;
 
 import com.newrelic.api.agent.Trace;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
@@ -32,8 +31,8 @@ import static org.innovateuk.ifs.user.resource.Role.LIVE_PROJECTS_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Service
+@Slf4j
 public class GrantServiceImpl implements GrantService {
-    private static final Log LOG = LogFactory.getLog(GrantServiceImpl.class);
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -70,7 +69,7 @@ public class GrantServiceImpl implements GrantService {
 
     private ServiceResult<ScheduleResponse> sendProject(GrantProcess grantProcess) {
         long applicationId = grantProcess.getApplicationId();
-        LOG.info("Sending project : " + applicationId);
+        log.info("Sending project : " + applicationId);
 
         Project project = projectRepository.findOneByApplicationId(applicationId);
 

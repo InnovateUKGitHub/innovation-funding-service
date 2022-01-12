@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.publiccontent.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
@@ -29,10 +28,9 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 /**
  * Web service for public content.
  */
+@Slf4j
 @Service
 public class PublicContentServiceImpl implements PublicContentService {
-
-    private static final Log LOG = LogFactory.getLog(PublicContentServiceImpl.class);
 
     @Autowired
     private PublicContentRestService publicContentRestService;
@@ -79,7 +77,7 @@ public class PublicContentServiceImpl implements PublicContentService {
             try {
                 return contentGroupRestService.uploadFile(groupToUpload, attachment.getContentType(), attachment.getSize(), attachment.getOriginalFilename(), attachment.getBytes()).toServiceResult();
             } catch (IOException e) {
-                LOG.error("unable to upload file", e);
+                log.error("unable to upload file", e);
                 return serviceFailure(FILES_UNABLE_TO_CREATE_FILE);
             }
         } else {

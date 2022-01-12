@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!--/*
+
+A fragment to render a standard textfield within a table cell.
+
+all the same parameters as
+fragments/form-elements/textfield :: textfield
+with table=true
+
+*/-->
+<th:block th:fragment="textfield(label, id, value)">
+    <td class="govuk-table__cell"
+        th:classappend="${#bools.isTrue(readOnly)} ?: 'govuk-form-group'">
+        <th:block th:insert="fragments/form-elements/textfield ::
+                    textfield(
+                    label=${label},
+                    id=${id},
+                    value=${value},
+                    table=${true}
+                    )" />
+    </td>
+</th:block>
+
+<!--/*
+
+A fragment to render an integer-capturing input textfield within a table cell.
+
+all the same parameters as
+fragments/form-elements/textfield :: textfield-integer
+with table=true
+
+*/-->
+<th:block th:fragment="textfield-integer(label, id, value)">
+      <td class="govuk-table__cell govuk-table__cell--numeric"
+          th:classappend="${#bools.isTrue(readOnly)} ?: 'govuk-form-group'">
+          <th:block th:insert="fragments/form-elements/textfield ::
+                    textfield-integer(
+                    label=${label},
+                    id=${id},
+                    value=${value},
+                    table=${true}
+                    )" />
+      </td>
+</th:block>
+
+</html>
