@@ -6,10 +6,10 @@ group 'innovateuk'
 version project.version
 
 dependencies {
-    implementation "org.innovateuk.ifs.libraries:ifs-commons"
-    implementation "org.innovateuk.ifs.libraries:ifs-sil-resources"
-    implementation "org.innovateuk.ifs.libraries:ifs-rest-util"
-    implementation 'org.innovateuk.ifs.libraries:ifs-error-util'
+    implementation project(":common:ifs-commons")
+    implementation project(":common:ifs-sil-resources")
+    implementation project(":common:ifs-rest-util")
+    implementation project(":common:ifs-error-util")
 
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation 'javax.mail:mail'

@@ -29,16 +29,16 @@ jib {
 }
 
 dependencies {
-    implementation "org.innovateuk.ifs.libraries:ifs-data-service-file"
-    implementation "org.innovateuk.ifs.libraries:ifs-data-service-commons"
-    implementation "org.innovateuk.ifs.libraries:ifs-data-service-notifications"
-    implementation "org.innovateuk.ifs.libraries:ifs-sil-resources"
-    implementation "org.innovateuk.ifs.libraries:ifs-error-util"
-    implementation 'org.innovateuk.ifs.libraries:ifs-data-service-file'
-    implementation 'org.innovateuk.ifs.libraries:ifs-resources'
-    implementation 'org.innovateuk.ifs.libraries:ifs-commons'
-    implementation 'org.innovateuk.ifs.libraries:ifs-security'
-    implementation 'org.innovateuk.ifs.libraries:ifs-rest-util'
+    implementation project(":common:ifs-data-service-file")
+    implementation project(":common:ifs-data-service-commons")
+    implementation project(":common:ifs-data-service-notifications")
+    implementation project(":common:ifs-sil-resources")
+    implementation project(":common:ifs-error-util")
+    implementation project(":common:ifs-data-service-file")
+    implementation project(":common:ifs-resources")
+    implementation project(":common:ifs-commons")
+    implementation project(":common:ifs-security")
+    implementation project(":common:ifs-rest-util")
 
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-validation"
@@ -72,10 +72,10 @@ dependencies {
         exclude group: "commons-logging", module: "commons-logging"
     }
 
-    testImplementation "org.innovateuk.ifs.libraries:ifs-commons-test"
-    testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
-    testImplementation "org.innovateuk.ifs.libraries:ifs-data-service-commons-test"
-    testImplementation "org.innovateuk.ifs.libraries:ifs-data-service-notifications-test"
+    testImplementation project(":common:ifs-commons-test")
+    testImplementation project(":common:ifs-security-test")
+    testImplementation project(":common:ifs-data-service-commons-test")
+    testImplementation project(":common:ifs-data-service-notifications-test")
 
     testImplementation "junit:junit"
 }
