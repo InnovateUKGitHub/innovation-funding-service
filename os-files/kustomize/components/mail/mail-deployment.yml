@@ -15,7 +15,7 @@ spec:
         app: mail
     spec:
       containers:
-        - image: docker-ifs.devops.innovateuk.org/releases/mail-sink:1.0.0
+        - image: docker-ifs.devops.innovateuk.org/releases/mail-sink:1.0.1
           name: mail
           imagePullPolicy: IfNotPresent
           env:

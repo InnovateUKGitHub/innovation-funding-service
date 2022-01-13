@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="costs(form, readOnly, internal)">
+
+    <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+            <h2 class="govuk-fieldset__heading">Innovate UK funding</h2>
+        </legend>
+        <th:block th:unless="${internal}">
+            <p class="govuk-body">Innovate UK is the new name for the Technology Strategy Board (TSB).</p>
+
+            <p class="govuk-body">To receive Innovate UK funding, your academic organisation must apply for funding through the Je-S system. To find out more about the Je-S requirements and processes please go to the <a href="https://je-s.rcuk.ac.uk/" class="govuk-link" rel="external">Je-S website</a>.</p>
+
+            <p class="govuk-body">All finances need to be provided before this application can be submitted. If there are any finances outstanding at the competition deadline this
+                application will not be submitted into this competition.</p>
+
+            <h3 class="govuk-heading-s">Your project costs</h3>
+
+            <p class="govuk-body">Provide key figures from the Je-S form here to allow your partners to see the overall project costs and contribution required from Innovate
+                UK</p>
+            <p class="govuk-body">Enter the figures from the following fields on the Je-S form:</p>
+        </th:block>
+
+        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('tsbReference')} ? 'govuk-form-group--error'">
+            <label class="govuk-label" th:for="tsbReference">
+                TSB reference
+            </label>
+            <span th:unless="${internal}" class="govuk-hint">This number is found at the top of your Je-S form</span>
+            <span th:if="${internal}" class="govuk-hint">This number is found at the top of the Je-S form</span>
+            <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=tsbReference)"/>
+            <input type="text"
+                   class="govuk-input govuk-input--width-20"
+                   th:field="*{tsbReference}"
+                   required="required"
+                   th:readonly="${readOnly}"
+                   th:errorclass="govuk-input--error" />
+        </div>
+    </fieldset>
+
+        <h2 class="govuk-heading-s">Financial resources</h2>
+        <p th:unless="${internal}" class="govuk-body">The following costs are entered by the organisation from the summary of resources section
+            on your Je-S form</p>
+        <p th:if="${internal}" class="govuk-body">The following costs are entered by the organisation from the summary of resources section on the Je-S form</p>
+
+        <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
+            <div class="govuk-accordion__section">
+                <div class="govuk-accordion__section-header">
+                    <h3 class="govuk-accordion__section-heading">
+                        <span class="govuk-accordion__section-button">Directly incurred
+                        <span class="finance-total" data-mirror="#subtotal-resources"></span></span>
+                    </h3>
+                </div>
+                <div class="govuk-accordion__section-content">
+                    <p class="govuk-body govuk-hint">TSB Contribution (please refer to the TSB contribution column)</p>
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('incurredStaff')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-!-font-weight-bold" th:for="incurredStaff">Staff</label>
+                        <th:block
+                            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=incurredStaff)"/>
+                        <div>
+                            <input type="number"
+                                   data-prevent-input-non-number
+                                   class="govuk-input govuk-input--width-5"
+                                   th:field="*{incurredStaff}"
+                                   min="0"
+                                   th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                                   placeholder="0"
+                                   step="1"
+                                   th:readonly="${readOnly}"
+                                   th:errorclass="govuk-input--error"/>
+                        </div>
+                    </div>
+
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('incurredTravel')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-!-font-weight-bold" th:for="incurredTravel">Travel &amp; subsistence</label>
+                        <th:block
+                            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=incurredTravel)"/>
+                        <div>
+                            <input class="govuk-input govuk-input--width-5"
+                                   th:field="*{incurredTravel}"
+                                   type="number"
+                                   data-prevent-input-non-number
+                                   min="0"
+                                   th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                                   placeholder="0"
+                                   step="1"
+                                   th:readonly="${readOnly}"
+                                   th:errorclass="govuk-input--error"/>
+                        </div>
+                    </div>
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('incurredOtherCosts')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-!-font-weight-bold" th:for="incurredOtherCosts">Other costs</label>
+                        <th:block
+                            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=incurredOtherCosts)"/>
+
+                        <div>
+                            <input class="govuk-input govuk-input--width-5"
+                                   th:field="*{incurredOtherCosts}"
+                                   type="number"
+                                   data-prevent-input-non-number
+                                   min="0"
+                                   th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                                   placeholder="0"
+                                   step="1"
+                                   th:readonly="${readOnly}"
+                                   th:errorclass="govuk-input--error"/>
+                        </div>
+                    </div>
+                    <p class="govuk-body govuk-!-font-weight-bold">Total directly incurred costs <span data-mirror="#subtotal-resources" th:text="'£' + ${#numbers.formatInteger(form.getTotalIncurred(),0, 'DEFAULT')}"></span></p>
+                    <input class="govuk-input"
+                           id="subtotal-resources"
+                           data-calculation-fields="#incurredStaff,#incurredTravel,#incurredOtherCosts"
+                           data-calculation-operations="+"
+                           type="hidden"
+                           th:value="'£' + ${#numbers.formatInteger(form.getTotalIncurred(),0, 'DEFAULT')}"/>
+                </div>
+            </div>
+
+            <div class="govuk-accordion__section">
+                <div class="govuk-accordion__section-header">
+                    <h3 class="govuk-accordion__section-heading">
+                        <span class="govuk-accordion__section-button">Directly allocated
+                            <span class="finance-total" data-mirror="#subtotal-directly-allocated"></span></span>
+                    </h3>
+                </div>
+                <div class="govuk-accordion__section-content">
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('allocatedInvestigators')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-!-font-weight-bold" th:for="allocatedInvestigators">Investigators</label>
+                        <th:block
+                            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=allocatedInvestigators)"/>
+                        <div>
+                            <input class="govuk-input govuk-input--width-5"
+                                   th:field="*{allocatedInvestigators}"
+                                   type="number"
+                                   data-prevent-input-non-number
+                                   min="0"
+                                   th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                                   placeholder="0"
+                                   step="1"
+                                   th:readonly="${readOnly}"
+                                   th:errorclass="govuk-input--error"/>
+                        </div>
+                    </div>
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('allocatedEstateCosts')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-!-font-weight-bold" th:for="allocatedEstateCosts">Estates Costs</label>
+                        <th:block
+                            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=allocatedEstateCosts)"/>
+                        <div>
+                            <input class="govuk-input govuk-input--width-5"
+                                   th:field="*{allocatedEstateCosts}"
+                                   type="number"
+                                   data-prevent-input-non-number
+                                   min="0"
+                                   th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                                   placeholder="0"
+                                   step="1"
+                                   th:readonly="${readOnly}"
+                                   th:errorclass="govuk-input--error"/>
+                        </div>
+                    </div>
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('allocatedOtherCosts')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-!-font-weight-bold" th:for="allocatedOtherCosts">Other costs</label>
+                        <th:block
+                            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=allocatedOtherCosts)"/>
+                        <div>
+                            <input class="govuk-input govuk-input--width-5"
+                                   th:field="*{allocatedOtherCosts}"
+                                   type="number"
+                                   data-prevent-input-non-number
+                                   min="0"
+                                   th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                                   placeholder="0"
+                                   step="1"
+                                   th:readonly="${readOnly}"
+                                   th:errorclass="govuk-input--error"/>
+                        </div>
+                    </div>
+
+                    <p class="govuk-body govuk-!-font-weight-bold">Total directly allocated costs <span data-mirror="#subtotal-directly-allocated" th:text="'£' + ${#numbers.formatInteger(form.getTotalAllocated(),0, 'DEFAULT')}"></span></p>
+                    <input class="govuk-input"
+                           data-calculation-fields="#allocatedInvestigators,#allocatedEstateCosts,#allocatedOtherCosts"
+                           data-calculation-operations="+"
+                           type="hidden" id="subtotal-directly-allocated"
+                           th:value="'£' + ${#numbers.formatInteger(form.getTotalAllocated(),0, 'DEFAULT')}"/>
+                </div>
+            </div>
+            <div class="govuk-accordion__section">
+                <div class="govuk-accordion__section-header">
+                    <h3 class="govuk-accordion__section-heading">
+                        <span class="govuk-accordion__section-button">Indirect costs
+                            <span class="finance-total" data-mirror="#subtotal-indirect"></span></span>
+                    </h3>
+                </div>
+                <div class="govuk-accordion__section-content">
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('indirectCosts')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-!-font-weight-bold" th:for="indirect-costs">Indirect costs</label>
+                        <th:block
+                            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=indirectCosts)"/>
+                        <div>
+                            <input class="govuk-input govuk-input--width-5"
+                                   th:field="*{indirectCosts}"
+                                   id="indirect-costs"
+                                   type="number"
+                                   data-prevent-input-non-number
+                                   min="0"
+                                   th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                                   placeholder="0"
+                                   step="1"
+                                   th:readonly="${readOnly}"
+                                   th:errorclass="govuk-input--error"/>
+                        </div>
+                    </div>
+                    <p class="govuk-body govuk-!-font-weight-bold">Total indirect costs <span data-mirror="#subtotal-indirect" th:text="'£' + ${#numbers.formatInteger(form.indirectCosts,0, 'DEFAULT')}"></span></p>
+                    <input id="subtotal-indirect"
+                           class="govuk-input"
+                           data-calculation-fields="#indirect-costs,1"
+                           data-calculation-operations="*"
+                           type="hidden"
+                           th:value="'£' + ${#numbers.formatInteger(form.indirectCosts,0, 'DEFAULT')}"/>
+                </div>
+            </div>
+
+            <div class="govuk-accordion__section">
+                <div class="govuk-accordion__section-header">
+                    <h3 class="govuk-accordion__section-heading">
+                        <span class="govuk-accordion__section-button">Exceptions
+                            <span class="finance-total" data-mirror="#subtotal-exceptions"></span>
+                        </span>
+                    </h3>
+                </div>
+                <div class="govuk-accordion__section-content">
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('exceptionsStaff')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-!-font-weight-bold" th:for="exceptionsStaff">Staff</label>
+                        <th:block
+                            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=exceptionsStaff)"/>
+                        <div>
+                            <input class="govuk-input govuk-input--width-5"
+                                   th:field="*{exceptionsStaff}"
+                                   type="number"
+                                   data-prevent-input-non-number
+                                   min="0"
+                                   th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                                   placeholder="0"
+                                   step="1"
+                                   th:readonly="${readOnly}"
+                                   th:errorclass="govuk-input--error"/>
+                        </div>
+                    </div>
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('exceptionsOtherCosts')} ? 'govuk-form-group--error'">
+                        <label class="govuk-label govuk-!-font-weight-bold" th:for="exceptionsOtherCosts">Other costs</label>
+                        <th:block
+                            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=exceptionsOtherCosts)"/>
+                        <div>
+                            <input class="govuk-input govuk-input--width-5"
+                                   th:field="*{exceptionsOtherCosts}"
+                                   type="number"
+                                   data-prevent-input-non-number
+                                   min="0"
+                                   th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                                   placeholder="0"
+                                   step="1"
+                                   th:readonly="${readOnly}"
+                                   th:errorclass="govuk-input--error"/>
+                        </div>
+                    </div>
+                    <p class="govuk-body govuk-!-font-weight-bold">Total exceptions costs <span data-mirror="#subtotal-exceptions" th:text="'£' + ${#numbers.formatInteger(form.getTotalExceptions(),0, 'DEFAULT')}"></span></p>
+                    <input id="subtotal-exceptions"
+                           class="govuk-input"
+                           data-calculation-fields="#exceptionsStaff,#exceptionsOtherCosts"
+                           data-calculation-operations="+"
+                           type="hidden"
+                           th:value="'£' + ${#numbers.formatInteger(form.getTotalExceptions(),0, 'DEFAULT')}"/>
+                </div>
+            </div>
+        </div>
+        <p class="govuk-body govuk-!-font-weight-bold">Total project costs <span data-mirror="#total" th:text="'£' + ${#numbers.formatInteger(form.getTotal(),0, 'DEFAULT')}"></span></p>
+        <input class="govuk-input"
+               data-calculation-fields="#subtotal-resources,#subtotal-indirect,#subtotal-directly-allocated,#subtotal-exceptions"
+               data-calculation-operations="+"
+               id="total"
+               type="hidden"
+               th:value="'£' + ${#numbers.formatInteger(form.getTotal(),0, 'DEFAULT')}"/>
+
+
+</th:block>
+</html>

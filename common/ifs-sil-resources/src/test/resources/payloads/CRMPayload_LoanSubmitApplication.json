@@ -1,0 +1,14 @@
+{
+  "appID" : 10000234,
+  "appSubDate" : "2021-10-12T09:38:12.850Z",
+  "appName" : "Sample skips for plastic storage",
+  "appLoc" : "RG1 4AF",
+  "compCode" : "2109-13",
+  "compName" : "Resilience Fund: Strand 2",
+  "projectDuration" : 10,
+  "projTotalCost" : 10634.0,
+  "projOtherFunding" : 1200.0,
+  "markedIneligible" : null,
+  "eligibilityStatusChangeDate" : null,
+  "eligibilityStatusChangeSource" : null
+}
