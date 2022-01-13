@@ -8,7 +8,7 @@
     "govuk-frontend": "^3.3.0",
     "html5shiv": "^3.7.3",
     "http-proxy-agent": "^2.1.0",
-    "jquery": "^1.12.4",
+    "jquery": "^3.6.0",
     "jquery-ui": "^1.12.1",
     "js-cookie": "^2.2.0",
     "jshint-stylish": "^2.2.1",
@@ -17,15 +17,15 @@
     "tablesorter": "^2.31.1"
   },
   "devDependencies": {
-    "eslint": "^4.19.1",
-    "gulp": "^4.0.2",
+    "eslint": "^8.6.0",
+    "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
     "gulp-replace": "^1.0.0",
-    "gulp-sass": "^4.0.1",
+    "gulp-sass": "^5.1.0",
     "gulp-sass-lint": "^1.4.0",
-    "gulp-standard": "^11.0.0",
+    "gulp-standard": "^10.1.2",
     "gulp-uglify": "^3.0.0",
-    "jest": "^24.9.0",
+    "jest": "^27.4.7",
     "lodash": "^4.17.21"
   },
   "engines": {
