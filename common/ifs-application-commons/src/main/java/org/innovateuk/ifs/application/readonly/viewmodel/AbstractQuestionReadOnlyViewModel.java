@@ -1,0 +1,110 @@
+package org.innovateuk.ifs.application.readonly.viewmodel;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
+import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
+
+import java.util.Optional;
+import java.util.function.Function;
+
+public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel, BaseAnalyticsViewModel {
+    private final long applicationId;
+    private final String competitionName;
+    private final long questionId;
+    private final String name;
+    private final boolean complete;
+    private final boolean displayActions;
+    private final boolean lead;
+    private final boolean ktpCompetition;
+    private final QuestionSetupType questionType;
+
+    public AbstractQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question) {
+        this.competitionName = data.getCompetition().getName();
+        this.name = question.getShortName();
+        this.applicationId = data.getApplication().getId();
+        this.questionId = question.getId();
+        this.lead = data.getUsersProcessRole().map(role -> ProcessRoleType.LEADAPPLICANT == role.getRole()).orElse(false);
+        Optional<QuestionStatusResource> completeStatus = data.getQuestionToQuestionStatus()
+                .get(question.getId())
+                .stream()
+                .filter(status -> status.getMarkedAsComplete() != null)
+                .findFirst();
+        this.complete = completeStatus.map(QuestionStatusResource::getMarkedAsComplete).orElse(false);
+        Optional<QuestionStatusResource> assignedStatus = data.getQuestionToQuestionStatus()
+                .get(question.getId())
+                .stream()
+                .filter(status -> status.getAssignee() != null)
+                .findFirst();
+        boolean assignedToUser = assignedStatus
+                .map(isAssignedToProcessRole(data.getUsersProcessRole()))
+                .orElse(false);
+        this.displayActions = lead || assignedToUser;
+        this.ktpCompetition = data.getCompetition().isKtp();
+        this.questionType = question.getQuestionSetupType();
+    }
+
+    private Function<QuestionStatusResource, Boolean> isAssignedToProcessRole(Optional<ProcessRoleResource> processRole) {
+        return status -> processRole.isPresent() && status.getAssignee().equals(processRole.get().getId());
+    }
+
+    @Override
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competitionName;
+    }
+
+    @Override
+    public long getQuestionId() {
+        return questionId;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public boolean isComplete() {
+        return complete;
+    }
+
+    @Override
+    public boolean hasScore() { return false; }
+
+    @Override
+    public boolean shouldDisplayActions() {
+        return displayActions;
+    }
+
+    @Override
+    public boolean shouldDisplayMarkAsComplete() {
+        return isLead() && !isComplete();
+    }
+
+    @Override
+    public boolean isLead() {
+        return lead;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
+    }
+
+    public QuestionSetupType getQuestionType() {
+        return questionType;
+    }
+
+    @JsonIgnore
+    public QuestionSetupType getLoansBusinessAndFinancialInformation() {
+        return QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
+    }
+}

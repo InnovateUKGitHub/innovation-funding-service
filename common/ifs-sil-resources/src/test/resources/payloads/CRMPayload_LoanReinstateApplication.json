@@ -1,0 +1,14 @@
+{
+  "appID" : 10000234,
+  "appSubDate" : null,
+  "appName" : null,
+  "appLoc" : null,
+  "compCode" : null,
+  "compName" : null,
+  "projectDuration" : null,
+  "projTotalCost" : null,
+  "projOtherFunding" : null,
+  "markedIneligible" : false,
+  "eligibilityStatusChangeDate" : "2021-10-12T09:38:12.850Z",
+  "eligibilityStatusChangeSource" : "IFS"
+}
