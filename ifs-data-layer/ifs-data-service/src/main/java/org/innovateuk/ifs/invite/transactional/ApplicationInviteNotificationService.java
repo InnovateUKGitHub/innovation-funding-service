@@ -100,7 +100,7 @@ class ApplicationInviteNotificationService {
             if (invite.getId() == null) {
                 applicationInviteRepository.save(invite);
             }
-            if (!isResend) {
+            if(!isResend) {
                 invite.setHash(generateInviteHash());
             }
 
@@ -131,7 +131,7 @@ class ApplicationInviteNotificationService {
             if (invite.getId() == null) {
                 applicationKtaInviteRepository.save(invite);
             }
-            if (!isResend) {
+            if(!isResend) {
                 invite.setHash(generateInviteHash());
             }
             applicationKtaInviteRepository.save(invite);
@@ -190,7 +190,6 @@ class ApplicationInviteNotificationService {
 
         Notification notification = new Notification(from, to, Notifications.INVITE_COLLABORATOR, notificationArguments);
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
-
     }
 
     public ServiceResult<Void> removeKtaFromApplication(ApplicationKtaInvite invite) {

@@ -130,11 +130,6 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         return getByHash(hash);
     }
 
-
-    @Autowired
-    private ApplicationInviteService applicationInviteService;
-
-
     @Override
     @Transactional
     public ServiceResult<Void> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource, Optional<Long> applicationId) {
@@ -237,7 +232,6 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     @Override
     public ServiceResult<Void> updateInviteHistory(ApplicationInviteResource inviteResource) {
         InviteHistory inviteHistory = getInviteHistory(inviteResource);
-
         inviteHistoryRepository.save(inviteHistory);
         return serviceSuccess();
     }

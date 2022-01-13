@@ -187,13 +187,6 @@ public class RegistrationController {
         String hash = cookieUtil.getCookieValue(request, "invite_hash");
 
         ApplicationInviteResource applicationInviteResource = inviteRestService.getInviteByHash(hash).getSuccess();
-        // ApplicationInviteResource applicationInviteResource =  applicationInviteService.getInviteByHash(hash).toGetResponse().getSuccess();
-        // InviteHistory inviteHistory = getInviteHistory(applicationInviteResource);
-        //  inviteHistoryRepository.save(inviteHistory);
-
-//        applicationInviteResource.setStatus(InviteStatus.VERIFIED);
-//        inviteRestService.acceptInvite(applicationInviteResource);
-
         Long inviteId = applicationInviteResource.getId();
         return validationHandler.failNowOrSucceedWith(
                 () -> registerForm(registrationForm, model, user, request, response),
