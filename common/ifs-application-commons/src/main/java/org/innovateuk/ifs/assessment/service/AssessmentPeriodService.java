@@ -15,6 +15,9 @@ import java.util.stream.Collectors;
 @Service
 public class AssessmentPeriodService {
 
+    private static final int ASSESSOR_BRIEFING_INDEX = 0;
+    private static final int ASSESSOR_DEADLINE_INDEX = 2;
+
     @Autowired
     private AssessmentPeriodRestService assessmentPeriodRestService;
 
@@ -55,8 +58,14 @@ public class AssessmentPeriodService {
 
         List<MilestoneResource> milestonesForAssessmentPeriod = milestonesGroupedByAssessmentPeriodId.get(assessmentPeriodId);
 
-        MilestoneResource first = milestonesForAssessmentPeriod.get(0);
-        MilestoneResource last = milestonesForAssessmentPeriod.get(milestonesForAssessmentPeriod.size() - 1);
+        int milestonesSize = milestonesForAssessmentPeriod.size();
+        MilestoneResource first = milestonesForAssessmentPeriod.get(ASSESSOR_BRIEFING_INDEX);
+        MilestoneResource last;
+        if (milestonesSize > ASSESSOR_DEADLINE_INDEX) {
+            last = milestonesForAssessmentPeriod.get(ASSESSOR_DEADLINE_INDEX);
+        } else {
+            last = milestonesForAssessmentPeriod.get(milestonesSize - 1); //for unit test setup
+        }
 
         ZonedDateTime start = first.getDate();
         ZonedDateTime end = last.getDate();
