@@ -1,6 +1,10 @@
 package org.innovateuk.ifs.user.transactional;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.lang3.RandomUtils;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -8,9 +12,13 @@ import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
-import org.innovateuk.ifs.invite.domain.Invite;
-import org.innovateuk.ifs.invite.domain.RoleInvite;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.invite.domain.*;
 import org.innovateuk.ifs.invite.repository.AllInviteRepository;
+import org.innovateuk.ifs.invite.repository.InviteHistoryRepository;
+import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
+import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.transactional.ApplicationInviteServiceImpl;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerInviteRepository;
@@ -26,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -86,6 +95,19 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private AllInviteRepository allInviteRepository;
+    @Autowired
+    private InviteHistoryRepository inviteHistoryRepository;
+    @Autowired
+    private ApplicationInviteServiceImpl applicationInviteService;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
+
+
+
+    @Autowired
+    private InviteOrganisationRepository inviteOrganisationRepository;
 
     @Override
     @Transactional
@@ -295,10 +317,41 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<Void> activateApplicantAndSendDiversitySurvey(long userId) {
+    public ServiceResult<Void> activateApplicantAndSendDiversitySurvey(long userId,Long inviteId) {
+
+
+        ApplicationInvite applicationInvite = applicationInviteService.getById(inviteId).getSuccess();
+
+        ApplicationInviteResource applicationInviteResource = applicationInviteService.getInviteByHash(applicationInvite.getHash()).toGetResponse().getSuccess();
+        InviteHistory inviteHistory = getInviteHistory(applicationInviteResource, InviteStatus.VERIFIED);
+        inviteHistoryRepository.save(inviteHistory);
+
+
+
+
         return getUser(userId)
                 .andOnSuccess(this::activateUser)
                 .andOnSuccessReturnVoid(this::sendApplicantDiversitySurvey);
+    }
+
+    private ApplicationInvite mapInviteResourceToInvite(ApplicationInviteResource inviteResource, InviteOrganisation newInviteOrganisation) {
+        Application application = applicationRepository.findById(inviteResource.getApplication()).orElse(null);
+        if (newInviteOrganisation == null && inviteResource.getInviteOrganisation() != null) {
+            newInviteOrganisation = inviteOrganisationRepository.findById(inviteResource.getInviteOrganisation()).orElse(null);
+        }
+        return new ApplicationInvite(inviteResource.getId(), inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
+    }
+
+    private InviteHistory getInviteHistory(ApplicationInviteResource applicationInviteResource, InviteStatus status) {
+        Invite invite = mapInviteResourceToInvite(applicationInviteResource, null);
+
+        InviteHistory inviteHistory = new InviteHistory();
+        inviteHistory.setStatus(status);
+        inviteHistory.setUpdatedOn(ZonedDateTime.now());
+        inviteHistory.setUpdatedBy(null);
+        inviteHistory.setId(RandomUtils.nextLong());
+        inviteHistory.setInvite(invite);
+        return inviteHistory;
     }
 
     @Override

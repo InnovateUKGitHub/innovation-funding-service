@@ -65,8 +65,7 @@ public class UserController {
 
     @Autowired
     private BaseUserService baseUserService;
-    @Autowired
-    private ApplicationInviteServiceImpl applicationInviteService;
+
 
     @Autowired
     private UserService userService;
@@ -81,15 +80,7 @@ public class UserController {
     private CrmService crmService;
 
 
-    @Autowired
-    private ApplicationRepository applicationRepository;
 
-    @Autowired
-    private InviteHistoryRepository inviteHistoryRepository;
-
-
-    @Autowired
-    private InviteOrganisationRepository inviteOrganisationRepository;
 
     @GetMapping("/uid/{uid}")
     public RestResult<UserResource> getUserByUid(@PathVariable String uid) {
@@ -218,25 +209,7 @@ public class UserController {
                 .toPutResponse();
     }
 
-    private ApplicationInvite mapInviteResourceToInvite(ApplicationInviteResource inviteResource, InviteOrganisation newInviteOrganisation) {
-        Application application = applicationRepository.findById(inviteResource.getApplication()).orElse(null);
-        if (newInviteOrganisation == null && inviteResource.getInviteOrganisation() != null) {
-            newInviteOrganisation = inviteOrganisationRepository.findById(inviteResource.getInviteOrganisation()).orElse(null);
-        }
-        return new ApplicationInvite(inviteResource.getId(), inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
-    }
 
-    private InviteHistory getInviteHistory(ApplicationInviteResource applicationInviteResource, InviteStatus status) {
-        Invite invite = mapInviteResourceToInvite(applicationInviteResource, null);
-
-        InviteHistory inviteHistory = new InviteHistory();
-        inviteHistory.setStatus(status);
-        inviteHistory.setUpdatedOn(ZonedDateTime.now());
-        inviteHistory.setUpdatedBy(null);
-        inviteHistory.setId(RandomUtils.nextLong());
-        inviteHistory.setInvite(invite);
-        return inviteHistory;
-    }
 
     @GetMapping("/" + URL_VERIFY_EMAIL + "/{hash}")
     public RestResult<Void> verifyEmail(@PathVariable String hash) {
@@ -247,16 +220,10 @@ public class UserController {
         return result.handleSuccessOrFailure(
                 failure -> restFailure(failure.getErrors()),
                 token -> {
-                    registrationService.activateApplicantAndSendDiversitySurvey(token.getClassPk()).andOnSuccessReturnVoid(v -> {
+                    JsonNode extraInfo = token.getExtraInfo();
+                    Long inviteId = extraInfo.get("inviteId").asLong();
+                    registrationService.activateApplicantAndSendDiversitySurvey(token.getClassPk(),inviteId).andOnSuccessReturnVoid(v -> {
                         ServiceResult<ApplicationResource> applicationResourceServiceResult = tokenService.handleExtraAttributes(token);
-                        JsonNode extraInfo = token.getExtraInfo();
-                        Long inviteId = extraInfo.get("inviteId").asLong();
-                        ApplicationInvite applicationInvite = applicationInviteService.getById(inviteId).getSuccess();
-
-                        ApplicationInviteResource applicationInviteResource = applicationInviteService.getInviteByHash(applicationInvite.getHash()).toGetResponse().getSuccess();
-                        InviteHistory inviteHistory = getInviteHistory(applicationInviteResource, InviteStatus.VERIFIED);
-                        inviteHistoryRepository.save(inviteHistory);
-
 
                         applicationResourceServiceResult.andOnSuccessReturnVoid(
                                 applicationResource -> crmService.syncCrmContact(token.getClassPk(), applicationResource.getCompetition(), applicationResource.getId()));
