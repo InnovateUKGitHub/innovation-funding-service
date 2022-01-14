@@ -74,7 +74,7 @@ public class RegistrationNotificationServiceTest extends BaseServiceUnitTest<Reg
         when(tokenRepositoryMock.save(isA(Token.class))).thenReturn(newToken);
         when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
-        final ServiceResult<Void> result = service.sendUserVerificationEmail(userResource, empty(), empty(),null);
+        final ServiceResult<Void> result = service.sendUserVerificationEmail(userResource, empty(), empty(),empty());
         assertTrue(result.isSuccess());
 
         verify(tokenRepositoryMock).save(isA(Token.class));
@@ -108,7 +108,7 @@ public class RegistrationNotificationServiceTest extends BaseServiceUnitTest<Reg
         when(tokenRepositoryMock.save(isA(Token.class))).thenReturn(newToken);
         when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
-        final ServiceResult<Void> result = service.sendUserVerificationEmail(userResource, of(456L), of(123L),null);
+        final ServiceResult<Void> result = service.sendUserVerificationEmail(userResource, of(456L), of(123L),of(123L));
         assertTrue(result.isSuccess());
 
         verify(tokenRepositoryMock).save(isA(Token.class));

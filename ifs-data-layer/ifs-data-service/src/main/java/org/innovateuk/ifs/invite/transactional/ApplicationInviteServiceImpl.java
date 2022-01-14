@@ -29,6 +29,7 @@ import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.procurement.milestone.repository.ApplicationProcurementMilestoneRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,23 +150,14 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     }
 
     private InviteHistory getInviteHistory(ApplicationInviteResource applicationInviteResource) {
-        Invite invite = mapInviteResourceToInvite(applicationInviteResource, null);
-
+        ApplicationInvite invite = mapInviteResourceToInvite(applicationInviteResource, null);
+        User loggedInUser = loggedInUserSupplier.get();
         InviteHistory inviteHistory = new InviteHistory();
         inviteHistory.setStatus(applicationInviteResource.getStatus());
+        inviteHistory.setUpdatedBy(loggedInUser);
         inviteHistory.setUpdatedOn(ZonedDateTime.now());
-        inviteHistory.setUpdatedBy(loggedInUserSupplier.get());
-        inviteHistory.setId(RandomUtils.nextLong());
         inviteHistory.setInvite(invite);
         return inviteHistory;
-    }
-
-    private ApplicationInvite mapInviteResourceToInvite(ApplicationInviteResource inviteResource, InviteOrganisation newInviteOrganisation) {
-        Application application = applicationRepository.findById(inviteResource.getApplication()).orElse(null);
-        if (newInviteOrganisation == null && inviteResource.getInviteOrganisation() != null) {
-            newInviteOrganisation = inviteOrganisationRepository.findById(inviteResource.getInviteOrganisation()).orElse(null);
-        }
-        return new ApplicationInvite(inviteResource.getId(), inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
     }
 
     @Override
@@ -324,6 +316,15 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         return applicationInviteResources.stream().map(inviteResource ->
                 applicationInviteRepository.save(mapInviteResourceToInvite(inviteResource, inviteOrganisation))).collect(toList());
     }
+
+    private ApplicationInvite mapInviteResourceToInvite(ApplicationInviteResource inviteResource, InviteOrganisation newInviteOrganisation) {
+        Application application = applicationRepository.findById(inviteResource.getApplication()).orElse(null);
+        if (newInviteOrganisation == null && inviteResource.getInviteOrganisation() != null) {
+            newInviteOrganisation = inviteOrganisationRepository.findById(inviteResource.getInviteOrganisation()).orElse(null);
+        }
+        return new ApplicationInvite(inviteResource.getId(), inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
+    }
+
 
 
     private ServiceResult<Void> validateInviteOrganisationResource(InviteOrganisationResource inviteOrganisationResource) {

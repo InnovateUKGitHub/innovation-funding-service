@@ -165,7 +165,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         applicationResource.setId(appId);
 
 
-        when(tokenServiceMock.handleExtraAttributes(token)).thenReturn(serviceSuccess((applicationResource)));
+        when(tokenServiceMock.handleExtraAttributes(any())).thenReturn(serviceSuccess((applicationResource)));
         when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(anyLong())).thenReturn(serviceSuccess());
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
                 .header("IFS_AUTH_TOKEN", "123abc"))

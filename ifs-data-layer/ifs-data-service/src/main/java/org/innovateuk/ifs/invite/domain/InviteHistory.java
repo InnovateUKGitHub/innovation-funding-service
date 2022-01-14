@@ -14,7 +14,7 @@ public class InviteHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name="inviteId", referencedColumnName="id")
     private Invite invite;
 
