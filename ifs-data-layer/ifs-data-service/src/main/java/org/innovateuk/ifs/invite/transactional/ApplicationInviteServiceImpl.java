@@ -115,6 +115,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     private InviteHistoryRepository inviteHistoryRepository;
 
 
+
     @Override
     protected Class<ApplicationInvite> getInviteClass() {
         return ApplicationInvite.class;
@@ -153,7 +154,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         InviteHistory inviteHistory = new InviteHistory();
         inviteHistory.setStatus(applicationInviteResource.getStatus());
         inviteHistory.setUpdatedOn(ZonedDateTime.now());
-        inviteHistory.setUpdatedBy(null);
+        inviteHistory.setUpdatedBy(loggedInUserSupplier.get());
         inviteHistory.setId(RandomUtils.nextLong());
         inviteHistory.setInvite(invite);
         return inviteHistory;
