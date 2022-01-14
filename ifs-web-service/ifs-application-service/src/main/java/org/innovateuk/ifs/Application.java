@@ -1,7 +1,6 @@
 package org.innovateuk.ifs;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.cfg.IfsApplicationServiceApplicationConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,23 +11,22 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-@PropertySource(value = { "classpath:/application.properties", "classpath:/applicationservice.properties" })
+@Slf4j
+@PropertySource(value = {"classpath:application.properties", "classpath:/application-web-core.properties"})
 @SpringBootApplication
 @EnableAspectJAutoProxy(proxyTargetClass=true)
 @EnableAsync
 @Import(IfsApplicationServiceApplicationConfiguration.class)
 public class Application extends SpringBootServletInitializer {
 
-    private static final Log LOG = LogFactory.getLog(Application.class);
-
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        LOG.info("IFS Application builder configure method");
+        log.info("IFS Application builder configure method");
         return application.sources(Application.class);
     }
 
     public static void main(String[] args) {
-        LOG.info("IFS boot Application main method");
+        log.info("IFS boot Application main method");
         SpringApplication.run(Application.class, args);
     }
 }

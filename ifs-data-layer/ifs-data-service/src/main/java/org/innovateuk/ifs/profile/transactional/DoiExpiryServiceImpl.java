@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.profile.transactional;
 
 import com.newrelic.api.agent.Trace;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -30,9 +29,9 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 @Service
+@Slf4j
 public class DoiExpiryServiceImpl extends BaseTransactionalService implements DoiExpiryService {
     private static final DateTimeFormatter formatter = ofPattern("d MMMM yyyy");
-    private static final Log LOG = LogFactory.getLog(DoiExpiryServiceImpl.class);
 
     private final AffiliationRepository affiliationRepository;
 
@@ -69,7 +68,7 @@ public class DoiExpiryServiceImpl extends BaseTransactionalService implements Do
     }
 
     private ScheduleResponse notifyExpiry(User user) {
-        LOG.info(String.format("Notifying user of DOI expiry %d", user.getId()));
+        log.info(String.format("Notifying user of DOI expiry %d", user.getId()));
         NotificationTarget recipient = new UserNotificationTarget(
                 user.getName(),
                 user.getEmail()

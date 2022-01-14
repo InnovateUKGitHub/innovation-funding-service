@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.sil.experian.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.sil.experian.resource.*;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,15 +14,15 @@ import java.util.Map;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
+import static org.innovateuk.ifs.util.JsonMappingDeprecatedUtil.fromJson;
 
 /**
  * A simple endpoint to allow stubbing of the SIL outbound email endpoint for non-integration test environments
  */
+@Slf4j
 @RestController
 @RequestMapping("/silstub")
 public class ExperianEndpointController {
-    private static final Log LOG = LogFactory.getLog(ExperianEndpointController.class);
 
     static final Map<SILBankDetails, ValidationResultWrapper> VALIDATION_ERRORS;
     private static final Map<SILBankDetails, SilExperianError> OTHER_ERRORS_DURING_VALIDATION;
@@ -50,7 +49,7 @@ public class ExperianEndpointController {
 
     @PostMapping("/experianValidate")
     public RestResult<Object> experianValidate(@RequestBody SILBankDetails bankDetails) {
-        LOG.info("Stubbing out SIL experian validation: " + bankDetails);
+        log.info("Stubbing out SIL experian validation: " + bankDetails);
         ValidationResultWrapper validationResultWrapper = VALIDATION_ERRORS.get(bankDetails);
         if (validationResultWrapper == null) {
             SilExperianError silError = OTHER_ERRORS_DURING_VALIDATION.get(bankDetails);

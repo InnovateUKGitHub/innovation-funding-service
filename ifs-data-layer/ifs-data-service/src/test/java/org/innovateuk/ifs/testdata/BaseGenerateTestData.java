@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.testdata;
 
 import com.google.common.collect.ImmutableMap;
-import org.apache.commons.io.FileUtils;
 import org.flywaydb.core.Flyway;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
@@ -9,11 +8,15 @@ import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.project.core.transactional.ProjectToBeCreatedService;
+import org.innovateuk.ifs.sil.crm.resource.SilLoanApplication;
+import org.innovateuk.ifs.sil.crm.resource.SilLoanAssessment;
+import org.innovateuk.ifs.sil.crm.service.SilCrmEndpoint;
 import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
 import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
 import org.innovateuk.ifs.sil.experian.resource.ValidationResult;
@@ -39,6 +42,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.util.FileSystemUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -59,6 +63,7 @@ import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -189,6 +194,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @Autowired
     private ProjectToBeCreatedService projectToBeCreatedService;
 
+    @Autowired
+    private CrmService crmService;
+
     private List<OrganisationLine> organisationLines;
     private List<CompetitionLine> competitionLines;
     private List<CsvUtils.ApplicationLine> applicationLines;
@@ -241,6 +249,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         IdentityProviderService idpServiceMock = mock(IdentityProviderService.class);
         EmailService emailServiceMock = mock(EmailService.class);
         SilExperianEndpoint silExperianEndpointMock = mock(SilExperianEndpoint.class);
+        SilCrmEndpoint silCrmEndpointMock = mock(SilCrmEndpoint.class);
 
         when(idpServiceMock.createUserRecordWithUid(isA(String.class), isA(String.class))).thenAnswer(
                 user -> serviceSuccess(UUID.randomUUID().toString()));
@@ -253,18 +262,24 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         when(silExperianEndpointMock.validate(isA(SILBankDetails.class))).thenReturn(serviceSuccess(new ValidationResult(true, "", emptyList())));
         when(silExperianEndpointMock.verify(isA(AccountDetails.class))).thenReturn(serviceSuccess(new VerificationResult("10", "10", "10", "10", emptyList())));
 
+        when(silCrmEndpointMock.updateLoanApplicationState(any(SilLoanApplication.class))).thenReturn(serviceSuccess());
+        when(silCrmEndpointMock.updateLoanAssessment(any(SilLoanAssessment.class))).thenReturn(serviceSuccess());
+
         RegistrationService registrationServiceUnwrapped = (RegistrationService) unwrapProxy(registrationService);
         ReflectionTestUtils.setField(registrationServiceUnwrapped, "idpService", idpServiceMock);
 
         BankDetailsService bankDetailsServiceUnwrapped = (BankDetailsService) unwrapProxy(bankDetailsService);
         ReflectionTestUtils.setField(bankDetailsServiceUnwrapped, "silExperianEndpoint", silExperianEndpointMock);
+
+        CrmService crmServiceUnwrapped = (CrmService) unwrapProxy(crmService);
+        ReflectionTestUtils.setField(crmServiceUnwrapped, "silCrmEndpoint", silCrmEndpointMock);
     }
 
     @After
     public void tearDownFiles() throws Exception {
         File f = new File(storageLocation);
         if (f.exists()) {
-            FileUtils.deleteDirectory(new File(storageLocation));
+            FileSystemUtils.deleteRecursively(f);
         }
     }
 

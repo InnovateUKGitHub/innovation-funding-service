@@ -1,24 +1,76 @@
-include 'docker:cache-provider'
-include 'docker:ifs-mysql'
-include 'docker:ifs-mysql:ifs-database'
-include 'docker:ifs-mysql:ifs-finance-database'
-include 'docker:ifs-mysql:ifs-survey-database'
-include 'docker:ifs-mail-sink'
-include 'ifs-data-layer'
-include 'ifs-data-layer:ifs-data-service'
-include 'ifs-data-layer:ifs-finance-data-service'
-include 'ifs-data-layer:ifs-survey-data-service'
-include 'ifs-sil-stub'
-include 'ifs-data-layer:data-service-alerts'
-include 'ifs-web-service'
-include 'ifs-web-service:ifs-web-core'
-include 'ifs-web-service:ifs-application-service'
-include 'ifs-web-service:ifs-survey-service'
-include 'ifs-web-service:ifs-competition-mgt-service'
-include 'ifs-web-service:ifs-assessment-service'
-include 'ifs-web-service:ifs-project-setup-service'
-include 'ifs-web-service:ifs-project-setup-mgt-service'
-include 'ifs-web-service:ifs-front-door-service'
-include 'ifs-registration-service'
-include 'robot-tests'
+// Try and keep these in dependency order!
+
+// API - some is mixed in with resources etc. so this is more recent additions only
+// Keep it very light
+// The intention is to migrate api in here
+include("common")
+include("common:api")
+include("common:api:audit-api")
+
+// Starters - should only depend on external libs (mostly spring)
+include("common:starter:ifs-starter-logging")
+include("common:starter:ifs-starter-audit")
+
+// Commons - can be split and deprecated
+include("common:ifs-commons")
+include("common:ifs-commons-test")
+include("common:ifs-error-util")
+
+// API model classes mostly
+include("common:ifs-resources")
+include("common:ifs-survey-resources")
+include("common:ifs-sil-resources")
+
+// Can be split and deprecated
+include("common:ifs-rest-util")
+
+// Better as a starter
+include("common:ifs-security")
+include("common:ifs-security-test")
+
+// Data layer
+// Re-used by data-service and data-service-alerts (iffy)
+include("common:ifs-data-service-commons")
+include("common:ifs-data-service-commons-test")
+// make these part of data-service (not shared)
+include("common:ifs-data-service-file")
+include("common:ifs-data-service-notifications")
+include("common:ifs-data-service-notifications-test")
+
+// aka data-service client
+include("common:ifs-rest-api-service")
+// aka survey service client
+include("common:ifs-survey-rest-api-service")
+
+// Four models and populators so nearly just api (used in most web services)
+include("common:ifs-assessment-commons")
+
+// Common web APIs reused over multiple projects
+include("common:ifs-web-commons")
+include("common:ifs-web-commons-test")
+include("common:ifs-application-commons")
+include("common:ifs-project-commons")
+
+// Bundles spring and above common libraries/api/util code
+include("common:bom")
+
+// Services...
+include("ifs-data-layer")
+include("ifs-data-layer:ifs-data-service")
+include("ifs-data-layer:ifs-finance-data-service")
+include("ifs-data-layer:ifs-survey-data-service")
+include("ifs-sil-stub")
+include("ifs-data-layer:data-service-alerts")
+include("ifs-web-service")
+include("ifs-web-service:ifs-web-core")
+include("ifs-web-service:ifs-application-service")
+include("ifs-web-service:ifs-survey-service")
+include("ifs-web-service:ifs-competition-mgt-service")
+include("ifs-web-service:ifs-assessment-service")
+include("ifs-web-service:ifs-project-setup-service")
+include("ifs-web-service:ifs-project-setup-mgt-service")
+include("ifs-web-service:ifs-front-door-service")
+include("ifs-registration-service")
+include("robot-tests")
+include("common")
 

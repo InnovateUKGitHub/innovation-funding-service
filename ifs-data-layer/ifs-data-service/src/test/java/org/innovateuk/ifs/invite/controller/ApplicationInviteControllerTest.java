@@ -29,7 +29,6 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -92,8 +91,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
-                .andExpect(status().isCreated())
-                .andDo(document("invite/create-application-invites/" + applicationId));
+                .andExpect(status().isCreated());
 
         verify(applicationInviteService, times(1)).createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
     }

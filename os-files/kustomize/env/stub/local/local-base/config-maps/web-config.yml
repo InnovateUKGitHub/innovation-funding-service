@@ -17,3 +17,4 @@ data:
   IFS_SHOW_COVID_QUESTIONNAIRE_LINKS: 'host.docker.internal:8443'
   IFS_WEB_VIRTUALASSISTANT_BOTSECRET: '123456'
   IFS_WEB_VIRTUALASSISTANT_BOTID: 'bot_id-dev'
+  IFS_LOANS_SALESFORCE_PAGE_URL: "https://loans-innovateuk.cs80.force.com/loansCommunity/s"

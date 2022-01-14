@@ -1,0 +1,20 @@
+{
+  "competitionID" : 12345,
+  "applications" : [ {
+    "appID" : 10000234,
+    "scoreAverage" : 76,
+    "scoreSpread" : 3,
+    "assessorNumber" : 5,
+    "assessorNotInScope" : 2,
+    "assessorRecommended" : 4,
+    "assessorNotRecommended" : 1
+  }, {
+    "appID" : 10000245,
+    "scoreAverage" : 57,
+    "scoreSpread" : 6,
+    "assessorNumber" : 5,
+    "assessorNotInScope" : 1,
+    "assessorRecommended" : 3,
+    "assessorNotRecommended" : 2
+  } ]
+}

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.registration.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -55,6 +54,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*
 import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder.aRegistrationViewModel;
 import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.anInvitedUserViewModelBuilder;
 
+@Slf4j
 @Controller
 @RequestMapping("/registration")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = RegistrationController.class)
@@ -95,8 +95,6 @@ public class RegistrationController {
 
     @Autowired
     private ProjectPartnerInviteRestService projectPartnerInviteRestService;
-
-    private static final Log LOG = LogFactory.getLog(RegistrationController.class);
 
     private final static String EMAIL_FIELD_NAME = "email";
 
@@ -148,7 +146,7 @@ public class RegistrationController {
         try {
             addRegistrationFormToModel(registrationForm, model, request, response);
         } catch (InviteAlreadyAcceptedException e) {
-            LOG.info("invite already accepted", e);
+            log.info("invite already accepted", e);
             cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
             return "redirect:/login";
         }
@@ -176,7 +174,7 @@ public class RegistrationController {
                 validator.validate(registrationForm, bindingResult);
             }
         } catch (InviteAlreadyAcceptedException e) {
-            LOG.info("invite already accepted", e);
+            log.info("invite already accepted", e);
             cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
 
             return "redirect:/login";
@@ -261,7 +259,7 @@ public class RegistrationController {
                 model.addAttribute("model", anInvitedUserViewModelBuilder().withShowBackLink(true).build());
                 return true;
             } else {
-                LOG.debug("Invite already accepted.");
+                log.debug("Invite already accepted.");
                 throw new InviteAlreadyAcceptedException();
             }
         }
@@ -274,7 +272,7 @@ public class RegistrationController {
                 model.addAttribute("model", anInvitedUserViewModelBuilder().withShowBackLink(true).build());
                 return true;
             } else {
-                LOG.debug("Invite already accepted.");
+                log.debug("Invite already accepted.");
                 throw new InviteAlreadyAcceptedException();
             }
         }

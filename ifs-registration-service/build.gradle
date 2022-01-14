@@ -1,12 +1,8 @@
-apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
-apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
 
 group 'innovateuk'
 version project.version
-
-apply plugin: 'idea'
 
 description = """"""
 tasks.withType(JavaCompile) {
@@ -14,13 +10,13 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    compile("org.springframework.ldap:spring-ldap-core")
-    compile("org.springframework.security:spring-security-ldap")
-    compile("org.springframework.data:spring-data-ldap")
-    compile("org.springframework.boot:spring-boot-starter-security")
-    compile("org.springframework.boot:spring-boot-starter-validation")
-    testCompile("org.springframework.ldap:spring-ldap-test")
-    testCompile("junit:junit")
+    implementation("org.springframework.ldap:spring-ldap-core")
+    implementation("org.springframework.security:spring-security-ldap")
+    implementation("org.springframework.data:spring-data-ldap")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    testImplementation("org.springframework.ldap:spring-ldap-test") {
+        exclude group: "commons-logging", module: "commons-logging"
+    }
+    testImplementation("junit:junit")
 }
-project.version = nexusVersion
-deploy.dependsOn ":ifs-auth-service:ifs-ldap-service:deploy"

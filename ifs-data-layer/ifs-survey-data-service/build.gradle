@@ -1,58 +1,12 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
 
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
-apply from: rootProject.file("gradle-support/openshift-build.gradle")
-apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
 
 apply from: rootProject.file("gradle-support/profile-handler.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
 
-processResources.dependsOn applyProfiles
-
-
 apply from: "../flyway.gradle"
-
-project.version = nexusVersion
-tagDocker.tag = nexusVersion
-osStageRemote.tag = nexusVersion
-tagDockerLocal.tag = nexusVersion
-osStageLocal.tag = nexusVersion
-
-def enabled = project.hasProperty('ifs.survey-data-service.enabled') ? project.property('ifs.survey-data-service.enabled').toBoolean() : true
-def pullNexusImage = project.hasProperty('ifs.survey-data-service.pull.nexus.image') ? project.property('ifs.survey-data-service.pull.nexus.image').toBoolean() : false
-if (enabled && pullNexusImage) {
-
-    [stopNexusContainer, removeNexusContainer, pullImageAndCreateContainer, deployNexusLocal, waitNexusDeploy, flywayClean, flywayMigrate].each { task ->
-        task.enabled = true
-    }
-
-    [buildDocker, stop, removeContainer, createContainer, deploy, wait].each { task ->
-        task.enabled = false
-    }
-    deployNexusLocal.dependsOn ":docker:ifs-mysql:ifs-survey-database:waitNexusDeploy"
-    deployNexusLocal.mustRunAfter ":docker:ifs-mysql:ifs-survey-database:deployNexusLocal"
-
-    assemble.dependsOn deployNexusLocal
-
-} else {
-    [buildDocker, stop, removeContainer, createContainer, deploy, wait, flywayClean, flywayMigrate].each { task ->
-        task.enabled = enabled
-    }
-}
-
-createContainer.portBindings = ['9013:8000', '8087:8080']
-createContainer.networkAliases = ["ifs-survey-data-service"]
-
-pullImageAndCreateContainer.portBindings = ['9013:8000', '8087:8080']
-pullImageAndCreateContainer.networkAliases = ["ifs-survey-data-service"]
-createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
-
-if (enabled) {
-    deploy.dependsOn ":docker:ifs-mysql:ifs-survey-database:wait"
-    deploy.mustRunAfter ":docker:ifs-mysql:ifs-survey-database:deploy"
-}
-
 
 afterEvaluate {
     ext {
@@ -60,47 +14,26 @@ afterEvaluate {
     }
 }
 
-ext.ifsWebSystemUserId = "c0d02979-e66e-11e7-ac43-0242ac120002"
-
-ext {
-    snippetsDir = file('build/generated-snippets')
-}
-
-buildDocker.dependsOn prepareDockerInput
-buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-buildDocker.inputDir = project.file("$project.buildDir/docker")
-tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-
-prepareDockerBaseInput {
-}
-
 dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-    compile "org.springframework.boot:spring-boot-starter-security"
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.boot:spring-boot-starter-security"
 
-    compile "org.innovateuk.ifs.libraries:ifs-commons"
-    compile 'org.innovateuk.ifs.libraries:ifs-resources'
-    compile "org.innovateuk.ifs.libraries:ifs-survey-resources"
-    compile "org.innovateuk.ifs.libraries:ifs-security"
+    implementation project(":common:ifs-commons")
+    implementation project(":common:ifs-error-util")
+    implementation project(":common:ifs-rest-util")
+    implementation project(":common:ifs-resources")
+    implementation project(":common:ifs-survey-resources")
+    implementation project(":common:ifs-security")
 
-    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation project(":common:ifs-commons-test")
+    testImplementation project(":common:ifs-security-test")
 
-    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
-
-    testCompile "junit:junit"
+    testImplementation "junit:junit"
 }
 
 test {
-    outputs.dir snippetsDir
     if (project.hasProperty('excludeTests')) {
         exclude "${project.excludeTests}"
     }
 }
-
-flywayClean.dependsOn applyProfiles
-flywayMigrate.dependsOn processResources
-
-ext.serverPort = 8080
-ext.ifsFlywayLocations = "db/migration"
-

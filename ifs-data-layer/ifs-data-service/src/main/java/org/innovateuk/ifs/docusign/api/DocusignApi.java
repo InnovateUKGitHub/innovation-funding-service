@@ -3,8 +3,6 @@ package org.innovateuk.ifs.docusign.api;
 import com.docusign.esign.client.ApiClient;
 import com.docusign.esign.client.ApiException;
 import com.docusign.esign.client.auth.OAuth;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,7 +13,6 @@ import java.util.List;
 
 @Component
 public class DocusignApi {
-    private static final Log LOG = LogFactory.getLog(DocusignApi.class);
 
     @Value("${ifs.docusign.api.base}")
     private String apiBasePath;

@@ -1,12 +1,9 @@
 package org.innovateuk.ifs.survey.documentation;
 
-import org.innovateuk.ifs.commons.LibraryCandidate;
 import org.innovateuk.ifs.util.JsonMappingUtil;
 import org.junit.Before;
-import org.junit.Rule;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
-import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
@@ -14,7 +11,6 @@ import org.springframework.test.web.servlet.MockMvc;
  *
  * @param <ControllerType>
  */
-@LibraryCandidate
 abstract public class MockMvcTest<ControllerType> {
 
     protected MockMvc mockMvc;
@@ -22,15 +18,11 @@ abstract public class MockMvcTest<ControllerType> {
     @InjectMocks
     protected ControllerType controller = supplyControllerUnderTest();
 
-    @Rule
-    public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("build/generated-snippets");
-
     public abstract ControllerType supplyControllerUnderTest();
 
     @Before
     public void setupMockMvcTest() {
         mockMvc = new MockMvcConfigurer()
-                .restDocumentation(restDocumentation)
                 .getMockMvc(controller);
 
         MockitoAnnotations.initMocks(this);

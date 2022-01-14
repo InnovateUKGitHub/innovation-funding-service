@@ -1,30 +1,33 @@
-apply from: rootProject.file("gradle-support/spring-boot-cp.gradle")
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
-
-apply plugin: 'idea'
 
 group 'innovateuk'
 version project.version
 
 dependencies {
-    compile "org.innovateuk.ifs.libraries:ifs-commons"
-    compile "org.innovateuk.ifs.libraries:ifs-data-service-commons"
-    compile "org.innovateuk.ifs.libraries:ifs-data-service-commons-test"
 
-    compile "org.springframework.boot:spring-boot-starter-data-jpa"
-    compile "org.springframework.boot:spring-boot-starter-security"
-    compile "org.apache.httpcomponents:httpasyncclient"
-    compile "org.mariadb.jdbc:mariadb-java-client"
+    implementation project(":common:ifs-commons")
+    implementation project(":common:ifs-resources")
+    implementation project(":common:ifs-rest-util")
+    implementation project(":common:ifs-error-util")
+    implementation project(":common:ifs-security")
+    implementation project(":common:ifs-data-service-commons")
 
-    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
-    testCompile "org.innovateuk.ifs.libraries:ifs-data-service-commons-test"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.mariadb.jdbc:mariadb-java-client"
 
-    testCompile "com.h2database:h2"
-    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    testCompile "com.opencsv:opencsv"
-    testCompile "junit:junit"
+    testImplementation project(":common:ifs-commons")
+    testImplementation project(":common:ifs-security-test")
+    testImplementation project(":common:ifs-data-service-commons-test")
+
+    testImplementation "com.h2database:h2"
+    testImplementation("com.opencsv:opencsv") {
+        exclude group: "commons-logging", module: "commons-logging"
+    }
+    testImplementation "junit:junit"
 
 }
 

@@ -1,42 +1,35 @@
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
-apply from: rootProject.file("gradle-support/openshift-build.gradle")
-apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
-
-buildscript {
-    ext {
-        serverContext = '/project-setup'
-    }
-}
 
 group 'innovateuk'
 version project.version
 
-apply plugin: 'idea'
-
-project.version = nexusVersion
-
 dependencies {
-    compile project(':ifs-web-service:ifs-web-core')
-    compile "org.innovateuk.ifs.libraries:ifs-project-commons"
-    compile "org.innovateuk.ifs.libraries:ifs-application-commons"
-    implementation 'org.innovateuk.ifs.libraries:ifs-assessment-commons'
-    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile "org.innovateuk.ifs.libraries:ifs-security-test"
-    testCompile "org.innovateuk.ifs.libraries:ifs-web-commons-test"
-    testCompile "com.opencsv:opencsv"
-    testCompile "junit:junit"
-    testCompile "org.mockito:mockito-core"
-}
+    implementation project(':ifs-web-service:ifs-web-core')
+    implementation project(":common:ifs-commons")
+    implementation project(":common:ifs-error-util")
+    implementation project(":common:ifs-rest-util")
+    implementation project(":common:ifs-resources")
+    implementation project(":common:ifs-security")
+    implementation project(":common:ifs-project-commons")
+    implementation project(":common:ifs-application-commons")
+    implementation project(":common:ifs-assessment-commons")
+    implementation project(":common:ifs-web-commons")
+    implementation project(":common:ifs-rest-api-service")
 
-processResources {
-    filesMatching("*.properties") {
-        expand project.properties
+    implementation 'org.apache.commons:commons-lang3'
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+
+    testImplementation project(":common:ifs-commons-test")
+    testImplementation project(":common:ifs-security-test")
+    testImplementation project(":common:ifs-web-commons-test")
+
+    testImplementation("com.opencsv:opencsv") {
+        exclude group: "commons-logging", module: "commons-logging"
     }
-    if (project.hasProperty("profile") && project.profile == "automated") {
-        exclude '**/application.properties'
-    }
+    testImplementation "junit:junit"
+    testImplementation "org.mockito:mockito-core"
 }
 
 jar.dependsOn ":ifs-web-service:gulp_default"
-processResources.dependsOn ":ifs-web-service:applyProfiles"

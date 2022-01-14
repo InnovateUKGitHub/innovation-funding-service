@@ -4,9 +4,9 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.BuilderAmendFunctions;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipant;
-import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.user.domain.User;
 
 import java.util.Arrays;

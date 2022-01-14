@@ -7,7 +7,6 @@ import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResourc
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
-import org.innovateuk.ifs.documentation.AssessorFormInputResponseDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -15,20 +14,13 @@ import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentFeedbackAggregateResourceBuilder.newAssessmentFeedbackAggregateResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
-import static org.innovateuk.ifs.assessment.documentation.AssessmentAggregateScoreDocs.applicationAssessmentAggregateResourceFields;
-import static org.innovateuk.ifs.assessment.documentation.AssessmentFeedbackAggregateDocs.assessmentFeedbackAggregateResourceFields;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AssessorFormInputResponseDocs.assessorFormInputResponseResourceBuilder;
-import static org.innovateuk.ifs.documentation.AssessorFormInputResponseDocs.assessorFormInputResponsesFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -49,15 +41,7 @@ public class AssessorFormInputResponseControllerDocumentation extends BaseContro
         when(assessorFormInputResponseServiceMock.getAllAssessorFormInputResponses(assessmentId)).thenReturn(serviceSuccess(responses));
 
         mockMvc.perform(get("/assessor-form-input-response/assessment/{assessmentId}", assessmentId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("assessorFormInputResponse/{method-name}",
-                        pathParameters(
-                                parameterWithName("assessmentId").description("Id of the assessment associated with responses being requested")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("List of responses the user is allowed to see")
-                        ).andWithPrefix("[].", AssessorFormInputResponseDocs.assessorFormInputResponseFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -68,16 +52,7 @@ public class AssessorFormInputResponseControllerDocumentation extends BaseContro
         when(assessorFormInputResponseServiceMock.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId)).thenReturn(serviceSuccess(responses));
 
         mockMvc.perform(get("/assessor-form-input-response/assessment/{assessmentId}/question/{questionId}", assessmentId, questionId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("assessorFormInputResponse/{method-name}",
-                        pathParameters(
-                                parameterWithName("assessmentId").description("Id of the assessment associated with responses being requested"),
-                                parameterWithName("questionId").description("Id of the question associated with responses being requested")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("List of responses the user is allowed to see")
-                        ).andWithPrefix("[].", AssessorFormInputResponseDocs.assessorFormInputResponseFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -97,11 +72,7 @@ public class AssessorFormInputResponseControllerDocumentation extends BaseContro
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(responses)))
-                .andExpect(status().is2xxSuccessful())
-                .andDo(document("assessorFormInputResponse/{method-name}",
-                        requestFields(assessorFormInputResponsesFields)
-                        .andWithPrefix("responses[].", AssessorFormInputResponseDocs.assessorFormInputResponseFields)
-                ));
+                .andExpect(status().is2xxSuccessful());
     }
 
     @Test
@@ -112,13 +83,7 @@ public class AssessorFormInputResponseControllerDocumentation extends BaseContro
         when(assessorFormInputResponseServiceMock.getApplicationAggregateScores(applicationId)).thenReturn(serviceSuccess(response));
 
         mockMvc.perform(get("/assessor-form-input-response/application/{applicationId}/scores", applicationId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("assessorFormInputResponse/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("Id of the application associated with the aggregate scores being requested")
-                        ),
-                        responseFields(applicationAssessmentAggregateResourceFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 
     @Test
@@ -130,13 +95,6 @@ public class AssessorFormInputResponseControllerDocumentation extends BaseContro
         when(assessorFormInputResponseServiceMock.getAssessmentAggregateFeedback(applicationId, questionId)).thenReturn(serviceSuccess(response));
 
         mockMvc.perform(get("/assessor-form-input-response/application/{applicationId}/question/{questionId}/feedback", applicationId, questionId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("assessorFormInputResponse/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("Id of the application associated with the aggregate feedback being requested"),
-                                parameterWithName("questionId").description("Id of the question the feedback is for")
-                        ),
-                        responseFields(assessmentFeedbackAggregateResourceFields)
-                ));
+                .header("IFS_AUTH_TOKEN", "123abc"));
     }
 }

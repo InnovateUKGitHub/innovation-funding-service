@@ -1,8 +1,24 @@
+apply from: rootProject.file("gradle-support/enforcer.gradle")
+
 apply plugin: 'java'
 apply plugin: 'jacoco'
+apply plugin: 'idea'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+dependencies {
+    // version must match here and in common module
+    annotationProcessor "org.projectlombok:lombok:1.18.22"
+    testAnnotationProcessor  "org.projectlombok:lombok:1.18.22"
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+tasks.withType(Test) {
+    systemProperty "file.encoding", "UTF-8"
+}
 
 jacocoTestReport{
     additionalSourceDirs.from = files(sourceSets.main.allJava.srcDirs)
@@ -25,44 +41,10 @@ test {
     }
 }
 
-processResources {
-    filesMatching("*.properties") {
-        expand project.properties
-    }
-}
-
-processTestResources {
-    filesMatching("*.properties") {
-        expand project.properties
-    }
-}
-
-
 repositories {
     maven { url "https://repo.spring.io/milestone" }
     maven { url "https://plugins.gradle.org/m2/"}
     mavenCentral()
-    maven {
-        name 'ifs-libraries-snapshots'
-        url "https://devops.innovateuk.org/binaries/repository/ifs-libraries-snapshots/"
-        credentials {
-            username project.findProperty("nexus_username")
-            password project.findProperty("nexus_password")
-        }
-    }
-    maven {
-        name 'ifs-libraries'
-        url "https://devops.innovateuk.org/binaries/repository/ifs-libraries/"
-        credentials {
-            username project.findProperty("nexus_username")
-            password project.findProperty("nexus_password")
-        }
-    }
-    maven {
-        name 'local'
-        // Users can specify maven_local in ~/.gradle/gradle.properties or let it default to $HOME/.m2/repository
-        url project.findProperty("maven_local") ?: System.getenv('HOME') + "/.m2/repository"
-    }
 }
 
 jar {

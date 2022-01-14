@@ -16,6 +16,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
@@ -89,6 +90,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Mock
     private ProjectRepository projectRepository;
+
+    @Mock
+    private CrmService crmService;
 
     private Long competitionId = 1L;
 
@@ -166,6 +170,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                 .build();
         when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
         when(assessmentPeriodRepository.findById(competition.getAssessmentPeriods().get(0).getId())).thenReturn(Optional.of(competition.getAssessmentPeriods().get(0)));
+        when(crmService.syncCrmCompetitionAssessment(competitionId)).thenReturn(serviceSuccess());
 
         service.closeAssessment(competitionId);
 

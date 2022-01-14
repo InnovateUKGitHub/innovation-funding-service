@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.organisation.controller;
 
-import com.google.gson.Gson;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationInitialCreationService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.util.JsonMappingUtil;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -45,9 +45,7 @@ public class OrganisationControllerTest extends BaseControllerMockMVCTest<Organi
     @Test
     public void createOrMatch_callsOrganisationServiceAndReturnsResultWithNoHash() throws Exception {
         OrganisationResource organisationResource = newOrganisationResource().build();
-
-        Gson gson = new Gson();
-        String json = gson.toJson(organisationResource, OrganisationResource.class);
+        String json = JsonMappingUtil.toJson(organisationResource);
 
         when(organisationInitialCreationServiceMock.createOrMatch(organisationResource)).thenReturn(serviceSuccess(newOrganisationResource().withId(1L).withName("uniqueOrganisationName").build()));
 

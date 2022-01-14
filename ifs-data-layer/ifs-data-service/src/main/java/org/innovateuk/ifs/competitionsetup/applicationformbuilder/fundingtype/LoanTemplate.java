@@ -35,6 +35,9 @@ public class LoanTemplate implements FundingTypeTemplate {
     @Value("${ifs.loan.survey.question.enabled}")
     private boolean ifsLoanSurveyQuestionEnabled;
 
+    @Value("${ifs.loan.partb.enabled}")
+    private boolean ifsLoanPartBEnabled;
+
     @Override
     public FundingType type() {
         return FundingType.LOAN;
@@ -100,7 +103,8 @@ public class LoanTemplate implements FundingTypeTemplate {
 
     private void addLoanBusinessAndFinanceInformationQuestion(SectionBuilder projectDetailSection){
         if (ifsLoanSurveyQuestionEnabled){
-            projectDetailSection.getQuestions().add(0, loanBusinessAndFinancialInformation());
+            projectDetailSection.getQuestions().add(0,
+                    ifsLoanPartBEnabled ? loanPartBBusinessAndFinancialInformation() : loanBusinessAndFinancialInformation());
         }
     }
 
@@ -139,7 +143,25 @@ public class LoanTemplate implements FundingTypeTemplate {
                                 .withScope(FormInputScope.APPLICATION)
                                 .withActive(false)
                         ));
+    }
 
+    private static QuestionBuilder loanPartBBusinessAndFinancialInformation() {
+        return aQuestion()
+                .withQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION)
+                .withName("Business and financial information")
+                .withShortName("Business and financial information")
+                .withMarkAsCompletedEnabled(true)
+                .withDescription(
+                        "<p><strong>Business and financial details</strong></p>" +
+                                "<p>For us to consider the suitability of your business for a loan, we need detailed information about your business as well as financial information and forecasts.</p>" +
+                                "<p><strong>Financial information</strong></p>" +
+                                "<p>You must submit financial information to us about your business. This is done through completion of a spreadsheet template. Please download the financial spreadsheet template and fill this in offline. At the end of the business and financial information you will be asked to upload the financial spreadsheet.</p>"
+                )
+                .withDescription2(
+                        "<p><strong>Complete the online business survey</strong></p>" +
+                                "<p>At any stage, you can return here to carry on editing incomplete form.</p>"
+                )
+                .withAssignEnabled(false);
     }
 
     private void addLoanProjectSetupColumns(Competition competition) {

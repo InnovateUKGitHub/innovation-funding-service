@@ -1,0 +1,31 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+
+test {
+    useJUnitPlatform {
+    }
+}
+
+dependencies {
+
+    api platform(project(":common:bom"))
+
+    // exported
+    api project(":common:api:audit-api")
+
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-amqp"
+    implementation "org.springframework.boot:spring-boot-starter-json"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.amqp:spring-rabbit"
+    implementation "org.springframework.amqp:spring-amqp"
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.amqp:spring-rabbit-test")
+    testImplementation('com.github.fridujo:rabbitmq-mock:1.1.1')
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation('org.mockito:mockito-junit-jupiter')
+
+
+}

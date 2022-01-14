@@ -4,10 +4,10 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationExternalConfig;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
@@ -69,9 +69,9 @@ import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
+@Slf4j
 @Component
 public class BuildDataFromFile {
-    private static final Log LOG = LogFactory.getLog(BuildDataFromFile.class);
 
     private static final String applicantDummyEmail = "dummy.person@example.com";
     private static final String applicantDummyOrganisation = "Dummy Organisation";
@@ -159,11 +159,14 @@ public class BuildDataFromFile {
                     ).collect(Collectors.toList());
             buildData(lines);
         } catch (FileNotFoundException e) {
-            LOG.error("Unable to supply input stream for file ", e);
+            log.error("Unable to supply input stream for file ", e);
             throw new IllegalStateException("Unable to supply input stream for file ", e);
         } catch (IOException e) {
-            LOG.error("Unable to open an input stream from request", e);
+            log.error("Unable to open an input stream from request", e);
             throw new RuntimeException("Unable to open an input stream from request", e);
+        } catch (CsvException e) {
+            log.error("CSV Error", e);
+            throw new RuntimeException("CSV Error", e);
         }
     }
 
@@ -247,7 +250,7 @@ public class BuildDataFromFile {
         Multimap<String, BuildExternalCompetition> compToExternalCompetitionMap = Multimaps.index(externalCompetitions, BuildExternalCompetition::getCompetitionName);
         competitions.forEach(c -> {
             String name = c.getName();
-            LOG.error("CREATING COMP " + name);
+            log.error("CREATING COMP " + name);
             CompetitionResource competition = competitionSetupService.create().getSuccess();
             competition.setName(name);
             competition.setFundingType(FundingType.GRANT);

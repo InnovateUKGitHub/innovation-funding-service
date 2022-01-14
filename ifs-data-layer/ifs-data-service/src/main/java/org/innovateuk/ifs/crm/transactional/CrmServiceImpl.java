@@ -1,14 +1,23 @@
 package org.innovateuk.ifs.crm.transactional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationEvent;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.ApplicationSummarisationService;
+import org.innovateuk.ifs.assessment.dashboard.transactional.ApplicationAssessmentService;
+import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
+import org.innovateuk.ifs.assessment.resource.dashboard.ApplicationAssessmentResource;
+import org.innovateuk.ifs.assessment.transactional.AssessmentService;
+import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -19,10 +28,8 @@ import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationAddressService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
-import org.innovateuk.ifs.sil.crm.resource.SilAddress;
-import org.innovateuk.ifs.sil.crm.resource.SilContact;
-import org.innovateuk.ifs.sil.crm.resource.SilLoanApplication;
-import org.innovateuk.ifs.sil.crm.resource.SilOrganisation;
+import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
+import org.innovateuk.ifs.sil.crm.resource.*;
 import org.innovateuk.ifs.sil.crm.service.SilCrmEndpoint;
 import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -31,10 +38,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_INCORRECT_TYPE;
@@ -42,15 +53,22 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 
+@Slf4j
 @Service
 public class CrmServiceImpl implements CrmService {
 
-    private static final Log LOG = LogFactory.getLog(CrmServiceImpl.class);
     @Autowired
     private BaseUserService userService;
 
     @Autowired
+    private PublicContentService publicContentService;
+
+    @Autowired
     private CompetitionService competitionService;
+
+
+    @Autowired
+    private AssessmentService assessmentService;
 
     @Autowired
     private OrganisationService organisationService;
@@ -64,6 +82,14 @@ public class CrmServiceImpl implements CrmService {
     @Autowired
     private ApplicationSummarisationService applicationSummarisationService;
 
+    @Autowired
+    ApplicationService applicationService;
+
+    @Autowired
+    private ApplicationAssessmentService applicationAssessmentService;
+
+    @Autowired
+    private AssessorFormInputResponseService assessorFormInputResponseService;
 
     @Value("${ifs.new.organisation.search.enabled:false}")
     private Boolean newOrganisationSearchEnabled;
@@ -141,7 +167,7 @@ public class CrmServiceImpl implements CrmService {
         } else {
             if (isLoanPartBEnabled) {
                 SilLoanApplication loanApplication = setLoanApplication(application);
-                LOG.info(format("Updating CRM application for appId:%s state:%s, payload:%s", loanApplication.getApplicationID(), application.getApplicationState(), loanApplication));
+                log.info(format("Updating CRM application for appId:%s state:%s, payload:%s", loanApplication.getApplicationID(), application.getApplicationState(), loanApplication));
                 return silCrmEndpoint.updateLoanApplicationState(loanApplication);
             } else {
                 return serviceSuccess();
@@ -167,9 +193,39 @@ public class CrmServiceImpl implements CrmService {
 
     private FailingOrSucceedingResult<Void, ServiceFailure> getSilContactEmailAndOrganisationNameAndUpdateContact(SilContact silContact) {
         stripAttributesNotNeeded(silContact, () -> !FundingType.LOAN.getDisplayName().equals(silContact.getExperienceType()));
-        LOG.info(format("Updating CRM contact %s and organisation %s %nPayload is:%s ",
+        log.info(format("Updating CRM contact %s and organisation %s %nPayload is:%s ",
                 silContact.getEmail(), silContact.getOrganisation().getName(), silContact));
         return silCrmEndpoint.updateContact(silContact);
+    }
+
+    @Override
+    public ServiceResult<Void> syncCrmCompetitionAssessment(Long competitionId) {
+        CompetitionResource competition = competitionService.getCompetitionById(competitionId).getSuccess();
+        SilLoanAssessment silLoanAssessment = new SilLoanAssessment();
+        silLoanAssessment.setCompetitionID(competition.getId());
+
+        List<SilLoanAssessmentRow> silLoanAssessmentRows = new ArrayList<>();
+
+        if (!competition.isLoan()) {
+            return serviceFailure(CommonFailureKeys.GENERAL_INCORRECT_TYPE);
+        } else {
+            return applicationService.getApplicationsByCompetitionIdAndState(competitionId,
+                    ApplicationState.submittedStates).handleSuccessOrFailure(failure -> {
+                return serviceFailure(CommonFailureKeys.GENERAL_INCORRECT_TYPE);
+            }, applications -> {
+                applications.stream().filter(app->app.getAssessments().size()>0).forEach(application -> {
+                    silLoanAssessmentRows.add(setSilAssessmentRow(application));
+                });
+                silLoanAssessment.setApplications(silLoanAssessmentRows);
+                if (isLoanPartBEnabled) {
+                    log.info(format("Updating CRM application for compId:%s,  payload:%s", competition.getId(), silLoanAssessment));
+                    return silCrmEndpoint.updateLoanAssessment(silLoanAssessment);
+                } else {
+                    return serviceSuccess();
+                }
+
+            });
+        }
     }
 
     private void stripAttributesNotNeeded(SilContact silContact, BooleanSupplier supplier) {
@@ -280,6 +336,37 @@ public class CrmServiceImpl implements CrmService {
         }
 
         return loanApplication;
+    }
+    private SilLoanAssessmentRow setSilAssessmentRow(Application application) {
+        SilLoanAssessmentRow row = new SilLoanAssessmentRow();
+        Long appId = application.getId();
+        row.setApplicationID(appId.intValue());
+        ApplicationAssessmentAggregateResource res = assessorFormInputResponseService.getApplicationAggregateScores(appId).toGetResponse().getSuccess();
+
+        List<Assessment> assessments
+                = application.getAssessments()
+                .stream().filter(assessment -> assessment.getProcessState() == AssessmentState.SUBMITTED)
+                .collect(Collectors.toList());
+
+        row.setScoreAverage(res.getAveragePercentage());
+        row.setScoreSpread(getScoreSpread(appId));
+        row.setAssessorNumber(assessments.size());
+        row.setAssessorNotInScope(res.getTotalScope() - res.getInScope());
+        row.setAssessorRecommended(getRecommendedOrNot(appId, () -> applicationAssessmentResource -> applicationAssessmentResource.getRecommended()));
+        row.setAssessorNotRecommended(getRecommendedOrNot(appId, () -> applicationAssessmentResource -> !applicationAssessmentResource.getRecommended()));
+
+        return row;
+    }
+
+    private long getRecommendedOrNot(Long appId, Supplier<Predicate<ApplicationAssessmentResource>> supplier) {
+        return applicationAssessmentService.getApplicationAssessmentResource(appId).getSuccess().stream().filter(supplier.get()).count();
+    }
+
+    private int getScoreSpread(Long appId) {
+        List<ApplicationAssessmentResource> assessments = applicationAssessmentService.getApplicationAssessmentResource(appId).getSuccess();
+        return assessments.stream().max(Comparator.comparing(ApplicationAssessmentResource::getTotalScoreGiven)).get().getTotalScoreGiven() -
+                assessments.stream().min(Comparator.comparing(ApplicationAssessmentResource::getTotalScoreGiven)).get().getTotalScoreGiven();
+
     }
 
     private void markSubmitted(ApplicationResource application, CompetitionResource competition, SilLoanApplication loanApplication) {

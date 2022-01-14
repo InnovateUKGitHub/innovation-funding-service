@@ -35,4 +35,5 @@ public class TestQuestionService extends QuestionStatusServiceImpl {
                                                                                                           final Long markedAsCompleteById) {
         return setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true, false, ZonedDateTime.now());
     }
+
 }

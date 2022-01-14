@@ -21,6 +21,7 @@ Documentation     INFUND-3780: As an Assessor I want the system to autosave my w
 ...
 ...               IFS-2854 Allow assessors to see full application finances
 ...
+...
 ...               IFS-5920 Acceptance tests for T's and C's
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -176,6 +177,7 @@ Status of the application should be In Progress
     When The user clicks the button/link           link = ${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should see the element           jQuery = .progress-list li:contains("Intelligent water system") strong:contains("In progress")
 
+
 *** Keywords ***
 I enter feedback of words
     [Arguments]    ${no_of_words}
@@ -271,6 +273,7 @@ the uesr should see assessment overview details
     the user should see the element      jQuery = h2:contains("Application questions")
     the user should see the element      jQuery = h2:contains("Finances")
     the user should see the element      jQuery = h2:contains("Terms and conditions")
+
 
 the user navigate to previous pages
     the user clicks previous and goes to the page   Project exploitation

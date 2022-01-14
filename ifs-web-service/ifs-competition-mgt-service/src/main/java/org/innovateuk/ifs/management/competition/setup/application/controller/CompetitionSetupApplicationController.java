@@ -1,8 +1,7 @@
 
 package org.innovateuk.ifs.management.competition.setup.application.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -27,6 +26,7 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -54,13 +54,13 @@ import static org.innovateuk.ifs.management.competition.setup.CompetitionSetupCo
  * Controller to manage the Application Questions and it's sub-sections in the
  * competition setup process
  */
+@Slf4j
 @Controller
 @RequestMapping("/competition/setup/{competitionId}/section/application")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionSetupApplicationController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin')")
 public class CompetitionSetupApplicationController {
 
-    private static final Log LOG = LogFactory.getLog(CompetitionSetupApplicationController.class);
     public static final String APPLICATION_LANDING_REDIRECT = "redirect:/competition/setup/%d/section/application/landing-page";
     public static final String QUESTION_REDIRECT = "redirect:/competition/setup/%d/section/application/question/%d/edit";
     private static final String QUESTION_VIEW = "competition/setup/question";
@@ -92,6 +92,9 @@ public class CompetitionSetupApplicationController {
 
     @Autowired
     private CompetitionSetupApplicationQuestionValidator competitionSetupApplicationQuestionValidator;
+
+    @Value("${ifs.loan.partb.enabled}")
+    private boolean ifsLoanPartBEnabled;
 
     @PostMapping(value = "/landing-page", params = "createQuestion")
     public String createQuestion(@PathVariable long competitionId) {
@@ -481,7 +484,7 @@ public class CompetitionSetupApplicationController {
         CompetitionSetupQuestionResource questionResource = questionId.isPresent() ? questionSetupCompetitionRestService.getByQuestionId(
                 (questionId.get())).getSuccess() : null;
 
-        return new QuestionSetupViewModel(generalViewModel, subsectionViewModel, competition.getName(), isEditable, filename, displayAssessmentOptions(competition, questionResource));
+        return new QuestionSetupViewModel(generalViewModel, subsectionViewModel, competition.getName(), isEditable, filename, displayAssessmentOptions(competition, questionResource), ifsLoanPartBEnabled);
     }
 
     private boolean displayAssessmentOptions(CompetitionResource competitionResource, CompetitionSetupQuestionResource questionResource) {
@@ -515,7 +518,7 @@ public class CompetitionSetupApplicationController {
                                                                   Optional<Long> questionIdOpt,
                                                                   UserResource loggedInUser) {
         if (CompetitionSetupSection.APPLICATION_FORM.preventEdit(competition, loggedInUser)) {
-            LOG.error(String.format("Competition with id %1$d cannot edit section %2$s: ", competition.getId(), CompetitionSetupSection.APPLICATION_FORM));
+            log.error(String.format("Competition with id %1$d cannot edit section %2$s: ", competition.getId(), CompetitionSetupSection.APPLICATION_FORM));
             return "redirect:/dashboard";
         } else {
             questionIdOpt.ifPresent(questionId -> questionSetupRestService.markQuestionSetupIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM, questionId));

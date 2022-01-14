@@ -1,30 +1,10 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.form.builder.QuestionResourceBuilder;
-import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class QuestionDocs {
-    public static final FieldDescriptor[] questionFields = {
-            fieldWithPath("id").description("Id of the question").optional(),
-            fieldWithPath("name").description("Question name").optional(),
-            fieldWithPath("shortName").description("short version of the question name").optional(),
-            fieldWithPath("description").description("question description").optional(),
-            fieldWithPath("description2").description("question description2").optional(),
-            fieldWithPath("markAsCompletedEnabled").description("boolean to indicate if the question can be marked as complete").optional(),
-            fieldWithPath("assignEnabled").description("boolean to indicate if the question can be assigned").optional(),
-            fieldWithPath("multipleStatuses").description("boolean to indicate if the question has multiple statuses").optional(),
-            fieldWithPath("priority").description("priority of the question, used for rendering purposes only").optional(),
-            fieldWithPath("questionNumber").description("number of the question").optional(),
-            fieldWithPath("section").description("Id of the section of which the question is part of").optional(),
-            fieldWithPath("competition").description("Id of the competition").optional(),
-            fieldWithPath("type").description("The type of question").optional(),
-            fieldWithPath("questionSetupType").description("The setup type of question").optional(),
-            fieldWithPath("assessorMaximumScore").description("Maximum score that can be awarded to this question by an assessor").optional(),
-            fieldWithPath("questionnaireId").description("Id of the questionnaire completed as part of this question.").optional()
-    };
 
     public static final QuestionResourceBuilder questionBuilder = newQuestionResource()
             .withId(1L)

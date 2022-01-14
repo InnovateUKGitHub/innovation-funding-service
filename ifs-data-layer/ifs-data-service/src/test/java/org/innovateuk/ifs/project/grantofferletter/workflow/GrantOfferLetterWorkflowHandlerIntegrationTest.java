@@ -21,16 +21,14 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
         BaseWorkflowHandlerIntegrationTest<GrantOfferLetterWorkflowHandler, GrantOfferLetterProcessRepository, TestableTransitionWorkflowAction> {

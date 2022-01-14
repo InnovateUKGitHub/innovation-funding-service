@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.management.application.view.viewmodel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.io.FileUtils;
+import org.innovateuk.ifs.commons.error.HumanByteUtil;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 
 /**
@@ -43,7 +43,7 @@ public class AppendixViewModel extends FileEntryResource {
 
     @JsonIgnore
     public String getHumanReadableFileSize() {
-        return FileUtils.byteCountToDisplaySize(getFilesizeBytes());
+        return HumanByteUtil.byteCountToHuman(getFilesizeBytes());
     }
 
     public void setApplicationId(Long applicationId) {

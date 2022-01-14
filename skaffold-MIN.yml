@@ -67,6 +67,13 @@ build:
         project: ifs-registration-service
         args:
           - "-DskipTests"
+    - image: sil-stub
+      context: .
+      jib:
+        type: gradle
+        project: ifs-sil-stub
+        args:
+          - "-DskipTests"
   local:
     # Experiment with build concurrency
     # 2/3 seems to be the sweet spot and build takes 2 mins

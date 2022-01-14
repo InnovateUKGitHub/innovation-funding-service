@@ -1,12 +1,9 @@
 package org.innovateuk.ifs;
 
-import org.innovateuk.ifs.commons.LibraryCandidate;
 import org.innovateuk.ifs.commons.rest.RestResultHandlingHttpMessageConverter;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.restdocs.JUnitRestDocumentation;
-import org.springframework.restdocs.mockmvc.UriConfigurer;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder;
@@ -18,7 +15,6 @@ import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 /**
@@ -26,29 +22,7 @@ import static org.springframework.test.util.ReflectionTestUtils.getField;
  * in the data tier. We should also be able to apply any other optional
  * configuration such as Spring RestDocs (if required).
  */
-@LibraryCandidate
 public class MockMvcConfigurer {
-
-    private UriConfigurer documentConfiguration;
-
-    public MockMvcConfigurer restDocumentation(JUnitRestDocumentation restDocumentation) {
-        return restDocumentation(restDocumentation, "http", "localhost", 8090);
-    }
-
-    public MockMvcConfigurer restDocumentation(
-            JUnitRestDocumentation restDocumentation,
-            String scheme,
-            String host,
-            int port
-    ) {
-        documentConfiguration = documentationConfiguration(restDocumentation)
-                .uris()
-                .withScheme(scheme)
-                .withHost(host)
-                .withPort(port);
-
-        return this;
-    }
 
     /**
      * Build our test {@link MockMvc} instance.
@@ -85,10 +59,6 @@ public class MockMvcConfigurer {
                 .setMessageConverters(newMessageConverters)
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .setControllerAdvice(new ErrorControllerAdvice());
-
-        if (documentConfiguration != null) {
-            builder.apply(documentConfiguration);
-        }
 
         return builder.build();
     }

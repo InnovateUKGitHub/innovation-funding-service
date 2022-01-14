@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.log;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * In memory slf4j appender<br/>

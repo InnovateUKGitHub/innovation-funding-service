@@ -16,12 +16,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 import static javax.servlet.DispatcherType.ERROR;
-import static org.innovateuk.ifs.navigation.PageHistoryService.PAGE_HISTORY_COOKIE_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PageHistoryServiceTest {
+    private static final String PAGE_HISTORY_COOKIE_NAME = "pageHistory";
+    private static final String APPLICATION_OVERVIEW_PAGE_HISTORY = "appOverviewPageHistory";
 
     @InjectMocks
     private PageHistoryService pageHistoryService;
@@ -148,6 +149,16 @@ public class PageHistoryServiceTest {
         verify(encodedCookieService).saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
     }
 
+    @Test
+    public void recordLoanApplicationOverviewPageHistory() {
+        history = new LinkedList<>();
+        when(encodedCookieService.getCookieAs(eq(request), eq(APPLICATION_OVERVIEW_PAGE_HISTORY), any()))
+               .thenReturn(Optional.of(history));
+        pageHistoryService.recordLoanApplicationOverviewPageHistory(request, response, "Application Overview", "/url/applicationOverview");
+
+        assertEquals(1, history.size());
+        verify(encodedCookieService).saveToCookie(response, APPLICATION_OVERVIEW_PAGE_HISTORY, JsonUtil.getSerializedObject(history));
+    }
 
     private void assertNoPagesAddedToHistory() {
         assertEquals(2, history.size());

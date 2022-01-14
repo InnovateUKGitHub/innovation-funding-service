@@ -1,29 +1,20 @@
 apply from: rootProject.file("gradle-support/profile-handler.gradle")
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
-
-apply from: rootProject.file("gradle-support/openshift-build.gradle")
-apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/jib.gradle")
-
-apply plugin: 'idea'
 
 group 'innovateuk'
 version project.version
 
-processResources.dependsOn applyProfiles
-
-
 dependencies {
-    compile "org.innovateuk.ifs.libraries:ifs-commons"
-    compile "org.innovateuk.ifs.libraries:ifs-sil-resources"
-    compile "org.innovateuk.ifs.libraries:ifs-rest-util"
+    implementation project(":common:ifs-commons")
+    implementation project(":common:ifs-sil-resources")
+    implementation project(":common:ifs-rest-util")
+    implementation project(":common:ifs-error-util")
 
-    compile "org.springframework.boot:spring-boot-starter-web"
-    compile 'javax.mail:mail'
-    testCompile "org.springframework.restdocs:spring-restdocs-mockmvc"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation 'javax.mail:mail'
 
-    testCompile "org.innovateuk.ifs.libraries:ifs-commons"
-    testCompile "junit:junit"
+    testImplementation "junit:junit"
 }
 
 test {
@@ -35,44 +26,3 @@ test {
         systemProperty 'testGroups', project.getProperty('testGroups')
     }
 }
-
-prepareDockerBaseInput {
-}
-
-buildDocker.dependsOn prepareDockerBaseInput
-
-buildDocker.inputDir = project.file("$project.buildDir/docker")
-
-osStageRemote.onlyIf { isNotProductionEnv() }
-
-project.version = nexusVersion
-tagDocker.tag = nexusVersion
-osStageRemote.tag = nexusVersion
-tagDockerLocal.tag = nexusVersion
-osStageLocal.tag = nexusVersion
-
-createContainer.hostName = "sil-stub"
-createContainer.containerName = "sil-stub"
-createContainer.containerId = "sil-stub"
-createContainer.portBindings = ['8091:8080']
-
-def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
-[stop, removeContainer, createContainer, deploy, wait].each { task ->
-    task.enabled = enabled
-}
-
-//
-// The production application will use the SIL to send emails out.  For non-production environments, the IFS application
-// can talk to a SIL stub within the IFS application itself.  The below configuration allows you to configure whether or
-// not the stub will attempt to send emails out via an SMTP server, or simply log the emails being sent (it does this
-// regardless)
-//
-ext.ifsSendMailLocally=true
-ext.ifsSmtpHost="mail"
-ext.ifsSmtpPort=8025
-ext.ifsSmtpUser="smtp"
-ext.ifsSmtpAuth=false
-ext.ifsSmtpPassword="smtp"
-ext.ifsSmtpTlsEnabled=false
-ext.ifsMailTimeoutMillis=10000
-

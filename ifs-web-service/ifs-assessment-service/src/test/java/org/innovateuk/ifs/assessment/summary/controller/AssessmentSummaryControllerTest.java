@@ -2,6 +2,8 @@ package org.innovateuk.ifs.assessment.summary.controller;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.resource.AssessmentDetailsResource;
@@ -38,6 +40,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.nCopies;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
@@ -58,7 +61,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-@TestPropertySource(locations = "classpath:application.properties")
+@TestPropertySource(locations = { "classpath:application.properties", "classpath:/application-web-core.properties"} )
 public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<AssessmentSummaryController> {
 
     @Mock
@@ -76,6 +79,9 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
     @Mock
     private CompetitionRestService competitionRestService;
+
+    @Mock
+    private ApplicationRestService applicationRestService;
 
     @Mock
     private QuestionRestService questionRestService;
@@ -171,8 +177,11 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     public void save() throws Exception {
         CompetitionResource competitionResource = setupCompetitionResource();
 
+        ApplicationResource applicationResource = setupApplicationResource();
+
         AssessmentResource assessmentResource = newAssessmentResource()
                 .withCompetition(competitionResource.getId())
+                .withApplication(applicationResource.getId())
                 .build();
 
         String feedback = String.join(" ", nCopies(100, "feedback"));
@@ -239,7 +248,9 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void save_noFeedbackAndFundingConfirmationIsTrue() throws Exception {
         CompetitionResource competition = setupCompetitionResource();
+        ApplicationResource applicationResource = setupApplicationResource();
         AssessmentResource assessmentResource = setupAssessment(1L, competition.getId());
+        assessmentResource.setApplication(applicationResource.getId());
 
         String comment = String.join(" ", nCopies(100, "comment"));
 
@@ -299,7 +310,9 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void save_noComment() throws Exception {
         CompetitionResource competition = setupCompetitionResource();
+        ApplicationResource applicationResource = setupApplicationResource();
         AssessmentResource assessmentResource = setupAssessment(1L, competition.getId());
+        assessmentResource.setApplication(applicationResource.getId());
 
         String feedback = String.join(" ", nCopies(100, "feedback"));
 
@@ -424,6 +437,15 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
 
         return competitionResource;
+    }
+
+    private ApplicationResource setupApplicationResource() {
+        ApplicationResource applicationResource = newApplicationResource()
+                .build();
+
+        when(applicationRestService.getApplicationById(applicationResource.getId())).thenReturn(restSuccess(applicationResource));
+
+        return applicationResource;
     }
 
     private List<QuestionResource> setupQuestions(long competitionId, long assessmentId) {
