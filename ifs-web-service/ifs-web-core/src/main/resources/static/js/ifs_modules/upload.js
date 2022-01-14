@@ -22,7 +22,7 @@ IFS.core.upload = (function () {
                     '</div>' +
                   '</li>',
       errorRow: '<li class="error">' +
-                  '<div class="govuk-error-message">$error The file was not uploaded.</div>' +
+                  '<div class="govuk-error-message">$error</div>' +
                   '<div class="file-row">$text<button class="button-clear remove-file">Remove</button>' +
                   '</div>' +
                 '</li>',
@@ -85,13 +85,13 @@ IFS.core.upload = (function () {
           },
           error: function (error) {
             console.log(error)
-            var errorMessage = 'Internal server error.'
+            var errorMessage = 'Internal server error. The file was not uploaded.'
             if (error.status === 413) {
               var maxSize = wrapper.attr(s.maxSize)
               if (maxSize) {
-                errorMessage = 'Your upload must be less than ' + Math.floor(maxSize / 1024 / 1024) + 'MB in size.'
+                errorMessage = 'Please upload a file less than ' + Math.floor(maxSize / 1024 / 1024) + 'MB in size.'
               } else {
-                errorMessage = 'The file you submitted is too large. Please limit it to the sizes specified.'
+                errorMessage = 'The file you submitted is too large. Please limit it to the sizes specified. The file was not uploaded.'
               }
             }
             IFS.core.upload.handleUploadError(wrapper, file, pendingRow, errorMessage)
