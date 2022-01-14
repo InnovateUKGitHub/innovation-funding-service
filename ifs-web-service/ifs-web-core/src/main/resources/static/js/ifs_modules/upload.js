@@ -65,7 +65,7 @@ IFS.core.upload = (function () {
 
       var maxSize = wrapper.attr(s.maxSize)
       if (maxSize && file.size >= maxSize) {
-        var errorMessage = 'Your upload must be less than ' + Math.floor(maxSize / 1024 / 1024) + 'MB in size.'
+        var errorMessage = 'Please upload a file less than ' + Math.floor(maxSize / 1024 / 1024) + 'MB in size.'
         IFS.core.upload.handleUploadError(wrapper, file, pendingRow, errorMessage)
       } else if (wrapper.get(0).hasAttribute(s.oneAtATime)) {
         promise = promise.then(IFS.core.upload.doAjaxUpload(wrapper, file, pendingRow, formData))
