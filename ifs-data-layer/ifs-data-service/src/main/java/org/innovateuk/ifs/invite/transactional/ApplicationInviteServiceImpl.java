@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.invite.transactional;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
@@ -13,7 +12,6 @@ import org.innovateuk.ifs.finance.repository.EmployeesAndTurnoverRepository;
 import org.innovateuk.ifs.finance.repository.GrowthTableRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
-import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.InviteHistory;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.mapper.ApplicationInviteMapper;
@@ -205,6 +203,10 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     @Override
     public ServiceResult<Boolean> checkUserExistsForInvite(String inviteHash) {
         return super.checkUserExistsForInvite(inviteHash);
+    }
+    @Override
+    public ServiceResult<ApplicationInvite> getById(long id) {
+        return super.getById(id);
     }
 
     @Override
