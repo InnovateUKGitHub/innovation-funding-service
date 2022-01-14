@@ -89,18 +89,31 @@ public class ProcurementGrantOfferLetterTemplatePopulatorTest {
         assertThat(result.getProjectManagerName()).isEqualTo(projectManagerName);
         assertThat(result.getMilestones()).hasSize(3);
         assertThat(result.getMilestoneMonths()).hasSize(4);
+
+        ProcurementGrantOfferLetterTemplateViewModel.ProcurementGrantOfferLetterTemplateMilestoneEntryViewModel firstMilestone = result.getMilestones().get(0);
+        LocalDate firstMilestoneCompletionDate = LocalDate.from(projectStartDate);
+        assertThat(firstMilestone.getCompletionDate()).isEqualTo(firstMilestoneCompletionDate.withDayOfMonth(firstMilestoneCompletionDate.lengthOfMonth()));
         ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel firstMilestoneMonth = result.getMilestoneMonths().get(0);
         assertThat(firstMilestoneMonth.getMonth()).isEqualTo(1);
         assertThat(firstMilestoneMonth.getNumbers()).isEqualTo("1");
         assertThat(firstMilestoneMonth.getTotal()).isEqualTo(new BigInteger("100"));
+
+        ProcurementGrantOfferLetterTemplateViewModel.ProcurementGrantOfferLetterTemplateMilestoneEntryViewModel secondMilestone = result.getMilestones().get(1);
+        LocalDate secondMilestoneCompletionDate = LocalDate.from(projectStartDate).plusMonths(1);
+        assertThat(secondMilestone.getCompletionDate()).isEqualTo(secondMilestoneCompletionDate.withDayOfMonth(secondMilestoneCompletionDate.lengthOfMonth()));
+        ProcurementGrantOfferLetterTemplateViewModel.ProcurementGrantOfferLetterTemplateMilestoneEntryViewModel thirdMilestone = result.getMilestones().get(2);
+        LocalDate thirdMilestoneCompletionDate = LocalDate.from(projectStartDate).plusMonths(1);
+        assertThat(thirdMilestone.getCompletionDate()).isEqualTo(thirdMilestoneCompletionDate.withDayOfMonth(thirdMilestoneCompletionDate.lengthOfMonth()));
         ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel secondMilestoneMonth = result.getMilestoneMonths().get(1);
         assertThat(secondMilestoneMonth.getMonth()).isEqualTo(2);
         assertThat(secondMilestoneMonth.getNumbers()).isEqualTo("2, 3");
         assertThat(secondMilestoneMonth.getTotal()).isEqualTo(new BigInteger("500"));
+
         ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel thirdMilestoneMonth = result.getMilestoneMonths().get(2);
         assertThat(thirdMilestoneMonth.getMonth()).isEqualTo(3);
         assertThat(thirdMilestoneMonth.getNumbers()).isEqualTo("");
         assertThat(thirdMilestoneMonth.getTotal()).isEqualTo(BigInteger.ZERO);
+
         ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel fourthMilestoneMonth = result.getMilestoneMonths().get(3);
         assertThat(fourthMilestoneMonth.getMonth()).isEqualTo(4);
         assertThat(fourthMilestoneMonth.getNumbers()).isEqualTo("");
