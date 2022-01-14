@@ -80,6 +80,9 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     private ApplicationInviteRepository applicationInviteRepository;
 
     @Autowired
+    private InviteHistoryRepository inviteHistoryRepository;
+
+    @Autowired
     private OrganisationRepository organisationRepository;
 
     @Autowired
@@ -112,8 +115,6 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     @Autowired
     private ApplicationProcurementMilestoneRepository applicationProcurementMilestoneRepository;
 
-    @Autowired
-    private InviteHistoryRepository inviteHistoryRepository;
 
 
 
@@ -231,7 +232,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
 
     private void removeApplicationInvite(ApplicationInvite applicationInvite) {
         Application application = applicationInvite.getTarget();
-
+        inviteHistoryRepository.deleteInviteHistoryByInvite(applicationInvite);
         List<ProcessRole> collaboratorProcessRoles =
                 processRoleRepository.findByUserAndApplicationId(applicationInvite.getUser(), application.getId());
 
