@@ -44,6 +44,9 @@ public class GenericQuestionApplicationModelPopulator {
     @Value("${ifs.loans.salesforce.page.url}")
     private String salesForceURL;
 
+    @Value("${ifs.forminputresponse.max.filesize.bytes}")
+    private Long maximumAppendixSize;
+
     public GenericQuestionApplicationViewModel populate(ApplicantQuestionResource applicantQuestion, Optional<Long> organisationId) {
         Map<FormInputType, ApplicantFormInputResource> formInputs = applicantQuestion.getApplicantFormInputs()
                 .stream()
@@ -107,7 +110,8 @@ public class GenericQuestionApplicationModelPopulator {
                 .withAppendixGuidance(input.getFormInput().getGuidanceAnswer())
                 .withAppendices(appendices(input))
                 .withAppendixAllowedFileTypes(input.getFormInput().getAllowedFileTypes())
-                .withMaximumAppendices(input.getFormInput().getWordCount());
+                .withMaximumAppendices(input.getFormInput().getWordCount())
+                .withMaximumAppendixSize(maximumAppendixSize);
     }
 
     private void buildTextAreaViewModel(GenericQuestionApplicationViewModelBuilder viewModelBuilder, ApplicantFormInputResource input) {
