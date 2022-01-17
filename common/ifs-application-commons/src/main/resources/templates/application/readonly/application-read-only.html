@@ -97,28 +97,43 @@
                               th:if="${model.settings.includeQuestionLinks && question.shouldDisplayActions()}">
 
                             <div class="form-footer govuk-!-margin-top-6">
-                                <th:block th:unless="${model.isLoanPartBEnabled() and (question.questionType == question.getLoansBusinessAndFinancialInformation())}">
-                                <button class="govuk-button button-clear"
-                                        type="submit"
-                                        name="complete"
-                                        th:if="${question.shouldDisplayMarkAsComplete()}"
-                                        th:value="${question.questionId}">
-                                    Mark as complete
-                                </button>
+                                <th:block th:if="${model.isLoanPartBEnabled() and (question.questionType == question.getLoansBusinessAndFinancialInformation())}">
+                                    <button class="govuk-button button-clear"
+                                            type="submit"
+                                            name="assign"
+                                            th:unless="${question.lead || question.complete}"
+                                            th:value="${question.questionId}">
+                                        Assign to lead for review
+                                    </button>
+                                    <button class="govuk-button button-clear"
+                                            type="submit"
+                                            name="edit"
+                                            th:value="${question.questionId}">
+                                        Return and edit
+                                    </button>
                                 </th:block>
-                                <button class="govuk-button button-clear"
-                                        type="submit"
-                                        name="assign"
-                                        th:unless="${question.lead || question.complete}"
-                                        th:value="${question.questionId}">
-                                    Assign to lead for review
-                                </button>
-                                <button class="govuk-button button-clear"
-                                        type="submit"
-                                        th:name="${question.complete ? 'incomplete' : 'edit'}"
-                                        th:value="${question.questionId}">
-                                    Return and edit
-                                </button>
+                                <th:block th:unless="${model.isLoanPartBEnabled() and (question.questionType == question.getLoansBusinessAndFinancialInformation())}">
+                                    <button class="govuk-button button-clear"
+                                            type="submit"
+                                            name="complete"
+                                            th:if="${question.shouldDisplayMarkAsComplete()}"
+                                            th:value="${question.questionId}">
+                                        Mark as complete
+                                    </button>
+                                    <button class="govuk-button button-clear"
+                                            type="submit"
+                                            name="assign"
+                                            th:unless="${question.lead || question.complete}"
+                                            th:value="${question.questionId}">
+                                        Assign to lead for review
+                                    </button>
+                                    <button class="govuk-button button-clear"
+                                            type="submit"
+                                            th:name="${question.complete ? 'incomplete' : 'edit'}"
+                                            th:value="${question.questionId}">
+                                        Return and edit
+                                    </button>
+                                </th:block>
                             </div>
                         </form>
                     </div>
