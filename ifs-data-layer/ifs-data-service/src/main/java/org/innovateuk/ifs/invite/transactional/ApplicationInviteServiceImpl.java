@@ -204,10 +204,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     public ServiceResult<Boolean> checkUserExistsForInvite(String inviteHash) {
         return super.checkUserExistsForInvite(inviteHash);
     }
-    @Override
-    public ServiceResult<ApplicationInvite> getById(long id) {
-        return super.getById(id);
-    }
+
 
     @Override
     public ServiceResult<UserResource> getUserByInviteHash(String hash) {
@@ -230,6 +227,11 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         InviteHistory inviteHistory = getInviteHistory(inviteResource);
         inviteHistoryRepository.save(inviteHistory);
         return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<ApplicationInvite> getById(Long id) {
+        return super.getById(id);
     }
 
     private void removeApplicationInvite(ApplicationInvite applicationInvite) {

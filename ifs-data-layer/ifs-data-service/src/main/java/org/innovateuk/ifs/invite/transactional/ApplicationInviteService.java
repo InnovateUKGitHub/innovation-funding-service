@@ -58,6 +58,10 @@ public interface ApplicationInviteService {
     ServiceResult<Void> removeApplicationInvite(long applicationInviteId);
 
 
-    //@PreAuthorize("hasPermission(#inviteResource, 'SAVE')")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<Void> updateInviteHistory(ApplicationInviteResource inviteResource);
+
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<ApplicationInvite> getById(Long id);
+
 }
