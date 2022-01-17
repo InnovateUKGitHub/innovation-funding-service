@@ -9,8 +9,6 @@ build:
       jib:
         type: gradle
         project: ifs-data-layer:ifs-data-service
-        args:
-          - "-DskipTests"
   local:
     useDockerCLI: false
     useBuildkit: false

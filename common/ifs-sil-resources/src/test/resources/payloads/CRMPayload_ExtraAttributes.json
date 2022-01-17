@@ -1,0 +1,33 @@
+{
+  "ifsUuid" : "d39f211d-a1aa-4973-bd0d-9a746851559e",
+  "experienceType" : "LOAN",
+  "ifsAppID" : "1",
+  "email" : "email",
+  "lastName" : "last name",
+  "firstName" : "first name",
+  "title" : "title",
+  "jobTitle" : "job title",
+  "organisation" : {
+    "name" : "name",
+    "registrationNumber" : "registration number",
+    "registeredAddress" : {
+      "buildingName" : "building name",
+      "street" : "street",
+      "locality" : "locality",
+      "town" : "town",
+      "postcode" : "postcode",
+      "country" : "country"
+    },
+    "srcSysOrgId" : "sys org id"
+  },
+  "sourceSystem" : "IFS",
+  "srcSysContactId" : "sys contact id",
+  "Address" : {
+    "buildingName" : "building name",
+    "street" : "street",
+    "locality" : "locality",
+    "town" : "town",
+    "postcode" : "postcode",
+    "country" : "country"
+  }
+}

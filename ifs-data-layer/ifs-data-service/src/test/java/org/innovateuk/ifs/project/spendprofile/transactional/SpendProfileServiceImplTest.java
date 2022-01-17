@@ -1018,7 +1018,24 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         assertThat(projectInDb.getSpendProfileSubmittedDate(), nullValue());
         when(spendProfileWorkflowHandler.submit(projectInDb)).thenReturn(true);
 
-        ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);
+        ServiceResult<Void> result = service.completeSpendProfilesReview(projectId, true);
+
+        assertTrue(result.isSuccess());
+        assertThat(projectInDb.getSpendProfileSubmittedDate(), notNullValue());
+    }
+
+    @Test
+    public void completeSpendProfilesReviewSuccessWithoutEmailNotification() {
+        Project projectInDb = new Project();
+        projectInDb.setSpendProfileSubmittedDate(null);
+        SpendProfile spendProfileInDb = new SpendProfile();
+        spendProfileInDb.setMarkedAsComplete(true);
+        projectInDb.setSpendProfiles(singletonList(spendProfileInDb));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(projectInDb));
+        assertThat(projectInDb.getSpendProfileSubmittedDate(), nullValue());
+        when(spendProfileWorkflowHandler.submit(projectInDb)).thenReturn(true);
+
+        ServiceResult<Void> result = service.completeSpendProfilesReview(projectId, false);
 
         assertTrue(result.isSuccess());
         assertThat(projectInDb.getSpendProfileSubmittedDate(), notNullValue());
@@ -1034,7 +1051,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(projectInDb));
         assertThat(projectInDb.getSpendProfileSubmittedDate(), nullValue());
 
-        ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);
+        ServiceResult<Void> result = service.completeSpendProfilesReview(projectId, true);
 
         assertTrue(result.isFailure());
     }
@@ -1048,7 +1065,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         projectInDb.setSpendProfiles(singletonList(spendProfileInDb));
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(projectInDb));
 
-        ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);
+        ServiceResult<Void> result = service.completeSpendProfilesReview(projectId, true);
 
         assertTrue(result.isFailure());
     }
@@ -1132,7 +1149,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
                 .thenReturn(Optional.of(moUser));
         when(projectUsersHelper.getMOByProjectId(projectId)).thenReturn(Optional.of(moUser));
         when(spendProfileWorkflowHandler.submit(projectInDb)).thenReturn(true);
-        ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);
+        ServiceResult<Void> result = service.completeSpendProfilesReview(projectId, true);
         assertTrue(result.isSuccess());
         assertThat(projectInDb.getSpendProfileSubmittedDate(), notNullValue());
     }

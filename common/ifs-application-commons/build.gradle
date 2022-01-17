@@ -1,0 +1,30 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+
+dependencies {
+
+    api platform(project(":common:bom"))
+
+    implementation project(":common:ifs-web-commons")
+    implementation project(":common:ifs-rest-util")
+    implementation project(":common:ifs-error-util")
+    implementation project(":common:ifs-rest-api-service")
+    implementation project(":common:ifs-resources")
+    implementation project(":common:ifs-security")
+    implementation project(":common:ifs-commons")
+
+    implementation "org.apache.commons:commons-lang3"
+    implementation "javax.validation:validation-api"
+    implementation "org.springframework:spring-context"
+    implementation "org.springframework:spring-web"
+    implementation "javax.servlet:javax.servlet-api"
+    implementation "com.fasterxml.jackson.core:jackson-annotations"
+
+    testImplementation project(":common:ifs-commons-test")
+    testImplementation project(":common:ifs-web-commons-test")
+    testImplementation project(":common:ifs-security-test")
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "junit:junit"
+    testImplementation "org.springframework.boot:spring-boot-starter-validation"
+
+}
