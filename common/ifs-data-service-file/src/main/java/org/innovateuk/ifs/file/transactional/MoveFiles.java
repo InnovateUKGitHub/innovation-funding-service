@@ -1,0 +1,48 @@
+package org.innovateuk.ifs.file.transactional;
+
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+
+import java.io.File;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_MOVE_DESTINATION_EXIST_SOURCE_DOES_NOT;
+import static org.innovateuk.ifs.commons.service.BaseFailingOrSucceedingResult.filterErrors;
+import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
+import static org.innovateuk.ifs.file.util.FileFunctions.pathElementsToFile;
+
+
+/**
+ * Functionality to move files
+ */
+@Slf4j
+public final class MoveFiles {
+
+    private MoveFiles() {}
+
+    public static ServiceResult<List<File>> moveAllFiles(final FileStorageStrategy from, final FileStorageStrategy to, final boolean ignoreAlreadyMovedErrors) {
+        if (ignoreAlreadyMovedErrors) {
+            return aggregate(filterErrors(moveAllFiles(from, to), f -> !f.is(FILES_MOVE_DESTINATION_EXIST_SOURCE_DOES_NOT)));
+        } else {
+            return aggregate(moveAllFiles(from, to));
+        }
+    }
+
+    private static List<ServiceResult<File>> moveAllFiles(final FileStorageStrategy from, final FileStorageStrategy to) {
+        final List<ServiceResult<File>> moveResults = from.allWithIds().stream().
+                map(idAndPathOfFileToMove -> {
+                    final Long id = idAndPathOfFileToMove.getKey();
+                    final Pair<List<String>, String> path = idAndPathOfFileToMove.getValue();
+                    final File fileToMove = new File(pathElementsToFile(path.getKey()), path.getValue());
+                    ServiceResult<File> moveResult= to.moveFile(id, fileToMove);
+                    moveResult.ifSuccessful(movedFile ->
+                        log.info("[Filelogging] Moved file " + fileToMove.getAbsolutePath() + " to " + movedFile.getAbsolutePath())
+                    );
+                    return moveResult;
+                }).
+                collect(toList());
+        return moveResults;
+    }
+}

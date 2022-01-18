@@ -225,7 +225,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     public void completeSpendProfilesReview() {
         ProjectCompositeId projectId = ProjectCompositeId.id(1L);
         when(projectLookupStrategy.getProjectCompositeId(projectId.id())).thenReturn(projectId);
-        assertAccessDenied(() -> classUnderTest.completeSpendProfilesReview(projectId.id()),
+        assertAccessDenied(() -> classUnderTest.completeSpendProfilesReview(projectId.id(), true),
                 () -> {
                     verify(spendProfilePermissionRules).projectManagerCanCompleteSpendProfile(projectId, getLoggedInUser());
                     verifyNoMoreInteractions(spendProfilePermissionRules);
