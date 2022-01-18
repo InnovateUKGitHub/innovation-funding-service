@@ -9,8 +9,6 @@ build:
       jib:
         type: gradle
         project: ifs-web-service:ifs-project-setup-mgt-service
-        args:
-          - "-DskipTests"
   local:
     useDockerCLI: false
     useBuildkit: false
