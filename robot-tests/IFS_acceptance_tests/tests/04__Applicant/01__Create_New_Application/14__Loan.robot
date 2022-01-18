@@ -116,9 +116,14 @@ The user can see the business and financial information application question in 
     When the sales force submits/unsubmits b&fi survey     1
     Then the user should see the element                   jQuery = .section-complete + button:contains("Business and financial information")
 
+Return and edit button should not change the status of B&FI question
+    [Documentation]    IFS-11019
+    When the user clicks the button/link   jQuery = #accordion-questions-content-1-1 button:contains("Return and edit")
+    Then the user should see the element   jQuery = p:contains("This question is marked as complete.")
+
 Loan application shows correct T&C's
     [Documentation]    IFS-6205  IFS-9483  IFS-9716
-    Given the user clicks the button/link   link = Application overview
+    Given the user clicks the button/link   link = Back to application overview
     And the user clicks the button/link     link = Loan terms and conditions
     And the user should see the element     jQuery = h1:contains("Loans terms and conditions")
     When the user clicks the button/link    link = Back to application overview
