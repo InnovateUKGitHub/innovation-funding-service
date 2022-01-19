@@ -37,6 +37,7 @@ import javax.validation.Valid;
 import java.time.ZonedDateTime;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
@@ -78,8 +79,6 @@ public class UserController {
 
     @Autowired
     private CrmService crmService;
-
-
 
 
     @GetMapping("/uid/{uid}")
@@ -210,7 +209,6 @@ public class UserController {
     }
 
 
-
     @GetMapping("/" + URL_VERIFY_EMAIL + "/{hash}")
     public RestResult<Void> verifyEmail(@PathVariable String hash) {
         final ServiceResult<Token> result = tokenService.getEmailToken(hash);
@@ -220,9 +218,10 @@ public class UserController {
         return result.handleSuccessOrFailure(
                 failure -> restFailure(failure.getErrors()),
                 token -> {
-                    JsonNode extraInfo = token.getExtraInfo();
-                    Long inviteId = extraInfo.get("inviteId").asLong();
-                    registrationService.activateApplicantAndSendDiversitySurvey(token.getClassPk(),inviteId).andOnSuccessReturnVoid(v -> {
+                    JsonNode extraInfo = token.getExtraInfo().get("inviteId");
+                    Long inviteId = Optional.ofNullable(extraInfo).isPresent() ? extraInfo.asLong() : null;
+
+                    registrationService.activateApplicantAndSendDiversitySurvey(token.getClassPk(), inviteId).andOnSuccessReturnVoid(v -> {
                         ServiceResult<ApplicationResource> applicationResourceServiceResult = tokenService.handleExtraAttributes(token);
 
                         applicationResourceServiceResult.andOnSuccessReturnVoid(

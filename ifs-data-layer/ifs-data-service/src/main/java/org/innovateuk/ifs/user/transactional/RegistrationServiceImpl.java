@@ -103,9 +103,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Autowired
     private ApplicationRepository applicationRepository;
 
-
-
-
     @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
 
@@ -150,7 +147,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<User> handleInvite(User created, UserCreationResource user) {
         if (user.getInviteHash() != null) {
-            Invite invite =  allInviteRepository.getByHash(user.getInviteHash());
+            Invite invite = allInviteRepository.getByHash(user.getInviteHash());
             if (invite != null) {
                 allInviteRepository.save(invite.open());
 
@@ -166,11 +163,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private String getPasswordOrPlaceholder(UserCreationResource user) {
-         if (shouldBePending(user)) {
-             return randomAlphabetic(6).toLowerCase() + randomAlphabetic(6).toUpperCase() + randomNumeric(6);
-         } else {
-             return user.getPassword();
-         }
+        if (shouldBePending(user)) {
+            return randomAlphabetic(6).toLowerCase() + randomAlphabetic(6).toUpperCase() + randomNumeric(6);
+        } else {
+            return user.getPassword();
+        }
     }
 
     private boolean shouldBePending(UserCreationResource user) {
@@ -225,11 +222,12 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
         String password = getPasswordOrPlaceholder(userCreationResource);
         ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(user.getEmail(), password);
-    
+
         return uidFromIdpResult.andOnSuccessReturn(uidFromIdp -> {
             user.setUid(uidFromIdp);
             user.setStatus(UserStatus.INACTIVE);
-            if (userCreationResource.getAddress() != null) profile.setAddress(addressMapper.mapToDomain(userCreationResource.getAddress()));
+            if (userCreationResource.getAddress() != null)
+                profile.setAddress(addressMapper.mapToDomain(userCreationResource.getAddress()));
             Profile savedProfile = profileRepository.save(profile);
             user.setProfileId(savedProfile.getId());
             return userRepository.save(user);
@@ -237,7 +235,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<User> sendUserVerificationEmail(Optional<Long> competitionId, Optional<Long> organisationId, Optional<Long> inviteId, User user) {
-        return registrationEmailService.sendUserVerificationEmail(userMapper.mapToResource(user), competitionId, organisationId,inviteId).
+        return registrationEmailService.sendUserVerificationEmail(userMapper.mapToResource(user), competitionId, organisationId, inviteId).
                 andOnSuccessReturn(() -> user);
     }
 
@@ -317,16 +315,15 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<Void> activateApplicantAndSendDiversitySurvey(long userId,Long inviteId) {
+    public ServiceResult<Void> activateApplicantAndSendDiversitySurvey(long userId, Long inviteId) {
 
+        if (inviteId != null) {
+            ApplicationInvite applicationInvite = applicationInviteService.getById(inviteId).getSuccess();
+            ApplicationInviteResource applicationInviteResource = applicationInviteService.getInviteByHash(applicationInvite.getHash()).toGetResponse().getSuccess();
+            InviteHistory inviteHistory = getInviteHistory(applicationInviteResource, InviteStatus.VERIFIED);
+            inviteHistoryRepository.save(inviteHistory);
 
-        ApplicationInvite applicationInvite = applicationInviteService.getById(inviteId).getSuccess();
-
-        ApplicationInviteResource applicationInviteResource = applicationInviteService.getInviteByHash(applicationInvite.getHash()).toGetResponse().getSuccess();
-        InviteHistory inviteHistory = getInviteHistory(applicationInviteResource, InviteStatus.VERIFIED);
-        inviteHistoryRepository.save(inviteHistory);
-
-
+        }
 
 
         return getUser(userId)
@@ -377,11 +374,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return validateInternalUserRole(userRoleType)
                 .andOnSuccess(() -> ServiceResult.getNonNullValue(userRepository.findById(userToEdit.getId()).orElse(null), notFoundError(User.class)))
                 .andOnSuccessReturn(user -> {
-                        Set<Role> roleList = newHashSet(userRoleType);
-                        user.setFirstName(userToEdit.getFirstName());
-                        user.setLastName(userToEdit.getLastName());
-                        user.setRoles(roleList);
-                        return userRepository.save(user);
+                    Set<Role> roleList = newHashSet(userRoleType);
+                    user.setFirstName(userToEdit.getFirstName());
+                    user.setLastName(userToEdit.getLastName());
+                    user.setRoles(roleList);
+                    return userRepository.save(user);
                 })
                 .andOnSuccessReturn(userMapper::mapToResource);
     }
