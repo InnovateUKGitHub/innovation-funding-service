@@ -5,6 +5,8 @@ import org.innovateuk.ifs.project.state.OnHoldReasonResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.ProjectStateCommentsResource;
 
+import java.time.LocalDate;
+
 public interface ProjectStateRestService {
     RestResult<Void> withdrawProject(long projectId);
 
