@@ -334,7 +334,7 @@ internal user generate SP
     the user selects the option from the drop-down menu  Green  id = rag-rating
     the user clicks the button/link          css = #confirm-button
     the user clicks the button/link          css = [name="confirm-eligibility"]
-    the user should see the element          jQuery = .govuk-body:contains("The organisation’sthe user marks loan as complete finance eligibility has been approved by")
+    the user should see the element          jQuery = .govuk-body:contains("The organisation’s finance eligibility has been approved by")
     the user clicks the button/link          link = Return to finance checks
     the user clicks the button/link          css = .generate-spend-profile-main-button
     the user clicks the button/link          css = #generate-spend-profile-modal-button
