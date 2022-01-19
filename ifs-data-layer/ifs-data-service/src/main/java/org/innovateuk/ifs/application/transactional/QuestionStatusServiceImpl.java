@@ -299,9 +299,6 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     }
 
     protected ServiceResult<List<ValidationMessages>> setComplete(long questionId, long applicationId, long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus, ZonedDateTime markedAsCompleteOn) {
-        if (ifsLoanPartBEnabled && isLoansBusinessAndFinancialInformationQuestion(questionId)) {
-            return serviceFailure(APPLICATION_NOT_UPDATED);
-        }
 
         return find(processRole(processRoleId), openApplication(applicationId), getQuestionSupplier(questionId))
                 .andOnSuccess((markedAsCompleteBy, application, question) -> {
@@ -312,11 +309,6 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
                             return serviceSuccess(validation);
                         }
                 );
-    }
-
-    protected boolean isLoansBusinessAndFinancialInformationQuestion(long questionId) {
-        QuestionSetupType questionSetupType = questionService.getQuestionById(questionId).getSuccess().getQuestionSetupType();
-        return questionSetupType != null && questionSetupType.equals(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
     }
 
     private List<ValidationMessages> validateApplicationQuestion(boolean markAsComplete, Question question, Application application, long processRoleId) {

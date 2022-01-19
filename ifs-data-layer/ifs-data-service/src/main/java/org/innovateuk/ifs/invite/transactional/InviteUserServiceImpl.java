@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.invite.transactional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
@@ -58,10 +57,9 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 /**
  * Transactional and secured service implementation providing operations around invites for users.
  */
+@Slf4j
 @Service
 public class InviteUserServiceImpl extends BaseTransactionalService implements InviteUserService {
-
-    private static final Log LOG = LogFactory.getLog(InviteUserServiceImpl.class);
 
     @Autowired
     private RoleInviteRepository roleInviteRepository;
@@ -209,7 +207,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
             );
             return inviteContactEmailSendResult;
         } catch (IllegalArgumentException e) {
-            LOG.error(String.format("Role %s lookup failed for user %s", roleInvite.getEmail(), roleInvite.getTarget().name()), e);
+            log.error(String.format("Role %s lookup failed for user %s", roleInvite.getEmail(), roleInvite.getTarget().name()), e);
             return ServiceResult.serviceFailure(new Error(CommonFailureKeys.ADMIN_INVALID_USER_ROLE));
         }
     }
@@ -230,7 +228,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
             );
             return inviteContactEmailSendResult;
         } catch (IllegalArgumentException e) {
-            LOG.error(String.format("Role %s lookup failed for user %s", roleInvite.getEmail(), roleInvite.getTarget().name()), e);
+            log.error(String.format("Role %s lookup failed for user %s", roleInvite.getEmail(), roleInvite.getTarget().name()), e);
             return ServiceResult.serviceFailure(new Error(CommonFailureKeys.ADMIN_INVALID_USER_ROLE));
         }
     }
@@ -277,7 +275,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     private ServiceResult<Boolean> handleInviteError(RoleInvite i, ServiceFailure failure) {
-        LOG.error(String.format("Invite failed %s, %s, %s (error count: %s)", i.getId(), i.getEmail(), i.getTarget().name(), failure.getErrors().size()));
+        log.error(String.format("Invite failed %s, %s, %s (error count: %s)", i.getId(), i.getEmail(), i.getTarget().name(), failure.getErrors().size()));
         List<Error> errors = failure.getErrors();
         return serviceFailure(errors);
     }

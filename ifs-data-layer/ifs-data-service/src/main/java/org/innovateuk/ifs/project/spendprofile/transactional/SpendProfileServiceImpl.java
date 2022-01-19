@@ -2,8 +2,7 @@ package org.innovateuk.ifs.project.spendprofile.transactional;
 
 import com.google.common.collect.Lists;
 import com.opencsv.CSVWriter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
@@ -89,9 +88,8 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  * Service dealing with Project finance operations
  */
 @Service
+@Slf4j
 public class SpendProfileServiceImpl extends BaseTransactionalService implements SpendProfileService {
-
-    private static final Log LOG = LogFactory.getLog(SpendProfileServiceImpl.class);
 
     public static final String EMPTY_CELL = "";
     private static final String CSV_MONTH = "Month";
@@ -168,7 +166,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                                     if (spendProfileWorkflowHandler.spendProfileGenerated(project, user)) {
                                         return serviceSuccess(project);
                                     } else {
-                                        LOG.error(String.format(SPEND_PROFILE_STATE_ERROR, project.getId()));
+                                        log.error(String.format(SPEND_PROFILE_STATE_ERROR, project.getId()));
                                         return serviceFailure(GENERAL_UNEXPECTED_ERROR);
                                     }
                                 })
@@ -181,7 +179,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                                 .map(po -> markSpendProfileComplete(ProjectOrganisationCompositeId.id(project.getId(), po.getOrganisation().getId())))
                                 .collect(toList());
                         return aggregate(markAsCompleteResults)
-                                .andOnSuccess(() -> completeSpendProfilesReview(projectId))
+                                .andOnSuccess(() -> completeSpendProfilesReview(projectId, false))
                                 .andOnSuccess(() -> approveOrRejectSpendProfile(projectId, APPROVED));
                     }
                     return serviceSuccess();
@@ -500,7 +498,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         try {
             return serviceSuccess(generateSpendProfileCSVData(spendProfileTableResource, projectOrganisationCompositeId));
         } catch (IOException ioe) {
-            LOG.error("exception thrown getting spend profile", ioe);
+            log.error("exception thrown getting spend profile", ioe);
             return serviceFailure(SPEND_PROFILE_CSV_GENERATION_FAILURE);
         }
     }
@@ -564,7 +562,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
+    public ServiceResult<Void> completeSpendProfilesReview(Long projectId, boolean sendEmailNotification) {
         return getProject(projectId).andOnSuccess(project -> {
             if (project.getSpendProfiles().stream().anyMatch(spendProfile -> !spendProfile.isMarkedAsComplete())) {
                 return serviceFailure(SPEND_PROFILES_MUST_BE_COMPLETE_BEFORE_SUBMISSION);
@@ -572,7 +570,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
             if (spendProfileWorkflowHandler.submit(project)) {
                 project.setSpendProfileSubmittedDate(ZonedDateTime.now());
                 updateApprovalOfSpendProfile(projectId, ApprovalType.UNSET);
-                if (isMOSpendProfileUpdateEnabled) {
+                if (isMOSpendProfileUpdateEnabled && sendEmailNotification) {
                   sendSpendProfileReviewNotification(project);
                 }
                 return serviceSuccess();

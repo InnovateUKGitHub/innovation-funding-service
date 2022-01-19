@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.core.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -25,8 +24,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.sort;
 
 @Service
+@Slf4j
 public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMilestoneService {
-    private static final Log LOG = LogFactory.getLog(CompetitionSetupMilestoneServiceImpl.class);
 
     @Autowired
     private MilestoneRestService milestoneRestService;
@@ -110,7 +109,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
             return year <= 9999;
         }
         catch(DateTimeException dte){
-            LOG.trace("invalid milestone date", dte);
+            log.trace("invalid milestone date", dte);
             return false;
         }
     }

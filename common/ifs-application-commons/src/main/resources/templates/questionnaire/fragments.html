@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <!--/*@thymesVar id="model" type="org.innovateuk.ifs.questionnaire.response.viewmodel.AnswerTableViewModel"*/-->
+    <th:block th:fragment="answer-table(model)">
+        <table class="govuk-table govuk-!-margin-top-3" th:unless="${model == null or model.questions.isEmpty()}">
+            <caption class="govuk-table__caption ">
+                <h2 class="govuk-heading-m" th:unless="${model.title == null}" th:text="${model.title}">Previous answers</h2>
+                <p class="govuk-body" th:unless="${model.readonly}"><a class="govuk-link" th:href="${model.getLink()}">Start again</a></p>
+            </caption>
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">Question</th>
+                <th scope="col" class="govuk-table__header">Answer</th>
+                <th scope="col" class="govuk-table__header" th:unless="${model.readonly}"><span class="govuk-visually-hidden">Change answer</span></th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <tr th:each="answer : ${model.questions}"
+                class="govuk-table__row">
+                <td scope="row" class="govuk-table__cell govuk-!-width-one-half" th:text="${answer.question}">Where is your business based?</td>
+                <td class="govuk-table__cell" th:text="${answer.answer}"></td>
+                <td class="govuk-table__cell alignright" th:unless="${model.readonly}">
+                    <a class="govuk-link" th:href="${model.getLink(answer.questionnaireQuestionId)}"
+                       th:text="${answer.answer != null ? 'Change answer' : 'Continue'}">Change answer</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </th:block>
+
+    <!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.forms.questions.questionnaire.viewmodel.AbstractQuestionQuestionnaireViewModel"*/-->
+    <th:block th:fragment="subsidy-basis(model)">
+        <p th:if="${model.getNorthernIrelandDeclaration() != null}" class="govuk-body">
+            Based on the answers, the subsidy basis has been determined as falling under the <span class="govuk-!-font-weight-bold"><th:block th:if="${model.getNorthernIrelandDeclaration()}">Northern Ireland Protocol</th:block><th:block th:unless="${model.getNorthernIrelandDeclaration()}">EU-UK Trade and Cooperation Agreement</th:block></span>.</p>
+        <th:block th:unless="${model.readOnly}">
+            <h2 class="govuk-heading-m">Declaration</h2>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('agreement')} ? 'govuk-form-group--error'">
+                <div class="govuk-checkboxes">
+                    <span class="govuk-error-message" th:if="${#fields.hasErrors('agreement')}" th:errors="*{agreement}"></span>
+                    <div class="govuk-checkboxes__item">
+                        <input id="agreement"
+                               class="govuk-checkboxes__input"
+                               type="checkbox"
+                               th:field="*{agreement}"
+                               data-switches-button-status="#mark-questionnaire-complete"/>
+                        <label for="agreement"
+                               class="govuk-label govuk-checkboxes__label">
+                            Based on the answers I have provided; I agree to the subsidy basis that has been determined for my organisation.
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+        <th:block th:insert="questionnaire/fragments :: answer-table(${model.answers})" />
+        <th:block th:if="${model.readOnly}">
+        </th:block>
+        <div th:if="${model.open}" class="form-footer">
+            <button id="mark-questionnaire-complete" th:unless="${model.complete}" type="submit" name="complete"
+                    class="button-clear">Mark as complete
+            </button>
+            <button th:if="${model.complete}" id="edit-application-details-button" type="submit" name="edit" class="button-clear">
+                Edit
+            </button>
+        </div>
+
+</th:block>
+
+
+
+</html>

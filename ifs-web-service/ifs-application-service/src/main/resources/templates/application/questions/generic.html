@@ -233,14 +233,14 @@
                                     PDF
                                 </li>
                             </ul>
-                            <p class="govuk-body">It must be less than 10MB in size.</p>
+                            <p class="govuk-body">It must be less than 32MB in size.</p>
                         </div>
                     </details>
                     <div class="govuk-form-group">
                         <div class="ajax-upload"
                              data-js-upload-button-name="uploadAppendix"
                              data-js-upload-file-input="appendix"
-                             th:attr="data-js-number-of-files=${model.maximumAppendices}"
+                             th:attr="data-js-number-of-files=${model.maximumAppendices},data-js-max-size=${model.maximumAppendixSize}"
                              data-js-upload-one-at-a-time="">
                             <p th:if="${model.appendices.isEmpty()}" class="govuk-body no-file-uploaded">No file have been uploaded yet.</p>
                             <ul class="govuk-list file-list">

@@ -6,23 +6,25 @@ version project.version
 
 dependencies {
     implementation project(':ifs-web-service:ifs-web-core')
-    implementation "org.innovateuk.ifs.libraries:ifs-commons"
-    implementation "org.innovateuk.ifs.libraries:ifs-error-util"
-    implementation "org.innovateuk.ifs.libraries:ifs-rest-util"
-    implementation "org.innovateuk.ifs.libraries:ifs-resources"
-    implementation "org.innovateuk.ifs.libraries:ifs-security"
-    implementation "org.innovateuk.ifs.libraries:ifs-application-commons"
-    implementation "org.innovateuk.ifs.libraries:ifs-rest-api-service"
+    implementation project(":common:ifs-commons")
+    implementation project(":common:ifs-error-util")
+    implementation project(":common:ifs-rest-util")
+    implementation project(":common:ifs-resources")
+    implementation project(":common:ifs-security")
+    implementation project(":common:ifs-application-commons")
+    implementation project(":common:ifs-rest-api-service")
 
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation 'org.apache.commons:commons-lang3'
     implementation 'org.apache.httpcomponents:httpclient:4.5.13'
 
-    testImplementation "org.innovateuk.ifs.libraries:ifs-commons-test"
-    testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
-    testImplementation "org.innovateuk.ifs.libraries:ifs-web-commons-test"
+    testImplementation project(":common:ifs-commons-test")
+    testImplementation project(":common:ifs-security-test")
+    testImplementation project(":common:ifs-web-commons-test")
 
-    testImplementation "com.opencsv:opencsv"
+    testImplementation("com.opencsv:opencsv") {
+        exclude group: "commons-logging", module: "commons-logging"
+    }
     testImplementation "junit:junit"
 }
 

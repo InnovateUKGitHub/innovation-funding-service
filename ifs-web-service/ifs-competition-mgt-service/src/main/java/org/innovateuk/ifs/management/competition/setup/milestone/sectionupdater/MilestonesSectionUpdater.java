@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.management.competition.setup.milestone.sectionupdater;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -35,8 +33,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
  */
 @Service
 public class MilestonesSectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater {
-
-    private static Log LOG = LogFactory.getLog(MilestonesSectionUpdater.class);
 
     @Autowired
     private MilestoneRestService milestoneRestService;

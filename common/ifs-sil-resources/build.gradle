@@ -1,0 +1,16 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+
+
+dependencies {
+
+    api platform(project(":common:bom"))
+
+    compile project(":common:ifs-resources")
+
+    compile "org.apache.commons:commons-lang3"
+    compile "com.fasterxml.jackson.core:jackson-databind"
+    compile "javax.validation:validation-api"
+
+    testCompile "junit:junit"
+}
+

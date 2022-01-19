@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.application.transactional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
@@ -44,6 +43,7 @@ import static org.innovateuk.ifs.util.state.ApplicationStateVerificationFunction
 /**
  * Service provides CRUD operation functions for {@FileEntry}s linked to {@FormInputReponse}s.
  */
+@Slf4j
 @Service
 public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalService implements ApplicationFormInputUploadService {
     @Autowired
@@ -54,8 +54,6 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
 
     @Autowired
     private FileService fileService;
-
-    private static final Log LOG = LogFactory.getLog(ApplicationServiceImpl.class);
 
     @Override
     @Transactional
@@ -69,7 +67,7 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
         return findApplicationById(applicationId).andOnSuccess(
                 foundApplication -> verifyApplicationIsOpen(foundApplication).andOnSuccess(
                         openApplication -> {
-                            LOG.info("[FileLogging] Creating a new file for application id " + openApplication.getId() +
+                            log.info("[FileLogging] Creating a new file for application id " + openApplication.getId() +
                                     " processRoleId " + processRoleId +
                                     " formInputId " + formInputId);
 
@@ -82,7 +80,7 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
                                 FormInput formInput = response.get().getFormInput();
 
                                 if (formInput.getType() == FormInputType.TEMPLATE_DOCUMENT) {
-                                    LOG.info("[FileLogging] FormInputResponse for template upload " +
+                                    log.info("[FileLogging] FormInputResponse for template upload " +
                                             " for application id " + openApplication.getId() +
                                             " formInputId " + formInputId +
                                             " , so returning error...");
@@ -90,7 +88,7 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
                                 }
                                 if (formInput.getType() == FormInputType.FILEUPLOAD
                                     && response.get().getFileEntries().size() >= formInput.getWordCount()) {
-                                    LOG.info("[FileLogging] FormInputResponse for appendix exceeds configured maximum of " + response.get().getFormInput().getWordCount() +
+                                    log.info("[FileLogging] FormInputResponse for appendix exceeds configured maximum of " + response.get().getFormInput().getWordCount() +
                                             " for application id " + openApplication.getId() +
                                             " formInputId " + formInputId +
                                             " , so returning error...");
@@ -169,7 +167,7 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
         return findFormInputById(id.getFormInputId()).andOnSuccess(
                 formInput -> getFormInputResponseFileEntryResource(id, formInput)
                         .andOnSuccess(formInputResponseFileEntryResource -> {
-                            LOG.info("[FileLogging] Deleting existing FileEntryResource with id " +
+                            log.info("[FileLogging] Deleting existing FileEntryResource with id " +
                                     formInputResponseFileEntryResource.getFileEntryResource().getId() +
                                     " for application id " + formInputResponseFileEntryResource.getCompoundId().getApplicationId() +
                                     " processRoleId " + formInputResponseFileEntryResource.getCompoundId().getProcessRoleId() +
@@ -215,11 +213,11 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
     private ServiceResult<FormInputResponse> unlinkFileEntryFromFormInputResponse(FormInputResponse formInputResponse, FormInputResponseFileEntryId id) {
         formInputResponse.getFileEntries().removeIf(file -> file.getId().equals(id.getFileEntryId()));
         FormInputResponse unlinkedResponse = formInputResponseRepository.save(formInputResponse);
-        LOG.info("[FileLogging] Deleting FormInputResponse with id " + unlinkedResponse.getId() +
+        log.info("[FileLogging] Deleting FormInputResponse with id " + unlinkedResponse.getId() +
                 " and application " + formInputResponse.getApplication().getId());
         if (formInputResponse.getFileEntries().isEmpty()) {
             formInputResponseRepository.delete(formInputResponse);
-            LOG.info("[FileLogging] FormInputResponse with id " + unlinkedResponse.getId() + " deleted");
+            log.info("[FileLogging] FormInputResponse with id " + unlinkedResponse.getId() + " deleted");
         }
         return serviceSuccess(unlinkedResponse);
     }
