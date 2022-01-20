@@ -51,6 +51,8 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-10860 Always open competitions:Assessment period display changes
 ...
+...               IFS-8952 Always open competitions: Close completed competition
+...
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -112,7 +114,7 @@ the user check for valid content on front end for open ended competitions
     Then the user check for valid content on front end
 
 the user should see the disabled send notification and release feedback button
-    [Documentation]  IFS-9750
+    [Documentation]  IFS-9750 IFS-8952
     Given the user navigates to the page     ${CA_Live}
     When the user clicks the button/link     link = ${openEndedCompName}
     Then the user should see the element     css = [disabled='disabled']
@@ -177,9 +179,6 @@ Internal user should see the same dates entered in choose assessment period drop
     Given the user clicks the button/link   link = Back to manage assessments
     When the user clicks the button/link    jQuery = button:contains("Notify assessors")
     Then the user should see the element    jQuery = td:contains("Saturday") + td:contains("16/01/2100")
-   # And the user clicks the button/link     link = Manage applications
-   # And the user selects the value from the drop-down menu      125  name = assessmentPeriodId
-    #Then the user should see the element    jQuery = option:contains("12 January to 16 January 2100")
 
 Lead applicant checks the dashboard content and the guidance after an assessor is assigned to the application
     [Documentation]  IFS-8850
@@ -281,6 +280,12 @@ internal user inputs the decision and send the notification with feedback
     When the user sends notification and releases feedback
     And the user navigates to the page                               ${server}/project-setup-management/competition//${webTestCompID}/status/all
     Then the user refreshes until element appears on page            jQuery = tr div:contains("${webTestAppName}")
+
+Comp admin can see the close competition button as a disabled
+    Given Log in as a different user               &{ifs_admin_user_credentials}
+    And the user navigates to the page             ${server}/management/competition/${webTestCompID}
+    When The user clicks the button/link           link = Close competition
+    Then The user should not see the element       jQuery = button:contains("Close competition")
 
 Comp admin manages the assessors
     [Documentation]  IFS-8852  IFS-10860
