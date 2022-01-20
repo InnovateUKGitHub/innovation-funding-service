@@ -65,6 +65,7 @@ public class ApplicationInviteController {
     public RestResult<Void> resendInvite(@RequestBody ApplicationInviteResource inviteResource) {
         return applicationInviteService.resendInvite(inviteResource).toPostCreateResponse();
     }
+
     @PostMapping("/update-invite")
     public RestResult<Void> updateInvite(@RequestBody ApplicationInviteResource inviteResource) {
         return applicationInviteService.updateInviteHistory(inviteResource).toPostCreateResponse();
