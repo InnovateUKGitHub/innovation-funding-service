@@ -282,10 +282,11 @@ internal user inputs the decision and send the notification with feedback
     Then the user refreshes until element appears on page            jQuery = tr div:contains("${webTestAppName}")
 
 Comp admin can see the close competition button as a disabled
+    [Documentation]  IFS-8952
     Given Log in as a different user               &{ifs_admin_user_credentials}
     And the user navigates to the page             ${server}/management/competition/${webTestCompID}
     When The user clicks the button/link           link = Close competition
-    Then The user should not see the element       jQuery = button:contains("Close competition")
+    Then the element should be disabled            jQuery = button:contains("Close competition")
 
 Comp admin manages the assessors
     [Documentation]  IFS-8852  IFS-10860
@@ -319,6 +320,13 @@ Auditor can view j-ES form for the submitted application
     And The user clicks the button/link                  jQuery = a:contains("Your project costs")
     When the user clicks the button/link                 jQuery = a:contains(".pdf (opens in a new window)")
     Then the user should not see an error in the page
+
+Comp admin can see the close competition button as a enabled
+    [Documentation]  IFS-8952
+    Given Log in as a different user               &{ifs_admin_user_credentials}
+    And the user navigates to the page             ${server}/management/competition/${webTestCompID}
+    When The user clicks the button/link           link = Close competition
+    Then The user should see the element           jQuery = button:contains("Close competition")
 
 *** Keywords ***
 Custom suite setup
