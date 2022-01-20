@@ -196,6 +196,7 @@ ${excel_file}                 testing.xlsx
 ${valid_pdf excerpt}          Adobe PDF is an ideal format for electronic document distribution
 ${ods_file}                   file_example_ODS.ods
 ${assessment-as-service}      assessment-as-service.csv
+${32MB_large_pdf}             32mb_file.pdf
 
 # Assessor variables
 ${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}     ${assessment_ids["${IN_ASSESSMENT_APPLICATION_4_TITLE}"]["${assessor_credentials["email"]}"]}
@@ -222,6 +223,7 @@ ${finance_query_notes_filetype_error}              Your file must be a PDF or an
 ${applicant_query_response_filetype_error}         Your upload must be a PDF, document or a spreadsheet
 ${too_large_5MB_validation_error}                  Please upload a file less than 5MB in size.
 ${too_large_10MB_validation_error}                 Please upload a file less than 10MB in size.
+${too_large_32MB_validation_error}                 Please upload a file less than 32MB in size.
 ${unsuccessful_login_message}                      Your sign in was unsuccessful because of the following issues
 ${empty_field_warning_message}                     This field cannot be left blank.
 ${email_already_in_use}                            This email address is already in use.

@@ -8,8 +8,8 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
@@ -40,8 +40,8 @@ import org.springframework.transaction.annotation.Transactional;
  * Transactional service to support operations on ProjectFinanceRow.  This is only permitted for use by internal finance users.
  */
 @Service
+@Slf4j
 public class ProjectFinanceRowServiceImpl extends BaseTransactionalService implements ProjectFinanceRowService {
-    private static final Log LOG = LogFactory.getLog(ProjectFinanceRowServiceImpl.class);
 
     @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
@@ -195,7 +195,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
 
     private void updateCostValue(FinanceRowMetaValue costValue, FinanceRow savedCost) {
         if (costValue.getFinanceRowMetaField() == null) {
-            LOG.error("FinanceRowMetaField is null");
+            log.error("FinanceRowMetaField is null");
             return;
         }
         FinanceRowMetaField financeRowMetaField = financeRowMetaFieldRepository.findById(costValue.getFinanceRowMetaField().getId()).orElse(null);

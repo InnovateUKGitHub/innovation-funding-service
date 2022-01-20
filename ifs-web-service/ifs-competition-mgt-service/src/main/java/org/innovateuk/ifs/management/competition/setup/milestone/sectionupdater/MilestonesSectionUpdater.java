@@ -1,8 +1,5 @@
 package org.innovateuk.ifs.management.competition.setup.milestone.sectionupdater;
 
-import org.apache.commons.collections4.map.LinkedMap;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -37,8 +34,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 @Service
 public class MilestonesSectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater {
 
-    private static Log LOG = LogFactory.getLog(MilestonesSectionUpdater.class);
-
     @Autowired
     private MilestoneRestService milestoneRestService;
 
@@ -53,7 +48,7 @@ public class MilestonesSectionUpdater extends AbstractSectionUpdater implements 
     @Override
     protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm, UserResource loggedInUser) {
         MilestonesForm milestonesForm = (MilestonesForm) competitionSetupForm;
-        LinkedMap<String, GenericMilestoneRowForm> milestoneEntries = milestonesForm.getMilestoneEntries();
+        Map<String, GenericMilestoneRowForm> milestoneEntries = milestonesForm.getMilestoneEntries();
 
         List<Error> errors = returnErrorsFoundOnSave(milestoneEntries, competition);
         if (!errors.isEmpty()) {
@@ -64,7 +59,7 @@ public class MilestonesSectionUpdater extends AbstractSectionUpdater implements 
         return serviceSuccess();
     }
 
-    private List<Error> returnErrorsFoundOnSave(LinkedMap<String, GenericMilestoneRowForm> milestoneEntries, CompetitionResource competition) {
+    private List<Error> returnErrorsFoundOnSave(Map<String, GenericMilestoneRowForm> milestoneEntries, CompetitionResource competition) {
         List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competition.getId()).getSuccess();
         Map<String, GenericMilestoneRowForm> filteredMilestoneEntries = milestoneEntries;
 

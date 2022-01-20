@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.assessmentperiod.controller;
 
-import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.commons.resource.PageResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -25,7 +24,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.EnumSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
@@ -78,7 +79,7 @@ public class AssessmentPeriodController {
 
     private AssessmentPeriodForm newAssessmentPeriodForm(){
         AssessmentPeriodForm form = new AssessmentPeriodForm();
-        LinkedMap<String, MilestoneRowForm> newMilestones = new LinkedMap<>();
+        Map<String, MilestoneRowForm> newMilestones = new LinkedHashMap<>();
         for (MilestoneType milestoneType : EnumSet.of(ASSESSOR_BRIEFING, ASSESSORS_NOTIFIED, ASSESSOR_ACCEPTS, ASSESSOR_DEADLINE, ASSESSMENT_CLOSED)){
             MilestoneRowForm milestoneRowForm = new MilestoneRowForm();
             milestoneRowForm.setEditable(true);

@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.management.interview.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -36,14 +35,13 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 /**
  * This controller will handle all Competition Management requests related to assigning applications to an interview Panel.
  */
+@Slf4j
 @Controller
 @RequestMapping("/assessment/interview/competition/{competitionId}/applications")
 @SecuredBySpring(value = "Controller", description = "Only comp admin and project finance users can setup interview" +
         " panels if they competition supports them", securedType = InterviewApplicationAssignmentController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'INTERVIEW_APPLICATIONS')")
 public class InterviewApplicationAssignmentController extends CompetitionManagementCookieController<InterviewAssignmentSelectionForm> {
-
-    private static final Log LOG = LogFactory.getLog(InterviewApplicationAssignmentController.class);
 
     private static final String SELECTION_FORM = "interviewAssignmentApplicationSelectionForm";
 
@@ -147,7 +145,7 @@ public class InterviewApplicationAssignmentController extends CompetitionManagem
             saveFormToCookie(response, competitionId, selectionForm);
             return createJsonObjectNode(selectionForm.getSelectedIds().size(), selectionForm.getAllSelected(), limitExceeded);
         } catch (Exception e) {
-            LOG.error("exception thrown selecting application for invite list", e);
+            log.error("exception thrown selecting application for invite list", e);
             return createFailureResponse();
         }
     }
@@ -174,7 +172,7 @@ public class InterviewApplicationAssignmentController extends CompetitionManagem
 
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedIds().size(), selectionForm.getAllSelected(), false);
         } catch (Exception e) {
-            LOG.error("exception thrown adding applications to invite list", e);
+            log.error("exception thrown adding applications to invite list", e);
             return createFailureResponse();
         }
     }

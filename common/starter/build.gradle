@@ -1,0 +1,8 @@
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
+
+ext {
+    javaLanguageLevel = 1.8
+}

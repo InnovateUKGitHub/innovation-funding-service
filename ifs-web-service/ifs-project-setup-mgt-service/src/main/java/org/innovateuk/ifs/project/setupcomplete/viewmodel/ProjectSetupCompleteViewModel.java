@@ -31,4 +31,8 @@ public class ProjectSetupCompleteViewModel {
     public boolean isReadonly() {
         return !state.isActive();
     }
+
+    public boolean isUnsuccessful() {
+        return state.isUnsuccessful();
+    }
 }

@@ -20,14 +20,14 @@ public class ProjectSetupCompleteForm {
     private boolean successfulConfirmation;
     private boolean unsuccessfulConfirmation;
 
-    @Min(value = 2000, message = "{validation.standard.date.format}")
-    @Max(value = 9999, message = "{validation.standard.date.format}")
+    @Min(value = 2000, message = "{validation.project.start.date.format}")
+    @Max(value = 9999, message = "{validation.project.start.date.format}")
     protected Integer startDateYear;
-    @Min(value = 1, message = "{validation.standard.date.format}")
-    @Max(value = 12, message = "{validation.standard.date.format}")
+    @Min(value = 1, message = "{validation.project.start.date.format}")
+    @Max(value = 12, message = "{validation.project.start.date.format}")
     protected Integer startDateMonth;
-    @Min(value = 1, message = "{validation.standard.date.format}")
-    @Max(value = 31, message = "{validation.standard.date.format}")
+    @Min(value = 1, message = "{validation.project.start.date.format}")
+    @Max(value = 31, message = "{validation.project.start.date.format}")
     protected Integer startDateDay;
 
     public LocalDate getStartDate() {

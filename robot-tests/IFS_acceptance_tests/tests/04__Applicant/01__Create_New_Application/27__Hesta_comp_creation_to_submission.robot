@@ -25,6 +25,8 @@ ${hestaApplicationUnsuccessfulEmailSubject}     update about your Horizon Europe
 ${hestaApplicationSubmissionEmail}              We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
 ${hestaApplicationUnsuccessfulEmail}            We have been advised you were unsuccessful in your grant application for Horizon Europe funding from The European Commission
 ${assessorEmail}                                another.person@gmail.com
+${webTestAssessor}                              Angel Witt
+${webTestAssessorEmailAddress}                  angel.witt@gmail.com
 
 *** Test Cases ***
 Comp admin can select the competition type option Hesta in Initial details on competition setup
@@ -63,6 +65,11 @@ The Application Summary page must not include the Reopen Application link when t
     Given Log in as a different user                                                &{Comp_admin1_credentials}
     And Requesting IDs of this competition                                          ${hestaCompetitionName}
     And Competition admin creates an assessment period                              ${competitionId}
+    And comp admin sends invite to assesor
+    And the assessor accepts an invite to an application
+    And Log in as a different user                                                  &{Comp_admin1_credentials}
+    And The user clicks the button/link                                             link = ${hestaCompetitionName}
+    And assign the application to assessor                                          ${hestaApplicationName}
     When the internal team mark the application as successful / unsuccessful        ${hestaApplicationName}   FUNDED
     And Log in as a different user                                                  email=${leadApplicantEmail}   password=${short_password}
     Then the application summary page must not include the reopen application link
@@ -72,11 +79,14 @@ The Application Summary page must not include the Reopen Application link when t
 Lead applicant receives email notifiction when internal user marks application unsuccessful
     [Documentation]  IFS-10695
     Given the user logs out if they are logged in
+    And Requesting IDs of this competition                                          ${hestaCompetitionName}
     And the user successfully completes application                                 barry   barrington   ${newLeadApplicantEmail}   ${newHestaApplicationName}
     And the user clicks the button/link                                             link = Your project finances
     And the user marks the finances as complete                                     ${newHestaApplicationName}  labour costs  54,000  no
     And the user can submit the application
-    And log in as a different user                                                  &{Comp_admin1_credentials}
+    And Log in as a different user                                                  &{Comp_admin1_credentials}
+    And The user clicks the button/link                                             link = ${hestaCompetitionName}
+    And assign the application to assessor                                          ${newHestaApplicationName}
     When the internal team mark the application as successful / unsuccessful        ${newHestaApplicationName}   UNFUNDED
     And the user clicks the button/link                                             link = Competition
     And Requesting IDs of this application                                          ${newHestaApplicationName}
@@ -228,7 +238,36 @@ Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
     Connect to database  @{database}
-
 Custom Suite Teardown
     the user closes the browser
     Disconnect from database
+
+assign the application to assessor
+    [Arguments]   ${applicationName}
+    the user clicks the button/link     link = Manage assessments
+    the user clicks the button/link     link = Manage applications
+    the user clicks the button/link     jQuery = td:contains("${applicationName}") ~ td a:contains("View progress")
+    the user selects the checkbox       assessor-row-1
+    the user clicks the button/link     jQuery = button:contains("Add to application")
+    the user clicks the button/link     link = Allocate applications
+    the user clicks the button/link     link = Back to manage assessments
+    the user clicks the button/link     link = Competition
+    the user clicks the button/link     link = Input and review funding decision
+    the user should see the element     jQuery =td:contains("${hestaApplicationName}")
+
+comp admin sends invite to assesor
+    the user clicks the button/link          link = Invite assessors to assess the competition
+    the user enters text to a text field     id = assessorNameFilter  ${webTestAssessor}
+    the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
+    the user clicks the button/link          jQuery = tr:contains("${webTestAssessor}") label[for^="assessor-row"]
+    the user clicks the button/link          jQuery = .govuk-button:contains("Add selected to invite list")
+    the user clicks the button/link          link = Invite
+    the user clicks the button/link          link = Review and send invites
+    the user clicks the button/link          jQuery = .govuk-button:contains("Send invitation")
+    the user logs out if they are logged in
+
+the assessor accepts an invite to an application
+    logging in and error checking         ${webTestAssessorEmailAddress}   ${short_password}
+    the user clicks the button/link       link = ${hestaCompetitionName}
+    the user selects the radio button     acceptInvitation  true
+    the user clicks the button/link       jQuery = button:contains("Confirm")

@@ -1,0 +1,22 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+
+
+dependencies {
+
+    api platform(project(":common:bom"))
+
+    implementation "org.springframework.boot:spring-boot-starter-freemarker"
+    implementation "org.springframework:spring-web"
+
+    implementation project(":common:ifs-data-service-commons")
+    implementation project(":common:ifs-data-service-notifications")
+    implementation project(":common:ifs-sil-resources")
+    implementation project(":common:ifs-rest-util")
+    implementation project(":common:ifs-error-util")
+
+    implementation project(":common:ifs-security-test")
+    implementation project(":common:ifs-commons")
+    implementation project(":common:ifs-data-service-commons-test")
+    implementation "junit:junit"
+
+}

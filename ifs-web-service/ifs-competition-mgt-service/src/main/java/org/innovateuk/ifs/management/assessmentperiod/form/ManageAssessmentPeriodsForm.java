@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.assessmentperiod.form;
 
-import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
@@ -29,7 +28,7 @@ public class ManageAssessmentPeriodsForm extends BaseBindingResultTarget {
                         .entrySet()
                         .stream()
                         .sorted(Comparator.comparing(entry -> MilestoneType.valueOf(entry.getKey()).ordinal()))
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedMap::new))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new))
         ));
     }
 }

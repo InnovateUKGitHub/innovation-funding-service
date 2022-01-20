@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Finance checks overview - ${model.overview.projectName}|" />
+</head>
+<body class="govuk-template__body competition-management project-management finance-checks-overview">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to finance checks',linkUrl=@{${model.externalUserLinkUrl}}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance overview',subTitle=|${model.applicationId}: ${model.overview.projectName}|,size='govuk-heading-xl'" />
+            </div>
+        </div>
+
+        <div th:if="${showFundingAmountMessage}" class="success-alert">
+            <h2 class="govuk-heading-s govuk-!-margin-top-0">The funding amount has changed</h2>
+        </div>
+
+        <div th:if="${showFundingLevelMessage}" class="success-alert">
+            <h2 class="govuk-heading-s govuk-!-margin-top-0">The funding levels have been changed</h2>
+        </div>
+
+        <th:block th:unless="${model.ktpCompetition}" th:insert="project/financecheck/fragments/finance :: project-finance-overview(overview=${model.overview})" />
+
+        <th:block th:unless="${model.summaries.fundingType ==  model.isProcurement()}">
+            <h3 class="govuk-heading-m">Finance summary</h3>
+            <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})"/>
+        </th:block>
+
+
+        <th:block th:unless="${model.externalUser}">
+            <div th:if="${model.canChangeFundingLevelPercentages}" class="govuk-!-margin-top-0">
+                <p class="govuk-body"><a class="govuk-link" th:href="@{/project/{projectId}/funding-level(projectId=${model.overview.projectId})}">Change funding level percentages</a></p>
+            </div>
+
+            <p class="govuk-body govuk-!-margin-bottom-6">
+                <a class="govuk-link"
+                   th:if="${model.canChangeFundingSought}"
+                   th:href="@{/project/{projectId}/funding-sought(projectId=${model.overview.projectId})}">Change funding sought</a>
+            </p>
+        </th:block>
+
+        <div th:unless="${model.ktpCompetition || model.externalUser}" class="govuk-!-margin-top-6">
+            <th:block th:insert="project/financecheck/fragments/finance :: research_participation(researchParticipationPercentage=${model.overview.researchParticipationPercentage},maxResearchPercentage=${model.overview.competitionMaximumResearchPercentage})"/>
+        </div>
+
+        <h3 th:if="${model.ktpCompetition}" class="govuk-heading-m">Project cost summary</h3>
+        <h3 th:unless="${model.ktpCompetition}" class="govuk-heading-m">Project cost breakdown</h3>
+        <th:block th:insert="finance/finance-summary :: finance-breakdown-table (${model.applicationFundingBreakdownViewModel})"/>
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

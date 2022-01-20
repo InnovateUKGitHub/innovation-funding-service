@@ -7,26 +7,26 @@ version project.version
 
 dependencies {
 
-    implementation "org.innovateuk.ifs.libraries:ifs-commons"
-    implementation "org.innovateuk.ifs.libraries:ifs-resources"
-    implementation "org.innovateuk.ifs.libraries:ifs-rest-util"
-    implementation "org.innovateuk.ifs.libraries:ifs-error-util"
-    implementation "org.innovateuk.ifs.libraries:ifs-security"
-    implementation "org.innovateuk.ifs.libraries:ifs-data-service-commons"
+    implementation project(":common:ifs-commons")
+    implementation project(":common:ifs-resources")
+    implementation project(":common:ifs-rest-util")
+    implementation project(":common:ifs-error-util")
+    implementation project(":common:ifs-security")
+    implementation project(":common:ifs-data-service-commons")
 
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "org.springframework.boot:spring-boot-starter-validation"
-
-    implementation "org.apache.httpcomponents:httpasyncclient"
     implementation "org.mariadb.jdbc:mariadb-java-client"
 
-    testImplementation "org.innovateuk.ifs.libraries:ifs-commons"
-    testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
-    testImplementation "org.innovateuk.ifs.libraries:ifs-data-service-commons-test"
+    testImplementation project(":common:ifs-commons")
+    testImplementation project(":common:ifs-security-test")
+    testImplementation project(":common:ifs-data-service-commons-test")
 
     testImplementation "com.h2database:h2"
-    testImplementation "com.opencsv:opencsv"
+    testImplementation("com.opencsv:opencsv") {
+        exclude group: "commons-logging", module: "commons-logging"
+    }
     testImplementation "junit:junit"
 
 }

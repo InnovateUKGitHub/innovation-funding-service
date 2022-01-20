@@ -29,22 +29,22 @@ dependencies {
     implementation "org.apache.httpcomponents:httpasyncclient"
     implementation 'org.jsoup:jsoup'
     implementation "org.apache.commons:commons-lang3"
-    implementation "commons-beanutils:commons-beanutils"
 
-    implementation "org.innovateuk.ifs.libraries:ifs-web-commons"
-    implementation "org.innovateuk.ifs.libraries:ifs-resources"
-    implementation 'org.innovateuk.ifs.libraries:ifs-rest-api-service'
-    implementation "org.innovateuk.ifs.libraries:ifs-rest-util"
-    implementation "org.innovateuk.ifs.libraries:ifs-error-util"
+    implementation project(":common:ifs-web-commons")
+    implementation project(":common:ifs-resources")
+    implementation project(":common:ifs-rest-api-service")
+    implementation project(":common:ifs-rest-util")
+    implementation project(":common:ifs-error-util")
 
-    implementation "org.innovateuk.ifs.libraries:ifs-commons"
-    implementation "org.innovateuk.ifs.libraries:ifs-security"
+    implementation project(":common:ifs-commons")
+    implementation project(":common:ifs-security")
 
-    testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
-    testImplementation "org.innovateuk.ifs.libraries:ifs-web-commons-test"
+    testImplementation project(":common:ifs-security-test")
+    testImplementation project(":common:ifs-web-commons-test")
 
-    testImplementation "com.opencsv:opencsv"
-    testImplementation 'com.jayway.awaitility:awaitility'
+    testImplementation("com.opencsv:opencsv") {
+        exclude group: "commons-logging", module: "commons-logging"
+    }
     testImplementation 'junit:junit'
 }
 

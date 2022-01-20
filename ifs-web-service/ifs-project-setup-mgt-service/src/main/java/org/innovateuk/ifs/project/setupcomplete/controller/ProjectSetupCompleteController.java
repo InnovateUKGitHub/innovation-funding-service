@@ -4,6 +4,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
@@ -27,7 +28,7 @@ import static java.lang.String.format;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}")
-@PreAuthorize("hasAuthority('project_finance')")
+@PreAuthorize("hasAnyAuthority('project_finance','comp_admin')")
 @SecuredBySpring(value = "PROJECT_SETUP_COMPLETE", description = "Project finance can view the setup complete page and make changes")
 public class ProjectSetupCompleteController {
 
@@ -94,7 +95,10 @@ public class ProjectSetupCompleteController {
             if (form.getSuccessful()) {
 
                 if(isProjectTargetStartDateChanged(projectId, form.getStartDate())) {
-                    validationHandler.addAnyErrors(projectStateRestService.markAsSuccessful(projectId, form.getStartDate()));
+                    validationHandler.addAnyErrors(
+                            projectStateRestService.markAsSuccessful(projectId, form.getStartDate()),
+                            ErrorToObjectErrorConverterFactory.toField("startDate"),
+                            ErrorToObjectErrorConverterFactory.asGlobalErrors());
                 } else{
                     validationHandler.addAnyErrors(projectStateRestService.markAsSuccessful(projectId, null));
                 }
@@ -137,7 +141,7 @@ public class ProjectSetupCompleteController {
             bindingResult.rejectValue("successfulConfirmation", "validation.field.must.not.be.blank");
         } else if (Boolean.TRUE.equals(form.getSuccessful())) {
             if (form.getStartDate() == null) {
-                bindingResult.rejectValue("startDate", "validation.standard.date.format");
+                bindingResult.rejectValue("startDate", "validation.project.start.date.format");
             }
         }
     }

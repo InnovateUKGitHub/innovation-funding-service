@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.admin.viewmodel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.user.resource.*;
@@ -59,7 +58,7 @@ public class ViewUserViewModel {
     }
 
     public boolean isLinkVisibleToIfsAdmin() {
-        return isIfsAdmin() && !CollectionUtils.containsAny(user.getRoles(), externalRolesToInvite()) && isExternalRoleLinkEnabled();
+        return isIfsAdmin() && !user.getRoles().stream().anyMatch(externalRolesToInvite()::contains) && isExternalRoleLinkEnabled();
     }
 
     public boolean isCanEditUserDetails() {

@@ -5,6 +5,8 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
+import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -36,7 +38,10 @@ import org.springframework.test.annotation.Rollback;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -90,6 +95,9 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
+
+    @Autowired
+    private AssessmentPeriodRepository assessmentPeriodRepository;
 
     @Autowired
     @Override
@@ -651,5 +659,35 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         List<Application> foundApplications = repository.findByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, FUNDED, false);
 
         assertEquals(2, foundApplications.size());
+    }
+
+    @Test
+    public void findAssessedApplicationsWaitingForFudingDecision() {
+        Long competitionId = 1L;
+        loginCompAdmin();
+
+        List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
+
+        List<Long> closedAssessmentPeriodIds = new ArrayList<Long>();
+        AssessmentPeriod assessmentPeriod = assessmentPeriods.get(0);
+        Optional<Competition> competition= competitionRepository.findById(competitionId);
+        competition.ifPresent(comp -> {
+            comp.closeAssessment(ZonedDateTime.now(), assessmentPeriod);
+           });
+        closedAssessmentPeriodIds.add(assessmentPeriod.getId());
+
+        Application application = newApplication()
+                .with(id(null))
+                .withApplicationState(ApplicationState.SUBMITTED)
+                .withName("Warp Drive")
+                .withCompetition(competitionRepository.findById(competitionId).get())
+                .withAssessmentPeriod(assessmentPeriod)
+                .build();
+        application.getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
+        applicationRepository.save(application);
+        flushAndClearSession();
+
+        List<Application> foundApplications = repository.findApplicationsByClosedAssesmentPeriodAndWaitingForFunding(competitionId, SUBMITTED_STATES, null, FUNDED, false, closedAssessmentPeriodIds);
+        assertEquals(1, foundApplications.size());
     }
 }

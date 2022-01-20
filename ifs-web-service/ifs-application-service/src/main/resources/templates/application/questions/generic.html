@@ -68,22 +68,27 @@
 
         <th:block th:unless="${model.readOnly}">
             <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}" ifs:utext="${model.questionDescription}"/>
-            <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription2 != null}" ifs:utext="${model.questionDescription2}"/>
-            <div th:if="${model.questionType == model.getLoansBusinessAndFinancialInformation()}">
-               <div th:if="${model.isLoansPartBEnabled()}">
-                   <a class="govuk-button"
-                      target="_blank"
-                      th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}" value="open-salesforce"
-                      type="Continue">Continue (opens in new tab)</a>
-               </div>
-                <div th:unless="${model.isLoansPartBEnabled()}">
-                    <a class="govuk-link"
-                       target="_blank"
-                       th:href="@{https://innovateuk.eu.qualtrics.com/jfe/form/SV_8JtoEompki2GcUS(
-                    CompanyName=${model.leadOrganisationName},
-                    CompanyNumber=${model.leadOrganisationCompaniesHouseNumber},
-                    IFSApplicationNumber=${model.applicationId})}">Complete the online business survey (opens in a new window)</a>
-                </div>
+             <div th:if="${model.questionType == model.getLoansBusinessAndFinancialInformation()}">
+              <div th:if="${model.isLoansPartBEnabled()}">
+                <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription2 != null}" ifs:utext="${model.questionDescription2}"/>
+                    <a class="govuk-button"
+                       th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}"
+                       value="open-salesforce"
+                       type="Continue">Continue</a>
+              </div>
+              <div th:unless="${model.isLoansPartBEnabled()}">
+                     <div class="govuk-body">
+                         <a class="govuk-link"
+                            target="_blank"
+                            th:href="@{https://innovateuk.eu.qualtrics.com/jfe/form/SV_4My4nN0Pwhbh7mu(
+                                     CompanyName=${model.leadOrganisationName},
+                                     CompanyNumber=${model.leadOrganisationCompaniesHouseNumber},
+                                     IFSApplicationNumber=${model.applicationId})}">Complete the online business survey (opens in a new window)</a>
+                      </div>
+              </div>
+            </div>
+            <div th:unless="${model.isLoansPartBEnabled()}">
+               <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription2 != null}" ifs:utext="${model.questionDescription2}"/>
             </div>
             <details th:unless="${#strings.isEmpty(model.questionGuidance)}" class="govuk-details" role="group">
                 <summary th:unless="${#strings.isEmpty(model.questionGuidanceTitle)}" class="govuk-details__summary">
@@ -95,7 +100,7 @@
             </details>
         </th:block>
 
-        <th:block th:if="${model.complete and  (model.questionType == model.getLoansBusinessAndFinancialInformation())}">
+        <th:block th:if="${model.isLoansPartBEnabled() and model.complete and  (model.questionType == model.getLoansBusinessAndFinancialInformation())}">
             <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}"
                  ifs:utext="${model.questionDescription}"/>
             <div class="govuk-hint wysiwyg-styles">
@@ -104,9 +109,9 @@
             </div>
             <div>
                 <a class="govuk-button"
-                   target="_blank"
-                   th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}" value="open-salesforce"
-                   type="Continue">Continue (opens in new tab)</a>
+                   th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}"
+                   value="open-salesforce"
+                   type="Continue">Continue</a>
             </div>
         </th:block>
 
@@ -228,14 +233,14 @@
                                     PDF
                                 </li>
                             </ul>
-                            <p class="govuk-body">It must be less than 10MB in size.</p>
+                            <p class="govuk-body">It must be less than 32MB in size.</p>
                         </div>
                     </details>
                     <div class="govuk-form-group">
                         <div class="ajax-upload"
                              data-js-upload-button-name="uploadAppendix"
                              data-js-upload-file-input="appendix"
-                             th:attr="data-js-number-of-files=${model.maximumAppendices}"
+                             th:attr="data-js-number-of-files=${model.maximumAppendices},data-js-max-size=${model.maximumAppendixSize}"
                              data-js-upload-one-at-a-time="">
                             <p th:if="${model.appendices.isEmpty()}" class="govuk-body no-file-uploaded">No file have been uploaded yet.</p>
                             <ul class="govuk-list file-list">

@@ -16,16 +16,15 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "org.springframework.boot:spring-boot-starter-validation"
     implementation 'commons-codec:commons-codec'
-    implementation 'commons-io:commons-io'
 
-    implementation "org.innovateuk.ifs.libraries:ifs-commons"
-    implementation 'org.innovateuk.ifs.libraries:ifs-resources'
-    implementation 'org.innovateuk.ifs.libraries:ifs-security'
-    implementation 'org.innovateuk.ifs.libraries:ifs-error-util'
-    implementation 'org.innovateuk.ifs.libraries:ifs-rest-util'
+    implementation project(":common:ifs-commons")
+    implementation project(":common:ifs-resources")
+    implementation project(":common:ifs-security")
+    implementation project(":common:ifs-error-util")
+    implementation project(":common:ifs-rest-util")
 
-    testImplementation "org.innovateuk.ifs.libraries:ifs-commons-test"
-    testImplementation "org.innovateuk.ifs.libraries:ifs-security-test"
+    testImplementation project(":common:ifs-commons-test")
+    testImplementation project(":common:ifs-security-test")
 
     testImplementation "junit:junit"
 }

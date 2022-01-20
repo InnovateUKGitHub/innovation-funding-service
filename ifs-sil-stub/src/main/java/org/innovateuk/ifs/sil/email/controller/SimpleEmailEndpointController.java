@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.sil.email.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.sil.email.resource.SilEmailAddress;
 import org.innovateuk.ifs.sil.email.resource.SilEmailBody;
@@ -26,12 +25,10 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/silstub/sendmail")
 public class SimpleEmailEndpointController {
-
-    private static final Log LOG = LogFactory.getLog(SimpleEmailEndpointController.class);
 
     @Value("${sil.stub.send.mail.from.ifs:false}")
     private Boolean sendMailFromSilStub;
@@ -63,7 +60,7 @@ public class SimpleEmailEndpointController {
         SilEmailBody plainTextBody = simpleFilter(message.getBody(), body -> "text/plain".equals(body.getContentType())).get(0);
         SilEmailBody htmlBody = simpleFilter(message.getBody(), body -> "text/html".equals(body.getContentType())).get(0);
 
-        LOG.info("Stubbing out SIL outbound email:\n\n" +
+        log.info("Stubbing out SIL outbound email:\n\n" +
                 "From: " + message.getFrom().getEmail() + "\n" +
                 "To: " + simpleJoiner(simpleMap(message.getTo(), SilEmailAddress::getEmail), ", ") + "\n" +
                 "Subject: " + message.getSubject() + "\n" +
@@ -141,7 +138,7 @@ public class SimpleEmailEndpointController {
 
                 // warn about the exception but don't fail - this local mail sending is just a placeholder for the
                 // SIL functionality
-                LOG.warn("Unable to send email from SIL stub endpoint", e);
+                log.warn("Unable to send email from SIL stub endpoint", e);
             }
         }
 
@@ -152,7 +149,7 @@ public class SimpleEmailEndpointController {
         try {
             return new InternetAddress(recipient.getEmail(), recipient.getName());
         } catch (UnsupportedEncodingException e) {
-            LOG.error("Unable to construct recipient email address for recipient " + recipient, e);
+            log.error("Unable to construct recipient email address for recipient " + recipient, e);
             throw new IllegalArgumentException("Unable to construct recipient email address for recipient " + recipient, e);
         }
     }

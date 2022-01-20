@@ -41,17 +41,17 @@ public interface ProjectStateService {
     @Activity(type = RESUMED_FROM_ON_HOLD, projectId = "projectId")
     ServiceResult<Void> resumeProject(long projectId);
 
-    @PreAuthorize("hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the project finance users are able to mark projects as successful")
     @Activity(type = MARKED_PROJECT_AS_SUCCESSFUL, projectId = "projectId")
     ServiceResult<Void> markAsSuccessful(long projectId);
 
-    @PreAuthorize("hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the project finance users are able to mark projects as successful")
     @Activity(type = MARKED_PROJECT_AS_SUCCESSFUL, projectId = "projectId")
     ServiceResult<Void> markAsSuccessful(long projectId, LocalDate projectStartDate);
 
-    @PreAuthorize("hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the project finance users are able to mark projects as unsuccessful")
     @Activity(type = MARKED_PROJECT_AS_UNSUCCESSFUL, projectId = "projectId")
     ServiceResult<Void> markAsUnsuccessful(long projectId);

@@ -1,0 +1,12 @@
+ifs:
+  starter:
+    audit:
+      auditQueueName: audit
+      auditExchangeName: amqp.fanout
+
+spring:
+  rabbitmq:
+    host: ${RABBIT_HOST:localhost}
+    port: ${RABBIT_PORT:5672}
+    username: ${RABBIT_USERNAME:guest}
+    password: ${RABBIT_PASSWORD:guest}

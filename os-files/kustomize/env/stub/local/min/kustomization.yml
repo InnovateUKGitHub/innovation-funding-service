@@ -16,6 +16,7 @@ components:
   - ../../../../components/web-layer/front-door-service
   - ../../../../components/web-layer/project-setup-mgt-service
   - ../../../../components/web-layer/project-setup-service
+  - ../../../../components/sil-stub
 
   - ../../../../patches/
   - ../patches/

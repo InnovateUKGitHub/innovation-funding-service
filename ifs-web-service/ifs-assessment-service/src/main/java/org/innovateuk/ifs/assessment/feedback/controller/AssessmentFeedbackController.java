@@ -3,8 +3,7 @@ package org.innovateuk.ifs.assessment.feedback.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackApplicationDetailsModelPopulator;
@@ -52,13 +51,12 @@ import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
+@Slf4j
 @Controller
 @RequestMapping("/{assessmentId}")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentFeedbackController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessmentFeedbackController {
-
-    private static final Log LOG = LogFactory.getLog(AssessmentFeedbackController.class);
 
     private static final String FORM_ATTR_NAME = "form";
 
@@ -128,7 +126,7 @@ public class AssessmentFeedbackController {
                     .getSuccess();
             return createJsonObjectNode(true);
         } catch (Exception e) {
-            LOG.error("exception thrown updating input form response", e);
+            log.error("exception thrown updating input form response", e);
             return createJsonObjectNode(false);
         }
     }

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.status.security;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
@@ -33,11 +32,10 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
 /**
  * Permission checker around the access to various sections within the Project Setup process
  */
+@Slf4j
 @PermissionRules
 @Component
 public class SetupSectionsPermissionRules {
-
-    private static final Log LOG = LogFactory.getLog(SetupSectionsPermissionRules.class);
 
     @Autowired
     private ProjectService projectService;
@@ -262,7 +260,7 @@ public class SetupSectionsPermissionRules {
 
             return sectionCheckFn.apply(sectionAccessor, organisation) == ACCESSIBLE;
         } catch (ForbiddenActionException e) {
-            LOG.error("User " + user.getId() + " is not a Partner on an Organisation for Project " + projectId + ".  Denying access to Project Setup", e);
+            log.error("User " + user.getId() + " is not a Partner on an Organisation for Project " + projectId + ".  Denying access to Project Setup", e);
             return false;
         }
     }

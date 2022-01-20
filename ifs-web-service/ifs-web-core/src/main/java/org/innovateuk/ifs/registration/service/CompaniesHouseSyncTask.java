@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.registration.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 
@@ -18,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class CompaniesHouseSyncTask implements Runnable {
 
     private long organisationId;
@@ -29,8 +29,6 @@ public class CompaniesHouseSyncTask implements Runnable {
     private OrganisationRestService organisationRestService;
 
     private CompaniesHouseRestService companiesHouseRestService;
-
-    private static final Log LOG = LogFactory.getLog(CompaniesHouseSyncTask.class);
 
     CompaniesHouseSyncTask(long organisationId, OrganisationRestService organisationRestService,CompaniesHouseRestService companiesHouseRestService ){
         this.organisationId = organisationId;
@@ -67,7 +65,7 @@ public class CompaniesHouseSyncTask implements Runnable {
         RestResult<OrganisationResource> result = organisationRestService.syncCompaniesHouseDetails(orgResource);
         RequestContextHolder.resetRequestAttributes();
         if (result.isFailure()) {
-            LOG.error("Failed to update organisation with companies house data : " + result.getFailure());
+            log.error("Failed to update organisation with companies house data : " + result.getFailure());
         }
     }
 }

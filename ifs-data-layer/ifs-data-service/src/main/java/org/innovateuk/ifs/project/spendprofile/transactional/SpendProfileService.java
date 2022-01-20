@@ -69,5 +69,5 @@ public interface SpendProfileService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'COMPLETE_SPEND_PROFILE_REVIEW')")
     @Activity(projectId = "projectId", type = ActivityType.SPEND_PROFILE_SENT)
-    ServiceResult<Void> completeSpendProfilesReview(@P("projectId")Long projectId);
+    ServiceResult<Void> completeSpendProfilesReview(@P("projectId")Long projectId, boolean sendEmailNotification);
 }
