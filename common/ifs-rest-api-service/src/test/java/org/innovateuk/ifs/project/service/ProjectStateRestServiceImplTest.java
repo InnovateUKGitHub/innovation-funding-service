@@ -5,15 +5,18 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.state.OnHoldReasonResource;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static java.lang.String.format;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
 
 public class ProjectStateRestServiceImplTest extends BaseRestServiceUnitTest<ProjectStateRestServiceImpl> {
     private static final String projectRestURL = "/project";
+    private static final long projectId = 123L;
 
     @Override
     protected ProjectStateRestServiceImpl registerRestServiceUnderTest() {
