@@ -12,7 +12,7 @@ dependencies {
     // launched using java -jar or if it’s started using a special classloader, then it is considered a
     // “production application”. Flagging the dependency as optional in Maven or using compileOnly in Gradle
     // is a best practice that prevents devtools from being transitively applied to other modules using your project.
-    // compileOnly "org.springframework.boot:spring-boot-devtools"
+    compileOnly "org.springframework.boot:spring-boot-devtools"
 
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-web"
