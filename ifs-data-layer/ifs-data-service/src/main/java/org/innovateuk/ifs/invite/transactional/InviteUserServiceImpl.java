@@ -96,7 +96,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         INVITE_EXTERNAL_USER,
     }
 
-    private static final String DEFAULT_INTERNAL_USER_EMAIL_DOMAIN = "innovateuk.ukri.org";
+    private static final String DEFAULT_INTERNAL_USER_EMAIL_DOMAIN = "iuk.ukri.org";
 
     @Value("${ifs.system.internal.user.email.domains}")
     private String internalUserEmailDomains;

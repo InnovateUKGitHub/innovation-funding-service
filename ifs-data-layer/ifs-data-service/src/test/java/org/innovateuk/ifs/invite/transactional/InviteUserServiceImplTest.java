@@ -119,7 +119,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         invitedUser = UserResourceBuilder.newUserResource()
                 .withFirstName("Astle")
                 .withLastName("Pimenta")
-                .withEmail("Astle.Pimenta@innovateuk.ukri.org")
+                .withEmail("Astle.Pimenta@iuk.ukri.org")
                 .build();
     }
 
@@ -191,7 +191,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         Role role = Role.IFS_ADMINISTRATOR;
 
         RoleInvite expectedRoleInvite = newRoleInvite().
-                withEmail("Astle.Pimenta@innovateuk.ukri.org").
+                withEmail("Astle.Pimenta@iuk.ukri.org").
                 withName("Astle Pimenta").
                 withRole(role).
                 withStatus(CREATED).
@@ -201,7 +201,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         // hash is random, so capture RoleInvite value to verify other fields
         when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
 
-        NotificationTarget notificationTarget = new UserNotificationTarget("Astle Pimenta", "Astle.Pimenta@innovateuk.ukri.org");
+        NotificationTarget notificationTarget = new UserNotificationTarget("Astle Pimenta", "Astle.Pimenta@iuk.ukri.org");
         Map<String, Object> expectedNotificationArgs = asMap(
                 "role", role.getDisplayName(),
                 "inviteUrl", webBaseUrl + InviteUserServiceImpl.INTERNAL_USER_WEB_CONTEXT + "/" + expectedRoleInvite.getHash() + "/register"
@@ -225,12 +225,12 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         verify(notificationService).sendNotificationWithFlush(expectedNotification, EMAIL);
 
         List<RoleInvite> captured = roleInviteArgumentCaptor.getAllValues();
-        assertEquals("Astle.Pimenta@innovateuk.ukri.org", captured.get(0).getEmail());
+        assertEquals("Astle.Pimenta@iuk.ukri.org", captured.get(0).getEmail());
         assertEquals("Astle Pimenta", captured.get(0).getName());
         assertEquals(role, captured.get(0).getTarget());
         assertEquals(CREATED, captured.get(0).getStatus());
 
-        assertEquals("Astle.Pimenta@innovateuk.ukri.org", captured.get(1).getEmail());
+        assertEquals("Astle.Pimenta@iuk.ukri.org", captured.get(1).getEmail());
         assertEquals("Astle Pimenta", captured.get(1).getName());
         assertEquals(role, captured.get(1).getTarget());
         assertEquals(loggedInUserSupplierMock.get(), captured.get(1).getSentBy());
@@ -245,7 +245,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         Role role = SUPPORT;
 
         RoleInvite expectedRoleInvite = newRoleInvite()
-                .withEmail("Astle.Pimenta@innovateuk.ukri.org")
+                .withEmail("Astle.Pimenta@iuk.ukri.org")
                 .withName("Astle Pimenta")
                 .withRole(role)
                 .withStatus(CREATED).withHash("")
@@ -255,7 +255,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
 
-        NotificationTarget notificationTarget = new UserNotificationTarget("Astle Pimenta", "Astle.Pimenta@innovateuk.ukri.org");
+        NotificationTarget notificationTarget = new UserNotificationTarget("Astle Pimenta", "Astle.Pimenta@iuk.ukri.org");
         Map<String, Object> expectedNotificationArgs = asMap(
                 "role", role.getDisplayName(),
                 "inviteUrl", webBaseUrl + InviteUserServiceImpl.INTERNAL_USER_WEB_CONTEXT + "/" + expectedRoleInvite.getHash() + "/register"
@@ -271,7 +271,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         verify(notificationService).sendNotificationWithFlush(expectedNotification, EMAIL);
 
         List<RoleInvite> captured = roleInviteArgumentCaptor.getAllValues();
-        assertEquals("Astle.Pimenta@innovateuk.ukri.org", captured.get(0).getEmail());
+        assertEquals("Astle.Pimenta@iuk.ukri.org", captured.get(0).getEmail());
         assertEquals("Astle Pimenta", captured.get(0).getName());
         assertEquals(role, captured.get(0).getTarget());
         assertEquals(CREATED, captured.get(0).getStatus());
@@ -287,7 +287,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         Role role = Role.IFS_ADMINISTRATOR;
 
         RoleInvite expectedRoleInvite = newRoleInvite()
-                .withEmail("Astle.Pimenta@innovateuk.ukri.org")
+                .withEmail("Astle.Pimenta@iuk.ukri.org")
                 .withName("Astle Pimenta")
                 .withRole(role)
                 .withStatus(CREATED)
