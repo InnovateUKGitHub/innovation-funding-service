@@ -184,4 +184,11 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
                 QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION == questionResource.getQuestionSetupType() &&
                 isComplete();
     }
+
+    public boolean isInCompleteLoanBusinessAndFinancialInformation() {
+        return isLoanPartBEnabled &&
+                questionResource != null &&
+                QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION == questionResource.getQuestionSetupType() &&
+                !isComplete();
+    }
 }
