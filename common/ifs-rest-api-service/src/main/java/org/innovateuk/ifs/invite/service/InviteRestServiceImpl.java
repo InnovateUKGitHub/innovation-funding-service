@@ -84,7 +84,7 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
     @Override
     public RestResult<Void> acceptInvite(ApplicationInviteResource inviteResource) {
         String url = inviteRestUrl + "/update-invite";
-        return postWithRestResultAnonymous(url, inviteResource, Void.class);
+        return putWithRestResultAnonymous(url, inviteResource, Void.class);
     }
 
     @Override

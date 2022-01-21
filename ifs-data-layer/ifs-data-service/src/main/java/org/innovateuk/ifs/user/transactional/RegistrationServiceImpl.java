@@ -80,7 +80,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private TermsAndConditionsService termsAndConditionsService;
 
     @Autowired
-    private RegistrationNotificationService registrationEmailService;
+    private RegistrationNotificationService registrationNotificationService;
 
     @Autowired
     private MonitoringOfficerInviteRepository monitoringOfficerInviteRepository;
@@ -234,7 +234,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<User> sendUserVerificationEmail(Optional<Long> competitionId, Optional<Long> organisationId, Optional<Long> inviteId, User user) {
-        return registrationEmailService.sendUserVerificationEmail(userMapper.mapToResource(user), competitionId, organisationId, inviteId).
+        return registrationNotificationService.sendUserVerificationEmail(userMapper.mapToResource(user), competitionId, organisationId, inviteId).
                 andOnSuccessReturn(() -> user);
     }
 
@@ -251,7 +251,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Override
     @Transactional
     public ServiceResult<Void> resendUserVerificationEmail(final UserResource user) {
-        return registrationEmailService.resendUserVerificationEmail(user);
+        return registrationNotificationService.resendUserVerificationEmail(user);
     }
 
     private ServiceResult<Void> associateUserWithCompetition(Competition competition, User user) {

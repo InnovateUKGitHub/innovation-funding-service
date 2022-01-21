@@ -113,9 +113,6 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     @Autowired
     private ApplicationProcurementMilestoneRepository applicationProcurementMilestoneRepository;
 
-
-
-
     @Override
     protected Class<ApplicationInvite> getInviteClass() {
         return ApplicationInvite.class;
