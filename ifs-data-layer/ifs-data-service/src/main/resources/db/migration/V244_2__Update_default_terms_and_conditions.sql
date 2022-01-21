@@ -6,7 +6,7 @@ SET @system_maintenance_user_id = (
     WHERE email = 'ifs_system_maintenance_user@innovateuk.org');
 
 SET @old_terms_id = 34;
-SET @new_terms_id = 63; -- 64 if loans t&c goes first
+SET @new_terms_id = 64;
 
 INSERT INTO terms_and_conditions (id, name, template, version, type, created_by, created_on, modified_by, modified_on)
 VALUES (@new_terms_id, 'Innovate UK', 'default-terms-and-conditions-v7', 7, 'GRANT',
