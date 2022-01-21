@@ -1,14 +1,18 @@
 package org.innovateuk.ifs.project.projectdetails.transactional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.PostcodeAndTownResource;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ExceptionThrowingFunction;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.invite.mapper.ProjectUserInviteMapper;
@@ -25,6 +29,7 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
@@ -213,11 +218,16 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     private ServiceResult<Void> validateIfStartDateCanBeChanged(Long projectId) {
 
-        if (isSpendProfileIsGenerated(projectId)) {
+        if (!isLoanProject(projectId) && isSpendProfileIsGenerated(projectId)) {
             return serviceFailure(PROJECT_SETUP_START_DATE_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED);
         }
 
         return serviceSuccess();
+    }
+
+    private boolean isLoanProject(long projectId) {
+        Project project = projectRepository.findById(projectId).orElse(null);
+        return project != null && project.getApplication().getCompetition().isLoan();
     }
 
     private boolean isSpendProfileIsGenerated(Long projectId) {

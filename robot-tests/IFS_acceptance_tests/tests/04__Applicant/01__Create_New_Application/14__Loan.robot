@@ -218,21 +218,46 @@ Internal user can see application details in project setup
     Then the user should see the element     jQuery = h2:contains("Applicant details")
     And the user should see the element      jQuery = h2:contains("Project finance")
 
+Internal user aprroves the spend profile
+    [Documentation]  IFS-6363
+    Given Log in as a different user        &{ifs_admin_user_credentials}
+    When the user navigates to the page     ${spend_profile}
+    Then the IFS Admin approves to SP
+    And the user clicks the button/link     jQuery = button.govuk-button:contains("Submit")
+
+Internal user checks the start date validation on complete project start date
+    [Documentation]   IFS-8747
+    Given Log in as a different user                        &{Comp_admin1_credentials}
+    And the user navigates to the page                      ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
+    When the user clicks the button/link                    jQuery = tr:contains("${loan_PS_application1}") td:contains("Review") a
+    And the user selects the radio button                   successful   successful
+    And the user enters empty data into date fields         ${EMPTY}  ${EMPTY}  ${EMPTY}
+    And the user selects the checkbox                       successfulConfirmation
+    And the user clicks the button/link                     id = mark-as-successful
+    Then the user should see a field and summary error      You must enter a valid project start date.
+    And the user should see the element                     jQuery = p:contains("Finish the next steps offline so that the loan agreement can be completed:")
+    And the user should see the element                     jQuery = li:contains("Complete the 'Know your customer' (KYC) and 'Anti-money laundering' (AML) checks.")
+
 IFS Admin can mark project as successful
-    [Documentation]  IFS-6363  IFS-9679
-    Given Log in as a different user              &{ifs_admin_user_credentials}
-    And the user navigates to the page            ${spend_profile}
-    When the IFS Admin approves to SP
-    And the user clicks the button/link           jQuery = button.govuk-button:contains("Submit")
-    And the user navigates to the page            ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
-    And the user clicks the button/link           jQuery = tr:contains("${loan_PS_application1}") td:contains("Review") a
-    Then the user marks loan as complete          successful  ${loan_PS_application1}
+    [Documentation]  IFS-6363  IFS-9679  IFS-8747
+    When the user enters empty data into date fields    01  12  2025
+    And the user clicks the button/link                 id = mark-as-successful
+    And the user should see the element                 jQuery = p:contains("Project setup is complete and was successful.")
+    Then the user should see the element                jQuery = h1:contains("Complete project setup")
+    And the user should see the element                 jQuery = p:contains("1 December 2025") span:contains("Project Start Date")
+    And the user clicks the button/link                 link = Back to project setup
+    And the user should see the element                 jQuery = tr:contains("${loan_PS_application1}") .ifs-project-status-successful
 
 Internal user can mark project as unsuccessful
-    [Documentation]  IFS-6363
-    Given the user navigates to the page     ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
-    When the user clicks the button/link     jQuery = tr:contains("${loan_PS_application2}") td:contains("Review") a
-    Then the user marks loan as complete     unsuccessful  ${loan_PS_application2}
+    [Documentation]  IFS-6363  IFS-8747
+    Given the user clicks the button/link       jQuery = tr:contains("${loan_PS_application2}") td:contains("Review") a
+    When the user selects the radio button      successful   unsuccessful
+    And the user selects the checkbox           successfulConfirmation
+    And the user clicks the button/link         id = mark-as-successful
+    Then the user should see the element        jQuery = h1:contains("Complete project setup")
+    And the user should not see the element     jQuery = span:contains("Project Start Date")
+    And the user clicks the button/link         link = Back to project setup
+    And the user should see the element         jQuery = tr:contains("${loan_PS_application2}") .ifs-project-status-unsuccessful
 
 Applicant checks successful and unsuccessful project status
     [Documentation]  IFS-6294
@@ -377,14 +402,14 @@ the external user should see the funding changes
     the user should see the element     jQuery = th:contains("Travel and subsistence") ~ td:contains("5,970")
     the user should see the element     jQuery = th:contains("Total project costs") ~ td:contains("£203,371") ~ td:contains("£207,271") ~ td:contains("£3900")
 
-the user marks loan as complete
-    [Arguments]  ${status}  ${appl_name}
-    the user selects the radio button     successful   ${status}
-    the user selects the checkbox         ${status}Confirmation
-    the user clicks the button/link       id = mark-as-${status}
-    the user should see the element       jQuery = p:contains("Project setup is complete and was ${status}.")
-    the user clicks the button/link       link = Back to project setup
-    the user should see the element       jQuery = tr:contains("${appl_name}") .ifs-project-status-${status}
+#the user marks loan as complete
+#    [Arguments]  ${status}  ${appl_name}
+#    the user selects the radio button     successful   ${status}
+#    the user selects the checkbox         ${status}Confirmation
+#    the user clicks the button/link       id = mark-as-${status}
+#    the user should see the element       jQuery = p:contains("Project setup is complete and was ${status}.")
+#    the user clicks the button/link       link = Back to project setup
+#    the user should see the element       jQuery = tr:contains("${appl_name}") .ifs-project-status-${status}
 
 the user approves the spend profile
     the user navigates to the page   ${spend_profile}
@@ -506,3 +531,9 @@ the user logs in if username field present
     ...             AND                      the user clicks the button/link   id = sign-in-cta
     #waiting for sales force to load
     Sleep  30s
+
+the user enters empty data into date fields
+    [Arguments]  ${date}  ${month}  ${year}
+    the user enters text to a text field   id = startDateDay  ${date}
+    the user enters text to a text field   id = startDateMonth   ${month}
+    the user enters text to a text field   id = startDateYear  ${year}

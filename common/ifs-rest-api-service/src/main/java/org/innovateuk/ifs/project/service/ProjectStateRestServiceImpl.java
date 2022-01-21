@@ -7,6 +7,9 @@ import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.ProjectStateCommentsResource;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import static java.lang.String.format;
 
 @Service
@@ -42,6 +45,12 @@ public class ProjectStateRestServiceImpl extends BaseRestService implements Proj
     @Override
     public RestResult<Void> markAsSuccessful(long projectId) {
         return postWithRestResult(projectRestURL + "/" + projectId + "/successful");
+    }
+
+    @Override
+    public RestResult<Void> markAsSuccessful(long projectId, LocalDate projectStartDate) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/successful?projectStartDate=" +
+                projectStartDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
     }
 
     @Override

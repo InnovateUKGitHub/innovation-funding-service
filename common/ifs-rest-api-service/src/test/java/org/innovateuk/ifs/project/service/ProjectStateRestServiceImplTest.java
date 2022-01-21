@@ -6,6 +6,9 @@ import org.innovateuk.ifs.project.state.OnHoldReasonResource;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -71,6 +74,17 @@ public class ProjectStateRestServiceImplTest extends BaseRestServiceUnitTest<Pro
         setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/successful", null, OK );
         RestResult<Void> result = service.markAsSuccessful(projectId);
         setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/successful", Void.class);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void markAsSuccessfulLoan() {
+        long projectId = 123L;
+        LocalDate projectStartDate = LocalDate.now().plusDays(10);
+        String projectStartDateStr = projectStartDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/successful?projectStartDate=" + projectStartDateStr, null, OK );
+        RestResult<Void> result = service.markAsSuccessful(projectId, projectStartDate);
+        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/successful?projectStartDate=" + projectStartDateStr, Void.class);
         assertTrue(result.isSuccess());
     }
 

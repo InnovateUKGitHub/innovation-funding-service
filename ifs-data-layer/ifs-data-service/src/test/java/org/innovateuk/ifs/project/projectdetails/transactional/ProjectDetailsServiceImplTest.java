@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.projectdetails.transactional;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
@@ -11,6 +12,8 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.invite.mapper.ProjectUserInviteMapper;
@@ -156,9 +159,11 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     private Long projectId = 123L;
     private Long applicationId = 456L;
+    private Long competitionId = 789L;
     private Long userId = 7L;
     private Long otherUserId = 8L;
 
+    private Competition competition;
     private Application application;
     private Organisation organisation;
     private User user;
@@ -192,13 +197,17 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 withUser(user).
                 build();
 
+        competition = newCompetition()
+                .withId(competitionId)
+                .build();
+
         application = newApplication().
                 withId(applicationId).
                 withProcessRoles(leadApplicantProcessRole).
                 withName("My Application").
                 withDurationInMonths(5L).
                 withStartDate(LocalDate.of(2017, 3, 2)).
-                withCompetition(newCompetition().build()).
+                withCompetition(competition).
                 build();
 
         project = newProject().
@@ -350,7 +359,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         LocalDate now = LocalDate.now();
         LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
 
-        Project existingProject = newProject().build();
+        Project existingProject = newProject()
+                .withApplication(application)
+                .build();
         assertNull(existingProject.getTargetStartDate());
 
         List<SpendProfile> spendProfiles = SpendProfileBuilder.newSpendProfile().build(2);
@@ -362,9 +373,39 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(PROJECT_SETUP_START_DATE_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED));
 
-        verify(projectRepositoryMock, never()).findById(123L);
+        verify(projectRepositoryMock, times(1)).findById(123L);
         verify(spendProfileRepositoryMock).findByProjectId(123L);
         assertNull(existingProject.getTargetStartDate());
+    }
+
+    @Test
+    public void updateLoanProjectStartDateWhenSpendProfileHasAlreadyBeenGenerated() {
+
+        LocalDate now = LocalDate.now();
+        LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
+
+        Competition competition = newCompetition()
+                .withFundingType(FundingType.LOAN)
+                .build();
+        Application application = newApplication()
+                .withCompetition(competition)
+                .build();
+        Project existingProject = newProject()
+                .withApplication(application)
+                .build();
+        assertNull(existingProject.getTargetStartDate());
+
+        List<SpendProfile> spendProfiles = SpendProfileBuilder.newSpendProfile().build(2);
+
+        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(existingProject));
+        when(spendProfileRepositoryMock.findByProjectId(123L)).thenReturn(spendProfiles);
+
+        ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
+        assertTrue(updateResult.isSuccess());
+
+        verify(projectRepositoryMock, times(2)).findById(123L);
+        verify(spendProfileRepositoryMock, never()).findByProjectId(123L);
+        assertNotNull(existingProject.getTargetStartDate());
     }
 
     @Test
@@ -386,7 +427,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         LocalDate now = LocalDate.now();
         LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
 
-        Project existingProject = newProject().build();
+        Project existingProject = newProject()
+                .withApplication(application)
+                .build();
         assertNull(existingProject.getTargetStartDate());
 
         when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(existingProject));
@@ -394,7 +437,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
         assertTrue(updateResult.isSuccess());
 
-        verify(projectRepositoryMock).findById(123L);
+        verify(projectRepositoryMock, times(2)).findById(123L);
         assertEquals(validDate, existingProject.getTargetStartDate());
     }
 
