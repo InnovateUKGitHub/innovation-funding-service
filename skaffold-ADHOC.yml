@@ -77,7 +77,7 @@ profiles:
       statusCheckDeadlineSeconds: 600
       kustomize:
         paths:
-          - os-files/kustomize/env/stub/local/adhoc/finance-data-service
+          - os-files/kustomize/env/stub/local/adhoc/survey-data-service
   - name: data-service-alerts
     build:
       artifacts:
