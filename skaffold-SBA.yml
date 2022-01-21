@@ -1,0 +1,24 @@
+apiVersion: skaffold/v2beta11
+kind: Config
+metadata:
+  name: innovation-funding-service
+build:
+  local:
+    useDockerCLI: false
+    useBuildkit: false
+    tryImportMissing: false
+    push: false
+  tagPolicy:
+    gitCommit:
+      ignoreChanges: true
+  artifacts:
+    - image: sba
+      context: .
+      jib:
+        type: gradle
+        project: ifs-tools:sba
+deploy:
+  statusCheckDeadlineSeconds: 600
+  kustomize:
+    paths:
+      - os-files/kustomize/env/stub/local/sba

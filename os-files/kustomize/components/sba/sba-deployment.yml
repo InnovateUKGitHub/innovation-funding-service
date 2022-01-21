@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sba
+  annotations:
+    pullSecrets: pullSecrets
+spec:
+  selector:
+    matchLabels:
+      app: sba
+  template:
+    metadata:
+      labels:
+        app: sba
+    spec:
+      containers:
+        - name: spring-boot-admin
+          image: sba
+          ports:
+            - containerPort: 7443

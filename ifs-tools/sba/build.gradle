@@ -1,0 +1,19 @@
+apply from: rootProject.file("gradle-support/java.gradle")
+
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.springframework.boot'
+
+apply from: rootProject.file("gradle-support/jib.gradle")
+
+group 'innovateuk'
+version project.version
+
+dependencies {
+    implementation enforcedPlatform ("org.springframework.boot:spring-boot-dependencies:2.4.12")
+    implementation enforcedPlatform("org.springframework.cloud:spring-cloud-dependencies:2020.0.3")
+
+    implementation "de.codecentric:spring-boot-admin-starter-server:2.5.5"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+//    implementation "org.springframework.cloud:spring-cloud-starter-kubernetes-client-all"
+}

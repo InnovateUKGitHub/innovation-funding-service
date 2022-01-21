@@ -1,0 +1,9 @@
+spring:
+  applicaton:
+    name: sba
+  cloud:
+    kubernetes:
+      discovery:
+        all-namespaces: true
+        service-labels:
+          spring-boot: true
