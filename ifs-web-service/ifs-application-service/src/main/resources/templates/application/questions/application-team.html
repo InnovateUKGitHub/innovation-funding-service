@@ -85,6 +85,11 @@
                                     <td class="govuk-table__cell"ifs:utext="${organisation.address.getAsInternationalTwoLine()}">1 my lane, france, 1234</td>
                                     <td class="govuk-table__cell alignright"><a class="govuk-link" th:if="${organisation.userBelongsToOrganisation and !model.readOnly}" th:href="@{{base}/organisation/{organisationId}/address(base=${#ifsUtil.formPostUri(#httpServletRequest)},organisationId=${organisation.id})}">Edit</a></td>
                                 </tr>
+                                <tr class="govuk-table__row" th:if="${organisation.companiesHouseNumber != null && (organisation.isBusiness() || organisation.isRTO() || organisation.isPublicSectorOrCharity())}" >
+                                    <td class="govuk-table__cell">Company registration number</td>
+                                    <td class="govuk-table__cell"th:text="${organisation.companiesHouseNumber}">Company Registration Number</td>
+                                    <td class="govuk-table__cell"></td>
+                                </tr>
                             </tbody>
                         </table>
                     </th:block>
