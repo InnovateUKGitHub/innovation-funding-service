@@ -2421,11 +2421,16 @@
                 th:if="${model.isReadOnly()}">
                 <th:block th:insert="application/your-project-costs-fragments :: associate_development_costs_read_only"/>
             </th:block>
-            <th:block
-                th:unless="${model.isReadOnly()}">
-                <th:block  th:unless="${model.internal}">
-                    <p class="govuk-body">These costs are for any development training the associate needs for this project and for their all-round development.</p>
-                    <p class="govuk-body">You cannot exceed the allowable limit.</p>
+            <th:block th:unless="${model.isReadOnly()}">
+                <th:block th:unless="${model.internal}">
+                    <th:block th:if="${model.ktpCompetition}">
+                        <p class="govuk-body">This supports the associate’s personal and professional development.</p>
+                        <p class="govuk-body">A full description of allowable costs can be found in the <a class="govuk-link" href="https://www.ukri.org/councils/innovate-uk/guidance-for-applicants/costs-we-fund/costs-guidance-for-knowledge-transfer-partnerships/" target="_blank"> KTP Project costs guidance</a> (opens in a new tab).</p>
+                    </th:block>
+                    <th:block th:unless="${model.ktpCompetition}">
+                        <p class="govuk-body">These costs are for any development training the associate needs for this project and for their all-round development.</p>
+                        <p class="govuk-body">You cannot exceed the allowable limit.</p>
+                    </th:block>
                 </th:block>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="associate-development-costs-table">
@@ -2587,10 +2592,12 @@
                 th:if="${model.isReadOnly()}">
                 <th:block th:insert="application/your-project-costs-fragments :: associate_support_read_only"/>
             </th:block>
-            <th:block
-                th:unless="${model.isReadOnly()}">
-                <th:block  th:unless="${model.internal}">
+            <th:block th:unless="${model.isReadOnly()}">
+                <th:block th:unless="${model.internal}">
                     <p class="govuk-body">These are the costs of managing the associate, such as computing, personnel admin, learning resources and secretariat support to the local management committee (LMC).</p>
+                    <th:block th:if="${model.ktpCompetition}">
+                        <p class="govuk-body">A full description of allowable costs can be found in the <a class="govuk-link" href="https://www.ukri.org/councils/innovate-uk/guidance-for-applicants/costs-we-fund/costs-guidance-for-knowledge-transfer-partnerships/" target="_blank">KTP Project costs guidance</a> (opens in a new tab).</p>
+                    </th:block>
                 </th:block>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="associate-support-table">
@@ -2763,12 +2770,17 @@
                 th:if="${model.isReadOnly()}">
                 <th:block th:insert="application/your-project-costs-fragments :: estate_costs_read_only"/>
             </th:block>
-            <th:block
-                th:unless="${model.isReadOnly()}">
-                <th:block  th:unless="${model.internal}">
-                    <p class="govuk-body">This is usually zero because the associate is normally located at the knowledge base partner’s premises.</p>
-                    <p class="govuk-body">A knowledge base partner may request additional funding, which is capped at £10,000 per project.</p>
-                    <p class="govuk-body">We rarely allow the allowable limit to be exceeded, but if you have an exceptional reason for doing so, please provide a detailed explanation.</p>
+            <th:block th:unless="${model.isReadOnly()}">
+                <th:block th:unless="${model.internal}">
+                    <th:block th:if="${model.ktpCompetition}">
+                        <p class="govuk-body">This is usually zero because the associate is normally located at the knowledge base partner’s premises.</p>
+                        <p class="govuk-body">A full description of allowable costs can be found in the <a class="govuk-link" href="https://www.ukri.org/councils/innovate-uk/guidance-for-applicants/costs-we-fund/costs-guidance-for-knowledge-transfer-partnerships/" target="_blank">KTP Project costs guidance</a> (opens in a new tab).</p>
+                    </th:block>
+                    <th:block th:unless="${model.ktpCompetition}">
+                        <p class="govuk-body">This is usually zero because the associate is normally located at the knowledge base partner’s premises.</p>
+                        <p class="govuk-body">A knowledge base partner may request additional funding, which is capped at £10,000 per project.</p>
+                        <p class="govuk-body">We rarely allow the allowable limit to be exceeded, but if you have an exceptional reason for doing so, please provide a detailed explanation.</p>
+                    </th:block>
                 </th:block>
                 <div class="govuk-form-group table-overflow" id="estateCostRows">
                     <table class="govuk-table" id="estate-costs-table">
@@ -3245,25 +3257,30 @@
             <th:block th:if="${model.isReadOnly()}">
                 <th:block th:insert="application/your-project-costs-fragments :: consumables_read_only"/>
             </th:block>
-            <th:block
-                th:unless="${model.isReadOnly()}">
-                <th:block  th:unless="${model.internal}">
-                <p class="govuk-body">Please provide a breakdown of the consumables you expect to use for the proposed projects.</p>
-                <details class="govuk-details" role="group">
-                    <summary class="govuk-details__summary">
-                        <span class="govuk-details__summary-text">Consumables costs guidance</span>
-                    </summary>
-                    <div class="govuk-details__text">
+            <th:block th:unless="${model.isReadOnly()}">
+                <th:block th:unless="${model.internal}">
+                    <th:block th:if="${model.ktpCompetition}">
+                        <p class="govuk-body">Please provide a breakdown of the consumables you expect to use for the proposed projects.</p>
+                        <details class="govuk-details" role="group">
+                            <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text">Consumables costs guidance</span>
+                            </summary>
+                            <div class="govuk-details__text">
+                                <p class="govuk-body">The consumables budget is a standard contribution towards the consumable items needed to complete these projects.</p>
+                                <p class="govuk-body">They can include the associate’s personal computer, but not capital items that the business partner will use after the project has been completed.</p>
+                                <p class="govuk-body">You also need to allocate each item to the relevant section in the project plan in the ‘Item description and project plan section’ boxes below.</p>
+                                <p class="govuk-body govuk-!-margin-0">You can claim the costs of materials used on the projects providing:</p>
+                                <ul class="govuk-list govuk-list--bullet">
+                                    <li>they are not already purchased or included in the overheads</li>
+                                    <li>they are purchased from third parties</li>
+                                </ul>
+                            </div>
+                        </details>
+                    </th:block>
+                    <th:block th:unless="${model.ktpCompetition}">
                         <p class="govuk-body">The consumables budget is a standard contribution towards the consumable items needed to complete these projects.</p>
-                        <p class="govuk-body">They can include the associate’s personal computer, but not capital items that the business partner will use after the project has been completed.</p>
-                        <p class="govuk-body">You also need to allocate each item to the relevant section in the project plan in the ‘Item description and project plan section’ boxes below.</p>
-                        <p class="govuk-body govuk-!-margin-0">You can claim the costs of materials used on the projects providing:</p>
-                        <ul class="govuk-list govuk-list--bullet">
-                            <li>they are not already purchased or included in the overheads</li>
-                            <li>they are purchased from third parties</li>
-                        </ul>
-                    </div>
-                </details>
+                        <p class="govuk-body">A full description of allowable costs can be found in the <a class="govuk-link" href="https://www.ukri.org/councils/innovate-uk/guidance-for-applicants/costs-we-fund/costs-guidance-for-knowledge-transfer-partnerships/" target="_blank">KTP Project costs guidance</a> (opens in a new tab).</p>
+                    </th:block>
                 </th:block>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="material-costs-table">
@@ -3478,8 +3495,13 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly()}">
-                <th:block  th:unless="${model.internal}">
-                    <p class="govuk-body">This is the cost of the knowledge base supervisor in the partnership and their indirect cost element.</p>
+                <th:block th:unless="${model.internal}">
+                    <th:block th:if="${model.ktpCompetition}">
+                        <p class="govuk-body">A full description of allowable costs can be found in the <a class="govuk-link" href="https://www.ukri.org/councils/innovate-uk/guidance-for-applicants/costs-we-fund/costs-guidance-for-knowledge-transfer-partnerships/" target="_blank">KTP Project costs guidance</a> (opens in a new tab).</p>
+                    </th:block>
+                    <th:block th:unless="${model.ktpCompetition}">
+                        <p class="govuk-body">This is the cost of the knowledge base supervisor in the partnership and their indirect cost element.</p>
+                    </th:block>
                 </th:block>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="knowledge-base-table">
