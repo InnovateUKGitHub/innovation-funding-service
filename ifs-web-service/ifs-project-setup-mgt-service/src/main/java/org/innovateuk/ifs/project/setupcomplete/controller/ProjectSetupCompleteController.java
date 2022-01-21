@@ -1,15 +1,11 @@
 package org.innovateuk.ifs.project.setupcomplete.controller;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.Application;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.project.projectdetails.service.ProjectDetailsRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.service.ProjectStateRestService;
@@ -104,7 +100,7 @@ public class ProjectSetupCompleteController {
                             ErrorToObjectErrorConverterFactory.toField("startDate"),
                             ErrorToObjectErrorConverterFactory.asGlobalErrors());
                 } else{
-                    validationHandler.addAnyErrors(projectStateRestService.markAsSuccessful(projectId));
+                    validationHandler.addAnyErrors(projectStateRestService.markAsSuccessful(projectId, null));
                 }
             } else {
                 validationHandler.addAnyErrors(projectStateRestService.markAsUnsuccessful(projectId));

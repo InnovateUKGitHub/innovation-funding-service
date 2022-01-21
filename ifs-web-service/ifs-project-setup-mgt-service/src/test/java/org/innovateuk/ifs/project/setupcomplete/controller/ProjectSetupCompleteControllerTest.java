@@ -95,11 +95,10 @@ public class ProjectSetupCompleteControllerTest extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void saveProjectStateLoan_success() throws Exception {
+    public void saveProjectStateLoanStartAndSetupComplete_success() throws Exception {
         when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
-        when(projectStateRestService.markAsSuccessful(projectId)).thenReturn(restSuccess());
-
+        when(projectStateRestService.markAsSuccessful(projectId, null)).thenReturn(restSuccess());
         mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/loan-setup-complete", competitionId, projectId)
                 .param("successful", "true")
                 .param("successfulConfirmation", "true")
@@ -108,7 +107,7 @@ public class ProjectSetupCompleteControllerTest extends BaseControllerMockMVCTes
                 .param("startDateDay", String.valueOf(projectStartDate.getDayOfMonth())))
                 .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/setup-complete", competitionId, projectId)));
 
-        verify(projectStateRestService).markAsSuccessful(projectId);
+          verify(projectStateRestService).markAsSuccessful(projectId, null);
     }
 
     @Test
