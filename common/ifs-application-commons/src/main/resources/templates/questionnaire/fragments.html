@@ -52,11 +52,7 @@
             </div>
         </div>
     </th:block>
-
-    <th:block th:insert="application/readonly/question-read-only :: subsidy-basis(${model.answers.questions.answer})" />
-
-    <!-- <th:block th:insert="questionnaire/fragments :: answer-table(${model.answers})" /> -->
-
+    <th:block th:insert="questionnaire/fragments :: answer-table(${model.answers})" />
     <th:block th:if="${model.readOnly}">
     </th:block>
     <div th:if="${model.open}" class="form-footer">

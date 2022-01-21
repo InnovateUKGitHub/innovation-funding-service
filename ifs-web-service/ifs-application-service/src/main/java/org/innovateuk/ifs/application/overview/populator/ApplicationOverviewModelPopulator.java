@@ -217,15 +217,15 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
     private boolean isSubsidyBasisComplete(ApplicationOverviewData data, QuestionResource question) {
         boolean completeForOrganisation = data.getStatuses().get(question.getId())
                 .stream()
-                .anyMatch(status -> status.getMarkedAsComplete() != null && status.getMarkedAsComplete());
-
+                .anyMatch(questionStatus -> questionStatus.getMarkedAsComplete() != null && questionStatus.getMarkedAsComplete());
         boolean leadOrganisation = data.getLeadApplicant().getOrganisationId().equals(data.getOrganisation().getId());
 
-        boolean completeForAll = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(question.getId(), data.getApplication().getId()).getSuccess()
-                .stream()
-                .allMatch(questionStatus -> questionStatus.getMarkedAsComplete());
+        long totalOrganisations = organisationRestService.getOrganisationsByApplicationId(data.getApplication().getId()).getSuccess().size();
+        long answeredOrganisations = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(question.getId(), data.getApplication().getId()).getSuccess().stream()
+                .filter(questionStatus -> questionStatus.getMarkedAsComplete() != null && questionStatus.getMarkedAsComplete()).count();
+        boolean completeForAll = totalOrganisations == answeredOrganisations;
 
-        return !leadOrganisation && completeForOrganisation || completeForAll;
+        return (!leadOrganisation && completeForOrganisation) || completeForAll;
     }
 
     private static boolean isTermsAndConditionsComplete(ApplicationOverviewData data, QuestionResource question, SectionResource section) {
