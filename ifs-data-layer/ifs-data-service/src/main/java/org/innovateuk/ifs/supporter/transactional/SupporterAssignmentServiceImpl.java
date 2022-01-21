@@ -16,6 +16,7 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.util.DateUtil;
 import org.innovateuk.ifs.workflow.audit.ProcessHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -124,6 +127,7 @@ public class SupporterAssignmentServiceImpl extends BaseTransactionalService imp
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationId", application.getId());
         notificationArguments.put("applicationName", application.getName());
+        notificationArguments.put("applicationDeadline", getFormattedApplicationDeadline(application));
         notificationArguments.put("link", format("%s/assessment/supporter/dashboard", webBaseUrl));
         Notification notification = new Notification(systemNotificationSource, recipient, Notifications.ASSIGN_SUPPORTER, notificationArguments);
         return notificationService.sendNotificationWithFlush(notification, NotificationMedium.EMAIL);
@@ -246,4 +250,11 @@ public class SupporterAssignmentServiceImpl extends BaseTransactionalService imp
         return find(supporterAssignmentRepository.findById(assignmentId), notFoundError(SupporterAssignment.class, assignmentId));
     }
 
+    private String getFormattedApplicationDeadline(Application application) {
+        ZonedDateTime deadline = application.getCompetition().getSubmissionDate();
+        return deadline == null ? "" : deadline.format(DateTimeFormatter.ofPattern(String.format(
+                "%s EEEE dd'%s' MMMM yyyy",
+                (deadline.getHour() == 12 ? "'midday'" : "hh:mma"),
+                DateUtil.getOrdinalDaySuffix(deadline.getDayOfMonth()))));
+    }
 }

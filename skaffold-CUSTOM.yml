@@ -4,6 +4,11 @@ metadata:
   name: innovation-funding-service
 build:
   artifacts:
+    - image: application-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-web-service:ifs-application-service
     - image: data-service
       context: .
       jib:

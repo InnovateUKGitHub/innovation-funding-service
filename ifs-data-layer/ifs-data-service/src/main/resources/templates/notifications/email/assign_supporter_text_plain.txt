@@ -2,11 +2,13 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name}
 
-You have been invited to review this application for support opportunities:
+You have been invited to review this application and tell us if you are interested in supporting it.
 
 ${applicationId} : ${applicationName}
 
 You will be able to decide if your organisation wishes to offer support and provide feedback to the applicant.
+
+The deadline to review this application is ${applicationDeadline}.
 
 ${link}
 
