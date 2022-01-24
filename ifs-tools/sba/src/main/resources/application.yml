@@ -11,3 +11,8 @@ spring:
       discovery:
         converter:
           management-context-path: /monitoring
+
+ifs:
+  sba:
+    username: ${IFS_SBA_USERNAME}
+    password: ${IFS_SBA_PASSWORD}

@@ -18,3 +18,15 @@ spec:
           image: sba
           ports:
             - containerPort: 7443
+          env:
+            - name: IFS_SBA_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: sba-secret
+                  key: IFS_SBA_USERNAME
+            - name: IFS_SBA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sba-secret
+                  key: IFS_SBA_PASSWORD
+
