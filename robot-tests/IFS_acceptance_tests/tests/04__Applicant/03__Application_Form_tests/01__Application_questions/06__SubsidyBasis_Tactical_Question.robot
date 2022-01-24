@@ -26,11 +26,12 @@ Lead can mark the subsidy basis as complete when no partner invited
 
 Lead subsidy basis question status marked as incomplete when partner not submitted their input for subsidy basis
     [Documentation]   IFS-10072
-    Given the lead invites already registered user     ${collaborator1_credentials["email"]}  ${subsidyControlTacticalComp}
-    When logging in and error checking                 jessica.doe@ludlow.co.uk  ${short_password}
-    And log in as a different user                     &{lead_applicant_credentials}
-    And the user clicks the button/link                ${tacticalApplication}
-    Then the user should see the element               jQuery = li:contains("Subsidy basis") > .task-status-incomplete
+    Given the lead invites already registered user          ${collaborator1_credentials["email"]}  ${subsidyControlTacticalComp}
+    When logging in and error checking                      jessica.doe@ludlow.co.uk  ${short_password}
+    And log in as a different user                          &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
+    And the user clicks the button/link                     link = ${tacticalApplication}
+    Then the user should see the element                    jQuery = li:contains("Subsidy basis") > .task-status-incomplete
 
 Lead gets a validation message when partner does not input their subsidy basis
     [Documentation]   IFS-10072
