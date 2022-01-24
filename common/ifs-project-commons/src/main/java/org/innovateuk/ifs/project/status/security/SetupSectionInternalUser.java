@@ -137,7 +137,7 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessProjectSetupComplete(UserResource user) {
-        if (user.hasAuthority(Authority.PROJECT_FINANCE)
+        if ((user.hasAuthority(Authority.PROJECT_FINANCE) || user.hasAuthority(Authority.COMP_ADMIN))
                 && documentsApproved()
                 && projectSetupProgressChecker.isSpendProfileApproved()) {
             return ACCESSIBLE;

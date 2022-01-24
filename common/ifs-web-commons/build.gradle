@@ -19,6 +19,7 @@ dependencies {
     implementation "javax.servlet:javax.servlet-api"
     implementation "org.apache.commons:commons-lang3"
     implementation "javax.validation:validation-api"
+    implementation "javax.annotation:javax.annotation-api"
 
     testImplementation "junit:junit"
 
