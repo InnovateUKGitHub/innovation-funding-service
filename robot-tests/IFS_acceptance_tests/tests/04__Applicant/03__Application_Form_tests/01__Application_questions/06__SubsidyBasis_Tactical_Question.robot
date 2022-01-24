@@ -17,7 +17,7 @@ Lead can mark the subsidy basis as complete when no partner invited
     Given existing user creates a new application    ${subsidyControlTacticalComp}
     And the user clicks the button/link              link = Application details
     And the user completes application details       ${tacticalApplication}  ${tomorrowday}  ${month}  ${nextyear}
-    When the user should see the element             link = Subsidy basis
+    When the user clicks the button/link             link = Subsidy basis
     And the user clicks the button twice             jQuery = label:contains("Yes")
     And the user clicks the button/link              id = application-question-complete
     Then the user should see the element             jQuery = p:contains("Yes")
