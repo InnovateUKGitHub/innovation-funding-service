@@ -114,7 +114,7 @@ the user check for valid content on front end for open ended competitions
     Then the user check for valid content on front end
 
 the user should see the disabled send notification and release feedback button
-    [Documentation]  IFS-9750 IFS-8952
+    [Documentation]  IFS-9750
     Given the user navigates to the page     ${CA_Live}
     When the user clicks the button/link     link = ${openEndedCompName}
     Then the user should see the element     css = [disabled='disabled']
@@ -272,7 +272,7 @@ Internal user sees valid information on dashboard
 
 internal user inputs the decision and send the notification with feedback
     [Documentation]  IFS-8855 IFS-9739
-    Given the user inputs the funding decision for applications
+    Given the user inputs the funding decision for applications  1
     And The user clicks the button/link                              link = Input and review funding decision
     And the user should see the element                              jQuery =a:contains("${webTestAppID}")
     And The user should not see the element                          jQuery =a:contains("${applicationName}")
@@ -301,6 +301,19 @@ Comp admin manages the assessors
     And the user clicks the button/link        link = Back to choose an assessment period to manage assessors
     And the user clicks the button/link        link = Back to manage assessments
 
+Comp admin can see the open ended competition in project setup/previous dashboard
+    [Documentation]  IFS-8952
+    Given the user clicks the button/link          jQuery = button:contains("Close assessment")
+    And the user navigates to the page             ${server}/management/assessment/competition/${webTestCompID}
+    And update milestone to yesterday              ${webTestCompID}  SUBMISSION_DATE
+    And The user navigates to the page             ${server}/management/competition/${webTestCompID}
+    And the user inputs the funding decision for applications  2
+    And the user sends notification and releases feedback
+    And The user navigates to the page             ${server}/management/competition/${webTestCompID}
+    When The user clicks the button/link           link = Close competition
+    And The user clicks the button/link            jQuery = button:contains("Close competition")
+    Then the user should see the competition in project setup/previous dashboard and can not see on live dashboard
+
 Supporter can review open ended ktp competition applications
     [Documentation]  IFS-9785
     Given log in as a different user          &{supporter_credentials}
@@ -321,12 +334,6 @@ Auditor can view j-ES form for the submitted application
     When the user clicks the button/link                 jQuery = a:contains(".pdf (opens in a new window)")
     Then the user should not see an error in the page
 
-Comp admin can see the close competition button as a enabled
-    [Documentation]  IFS-8952
-    Given Log in as a different user               &{ifs_admin_user_credentials}
-    And the user navigates to the page             ${server}/management/competition/${webTestCompID}
-    When The user clicks the button/link           link = Close competition
-    Then The user should see the element           jQuery = button:contains("Close competition")
 
 *** Keywords ***
 Custom suite setup
@@ -466,8 +473,9 @@ the user sees valid open ended competition details
     the user should see the element      jQuery = h3:contains("Funding decision and assessment feedback")
 
 the user inputs the funding decision for applications
+    [Arguments]  ${rowNo}
     the user clicks the button/link     link = Input and review funding decision
-    the user clicks the button/link     id = app-row-1
+    the user clicks the button/link     id = app-row-${rowNo}
     the user clicks the button/link     jQuery = button:contains("Successful")
     the user clicks the button/link     link = Competition
 
@@ -549,4 +557,13 @@ Assessor submits the assessment
     the user clicks the button/link         jQuery = li:contains("Always open application awaiting assessment") label[for^="assessmentIds"]
     the user clicks the button/link         jQuery = .govuk-button:contains("Submit assessments")
     the user clicks the button/link         jQuery = button:contains("Yes I want to submit the assessments")
+
+the user should see the competition in project setup/previous dashboard and can not see on live dashboard
+    the user navigates to the page       ${server}/management/dashboard/project-setup
+    The user should see the element      jQuery = a:contains("${webTestCompName}")
+    the user navigates to the page       ${server}/management/competition/${webTestCompID}/previous
+    The user should see the element      jQuery = a:contains("${webTestCompName}")
+    the user navigates to the page       ${server}/management/dashboard/live
+    the user should not see the element  jQuery = a:contains("${webTestCompName}")
+
 
