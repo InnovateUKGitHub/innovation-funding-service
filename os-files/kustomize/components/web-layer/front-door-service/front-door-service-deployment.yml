@@ -72,6 +72,11 @@ spec:
                 configMapKeyRef:
                   name: feature-toggle-config
                   key: IFS_LOAN_PARTB_ENABLED
+            - name: IFS_KTP_PHASE2_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: feature-toggle-config
+                  key: IFS_KTP_PHASE2_ENABLED
             - name: IFS_WEB_BASEURL
               valueFrom:
                 configMapKeyRef:
