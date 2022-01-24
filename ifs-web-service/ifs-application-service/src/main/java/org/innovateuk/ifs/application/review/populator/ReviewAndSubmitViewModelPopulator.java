@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.review.populator;
 
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.overview.ApplicationOverviewData;
 import org.innovateuk.ifs.application.readonly.populator.ApplicationReadOnlyViewModelPopulator;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 
+@Slf4j
 @Component
 public class ReviewAndSubmitViewModelPopulator {
 
@@ -58,16 +60,18 @@ public class ReviewAndSubmitViewModelPopulator {
     }
 
     private boolean isWaitingForPartnerSubsidyBasisOnly(ApplicationResource application, CompetitionResource competition) {
-        QuestionResource question = questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), QuestionSetupType.NORTHERN_IRELAND_DECLARATION).getSuccess();
-        List<QuestionStatusResource> questionStatuses = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(question.getId(), application.getId()).getSuccess();
-
-        boolean completedByLeadOrganisation = questionStatuses
-                .stream()
-                .anyMatch(questionStatus -> questionStatus.getMarkedAsCompleteByOrganisationId() == application.getLeadOrganisationId() &&
-                        questionStatus.getMarkedAsComplete() != null && questionStatus.getMarkedAsComplete());
-        boolean completeByAll = questionStatuses.stream()
-                .allMatch(questionStatus -> questionStatus.getMarkedAsComplete() != null && questionStatus.getMarkedAsComplete());
-
-        return completedByLeadOrganisation && (!completeByAll);
+        return questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), QuestionSetupType.NORTHERN_IRELAND_DECLARATION)
+                .handleSuccessOrFailure(failure -> false,       // TODO at the moment only subsidy-tactical competition needs this checking, subsidy-strategic is not handled yet
+                        question -> {
+                            List<QuestionStatusResource> questionStatuses = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(question.getId(), application.getId()).getSuccess();
+                            boolean completedByLeadOrganisation = questionStatuses
+                                    .stream()
+                                    .anyMatch(questionStatus -> questionStatus.getMarkedAsCompleteByOrganisationId() == application.getLeadOrganisationId() &&
+                                            questionStatus.getMarkedAsComplete() != null && questionStatus.getMarkedAsComplete());
+                            boolean completeByAll = questionStatuses.stream()
+                                    .allMatch(questionStatus -> questionStatus.getMarkedAsComplete() != null && questionStatus.getMarkedAsComplete());
+                            return completedByLeadOrganisation && (!completeByAll);
+                        }
+                );
     }
 }
