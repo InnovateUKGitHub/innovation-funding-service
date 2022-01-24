@@ -303,15 +303,16 @@ Comp admin manages the assessors
 
 Comp admin can see the open ended competition in project setup/previous dashboard
     [Documentation]  IFS-8952
-    Given the user clicks the button/link          jQuery = button:contains("Close assessment")
-    And the user navigates to the page             ${server}/management/assessment/competition/${webTestCompID}
-    And update milestone to yesterday              ${webTestCompID}  SUBMISSION_DATE
-    And The user navigates to the page             ${server}/management/competition/${webTestCompID}
+    Given the user clicks the button/link                      jQuery = button:contains("Close assessment")
+    And the user navigates to the page                         ${server}/management/assessment/competition/${webTestCompID}
+    And update milestone to yesterday                          ${webTestCompID}  SUBMISSION_DATE
+    And The user navigates to the page                         ${server}/management/competition/${webTestCompID}
     And the user inputs the funding decision for applications  2
     And the user sends notification and releases feedback
-    And The user navigates to the page             ${server}/management/competition/${webTestCompID}
-    When The user clicks the button/link           link = Close competition
-    And The user clicks the button/link            jQuery = button:contains("Close competition")
+    And the user refreshes until element appears on page       jQuery = td:contains("Sent")
+    And The user navigates to the page                         ${server}/management/competition/${webTestCompID}
+    When The user clicks the button/link                       link = Close competition
+    And The user clicks the button/link                        jQuery = button:contains("Close competition")
     Then the user should see the competition in project setup/previous dashboard and can not see on live dashboard
 
 Supporter can review open ended ktp competition applications
