@@ -28,6 +28,7 @@ Lead subsidy basis question status marked as incomplete when partner not submitt
     [Documentation]   IFS-10072
     Given the lead invites already registered user          ${collaborator1_credentials["email"]}  ${subsidyControlTacticalComp}
     When logging in and error checking                      jessica.doe@ludlow.co.uk  ${short_password}
+    And the user clicks the button/link                     css = .govuk-button[type="submit"]    #Save and continue
     And log in as a different user                          &{lead_applicant_credentials}
     And the user clicks the application tile if displayed
     And the user clicks the button/link                     link = ${tacticalApplication}
