@@ -1,2 +1,13 @@
 server:
   port: 7443
+spring:
+  cloud:
+    kubernetes:
+      discovery:
+        include-not-ready-addresses: true
+        all-namespaces: true
+  boot:
+    admin:
+      discovery:
+        converter:
+          management-context-path: /monitoring
