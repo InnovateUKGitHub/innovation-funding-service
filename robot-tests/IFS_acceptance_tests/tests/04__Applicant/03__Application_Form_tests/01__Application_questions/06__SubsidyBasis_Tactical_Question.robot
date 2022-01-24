@@ -16,7 +16,7 @@ Lead can mark the subsidy basis as complete when no partner invited
     [Documentation]    IFS-10072
     Given existing user creates a new application    ${subsidyControlTacticalComp}
     And the user clicks the button/link              link = Application details
-    And the user fills in the Application details    ${tacticalApplication}  ${tomorrowday}  ${month}  ${nextyear}
+    And the user completes application details       ${tacticalApplication}  ${tomorrowday}  ${month}  ${nextyear}
     When the user should see the element             link = Subsidy basis
     And the user clicks the button twice             jQuery = label:contains("Yes")
     And the user clicks the button/link              id = application-question-complete
@@ -46,6 +46,16 @@ Custom Suite Setup
     Set predefined date variables
     The user logs-in in new browser    &{lead_applicant_credentials}
 
+the user completes application details
+    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user should see the element       jQuery = h1:contains("Application details")
+    the user enters text to a text field  id = name  ${appTitle}
+    the user enters text to a text field  id = startDate  ${tomorrowday}
+    the user enters text to a text field  css = #application_details-startdate_month  ${month}
+    the user enters text to a text field  css = #application_details-startdate_year  ${nextyear}
+    the user enters text to a text field  css = [id="durationInMonths"]  24
+    the user can mark the question as complete
+    the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
 
 Custom suite teardown
     The user closes the browser
