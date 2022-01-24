@@ -185,9 +185,6 @@ public class RegistrationController {
         ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
 
         String hash = cookieUtil.getCookieValue(request, "invite_hash");
-
-        // ApplicationInviteResource applicationInviteResource = inviteRestService.getInviteByHash(hash).getSuccess();
-
         RestResult<ApplicationInviteResource> inviteResponse = inviteRestService.getInviteByHash(hash);
 
         Long inviteId = inviteResponse.isFailure() ? null : inviteResponse.getSuccess().getId();
