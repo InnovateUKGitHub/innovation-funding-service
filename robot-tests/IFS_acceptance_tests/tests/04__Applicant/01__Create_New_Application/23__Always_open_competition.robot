@@ -309,7 +309,7 @@ Comp admin can see the open ended competition in project setup/previous dashboar
     And The user navigates to the page                         ${server}/management/competition/${webTestCompID}
     And the user inputs the funding decision for applications  2
     And the user sends notification and releases feedback
-    And the user refreshes until element appears on page       jQuery = td:contains("Sent")
+    And the user refreshes until element appears on page       jQuery = td:contains("Always open application awaiting assessment") ~ td:contains("Sent")
     And The user navigates to the page                         ${server}/management/competition/${webTestCompID}
     When The user clicks the button/link                       link = Close competition
     And The user clicks the button/link                        jQuery = button:contains("Close competition")
