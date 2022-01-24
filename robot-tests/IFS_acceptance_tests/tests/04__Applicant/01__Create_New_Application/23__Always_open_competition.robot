@@ -563,7 +563,7 @@ the user should see the competition in project setup/previous dashboard and can 
     the user navigates to the page       ${server}/management/dashboard/project-setup
     The user should see the element      jQuery = a:contains("${webTestCompName}")
     the user navigates to the page       ${server}/management/competition/${webTestCompID}/previous
-    The user should see the element      jQuery = a:contains("${webTestCompName}")
+    The user should see the element      jQuery = h1:contains("Always open competition")
     the user navigates to the page       ${server}/management/dashboard/live
     the user should not see the element  jQuery = a:contains("${webTestCompName}")
 
