@@ -39,7 +39,7 @@ Lead gets a validation message when partner does not input their subsidy basis
     Given the user clicks the button/link    id = application-overview-submit-cta
     When the user clicks the button/link     id = accordion-questions-heading-1-1
     Then the user should see the element     jQuery = .warning-alert p:contains("The following organisations have not yet marked this question as complete:")
-    And the user should see the element      jQuery = li:contains("Ward Ltd")
+    And the user should see the element      jQuery = li:contains("Ludlow")
     And the user should see the element      jQuery = .section-incomplete + button:contains("Subsidy basis ")
 
 
