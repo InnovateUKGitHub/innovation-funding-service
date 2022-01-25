@@ -104,7 +104,9 @@ class ApplicationInviteNotificationService {
                 invite.setHash(generateInviteHash());
             }
 
-            inviteHistoryRepository.save(mapInviteHistory(invite));
+            if(!isResend){
+                inviteHistoryRepository.save(mapInviteHistory(invite));
+            }
             applicationInviteRepository.save(invite);
             return inviteCollaboratorToApplication(baseUrl, invite).
                     andOnSuccessReturnVoid(() -> handleInviteSuccess(invite, isResend));
