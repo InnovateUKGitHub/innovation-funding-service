@@ -14,9 +14,7 @@ ${tacticalApplication}          Subsidy control tactical application
 *** Test Cases ***
 Lead can mark the subsidy basis as complete when no partner invited
     [Documentation]    IFS-10072
-    Given existing user creates a new application    ${subsidyControlTacticalComp}
-    And the user clicks the button twice             jQuery = label:contains("Empire Ltd")
-    And the user clicks the button/link              jQuery = button:contains("Save and continue")
+    Given lead applicant creates a new application
     And the user clicks the button/link              link = Application details
     And the user completes application details       ${tacticalApplication}  ${tomorrowday}  ${month}  ${nextyear}
     When the user clicks the button/link             link = Subsidy basis
@@ -60,6 +58,12 @@ the user completes application details
     the user enters text to a text field  css = [id="durationInMonths"]  24
     the user can mark the question as complete
     the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
+
+lead applicant creates a new application
+    existing user creates a new application     ${subsidyControlTacticalComp}
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  jQuery = label:contains("Empire Ltd")
+    Run Keyword if  '${status}' == 'PASS'  runkeywords  the user clicks the button twice   jQuery = label:contains("Empire Ltd")
+    ...                             AND                 the user clicks the button/link    jQuery = button:contains("Save and continue")
 
 Custom suite teardown
     The user closes the browser
