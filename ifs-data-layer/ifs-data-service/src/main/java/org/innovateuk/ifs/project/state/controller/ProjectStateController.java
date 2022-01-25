@@ -4,7 +4,10 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.state.OnHoldReasonResource;
 import org.innovateuk.ifs.project.state.transactional.ProjectStateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 /**
  * ProjectStateController exposes Project state data and operations through a REST API.
@@ -49,6 +52,12 @@ public class ProjectStateController {
     @PostMapping("/{projectId}/successful")
     public RestResult<Void> markAsSuccessful(@PathVariable("projectId") final long projectId) {
         return projectStateService.markAsSuccessful(projectId).toPostWithBodyResponse();
+    }
+
+    @PostMapping("/{projectId}/loans-successful")
+    public RestResult<Void> markAsSuccessful(@PathVariable("projectId") final long projectId,
+                                             @RequestParam(value="projectStartDate", required=false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate projectStartDate) {
+        return  projectStateService.markAsSuccessful(projectId, projectStartDate).toPostWithBodyResponse();
     }
 
     @PostMapping("/{projectId}/unsuccessful")

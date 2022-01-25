@@ -6,6 +6,8 @@ import org.innovateuk.ifs.project.state.transactional.ProjectStateService;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.time.LocalDate;
+
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_CANNOT_BE_WITHDRAWN;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -124,6 +126,20 @@ public class ProjectStateControllerTest extends BaseControllerMockMVCTest<Projec
                 .andExpect(status().isOk());
 
         verify(projectStateService).markAsUnsuccessful(projectId);
+    }
+
+    @Test
+    public void markLoansProjectAsSuccessful() throws Exception {
+        long projectId = 456L;
+        LocalDate now = LocalDate.now();
+        LocalDate projectStartDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
+
+        when(projectStateService.markAsSuccessful(projectId, projectStartDate)).thenReturn(serviceSuccess());
+        mockMvc.perform(post("/project/{projectId}/loans-successful", projectId)
+                .param("projectStartDate", String.valueOf(projectStartDate)))
+                .andExpect(status().isOk());
+
+        verify(projectStateService).markAsSuccessful(projectId, projectStartDate);
     }
 }
 
