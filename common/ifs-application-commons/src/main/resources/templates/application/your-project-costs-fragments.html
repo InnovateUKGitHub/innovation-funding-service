@@ -3852,8 +3852,7 @@
                             th:field="*{__${fieldName}__.description}"
                             th:errorclass="govuk-input--error"
                             maxlength="255"
-                            rows="4"
-                            required="required">
+                            rows="4">
                         </textarea>
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group top">
@@ -3871,7 +3870,6 @@
                                min="0"
                                max="9999999999999999999"
                                step="1"
-                               required="required"
                                th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
                     </td>
                 </tr>
