@@ -50,6 +50,9 @@ public class SupporterAssignmentServiceImpl extends BaseTransactionalService imp
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
+    @Value("${ifs.ktp.phase2.enabled}")
+    private boolean ktpPhase2Enabled;
+
     @Autowired
     private SupporterAssignmentWorkflowHandler supporterAssignmentWorkflowHandler;
 
@@ -127,6 +130,7 @@ public class SupporterAssignmentServiceImpl extends BaseTransactionalService imp
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationId", application.getId());
         notificationArguments.put("applicationName", application.getName());
+        notificationArguments.put("ktpPhase2Enabled", ktpPhase2Enabled);
         notificationArguments.put("applicationDeadline", getFormattedApplicationDeadline(application));
         notificationArguments.put("link", format("%s/assessment/supporter/dashboard", webBaseUrl));
         Notification notification = new Notification(systemNotificationSource, recipient, Notifications.ASSIGN_SUPPORTER, notificationArguments);
