@@ -107,7 +107,7 @@ Innovateuk State aid t&c's are correct
     And the user clicks the button/link                  link = ${innovateUKStateAid}
     And select window                                    title = Terms and conditions of an Innovate UK grant award - Innovation Funding Service
     Then the user should see the element                 jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
-    And the user should see the element                  jQuery = li:contains("State Aid obligations")
+    And the user should see the element                  jQuery = li:contains("UK Subsidy obligations")
     [Teardown]   the user closes the last opened tab
 
 Innovateuk subsidy control T&C's section should be completed

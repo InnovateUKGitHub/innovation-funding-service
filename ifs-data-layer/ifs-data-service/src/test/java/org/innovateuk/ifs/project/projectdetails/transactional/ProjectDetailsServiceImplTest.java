@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.projectdetails.transactional;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
@@ -11,6 +12,8 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.invite.mapper.ProjectUserInviteMapper;
@@ -156,9 +159,11 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     private Long projectId = 123L;
     private Long applicationId = 456L;
+    private Long competitionId = 789L;
     private Long userId = 7L;
     private Long otherUserId = 8L;
 
+    private Competition competition;
     private Application application;
     private Organisation organisation;
     private User user;
@@ -192,13 +197,17 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 withUser(user).
                 build();
 
+        competition = newCompetition()
+                .withId(competitionId)
+                .build();
+
         application = newApplication().
                 withId(applicationId).
                 withProcessRoles(leadApplicantProcessRole).
                 withName("My Application").
                 withDurationInMonths(5L).
                 withStartDate(LocalDate.of(2017, 3, 2)).
-                withCompetition(newCompetition().build()).
+                withCompetition(competition).
                 build();
 
         project = newProject().
@@ -222,7 +231,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void getProjectManager() {
-        final Long projectId = 123L;
         final Project project = newProject().withId(projectId).build();
         final ProjectUser projectManager = newProjectUser().withProject(project).withRole(PROJECT_MANAGER).build();
         final ProjectUserResource projectManagerResource = newProjectUserResource().withProject(projectId).withRoleName(PROJECT_MANAGER.getName()).build();
@@ -350,7 +358,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         LocalDate now = LocalDate.now();
         LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
 
-        Project existingProject = newProject().build();
+        Project existingProject = newProject()
+                .withApplication(application)
+                .build();
         assertNull(existingProject.getTargetStartDate());
 
         List<SpendProfile> spendProfiles = SpendProfileBuilder.newSpendProfile().build(2);
@@ -362,9 +372,39 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(PROJECT_SETUP_START_DATE_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED));
 
-        verify(projectRepositoryMock, never()).findById(123L);
+        verify(projectRepositoryMock, times(1)).findById(123L);
         verify(spendProfileRepositoryMock).findByProjectId(123L);
         assertNull(existingProject.getTargetStartDate());
+    }
+
+    @Test
+    public void updateLoanProjectStartDateWhenSpendProfileHasAlreadyBeenGenerated() {
+
+        LocalDate now = LocalDate.now();
+        LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
+
+        Competition competition = newCompetition()
+                .withFundingType(FundingType.LOAN)
+                .build();
+        Application application = newApplication()
+                .withCompetition(competition)
+                .build();
+        Project existingProject = newProject()
+                .withApplication(application)
+                .build();
+        assertNull(existingProject.getTargetStartDate());
+
+        List<SpendProfile> spendProfiles = SpendProfileBuilder.newSpendProfile().build(2);
+
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(existingProject));
+        when(spendProfileRepositoryMock.findByProjectId(projectId)).thenReturn(spendProfiles);
+
+        ServiceResult<Void> updateResult = service.updateProjectStartDate(projectId, validDate);
+        assertTrue(updateResult.isSuccess());
+
+        verify(projectRepositoryMock, times(2)).findById(projectId);
+        verify(spendProfileRepositoryMock, never()).findByProjectId(projectId);
+        assertNotNull(existingProject.getTargetStartDate());
     }
 
     @Test
@@ -373,11 +413,11 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         LocalDate now = LocalDate.now();
         LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
 
-        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.empty());
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
 
-        ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
+        ServiceResult<Void> updateResult = service.updateProjectStartDate(projectId, validDate);
         assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(notFoundError(Project.class, 123L)));
+        assertTrue(updateResult.getFailure().is(notFoundError(Project.class, projectId)));
     }
 
     @Test
@@ -386,22 +426,22 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         LocalDate now = LocalDate.now();
         LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
 
-        Project existingProject = newProject().build();
+        Project existingProject = newProject()
+                .withApplication(application)
+                .build();
         assertNull(existingProject.getTargetStartDate());
 
         when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(existingProject));
 
-        ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
+        ServiceResult<Void> updateResult = service.updateProjectStartDate(projectId, validDate);
         assertTrue(updateResult.isSuccess());
 
-        verify(projectRepositoryMock).findById(123L);
+        verify(projectRepositoryMock, times(2)).findById(projectId);
         assertEquals(validDate, existingProject.getTargetStartDate());
     }
 
     @Test
     public void updateProjectDurationWhenDurationLessThanAMonth() {
-
-        long projectId = 123L;
         ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, 0L);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH));
@@ -413,19 +453,15 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void updateProjectDurationWhenProjectDoesNotExist() {
-
-        long projectId = 123L;
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
 
         ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, 36L);
         assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(notFoundError(Project.class, 123L)));
+        assertTrue(updateResult.getFailure().is(notFoundError(Project.class, projectId)));
     }
 
     @Test
     public void updateProjectDurationWhenSpendProfileAlreadyGenerated() {
-
-        long projectId = 123L;
 
         List<SpendProfile> spendProfiles = SpendProfileBuilder.newSpendProfile().build(2);
         when(spendProfileRepositoryMock.findByProjectId(projectId)).thenReturn(spendProfiles);
@@ -437,8 +473,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void updateProjectDurationWhenProjectIsAlreadyWithdrawn() {
-
-        long projectId = 123L;
         Project existingProject = newProject().build();
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(existingProject));
         when(projectWorkflowHandlerMock.getState(existingProject)).thenReturn(WITHDRAWN);
@@ -450,8 +484,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void updateProjectDurationSuccess() {
-
-        long projectId = 123L;
         long durationInMonths = 36L;
         Project existingProject = newProject().build();
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(existingProject));
@@ -464,13 +496,13 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void updateFinanceContact() {
 
-        Project project = newProject().withId(123L).build();
+        Project project = newProject().withId(projectId).build();
         Organisation organisation = newOrganisation().withId(5L).build();
         User user = newUser().withId(7L).build();
 
         newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_PARTNER).build();
 
-        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(project));
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
         when(organisationRepositoryMock.findById(5L)).thenReturn(Optional.of(organisation));
 
@@ -495,11 +527,11 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         FileEntry golFileEntry = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
 
         Project project = newProject()
-                .withId(123L)
+                .withId(projectId)
                 .withGrantOfferLetter(golFileEntry)
                 .build();
 
-        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(project));
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
 
         ServiceResult<Void> updateResult = service.updateFinanceContact(new ProjectOrganisationCompositeId(123L, 5L), 7L);
 
@@ -512,12 +544,12 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void updateFinanceContactButUserIsNotExistingPartner() {
 
-        Project project = newProject().withId(123L).build();
+        Project project = newProject().withId(projectId).build();
         Organisation organisation = newOrganisation().withId(5L).build();
         User user = newUser().withId(7L).build();
         newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_MANAGER).build();
 
-        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(project));
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
         when(organisationRepositoryMock.findById(5L)).thenReturn(Optional.of(organisation));
 
@@ -537,7 +569,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         Project existingProject = newProject().withId(123L).build();
         Project anotherProject = newProject().withId(9999L).build();
 
-        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(existingProject));
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(existingProject));
         when(projectWorkflowHandlerMock.getState(existingProject)).thenReturn(ProjectState.SETUP);
 
         Organisation organisation = newOrganisation().withId(5L).build();
@@ -583,8 +615,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void updatePartnerProjectLocationWhenPostcodeIsNullOrEmpty() {
-
-        long projectId = 1L;
         long organisationId = 2L;
         PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource(null, null);
 
@@ -607,8 +637,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void updatePartnerProjectLocationWhenPostcodeEnteredExceedsMaxLength() {
-
-        long projectId = 1L;
         long organisationId = 2L;
         PostcodeAndTownResource postcodeAndTownResource = new PostcodeAndTownResource("SOME LONG POSTCODE", null);
 
@@ -621,8 +649,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void updatePartnerProjectLocationWhenMonitoringOfficerAssigned() {
-
-        long projectId = 1L;
         long organisationId = 2L;
         PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource("TW14 9QG", null);
 
@@ -640,8 +666,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void updatePartnerProjectLocationWhenPartnerOrganisationDoesNotExist() {
-
-        long projectId = 1L;
         long organisationId = 2L;
         PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource("TW14 9QG", null);
 
@@ -656,8 +680,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void updatePartnerProjectLocationEnsureLowerCasePostcodeIsSavedAsUpperCase() {
-
-        long projectId = 1L;
         long organisationId = 2L;
         PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource("tw14 9qg", null);
 
@@ -676,8 +698,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void updatePartnerProjectLocationEnsureWrongCaseInternationalLocationIsSavedWithAppropriateCasing() {
-
-        long projectId = 1L;
         long organisationId = 2L;
         PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource(null, "aMsTeRdAm");
 
@@ -697,8 +717,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void updatePartnerProjectLocationEnsureWrongCaseInternationalLocationIsSavedWithAppropriateCasingForMultipleWords() {
-
-        long projectId = 1L;
         long organisationId = 2L;
         PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource(null, "tHe hAgUe");
 
@@ -718,8 +736,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void updatePartnerProjectLocationEnsureWrongCaseInternationalLocationIsSavedWithoutExcessiveSpacingForMultipleWords() {
-
-        long projectId = 1L;
         long organisationId = 2L;
         PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource(null, "tHe       hAgUe");
 
@@ -739,7 +755,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void updatePartnerProjectLocationWhenInternationalLocationIsNullOrEmpty() {
-        long projectId = 1L;
         long organisationId = 2L;
         when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(newOrganisation().withInternational(true).build()));
 
@@ -764,7 +779,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void updatePartnerProjectLocationSuccess() {
-        long projectId = 1L;
         long organisationId = 2L;
         PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource("UB7 8QF", null);
 
@@ -785,7 +799,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void updatePartnerProjectLocationSuccessForInternational() {
-        long projectId = 1L;
         long organisationId = 2L;
         PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource(null, "Amsterdam");
 
@@ -807,8 +820,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void inviteProjectManagerWhenProjectNotInDB() {
-
-        Long projectId = 1L;
 
         ProjectUserInviteResource inviteResource = newProjectUserInviteResource()
                 .withName("Abc Xyz")
@@ -845,8 +856,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void inviteProjectManagerWhenGOLAlreadyGenerated() {
-
-        Long projectId = 1L;
 
         ProjectUserInviteResource inviteResource = newProjectUserInviteResource()
                 .build();
@@ -967,8 +976,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void inviteFinanceContactWhenGOLAlreadyGenerated() {
-
-        Long projectId = 1L;
 
         ProjectUserInviteResource inviteResource = newProjectUserInviteResource()
                 .withName("Abc Xyz")
@@ -1147,6 +1154,31 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         verify(projectUserInviteRepositoryMock).save(projectInvite);
         verify(projectInviteMapperMock).mapToDomain(inviteResource);
     }
+
+    @Test
+    public void updateLoanProjectSetupCompleteDate() {
+
+        Competition competition = newCompetition()
+                .withFundingType(FundingType.LOAN)
+                .build();
+        Application application = newApplication()
+                .withCompetition(competition)
+                .build();
+        Project existingProject = newProject()
+                .withApplication(application)
+                .build();
+
+        assertNull(existingProject.getOfferSubmittedDate());
+
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(existingProject));
+        ServiceResult<Void> updateResult = service.updateLoansProjectSetupCompleteDate(projectId);
+        assertTrue(updateResult.isSuccess());
+
+        verify(projectRepositoryMock, times(1)).findById(projectId);
+        assertNotNull(existingProject.getOfferSubmittedDate());
+    }
+
+
 
     @Override
     protected ProjectDetailsService supplyServiceUnderTest() {
