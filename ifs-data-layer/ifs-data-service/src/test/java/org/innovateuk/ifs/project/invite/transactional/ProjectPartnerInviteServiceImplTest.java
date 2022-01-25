@@ -33,6 +33,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
 import java.util.HashMap;
@@ -403,6 +404,46 @@ public class ProjectPartnerInviteServiceImplTest {
         verify(viabilityWorkflowHandler, times(1)).projectCreated(any(), any());
         verify(eligibilityWorkflowHandler, times(1)).projectCreated(any(), any());
         verify(eligibilityWorkflowHandler, times(1)).notRequestingFunding(any(), any());
+
+        verifyNoMoreInteractions(projectPartnerChangeService, projectFinanceService, viabilityWorkflowHandler, eligibilityWorkflowHandler, pendingPartnerProgressRepository);
+    }
+
+    @Test
+    public void viabilityCheckNotRequiredForKTPPartner() {
+        long inviteId = 1L;
+        long organisationId = 2L;
+        ReflectionTestUtils.setField(service, "isKTPPhase2Enabled", true);
+        Competition competition = newCompetition().withFundingType(FundingType.KTP).build();
+        Application application = newApplication().withCompetition(competition).build();
+        Project project = newProject().withApplication(application).build();
+        ProjectPartnerInvite invite = new ProjectPartnerInvite();
+        InviteOrganisation inviteOrganisation = newInviteOrganisation().build();
+        invite.setInviteOrganisation(inviteOrganisation);
+        invite.setProject(project);
+        invite.send(newUser().withId(1l).build(), ZonedDateTime.now());
+        Organisation organisation = newOrganisation()
+                .withId(organisationId)
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS)
+                .build();
+
+        when(organisationRepository.findById(organisationId)).thenReturn(of(organisation));
+        when(projectPartnerInviteRepository.findById(inviteId)).thenReturn(of(invite));
+        when(partnerOrganisationRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(projectUserRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        ServiceResult<Void> result = service.acceptInvite(inviteId, organisationId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(inviteOrganisation.getOrganisation(), organisation);
+        verify(projectPartnerChangeService, times(1)).updateProjectWhenPartnersChange(project.getId());
+        verify(projectFinanceService, times(1)).createProjectFinance(project.getId(), organisationId);
+        verify(pendingPartnerProgressRepository, times(1)).save(any());
+
+        // Partner exempt from eligbility checks for KTP comp
+        verify(viabilityWorkflowHandler, times(1)).projectCreated(any(), any());
+        verify(eligibilityWorkflowHandler, times(1)).projectCreated(any(), any());
+        verify(eligibilityWorkflowHandler, times(1)).notRequestingFunding(any(), any());
+        verify(viabilityWorkflowHandler, times(1)).viabilityNotApplicable(any(), any());
 
         verifyNoMoreInteractions(projectPartnerChangeService, projectFinanceService, viabilityWorkflowHandler, eligibilityWorkflowHandler, pendingPartnerProgressRepository);
     }
