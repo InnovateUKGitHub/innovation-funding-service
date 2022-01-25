@@ -101,8 +101,6 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
         applicationRepository.delete(application);
         applicationInviteRepository.deleteAll(application.getInvites());
 
-
-
         return serviceSuccess();
     }
 
