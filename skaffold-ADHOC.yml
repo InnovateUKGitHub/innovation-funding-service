@@ -1,0 +1,200 @@
+apiVersion: skaffold/v2beta11
+kind: Config
+metadata:
+  name: innovation-funding-service
+profiles:
+  - name: data-service
+    build:
+      artifacts:
+        - image: data-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-data-layer:ifs-data-service
+            args:
+              - "-DskipTests"
+    deploy:
+      statusCheckDeadlineSeconds: 600
+      kustomize:
+        paths:
+          - os-files/kustomize/env/stub/local/adhoc/data-service
+  - name: sil-stub
+    build:
+      artifacts:
+        - image: sil-stub
+          context: .
+          jib:
+            type: gradle
+            project: ifs-sil-stub
+            args:
+              - "-DskipTests"
+    deploy:
+      statusCheckDeadlineSeconds: 600
+      kustomize:
+        paths:
+          - os-files/kustomize/env/stub/local/adhoc/sil-stub
+  - name: registration-service
+    build:
+      artifacts:
+        - image: registration-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-registration-service
+            args:
+              - "-DskipTests"
+    deploy:
+      statusCheckDeadlineSeconds: 600
+      kustomize:
+        paths:
+          - os-files/kustomize/env/stub/local/adhoc/registration-service
+  - name: finance-data-service
+    build:
+      artifacts:
+        - image: finance-data-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-data-layer:ifs-finance-data-service
+            args:
+              - "-DskipTests"
+    deploy:
+      statusCheckDeadlineSeconds: 600
+      kustomize:
+        paths:
+          - os-files/kustomize/env/stub/local/adhoc/finance-data-service
+  - name: survey-data-service
+    build:
+      artifacts:
+        - image: survey-data-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-data-layer:ifs-survey-data-service
+            args:
+              - "-DskipTests"
+    deploy:
+      statusCheckDeadlineSeconds: 600
+      kustomize:
+        paths:
+          - os-files/kustomize/env/stub/local/adhoc/survey-data-service
+  - name: data-service-alerts
+    build:
+      artifacts:
+        - image: data-service-alerts
+          context: .
+          jib:
+            type: gradle
+            project: ifs-data-layer:data-service-alerts
+            args:
+              - "-DskipTests"
+    deploy:
+      statusCheckDeadlineSeconds: 600
+      kustomize:
+        paths:
+          - os-files/kustomize/env/stub/local/adhoc/data-service-alerts
+  - name: survey-service
+    build:
+      artifacts:
+        - image: survey-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-survey-service
+            args:
+              - "-DskipTests"
+    deploy:
+      statusCheckDeadlineSeconds: 600
+      kustomize:
+        paths:
+          - os-files/kustomize/env/stub/local/adhoc/survey-service
+  - name: project-setup-service
+    build:
+      artifacts:
+        - image: project-setup-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-project-setup-service
+            args:
+              - "-DskipTests"
+    deploy:
+      statusCheckDeadlineSeconds: 600
+      kustomize:
+        paths:
+          - os-files/kustomize/env/stub/local/adhoc/project-setup-service
+  - name: project-setup-mgt-service
+    build:
+      artifacts:
+        - image: project-setup-mgt-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-project-setup-mgt-service
+            args:
+              - "-DskipTests"
+    deploy:
+      statusCheckDeadlineSeconds: 600
+      kustomize:
+        paths:
+          - os-files/kustomize/env/stub/local/adhoc/project-setup-mgt-service
+  - name: front-door-service
+    build:
+      artifacts:
+        - image: front-door-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-front-door-service
+            args:
+              - "-DskipTests"
+    deploy:
+      statusCheckDeadlineSeconds: 600
+      kustomize:
+        paths:
+          - os-files/kustomize/env/stub/local/adhoc/front-door-service
+  - name: competition-mgt-service
+    build:
+      artifacts:
+        - image: competition-mgt-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-competition-mgt-service
+            args:
+              - "-DskipTests"
+    deploy:
+      statusCheckDeadlineSeconds: 600
+      kustomize:
+        paths:
+          - os-files/kustomize/env/stub/local/adhoc/competition-mgt-service
+  - name: assessment-service
+    build:
+      artifacts:
+        - image: assessment-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-assessment-service
+            args:
+              - "-DskipTests"
+    deploy:
+      statusCheckDeadlineSeconds: 600
+      kustomize:
+        paths:
+          - os-files/kustomize/env/stub/local/adhoc/assessment-service
+  - name: application-service
+    build:
+      artifacts:
+        - image: application-service
+          context: .
+          jib:
+            type: gradle
+            project: ifs-web-service:ifs-application-service
+            args:
+              - "-DskipTests"
+    deploy:
+      statusCheckDeadlineSeconds: 600
+      kustomize:
+        paths:
+          - os-files/kustomize/env/stub/local/adhoc/application-service
