@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static org.innovateuk.ifs.invite.constant.InviteStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 
 
@@ -109,6 +110,14 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                                                  UserResource loggedInUser,
                                                  Model model) {
         String hash = registrationCookieService.getInviteHashCookieValue(request).orElse(null);
+
+        RestResult<ApplicationInviteResource> inviteResponse = inviteRestService.getInviteByHash(hash);
+        ApplicationInviteResource applicationInviteResource = inviteResponse.isFailure() ? null : inviteResponse.getSuccess();
+        if (applicationInviteResource != null) {
+            applicationInviteResource.setStatus(ACCEPTED);
+            inviteRestService.acceptInvite(applicationInviteResource);
+        }
+
         RestResult<String> view = inviteRestService.getInviteByHash(hash).andOnSuccessReturn(invite -> {
                     String validateView = validate(invite, response, loggedInUser, model);
                     if (validateView != null) {
