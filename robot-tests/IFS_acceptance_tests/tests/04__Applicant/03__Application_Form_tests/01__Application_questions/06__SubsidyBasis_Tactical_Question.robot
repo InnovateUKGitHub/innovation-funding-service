@@ -15,6 +15,8 @@ ${tacticalApplication}          Subsidy control tactical application
 Lead can mark the subsidy basis as complete when no partner invited
     [Documentation]    IFS-10072
     Given existing user creates a new application    ${subsidyControlTacticalComp}
+    And the user clicks the button twice             jQuery = label:contains("Empire Ltd")
+    And the user clicks the button/link              jQuery = button:contains("Save and continue")
     And the user clicks the button/link              link = Application details
     And the user completes application details       ${tacticalApplication}  ${tomorrowday}  ${month}  ${nextyear}
     When the user clicks the button/link             link = Subsidy basis
