@@ -1,0 +1,10 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: local-dev
+
+bases:
+  - ../../local-base
+
+components:
+  - ../../../../../components/data-layer/data-service
+  - ../../../../../patches/
