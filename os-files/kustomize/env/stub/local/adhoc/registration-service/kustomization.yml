@@ -1,0 +1,14 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: local-dev
+
+bases:
+  - ../../local-base
+
+components:
+  - ../../../../../components/registration-service
+  - ../../../../../patches/
+  - ../../patches/
+
+patchesStrategicMerge:
+  - registration-deployment.yml
