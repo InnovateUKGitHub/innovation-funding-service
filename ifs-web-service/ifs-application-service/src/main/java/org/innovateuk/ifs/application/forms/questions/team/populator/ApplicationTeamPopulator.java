@@ -25,6 +25,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -44,6 +45,9 @@ import static org.innovateuk.ifs.user.resource.ProcessRoleType.applicantProcessR
 
 @Component
 public class ApplicationTeamPopulator {
+
+    @Value("${ifs.ktp.phase2.enabled}")
+    private boolean ktpPhase2Enabled;
 
     @Autowired
     private InviteRestService inviteRestService;
@@ -118,6 +122,7 @@ public class ApplicationTeamPopulator {
                 application.isOpen() && competition.isOpen(),
                 questionStatuses.stream().anyMatch(QuestionStatusResource::getMarkedAsComplete),
                 competition.isKtp(),
+                ktpPhase2Enabled,
                 ktaInvite, ktaProcessRole);
     }
 
