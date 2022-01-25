@@ -11,7 +11,7 @@ spring:
       discovery:
         converter:
           management-context-path: /monitoring
-
+        ignored-services: "idp,kubernetes,sba,cache-provider,ifs-database,kube-dns,ldap,mail,shib"
 ifs:
   sba:
     username: ${IFS_SBA_USERNAME}
