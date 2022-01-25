@@ -53,16 +53,14 @@ public interface ApplicationConfiguration {
     }
 
     default boolean applicantNotRequiredForViabilityChecks(boolean isKTPPhase2Enabled, OrganisationTypeEnum organisationType) {
-        return (isKTPPhase2Enabled && ktpBusinessOrgNotRequiredForViabilityChecks(organisationType)) || isH2020() || applicantShouldUseJesFinances(organisationType) ||
+        if (isKTPPhase2Enabled) {
+            return this.isKtp() || isH2020() || applicantShouldUseJesFinances(organisationType);
+        }
+        return isH2020() || applicantShouldUseJesFinances(organisationType) ||
                 (organisationType.equals(OrganisationTypeEnum.KNOWLEDGE_BASE) && this.isKtp());
     }
 
     default boolean applicantNotRequiredForEligibilityChecks(OrganisationTypeEnum organisationTypeEnum) {
         return !organisationTypeEnum.equals(KNOWLEDGE_BASE) && this.isKtp();
     }
-
-    default boolean ktpBusinessOrgNotRequiredForViabilityChecks(OrganisationTypeEnum organisationType) {
-        return (this.isKtp() &&  organisationType.equals(BUSINESS) );
-    }
-
 }
