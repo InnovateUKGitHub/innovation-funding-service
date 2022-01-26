@@ -14,7 +14,7 @@ dependencies {
     implementation enforcedPlatform("org.springframework.cloud:spring-cloud-dependencies:2020.0.3")
     implementation enforcedPlatform("org.springframework.cloud:spring-cloud-kubernetes-dependencies:2.0.5")
 
-    implementation "de.codecentric:spring-boot-admin-starter-server:2.5.5"
+    implementation "de.codecentric:spring-boot-admin-starter-server:2.6.2"
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "org.springframework.cloud:spring-cloud-starter-kubernetes-client"
