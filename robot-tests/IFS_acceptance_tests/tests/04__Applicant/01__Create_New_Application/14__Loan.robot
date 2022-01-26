@@ -83,6 +83,8 @@ The user can navigate back to application overview in the same window from part 
     [Documentation]     IFS-10761
     When the user creates a new application
     And the user clicks the button/link                           link = Business and financial information
+    And The user should see the element                           jQuery = span:contains("Business and financial information")
+    And The user should see the element                           jQuery = p:contains("Information not yet provided")
     And the user clicks the button/link                           jQuery = a:contains("Continue")
     And the user logs in if username field present
     Then title should be                                           Home
@@ -106,9 +108,6 @@ The user will not be able to mark the application as complete without completing
     Given the user navigates to the page                        ${server}/applicant/dashboard
     And The user clicks the button/link                         link = ${loanApplicationName}
     When the user clicks the button/link                        id = application-overview-submit-cta
-    And The user clicks the button/link                         link = Business and financial information
-    And The user should see the element                         jQuery = span:contains("Business and financial information")
-    And The user should see the element                         jQuery = p:contains("Information not yet provided")
     Then the user should see that the element is disabled       id = submit-application-button
     And The user clicks the button/link                         id = accordion-questions-heading-1-1
     And The user should not see the element                     jQuery = #accordion-questions-content-1-1 button:contains("Mark")
