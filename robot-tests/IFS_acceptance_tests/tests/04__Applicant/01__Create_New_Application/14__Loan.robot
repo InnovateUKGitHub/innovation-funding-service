@@ -65,6 +65,7 @@ ${loan_comp_PS_Id}                         ${competition_ids["${loan_comp_PS}"]}
 ${loan_comp_application}                   Loan Competition
 ${loanApplicationName}                     Loan Application
 ${loanCompetitionPartB}                    Loans SF Part-B Competition
+${loanApplicationPartB}                    Loans SF Part-B Application
 ${loan_comp_appl_id}                       ${competition_ids["${loan_comp_application}"]}
 ${loanApplicationID}                       ${application_ids["${loanApplicationName}"]}
 ${loan_PS_application1}                    Loan Project 1
@@ -83,8 +84,6 @@ The user can navigate back to application overview in the same window from part 
     [Documentation]     IFS-10761
     When the user creates a new application
     And the user clicks the button/link                           link = Business and financial information
-    And The user should see the element                           jQuery = span:contains("Business and financial information")
-    And The user should see the element                           jQuery = p:contains("Information not yet provided")
     And the user clicks the button/link                           jQuery = a:contains("Continue")
     And the user logs in if username field present
     Then title should be                                           Home
@@ -102,6 +101,14 @@ the user can open the sales force new tab on clicking conitnue button in incompl
     When the user clicks the button/link                    jQuery = a:contains("Continue")
     And the user logs in if username field present
     Then title should be                                    Home
+
+The user can see BFI question as incomplete
+    [Documentation]    IFS-11137
+    Given the user navigates to the page                        ${server}/applicant/dashboard
+    And The user clicks the button/link                         link = ${loanApplicationPartB}
+    When the user clicks the button/link                        id = application-overview-submit-cta
+    Then The user should see the element                        jQuery = span:contains("Business and financial information")
+    And The user should see the element                         jQuery = p:contains("Information not yet provided")
 
 The user will not be able to mark the application as complete without completing business and financial information
     [Documentation]    IFS-9484  IFS-10705 IFS-10757 IFS-11137
