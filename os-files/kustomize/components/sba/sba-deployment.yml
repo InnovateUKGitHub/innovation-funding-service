@@ -14,7 +14,7 @@ spec:
         app: sba
     spec:
       containers:
-        - name: spring-boot-admin
+        - name: sba
           image: sba
           ports:
             - containerPort: 7443

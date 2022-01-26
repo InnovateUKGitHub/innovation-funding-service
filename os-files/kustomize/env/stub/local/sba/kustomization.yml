@@ -1,8 +1,0 @@
-commonAnnotations:
-  deployedWith: kustomize
-  environment: local-dev-sba
-
-components:
-  - ../../../../components/sba
-  - ../../../../patches/
-  - ../patches/
