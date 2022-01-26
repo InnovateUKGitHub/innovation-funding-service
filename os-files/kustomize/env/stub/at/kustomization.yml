@@ -6,5 +6,6 @@ commonAnnotations:
   environment: at
 
 components:
+  - ../../../components/sba
   - ../../../components/robot
   - ../../../patches/pull-secrets-patch

@@ -8,6 +8,7 @@ bases:
   - ../../env-base
 
 components:
+  - ../../../components/sba
   - ../../../components/registration-service
   - ../../../components/data-layer/
   - ../../../components/web-layer

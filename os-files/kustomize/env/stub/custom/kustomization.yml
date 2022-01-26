@@ -6,6 +6,7 @@ commonAnnotations:
   environment: custom
 
 components:
+  - ../../../components/sba
   - ../../../components/mail
   - ../../../components/sil-stub
   - ../../../components/ifs-database
