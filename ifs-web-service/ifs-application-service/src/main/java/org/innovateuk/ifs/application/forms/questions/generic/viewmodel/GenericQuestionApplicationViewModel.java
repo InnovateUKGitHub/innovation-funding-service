@@ -42,6 +42,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
     private final Set<FileTypeCategory> appendixAllowedFileTypes;
     private final List<GenericQuestionAppendix> appendices;
     private final Integer maximumAppendices;
+    private final Long maximumAppendixSize;
 
     private final Long templateDocumentFormInputId;
     private final String templateDocumentTitle;
@@ -87,6 +88,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                                                Set<FileTypeCategory> appendixAllowedFileTypes,
                                                List<GenericQuestionAppendix> appendices,
                                                Integer maximumAppendices,
+                                               Long maximumAppendixSize,
                                                Long templateDocumentFormInputId,
                                                String templateDocumentTitle,
                                                String templateDocumentFilename,
@@ -127,6 +129,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         this.appendixGuidance = appendixGuidance;
         this.appendixAllowedFileTypes = appendixAllowedFileTypes;
         this.appendices = appendices;
+        this.maximumAppendixSize = maximumAppendixSize;
         this.maximumAppendices = maximumAppendices;
         this.templateDocumentFormInputId = templateDocumentFormInputId;
         this.templateDocumentTitle = templateDocumentTitle;
@@ -238,6 +241,8 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
     public Integer getMaximumAppendices() {
         return maximumAppendices;
     }
+
+    public Long getMaximumAppendixSize() { return maximumAppendixSize; }
 
     public Long getTemplateDocumentFormInputId() {
         return templateDocumentFormInputId;
@@ -392,6 +397,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         private Set<FileTypeCategory> appendixAllowedFileTypes;
         private List<GenericQuestionAppendix> appendices;
         private Integer maximumAppendices;
+        private Long maximumAppendixSize;
         private Long templateDocumentFormInputId;
         private String templateDocumentTitle;
         private String templateDocumentFilename;
@@ -524,6 +530,11 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
             return this;
         }
 
+        public GenericQuestionApplicationViewModelBuilder withMaximumAppendixSize(Long maximumAppendixSize) {
+            this.maximumAppendixSize = maximumAppendixSize;
+            return this;
+        }
+
         public GenericQuestionApplicationViewModelBuilder withTemplateDocumentFormInputId(Long templateDocumentFormInputId) {
             this.templateDocumentFormInputId = templateDocumentFormInputId;
             return this;
@@ -628,7 +639,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
             return new GenericQuestionApplicationViewModel(applicationId, competitionName, questionId, currentUser, applicationName,
                     questionName, questionNumber, questionSubtitle, questionDescription, questionDescription2, questionGuidanceTitle, questionGuidance,
                     questionType, questionHasMultipleStatuses, textAreaFormInputId, wordCount, wordsLeft, appendixFormInputId, appendixGuidance, appendixAllowedFileTypes,
-                    appendices, maximumAppendices, templateDocumentFormInputId, templateDocumentTitle, templateDocumentFilename,
+                    appendices, maximumAppendices, maximumAppendixSize, templateDocumentFormInputId, templateDocumentTitle, templateDocumentFilename,
                     templateDocumentResponseFilename, templateDocumentResponseFileEntryId, lastUpdated, lastUpdatedByName, lastUpdatedBy,
                     open, complete, leadApplicant, assignButtonsViewModel, multipleChoiceFormInputId, multipleChoiceOptions, selectedMultipleChoiceOption,
                     leadOrganisationName, leadOrganisationCompaniesHouseNumber, loansPartBEnabled, salesForceURL);

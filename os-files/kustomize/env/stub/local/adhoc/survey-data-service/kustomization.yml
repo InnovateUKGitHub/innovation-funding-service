@@ -1,0 +1,11 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: local-dev
+
+bases:
+  - ../../local-base
+
+components:
+  - ../../../../../components/data-layer/survey-data-service
+  - ../../../../../patches/
+  - ../../patches/

@@ -1,0 +1,11 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: local-dev
+
+bases:
+  - ../../local-base
+
+components:
+  - ../../../../../components/web-layer/project-setup-mgt-service
+  - ../../../../../patches/
+  - ../../patches/

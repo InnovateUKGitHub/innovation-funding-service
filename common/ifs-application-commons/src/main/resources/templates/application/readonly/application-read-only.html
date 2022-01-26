@@ -71,7 +71,7 @@
             <div class="govuk-accordion" data-module="govuk-accordion" th:id="|accordion-questions-${sectionIter.count}|">
                 <div class="govuk-accordion__section"  th:each="question, questionIter : ${section.questions}" th:id="${question?.accordionSectionId}">
                     <div class="govuk-accordion__section-header">
-                        <h2 class="govuk-accordion__section-heading">
+                        <h2 class="govuk-accordion__section-heading" th:attr="data-fragment=${question.fragment}">
                             <span class="govuk-accordion__section-button" th:id="|accordion-questions-heading-${sectionIter.count}-${questionIter.count}|">
                                 <th:block th:if="${!section.termsAndConditions || !model.thirdPartyProcurement}"
                                           th:text="${question.name}"></th:block>
@@ -97,28 +97,43 @@
                               th:if="${model.settings.includeQuestionLinks && question.shouldDisplayActions()}">
 
                             <div class="form-footer govuk-!-margin-top-6">
-                                <th:block th:unless="${model.isLoanPartBEnabled() and (question.questionType == question.getLoansBusinessAndFinancialInformation())}">
-                                <button class="govuk-button button-clear"
-                                        type="submit"
-                                        name="complete"
-                                        th:if="${question.shouldDisplayMarkAsComplete()}"
-                                        th:value="${question.questionId}">
-                                    Mark as complete
-                                </button>
+                                <th:block th:if="${model.isLoanPartBEnabled() and (question.questionType == question.getLoansBusinessAndFinancialInformation())}">
+                                    <button class="govuk-button button-clear"
+                                            type="submit"
+                                            name="assign"
+                                            th:unless="${question.lead || question.complete}"
+                                            th:value="${question.questionId}">
+                                        Assign to lead for review
+                                    </button>
+                                    <button class="govuk-button button-clear"
+                                            type="submit"
+                                            name="edit"
+                                            th:value="${question.questionId}">
+                                        Return and edit
+                                    </button>
                                 </th:block>
-                                <button class="govuk-button button-clear"
-                                        type="submit"
-                                        name="assign"
-                                        th:unless="${question.lead || question.complete}"
-                                        th:value="${question.questionId}">
-                                    Assign to lead for review
-                                </button>
-                                <button class="govuk-button button-clear"
-                                        type="submit"
-                                        th:name="${question.complete ? 'incomplete' : 'edit'}"
-                                        th:value="${question.questionId}">
-                                    Return and edit
-                                </button>
+                                <th:block th:unless="${model.isLoanPartBEnabled() and (question.questionType == question.getLoansBusinessAndFinancialInformation())}">
+                                    <button class="govuk-button button-clear"
+                                            type="submit"
+                                            name="complete"
+                                            th:if="${question.shouldDisplayMarkAsComplete()}"
+                                            th:value="${question.questionId}">
+                                        Mark as complete
+                                    </button>
+                                    <button class="govuk-button button-clear"
+                                            type="submit"
+                                            name="assign"
+                                            th:unless="${question.lead || question.complete}"
+                                            th:value="${question.questionId}">
+                                        Assign to lead for review
+                                    </button>
+                                    <button class="govuk-button button-clear"
+                                            type="submit"
+                                            th:name="${question.complete ? 'incomplete' : 'edit'}"
+                                            th:value="${question.questionId}">
+                                        Return and edit
+                                    </button>
+                                </th:block>
                             </div>
                         </form>
                     </div>
