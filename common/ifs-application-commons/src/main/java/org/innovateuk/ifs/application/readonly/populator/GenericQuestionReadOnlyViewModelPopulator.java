@@ -297,6 +297,8 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
     @Override
     public Set<QuestionSetupType> questionTypes() {
-        return stream(QuestionSetupType.values()).filter(QuestionSetupType::hasFormInputResponses).collect(toSet());
+        return stream(QuestionSetupType.values()).filter(QuestionSetupType::hasFormInputResponses)
+                .filter(type -> type != QuestionSetupType.NORTHERN_IRELAND_DECLARATION)
+                .collect(toSet());
     }
 }
