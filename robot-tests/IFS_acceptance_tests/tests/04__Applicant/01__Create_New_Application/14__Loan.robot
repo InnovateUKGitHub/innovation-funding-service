@@ -49,6 +49,8 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...
 ...             IFS-10869 Loans Part B: remove unnecessary banner
 ...
+...             IFS-11137 Content change mop-up relating to Loans Part B epic
+...
 
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
@@ -100,10 +102,12 @@ the user can open the sales force new tab on clicking conitnue button in incompl
     Then title should be                                    Home
 
 The user will not be able to mark the application as complete without completing business and financial information
-    [Documentation]    IFS-9484  IFS-10705 IFS-10757
+    [Documentation]    IFS-9484  IFS-10705 IFS-10757 IFS-11137
     Given the user navigates to the page                        ${server}/applicant/dashboard
     And The user clicks the button/link                         link = ${loanApplicationName}
     When the user clicks the button/link                        id = application-overview-submit-cta
+    And The user should see the element                         jQuery = span:contains("Business and financial information")
+    And The user should see the element                         jQuery = p:contains("Information not yet provided")
     Then the user should see that the element is disabled       id = submit-application-button
     And The user clicks the button/link                         id = accordion-questions-heading-1-1
     And The user should not see the element                     jQuery = #accordion-questions-content-1-1 button:contains("Mark")
@@ -149,13 +153,13 @@ Loan application finance overview
     Then the user should see the element   jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00%") ~ td:contains("2,468") ~ td:contains("140,632")
 
 Loan application submission
-    [Documentation]  IFS-6237  IFS-6238  IFS-9483 IFS-10825 IFS-10869
+    [Documentation]  IFS-6237  IFS-6238  IFS-9483 IFS-10825 IFS-10869 IFS-11137
     Given the user submits the loan application
     When the user clicks the button/link            link = View application
     Then the user should see the element            jQuery = h1:contains("Application overview")
     And the user should see the element             jQuery = span:contains("Thanks for submitting Part B of your loan application.")
     And the user should see the element             jQuery = span:contains("What happens next")
-    And the user should see the element             jQuery = p:contains("We will make our decision based on: Suitability of your business to receive a loan and the quality of the project.")
+    And the user should see the element             jQuery = p:contains("We will make our decision based on the suitability of your business and the quality of the project.")
     And the user reads his email                    ${lead_applicant_credentials["email"]}   Complete your application for Loan Competition   You have completed your application for Loan Competition.
 
 Assessor can view BFI question in application
