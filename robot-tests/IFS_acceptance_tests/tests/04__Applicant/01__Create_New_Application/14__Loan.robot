@@ -64,6 +64,7 @@ ${loan_comp_PS}                            Project setup loan comp
 ${loan_comp_PS_Id}                         ${competition_ids["${loan_comp_PS}"]}
 ${loan_comp_application}                   Loan Competition
 ${loanApplicationName}                     Loan Application
+${loanCompetitionPartB}                    Loans SF Part-B Competition
 ${loan_comp_appl_id}                       ${competition_ids["${loan_comp_application}"]}
 ${loanApplicationID}                       ${application_ids["${loanApplicationName}"]}
 ${loan_PS_application1}                    Loan Project 1
@@ -76,7 +77,6 @@ ${loan_PS_Url}                             ${loan_PS}/details
 ${loan_finance_checks}                     ${server}/project-setup-management/project/${loan_PS_project_Id}/finance-check
 ${eligibility_changes}                     ${loan_finance_checks}/organisation/${EMPIRE_LTD_ID}/eligibility/changes
 ${spend_profile}                           ${server}/project-setup-management/project/${loan_PS_project_Id}/spend-profile/approval
-
 
 *** Test Cases ***
 The user can navigate back to application overview in the same window from part b questions form
@@ -106,6 +106,7 @@ The user will not be able to mark the application as complete without completing
     Given the user navigates to the page                        ${server}/applicant/dashboard
     And The user clicks the button/link                         link = ${loanApplicationName}
     When the user clicks the button/link                        id = application-overview-submit-cta
+    And The user clicks the button/link                         link = Business and financial information
     And The user should see the element                         jQuery = span:contains("Business and financial information")
     And The user should see the element                         jQuery = p:contains("Information not yet provided")
     Then the user should see that the element is disabled       id = submit-application-button
@@ -161,6 +162,14 @@ Loan application submission
     And the user should see the element             jQuery = span:contains("What happens next")
     And the user should see the element             jQuery = p:contains("We will make our decision based on the suitability of your business and the quality of the project.")
     And the user reads his email                    ${lead_applicant_credentials["email"]}   Complete your application for Loan Competition   You have completed your application for Loan Competition.
+
+Supporter can view BFI question in application
+   [Documentation]   IFS-11137
+   [Setup]  log in as a different user              &{support|_user}
+   Given The user clicks the button/link            link = ${loanCompetitionPartB}
+   When The user clicks the button/link             link = 77
+   Then The user should see the element             jQuery = span:contains("Business and financial information")
+   And The user should see the element              jQuery = p:contains("Information not yet provided")
 
 Assessor can view BFI question in application
    [Documentation]   IFS-10825
