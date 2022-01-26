@@ -71,7 +71,7 @@
             <div class="govuk-accordion" data-module="govuk-accordion" th:id="|accordion-questions-${sectionIter.count}|">
                 <div class="govuk-accordion__section"  th:each="question, questionIter : ${section.questions}" th:id="${question?.accordionSectionId}">
                     <div class="govuk-accordion__section-header">
-                        <h2 class="govuk-accordion__section-heading">
+                        <h2 class="govuk-accordion__section-heading" th:attr="data-fragment=${question.fragment}">
                             <span class="govuk-accordion__section-button" th:id="|accordion-questions-heading-${sectionIter.count}-${questionIter.count}|">
                                 <th:block th:if="${!section.termsAndConditions || !model.thirdPartyProcurement}"
                                           th:text="${question.name}"></th:block>

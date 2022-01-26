@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.junit.Test;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -31,24 +33,41 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
         return new CompetitionPostSubmissionController();
     }
 
+    private final Long competitionId = 1L;
+
     @Test
     public void releaseFeedback() throws Exception {
-        final Long competitionId = 1L;
 
+        CompetitionResource competition = newCompetitionResource().withId(competitionId).withAlwaysOpen(false).build();
+
+        when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competition));
         when(competitionService.releaseFeedback(competitionId)).thenReturn(serviceSuccess());
         when(applicationNotificationService.notifyApplicantsByCompetition(competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/competition/post-submission/{id}/release-feedback", competitionId))
                 .andExpect(status().isOk());
 
-        verify(competitionService, only()).releaseFeedback(competitionId);
+        verify(competitionService).getCompetitionById(competitionId);
+        verify(competitionService).releaseFeedback(competitionId);
         verify(applicationNotificationService).notifyApplicantsByCompetition(competitionId);
     }
 
     @Test
-    public void closeAssessment() throws Exception {
-        final long competitionId = 1L;
+    public void releaseFeedbackAlwaysOpenCompetition() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withId(competitionId).withAlwaysOpen(true).build();
 
+        when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competition));
+        when(competitionService.releaseFeedback(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/competition/post-submission/{id}/release-feedback", competitionId))
+                .andExpect(status().isOk());
+
+        verify(competitionService).getCompetitionById(competitionId);
+        verify(competitionService).releaseFeedback(competitionId);
+    }
+
+    @Test
+    public void closeAssessment() throws Exception {
         when(competitionService.closeAssessment(competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/competition/post-submission/{id}/close-assessment", competitionId))
@@ -60,8 +79,6 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
 
     @Test
     public void reopenAssessment() throws Exception {
-        final long competitionId = 1L;
-
         when(competitionService.reopenAssessmentPeriod(competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/competition/post-submission/{id}/reopen-assessment-period", competitionId))
@@ -73,8 +90,6 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
 
     @Test
     public void getPendingSpendProfiles() throws Exception {
-        final Long competitionId = 1L;
-
         List<SpendProfileStatusResource> pendingSpendProfiles = new ArrayList<>();
         when(competitionService.getPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfiles));
 
@@ -83,7 +98,6 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
                 .andExpect(content().json(toJson(pendingSpendProfiles)));
 
         verify(competitionService, only()).getPendingSpendProfiles(competitionId);
-
     }
 
     @Test
@@ -98,6 +112,5 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
                 .andExpect(content().json(toJson(pendingSpendProfileCount)));
 
         verify(competitionService, only()).countPendingSpendProfiles(competitionId);
-
     }
 }

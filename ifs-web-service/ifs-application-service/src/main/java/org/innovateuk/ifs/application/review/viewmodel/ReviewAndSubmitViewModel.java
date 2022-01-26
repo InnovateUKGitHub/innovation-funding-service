@@ -12,13 +12,15 @@ public class ReviewAndSubmitViewModel implements BaseAnalyticsViewModel {
     private final CompetitionResource competition;
     private final boolean applicationReadyForSubmit;
     private final boolean userIsLeadApplicant;
+    private final boolean waitingForPartnerSubsidyBasisOnly;
 
-    public ReviewAndSubmitViewModel(ApplicationReadOnlyViewModel applicationReadOnlyViewModel, ApplicationResource application, CompetitionResource competition, boolean applicationReadyForSubmit, boolean userIsLeadApplicant) {
+    public ReviewAndSubmitViewModel(ApplicationReadOnlyViewModel applicationReadOnlyViewModel, ApplicationResource application, CompetitionResource competition, boolean applicationReadyForSubmit, boolean userIsLeadApplicant, boolean waitingForPartnerSubsidyBasisOnly) {
         this.applicationReadOnlyViewModel = applicationReadOnlyViewModel;
         this.application = application;
         this.competition = competition;
         this.applicationReadyForSubmit = applicationReadyForSubmit;
         this.userIsLeadApplicant = userIsLeadApplicant;
+        this.waitingForPartnerSubsidyBasisOnly = waitingForPartnerSubsidyBasisOnly;
     }
 
     @Override
@@ -50,5 +52,7 @@ public class ReviewAndSubmitViewModel implements BaseAnalyticsViewModel {
     public boolean isUserIsLeadApplicant() {
         return userIsLeadApplicant;
     }
+
+    public boolean isWaitingForPartnerSubsidyBasisOnly() { return waitingForPartnerSubsidyBasisOnly; }
 
 }
