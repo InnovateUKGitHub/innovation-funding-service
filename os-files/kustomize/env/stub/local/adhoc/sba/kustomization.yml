@@ -9,3 +9,6 @@ components:
   - ../../../../../components/sba
   - ../../../../../patches/
   - ../../patches/
+
+patchesStrategicMerge:
+  - sba.yml

@@ -3,9 +3,11 @@ kind: Service
 metadata:
   name: sba
 spec:
+  type: NodePort
   selector:
     app: sba
   ports:
     - name: 7443-tcp
       port: 7443
       targetPort: 7443
+      nodePort: 7443
