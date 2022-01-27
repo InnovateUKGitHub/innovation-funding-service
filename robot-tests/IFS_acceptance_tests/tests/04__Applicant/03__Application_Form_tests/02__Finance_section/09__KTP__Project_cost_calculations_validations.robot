@@ -157,7 +157,7 @@ Total cost calculation
 Additional company cost estimation validations
     [Documentation]  IFS-7790  IFS-8154  IFS-11128
     Given the user clicks the button/link            id = accordion-finances-heading-additional-company-costs
-    When the user fills additional company costs     Additional Company Cost   0
+    When the user fills additional company costs     ${EMPTY}   0
     And the user clicks the button/link              id = mark-all-as-complete
     Then the user should see the validation messages for addition company costs
 
