@@ -27,6 +27,8 @@ Documentation     IFS-7790 KTP: Your finances - Edit
 ...
 ...               IFS-9819 KTP 2 Questions Wording Change
 ...
+...               IFS-11128 Remove validation for 'Your project costs > Additional Costs'
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../../resources/defaultResources.robot
@@ -153,9 +155,9 @@ Total cost calculation
     And the user should see the element      jQuery = div:contains("Total project costs") input[data-calculation-rawvalue="9496"]
 
 Additional company cost estimation validations
-    [Documentation]  IFS-7790  IFS-8154
+    [Documentation]  IFS-7790  IFS-8154  IFS-11128
     Given the user clicks the button/link            id = accordion-finances-heading-additional-company-costs
-    When the user fills additional company costs     ${EMPTY}  ${EMPTY}
+    When the user fills additional company costs     Additional Company Cost   ${EMPTY}
     Then the user should see the validation messages for addition company costs
 
 Additional company cost estimation calculations
