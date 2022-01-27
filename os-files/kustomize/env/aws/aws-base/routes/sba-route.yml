@@ -8,7 +8,7 @@ spec:
     targetPort: 7443-tcp
   tls:
     insecureEdgeTerminationPolicy: Redirect
-    termination: passthrough
+    termination: edge
   to:
     kind: Service
     name: sba
