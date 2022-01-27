@@ -17,3 +17,4 @@ resources:
   - config-maps/finance-db-config.yml
   - config-maps/survey-db-config.yml
   - routes/sba-route.yml
+  - rbac/sba-rbac.yml
