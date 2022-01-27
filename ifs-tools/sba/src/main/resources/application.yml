@@ -5,7 +5,7 @@ spring:
     kubernetes:
       discovery:
         include-not-ready-addresses: true
-        all-namespaces: true
+        all-namespaces: false
   boot:
     admin:
       discovery:
