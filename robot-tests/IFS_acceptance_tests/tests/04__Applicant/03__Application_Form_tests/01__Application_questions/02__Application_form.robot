@@ -44,8 +44,8 @@ Application details: Previous submission
 Application details: Innovation area section is visible
     [Documentation]  INFUND-8115 INFUND-9154
     [Tags]
-    Given Go To                                ${server}/application/${appId}
-    And the user clicks the button/link        link = Application details
+    Given the user navigates to the page       ${server}/application/${appId}/form/question/437/application-details
+    #And the user clicks the button/link        link = Application details
     Given the user should not see the element  jQuery = button:contains("Change your innovation area")
     When The user clicks the button/link       jQuery = button:contains("Choose your innovation area")
     Then the user should see the element       jQuery = label:contains("Digital manufacturing"):contains("Process analysis and control technologies including digital, sensor technology and metrology.")
@@ -62,8 +62,8 @@ Autosave in the form questions
     [Tags]
 #    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
 #    And the user clicks the button/link   link = ${aeroApplication}
-    Given Go To                                         ${server}/application/${appId}
-    When the user clicks the button/link                link = Application details
+    Given the user navigates to the page                ${server}/application/${appId}/form/question/437/application-details
+    #When the user clicks the button/link                link = Application details
     Then the application details need to be autosaved
     And the user clicks the button/link                 link = Back to application overview
     And the user clicks the button/link                 link = Project summary
@@ -107,7 +107,7 @@ Review and submit button
     [Tags]
 #    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
 #    And the user clicks the button/link   link = ${aeroApplication}
-    Given Go To                                 ${server}/application/${appId}
+    Given the user navigates to the page        ${server}/application/${appId}
     When the user clicks the button/link        jQuery = .govuk-button:contains("Review and submit")
     Then the user should see the element        jQuery = h1:contains("Application summary")
     And the user should see the element         jQuery = p:contains("Please review your application before final submission.")
