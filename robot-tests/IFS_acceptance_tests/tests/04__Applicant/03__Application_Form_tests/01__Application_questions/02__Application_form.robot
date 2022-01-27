@@ -44,7 +44,7 @@ Application details: Previous submission
 Application details: Innovation area section is visible
     [Documentation]  INFUND-8115 INFUND-9154
     [Tags]
-    Given the user clicks the button/link      link = Back to application overview
+    Given Go To                                ${server}/application/${appId}
     And the user clicks the button/link        link = Application details
     Given the user should not see the element  jQuery = button:contains("Change your innovation area")
     When The user clicks the button/link       jQuery = button:contains("Choose your innovation area")
@@ -60,15 +60,16 @@ Application details: Innovation area section is visible
 Autosave in the form questions
     [Documentation]    INFUND-189
     [Tags]
-    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link   link = ${aeroApplication}
-    When the user clicks the button/link  link = Application details
+#    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
+#    And the user clicks the button/link   link = ${aeroApplication}
+    Given Go To                                         ${server}/application/${appId}
+    When the user clicks the button/link                link = Application details
     Then the application details need to be autosaved
-    And the user clicks the button/link   link = Back to application overview
-    And the user clicks the button/link   link = Project summary
-    When The user enters text to a text field  css = .editor  I am a robot
+    And the user clicks the button/link                 link = Back to application overview
+    And the user clicks the button/link                 link = Project summary
+    When The user enters text to a text field           css = .editor  I am a robot
     And the user reloads the page
-    Then the user should see the text in the element  css = .editor  I am a robot
+    Then the user should see the text in the element    css = .editor  I am a robot
 
 Word count works
     [Documentation]    INFUND-198
@@ -104,11 +105,12 @@ Mark a question as incomplete
 Review and submit button
     [Documentation]  IFS-751
     [Tags]
-    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link   link = ${aeroApplication}
-    When the user clicks the button/link  jQuery = .govuk-button:contains("Review and submit")
-    Then the user should see the element  jQuery = h1:contains("Application summary")
-    And the user should see the element   jQuery = p:contains("Please review your application before final submission.")
+#    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
+#    And the user clicks the button/link   link = ${aeroApplication}
+    Given Go To                                 ${server}/application/${appId}
+    When the user clicks the button/link        jQuery = .govuk-button:contains("Review and submit")
+    Then the user should see the element        jQuery = h1:contains("Application summary")
+    And the user should see the element         jQuery = p:contains("Please review your application before final submission.")
 
 Incomplete sections contain mark as complete link
     [Documentation]  IFS-751
