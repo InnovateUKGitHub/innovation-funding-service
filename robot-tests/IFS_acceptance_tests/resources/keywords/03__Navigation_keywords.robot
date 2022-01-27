@@ -48,7 +48,3 @@ The table should be sorted by column
     ${test_sorting_list}=    Copy List    ${sorted_column_contents}
     Sort List    ${test_sorting_list}
     Lists Should Be Equal    ${sorted_column_contents}    ${test_sorting_list}
-
-The user navigates to the page without error checking
-    [Arguments]    ${TARGET_URL}
-    Wait Until Keyword Succeeds Without Screenshots    30    200ms    Go To    ${TARGET_URL}

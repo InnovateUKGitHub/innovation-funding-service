@@ -44,8 +44,7 @@ Application details: Previous submission
 Application details: Innovation area section is visible
     [Documentation]  INFUND-8115 INFUND-9154
     [Tags]
-    Given The user navigates to the page without error checking       ${server}/application/${appId}/form/question/437/application-details
-    #And the user clicks the button/link        link = Application details
+    Given the user navigates to application details page
     Given the user should not see the element  jQuery = button:contains("Change your innovation area")
     When The user clicks the button/link       jQuery = button:contains("Choose your innovation area")
     Then the user should see the element       jQuery = label:contains("Digital manufacturing"):contains("Process analysis and control technologies including digital, sensor technology and metrology.")
@@ -60,10 +59,7 @@ Application details: Innovation area section is visible
 Autosave in the form questions
     [Documentation]    INFUND-189
     [Tags]
-#    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
-#    And the user clicks the button/link   link = ${aeroApplication}
-    Given The user navigates to the page without error checking               ${server}/application/${appId}/form/question/437/application-details
-    #When the user clicks the button/link                link = Application details
+    Given the user navigates to application details page
     Then the application details need to be autosaved
     And the user clicks the button/link                 link = Back to application overview
     And the user clicks the button/link                 link = Project summary
@@ -105,9 +101,7 @@ Mark a question as incomplete
 Review and submit button
     [Documentation]  IFS-751
     [Tags]
-#    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
-#    And the user clicks the button/link   link = ${aeroApplication}
-    Given the user navigates to the page        ${server}/application/${appId}
+    Given the user navigates to application details page
     When the user clicks the button/link        jQuery = .govuk-button:contains("Review and submit")
     Then the user should see the element        jQuery = h1:contains("Application summary")
     And the user should see the element         jQuery = p:contains("Please review your application before final submission.")
@@ -223,3 +217,9 @@ the user should no longer see the Mark-as-complete-link
 Custom suite teardown
     The user closes the browser
     Disconnect from database
+
+the user navigates to application details page
+    Wait Until Keyword Succeeds Without Screenshots    30    200ms    Go To   ${server}/application/${appId}
+    the user reloads page with autosave
+    the user clicks the button/link        link = Application details
+    the user reloads page with autosave
