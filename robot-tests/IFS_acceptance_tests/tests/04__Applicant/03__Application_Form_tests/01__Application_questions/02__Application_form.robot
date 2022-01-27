@@ -170,7 +170,7 @@ the application details need to be autosaved
     wait for autosave
     the user clicks the button/link                 link = Back to application overview
     the user clicks the button/link                 link = Application details
-    the user should see the text in the element     id = durationInMonths    22
+    textfield should contain                        id = durationInMonths    22
 
 the word count should be correct for the Project summary
     Wait Until Element Contains Without Screenshots    css = .count-down    369
