@@ -157,7 +157,8 @@ Total cost calculation
 Additional company cost estimation validations
     [Documentation]  IFS-7790  IFS-8154  IFS-11128
     Given the user clicks the button/link            id = accordion-finances-heading-additional-company-costs
-    When the user fills additional company costs     Additional Company Cost   ${EMPTY}
+    When the user fills additional company costs     Additional Company Cost   0
+    And the user clicks the button/link              id = mark-all-as-complete
     Then the user should see the validation messages for addition company costs
 
 Additional company cost estimation calculations
@@ -329,12 +330,12 @@ the user should see the validation messages for addition company costs
     the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ textarea[id$="capitalEquipment.description"]
     the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ textarea[id$="otherCosts.description"]
     the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ textarea[id$="consumables.description"]
-    the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ input[id$="associateSalary.cost"]
-    the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ input[id$="managementSupervision.cost"]
-    the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ input[id$="otherStaff.cost"]
-    the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ input[id$="capitalEquipment.cost"]
-    the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ input[id$="consumables.cost"]
-    the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ input[id$="otherCosts.cost"]
+    the user should see the element       jQuery = span:contains(${field_should_be_1_or_higher}) ~ input[id$="associateSalary.cost"]
+    the user should see the element       jQuery = span:contains(${field_should_be_1_or_higher}) ~ input[id$="managementSupervision.cost"]
+    the user should see the element       jQuery = span:contains(${field_should_be_1_or_higher}) ~ input[id$="otherStaff.cost"]
+    the user should see the element       jQuery = span:contains(${field_should_be_1_or_higher}) ~ input[id$="capitalEquipment.cost"]
+    the user should see the element       jQuery = span:contains(${field_should_be_1_or_higher}) ~ input[id$="consumables.cost"]
+    the user should see the element       jQuery = span:contains(${field_should_be_1_or_higher}) ~ input[id$="otherCosts.cost"]
 
 the user should see the read only view of KTP
     the user should see the element         jQuery = th:contains("Total associate employment costs") ~ td:contains("£100")
