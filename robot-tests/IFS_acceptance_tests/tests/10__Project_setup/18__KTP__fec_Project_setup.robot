@@ -271,7 +271,7 @@ internal user approves finances
     log in as a different user          &{ifs_admin_user_credentials}
     the user navigates to the page      ${server}/project-setup-management/project/${project_id}/finance-check
     confirm eligibility                 0
-    confirm viability                   1
+    #confirm viability                   1
     the user clicks the button/link     jQuery = button:contains("Approve finance checks")
 
 the user edits the Academic and secretarial support costs in project setup

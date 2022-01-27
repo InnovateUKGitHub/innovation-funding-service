@@ -101,6 +101,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-10325 Update Ts&Cs -‘Knowledge Transfer Partnership (KTP) - Subsidy control'
 ...
+...            IFS-11129 Removal of Viability check for business
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -983,7 +985,7 @@ Internal user should not see the start date in the Edit Project screen
     Then The user should not see the element     jQuery = dt:contains("Start date")
 
 Internal user can not view status of the GOL section if the application not sucessful but finance checks have been approved
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-8119
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-8119  IFS-11129
     Given Log in as a different user                            &{ifs_admin_user_credentials}
     When the user navigates to the page                         ${server}/project-setup-management/project/${ProjectID}/finance-check
     And the user approves funding rules of lead and partner
@@ -1211,20 +1213,20 @@ the user approves Eligibility
     the user sees the changes in the finance summary table in Eligibility screen
     the user approves project costs
 
-the user approves KTP Viability
-    [Arguments]  ${project}
-    project finance approves KTP Viability for     ${partnerOrgId}  ${project}
-
-project finance approves KTP Viability for
-    [Arguments]  ${partner}  ${project}
-    the user navigates to the page       ${server}/project-setup-management/project/${project}/finance-check/organisation/${partner}/viability
-    the user should see the element      jQuery = th:contains("Funding sought (£)")
-    the user selects the checkbox        costs-reviewed
-    the user selects the checkbox        project-viable
-    Set Focus To Element                 link = Contact us
-    the user selects the option from the drop-down menu  Green  id = rag-rating
-    the user clicks the button/link      css = #confirm-button
-    the user clicks the button/link      jQuery = .modal-confirm-viability .govuk-button:contains("Confirm viability")
+#the user approves KTP Viability
+#    [Arguments]  ${project}
+#    project finance approves KTP Viability for     ${partnerOrgId}  ${project}
+#
+#project finance approves KTP Viability for
+#    [Arguments]  ${partner}  ${project}
+#    the user navigates to the page       ${server}/project-setup-management/project/${project}/finance-check/organisation/${partner}/viability
+#    the user should see the element      jQuery = th:contains("Funding sought (£)")
+#    the user selects the checkbox        costs-reviewed
+#    the user selects the checkbox        project-viable
+#    Set Focus To Element                 link = Contact us
+#    the user selects the option from the drop-down menu  Green  id = rag-rating
+#    the user clicks the button/link      css = #confirm-button
+#    the user clicks the button/link      jQuery = .modal-confirm-viability .govuk-button:contains("Confirm viability")
 
 the user approves spend profile
      the user clicks the button/link      link = Return to finance checks
@@ -1509,8 +1511,9 @@ the user closed ktp assesment
 
 the user approves finance checks
     [Arguments]   ${ProjectID}  ${competitionId}
-    the user approves Eligibility                            ${ProjectID}
-    the user approves KTP Viability                          ${ProjectID}
+    the user approves Eligibility                        ${ProjectID}
+    #the user approves KTP Viability                          ${ProjectID}
+    The user should see the element                      jQuery = span.viability-1:contains("N/A")
     the user clicks the approve finance check button
     the user navigates to the page                       ${server}/project-setup-management/competition/${competitionId}/status/all
 
