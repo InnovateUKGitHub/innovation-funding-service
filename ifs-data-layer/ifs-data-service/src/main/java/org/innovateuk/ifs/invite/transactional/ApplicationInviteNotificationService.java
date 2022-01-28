@@ -6,8 +6,10 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.ApplicationKtaInvite;
+import org.innovateuk.ifs.invite.domain.InviteHistory;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.ApplicationKtaInviteRepository;
+import org.innovateuk.ifs.invite.repository.InviteHistoryRepository;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteServiceImpl.Notifications;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
@@ -55,6 +57,9 @@ class ApplicationInviteNotificationService {
     private OrganisationRepository organisationRepository;
 
     @Autowired
+    private InviteHistoryRepository inviteHistoryRepository;
+
+    @Autowired
     private ApplicationInviteRepository applicationInviteRepository;
 
     @Autowired
@@ -98,10 +103,24 @@ class ApplicationInviteNotificationService {
             if(!isResend) {
                 invite.setHash(generateInviteHash());
             }
+
+            if(!isResend){
+                inviteHistoryRepository.save(mapInviteHistory(invite));
+            }
             applicationInviteRepository.save(invite);
             return inviteCollaboratorToApplication(baseUrl, invite).
                     andOnSuccessReturnVoid(() -> handleInviteSuccess(invite, isResend));
         }
+    }
+
+    private InviteHistory mapInviteHistory(ApplicationInvite invite) {
+        User loggedInUser = loggedInUserSupplier.get();
+        InviteHistory inviteHistory = new InviteHistory();
+        inviteHistory.setStatus(invite.getStatus());
+        inviteHistory.setUpdatedBy(loggedInUser);
+        inviteHistory.setUpdatedOn(ZonedDateTime.now());
+        inviteHistory.setInvite(invite);
+        return inviteHistory;
     }
 
     private ServiceResult<Void> processKtaInvite(String baseUrl, ApplicationKtaInvite invite, boolean isResend) {
@@ -211,7 +230,7 @@ class ApplicationInviteNotificationService {
     private String getParticipationAction(ApplicationInvite invite) {
         boolean leadOrganisation =
                 invite.getInviteOrganisation().getOrganisation() != null &&
-                invite.getTarget().getLeadOrganisationId().equals(invite.getInviteOrganisation().getOrganisation().getId());
+                        invite.getTarget().getLeadOrganisationId().equals(invite.getInviteOrganisation().getOrganisation().getId());
         return leadOrganisation ? "contribute" : "collaborate";
     }
 
@@ -233,6 +252,7 @@ class ApplicationInviteNotificationService {
         } else {
             invite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
         }
+        inviteHistoryRepository.save(mapInviteHistory(invite));
         applicationInviteRepository.save(invite);
     }
 
