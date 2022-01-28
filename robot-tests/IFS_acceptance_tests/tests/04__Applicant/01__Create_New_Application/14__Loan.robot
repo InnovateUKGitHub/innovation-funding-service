@@ -112,8 +112,9 @@ The user will not be able to mark the application as complete without completing
     Then the user should see that the element is disabled       id = submit-application-button
     And The user clicks the button/link                         id = accordion-questions-heading-1-1
     And The user should not see the element                     jQuery = #accordion-questions-content-1-1 button:contains("Mark")
+    And The user clicks the button/link                         link = Business and financial information
     And the user should see the element                         jQuery = .section-incomplete + button:contains("Business and financial information")
-    And The user should see the element                        jQuery = span:contains("Business and financial information")
+    And The user should see the element                         jQuery = span:contains("Business and financial information")
     And The user should see the element                         jQuery = p:contains("Information not yet provided")
     And the user should see the element                         jQuery = h2:contains("Applicant details")
     And the user should see the element                         jQuery = h2:contains("Project finance")
