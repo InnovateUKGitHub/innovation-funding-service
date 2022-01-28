@@ -12,10 +12,12 @@ import org.innovateuk.ifs.finance.repository.EmployeesAndTurnoverRepository;
 import org.innovateuk.ifs.finance.repository.GrowthTableRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
+import org.innovateuk.ifs.invite.domain.InviteHistory;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.mapper.ApplicationInviteMapper;
 import org.innovateuk.ifs.invite.mapper.InviteOrganisationMapper;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
+import org.innovateuk.ifs.invite.repository.InviteHistoryRepository;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -25,12 +27,14 @@ import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.procurement.milestone.repository.ApplicationProcurementMilestoneRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -72,6 +76,9 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
 
     @Autowired
     private ApplicationInviteRepository applicationInviteRepository;
+
+    @Autowired
+    private InviteHistoryRepository inviteHistoryRepository;
 
     @Autowired
     private OrganisationRepository organisationRepository;
@@ -138,6 +145,17 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         return getByHash(hash).andOnSuccessReturn(invite -> inviteOrganisationMapper.mapToResource(inviteOrganisationRepository.findById(invite.getInviteOrganisation().getId()).orElse(null)));
     }
 
+    private InviteHistory getInviteHistory(ApplicationInviteResource applicationInviteResource) {
+        ApplicationInvite invite = mapInviteResourceToInvite(applicationInviteResource, null);
+        User loggedInUser = loggedInUserSupplier.get();
+        InviteHistory inviteHistory = new InviteHistory();
+        inviteHistory.setStatus(applicationInviteResource.getStatus());
+        inviteHistory.setUpdatedBy(loggedInUser);
+        inviteHistory.setUpdatedOn(ZonedDateTime.now());
+        inviteHistory.setInvite(invite);
+        return inviteHistory;
+    }
+
     @Override
     public ServiceResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
         return serviceSuccess(
@@ -184,6 +202,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         return super.checkUserExistsForInvite(inviteHash);
     }
 
+
     @Override
     public ServiceResult<UserResource> getUserByInviteHash(String hash) {
         return getByHash(hash)
@@ -200,9 +219,21 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
                 .andOnSuccessReturnVoid(this::removeApplicationInvite);
     }
 
+    @Override
+    public ServiceResult<Void> updateInviteHistory(ApplicationInviteResource inviteResource) {
+        InviteHistory inviteHistory = getInviteHistory(inviteResource);
+        inviteHistoryRepository.save(inviteHistory);
+        return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<ApplicationInvite> getById(Long id) {
+        return super.getById(id);
+    }
+
     private void removeApplicationInvite(ApplicationInvite applicationInvite) {
         Application application = applicationInvite.getTarget();
-
+        inviteHistoryRepository.deleteInviteHistoryByInvite(applicationInvite);
         List<ProcessRole> collaboratorProcessRoles =
                 processRoleRepository.findByUserAndApplicationId(applicationInvite.getUser(), application.getId());
 

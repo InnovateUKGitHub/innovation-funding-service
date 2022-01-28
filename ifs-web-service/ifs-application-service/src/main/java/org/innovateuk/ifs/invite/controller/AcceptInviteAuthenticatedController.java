@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static org.innovateuk.ifs.invite.constant.InviteStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 
 
@@ -70,6 +71,10 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                     String registerUrl = "/accept-invite-authenticated/confirm-invited-organisation/confirm";
                     ConfirmOrganisationInviteOrganisationViewModel viewModel =
                             confirmOrganisationInviteModelPopulator.populate(invite, organisation, registerUrl);
+
+                    invite.setStatus(ACCEPTED);
+                    inviteRestService.acceptInvite(invite);
+
                     model.addAttribute("model", viewModel);
                     return "registration/confirm-registered-organisation";
                 })
@@ -116,6 +121,9 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                     }
 
                     CompetitionOrganisationConfigResource organisationConfig = organisationConfigRestService.findByCompetitionId(invite.getCompetitionId()).getSuccess();
+
+                    invite.setStatus(ACCEPTED);
+                    inviteRestService.acceptInvite(invite);
 
                     if (organisationConfig.areInternationalApplicantsAllowed()) {
                         return "redirect:/organisation/create/international-organisation";

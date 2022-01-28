@@ -13,8 +13,8 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.inv
 import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.GET_USER_BY_HASH_MAPPING;
 
 /*
-* A typical RestService to use as a client API on the web-service side for the data-service functionality .
-* */
+ * A typical RestService to use as a client API on the web-service side for the data-service functionality .
+ * */
 
 @Service
 public class InviteRestServiceImpl extends BaseRestService implements InviteRestService {
@@ -80,6 +80,13 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
         String url = inviteRestUrl + String.format("/accept-invite/%s/%s/%s", inviteHash, userId, organisationId);
         return putWithRestResultAnonymous(url, Void.class);
     }
+
+    @Override
+    public RestResult<Void> acceptInvite(ApplicationInviteResource inviteResource) {
+        String url = inviteRestUrl + "/update-invite";
+        return putWithRestResultAnonymous(url, inviteResource, Void.class);
+    }
+
     @Override
     public RestResult<Void> removeApplicationInvite(Long inviteId) {
         String url = inviteRestUrl + String.format("/remove-invite/%s", inviteId);

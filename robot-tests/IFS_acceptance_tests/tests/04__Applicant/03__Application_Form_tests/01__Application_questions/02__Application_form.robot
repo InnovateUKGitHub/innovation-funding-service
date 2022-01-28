@@ -44,8 +44,6 @@ Application details: Previous submission
 Application details: Innovation area section is visible
     [Documentation]  INFUND-8115 INFUND-9154
     [Tags]
-    Given the user clicks the button/link      link = Back to application overview
-    And the user clicks the button/link        link = Application details
     Given the user should not see the element  jQuery = button:contains("Change your innovation area")
     When The user clicks the button/link       jQuery = button:contains("Choose your innovation area")
     Then the user should see the element       jQuery = label:contains("Digital manufacturing"):contains("Process analysis and control technologies including digital, sensor technology and metrology.")
@@ -56,19 +54,16 @@ Application details: Innovation area section is visible
     When the user clicks the button/link       jQuery = label:contains("Digital manufacturing")
     And the user clicks the button/link        jQuery = button:contains("Save")
     Then the user should see the element       jQuery = button:contains("Change your innovation area")
+    And the application details need to be autosaved
 
 Autosave in the form questions
     [Documentation]    INFUND-189
     [Tags]
-    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link   link = ${aeroApplication}
-    When the user clicks the button/link  link = Application details
-    Then the application details need to be autosaved
-    And the user clicks the button/link   link = Back to application overview
-    And the user clicks the button/link   link = Project summary
-    When The user enters text to a text field  css = .editor  I am a robot
+    When the user clicks the button/link                link = Back to application overview
+    And the user clicks the button/link                 link = Project summary
+    When The user enters text to a text field           css = .editor  I am a robot
     And the user reloads the page
-    Then the user should see the text in the element  css = .editor  I am a robot
+    Then the user should see the text in the element    css = .editor  I am a robot
 
 Word count works
     [Documentation]    INFUND-198
@@ -104,11 +99,10 @@ Mark a question as incomplete
 Review and submit button
     [Documentation]  IFS-751
     [Tags]
-    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link   link = ${aeroApplication}
-    When the user clicks the button/link  jQuery = .govuk-button:contains("Review and submit")
-    Then the user should see the element  jQuery = h1:contains("Application summary")
-    And the user should see the element   jQuery = p:contains("Please review your application before final submission.")
+    Given the user navigates to the page        ${server}/application/${appId}
+    When the user clicks the button/link        jQuery = .govuk-button:contains("Review and submit")
+    Then the user should see the element        jQuery = h1:contains("Application summary")
+    And the user should see the element         jQuery = p:contains("Please review your application before final submission.")
 
 Incomplete sections contain mark as complete link
     [Documentation]  IFS-751
@@ -171,11 +165,12 @@ Custom Suite Setup
     Set suite variable  ${appId}
 
 the application details need to be autosaved
-    the user enters text to a text field    durationInMonths    22
+    the user enters text to a text field            durationInMonths    22
+    mouse out                                       durationInMonths
     wait for autosave
-    the user clicks the button/link         link = Back to application overview
-    the user clicks the button/link         link = Application details
-    the user should not see the text in the element    durationInMonths    22
+    the user clicks the button/link                 link = Back to application overview
+    the user clicks the button/link                 link = Application details
+    textfield should contain                        id = durationInMonths    22
 
 the word count should be correct for the Project summary
     Wait Until Element Contains Without Screenshots    css = .count-down    369

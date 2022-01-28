@@ -2,6 +2,7 @@ package org.innovateuk.ifs.invite.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -10,10 +11,12 @@ import org.junit.Test;
 import java.util.List;
 
 import static java.lang.Boolean.TRUE;
+import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.inviteOrganisationResourceListType;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -37,11 +40,11 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
         inviteOrganisationResource.setOrganisationName(organisationName);
         inviteOrganisationResource.setInviteResources(invites);
 
-        setupPostWithRestResultExpectations(inviteRestURL +  "/create-application-invites", inviteOrganisationResource, CREATED);
+        setupPostWithRestResultExpectations(inviteRestURL + "/create-application-invites", inviteOrganisationResource, CREATED);
         RestResult<Void> response = service.createInvitesByInviteOrganisation(organisationName, invites);
         assertTrue(response.isSuccess());
 
-        setupPostWithRestResultVerifications(inviteRestURL +  "/create-application-invites", Void.class, inviteOrganisationResource);
+        setupPostWithRestResultVerifications(inviteRestURL + "/create-application-invites", Void.class, inviteOrganisationResource);
 
     }
 
@@ -54,40 +57,40 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
         inviteOrganisationResource.setOrganisation(organisationId);
         inviteOrganisationResource.setInviteResources(invites);
 
-        setupPostWithRestResultExpectations(inviteRestURL +  "/create-application-invites", inviteOrganisationResource, CREATED);
+        setupPostWithRestResultExpectations(inviteRestURL + "/create-application-invites", inviteOrganisationResource, CREATED);
         RestResult<Void> response = service.createInvitesByOrganisation(organisationId, invites);
         assertTrue(response.isSuccess());
 
-        setupPostWithRestResultVerifications(inviteRestURL +  "/create-application-invites", Void.class, inviteOrganisationResource);
+        setupPostWithRestResultVerifications(inviteRestURL + "/create-application-invites", Void.class, inviteOrganisationResource);
     }
 
     @Test
     public void saveInvites() {
         final List<ApplicationInviteResource> invites = newApplicationInviteResource().build(42);
 
-        setupPostWithRestResultExpectations(inviteRestURL +  "/save-invites", invites, OK);
+        setupPostWithRestResultExpectations(inviteRestURL + "/save-invites", invites, OK);
         RestResult<Void> response = service.saveInvites(invites);
         assertTrue(response.isSuccess());
 
-        setupPostWithRestResultVerifications(inviteRestURL +  "/save-invites", Void.class, invites);
+        setupPostWithRestResultVerifications(inviteRestURL + "/save-invites", Void.class, invites);
     }
 
     @Test
     public void resendInvites() {
         final ApplicationInviteResource invite = newApplicationInviteResource().build();
 
-        setupPostWithRestResultExpectations(inviteRestURL +  "/resend-invite", invite, OK);
+        setupPostWithRestResultExpectations(inviteRestURL + "/resend-invite", invite, OK);
         RestResult<Void> response = service.resendInvite(invite);
         assertTrue(response.isSuccess());
 
-        setupPostWithRestResultVerifications(inviteRestURL +  "/resend-invite", Void.class, invite);
+        setupPostWithRestResultVerifications(inviteRestURL + "/resend-invite", Void.class, invite);
     }
 
     @Test
     public void acceptInvite() {
         final long userId = 124214L;
 
-        setupPutWithRestResultAnonymousExpectations(inviteRestURL +  String.format("/accept-invite/%s/%s", inviteHash, userId), null, OK);
+        setupPutWithRestResultAnonymousExpectations(inviteRestURL + String.format("/accept-invite/%s/%s", inviteHash, userId), null, OK);
 
         RestResult<Void> response = service.acceptInvite(inviteHash, userId);
         assertTrue(response.isSuccess());
@@ -98,17 +101,52 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
         final long userId = 124214L;
         final long organisationId = 23L;
 
-        setupPutWithRestResultAnonymousExpectations(inviteRestURL +  String.format("/accept-invite/%s/%s/%s", inviteHash, userId, organisationId), null, OK);
+        setupPutWithRestResultAnonymousExpectations(inviteRestURL + String.format("/accept-invite/%s/%s/%s", inviteHash, userId, organisationId), null, OK);
 
         RestResult<Void> response = service.acceptInvite(inviteHash, userId, organisationId);
         assertTrue(response.isSuccess());
     }
 
     @Test
+    public void acceptInvite_applicationInviteResource() {
+         String expectedLeadApplicant = "Steve Smith";
+        String expectedLeadApplicantEmail = "steve.smith@empire";
+        String expectedLeadOrganisation = "Empire";
+        String expectedName = "Jessica Doe";
+        String expectedNameConfirmed = "Jessica Doe";
+        String expectedEmail = "jessica.doe@ludlow.co.uk";
+        InviteStatus expectedStatus = SENT;
+        Long expectedApplication = 1L;
+        Long expectedUser = 2L;
+        String expectedHash = "hash";
+        Long expectedInviteOrganisation = 3L;
+
+
+        ApplicationInviteResource applicationInviteResource = newApplicationInviteResource()
+                .withLeadApplicant(expectedLeadApplicant)
+                .withLeadApplicantEmail(expectedLeadApplicantEmail)
+                .withLeadOrganisation(expectedLeadOrganisation)
+                .withName(expectedName)
+                .withNameConfirmed(expectedNameConfirmed)
+                .withEmail(expectedEmail)
+                .withStatus(expectedStatus)
+                .withApplication(expectedApplication)
+                .withUsers(expectedUser)
+                .withHash(expectedHash)
+                .withInviteOrganisation(expectedInviteOrganisation)
+                .build();
+        setupPutWithRestResultAnonymousExpectations(inviteRestURL + String.format("/update-invite"), applicationInviteResource, OK);
+
+        RestResult<Void> response = service.acceptInvite(applicationInviteResource);
+        assertTrue(response.isSuccess());
+    }
+
+
+    @Test
     public void removeApplicationInvite() {
         final Long inviteId = 20310L;
 
-        setupDeleteWithRestResultExpectations(inviteRestURL +  String.format("/remove-invite/%s", inviteId), OK);
+        setupDeleteWithRestResultExpectations(inviteRestURL + String.format("/remove-invite/%s", inviteId), OK);
         RestResult<Void> response = service.removeApplicationInvite(inviteId);
         assertTrue(response.isSuccess());
     }
