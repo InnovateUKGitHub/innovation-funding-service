@@ -51,7 +51,7 @@ public abstract class AbstractInviteMockMVCTest<ControllerType> extends BaseCont
         invite.setCompetitionId(competitionId);
         inviteOrganisation.setInviteResources(Arrays.asList(invite));
 
-        when(inviteRestService.getInviteByHash(eq(INVITE_HASH))).thenReturn(RestResult.restSuccess(invite));
+        when(inviteRestService.getInviteByHash(any())).thenReturn(RestResult.restSuccess(invite));
         when(inviteOrganisationRestService.getByIdForAnonymousUserFlow(eq(invite.getInviteOrganisation()))).thenReturn(RestResult.restSuccess(inviteOrganisation));
         when(inviteOrganisationRestService.put(any())).thenReturn(RestResult.restSuccess());
         when(inviteRestService.checkExistingUser(eq(INVITE_HASH))).thenReturn(RestResult.restSuccess(false));

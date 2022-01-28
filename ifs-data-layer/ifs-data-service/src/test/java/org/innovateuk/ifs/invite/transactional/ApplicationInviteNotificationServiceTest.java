@@ -5,8 +5,10 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
+import org.innovateuk.ifs.invite.domain.InviteHistory;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
+import org.innovateuk.ifs.invite.repository.InviteHistoryRepository;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
 import org.innovateuk.ifs.notifications.resource.NotificationMessage;
@@ -58,7 +60,8 @@ public class ApplicationInviteNotificationServiceTest {
 
     @Mock
     private ApplicationInviteRepository applicationInviteRepositoryMock;
-
+    @Mock
+    private InviteHistoryRepository inviteHistoryRepositoryMock;
     @Mock
     private OrganisationRepository organisationRepositoryMock;
 
@@ -77,6 +80,7 @@ public class ApplicationInviteNotificationServiceTest {
     public void setup() {
 
         when(applicationInviteRepositoryMock.save(any(ApplicationInvite.class))).thenReturn(new ApplicationInvite());
+        when(inviteHistoryRepositoryMock.save(any(InviteHistory.class))).thenReturn(new InviteHistory());
 
         localValidatorFactory = new LocalValidatorFactoryBean();
         localValidatorFactory.setProviderClass(HibernateValidator.class);
