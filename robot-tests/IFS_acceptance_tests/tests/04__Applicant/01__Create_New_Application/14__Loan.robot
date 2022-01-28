@@ -107,6 +107,7 @@ The user will not be able to mark the application as complete without completing
     Given the user navigates to the page                        ${server}/applicant/dashboard
     And The user clicks the button/link                         link = ${loanApplicationName}
     When the user clicks the button/link                        id = application-overview-submit-cta
+    And The user clicks the button/link                         link = Business and financial information
     And The user should see the element                         jQuery = span:contains("Business and financial information")
     And The user should see the element                         jQuery = p:contains("Information not yet provided")
     Then the user should see that the element is disabled       id = submit-application-button
