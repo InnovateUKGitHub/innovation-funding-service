@@ -9,10 +9,12 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
+import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.mapper.ApplicationInviteMapper;
 import org.innovateuk.ifs.invite.mapper.InviteOrganisationMapper;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
+import org.innovateuk.ifs.invite.repository.InviteHistoryRepository;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -27,10 +29,7 @@ import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InOrder;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
@@ -80,6 +79,8 @@ public class ApplicationInviteServiceImplTest {
 
     @Mock
     private ProcessRoleRepository processRoleRepository;
+    @Mock
+    private InviteHistoryRepository inviteHistoryRepository;
 
     @Mock
     private OrganisationRepository organisationRepository;
@@ -105,6 +106,10 @@ public class ApplicationInviteServiceImplTest {
     @Before
     public void setup() {
         when(applicationInviteRepository.save(any(ApplicationInvite.class))).thenReturn(new ApplicationInvite());
+        ApplicationInvite applicationInvite = new ApplicationInvite();
+        doNothing().when(inviteHistoryRepository).deleteInviteHistoryByInvite(any());
+
+
         when(loggedInUserSupplier.get()).thenReturn(newUser().build());
     }
 

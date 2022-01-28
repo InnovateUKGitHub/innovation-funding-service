@@ -1,11 +1,24 @@
 package org.innovateuk.ifs.user.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomUtils;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.invite.domain.ApplicationInvite;
+import org.innovateuk.ifs.invite.domain.Invite;
+import org.innovateuk.ifs.invite.domain.InviteHistory;
+import org.innovateuk.ifs.invite.domain.InviteOrganisation;
+import org.innovateuk.ifs.invite.repository.InviteHistoryRepository;
+import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
+import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
+import org.innovateuk.ifs.invite.transactional.ApplicationInviteServiceImpl;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
@@ -21,8 +34,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.ZonedDateTime;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
@@ -52,6 +67,7 @@ public class UserController {
     @Autowired
     private BaseUserService baseUserService;
 
+
     @Autowired
     private UserService userService;
 
@@ -63,6 +79,7 @@ public class UserController {
 
     @Autowired
     private CrmService crmService;
+
 
     @GetMapping("/uid/{uid}")
     public RestResult<UserResource> getUserByUid(@PathVariable String uid) {
@@ -120,11 +137,11 @@ public class UserController {
     @PostMapping("/internal/create/{inviteHash}")
     public RestResult<Void> createInternalUser(@PathVariable("inviteHash") String inviteHash, @Valid @RequestBody InternalUserRegistrationResource internalUserRegistrationResource) {
         return registrationService.createUser(anUserCreationResource()
-                .withFirstName(internalUserRegistrationResource.getFirstName())
-                .withLastName(internalUserRegistrationResource.getLastName())
-                .withPassword(internalUserRegistrationResource.getPassword())
-                .withInviteHash(inviteHash)
-                .build())
+                        .withFirstName(internalUserRegistrationResource.getFirstName())
+                        .withLastName(internalUserRegistrationResource.getLastName())
+                        .withPassword(internalUserRegistrationResource.getPassword())
+                        .withInviteHash(inviteHash)
+                        .build())
                 .andOnSuccessReturnVoid()
                 .toPostCreateResponse();
     }
@@ -191,6 +208,7 @@ public class UserController {
                 .toPutResponse();
     }
 
+
     @GetMapping("/" + URL_VERIFY_EMAIL + "/{hash}")
     public RestResult<Void> verifyEmail(@PathVariable String hash) {
         final ServiceResult<Token> result = tokenService.getEmailToken(hash);
@@ -200,7 +218,10 @@ public class UserController {
         return result.handleSuccessOrFailure(
                 failure -> restFailure(failure.getErrors()),
                 token -> {
-                    registrationService.activateApplicantAndSendDiversitySurvey(token.getClassPk()).andOnSuccessReturnVoid(v -> {
+                    JsonNode extraInfo = token.getExtraInfo().get("inviteId");
+                    Long inviteId = Optional.ofNullable(extraInfo).isPresent() ? extraInfo.asLong() : null;
+
+                    registrationService.activateApplicantAndSendDiversitySurvey(token.getClassPk(), inviteId).andOnSuccessReturnVoid(v -> {
                         ServiceResult<ApplicationResource> applicationResourceServiceResult = tokenService.handleExtraAttributes(token);
 
                         applicationResourceServiceResult.andOnSuccessReturnVoid(

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.forms.form.ApplicationReopenForm;
 import org.innovateuk.ifs.application.forms.form.ApplicationSubmitForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
+import org.innovateuk.ifs.application.review.viewmodel.ReviewAndSubmitViewModel;
 import org.innovateuk.ifs.application.review.viewmodel.TrackViewModel;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
@@ -28,6 +29,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -71,7 +73,10 @@ public class ReviewAndSubmitController {
                                   Model model,
                                   UserResource user) {
 
-        model.addAttribute("model", reviewAndSubmitViewModelPopulator.populate(applicationId, user));
+        ReviewAndSubmitViewModel viewModel = reviewAndSubmitViewModelPopulator.populate(applicationId, user);
+        model.addAttribute("model", viewModel);
+        handleSubsidyBasis(viewModel, bindingResult);
+
 
         return "application/review-and-submit";
     }
@@ -89,7 +94,7 @@ public class ReviewAndSubmitController {
 
         if (!ableToSubmitApplication(user, application)) {
             cookieFlashMessageFilter.setFlashMessage(response, "cannotSubmit");
-            return  format("redirect:/application/%d", applicationId);
+            return format("redirect:/application/%d", applicationId);
         }
 
         return format("redirect:/application/%d/confirm-submit?termsAgreed=true", applicationId);
@@ -291,5 +296,11 @@ public class ReviewAndSubmitController {
     private String handleMarkAsCompleteFailure(long applicationId, long questionId, ProcessRoleResource processRole) {
         questionStatusRestService.markAsInComplete(questionId, applicationId, processRole.getId());
         return "redirect:/application/" + applicationId + "/form/question/edit/" + questionId + "?show-errors=true";
+    }
+
+    private void handleSubsidyBasis(ReviewAndSubmitViewModel viewModel, BindingResult bindingResult) {
+        if(viewModel.isUserIsLeadApplicant() && viewModel.isWaitingForPartnerSubsidyBasisOnly()) {
+            bindingResult.addError(new ObjectError("subsidyBasis", new String[] {"validation.subsidy.basis.partner.incomplete"}, null, null));
+        }
     }
 }

@@ -412,6 +412,46 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
+    public void manageInformState_withOnHoldAlwaysOpenApplication() {
+        List<Milestone> milestones = newMilestone()
+                .withDate(ZonedDateTime.now().minusDays(1))
+                .withType(OPEN_DATE,
+                        SUBMISSION_DATE,
+                        ALLOCATE_ASSESSORS,
+                        ASSESSORS_NOTIFIED,
+                        ASSESSMENT_CLOSED,
+                        ASSESSMENT_PANEL,
+                        PANEL_DATE,
+                        FUNDERS_PANEL)
+                .build(9);
+        milestones.addAll(newMilestone()
+                .withDate(ZonedDateTime.now().plusDays(1))
+                .withType(RELEASE_FEEDBACK)
+                .build(1));
+
+        Competition competition = newCompetition()
+                .withSetupComplete(true)
+                .withAlwaysOpen(true)
+                .withMilestones(milestones)
+                .build();
+
+        assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
+
+        CompetitionFundedKeyApplicationStatisticsResource keyStatistics = new CompetitionFundedKeyApplicationStatisticsResource();
+        keyStatistics.setApplicationsSubmitted(5);
+        keyStatistics.setApplicationsNotifiedOfDecision(4);
+        keyStatistics.setApplicationsOnHold(1);
+
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatistics));
+
+        ServiceResult<Void> response = service.manageInformState(competitionId);
+
+        assertTrue(response.isSuccess());
+        assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
+    }
+
+    @Test
     public void getCompetitionOrganisationTypesById() {
         List<OrganisationType> organisationTypes  = newOrganisationType().build(2);
         List<OrganisationTypeResource> organisationTypeResources = newOrganisationTypeResource().build(2);
