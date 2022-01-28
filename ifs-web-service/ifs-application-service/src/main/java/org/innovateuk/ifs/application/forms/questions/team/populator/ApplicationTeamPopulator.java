@@ -164,7 +164,7 @@ public class ApplicationTeamPopulator {
                 organisation.getName(),
                 organisation.getOrganisationType(),
                 organisation.getOrganisationTypeName(),
-                organisation.getCompaniesHouseNumber(),
+                organisation.getCompanyRegistrationNumber(),
                 userRows,
                 applicantCanEditRow(userRows, user, leadApplicant),
                 true,

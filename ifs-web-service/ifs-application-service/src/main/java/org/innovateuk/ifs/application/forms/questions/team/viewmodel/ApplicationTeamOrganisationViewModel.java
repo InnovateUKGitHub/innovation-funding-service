@@ -12,7 +12,7 @@ public class ApplicationTeamOrganisationViewModel implements Comparable<Applicat
     private final String name;
     private final Long organisationType;
     private final String organisationTypeName;
-    private final String companiesHouseNumber;
+    private final String companyRegistrationNumber;
     private final List<ApplicationTeamRowViewModel> rows;
     private final boolean editable;
     private final boolean userBelongsToOrganisation;
@@ -25,11 +25,11 @@ public class ApplicationTeamOrganisationViewModel implements Comparable<Applicat
                                                 String name,
                                                 Long organisationType,
                                                 String organisationTypeName,
-                                                String companiesHouseNumber,
+                                                String companyRegistrationNumber,
                                                 List<ApplicationTeamRowViewModel> rows,
                                                 boolean editable,
                                                 boolean existing) {
-        this(id, inviteId, name, organisationType, organisationTypeName, companiesHouseNumber, rows, editable, false, existing, null);
+        this(id, inviteId, name, organisationType, organisationTypeName, companyRegistrationNumber, rows, editable, false, existing, null);
     }
 
     public ApplicationTeamOrganisationViewModel(long id,
@@ -37,7 +37,7 @@ public class ApplicationTeamOrganisationViewModel implements Comparable<Applicat
                                                 String name,
                                                 Long organisationType,
                                                 String organisationTypeName,
-                                                String companiesHouseNumber,
+                                                String companyRegistrationNumber,
                                                 List<ApplicationTeamRowViewModel> rows,
                                                 boolean editable,
                                                 boolean existing,
@@ -48,7 +48,7 @@ public class ApplicationTeamOrganisationViewModel implements Comparable<Applicat
         this.name = name;
         this.organisationType = organisationType;
         this.organisationTypeName = organisationTypeName;
-        this.companiesHouseNumber = companiesHouseNumber;
+        this.companyRegistrationNumber = companyRegistrationNumber;
         this.rows = rows;
         this.editable = editable;
         this.userBelongsToOrganisation = userBelongsToOrganisation;
@@ -82,9 +82,7 @@ public class ApplicationTeamOrganisationViewModel implements Comparable<Applicat
         return organisationTypeName;
     }
 
-    public String getCompaniesHouseNumber() {
-        return companiesHouseNumber;
-    }
+    public String getCompanyRegistrationNumber() { return companyRegistrationNumber; }
 
     public List<ApplicationTeamRowViewModel> getRows() {
         return rows;

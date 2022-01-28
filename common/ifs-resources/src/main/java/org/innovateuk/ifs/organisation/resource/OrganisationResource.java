@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Comparator.comparingLong;
 
@@ -150,6 +151,19 @@ public class OrganisationResource {
 
     public void setBusinessType(String businessType) {
         this.businessType = businessType;
+    }
+
+    @JsonIgnore
+    public String getCompanyRegistrationNumber() {
+        switch(getOrganisationTypeEnum()) {
+            case BUSINESS:
+            case RTO:
+            case PUBLIC_SECTOR_OR_CHARITY:
+                return isInternational() ? getInternationalRegistrationNumber() :
+                        Optional.of(getCompaniesHouseNumber()).orElseGet(() -> getOrganisationNumber());
+            default:
+                return null;
+        }
     }
 
     @JsonIgnore
