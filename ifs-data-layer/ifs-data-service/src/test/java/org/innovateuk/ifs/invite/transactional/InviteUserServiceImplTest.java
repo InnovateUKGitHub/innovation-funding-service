@@ -219,8 +219,6 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
 
-
-
         ServiceResult<Void> result = service.saveUserInvite(invitedUser, IFS_ADMINISTRATOR, "");
 
         assertTrue(result.isSuccess());
