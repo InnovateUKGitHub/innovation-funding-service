@@ -179,6 +179,10 @@ Assessor can view BFI question in application
 Applicant complete the project setup details
     [Documentation]  IFS-6369  IFS-6285  IFS-9483  IFS-10825
     When the user completes the project details
+    And the user completes the project team details
+    Then the user should not see the element    jQuery = h2:contains("Bank details")
+
+The user is unable to change funding percentage
     [Documentation]  IFS-7244
     [Setup]  log in as a different user         &{internal_finance_credentials}
     Given the user navigates to the page        ${loan_finance_checks}
