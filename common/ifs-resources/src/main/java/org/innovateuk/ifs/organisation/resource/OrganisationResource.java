@@ -160,7 +160,7 @@ public class OrganisationResource {
             case RTO:
             case PUBLIC_SECTOR_OR_CHARITY:
                 return isInternational() ? getInternationalRegistrationNumber() :
-                        Optional.of(getCompaniesHouseNumber()).orElseGet(() -> getOrganisationNumber());
+                        Optional.ofNullable(getCompaniesHouseNumber()).orElseGet(() -> getOrganisationNumber());
             default:
                 return null;
         }
