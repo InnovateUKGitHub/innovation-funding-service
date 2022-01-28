@@ -121,6 +121,8 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
                 .withLastName("Pimenta")
                 .withEmail("Astle.Pimenta@iuk.ukri.org")
                 .build();
+
+        ReflectionTestUtils.setField(service, "internalUserEmailDomains", "iuk.ukri.org");
     }
 
     @Override
@@ -216,6 +218,8 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
 
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
+
+
 
         ServiceResult<Void> result = service.saveUserInvite(invitedUser, IFS_ADMINISTRATOR, "");
 
