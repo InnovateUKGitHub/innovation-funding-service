@@ -1213,21 +1213,6 @@ the user approves Eligibility
     the user sees the changes in the finance summary table in Eligibility screen
     the user approves project costs
 
-#the user approves KTP Viability
-#    [Arguments]  ${project}
-#    project finance approves KTP Viability for     ${partnerOrgId}  ${project}
-#
-#project finance approves KTP Viability for
-#    [Arguments]  ${partner}  ${project}
-#    the user navigates to the page       ${server}/project-setup-management/project/${project}/finance-check/organisation/${partner}/viability
-#    the user should see the element      jQuery = th:contains("Funding sought (£)")
-#    the user selects the checkbox        costs-reviewed
-#    the user selects the checkbox        project-viable
-#    Set Focus To Element                 link = Contact us
-#    the user selects the option from the drop-down menu  Green  id = rag-rating
-#    the user clicks the button/link      css = #confirm-button
-#    the user clicks the button/link      jQuery = .modal-confirm-viability .govuk-button:contains("Confirm viability")
-
 the user approves spend profile
      the user clicks the button/link      link = Return to finance checks
      the user clicks the button/link      link = Generate spend profile
@@ -1512,7 +1497,7 @@ the user closed ktp assesment
 the user approves finance checks
     [Arguments]   ${ProjectID}  ${competitionId}
     the user approves Eligibility                        ${ProjectID}
-    #the user approves KTP Viability                          ${ProjectID}
+    the user clicks the button/link                      link = Back to finance checks
     The user should see the element                      jQuery = span.viability-1:contains("N/A")
     the user clicks the approve finance check button
     the user navigates to the page                       ${server}/project-setup-management/competition/${competitionId}/status/all
@@ -1522,7 +1507,6 @@ the user edits project location
     the user clicks the button/link     jQuery = button:contains("Save project location")
 
 the user clicks the approve finance check button
-     the user clicks the button/link      link = Return to finance checks
      the user clicks the button/link      jQuery = button:contains("Approve finance checks")
      the user should see the element      jQuery = p:contains("The finance checks have been approved")
 

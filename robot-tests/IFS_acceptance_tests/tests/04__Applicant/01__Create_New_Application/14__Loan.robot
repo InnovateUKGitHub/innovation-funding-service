@@ -402,15 +402,6 @@ the external user should see the funding changes
     the user should see the element     jQuery = th:contains("Travel and subsistence") ~ td:contains("5,970")
     the user should see the element     jQuery = th:contains("Total project costs") ~ td:contains("£203,371") ~ td:contains("£207,271") ~ td:contains("£3900")
 
-#the user marks loan as complete
-#    [Arguments]  ${status}  ${appl_name}
-#    the user selects the radio button     successful   ${status}
-#    the user selects the checkbox         ${status}Confirmation
-#    the user clicks the button/link       id = mark-as-${status}
-#    the user should see the element       jQuery = p:contains("Project setup is complete and was ${status}.")
-#    the user clicks the button/link       link = Back to project setup
-#    the user should see the element       jQuery = tr:contains("${appl_name}") .ifs-project-status-${status}
-
 the user approves the spend profile
     the user navigates to the page   ${spend_profile}
     the user selects the checkbox    approvedByLeadTechnologist

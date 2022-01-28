@@ -42,11 +42,6 @@ Internal user approves the Eligibility of the lead applicant
     When the user approves project costs
     Then the user should see the element     jQuery = p:contains("The partner's finance eligibility has been approved by ")
 
-#Internal user approves the Viability of the partner
-#    [Documentation]  IFS-8328
-#    And The user navigates to the page      ${server}/project-setup-management/project/${ktpProjectID}/finance-check/organisation/${ktpPartnerOrgId}/viability
-#    And the user approves viability
-
 Internal user checks the values in Finance checks page
     [Documentation]  IFS-8328
     When The user navigates to the page                                      ${server}/project-setup-management/project/${ktpProjectID}/finance-check
