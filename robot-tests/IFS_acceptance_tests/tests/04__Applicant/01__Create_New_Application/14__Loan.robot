@@ -103,7 +103,7 @@ the user can open the sales force new tab on clicking conitnue button in incompl
     Then title should be                                    Home
 
 The user will not be able to mark the application as complete without completing business and financial information
-    [Documentation]    IFS-9484  IFS-10705 IFS-10757 IFS-11137
+    [Documentation]    IFS-9484  IFS-10705  IFS-10757  IFS-11137
     Given the user navigates to the page                        ${server}/applicant/dashboard
     And The user clicks the button/link                         link = ${loanApplicationName}
     When the user clicks the button/link                        id = application-overview-submit-cta
@@ -112,10 +112,7 @@ The user will not be able to mark the application as complete without completing
     Then the user should see that the element is disabled       id = submit-application-button
     And The user clicks the button/link                         id = accordion-questions-heading-1-1
     And The user should not see the element                     jQuery = #accordion-questions-content-1-1 button:contains("Mark")
-    And The user clicks the button/link                         link = Business and financial information
     And the user should see the element                         jQuery = .section-incomplete + button:contains("Business and financial information")
-    And The user should see the element                         jQuery = span:contains("Business and financial information")
-    And The user should see the element                         jQuery = p:contains("Information not yet provided")
     And the user should see the element                         jQuery = h2:contains("Applicant details")
     And the user should see the element                         jQuery = h2:contains("Project finance")
 
