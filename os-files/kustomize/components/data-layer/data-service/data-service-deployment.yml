@@ -302,11 +302,6 @@ spec:
             configMapKeyRef:
               key: SPRING_DATASOURCE_HIKARI_MAXLIFETIME
               name: data-service-config
-        - name: SPRING_DATASOURCE_HIKARI_KEEPALIVETIME
-          valueFrom:
-            configMapKeyRef:
-              key: SPRING_DATASOURCE_HIKARI_KEEPALIVETIME
-              name: data-service-config
         - name: SPRING_DATASOURCE_HIKARI_POOLNAME
           value: "IFS_DATA_SERVICE_CONNECTION_POOL"
         - name: FLYWAY_BASELINE_ON_MIGRATE
