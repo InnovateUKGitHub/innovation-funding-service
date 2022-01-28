@@ -287,6 +287,31 @@ spec:
             configMapKeyRef:
               name: feature-toggle-config
               key: IFS_KTP_PHASE2_ENABLED
+        - name: SPRING_DATASOURCE_HIKARI_CONNECTION_TIMEOUT
+          valueFrom:
+            configMapKeyRef:
+              key: SPRING_DATASOURCE_HIKARI_CONNECTION_TIMEOUT
+              name: data-service-config
+        - name: SPRING_DATASOURCE_HIKARI_IDLE_TIMEOUT
+          valueFrom:
+            configMapKeyRef:
+              key: SPRING_DATASOURCE_HIKARI_IDLE_TIMEOUT
+              name: data-service-config
+        - name: SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE
+          valueFrom:
+            configMapKeyRef:
+              key: SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE
+              name: data-service-config
+        - name: SPRING_DATASOURCE_HIKARI_MAX_LIFETIME
+          valueFrom:
+            configMapKeyRef:
+              key: SPRING_DATASOURCE_HIKARI_MAX_LIFETIME
+              name: data-service-config
+        - name: SPRING_DATASOURCE_HIKARI_KEEPALIVE_TIME
+          valueFrom:
+            configMapKeyRef:
+              key: SPRING_DATASOURCE_HIKARI_KEEPALIVE_TIME
+              name: data-service-config
         - name: FLYWAY_BASELINE_ON_MIGRATE
           value: "false"
         - name: SPRING_FLYWAY_TABLE
