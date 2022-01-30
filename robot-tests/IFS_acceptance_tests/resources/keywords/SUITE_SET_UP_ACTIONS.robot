@@ -136,19 +136,19 @@ check if there is an existing application in progress for this competition
 
 Invite and accept the invitation
     [Arguments]    ${recipient}    ${subject}    ${pattern}
-    Given the user navigates to the page                ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link                 link=Academic robot test application
+    the user navigates to the page                      ${APPLICANT_DASHBOARD_URL}
+    the user clicks the button/link                     link=Academic robot test application
     the user fills in the inviting steps no edit        ${test_mailbox_one}+academictest@gmail.com
     logout as user
-    When the user reads his email and clicks the link   ${recipient}    ${subject}    ${pattern}    2
-    And the user clicks the button/link                 jQuery=.govuk-button:contains("Yes, accept invitation")
-    When the user selects the radio button              organisationTypeId    2
-    And the user clicks the button/link                 css = .govuk-button[type="submit"]
+    the user reads his email and clicks the link        ${recipient}    ${subject}    ${pattern}    2
+    the user clicks the button/link                     jQuery=.govuk-button:contains("Yes, accept invitation")
+    the user selects the radio button                   organisationTypeId    2
+    the user clicks the button/link                     css = .govuk-button[type="submit"]
     the research user finds org in companies house      Live  University of Liverpool
-    And the invited user fills the create account form  Arsene    Wenger
-    And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    We now need you to verify your email address
-    And the user clicks the button/link                 jQuery=p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
-    And Logging in and Error Checking                   ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
+    the invited user fills the create account form      Arsene    Wenger
+    the user reads his email and clicks the link        ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    We now need you to verify your email address
+    the user clicks the button/link                     jQuery=p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
+    Logging in and Error Checking                       ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
 
 the user fills in the inviting steps no edit
     [Arguments]  ${email}
