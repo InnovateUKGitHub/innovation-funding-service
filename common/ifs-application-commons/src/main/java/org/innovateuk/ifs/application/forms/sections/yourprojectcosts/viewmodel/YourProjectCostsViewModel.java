@@ -44,6 +44,8 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     private final boolean ktpCompetition;
 
+    private final boolean ktpPhase2Enabled;
+
     private final List<FinanceRowType> financeRowTypes;
 
     private final boolean overheadAlwaysTwenty;
@@ -84,6 +86,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      boolean procurementCompetition,
                                      boolean thirdPartyProcurementCompetition,
                                      boolean ktpCompetition,
+                                     boolean ktpPhase2Enabled,
                                      List<FinanceRowType> financeRowTypes,
                                      boolean overheadAlwaysTwenty,
                                      boolean showCovidGuidance,
@@ -112,6 +115,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.procurementCompetition = procurementCompetition;
         this.thirdPartyProcurementCompetition = thirdPartyProcurementCompetition;
         this.ktpCompetition = ktpCompetition;
+        this.ktpPhase2Enabled = ktpPhase2Enabled;
         this.financeRowTypes = financeRowTypes;
         this.overheadAlwaysTwenty = overheadAlwaysTwenty;
         this.showCovidGuidance = showCovidGuidance;
@@ -141,6 +145,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      boolean procurementCompetition,
                                      boolean thirdPartyProcurementCompetition,
                                      boolean ktpCompetition,
+                                     boolean ktpPhase2Enabled,
                                      List<FinanceRowType> financeRowTypes,
                                      boolean overheadAlwaysTwenty,
                                      boolean showCovidGuidance,
@@ -151,19 +156,20 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      boolean ofGemCompetition) {
         this(applicationId, competitionName, sectionId, competitionId, organisationId, complete, open,
                 includeVat, applicationName, organisationName, financesUrl, procurementCompetition, thirdPartyProcurementCompetition,
-                ktpCompetition, financeRowTypes, overheadAlwaysTwenty, showCovidGuidance, showJustificationForm, false,
+                ktpCompetition, ktpPhase2Enabled, financeRowTypes, overheadAlwaysTwenty, showCovidGuidance, showJustificationForm, false,
                 false, null, false, null, fecModelEnabled,
                 grantClaimPercentage, thirdPartyProjectCostGuidanceLink, ofGemCompetition);
     }
 
     public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, boolean thirdPartyProcurementCompetition,
-                                     boolean ktpCompetition, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty,
+                                     boolean ktpCompetition, boolean ktpPhase2Enabled, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty,
                                      String competitionName, long applicationId) {
         this.open = open;
         this.internal = internal;
         this.procurementCompetition = procurementCompetition;
         this.thirdPartyProcurementCompetition = thirdPartyProcurementCompetition;
         this.ktpCompetition = ktpCompetition;
+        this.ktpPhase2Enabled = ktpPhase2Enabled;
         this.financeRowTypes = financeRowTypes;
         this.competitionName = competitionName;
         this.applicationId = applicationId;
@@ -260,9 +266,9 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         return thirdPartyProcurementCompetition;
     }
 
-    public boolean isKtpCompetition() {
-        return ktpCompetition;
-    }
+    public boolean isKtpCompetition() { return ktpCompetition; }
+
+    public boolean isKtpPhase2Enabled() { return ktpPhase2Enabled; }
 
     public boolean isShowJustificationForm() {
         return showJustificationForm;

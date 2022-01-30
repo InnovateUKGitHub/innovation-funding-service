@@ -1,11 +1,15 @@
 package org.innovateuk.ifs.organisation.controller;
 
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.navigation.PageHistoryService;
 import org.innovateuk.ifs.organisation.populator.OrganisationCreationSelectTypePopulator;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
@@ -13,6 +17,7 @@ import org.innovateuk.ifs.organisation.viewmodel.OrganisationCreationSelectTypeV
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -29,6 +34,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+
+import static org.innovateuk.ifs.invite.constant.InviteStatus.ACCEPTED;
 
 /**
  * Provides methods for picking an organisation type as a lead applicant after initialization or the registration process.
@@ -48,6 +55,8 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
     protected static final String MANUALLY_ENTER_ORGANISATION_DETAILS = "manually-enter-organisation-details";
 
     @Autowired
+    private EncryptedCookieService cookieUtil;
+    @Autowired
     private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
 
     @Autowired
@@ -55,12 +64,28 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
 
     @Autowired
     private CompetitionOrganisationConfigRestService competitionOrganisationConfigRestService;
+    @Autowired
+    private InviteRestService inviteRestService;
+
+    @Autowired
+    private PageHistoryService pageHistoryService;
 
     @GetMapping
     public String selectOrganisationType(Model model,
                                          UserResource user,
                                          HttpServletRequest request,
                                          HttpServletResponse response) {
+        String hash = cookieUtil.getCookieValue(request, "invite_hash");
+        RestResult<ApplicationInviteResource> inviteResponse = inviteRestService.getInviteByHash(hash);
+        String referer = request.getHeader("referer");
+
+        ApplicationInviteResource applicationInviteResource = inviteResponse.isFailure() ? null : inviteResponse.getSuccess();
+        if (applicationInviteResource != null && referer != null && referer.contains(String.format("/accept-invite/%s", hash))) {
+            applicationInviteResource.setStatus(ACCEPTED);
+            inviteRestService.acceptInvite(applicationInviteResource);
+        }
+
+
         CompetitionResource competition = competitionRestService.getPublishedCompetitionById(getCompetitionIdFromInviteOrCookie(request)).getSuccess();
         if (registrationCookieService.isLeadJourney(request)
                 && competition.getFundingType() == FundingType.KTP) {

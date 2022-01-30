@@ -7,8 +7,13 @@ import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.resource.ApplicationUserCompositeId;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
+import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
-import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.invite.repository.InviteHistoryRepository;
+import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationMessage;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -18,9 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -68,6 +71,9 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
     @Autowired
     private ApplicationInviteRepository applicationInviteRepository;
 
+    @Autowired
+    private InviteHistoryRepository inviteHistoryRepository;
+
     @Override
     @Transactional
     public ServiceResult<Void> deleteApplication(long applicationId) {
@@ -81,6 +87,11 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
     }
 
     private ServiceResult<Void> deleteApplicationData(Application application) {
+
+
+        for (ApplicationInvite invite : Optional.ofNullable(application.getInvites()).orElse(Collections.emptyList())) {
+            inviteHistoryRepository.deleteInviteHistoryByInvite(invite);
+        }
         applicationFinanceRepository.deleteByApplicationId(application.getId());
         processRoleRepository.deleteByApplicationId(application.getId());
         formInputResponseRepository.deleteByApplicationId(application.getId());
@@ -125,8 +136,8 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
     @Transactional
     public ServiceResult<Void> hideApplicationFromDashboard(ApplicationUserCompositeId id) {
         return getApplication(id.getApplicationId()).andOnSuccessReturnVoid((application) ->
-            getUser(id.getUserId()).andOnSuccessReturnVoid(user ->
-                    applicationHiddenFromDashboardRepository.save(new ApplicationHiddenFromDashboard(application, user))));
+                getUser(id.getUserId()).andOnSuccessReturnVoid(user ->
+                        applicationHiddenFromDashboardRepository.save(new ApplicationHiddenFromDashboard(application, user))));
     }
 
     private ServiceResult<Application> getApplication(long id) {

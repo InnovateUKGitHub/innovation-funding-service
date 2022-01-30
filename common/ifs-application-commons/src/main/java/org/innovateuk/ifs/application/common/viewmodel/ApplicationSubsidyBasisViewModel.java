@@ -14,6 +14,10 @@ public class ApplicationSubsidyBasisViewModel {
         this.partners = partners;
     }
 
+    public boolean isSubsidyBasisCompletedByLeadOrganisation() {
+        return partners.stream().filter(partner -> partner.isLead() && partner.isQuestionnaireMarkedAsComplete()).count() == 1;
+    }
+
     public boolean isSubsidyBasisCompletedByAllOrganisations(){
         return partners.stream().allMatch(partner -> partner.isQuestionnaireMarkedAsComplete());
     }
