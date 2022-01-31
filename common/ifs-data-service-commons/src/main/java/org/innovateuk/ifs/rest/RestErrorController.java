@@ -2,10 +2,10 @@ package org.innovateuk.ifs.rest;
 
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
-import org.springframework.boot.web.error.ErrorAttributeOptions;
-import org.springframework.boot.web.servlet.error.ErrorAttributes;
-import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.boot.autoconfigure.web.servlet.error.AbstractErrorController;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
+import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
+import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +29,7 @@ import static org.springframework.http.HttpStatus.*;
  * exceptions for attempting to access a forbidden path.
  */
 @RestController
-public class RestErrorController extends AbstractErrorController implements org.springframework.boot.web.servlet.error.ErrorController {
+public class RestErrorController extends AbstractErrorController {
 
     private static final String PATH = "/error";
 
@@ -65,4 +65,8 @@ public class RestErrorController extends AbstractErrorController implements org.
         return new ResponseEntity<>(fallbackResponse, INTERNAL_SERVER_ERROR);
     }
 
+    @Override
+    public String getErrorPath() {
+        return PATH;
+    }
 }
