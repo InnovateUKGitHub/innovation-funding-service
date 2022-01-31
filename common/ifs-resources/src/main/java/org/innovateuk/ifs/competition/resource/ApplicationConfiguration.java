@@ -52,7 +52,10 @@ public interface ApplicationConfiguration {
                         && getFundingType() == GRANT;
     }
 
-    default boolean applicantNotRequiredForViabilityChecks(OrganisationTypeEnum organisationType) {
+    default boolean applicantNotRequiredForViabilityChecks(boolean isKTPPhase2Enabled, OrganisationTypeEnum organisationType) {
+        if (isKTPPhase2Enabled) {
+            return this.isKtp() || isH2020() || applicantShouldUseJesFinances(organisationType);
+        }
         return isH2020() || applicantShouldUseJesFinances(organisationType) ||
                 (organisationType.equals(OrganisationTypeEnum.KNOWLEDGE_BASE) && this.isKtp());
     }

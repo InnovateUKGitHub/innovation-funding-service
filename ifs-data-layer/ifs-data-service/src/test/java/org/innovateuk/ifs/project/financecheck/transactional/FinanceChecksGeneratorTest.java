@@ -33,6 +33,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -308,6 +309,35 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
                         build();
 
         organisation.setOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE).build());
+
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId())).thenReturn(partnerOrganisation);
+        when(viabilityWorkflowHandlerMock.viabilityNotApplicable(partnerOrganisation, null)).thenReturn(true);
+
+        List<ProjectFinanceRow> newProjectFinanceRows = setUpCreateFinanceChecksFiguresMocking();
+        ProjectFinanceRow newProjectFinanceRow1 = newProjectFinanceRows.get(0);
+        ProjectFinanceRow newProjectFinanceRow2 = newProjectFinanceRows.get(1);
+
+        when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow1))).thenReturn(newProjectFinanceRow1);
+        when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow2))).thenReturn(newProjectFinanceRow2);
+
+        competition.setFundingType(FundingType.KTP);
+
+        ServiceResult<ProjectFinance> result = service.createFinanceChecksFigures(newProject, organisation);
+        assertTrue(result.isSuccess());
+
+        verify(viabilityWorkflowHandlerMock).viabilityNotApplicable(partnerOrganisation, null);
+
+        assertCreateFinanceChecksFiguresResults(newProjectFinanceRow1, newProjectFinanceRow2);
+    }
+    @Test
+    public void createFinanceChecksWithKTPPartnerNoViabilityChecks() {
+        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation()
+                .withOrganisation(
+                        OrganisationBuilder.newOrganisation()
+                                .withOrganisationType(OrganisationTypeEnum.BUSINESS).build()).
+                        build();
+        ReflectionTestUtils.setField(service, "isKTPPhase2Enabled", true);
+        organisation.setOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build());
 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId())).thenReturn(partnerOrganisation);
         when(viabilityWorkflowHandlerMock.viabilityNotApplicable(partnerOrganisation, null)).thenReturn(true);
