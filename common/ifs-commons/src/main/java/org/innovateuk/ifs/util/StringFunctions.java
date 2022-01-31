@@ -3,6 +3,7 @@ package org.innovateuk.ifs.util;
 import org.apache.commons.text.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.safety.Safelist;
 import org.jsoup.safety.Whitelist;
 
 import static java.util.Optional.ofNullable;
@@ -34,7 +35,7 @@ public final class StringFunctions {
      */
     public static String stripHtml(String content) {
         return ofNullable(content).map(contentValue -> {
-                    String cleaned = Jsoup.clean(content, "", Whitelist.none(), new Document.OutputSettings().prettyPrint(false));
+                    String cleaned = Jsoup.clean(content, "", Safelist.none(), new Document.OutputSettings().prettyPrint(false));
                     return cleaned.trim().replaceAll("[ \t]+", " ");
                 }
         ).orElse(null);
