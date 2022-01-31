@@ -54,7 +54,7 @@ public abstract class Finance {
 
     private LocalDate fecCertExpiryDate;
 
-    public Finance(Organisation organisation, OrganisationSize organisationSize,  GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover, KtpFinancialYears ktpFinancialYears, Boolean northernIrelandDeclaration, Boolean fecModelEnabled, FileEntry fecFileEntry) {
+    public Finance(Organisation organisation, OrganisationSize organisationSize,  GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover, KtpFinancialYears ktpFinancialYears, Boolean northernIrelandDeclaration, Boolean fecModelEnabled, FileEntry fecFileEntry, LocalDate fecCertExpiryDate) {
         this.organisation = organisation;
         this.organisationSize = organisationSize;
         this.growthTable = growthTable;
