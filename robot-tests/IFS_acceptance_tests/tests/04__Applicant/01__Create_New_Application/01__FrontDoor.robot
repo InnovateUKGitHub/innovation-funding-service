@@ -31,7 +31,7 @@ Guest user navigates to Front Door
     Then verify first date is greater than or equal to second  css = li:nth-child(2) .date-definition-list dd:nth-of-type(1)  css = li:nth-child(3) .date-definition-list dd:nth-of-type(1)
     When the user clicks the button/link       link = Contact us
     Then the user should see the element       jQuery = h1:contains("Contact us")
-    And The user should see the element        ink = support@iuk.ukri.org
+    And The user should see the element        link = support@iuk.ukri.org
     And the user should not see an error in the page
     And the user should see the element        jQuery = a:contains("feedback")
 
