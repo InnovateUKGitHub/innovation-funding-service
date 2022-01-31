@@ -101,6 +101,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-10325 Update Ts&Cs -‘Knowledge Transfer Partnership (KTP) - Subsidy control'
 ...
+...            IFS-11184 Support email update in Contact us page
+
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -164,6 +166,14 @@ ${uploadedPdf}                        testing_5MB.pdf
 ${estateValue}                        11000
 
 *** Test Cases ***
+The user can see contact us page and new support email id
+    [Documentation]  IFS-11184
+    Given The user clicks the button/link         link = Contact us
+    Then The user should see the element          jQuery = h3:contains("Email")
+    And The user should see the element           jQuery = p:contains("Send your question or query to")
+    And The user should see the element           link = support@iuk.ukri.org
+    And The user should see the element           jQuery =p:contains("and we'll get back to you as soon as possible.")
+
 The applicants should not see knowledge based organisations when creating a non-ktp applications
     [Documentation]  IFS-8035
     Given Logging in and Error Checking                             &{ktpExistingLeadCredentials}
