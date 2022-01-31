@@ -98,13 +98,11 @@
                                     <td class="govuk-table__cell"ifs:utext="${organisation.address.getAsInternationalTwoLine()}">1 my lane, france, 1234</td>
                                     <td class="govuk-table__cell alignright"><a class="govuk-link" th:if="${organisation.userBelongsToOrganisation and !model.readOnly}" th:href="@{{base}/organisation/{organisationId}/address(base=${#ifsUtil.formPostUri(#httpServletRequest)},organisationId=${organisation.id})}">Edit</a></td>
                                 </tr>
-                                <th:block th:if="${model.ktpPhase2Enabled}">
-                                    <tr class="govuk-table__row" th:unless="${#strings.isEmpty(organisation.companyRegistrationNumber)}" >
-                                        <td class="govuk-table__cell">Company registration number</td>
-                                        <td class="govuk-table__cell"th:text="${organisation.companyRegistrationNumber}">Company Registration Number</td>
-                                        <td class="govuk-table__cell"></td>
-                                    </tr>
-                                </th:block>
+                                <tr class="govuk-table__row" th:unless="${#strings.isEmpty(organisation.companyRegistrationNumber)}" >
+                                    <td class="govuk-table__cell">Company registration number</td>
+                                    <td class="govuk-table__cell"th:text="${organisation.companyRegistrationNumber}">Company Registration Number</td>
+                                    <td class="govuk-table__cell"></td>
+                                </tr>
                             </tbody>
                         </table>
                     </th:block>
