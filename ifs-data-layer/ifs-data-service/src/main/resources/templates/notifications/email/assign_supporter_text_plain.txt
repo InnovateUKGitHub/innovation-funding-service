@@ -13,7 +13,7 @@ ${applicationId} : ${applicationName}
 You will be able to decide if your organisation wishes to offer support and provide feedback to the applicant.
 
 <#if ktpPhase2Enabled>
-The deadline to review this application is ${applicationDeadline}.
+The deadline to review this application is ${assessorDeadline}.
 </#if>
 
 ${link}
