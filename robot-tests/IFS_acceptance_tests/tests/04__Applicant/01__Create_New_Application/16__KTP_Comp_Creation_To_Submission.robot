@@ -101,7 +101,6 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-10325 Update Ts&Cs -‘Knowledge Transfer Partnership (KTP) - Subsidy control'
 ...
-...            IFS-11184 Support email update in Contact us page
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
