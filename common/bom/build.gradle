@@ -7,7 +7,7 @@ javaPlatform {
 dependencies {
 
     // This BOM combines with these two boms - defer to these and only declare overrides and things not in these below
-    api platform("org.springframework.boot:spring-boot-dependencies:2.4.12")
+    api platform("org.springframework.boot:spring-boot-dependencies:2.5.9")
     api platform("org.springframework.cloud:spring-cloud-dependencies:2020.0.3")
 
     // These will appear in referencing modules (actual deps so keep it light)
