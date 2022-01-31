@@ -110,9 +110,9 @@ Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
-${nonKTPCompetitionName}             International Competition
+${nonKTPCompetitionName}              International Competition
 ${noKTPApplicationName}               PSC application 8
-${nonKTPCompetitionInPS}            Project Setup Comp 8
+${nonKTPCompetitionInPS}              Project Setup Comp 8
 &{ktpLeadApplicantCredentials}        email=${lead_ktp_email}  password=${short_password}
 &{ktpNewPartnerCredentials}           email=${new_partner_ktp_email}  password=${correct_password}
 &{ktpExistingLeadCredentials}         email=${existing_lead_ktp_email}  password=${short_password}

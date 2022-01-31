@@ -209,7 +209,10 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                         .getSuccess();
         if (keyStatisticsResource.isCanReleaseFeedback()) {
             Competition competition = competitionRepository.findById(competitionId).get();
-            competition.setFundersPanelEndDate(ZonedDateTime.now());
+            // at the moment, only Always open competition cannot be in inform state if there is an application On Hold
+            if (!competition.isAlwaysOpen() || (competition.isAlwaysOpen() && keyStatisticsResource.getApplicationsOnHold() == 0)) {
+                competition.setFundersPanelEndDate(ZonedDateTime.now());
+            }
         }
         return serviceSuccess();
     }

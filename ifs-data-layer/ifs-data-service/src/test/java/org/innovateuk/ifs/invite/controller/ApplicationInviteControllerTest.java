@@ -3,6 +3,7 @@ package org.innovateuk.ifs.invite.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.crm.transactional.CrmService;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
@@ -15,6 +16,7 @@ import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.http.MediaType;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +27,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
@@ -88,9 +91,9 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
         when(applicationInviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/invite/create-application-invites/" + applicationId, "json")
-                .header("IFS_AUTH_TOKEN", "123abc")
-                .contentType(APPLICATION_JSON)
-                .content(organisationResourceString))
+                        .header("IFS_AUTH_TOKEN", "123abc")
+                        .contentType(APPLICATION_JSON)
+                        .content(organisationResourceString))
                 .andExpect(status().isCreated());
 
         verify(applicationInviteService, times(1)).createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
@@ -115,8 +118,8 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
         when(applicationInviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId))).thenReturn(serviceFailure(badRequestError("no invites")));
 
         mockMvc.perform(post("/invite/create-application-invites/" + applicationId, "json")
-                .contentType(APPLICATION_JSON)
-                .content(organisationResourceString))
+                        .contentType(APPLICATION_JSON)
+                        .content(organisationResourceString))
                 .andExpect(status().isBadRequest());
     }
 
@@ -133,8 +136,8 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
         when(applicationInviteService.resendInvite(inviteResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/invite/resend-invite")
-                .contentType(APPLICATION_JSON)
-                .content(toJson(inviteResource)))
+                        .contentType(APPLICATION_JSON)
+                        .content(toJson(inviteResource)))
                 .andExpect(status().isCreated());
     }
 
@@ -172,4 +175,47 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
         verify(acceptApplicationInviteService).acceptInvite(hash, userId, Optional.of(organisationId));
         verify(crmService).syncCrmContact(userId, compId, appId);
     }
+
+    @Test
+    public void acceptInvite_withApplicationInviteResource() throws Exception {
+        String hash = "abcdef";
+        long userId = 1L;
+        long organisationId = 2L;
+
+        String expectedLeadApplicant = "Steve Smith";
+        String expectedLeadApplicantEmail = "steve.smith@empire";
+        String expectedLeadOrganisation = "Empire";
+        String expectedName = "Jessica Doe";
+        String expectedNameConfirmed = "Jessica Doe";
+        String expectedEmail = "jessica.doe@ludlow.co.uk";
+        InviteStatus expectedStatus = SENT;
+        Long expectedApplication = 1L;
+        Long expectedUser = 2L;
+        String expectedHash = "hash";
+        Long expectedInviteOrganisation = 3L;
+        ApplicationInviteResource applicationInviteResource = newApplicationInviteResource()
+                .withLeadApplicant(expectedLeadApplicant)
+                .withLeadApplicantEmail(expectedLeadApplicantEmail)
+                .withLeadOrganisation(expectedLeadOrganisation)
+                .withName(expectedName)
+                .withNameConfirmed(expectedNameConfirmed)
+                .withEmail(expectedEmail)
+                .withStatus(expectedStatus)
+                .withApplication(expectedApplication)
+                .withUsers(expectedUser)
+                .withHash(expectedHash)
+                .withInviteOrganisation(expectedInviteOrganisation)
+                .build();
+        when(applicationInviteService.updateInviteHistory(applicationInviteResource)).thenReturn(serviceSuccess());
+        when(acceptApplicationInviteService.acceptInvite(hash, userId, Optional.of(organisationId))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/invite/update-invite")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(applicationInviteResource)))
+                .andExpect(status().isOk());
+
+        verify(applicationInviteService).updateInviteHistory(applicationInviteResource);
+
+    }
+
 }

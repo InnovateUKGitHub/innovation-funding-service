@@ -27,6 +27,10 @@ Documentation     IFS-7790 KTP: Your finances - Edit
 ...
 ...               IFS-9819 KTP 2 Questions Wording Change
 ...
+...               IFS-11128 Remove validation for 'Your project costs > Additional Costs'
+...
+...               IFS-11138 Add Assessment deadline in supporters email
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../../resources/defaultResources.robot
@@ -153,9 +157,10 @@ Total cost calculation
     And the user should see the element      jQuery = div:contains("Total project costs") input[data-calculation-rawvalue="9496"]
 
 Additional company cost estimation validations
-    [Documentation]  IFS-7790  IFS-8154
+    [Documentation]  IFS-7790  IFS-8154  IFS-11128
     Given the user clicks the button/link            id = accordion-finances-heading-additional-company-costs
-    When the user fills additional company costs     ${EMPTY}  ${EMPTY}
+    When the user fills additional company costs     ${EMPTY}   0
+    And the user clicks the button/link              id = mark-all-as-complete
     Then the user should see the validation messages for addition company costs
 
 Additional company cost estimation calculations
@@ -253,9 +258,13 @@ KTA assessor assigned to application can view the read-only view for 'No' select
     And the user navigates to the page                                      ${server}/application/${KTPapplicationId}/summary
     Then the user should see read only view for non-fec declaration
 
+The supporter can view assessment deadline in the application review email
+    [Documentation]  IFS-11138
+    Given ifs admin invites a supporter to the ktp application
+    Then the user reads his email    ${supporter_credentials["email"]}    You have been invited to review an application    The deadline to review this application is midday Tuesday 30th January 2024.
+
 Supporter can view the read-only view for 'No' selected fEC declaration
     [Documentation]  IFS-9246
-    [Setup]  ifs admin invites a supporter to the ktp application
     Given log in as a different user                                    &{supporter_credentials}
     When the user navigates to the page                                 ${server}/application/${KTPapplicationId}/summary
     Then the user should see read only view for non-fec declaration
@@ -327,12 +336,12 @@ the user should see the validation messages for addition company costs
     the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ textarea[id$="capitalEquipment.description"]
     the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ textarea[id$="otherCosts.description"]
     the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ textarea[id$="consumables.description"]
-    the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ input[id$="associateSalary.cost"]
-    the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ input[id$="managementSupervision.cost"]
-    the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ input[id$="otherStaff.cost"]
-    the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ input[id$="capitalEquipment.cost"]
-    the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ input[id$="consumables.cost"]
-    the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ input[id$="otherCosts.cost"]
+    the user should see the element       jQuery = span:contains(${field_should_be_1_or_higher}) ~ input[id$="associateSalary.cost"]
+    the user should see the element       jQuery = span:contains(${field_should_be_1_or_higher}) ~ input[id$="managementSupervision.cost"]
+    the user should see the element       jQuery = span:contains(${field_should_be_1_or_higher}) ~ input[id$="otherStaff.cost"]
+    the user should see the element       jQuery = span:contains(${field_should_be_1_or_higher}) ~ input[id$="capitalEquipment.cost"]
+    the user should see the element       jQuery = span:contains(${field_should_be_1_or_higher}) ~ input[id$="consumables.cost"]
+    the user should see the element       jQuery = span:contains(${field_should_be_1_or_higher}) ~ input[id$="otherCosts.cost"]
 
 the user should see the read only view of KTP
     the user should see the element         jQuery = th:contains("Total associate employment costs") ~ td:contains("£100")

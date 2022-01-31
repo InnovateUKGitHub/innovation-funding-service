@@ -51,6 +51,8 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-10860 Always open competitions:Assessment period display changes
 ...
+...               IFS-8952 Always open competitions: Close completed competition
+...
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -177,9 +179,6 @@ Internal user should see the same dates entered in choose assessment period drop
     Given the user clicks the button/link   link = Back to manage assessments
     When the user clicks the button/link    jQuery = button:contains("Notify assessors")
     Then the user should see the element    jQuery = td:contains("Saturday") + td:contains("16/01/2100")
-   # And the user clicks the button/link     link = Manage applications
-   # And the user selects the value from the drop-down menu      125  name = assessmentPeriodId
-    #Then the user should see the element    jQuery = option:contains("12 January to 16 January 2100")
 
 Lead applicant checks the dashboard content and the guidance after an assessor is assigned to the application
     [Documentation]  IFS-8850
@@ -273,7 +272,7 @@ Internal user sees valid information on dashboard
 
 internal user inputs the decision and send the notification with feedback
     [Documentation]  IFS-8855 IFS-9739
-    Given the user inputs the funding decision for applications
+    Given the user inputs the funding decision for applications  1
     And The user clicks the button/link                              link = Input and review funding decision
     And the user should see the element                              jQuery =a:contains("${webTestAppID}")
     And The user should not see the element                          jQuery =a:contains("${applicationName}")
@@ -281,6 +280,13 @@ internal user inputs the decision and send the notification with feedback
     When the user sends notification and releases feedback
     And the user navigates to the page                               ${server}/project-setup-management/competition//${webTestCompID}/status/all
     Then the user refreshes until element appears on page            jQuery = tr div:contains("${webTestAppName}")
+
+Comp admin can see the close competition button as a disabled
+    [Documentation]  IFS-8952
+    Given Log in as a different user               &{ifs_admin_user_credentials}
+    And the user navigates to the page             ${server}/management/competition/${webTestCompID}
+    When The user clicks the button/link           link = Close competition
+    Then the element should be disabled            jQuery = button:contains("Close competition")
 
 Comp admin manages the assessors
     [Documentation]  IFS-8852  IFS-10860
@@ -294,6 +300,20 @@ Comp admin manages the assessors
     And the user clicks the button/link        link = Back to manage assessors
     And the user clicks the button/link        link = Back to choose an assessment period to manage assessors
     And the user clicks the button/link        link = Back to manage assessments
+
+Comp admin can see the open ended competition in project setup/previous dashboard
+    [Documentation]  IFS-8952
+    Given the user clicks the button/link                      jQuery = button:contains("Close assessment")
+    And the user navigates to the page                         ${server}/management/assessment/competition/${webTestCompID}
+    And update milestone to yesterday                          ${webTestCompID}  SUBMISSION_DATE
+    And The user navigates to the page                         ${server}/management/competition/${webTestCompID}
+    And the user inputs the funding decision for applications  2
+    And the user sends notification and releases feedback
+    And the user refreshes until element appears on page       jQuery = td:contains("Always open application awaiting assessment") ~ td:contains("Sent")
+    And The user navigates to the page                         ${server}/management/competition/${webTestCompID}
+    When The user clicks the button/link                       link = Close competition
+    And The user clicks the button/link                        jQuery = button:contains("Close competition")
+    Then the user should see the competition in project setup/previous dashboard and can not see on live dashboard
 
 Supporter can review open ended ktp competition applications
     [Documentation]  IFS-9785
@@ -314,6 +334,7 @@ Auditor can view j-ES form for the submitted application
     And The user clicks the button/link                  jQuery = a:contains("Your project costs")
     When the user clicks the button/link                 jQuery = a:contains(".pdf (opens in a new window)")
     Then the user should not see an error in the page
+
 
 *** Keywords ***
 Custom suite setup
@@ -453,8 +474,9 @@ the user sees valid open ended competition details
     the user should see the element      jQuery = h3:contains("Funding decision and assessment feedback")
 
 the user inputs the funding decision for applications
+    [Arguments]  ${rowNo}
     the user clicks the button/link     link = Input and review funding decision
-    the user clicks the button/link     id = app-row-1
+    the user clicks the button/link     id = app-row-${rowNo}
     the user clicks the button/link     jQuery = button:contains("Successful")
     the user clicks the button/link     link = Competition
 
@@ -536,4 +558,13 @@ Assessor submits the assessment
     the user clicks the button/link         jQuery = li:contains("Always open application awaiting assessment") label[for^="assessmentIds"]
     the user clicks the button/link         jQuery = .govuk-button:contains("Submit assessments")
     the user clicks the button/link         jQuery = button:contains("Yes I want to submit the assessments")
+
+the user should see the competition in project setup/previous dashboard and can not see on live dashboard
+    the user navigates to the page       ${server}/management/dashboard/project-setup
+    The user should see the element      jQuery = a:contains("${webTestCompName}")
+    the user navigates to the page       ${server}/management/competition/${webTestCompID}/previous
+    The user should see the element      jQuery = h1:contains("Always open competition")
+    the user navigates to the page       ${server}/management/dashboard/live
+    the user should not see the element  jQuery = a:contains("${webTestCompName}")
+
 
