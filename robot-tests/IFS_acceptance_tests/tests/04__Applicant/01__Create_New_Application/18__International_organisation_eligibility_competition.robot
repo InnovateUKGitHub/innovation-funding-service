@@ -338,7 +338,7 @@ Lead applicant applies again to international competition using the same interna
     And the user should be able to see the same address details
 
 Lead applicant adds a team member
-    [Documentation]    IFS-7264  IFS-11131
+    [Documentation]    IFS-7264
     [Tags]  HappyPath
     [Setup]  the user navigates to the page     ${APPLICANT_DASHBOARD_URL}
     Given the user clicks the button/link       link = ${internationalApplicationTitle}
@@ -346,7 +346,6 @@ Lead applicant adds a team member
     When the user clicks the button/link        jQuery = button:contains("Add person to New Empire 1")
     And the user adds a new team member         MemberFName MemberSName  ${team_member}
     Then the user should see the element        jQuery = td:contains("MemberFName MemberSName (pending for 0 days)")
-    And the user should see the element         jQuery = td:contains("Company registration number")+td:contains("343434435")
     [Teardown]  logout as user
 
 Team member accepts the invite and can change lead organisation address details
