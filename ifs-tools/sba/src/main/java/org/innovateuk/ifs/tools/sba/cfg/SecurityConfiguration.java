@@ -51,7 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication().withUser(sbaConfigurationProperties.getUsername())
-                .password("{bcrypt}" + sbaConfigurationProperties.getPassword()).roles("USER");
+                .password(sbaConfigurationProperties.getPassword()).roles("USER");
     }
 
 }

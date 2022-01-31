@@ -3,5 +3,4 @@ kind: Component
 resources:
   - sba.yml
   - sba-deployment.yml
-  - sba-secret.yml
 

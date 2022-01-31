@@ -10,5 +10,8 @@ components:
   - ../../../../../patches/
   - ../../patches/
 
+resources:
+  - sba-secret.yml
+
 patchesStrategicMerge:
   - sba.yml
