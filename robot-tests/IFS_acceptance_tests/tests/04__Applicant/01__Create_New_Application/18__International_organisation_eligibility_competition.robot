@@ -25,6 +25,8 @@ Documentation     IFS-7195  Organisational eligibility category in Competition s
 ...
 ...               IFS-9679 MO Spend profile: IFS Admin only to be able to approve or reject spend profiles
 ...
+...               IFS-11131 Company registration number in Application Team
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin Applicant
@@ -336,7 +338,7 @@ Lead applicant applies again to international competition using the same interna
     And the user should be able to see the same address details
 
 Lead applicant adds a team member
-    [Documentation]    IFS-7264
+    [Documentation]    IFS-7264  IFS-11131
     [Tags]  HappyPath
     [Setup]  the user navigates to the page     ${APPLICANT_DASHBOARD_URL}
     Given the user clicks the button/link       link = ${internationalApplicationTitle}
@@ -344,6 +346,7 @@ Lead applicant adds a team member
     When the user clicks the button/link        jQuery = button:contains("Add person to New Empire 1")
     And the user adds a new team member         MemberFName MemberSName  ${team_member}
     Then the user should see the element        jQuery = td:contains("MemberFName MemberSName (pending for 0 days)")
+    And the user should see the element         jQuery = td:contains("Company registration number")+td:contains("343434435")
     [Teardown]  logout as user
 
 Team member accepts the invite and can change lead organisation address details
@@ -620,7 +623,6 @@ GOL template to be updated with country for correspondents address
     And the user selects the radio button                                         spendProfileApproved  true
     And the user should not see an error in the page
     And the user clicks the button/link                                           jQuery = button.govuk-button:contains("Submit")
-#    Then Log in as a different user                                               &{ukLeadOrganisationCredentials}
     And the user navigates to the page                                            ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/template
     Then element should contain                                                    xpath = //p[1]     Argentina
 

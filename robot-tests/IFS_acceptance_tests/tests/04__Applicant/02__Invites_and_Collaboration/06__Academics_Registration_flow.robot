@@ -3,6 +3,8 @@ Documentation     INFUND-1231: As a collaborator registering my company as Acade
 ...
 ...               IFS-7723 Improvement to company search results
 ...
+...               IFS-11131 Company registration number in Application Team
+...
 Suite Setup       The guest user opens the browser
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
@@ -45,6 +47,14 @@ Accept invitation as academic
     When the user clicks the button/link                link = Your project costs
     Then the user should not see the element            jQuery = h3:contains("Labour")
     And the user should not see an error in the page
+
+Academic organisations should not display company house number in application team
+    [Documentation]  IFS-11131
+    Given The user navigates to the page        ${APPLICANT_DASHBOARD_URL}
+    When the user clicks the button/link        link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    And the user clicks the button/link         link = Application team
+    Then the user should see the element        jQuery = h1:contains("Application team")
+    And the user should not see the element     jQuery = td:contains("Company registration number")
 
 *** Keywords ***
 If the user goes to the previous page he should redirect to the login page
