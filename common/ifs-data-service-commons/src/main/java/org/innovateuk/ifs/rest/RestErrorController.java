@@ -65,7 +65,6 @@ public class RestErrorController extends AbstractErrorController {
         return new ResponseEntity<>(fallbackResponse, INTERNAL_SERVER_ERROR);
     }
 
-    @Override
     public String getErrorPath() {
         return PATH;
     }
