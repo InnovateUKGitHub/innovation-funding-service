@@ -254,6 +254,8 @@ the invited user fills the create account form
     Input Text                          id=phoneNumber    0612121212
     Input Password                      id=password    ${correct_password}
     the user selects the checkbox       termsAndConditions
+    ${status} =   Run Keyword and return status    Checkbox Should Be Selected     css=[id="termsAndConditions"]
+    Run Keyword If    '${status}' == 'False'   Select checkbox     css=[id="termsAndConditions"]
     the user selects the checkbox       allowMarketing
     the user clicks the button/link     css=button[type="submit"][name="create-account"]
 
@@ -266,6 +268,8 @@ the user enters the details and clicks the create account
     Input Text                                              id = email  ${email}
     Input Password                                          id = password  ${password}
     the user selects the checkbox                           termsAndConditions
+    ${status} =   Run Keyword and return status    Checkbox Should Be Selected     css=[id="termsAndConditions"]
+    Run Keyword If    '${status}' == 'False'   Select checkbox     css=[id="termsAndConditions"]
     the user selects the checkbox                           allowMarketingEmails
     Submit Form
 
