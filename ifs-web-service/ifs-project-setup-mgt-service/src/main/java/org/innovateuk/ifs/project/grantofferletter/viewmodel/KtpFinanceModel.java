@@ -4,6 +4,7 @@ package org.innovateuk.ifs.project.grantofferletter.viewmodel;
 import org.apache.commons.lang3.BooleanUtils;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -24,11 +25,12 @@ public class KtpFinanceModel {
 
     private final BigDecimal claimPercentage;
     private final Boolean fecModelEnabled;
+    private final LocalDate fecCertExpiryDate;
 
     public KtpFinanceModel(KtpFinanceRowModel associateEmployment, KtpFinanceRowModel associateDevelopment, KtpFinanceRowModel travelAndSubsistence,
                            KtpFinanceRowModel consumables, KtpFinanceRowModel knowledgeBaseSupervisor, KtpFinanceRowModel associateEstateCosts,
                            KtpFinanceRowModel otherCosts, KtpFinanceRowModel additionalSupportCosts, KtpFinanceRowModel academicAndSecretarialSupport,
-                           BigDecimal claimPercentage, Boolean fecModelEnabled) {
+                           BigDecimal claimPercentage, Boolean fecModelEnabled, LocalDate fecCertExpiryDate) {
         this.associateEmployment = associateEmployment;
         this.associateDevelopment = associateDevelopment;
         this.travelAndSubsistence = travelAndSubsistence;
@@ -40,6 +42,7 @@ public class KtpFinanceModel {
         this.academicAndSecretarialSupport = academicAndSecretarialSupport;
         this.claimPercentage = claimPercentage;
         this.fecModelEnabled = fecModelEnabled;
+        this.fecCertExpiryDate = fecCertExpiryDate;
     }
 
     public KtpFinanceRowModel getAssociateEmployment() {
@@ -148,6 +151,7 @@ public class KtpFinanceModel {
         private KtpFinanceRowModel academicAndSecretarialSupport;
         private BigDecimal claimPercentage;
         private Boolean fecModelEnabled;
+        private LocalDate fecCertExpiryDate;
 
         private KtpFinanceModelBuilder() {
         }
@@ -211,10 +215,15 @@ public class KtpFinanceModel {
             return this;
         }
 
+        public KtpFinanceModelBuilder withFecCertExpiryDate(LocalDate fecCertExpiryDate) {
+            this.fecCertExpiryDate = fecCertExpiryDate;
+            return this;
+        }
+
         public KtpFinanceModel build() {
             return new KtpFinanceModel(associateEmployment, associateDevelopment, travelAndSubsistence, consumables, knowledgeBaseSupervisor,
                     associateEstateCosts, otherCosts, additionalSupportCosts, academicAndSecretarialSupport, claimPercentage,
-                    fecModelEnabled);
+                    fecModelEnabled, fecCertExpiryDate);
         }
     }
 }
