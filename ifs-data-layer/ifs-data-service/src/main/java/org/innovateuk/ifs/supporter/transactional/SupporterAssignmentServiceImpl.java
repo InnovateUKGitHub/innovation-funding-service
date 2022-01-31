@@ -131,7 +131,7 @@ public class SupporterAssignmentServiceImpl extends BaseTransactionalService imp
         notificationArguments.put("applicationId", application.getId());
         notificationArguments.put("applicationName", application.getName());
         notificationArguments.put("ktpPhase2Enabled", ktpPhase2Enabled);
-        notificationArguments.put("applicationDeadline", getFormattedApplicationDeadline(application));
+        notificationArguments.put("assessorDeadline", getFormattedAssessorDeadline(application));
         notificationArguments.put("link", format("%s/assessment/supporter/dashboard", webBaseUrl));
         Notification notification = new Notification(systemNotificationSource, recipient, Notifications.ASSIGN_SUPPORTER, notificationArguments);
         return notificationService.sendNotificationWithFlush(notification, NotificationMedium.EMAIL);
@@ -254,8 +254,8 @@ public class SupporterAssignmentServiceImpl extends BaseTransactionalService imp
         return find(supporterAssignmentRepository.findById(assignmentId), notFoundError(SupporterAssignment.class, assignmentId));
     }
 
-    private String getFormattedApplicationDeadline(Application application) {
-        ZonedDateTime deadline = application.getCompetition().getSubmissionDate();
+    private String getFormattedAssessorDeadline(Application application) {
+        ZonedDateTime deadline = application.getCompetition().getAssessorDeadlineDate();
         return deadline == null ? "" : deadline.format(DateTimeFormatter.ofPattern(String.format(
                 "%s EEEE dd'%s' MMMM yyyy",
                 (deadline.getHour() == 12 ? "'midday'" : "hh:mma"),
