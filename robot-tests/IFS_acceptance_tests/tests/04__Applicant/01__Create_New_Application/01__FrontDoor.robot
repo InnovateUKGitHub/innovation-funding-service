@@ -9,6 +9,8 @@ Documentation    INFUND-6923 Create new public Competition listings page for App
 ...
 ...              IFS-8463 Implement Azure ChatBot in local environment
 ...
+...              IFS-11184 Support email update in Contact us page
+...
 Suite Setup      Custom suite setup
 Suite Teardown   Custom suite teardown
 Force Tags       Applicant
@@ -17,7 +19,7 @@ Resource         ../../../resources/common/Competition_Commons.robot
 
 *** Test Cases ***
 Guest user navigates to Front Door
-    [Documentation]    INFUND-6923 INFUND-7946 IFS-247
+    [Documentation]    INFUND-6923 INFUND-7946 IFS-247  IFS-11184
     [Tags]  HappyPath
     [Setup]  the user navigates to the page    ${FRONTDOOR}
     When the user should see the element       jQuery = a:contains("Innovate UK")
@@ -29,6 +31,7 @@ Guest user navigates to Front Door
     Then verify first date is greater than or equal to second  css = li:nth-child(2) .date-definition-list dd:nth-of-type(1)  css = li:nth-child(3) .date-definition-list dd:nth-of-type(1)
     When the user clicks the button/link       link = Contact us
     Then the user should see the element       jQuery = h1:contains("Contact us")
+    And The user should see the element        ink = support@iuk.ukri.org
     And the user should not see an error in the page
     And the user should see the element        jQuery = a:contains("feedback")
 
