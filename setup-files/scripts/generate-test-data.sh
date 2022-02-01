@@ -63,10 +63,10 @@ do_baseline () {
     # navigate to project root
     cd ${project_root_dir}
 
-    ./gradlew -PopenshiftEnv=unused $profile -Pcloud=automated -Pifs.companies.house.key=unused clean
+    ./gradlew -PopenshiftEnv=unused $profile -Pcloud=automated -Pifs.companies.house.key=unused clean --stacktrace
 
     # run generator test class
-    IFS_GENERATE_TEST_DATA_EXECUTION=SINGLE_THREADED IFS_GENERATE_TEST_DATA_COMPETITION_FILTER=ALL_COMPETITIONS ./gradlew -PopenshiftEnv=unused $profile -Pcloud=automated -Pifs.companies.house.key=unused -PtestGroups=generatetestdata :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData
+    IFS_GENERATE_TEST_DATA_EXECUTION=SINGLE_THREADED IFS_GENERATE_TEST_DATA_COMPETITION_FILTER=ALL_COMPETITIONS ./gradlew -PopenshiftEnv=unused $profile -Pcloud=automated -Pifs.companies.house.key=unused -PtestGroups=generatetestdata :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData  --stacktrace
 
     # extract the current version of the webtest data
     current_version="`get_current_patch_level`_"
