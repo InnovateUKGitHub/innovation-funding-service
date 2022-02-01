@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.forms.questions.team.viewmodel;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import java.util.List;
 
@@ -9,7 +10,9 @@ public class ApplicationTeamOrganisationViewModel implements Comparable<Applicat
     private final long id;
     private final Long inviteId;
     private final String name;
-    private final String type;
+    private final Long organisationType;
+    private final String organisationTypeName;
+    private final String companyRegistrationNumber;
     private final List<ApplicationTeamRowViewModel> rows;
     private final boolean editable;
     private final boolean userBelongsToOrganisation;
@@ -17,15 +20,35 @@ public class ApplicationTeamOrganisationViewModel implements Comparable<Applicat
     private final AddressResource address;
 
     private boolean openAddTeamMemberForm;
-    public ApplicationTeamOrganisationViewModel(long id, Long inviteId, String name, String type, List<ApplicationTeamRowViewModel> rows, boolean editable, boolean existing) {
-        this(id, inviteId, name, type, rows, editable, false, existing, null);
+    public ApplicationTeamOrganisationViewModel(long id,
+                                                Long inviteId,
+                                                String name,
+                                                Long organisationType,
+                                                String organisationTypeName,
+                                                String companyRegistrationNumber,
+                                                List<ApplicationTeamRowViewModel> rows,
+                                                boolean editable,
+                                                boolean existing) {
+        this(id, inviteId, name, organisationType, organisationTypeName, companyRegistrationNumber, rows, editable, false, existing, null);
     }
 
-    public ApplicationTeamOrganisationViewModel(long id, Long inviteId, String name, String type, List<ApplicationTeamRowViewModel> rows, boolean editable, boolean existing, boolean userBelongsToOrganisation, AddressResource address) {
+    public ApplicationTeamOrganisationViewModel(long id,
+                                                Long inviteId,
+                                                String name,
+                                                Long organisationType,
+                                                String organisationTypeName,
+                                                String companyRegistrationNumber,
+                                                List<ApplicationTeamRowViewModel> rows,
+                                                boolean editable,
+                                                boolean existing,
+                                                boolean userBelongsToOrganisation,
+                                                AddressResource address) {
         this.id = id;
         this.inviteId = inviteId;
         this.name = name;
-        this.type = type;
+        this.organisationType = organisationType;
+        this.organisationTypeName = organisationTypeName;
+        this.companyRegistrationNumber = companyRegistrationNumber;
         this.rows = rows;
         this.editable = editable;
         this.userBelongsToOrganisation = userBelongsToOrganisation;
@@ -46,9 +69,20 @@ public class ApplicationTeamOrganisationViewModel implements Comparable<Applicat
         return name;
     }
 
-    public String getType() {
-        return type;
+    public Long getOrganisationType() {
+        return organisationType;
     }
+
+    @Deprecated
+    public String getType() {
+        return organisationTypeName;
+    }
+
+    public String getOrganisationTypeName() {
+        return organisationTypeName;
+    }
+
+    public String getCompanyRegistrationNumber() { return companyRegistrationNumber; }
 
     public List<ApplicationTeamRowViewModel> getRows() {
         return rows;
@@ -94,5 +128,25 @@ public class ApplicationTeamOrganisationViewModel implements Comparable<Applicat
             return 1;
         }
         return name.compareTo(that.getName());
+    }
+
+    public boolean isBusiness() {
+        return OrganisationTypeEnum.isBusiness(organisationType);
+    }
+
+    public boolean isResearch() {
+        return OrganisationTypeEnum.isResearch(organisationType);
+    }
+
+    public boolean isRTO() {
+        return OrganisationTypeEnum.isRTO(organisationType);
+    }
+
+    public boolean isPublicSectorOrCharity() {
+        return OrganisationTypeEnum.isPublicSectorOrCharity(organisationType);
+    }
+
+    public boolean isKnowledgeBase() {
+        return OrganisationTypeEnum.isKnowledgeBase(organisationType);
     }
 }
