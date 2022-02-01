@@ -2,6 +2,7 @@ apply from: rootProject.file("gradle-support/java.gradle")
 
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.springframework.boot'
+apply plugin: "com.gorylenko.gradle-git-properties"
 
 dependencies {
 
@@ -24,5 +25,9 @@ dependencies {
 bootJar {
     classifier = 'executable'
     mainClassName = 'org.innovateuk.ifs.Application'
+}
+
+springBoot {
+    buildInfo()
 }
 
