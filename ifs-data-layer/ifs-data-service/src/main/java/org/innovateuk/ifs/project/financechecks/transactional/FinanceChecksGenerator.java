@@ -21,6 +21,7 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.util.KtpFecFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -85,6 +86,10 @@ public class FinanceChecksGenerator {
     @Autowired
     private KtpFecFilter ktpFecFilter;
 
+    @Value("${ifs.ktp.phase2.enabled}")
+    private boolean isKTPPhase2Enabled;
+
+
     public ServiceResult<Void> createMvpFinanceChecksFigures(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {
         FinanceCheck newFinanceCheck = createMvpFinanceCheckEmptyCosts(newProject, organisation, costCategoryType);
         populateFinanceCheck(newFinanceCheck);
@@ -120,7 +125,7 @@ public class FinanceChecksGenerator {
 
         CompetitionResource competition = competitionService.getCompetitionById(applicationFinanceForOrganisation.getApplication().getCompetition().getId()).getSuccess();
 
-        if (competition.applicantNotRequiredForViabilityChecks(organisation.getOrganisationTypeEnum())) {
+        if (competition.applicantNotRequiredForViabilityChecks(isKTPPhase2Enabled, organisation.getOrganisationTypeEnum())) {
             PartnerOrganisation partnerOrganisation = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId());
             viabilityWorkflowHandler.viabilityNotApplicable(partnerOrganisation, null);
         }

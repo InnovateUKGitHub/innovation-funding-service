@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.user.controller;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
+import org.innovateuk.ifs.invite.transactional.ApplicationInviteServiceImpl;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
@@ -59,6 +62,9 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Mock
     private TokenService tokenServiceMock;
+
+    @Mock
+    private ApplicationInviteServiceImpl applicationInviteService;
 
     @Override
     protected UserController supplyControllerUnderTest() {
@@ -157,7 +163,10 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final Long userId = 1L;
         final Long appId = 1L;
         final Long compId = 1L;
-        final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(), null);
+
+        ObjectNode node =  JsonNodeFactory.instance.objectNode();
+        node.put("inviteId",111L);
+        final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(),node );
         when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
 
         ApplicationResource applicationResource = new ApplicationResource();
@@ -165,8 +174,10 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         applicationResource.setId(appId);
 
 
-        when(tokenServiceMock.handleExtraAttributes(token)).thenReturn(serviceSuccess((applicationResource)));
-        when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(anyLong())).thenReturn(serviceSuccess());
+        when(tokenServiceMock.handleExtraAttributes(any())).thenReturn(serviceSuccess((applicationResource)));
+        when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(anyLong(),anyLong())).thenReturn(serviceSuccess());
+
+
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
@@ -179,13 +190,15 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     public void verifyEmailWithoutExtraAttributes() throws Exception {
         final String hash = "8eda60ad3441ee883cc95417e2abaa036c308dd9eb19468fcc8597fb4cb167c32a7e5daf5e237385";
         final Long userId = 1L;
+        ObjectNode node =  JsonNodeFactory.instance.objectNode();
+        node.put("inviteId",111L);
+        final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(),node );
 
-        final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(), null);
         when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
 
 
         when(tokenServiceMock.handleExtraAttributes(token)).thenReturn(serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN));
-        when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(anyLong())).thenReturn(serviceSuccess());
+        when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(anyLong(),anyLong())).thenReturn(serviceSuccess());
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())

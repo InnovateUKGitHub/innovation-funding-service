@@ -31,21 +31,29 @@ public enum OrganisationTypeEnum {
         return simpleFindFirst(values(), v -> v.id == organisationTypeId).orElse(null);
     }
 
-    public static boolean isResearch(OrganisationTypeEnum organisationType) {
-        return organisationType.equals(RESEARCH);
-    }
+    public static boolean isBusiness(OrganisationTypeEnum organisationType) { return organisationType.equals(BUSINESS); }
+
+    public static boolean isBusiness(long organisationTypeId) { return isBusiness(getFromId(organisationTypeId)); }
+
+    public static boolean isResearch(OrganisationTypeEnum organisationType) { return organisationType.equals(RESEARCH); }
 
     public static boolean isResearch(long organisationTypeId) {
         return isResearch(getFromId(organisationTypeId));
     }
 
-    public static boolean isKnowledgeBase(OrganisationTypeEnum organisationType) {
-        return organisationType.equals(KNOWLEDGE_BASE);
+    public static boolean isRTO(OrganisationTypeEnum organisationType) { return organisationType.equals(RTO); }
+
+    public static boolean isRTO(long organisationTypeId) {
+        return isRTO(getFromId(organisationTypeId));
     }
 
-    public static boolean isKnowledgeBase(long organisationTypeId) {
-        return isKnowledgeBase(getFromId(organisationTypeId));
-    }
+    public static boolean isPublicSectorOrCharity(OrganisationTypeEnum organisationType) { return organisationType.equals(PUBLIC_SECTOR_OR_CHARITY); }
+
+    public static boolean isPublicSectorOrCharity(long organisationTypeId) { return isPublicSectorOrCharity(getFromId(organisationTypeId)); }
+
+    public static boolean isKnowledgeBase(OrganisationTypeEnum organisationType) { return organisationType.equals(KNOWLEDGE_BASE); }
+
+    public static boolean isKnowledgeBase(long organisationTypeId) { return isKnowledgeBase(getFromId(organisationTypeId)); }
 
     public static boolean isResearchParticipationType(OrganisationTypeEnum organisationType) {
         return researchParticipationTypes.contains(organisationType);

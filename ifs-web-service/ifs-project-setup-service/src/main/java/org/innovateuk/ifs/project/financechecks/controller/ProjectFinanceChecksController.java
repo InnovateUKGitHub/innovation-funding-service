@@ -52,6 +52,7 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -93,6 +94,9 @@ public class ProjectFinanceChecksController {
 
     private static final String ATTACHMENT_COOKIE = "query_new_response_attachments";
     private static final String FORM_ATTR = "form";
+
+    @Value("${ifs.ktp.phase2.enabled}")
+    private boolean ktpPhase2Enabled;
 
     @Autowired
     private ProjectService projectService;
@@ -505,7 +509,7 @@ public class ProjectFinanceChecksController {
             Optional<ProjectFinanceResource> organisationProjectFinance = projectFinances.stream()
                     .filter(projectFinance -> projectFinance.getOrganisation().equals(organisation.getId()))
                     .findFirst();
-            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(), competition.getFinanceRowTypesByFinance(organisationProjectFinance), competition.isOverheadsAlwaysTwenty(), competition.getName(), competition.getFundingType() == FundingType.KTP, canEditProjectCosts));
+            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(), competition.getFinanceRowTypesByFinance(organisationProjectFinance), competition.isOverheadsAlwaysTwenty(), competition.getName(), competition.getFundingType() == FundingType.KTP, ktpPhase2Enabled, canEditProjectCosts));
             model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId()));
         } else {
             model.addAttribute("academicCostForm", projectAcademicCostFormPopulator.populate(new AcademicCostForm(), project.getId(), organisation.getId()));

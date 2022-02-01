@@ -96,9 +96,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         INVITE_EXTERNAL_USER,
     }
 
-    private static final String DEFAULT_INTERNAL_USER_EMAIL_DOMAIN = "innovateuk.ukri.org";
-
-    @Value("${ifs.system.internal.user.email.domains}")
+    @Value("${ifs.system.internal.user.email.domains:iuk.ukri.org}")
     private String internalUserEmailDomains;
 
     @Value("${ifs.system.kta.user.email.domain}")
@@ -133,8 +131,6 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     private ServiceResult<Void> validateInternalUserEmailDomain(String email) {
-
-        internalUserEmailDomains = StringUtils.defaultIfBlank(internalUserEmailDomains, DEFAULT_INTERNAL_USER_EMAIL_DOMAIN);
 
         String domain = StringUtils.substringAfter(email, "@");
 

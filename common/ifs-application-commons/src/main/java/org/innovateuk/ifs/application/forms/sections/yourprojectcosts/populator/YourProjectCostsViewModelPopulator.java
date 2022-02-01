@@ -36,6 +36,9 @@ import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STA
 @Component
 public class YourProjectCostsViewModelPopulator {
 
+    @Value("${ifs.ktp.phase2.enabled}")
+    private boolean ktpPhase2Enabled;
+
     @Autowired
     private CompetitionRestService competitionRestService;
 
@@ -102,6 +105,7 @@ public class YourProjectCostsViewModelPopulator {
                     isProcurementCompetition(competition),
                     isThirdPartyProcurementCompetition(competition),
                     FundingType.KTP == competition.getFundingType(),
+                    ktpPhase2Enabled,
                     getFinanceRowTypes(competition, finance),
                     competition.isOverheadsAlwaysTwenty(),
                     CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType()),
@@ -144,6 +148,7 @@ public class YourProjectCostsViewModelPopulator {
                 isProcurementCompetition(competition),
                 isThirdPartyProcurementCompetition(competition),
                 FundingType.KTP == competition.getFundingType(),
+                ktpPhase2Enabled,
                 getFinanceRowTypes(competition, finance),
                 competition.isOverheadsAlwaysTwenty(),
                 CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType()),

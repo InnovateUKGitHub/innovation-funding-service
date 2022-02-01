@@ -33,6 +33,8 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...
 ...               IFS-7723 Improvement to company search results
 ...
+...               IFS-11131 Company registration number in Application Team
+...
 #create new competition to test the new application team view.
 Suite Setup       Custom Suite Setup
 Suite Teardown
@@ -54,6 +56,7 @@ Application team page
     When the user clicks the button/link           link = Application team
     Then the user should see the element           jQuery = h1:contains("Application team")
     And the lead applicant should have the correct org status
+    And the user should see the element            jQuery = td:contains("Company registration number")+td:contains("04967001")
     And the user should see the element            link = Application overview
 
 Lead Adds/Removes rows
@@ -178,7 +181,7 @@ Complete account verification
     Then the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
 
 Partner should be able to log-in and see the new company name
-    [Documentation]    INFUND-2083  IFS-951
+    [Documentation]    INFUND-2083  IFS-951  IFS-11131
     ...
     ...    INFUND-7976
     [Tags]  HappyPath
@@ -186,6 +189,7 @@ Partner should be able to log-in and see the new company name
     When the user logs-in in new browser                    ${invite_email}    ${correct_password}
     Then the user should be redirected to the correct page  ${APPLICANT_DASHBOARD_URL}
     And the user can see the updated company name throughout the application
+    And the user should see the element                     jQuery = td:contains("Company registration number")+td:contains("SC157176")
     And the user reads his email and clicks the link        ${invite_email}    Innovate UK applicant questionnaire    diversity survey
     [Teardown]    the user navigates to the page            ${APPLICANT_DASHBOARD_URL}
 
@@ -272,17 +276,17 @@ the status of the people should be correct in the Manage contributors page
     the user should see the element  jQuery = .table-overflow tr:contains("Adrian Booth") td:nth-child(3):contains("Invite pending")
 
 the user can see the updated company name throughout the application
-    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link   link = ${application_name}
-    And the user clicks the button/link   link = Your project finances
-    And the user should see the element   link = Your project costs
-    And the user should see the element   link = Your organisation
-    And the user should see the element   jQuery = h3:contains("Your funding")
-    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link   link = ${application_name}
-    When the user clicks the button/link  link = Application team
-    Then the user should see the element  jQuery = h2:contains("FIRSTGROUP PLC")
-    And the user should see the element   jQuery = td:contains("Type")+td:contains("Business")
+    the user navigates to the page      ${APPLICANT_DASHBOARD_URL}
+    the user clicks the button/link     link = ${application_name}
+    the user clicks the button/link     link = Your project finances
+    the user should see the element     link = Your project costs
+    the user should see the element     link = Your organisation
+    the user should see the element     jQuery = h3:contains("Your funding")
+    the user navigates to the page      ${APPLICANT_DASHBOARD_URL}
+    the user clicks the button/link     link = ${application_name}
+    the user clicks the button/link     link = Application team
+    the user should see the element     jQuery = h2:contains("FIRSTGROUP PLC")
+    the user should see the element     jQuery = td:contains("Type")+td:contains("Business")
 
 the lead applicant cannot be removed
     the user should see the element         jQuery = td:contains("Lead applicant")

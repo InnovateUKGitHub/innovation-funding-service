@@ -49,6 +49,8 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...
 ...             IFS-10869 Loans Part B: remove unnecessary banner
 ...
+...             IFS-11137 Content change mop-up relating to Loans Part B epic
+...
 
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
@@ -62,6 +64,8 @@ ${loan_comp_PS}                            Project setup loan comp
 ${loan_comp_PS_Id}                         ${competition_ids["${loan_comp_PS}"]}
 ${loan_comp_application}                   Loan Competition
 ${loanApplicationName}                     Loan Application
+${loanCompetitionPartB}                    Loans SF Part-B Competition
+${loanApplicationPartB}                    Loans SF Part-B Application
 ${loan_comp_appl_id}                       ${competition_ids["${loan_comp_application}"]}
 ${loanApplicationID}                       ${application_ids["${loanApplicationName}"]}
 ${loan_PS_application1}                    Loan Project 1
@@ -74,7 +78,6 @@ ${loan_PS_Url}                             ${loan_PS}/details
 ${loan_finance_checks}                     ${server}/project-setup-management/project/${loan_PS_project_Id}/finance-check
 ${eligibility_changes}                     ${loan_finance_checks}/organisation/${EMPIRE_LTD_ID}/eligibility/changes
 ${spend_profile}                           ${server}/project-setup-management/project/${loan_PS_project_Id}/spend-profile/approval
-
 
 *** Test Cases ***
 The user can navigate back to application overview in the same window from part b questions form
@@ -100,12 +103,14 @@ the user can open the sales force new tab on clicking conitnue button in incompl
     Then title should be                                    Home
 
 The user will not be able to mark the application as complete without completing business and financial information
-    [Documentation]    IFS-9484  IFS-10705 IFS-10757
+    [Documentation]    IFS-9484  IFS-10705  IFS-10757  IFS-11137
     Given the user navigates to the page                        ${server}/applicant/dashboard
     And The user clicks the button/link                         link = ${loanApplicationName}
     When the user clicks the button/link                        id = application-overview-submit-cta
     Then the user should see that the element is disabled       id = submit-application-button
     And The user clicks the button/link                         id = accordion-questions-heading-1-1
+    And The user should see the element                         jQuery = span:contains("Business and financial information")
+    And The user should see the element                         jQuery = p:contains("Information not yet provided")
     And The user should not see the element                     jQuery = #accordion-questions-content-1-1 button:contains("Mark")
     And the user should see the element                         jQuery = .section-incomplete + button:contains("Business and financial information")
     And the user should see the element                         jQuery = h2:contains("Applicant details")
@@ -149,13 +154,13 @@ Loan application finance overview
     Then the user should see the element   jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00%") ~ td:contains("2,468") ~ td:contains("140,632")
 
 Loan application submission
-    [Documentation]  IFS-6237  IFS-6238  IFS-9483 IFS-10825 IFS-10869
+    [Documentation]  IFS-6237  IFS-6238  IFS-9483 IFS-10825 IFS-10869 IFS-11137
     Given the user submits the loan application
     When the user clicks the button/link            link = View application
     Then the user should see the element            jQuery = h1:contains("Application overview")
     And the user should see the element             jQuery = span:contains("Thanks for submitting Part B of your loan application.")
     And the user should see the element             jQuery = span:contains("What happens next")
-    And the user should see the element             jQuery = p:contains("We will make our decision based on: Suitability of your business to receive a loan and the quality of the project.")
+    And the user should see the element             jQuery = p:contains("We will make our decision based on the suitability of your business and the quality of the project.")
     And the user reads his email                    ${lead_applicant_credentials["email"]}   Complete your application for Loan Competition   You have completed your application for Loan Competition.
 
 Assessor can view BFI question in application
@@ -169,6 +174,7 @@ Assessor can view BFI question in application
    And The user clicks the button/link                                      link = ${loanApplicationName}
    And The user clicks the button/link                                      link = Business and financial information
    Then The user should see the element                                     jQuery = h1:contains("Business and financial information")
+   And the user should see the element                                      jQuery = p:contains("Thank you. This section is now complete and will be reviewed by Innovate UK.")
 
 Applicant complete the project setup details
     [Documentation]  IFS-6369  IFS-6285  IFS-9483  IFS-10825
@@ -401,15 +407,6 @@ the external user should see the funding changes
     the user should see the element     jQuery = th:contains("Subcontracting") ~ td:contains("90,000")
     the user should see the element     jQuery = th:contains("Travel and subsistence") ~ td:contains("5,970")
     the user should see the element     jQuery = th:contains("Total project costs") ~ td:contains("£203,371") ~ td:contains("£207,271") ~ td:contains("£3900")
-
-#the user marks loan as complete
-#    [Arguments]  ${status}  ${appl_name}
-#    the user selects the radio button     successful   ${status}
-#    the user selects the checkbox         ${status}Confirmation
-#    the user clicks the button/link       id = mark-as-${status}
-#    the user should see the element       jQuery = p:contains("Project setup is complete and was ${status}.")
-#    the user clicks the button/link       link = Back to project setup
-#    the user should see the element       jQuery = tr:contains("${appl_name}") .ifs-project-status-${status}
 
 the user approves the spend profile
     the user navigates to the page   ${spend_profile}
