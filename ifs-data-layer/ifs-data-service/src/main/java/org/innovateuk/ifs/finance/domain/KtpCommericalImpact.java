@@ -16,7 +16,7 @@ public class KtpCommericalImpact {
     @Column(columnDefinition = "double")
     private BigDecimal inProjectProfit;
 
-    @Column(columnDefinition = "string")
+    @Column(columnDefinition = "TEXT")
     private String additionalIncomeStream;
 
     @Column(columnDefinition = "double")
