@@ -7,7 +7,9 @@ package org.innovateuk.ifs.invite.constant;
 public enum InviteStatus {
     SENT("Sent"),
     CREATED("Not sent"),
-    OPENED("Opened");
+    OPENED("Opened"),
+    ACCEPTED("Accepted"),
+    VERIFIED("Verified");
 
     private String displayName;
 

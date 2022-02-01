@@ -45,6 +45,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -74,6 +75,9 @@ import java.util.stream.Collectors;
 public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     private static final String FORM_ATTR_NAME = "form";
+
+    @Value("${ifs.ktp.phase2.enabled}")
+    private boolean ktpPhase2Enabled;
 
     @Autowired
     private FinanceCheckService financeCheckService;
@@ -165,6 +169,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                         competition.get().getFinanceRowTypesByFinance(organisationProjectFinance),
                         competition.get().isOverheadsAlwaysTwenty(),
                         competition.get().getFundingType() == FundingType.KTP,
+                        ktpPhase2Enabled,
                         canEditProjectCosts));
                 if (form == null) {
                     future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId, organisation.get().getId())));
