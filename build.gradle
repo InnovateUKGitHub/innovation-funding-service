@@ -13,7 +13,7 @@ plugins {
     id "org.springframework.boot" version "2.4.2" apply false
     id "com.github.node-gradle.gulp" version "1.5.3" apply false
     // Used in spring-boot build-info
-    id "com.gorylenko.gradle-git-properties" version "2.2.2" apply false
+//    id "com.gorylenko.gradle-git-properties" version "2.2.2" apply false
 }
 
 sonarqube {
