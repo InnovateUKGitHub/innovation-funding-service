@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-public class KtpCommericalImpact {
+public class KtpCommercialImpact {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +16,7 @@ public class KtpCommericalImpact {
     @Column(columnDefinition = "double")
     private BigDecimal inProjectProfit;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String additionalIncomeStream;
 
     @Column(columnDefinition = "double")
@@ -26,9 +26,9 @@ public class KtpCommericalImpact {
     @JoinColumn(name="ktpCommericalImpactYearsId", referencedColumnName="id", nullable = false, updatable = false)
     private KtpCommercialImpactYears ktpCommercialImpactYears;
 
-    KtpCommericalImpact() {}
+    KtpCommercialImpact() {}
 
-    public KtpCommericalImpact(Integer year, BigDecimal inProjectProfit, String additionalIncomeStream, BigDecimal total, KtpCommercialImpactYears ktpCommercialImpactYears) {
+    public KtpCommercialImpact(Integer year, BigDecimal inProjectProfit, String additionalIncomeStream, BigDecimal total, KtpCommercialImpactYears ktpCommercialImpactYears) {
         this.year = year;
         this.inProjectProfit = inProjectProfit;
         this.additionalIncomeStream = additionalIncomeStream;
