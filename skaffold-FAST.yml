@@ -87,7 +87,11 @@ profiles:
           context: ifs-data-layer/ifs-data-service/src/main/docker/proxysql
           docker:
             dockerfile: Dockerfile-proxysql
-
+        - image: sba
+          context: .
+          jib:
+            type: gradle
+            project: ifs-tools:sba
   - name: custom
     build:
       local:
