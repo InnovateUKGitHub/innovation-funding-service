@@ -29,7 +29,7 @@ public class UserProfilePopulator {
         } else {
             name = user.getName();
         }
-        return new UserProfileViewModel(name, user.getPhoneNumber(), user.getEmail(), user.getAllowMarketingEmails(), organisationViewModels, user.hasAnyRoles(MONITORING_OFFICER));
+        return new UserProfileViewModel(name, user.getPhoneNumber(), user.getEmail(), user.isAllowMarketingEmails(), organisationViewModels, user.hasAnyRoles(MONITORING_OFFICER));
     }
 
     private OrganisationProfileViewModel toOrganisationViewModel(OrganisationResource organisation) {
