@@ -8,6 +8,7 @@ bases:
   - ../../env-base
 
 components:
+  - ../../../components/sba
   - ../../../components/registration-service
   - ../../../components/data-layer/
   - ../../../components/web-layer
@@ -15,3 +16,4 @@ components:
 resources:
   - config-maps/finance-db-config.yml
   - config-maps/survey-db-config.yml
+  - rbac/sba-rbac.yml

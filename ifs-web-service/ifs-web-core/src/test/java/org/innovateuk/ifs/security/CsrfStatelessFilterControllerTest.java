@@ -128,6 +128,14 @@ public class CsrfStatelessFilterControllerTest {
     }
 
     @Test
+    public void test_protectedRequest_tokenMissing_whitelist() throws Exception {
+        mockMvc.perform(post("/monitoring/logging"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("csrf-test"))
+                .andReturn();
+    }
+
+    @Test
     public void test_protectedRequest_byHeader_empty() throws Exception {
         mockMvc.perform(post("/csrf-test/test-post")
                 .header("X-CSRF-TOKEN", EMPTY))
@@ -195,16 +203,21 @@ public class CsrfStatelessFilterControllerTest {
     }
 
     @Controller
-    @RequestMapping("/csrf-test")
+    @RequestMapping("/")
     static class SampleController {
 
-        @PostMapping("/test-post")
+        @PostMapping("/monitoring/logging")
+        public String testWhitelistPost() {
+            return "csrf-test";
+        }
+
+        @PostMapping("/csrf-test/test-post")
         public String testPost() {
             return "csrf-test";
         }
 
 
-        @GetMapping("/test-get")
+        @GetMapping("/csrf-test/test-get")
         public String testGet() {
             return "csrf-test";
         }

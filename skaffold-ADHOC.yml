@@ -11,8 +11,6 @@ profiles:
           jib:
             type: gradle
             project: ifs-data-layer:ifs-data-service
-            args:
-              - "-DskipTests"
     deploy:
       statusCheckDeadlineSeconds: 600
       kustomize:
@@ -26,8 +24,6 @@ profiles:
           jib:
             type: gradle
             project: ifs-sil-stub
-            args:
-              - "-DskipTests"
     deploy:
       statusCheckDeadlineSeconds: 600
       kustomize:
@@ -41,8 +37,6 @@ profiles:
           jib:
             type: gradle
             project: ifs-registration-service
-            args:
-              - "-DskipTests"
     deploy:
       statusCheckDeadlineSeconds: 600
       kustomize:
@@ -56,8 +50,6 @@ profiles:
           jib:
             type: gradle
             project: ifs-data-layer:ifs-finance-data-service
-            args:
-              - "-DskipTests"
     deploy:
       statusCheckDeadlineSeconds: 600
       kustomize:
@@ -71,8 +63,6 @@ profiles:
           jib:
             type: gradle
             project: ifs-data-layer:ifs-survey-data-service
-            args:
-              - "-DskipTests"
     deploy:
       statusCheckDeadlineSeconds: 600
       kustomize:
@@ -86,8 +76,6 @@ profiles:
           jib:
             type: gradle
             project: ifs-data-layer:data-service-alerts
-            args:
-              - "-DskipTests"
     deploy:
       statusCheckDeadlineSeconds: 600
       kustomize:
@@ -101,8 +89,6 @@ profiles:
           jib:
             type: gradle
             project: ifs-web-service:ifs-survey-service
-            args:
-              - "-DskipTests"
     deploy:
       statusCheckDeadlineSeconds: 600
       kustomize:
@@ -116,8 +102,6 @@ profiles:
           jib:
             type: gradle
             project: ifs-web-service:ifs-project-setup-service
-            args:
-              - "-DskipTests"
     deploy:
       statusCheckDeadlineSeconds: 600
       kustomize:
@@ -131,8 +115,6 @@ profiles:
           jib:
             type: gradle
             project: ifs-web-service:ifs-project-setup-mgt-service
-            args:
-              - "-DskipTests"
     deploy:
       statusCheckDeadlineSeconds: 600
       kustomize:
@@ -146,8 +128,6 @@ profiles:
           jib:
             type: gradle
             project: ifs-web-service:ifs-front-door-service
-            args:
-              - "-DskipTests"
     deploy:
       statusCheckDeadlineSeconds: 600
       kustomize:
@@ -161,8 +141,6 @@ profiles:
           jib:
             type: gradle
             project: ifs-web-service:ifs-competition-mgt-service
-            args:
-              - "-DskipTests"
     deploy:
       statusCheckDeadlineSeconds: 600
       kustomize:
@@ -176,8 +154,6 @@ profiles:
           jib:
             type: gradle
             project: ifs-web-service:ifs-assessment-service
-            args:
-              - "-DskipTests"
     deploy:
       statusCheckDeadlineSeconds: 600
       kustomize:
@@ -191,10 +167,21 @@ profiles:
           jib:
             type: gradle
             project: ifs-web-service:ifs-application-service
-            args:
-              - "-DskipTests"
     deploy:
       statusCheckDeadlineSeconds: 600
       kustomize:
         paths:
           - os-files/kustomize/env/stub/local/adhoc/application-service
+  - name: sba
+    build:
+      artifacts:
+        - image: sba
+          context: .
+          jib:
+            type: gradle
+            project: ifs-tools:sba
+    deploy:
+      statusCheckDeadlineSeconds: 600
+      kustomize:
+        paths:
+          - os-files/kustomize/env/stub/local/adhoc/sba
