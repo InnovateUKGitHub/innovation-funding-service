@@ -23,7 +23,7 @@ public class KtpCommercialImpact {
     private BigDecimal total;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="ktpCommericalImpactYearsId", referencedColumnName="id", nullable = false, updatable = false)
+    @JoinColumn(name="ktpCommercialImpactYearsId", referencedColumnName="id", nullable = false, updatable = false)
     private KtpCommercialImpactYears ktpCommercialImpactYears;
 
     KtpCommercialImpact() {}
