@@ -47,7 +47,10 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     ADDITIONAL_COMPANY_COSTS("additional_company_costs", "Additional company costs"),
     PREVIOUS_FUNDING("previous_funding", "Other funding"),
     ACADEMIC_AND_SECRETARIAL_SUPPORT("academic_and_secretarial_support", "Academic and secretarial support", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
-    INDIRECT_COSTS("indirect costs", "Indirect costs", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION);
+    INDIRECT_COSTS("indirect costs", "Indirect costs", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
+
+    /* HECP TCP */
+    EQUIPMENT("equipment", "Indirect costs", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION);
 
     enum FinanceRowOptions {
         INCLUDE_IN_SPEND_PROFILE,
@@ -134,6 +137,20 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
                         || financeRowType == FinanceRowType.PREVIOUS_FUNDING
                         || financeRowType == FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT
                         || financeRowType == FinanceRowType.INDIRECT_COSTS))
+                .collect(Collectors.toList());
+    }
+
+    public static List<FinanceRowType> getHecpFinanceRowTypes() {
+        return Stream.of(values())
+                .filter(financeRowType -> (financeRowType == FinanceRowType.OTHER_COSTS
+                        || financeRowType == FinanceRowType.FINANCE
+                        || financeRowType == FinanceRowType.LABOUR
+                        || financeRowType == FinanceRowType.OVERHEADS
+                        || financeRowType == FinanceRowType.MATERIALS
+                        || financeRowType == FinanceRowType.CAPITAL_USAGE
+                        || financeRowType == FinanceRowType.SUBCONTRACTING_COSTS
+                        || financeRowType == FinanceRowType.TRAVEL
+                        || financeRowType == FinanceRowType.EQUIPMENT))
                 .collect(Collectors.toList());
     }
 }
