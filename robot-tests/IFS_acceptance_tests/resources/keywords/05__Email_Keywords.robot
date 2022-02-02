@@ -34,6 +34,7 @@ get email
 
 email contains pattern
     [Arguments]    ${email}    ${pattern}
+    ${email_to_test}=  wait for email    sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=60
     ${html}=    get email body    ${email}
     log    ${html}
     ${matches}=    Get Matches From Email    ${email}    ${pattern}
