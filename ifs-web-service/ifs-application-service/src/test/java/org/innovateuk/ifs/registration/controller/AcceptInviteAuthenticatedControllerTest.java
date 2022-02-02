@@ -4,6 +4,7 @@ import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.invite.controller.AcceptInviteAuthenticatedController;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.invite.populator.ConfirmOrganisationInviteModelPopulator;
@@ -11,6 +12,7 @@ import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.organisation.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,9 +21,11 @@ import java.util.Optional;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -62,6 +66,11 @@ public class AcceptInviteAuthenticatedControllerTest extends AbstractApplication
                 .withEmail("email@test.com")
                 .withInviteOrganisation(organisation.getId())
                 .build();
+        ApplicationInviteResource applicationInviteAccepted = newApplicationInviteResource()
+                .withStatus(ACCEPTED)
+                .withEmail("email@test.com")
+                .withInviteOrganisation(organisation.getId())
+                .build();
 
         ConfirmOrganisationInviteOrganisationViewModel expectedModel =
                 new ConfirmOrganisationInviteOrganisationViewModel("Empire Ltd", "Business", "Empire Ltd", "09422981"
@@ -73,6 +82,8 @@ public class AcceptInviteAuthenticatedControllerTest extends AbstractApplication
                 newInviteOrganisationResource()
                         .withOrganisation(organisation.getId())
                         .build()));
+        when(inviteRestService.acceptInvite (applicationInviteAccepted)).thenReturn(restSuccess());
+
         when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
         when(confirmOrganisationInviteModelPopulator.populate(applicationInvite, organisation, "/accept-invite" +
                 "-authenticated/confirm-invited-organisation/confirm")).thenReturn(expectedModel);

@@ -22,6 +22,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
     private final boolean open;
     private final boolean complete;
     private final boolean ktpCompetition;
+    private final boolean ktpPhase2Enabled;
     private final ApplicationKtaInviteResource ktaInvite;
     private final ProcessRoleResource ktaProcessRole;
 
@@ -36,6 +37,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
                                     boolean open,
                                     boolean complete,
                                     boolean ktpCompetition,
+                                    boolean ktpPhase2Enabled,
                                     ApplicationKtaInviteResource ktaInvite,
                                     ProcessRoleResource ktaProcessRole
                                     ) {
@@ -50,6 +52,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         this.open = open;
         this.complete = complete;
         this.ktpCompetition = ktpCompetition;
+        this.ktpPhase2Enabled = ktpPhase2Enabled;
         this.ktaInvite = ktaInvite;
         this.ktaProcessRole = ktaProcessRole;
     }
@@ -120,6 +123,10 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
 
     public boolean isKtpCompetition() {
         return ktpCompetition;
+    }
+
+    public boolean isKtpPhase2Enabled() {
+        return ktpPhase2Enabled;
     }
 
     public Long getKtaInvitePendingDays() {

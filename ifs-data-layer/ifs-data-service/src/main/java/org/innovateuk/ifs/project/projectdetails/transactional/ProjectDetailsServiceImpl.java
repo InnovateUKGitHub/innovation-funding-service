@@ -20,9 +20,9 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
@@ -46,7 +46,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -213,11 +216,16 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     private ServiceResult<Void> validateIfStartDateCanBeChanged(Long projectId) {
 
-        if (isSpendProfileIsGenerated(projectId)) {
+        if (!isLoanProject(projectId) && isSpendProfileIsGenerated(projectId)) {
             return serviceFailure(PROJECT_SETUP_START_DATE_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED);
         }
 
         return serviceSuccess();
+    }
+
+    private boolean isLoanProject(long projectId) {
+        Project project = projectRepository.findById(projectId).orElse(null);
+        return project != null && project.getApplication().getCompetition().isLoan();
     }
 
     private boolean isSpendProfileIsGenerated(Long projectId) {
@@ -436,6 +444,12 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return getProject(projectId)
                 .andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_MANAGER_CANNOT_BE_UPDATED_IF_GOL_GENERATED))
                 .andOnSuccess(() -> inviteContact(projectId, inviteResource, Notifications.INVITE_PROJECT_MANAGER));
+    }
+    @Override
+    @Transactional
+    public ServiceResult<Void> updateLoansProjectSetupCompleteDate(Long projectId) {
+        return getProject(projectId).
+                andOnSuccessReturnVoid(project -> project.setOfferSubmittedDate(ZonedDateTime.now()));
     }
 
     private ServiceResult<Void> inviteContact(Long projectId, ProjectUserInviteResource projectResource, Notifications kindOfNotification) {

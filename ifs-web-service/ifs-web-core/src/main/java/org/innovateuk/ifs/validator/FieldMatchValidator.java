@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.validator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.validator.constraints.FieldMatch;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.PropertyAccessorFactory;
@@ -12,9 +11,8 @@ import javax.validation.ConstraintValidatorContext;
 /**
  * A validator that tests two fields to be equal to each other
  */
-
+@Slf4j
 public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
-    private static final Log LOG = LogFactory.getLog(FieldMatchValidator.class);
 
     private String firstFieldName;
     private String secondFieldName;
@@ -36,7 +34,7 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
             final Object secondObject = beanWrapper.getPropertyValue(secondFieldName);
             matches = objectsMatch(firstObject, secondObject);
         } catch(final Exception ignore) {
-            LOG.error(ignore);
+            log.error(ignore.getMessage(), ignore);
         }
 
         if (!matches) {

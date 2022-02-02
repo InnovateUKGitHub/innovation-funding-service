@@ -104,7 +104,7 @@ the user selects the Terms and Conditions
     [Arguments]  ${compType}  ${fundingRule}  
     the user clicks the button/link                    link = Terms and conditions
     the user clicks the button/link                    jQuery = button:contains("Done")
-    Run Keyword If  '${fundingRule}' == 'SUBSIDY_CONTROL' and "${compType}" != "Expression of interest"  Run keywords  the user selects the radio button     termsAndConditionsId  34
+    Run Keyword If  '${fundingRule}' == 'SUBSIDY_CONTROL' and "${compType}" != "Expression of interest"  Run keywords  the user selects the radio button     termsAndConditionsId  64
     ...   AND  the user clicks the button/link         jQuery = button:contains("Done")
     the user clicks the button/link                    link = Back to competition details
     the user should see the element                    jQuery = li:contains("Terms and conditions") .task-status-complete
@@ -113,7 +113,10 @@ the user fills in the CS Funding Information
     the user clicks the button/link                   link = Funding information
     the user clicks the button/link                   jQuery = button:contains("Generate code")
     the user enters text to an autocomplete field     id = funders[0].funder    Aerospace Technology Institute (ATI)
+    textfield should contain                          id = funders[0].funder   BEIS: Aerospace Technology Institute (ATI) Programme
     the user enters text to a text field              id = funders[0].funderBudget  142424242
+    mouse out                                         id = funders[0].funderBudget
+    textfield should contain                          id = funders[0].funderBudget   142424242
     the user enters text to a text field              id = pafNumber  2424
     the user enters text to a text field              id = budgetCode  Ch0col@73
     the user enters text to a text field              id = activityCode  133t

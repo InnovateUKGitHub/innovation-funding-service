@@ -12,16 +12,16 @@ the user can remove the uploaded file
     [Arguments]  ${name}  ${file_name}
     Reload Page
     Click Button    name=${name}
-    Wait Until Page Does Not Contain Without Screenshots    Removing
-    Wait Until Page Does Not Contain Without Screenshots    Remove
+    Wait Until Page Does Not Contain Without Screenshots    Removing   30s
+    Wait Until Page Does Not Contain Without Screenshots    Remove     30s
     Page Should Contain                                     Upload
     Page Should Not Contain                                 ${file_name}
 
 the user can remove file with multiple uploads
     [Arguments]  ${name}  ${file_name}
     the user clicks the button/link                          name=${name}
-    Wait Until Page Does Not Contain Without Screenshots     Removing
-    Wait Until Page Does Not Contain Without Screenshots     Remove
+    Wait Until Page Does Not Contain Without Screenshots     Removing   30s
+    Wait Until Page Does Not Contain Without Screenshots     Remove     30s
     Page Should Contain                                      Upload
     Page Should Not Contain                                  ${file_name}
 

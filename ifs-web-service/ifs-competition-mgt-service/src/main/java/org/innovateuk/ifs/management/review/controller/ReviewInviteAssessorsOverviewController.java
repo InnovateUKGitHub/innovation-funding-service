@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.management.review.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.review.form.ReviewOverviewSelectionForm;
@@ -22,14 +21,13 @@ import java.util.List;
 /**
  * This controller handles the Overview tab for inviting assessors to an Assessor Panel.
  */
+@Slf4j
 @Controller
 @RequestMapping("/assessment/panel/competition/{competitionId}/assessors")
 @SecuredBySpring(value = "Controller", description = "Only comp admin and project finance users can setup assessment" +
         " panels if they competition supports them", securedType = ReviewInviteAssessorsOverviewController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'REVIEW')")
 public class ReviewInviteAssessorsOverviewController extends CompetitionManagementCookieController<ReviewOverviewSelectionForm> {
-
-    private static final Log LOG = LogFactory.getLog(ReviewInviteAssessorsController.class);
 
     private static final String SELECTION_FORM = "assessorPanelOverviewSelectionForm";
 
@@ -129,7 +127,7 @@ public class ReviewInviteAssessorsOverviewController extends CompetitionManageme
             saveFormToCookie(response, competitionId, selectionForm);
             return createJsonObjectNode(selectionForm.getSelectedInviteIds().size(), selectionForm.getAllSelected(), limitExceeded);
         } catch (Exception e) {
-            LOG.error("exception thrown getting pending and declined", e);
+            log.error("exception thrown getting pending and declined", e);
             return createFailureResponse();
         }
     }
@@ -155,7 +153,7 @@ public class ReviewInviteAssessorsOverviewController extends CompetitionManageme
 
             return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedInviteIds().size(), selectionForm.getAllSelected(), false);
         } catch (Exception e) {
-            LOG.error("exception thrown getting pending and declined", e);
+            log.error("exception thrown getting pending and declined", e);
             return createFailureResponse();
         }
     }

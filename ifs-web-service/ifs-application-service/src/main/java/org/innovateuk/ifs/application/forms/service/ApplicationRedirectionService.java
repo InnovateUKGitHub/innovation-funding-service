@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application.forms.service;
 
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -17,8 +15,6 @@ import java.util.List;
  */
 @Service
 public class ApplicationRedirectionService {
-
-    private static final Log LOG = LogFactory.getLog(ApplicationRedirectionService.class);
 
     @Autowired
     private SectionService sectionService;

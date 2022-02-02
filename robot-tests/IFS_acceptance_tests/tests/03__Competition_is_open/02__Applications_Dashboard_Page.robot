@@ -86,8 +86,8 @@ Comp admin can open the view mode of the application
     And the user clicks the button/link                                     link = ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
     Then the user should see the element                                    link = Print application
     And the user should see the element                                     jQuery = h1 span:contains("Climate science the history of Greenland's ice")
-    And the user should see the element                                     jQuery = h3:contains("Appendix") ~ a:contains("testing_5MB.pdf, 4 MB")
-    And open pdf link                                                       jQuery = a:contains(${5mb_pdf}, 4 MB)
+    And the user should see the element                                     jQuery = h3:contains("Appendix") ~ a:contains("testing_5MB.pdf, 4MB")
+    And open pdf link                                                       jQuery = a:contains(${5mb_pdf}, 4MB)
 
 Comp admin can link to the comp page from application overview
     [Documentation]  IFS-6060
@@ -119,7 +119,7 @@ the user can see the option to upload a file on the page
     the user should see the element             jQuery = label:contains("Upload")
 
 the user can view this file without any errors
-    the user clicks the button/link   jQuery = a:contains(${5mb_pdf}, 4 MB)
+    the user clicks the button/link   jQuery = a:contains(${5mb_pdf}, 4MB)
     the user should not see an error in the page
 
 the user cannot see this file but gets a quarantined message

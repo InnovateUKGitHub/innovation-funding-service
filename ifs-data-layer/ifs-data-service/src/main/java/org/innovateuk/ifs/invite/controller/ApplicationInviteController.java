@@ -66,6 +66,11 @@ public class ApplicationInviteController {
         return applicationInviteService.resendInvite(inviteResource).toPostCreateResponse();
     }
 
+    @PutMapping("/update-invite")
+    public RestResult<Void> updateInvite(@RequestBody ApplicationInviteResource inviteResource) {
+        return applicationInviteService.updateInviteHistory(inviteResource).toPutResponse();
+    }
+
     @PutMapping("/accept-invite/{hash}/{userId}")
     public RestResult<Void> acceptInvite(@PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
         return acceptApplicationInviteService.acceptInvite(hash, userId, Optional.empty())

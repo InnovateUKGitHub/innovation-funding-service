@@ -101,6 +101,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-10325 Update Ts&Cs -‘Knowledge Transfer Partnership (KTP) - Subsidy control'
 ...
+...            IFS-11129 Removal of Viability check for business
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -219,7 +221,7 @@ The knowledge transfer partnership t&c's are correct
 T&c's can be confirmed
     [Documentation]  IFS-7213  IFS-9124
     Given the user clicks the button/link                    jQuery = button:contains("Done")
-    When the user sees that the radio button is selected     termsAndConditionsId  34
+    When the user sees that the radio button is selected     termsAndConditionsId  64
     And the user should see the element                      link = Innovate UK (opens in a new window)
     And the user clicks the button/link                      jQuery = button:contains("Done")
     And the user should see the element                      jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Knowledge Transfer Partnership (KTP) - Subsidy control")
@@ -983,7 +985,7 @@ Internal user should not see the start date in the Edit Project screen
     Then The user should not see the element     jQuery = dt:contains("Start date")
 
 Internal user can not view status of the GOL section if the application not sucessful but finance checks have been approved
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-8119
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-8119  IFS-11129
     Given Log in as a different user                            &{ifs_admin_user_credentials}
     When the user navigates to the page                         ${server}/project-setup-management/project/${ProjectID}/finance-check
     And the user approves funding rules of lead and partner
@@ -1210,21 +1212,6 @@ the user approves Eligibility
     the user navigates to the page                          ${server}/project-setup-management/project/${project}/finance-check/organisation/${leadOrgId}/eligibility
     the user sees the changes in the finance summary table in Eligibility screen
     the user approves project costs
-
-the user approves KTP Viability
-    [Arguments]  ${project}
-    project finance approves KTP Viability for     ${partnerOrgId}  ${project}
-
-project finance approves KTP Viability for
-    [Arguments]  ${partner}  ${project}
-    the user navigates to the page       ${server}/project-setup-management/project/${project}/finance-check/organisation/${partner}/viability
-    the user should see the element      jQuery = th:contains("Funding sought (£)")
-    the user selects the checkbox        costs-reviewed
-    the user selects the checkbox        project-viable
-    Set Focus To Element                 link = Contact us
-    the user selects the option from the drop-down menu  Green  id = rag-rating
-    the user clicks the button/link      css = #confirm-button
-    the user clicks the button/link      jQuery = .modal-confirm-viability .govuk-button:contains("Confirm viability")
 
 the user approves spend profile
      the user clicks the button/link      link = Return to finance checks
@@ -1509,8 +1496,9 @@ the user closed ktp assesment
 
 the user approves finance checks
     [Arguments]   ${ProjectID}  ${competitionId}
-    the user approves Eligibility                            ${ProjectID}
-    the user approves KTP Viability                          ${ProjectID}
+    the user approves Eligibility                        ${ProjectID}
+    the user clicks the button/link                      link = Back to finance checks
+    The user should see the element                      jQuery = span.viability-1:contains("N/A")
     the user clicks the approve finance check button
     the user navigates to the page                       ${server}/project-setup-management/competition/${competitionId}/status/all
 
@@ -1519,7 +1507,6 @@ the user edits project location
     the user clicks the button/link     jQuery = button:contains("Save project location")
 
 the user clicks the approve finance check button
-     the user clicks the button/link      link = Return to finance checks
      the user clicks the button/link      jQuery = button:contains("Approve finance checks")
      the user should see the element      jQuery = p:contains("The finance checks have been approved")
 

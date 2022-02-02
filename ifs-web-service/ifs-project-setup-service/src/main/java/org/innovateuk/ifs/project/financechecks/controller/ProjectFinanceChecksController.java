@@ -2,8 +2,7 @@ package org.innovateuk.ifs.project.financechecks.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -53,6 +52,7 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -85,16 +85,18 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 /**
  * This controller will handle requests related to finance checks for external users
  */
+@Slf4j
 @Controller
 @RequestMapping(ProjectFinanceChecksController.PROJECT_FINANCE_CHECKS_BASE_URL)
 public class ProjectFinanceChecksController {
-
-    private static final Log LOG = LogFactory.getLog(ProjectFinanceChecksController.class);
 
     static final String PROJECT_FINANCE_CHECKS_BASE_URL = "/project/{projectId}/finance-check";
 
     private static final String ATTACHMENT_COOKIE = "query_new_response_attachments";
     private static final String FORM_ATTR = "form";
+
+    @Value("${ifs.ktp.phase2.enabled}")
+    private boolean ktpPhase2Enabled;
 
     @Autowired
     private ProjectService projectService;
@@ -482,7 +484,7 @@ public class ProjectFinanceChecksController {
                 return attachments;
             } catch (IOException e) {
                 //ignored
-                LOG.trace(e);
+                log.trace(e.getMessage(), e);
             }
         }
         return attachments;
@@ -507,7 +509,7 @@ public class ProjectFinanceChecksController {
             Optional<ProjectFinanceResource> organisationProjectFinance = projectFinances.stream()
                     .filter(projectFinance -> projectFinance.getOrganisation().equals(organisation.getId()))
                     .findFirst();
-            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(), competition.getFinanceRowTypesByFinance(organisationProjectFinance), competition.isOverheadsAlwaysTwenty(), competition.getName(), competition.getFundingType() == FundingType.KTP, canEditProjectCosts));
+            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(), competition.getFinanceRowTypesByFinance(organisationProjectFinance), competition.isOverheadsAlwaysTwenty(), competition.getName(), competition.getFundingType() == FundingType.KTP, ktpPhase2Enabled, canEditProjectCosts));
             model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId()));
         } else {
             model.addAttribute("academicCostForm", projectAcademicCostFormPopulator.populate(new AcademicCostForm(), project.getId(), organisation.getId()));
