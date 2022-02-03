@@ -121,8 +121,7 @@ public class ApplicationTeamPopulator {
                 competition.getCollaborationLevel() == CollaborationLevel.SINGLE,
                 application.isOpen() && competition.isOpen(),
                 questionStatuses.stream().anyMatch(QuestionStatusResource::getMarkedAsComplete),
-                competition.isKtp(),
-                ktpPhase2Enabled,
+                competition.isKtp(), ktpPhase2Enabled,
                 ktaInvite, ktaProcessRole);
     }
 
@@ -131,7 +130,14 @@ public class ApplicationTeamPopulator {
                 .map(ApplicationTeamRowViewModel::fromInvite)
                 .collect(toList());
 
-        return new ApplicationTeamOrganisationViewModel(organisationInvite.getId(), organisationInvite.getId(), organisationInvite.getOrganisationName(), null, inviteRows, leadApplicant, false);
+        return new ApplicationTeamOrganisationViewModel(
+                organisationInvite.getId(),
+                organisationInvite.getId(),
+                organisationInvite.getOrganisationName(),
+                0L,
+                null,
+                null,
+                inviteRows, leadApplicant, false);
     }
 
     private ApplicationTeamOrganisationViewModel toOrganisationTeamViewModel(long applicationId, OrganisationResource organisation, Collection<ProcessRoleResource> processRoles, InviteOrganisationResource organisationInvite, boolean leadApplicant, UserResource user) {
@@ -156,7 +162,9 @@ public class ApplicationTeamPopulator {
         return new ApplicationTeamOrganisationViewModel(organisation.getId(),
                 maybeOrganisationInvite.map(InviteOrganisationResource::getId).orElse(null),
                 organisation.getName(),
+                organisation.getOrganisationType(),
                 organisation.getOrganisationTypeName(),
+                organisation.getCompanyRegistrationNumber(),
                 userRows,
                 applicantCanEditRow(userRows, user, leadApplicant),
                 true,

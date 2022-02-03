@@ -23,11 +23,11 @@ alias k8s_configmap="kubectl get configmap"
 alias k8s_secrets="kubectl get secrets"
 
 skaffold_dev() {
-  skaffold dev -f skaffold-ADHOC.yml -p $1 --watch-image='[]' --cache-artifacts=false --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true --tail=false
+  skaffold dev -f skaffold-ADHOC.yml -p $1 --watch-image='[]' --cache-artifacts=false --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true --tail=true
 }
 
 skaffold_debug() {
-  skaffold debug -f skaffold-ADHOC.yml -p $1 --watch-image='[]' --cache-artifacts=false --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true --tail=false
+  skaffold debug -f skaffold-ADHOC.yml -p $1 --watch-image='[]' --cache-artifacts=false --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true --tail=true
 }
 
 # Use k8s_dep alias then the name is the first arg here e.g. 'k8s_log application-svc'
