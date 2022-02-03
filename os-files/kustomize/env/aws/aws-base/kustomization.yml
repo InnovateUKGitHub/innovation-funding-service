@@ -16,4 +16,3 @@ components:
 resources:
   - config-maps/finance-db-config.yml
   - config-maps/survey-db-config.yml
-  - rbac/sba-rbac.yml

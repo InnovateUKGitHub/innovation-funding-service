@@ -2,7 +2,6 @@ apply from: rootProject.file("gradle-support/java.gradle")
 
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.springframework.boot'
-apply plugin: "com.gorylenko.gradle-git-properties"
 
 dependencies {
 
@@ -28,6 +27,14 @@ bootJar {
 }
 
 springBoot {
-    buildInfo()
+    buildInfo {
+        properties {
+            additional = [
+                    'buildNumber': java.util.Optional.ofNullable(System.getenv("bamboo_buildNumber")).orElse("[not available]"),
+                    'gitCommitId': java.util.Optional.ofNullable(System.getenv("bamboo_planRepository_revision")).orElse("[not available]"),
+                    'gitBranch': java.util.Optional.ofNullable(System.getenv("bamboo_planRepository_branchName")).orElse("[not available]")
+            ]
+        }
+    }
 }
 
