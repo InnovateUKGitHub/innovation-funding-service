@@ -536,7 +536,7 @@ Comp admin remove project assigned to MO
     the user clicks the button/link     jQuery = td:contains("${project_name}") ~ td a:contains("Remove")
 
 The user should not see assigned project in Select a project to assign search field
-    input text                             id = projectId    ${Assign_Project_ID}
+    wait until keyword succeeds without screenshots   10s    200ms  input text     id = projectId    ${Assign_Project_ID}
     the user should not see the element    jQuery = ul li:contains("${Assign_Project_ID} - ${Assign_Project}")
 
 Comp admin assign and remove project to MO

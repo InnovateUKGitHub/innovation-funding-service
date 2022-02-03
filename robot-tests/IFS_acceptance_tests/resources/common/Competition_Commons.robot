@@ -117,7 +117,6 @@ the user fills in the CS Funding Information
     the user enters text to a text field              id = pafNumber  2424
     the user enters text to a text field              id = budgetCode  Ch0col@73
     the user enters text to a text field              id = activityCode  133t
-    reload and check if element appears               id = funders[0].funderBudget
     the user enters text to a text field              id = funders[0].funderBudget  142424242
     the user sees the text in the text field          id = funders[0].funderBudget   142424242
     ${nextYearInTwoDigits}=                           get next year in two digits

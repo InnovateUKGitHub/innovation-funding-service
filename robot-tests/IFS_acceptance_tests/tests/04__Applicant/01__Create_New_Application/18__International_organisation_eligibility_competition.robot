@@ -802,8 +802,8 @@ the user provides international organisation details
     the user enters text to a text field                               id = companyRegistrationNumber  ${company_reg_no}
     the user enters text to a text field                               id = addressLine1  ${internationalOrganisationFirstLineAddress}
     the user enters text to a text field                               id = town  ${international_org_town}
-    input text                                                         id = country  ${international_org_country}
-    the user should see country in dropdown                            id = country  ${international_org_country_complete}
+    wait until keyword succeeds without screenshots   10s   200ms   input text     id = country  ${international_org_country}
+    #the user should see country in dropdown                            id = country  ${international_org_country_complete}
     the user clicks the button/link                                    jQuery = ul li:contains("${international_org_country_complete}")
     the user clicks the button/link                                    id = ${button_id}
 

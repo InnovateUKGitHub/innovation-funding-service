@@ -450,7 +450,7 @@ the user completes the new account creation
 
 the applicant adds some content and marks this section as complete
     Set Focus To Element      css = .textarea-wrapped .editor
-    Input Text    css = .textarea-wrapped .editor    This is some random text
+    wait until keyword succeeds without screenshots   10s    200ms  Input Text    css = .textarea-wrapped .editor    This is some random text
     the user clicks the button/link    name = complete
     the user should see the element    name = edit
 
@@ -869,7 +869,7 @@ the user selected organisation if available
 
 the user selects a knowledge based organisation
     [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
-    input text                          id = knowledgeBase        ${knowledgeBase}
+    wait until keyword succeeds without screenshots   10s    200ms  input text     id = knowledgeBase        ${knowledgeBase}
     the user clicks the button/link     jQuery = ul li:contains("${completeKBOrganisartionName}")
 
 the user apply with knowledge base organisation

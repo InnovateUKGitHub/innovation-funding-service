@@ -75,14 +75,15 @@ The user enters text to an autocomplete field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
     Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
     click element    ${TEXT_FIELD}
-    wait for autosave
-    click element    jQuery = li:contains("${TEXT_INPUT}")
+    #wait for autosave
+    Wait Until Element Is Visible Without Screenshots   jQuery = li:contains("${TEXT_INPUT}")
+    Wait Until Keyword Succeeds Without Screenshots    10s    500ms    click element    jQuery = li:contains("${TEXT_INPUT}")
 
 The user edits autocomplete field
     [Arguments]      ${TEXT_FIELD}    ${TEXT_INPUT}
     click element       ${TEXT_FIELD}
-    Input text          ${TEXT_FIELD}   ${TEXT_INPUT}
-    click element       jQuery = li:contains("${TEXT_INPUT}")
+    wait until keyword succeeds without screenshots   10s    200ms   Input text      ${TEXT_FIELD}   ${TEXT_INPUT}
+    Wait Until Keyword Succeeds Without Screenshots   10s    500ms   click element   jQuery = li:contains("${TEXT_INPUT}")
     Mouse Out           ${TEXT_FIELD}
 
 the user sees the text in the element
