@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.user.transactional;
 
 import org.innovateuk.ifs.address.mapper.AddressMapper;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -8,9 +9,15 @@ import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.AllInviteRepository;
+import org.innovateuk.ifs.invite.repository.InviteHistoryRepository;
+import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
+import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.transactional.ApplicationInviteServiceImpl;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerInviteRepository;
@@ -73,7 +80,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private TermsAndConditionsService termsAndConditionsService;
 
     @Autowired
-    private RegistrationNotificationService registrationEmailService;
+    private RegistrationNotificationService registrationNotificationService;
 
     @Autowired
     private MonitoringOfficerInviteRepository monitoringOfficerInviteRepository;
@@ -86,6 +93,17 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private AllInviteRepository allInviteRepository;
+    @Autowired
+    private InviteHistoryRepository inviteHistoryRepository;
+    @Autowired
+    private ApplicationInviteServiceImpl applicationInviteService;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private InviteOrganisationRepository inviteOrganisationRepository;
+
 
     @Override
     @Transactional
@@ -100,7 +118,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
         if (shouldSendVerificationEmail(user)) {
             result = result
-                    .andOnSuccess(savedUser -> sendUserVerificationEmail(ofNullable(user.getCompetitionId()), ofNullable(user.getOrganisationId()), savedUser));
+                    .andOnSuccess(savedUser -> sendUserVerificationEmail(ofNullable(user.getCompetitionId()), ofNullable(user.getOrganisationId()), ofNullable(user.getInviteId()), savedUser));
         }
         if (shouldBePending(user)) {
             result = result.andOnSuccess(this::saveUserAsPending);
@@ -128,7 +146,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<User> handleInvite(User created, UserCreationResource user) {
         if (user.getInviteHash() != null) {
-            Invite invite =  allInviteRepository.getByHash(user.getInviteHash());
+            Invite invite = allInviteRepository.getByHash(user.getInviteHash());
             if (invite != null) {
                 allInviteRepository.save(invite.open());
 
@@ -144,11 +162,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private String getPasswordOrPlaceholder(UserCreationResource user) {
-         if (shouldBePending(user)) {
-             return randomAlphabetic(6).toLowerCase() + randomAlphabetic(6).toUpperCase() + randomNumeric(6);
-         } else {
-             return user.getPassword();
-         }
+        if (shouldBePending(user)) {
+            return randomAlphabetic(6).toLowerCase() + randomAlphabetic(6).toUpperCase() + randomNumeric(6);
+        } else {
+            return user.getPassword();
+        }
     }
 
     private boolean shouldBePending(UserCreationResource user) {
@@ -203,19 +221,20 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
         String password = getPasswordOrPlaceholder(userCreationResource);
         ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(user.getEmail(), password);
-    
+
         return uidFromIdpResult.andOnSuccessReturn(uidFromIdp -> {
             user.setUid(uidFromIdp);
             user.setStatus(UserStatus.INACTIVE);
-            if (userCreationResource.getAddress() != null) profile.setAddress(addressMapper.mapToDomain(userCreationResource.getAddress()));
+            if (userCreationResource.getAddress() != null)
+                profile.setAddress(addressMapper.mapToDomain(userCreationResource.getAddress()));
             Profile savedProfile = profileRepository.save(profile);
             user.setProfileId(savedProfile.getId());
             return userRepository.save(user);
         });
     }
 
-    private ServiceResult<User> sendUserVerificationEmail(Optional<Long> competitionId, Optional<Long> organisationId, User user) {
-        return registrationEmailService.sendUserVerificationEmail(userMapper.mapToResource(user), competitionId, organisationId).
+    private ServiceResult<User> sendUserVerificationEmail(Optional<Long> competitionId, Optional<Long> organisationId, Optional<Long> inviteId, User user) {
+        return registrationNotificationService.sendUserVerificationEmail(userMapper.mapToResource(user), competitionId, organisationId, inviteId).
                 andOnSuccessReturn(() -> user);
     }
 
@@ -232,7 +251,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Override
     @Transactional
     public ServiceResult<Void> resendUserVerificationEmail(final UserResource user) {
-        return registrationEmailService.resendUserVerificationEmail(user);
+        return registrationNotificationService.resendUserVerificationEmail(user);
     }
 
     private ServiceResult<Void> associateUserWithCompetition(Competition competition, User user) {
@@ -295,7 +314,17 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<Void> activateApplicantAndSendDiversitySurvey(long userId) {
+    public ServiceResult<Void> activateApplicantAndSendDiversitySurvey(long userId, Long inviteId) {
+
+        if (inviteId != null) {
+            ApplicationInvite applicationInvite = applicationInviteService.getById(inviteId).getSuccess();
+            ApplicationInviteResource applicationInviteResource = applicationInviteService.getInviteByHash(applicationInvite.getHash()).toGetResponse().getSuccess();
+            applicationInviteResource.setStatus(InviteStatus.VERIFIED);
+            applicationInviteService.updateInviteHistory(applicationInviteResource);
+
+        }
+
+
         return getUser(userId)
                 .andOnSuccess(this::activateUser)
                 .andOnSuccessReturnVoid(this::sendApplicantDiversitySurvey);
@@ -324,11 +353,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return validateInternalUserRole(userRoleType)
                 .andOnSuccess(() -> ServiceResult.getNonNullValue(userRepository.findById(userToEdit.getId()).orElse(null), notFoundError(User.class)))
                 .andOnSuccessReturn(user -> {
-                        Set<Role> roleList = newHashSet(userRoleType);
-                        user.setFirstName(userToEdit.getFirstName());
-                        user.setLastName(userToEdit.getLastName());
-                        user.setRoles(roleList);
-                        return userRepository.save(user);
+                    Set<Role> roleList = newHashSet(userRoleType);
+                    user.setFirstName(userToEdit.getFirstName());
+                    user.setLastName(userToEdit.getLastName());
+                    user.setRoles(roleList);
+                    return userRepository.save(user);
                 })
                 .andOnSuccessReturn(userMapper::mapToResource);
     }

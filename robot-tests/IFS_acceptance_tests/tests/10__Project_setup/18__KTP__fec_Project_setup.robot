@@ -13,6 +13,8 @@ Documentation     IFS-9305  KTP fEC/Non-fEC: display correct finance table if fE
 ...
 ...               IFS-9818 KTP fEC/non-fEC: display only selected fEC table in GOL
 ...
+...               IFS-11129 Removal of Viability check for business
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../resources/defaultResources.robot
@@ -100,11 +102,11 @@ Lead applicant can view their non-FEC project finance overview
     Then the user should view the non-fec project finance overview
 
 Partner can view the non-FEC project finance overview
-    [Documentation]  IFS-9248
+    [Documentation]  IFS-9248  IFS-11129
     Given log in as a different user                                   &{collaborator1_credentials}
     And the user clicks the application tile if displayed
     When the user navigates to finance checks
-    And the user clicks the button/link                                link = view the project finance overview
+    And the user clicks the button/link                                link = project finance overview
     Then the user should view the non-fec project finance overview
 
 IFS admin can view the correct fields in project finance overview table for non-fEC application
@@ -152,7 +154,7 @@ Lead applicant should be able to view any changes to finances screen before appr
     Then the user views the changes to finance screen
 
 Lead applicant can view their non-FEC project finances in the Eligibility section when approved
-    [Documentation]  IFS-9248  IFS-9633
+    [Documentation]  IFS-9248  IFS-9633  IFS-11129
     [Setup]  internal user approves finances
     Given log in as a different user                                           &{ktpLead}
     When the user navigates to finance checks
@@ -271,7 +273,6 @@ internal user approves finances
     log in as a different user          &{ifs_admin_user_credentials}
     the user navigates to the page      ${server}/project-setup-management/project/${project_id}/finance-check
     confirm eligibility                 0
-    confirm viability                   1
     the user clicks the button/link     jQuery = button:contains("Approve finance checks")
 
 the user edits the Academic and secretarial support costs in project setup

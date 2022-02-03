@@ -53,6 +53,7 @@ include("common:ifs-project-commons")
 
 // Bundles spring and above common libraries/api/util code
 include("common:bom")
+include("common")
 
 // Services...
 include("ifs-data-layer")
@@ -72,5 +73,6 @@ include("ifs-web-service:ifs-project-setup-mgt-service")
 include("ifs-web-service:ifs-front-door-service")
 include("ifs-registration-service")
 include("robot-tests")
-include("common")
 
+// Tools...
+include("ifs-tools:sba")

@@ -19,7 +19,7 @@
             <div th:if="${model.isCompletedLoanBusinessAndFinancialInformation()}" class="govuk-body">
 
                     <span class="govuk-heading-m">What happens next</span>
-                    <p>We will make our decision based on: Suitability of your business to receive a loan and the quality of the project.</p>
+                    <p>We will make our decision based on the suitability of your business and the quality of the project.</p>
 
             </div>
             <th:block th:unless="${model.isCompletedLoanBusinessAndFinancialInformation()}">
@@ -58,7 +58,8 @@
                     </table>
                 </th:block>
 
-                <p th:unless="${model.multipleStatuses}" data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${model.answer != null ? model.answer  : 'Answer yet to be provided'}" >Answer</p>
+                <p th:unless="${model.multipleStatuses}" data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${model.answer != null ? model.answer  :
+                                model.isInCompleteLoanBusinessAndFinancialInformation() ? 'Information not yet provided' :'Answer yet to be provided'}" >Answer</p>
             </th:block>
 
             <div class="govuk-inset-text govuk-!-margin-bottom-6" th:if="${model.templateFile != null}">
