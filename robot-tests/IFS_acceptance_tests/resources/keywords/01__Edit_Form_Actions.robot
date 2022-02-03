@@ -58,7 +58,7 @@ The user enters text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
     Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
     Clear Element Text    ${TEXT_FIELD}
-    Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
+    Wait Until Keyword Succeeds Without Screenshots    10s    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out    ${TEXT_FIELD}
     Set Focus To Element    link=GOV.UK
     Wait for autosave
@@ -91,7 +91,7 @@ the user sees the text in the element
 
 the user sees the text in the text field
     [Arguments]    ${textfield}    ${text}
-    Wait Until Keyword Succeeds Without Screenshots    10    200ms    textfield should contain    ${textfield}    ${text}
+    Wait Until Keyword Succeeds Without Screenshots    10s    200ms    textfield should contain    ${textfield}    ${text}
 
 The user enters multiple strings into a text field
     [Arguments]    ${field}    ${string}    ${multiplicity}

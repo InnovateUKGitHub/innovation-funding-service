@@ -113,14 +113,13 @@ the user fills in the CS Funding Information
     the user clicks the button/link                   link = Funding information
     the user clicks the button/link                   jQuery = button:contains("Generate code")
     the user enters text to an autocomplete field     id = funders[0].funder    Aerospace Technology Institute (ATI)
-    textfield should contain                          id = funders[0].funder   BEIS: Aerospace Technology Institute (ATI) Programme
-    reload and check if element appears               id = funders[0].funderBudget
-    the user enters text to a text field              id = funders[0].funderBudget  142424242
-    mouse out                                         id = funders[0].funderBudget
-    textfield should contain                          id = funders[0].funderBudget   142424242
+    the user sees the text in the text field          id = funders[0].funder   BEIS: Aerospace Technology Institute (ATI) Programme
     the user enters text to a text field              id = pafNumber  2424
     the user enters text to a text field              id = budgetCode  Ch0col@73
     the user enters text to a text field              id = activityCode  133t
+    reload and check if element appears               id = funders[0].funderBudget
+    the user enters text to a text field              id = funders[0].funderBudget  142424242
+    the user sees the text in the text field          id = funders[0].funderBudget   142424242
     ${nextYearInTwoDigits}=                           get next year in two digits
     textfield should contain                          css = input[name="competitionCode"]   ${nextYearInTwoDigits}
     the user clicks the button/link                   jQuery = button:contains("Done")
