@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.security;
 
+import com.google.common.collect.ImmutableList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +19,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -147,6 +149,9 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
 
         private boolean enableDevTools;
         private final Pattern allowedMethods = Pattern.compile("^(GET|HEAD|TRACE|OPTIONS)$");
+        private static final List<String> whitelist = ImmutableList.of(
+            "/monitoring"
+        );
 
         /**
          * @param enableDevTools Allow Spring Dev Tools to bypass the need for a CSRF token.  This is based on
@@ -164,7 +169,17 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
         public boolean matches(HttpServletRequest request) {
             boolean isAllowedMethod = allowedMethods.matcher(request.getMethod()).matches();
             boolean isDevToolsEndpoint = request.getRequestURI().contains("/.~~spring-boot!~");
-            return !isAllowedMethod && !(isDevToolsEndpoint && enableDevTools);
+            return !isAllowedMethod && !isAllowWhitelistMethod(request) && !(isDevToolsEndpoint && enableDevTools);
+        }
+
+        private boolean isAllowWhitelistMethod(HttpServletRequest request) {
+            for (String white : whitelist) {
+                if (request.getRequestURI().startsWith(white)) {
+                    log.trace("Whitelist match on {} for uri {} on method {}", white, request.getRequestURI(), request.getMethod());
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
