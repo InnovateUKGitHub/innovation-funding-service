@@ -28,13 +28,12 @@ Delete the emails from the local test mailbox
 get email
     [Arguments]    ${recipient}    ${subject}
     Open Mailbox    server=${local_imap}    port=${local_imap_port}   user=smtp    password=smtp     is_secure=False
-    ${email_to_test}=  wait for email    sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=90
+    ${email_to_test}=  wait for email    sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=120
     #log ${subject}
     [return]    ${email_to_test}
 
 email contains pattern
     [Arguments]    ${email}    ${pattern}
-    ${email_to_test}=  wait for email    sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=60
     ${html}=    get email body    ${email}
     log    ${html}
     ${matches}=    Get Matches From Email    ${email}    ${pattern}
