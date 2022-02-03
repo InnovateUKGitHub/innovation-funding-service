@@ -19,11 +19,10 @@ the user can remove the uploaded file
 
 the user can remove file with multiple uploads
     [Arguments]  ${name}  ${file_name}
-    the user clicks the button/link                          name=${name}
-    Wait Until Page Does Not Contain Without Screenshots     Removing   30s
-    Wait Until Page Does Not Contain Without Screenshots     Remove     30s
-    Page Should Contain                                      Upload
-    Page Should Not Contain                                  ${file_name}
+    the user clicks the button/link                    name=${name}
+    wait until keyword succeeds without screenshots    60s  500ms  the user should not see the element  link = ${file_name}
+    Page Should Contain                                Upload
+    Page Should Not Contain                            ${file_name}
 
 #Download
 The user downloads the file

@@ -338,6 +338,7 @@ the user completes the application
 
 the partner selects new answer choice
      the user clicks the button/link                    name = removeAppendix
+     wait until keyword succeeds without screenshots    60s  500ms  the user should not see the element  link = ${valid_pdf}
      the user can remove file with multiple uploads     removeAppendix    ${valid_pdf}
      input text                                         id = multipleChoiceOptionId  ${answerToSelect}
      the user clicks the button/link                    jQuery = ul li:contains("${answerToSelect}")
