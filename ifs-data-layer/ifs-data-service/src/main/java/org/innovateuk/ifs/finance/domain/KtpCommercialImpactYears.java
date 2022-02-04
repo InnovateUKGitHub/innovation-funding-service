@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.finance.domain;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import org.innovateuk.ifs.application.domain.Application;
+
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -12,6 +11,10 @@ import static java.util.stream.Collectors.toList;
 
 @Entity
 public class KtpCommercialImpactYears extends FinancialYearAccounts {
+
+    @JoinColumn(name = "application_id", referencedColumnName="id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Application application;
 
     @OneToMany(mappedBy="ktpCommercialImpactYears", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<KtpCommercialImpact> years;
@@ -22,10 +25,19 @@ public class KtpCommercialImpactYears extends FinancialYearAccounts {
     @Column(columnDefinition = "LONGTEXT")
     private String additionalIncomeStream;
 
-    public KtpCommercialImpactYears(List<KtpCommercialImpact> years, BigDecimal inProjectProfit, String additionalIncomeStream) {
+    public KtpCommercialImpactYears(Application application, List<KtpCommercialImpact> years, BigDecimal inProjectProfit, String additionalIncomeStream) {
+        this.application = application;
         this.years = years;
         this.inProjectProfit = inProjectProfit;
         this.additionalIncomeStream = additionalIncomeStream;
+    }
+
+    public Application getApplication() {
+        return application;
+    }
+
+    public void setApplication(Application application) {
+        this.application = application;
     }
 
     public List<KtpCommercialImpact> getYears() {
