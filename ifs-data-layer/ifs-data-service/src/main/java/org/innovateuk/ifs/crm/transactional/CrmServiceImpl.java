@@ -303,6 +303,7 @@ public class CrmServiceImpl implements CrmService {
         silContact.setExperienceType(fundingType);
         silContact.setIfsAppID(String.valueOf(applicationId));
         silContact.setIfsUuid(user.getUid());
+        silContact.setPhoneNumber(user.getPhoneNumber());
         return silContact;
     }
 
