@@ -125,6 +125,6 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
     }
 
     public UserResourceBuilder withEdiStatusReviewDate(ZonedDateTime... ediStatusReviewDates) {
-        return withArray((ediStatusReviewDate, user) -> setField("ediStatusReviewDate", ediStatusReviewDate, user), ediStatusReviewDates);
+        return withArray((ediStatusReviewDate, user) -> setField("ediReviewDate", ediStatusReviewDate, user), ediStatusReviewDates);
     }
 }
