@@ -3,6 +3,7 @@ CREATE TABLE ktp_commercial_impact_years (
   application_id bigint(20) NOT NULL,
   in_project_profit double,
   additional_income_stream longtext,
+  CONSTRAINT fk_ktp_commercial_impact_years_to_application FOREIGN KEY (application_id) REFERENCES application (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE ktp_commercial_impact (
