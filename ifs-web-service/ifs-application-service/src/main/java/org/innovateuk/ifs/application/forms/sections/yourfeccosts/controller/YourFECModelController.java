@@ -24,6 +24,7 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,6 +49,10 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.m
 public class YourFECModelController {
 
     private static final String VIEW_PAGE = "application/sections/your-fec-model/your-fec-model";
+    private static final String VIEW_PAGE_V2 = "application/sections/your-fec-model/your-fec-model-v2";
+
+    @Value("${ifs.ktp.phase2.enabled}")
+    private Boolean ktpPhase2Enabled;
 
     @Autowired
     private YourFECViewModelPopulator yourFECViewModelPopulator;
@@ -84,7 +89,7 @@ public class YourFECModelController {
                 getViewModel(applicationId, sectionId, organisationId, loggedInUser);
 
         model.addAttribute("model", yourFECViewModel);
-        return VIEW_PAGE;
+        return ktpPhase2Enabled ? VIEW_PAGE_V2 : VIEW_PAGE;
     }
 
     @PostMapping
@@ -189,7 +194,7 @@ public class YourFECModelController {
         }
 
         model.addAttribute("model", getViewModel(applicationId, sectionId, organisationId, user));
-        return VIEW_PAGE;
+        return ktpPhase2Enabled ? VIEW_PAGE_V2 : VIEW_PAGE;
     }
 
     @PostMapping(params = "remove_fecCertificateFile")
