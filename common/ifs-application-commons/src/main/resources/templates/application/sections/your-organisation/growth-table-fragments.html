@@ -41,13 +41,15 @@
         <th:block th:insert="this::organisation-size-alert(${model})"/>
 
         <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                    organisation-details(form=${form}, model=${model}, readOnly=${readOnly})" />
+
+        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
                                     organisation-size(form=${form}, model=${model}, readOnly=${readOnly})" />
 
 
         <th:block th:insert="fragments/form-elements/date ::
                 month-and-year(
                     legend='End of last financial year',
-                    hint='Enter the date of your last financial year.',
                     id='financialYearEnd',
                     monthValue=${form.financialYearEnd != null ? form.financialYearEnd.monthValue : ''},
                     yearValue=${form.financialYearEnd != null ? form.financialYearEnd.year : ''},
@@ -153,12 +155,14 @@
         <th:block th:insert="this::organisation-size-alert(${model})"/>
 
         <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                        organisation-details(form=${form}, model=${model}, readOnly=${readOnly})" />
+
+        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
                                         organisation-size(form=${form}, model=${model}, readOnly=${readOnly})" />
 
         <th:block th:insert="fragments/form-elements/date ::
                 month-and-year(
                     legend='End of last financial year',
-                    hint='Enter the date of your last financial year.',
                     id='financialYearEnd',
                     monthValue=${form.financialYearEnd != null ? form.financialYearEnd.monthValue : ''},
                     yearValue=${form.financialYearEnd != null ? form.financialYearEnd.year : ''},
@@ -262,6 +266,25 @@
 
     </th:block>
 
+    <th:block th:fragment="organisation-details(form, model, readOnly)">
+        <div class="table-organisation-details">
+            <table class="govuk-table">
+             <thead class="govuk-table__head">
+               <tr class="govuk-table__row">
+                 <th class="govuk-table__header" scope="col">Organisation name</th>
+                 <th class="govuk-table__header" scope="col">Registration number</th>
+                 <th class="govuk-table__header" scope="col">Registered address</th>
+                 <th class="govuk-table__header" scope="col">Sic code</th>
+               </tr>
+             </thead>
+             <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                <td class="govuk-table__cell" th:text="${organisation.name}"></td>
+               </tr>
+             </tbody>
+            </table>
+        </div>
+    </th:block>
 
     <th:block th:fragment="organisation-size(form, model, readOnly)">
             <th:block th:insert="fragments/form-elements/radiofield ::
@@ -283,8 +306,8 @@
             <th:block th:if="${model.showEligibilityMessage}">
                 <div class="govuk-!-margin-bottom-6">
                     <p class="govuk-body">
-                        If we decide to award you funding you must meet our <a th:href="@{~/competition/{competitionId}/overview#eligibility(competitionId=${model.competitionId})}">eligibility criteria</a> at the point
-                        of the award. If you are found to be ineligible, we will withdraw our offer.
+                        If we decide to award you funding you must meet the <a th:href="@{~/competition/{competitionId}/overview#eligibility(competitionId=${model.competitionId})}">eligibility criteria</a> at the time
+                        the award is offered. If you are found to be ineligible, we will withdraw our offer.
                     </p>
                 </div>
             </th:block>
@@ -294,7 +317,7 @@
     <th:block th:fragment="organisation-size-alert(model)">
         <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.showOrganisationSizeAlert}">
             <h2 class="govuk-heading-s govuk-!-margin-0">Organisation size determines funding</h2>
-            <p class="govuk-body">The organisation size is used to calculate your funding level. Changing this selection will reset your funding level.</p>
+            <p class="govuk-body">The size of your organisation determines the level of funding you are eligible for.</p>
         </div>
     </th:block>
 
