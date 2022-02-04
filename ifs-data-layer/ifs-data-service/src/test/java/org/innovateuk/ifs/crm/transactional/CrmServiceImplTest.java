@@ -295,7 +295,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         String expectedLogMessage = "Updating CRM contact test@innovate.com and organisation OrganisationResource 6 \n" +
                 "Payload is:SilContact(ifsUuid=17a0e34c-719a-4db4-b011-ccd4c375ad79, experienceType=Loan, ifsAppID=3, email=test@innovate.com, lastName=Doe, firstName=Jon, title=null, jobTitle=null, " +
                 "address=null, organisation=SilOrganisation(name=OrganisationResource 6, registrationNumber=null, registeredAddress=SilAddress(buildingName=Line1, " +
-                "street=Line2, Line3, locality=County, town=Town, postcode=Postcode, country=Country), srcSysOrgId=6), sourceSystem=IFS, srcSysContactId=1) ";
+                "street=Line2, Line3, locality=County, town=Town, postcode=Postcode, country=Country), srcSysOrgId=6), sourceSystem=IFS, srcSysContactId=1, phoneNumber=null) ";
 
 
         long userId = 1L;
@@ -355,14 +355,80 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         List<ILoggingEvent> eventList = memoryAppender.search("Payload", Level.INFO);
         assertEquals(expectedLogMessage, eventList.get(0).getMessage());
     }
+    @Test
+    public void syncExternalCrmContactWithPhone() {
 
+        String expectedLogMessage = "Updating CRM contact test@innovate.com and organisation OrganisationResource 6 \n" +
+                "Payload is:SilContact(ifsUuid=17a0e34c-719a-4db4-b011-ccd4c375ad79, experienceType=Loan, ifsAppID=3, email=test@innovate.com, lastName=Doe, firstName=Jon, title=null, jobTitle=null, " +
+                "address=null, organisation=SilOrganisation(name=OrganisationResource 6, registrationNumber=null, registeredAddress=SilAddress(buildingName=Line1, " +
+                "street=Line2, Line3, locality=County, town=Town, postcode=Postcode, country=Country), srcSysOrgId=6), sourceSystem=IFS, srcSysContactId=1, phoneNumber=8888888888) ";
+
+
+        long userId = 1L;
+        long applicationId = 3L;
+        long competitionId = 4L;
+        CompetitionResource competitionResource = new CompetitionResource();
+        competitionResource.setFundingType(FundingType.LOAN);
+
+
+        UserResource user = newUserResource()
+                .withRoleGlobal(APPLICANT)
+                .withId(1L)
+                .withEmail("test@innovate.com")
+                .withFirstName("Jon")
+                .withLastName("Doe")
+                .withPhoneNumber("8888888888")
+                .withUid("17a0e34c-719a-4db4-b011-ccd4c375ad79")
+                .build();
+
+        List<OrganisationResource> organisation = Arrays.asList(newOrganisationResource()
+                .withDateOfIncorporation(LocalDate.now())
+                .withSicCodes(newOrganisationSicCodeResource().withSicCode("code-1", "code-2").build(2))
+                .withExecutiveOfficers(newOrganisationExecutiveOfficerResource().withName("director-1", "director-2").build(2))
+                .build());
+
+        AddressType addressType = newAddressType()
+                .withId(OrganisationAddressType.REGISTERED.getId())
+                .withName(OrganisationAddressType.REGISTERED.name())
+                .build();
+
+        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource()
+                .withAddress(newAddressResource()
+                        .withAddressLine1("Line1")
+                        .withAddressLine2("Line2")
+                        .withAddressLine3("Line3")
+                        .withCounty("County")
+                        .withTown("Town")
+                        .withCountry("Country")
+                        .withPostcode("Postcode").build())
+                .withAddressType(newAddressTypeResource()
+                        .withId(OrganisationAddressType.REGISTERED.getId())
+                        .withName(OrganisationAddressType.REGISTERED.name()).build())
+                .build();
+
+        when(baseUserService.getUserById(userId)).thenReturn(serviceSuccess(user));
+        when(organisationService.getAllByUserId(userId)).thenReturn(serviceSuccess(organisation));
+        when(organisationAddressService.findByOrganisationIdAndAddressType(organisation.get(0).getId(), addressType))
+                .thenReturn(serviceSuccess(Collections.singletonList(organisationAddressResource)));
+        when(silCrmEndpoint.updateContact(any(SilContact.class))).thenReturn(serviceSuccess());
+        when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
+
+        ReflectionTestUtils.setField(service, "newOrganisationSearchEnabled", true);
+        ServiceResult<Void> result = service.syncCrmContact(userId, competitionId, applicationId);
+        assertThat(result.isSuccess(), equalTo(true));
+
+        verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchExternalSilContactWithOrganisationUpdates(user, organisation.get(0))));
+
+        List<ILoggingEvent> eventList = memoryAppender.search("Payload", Level.INFO);
+        assertEquals(expectedLogMessage, eventList.get(0).getMessage());
+    }
     @Test
     public void syncExternalCrmContactWithExperienceTypeNotLoanShouldHaveAttributesStripped() {
 
         String expectedLogMessage = "Updating CRM contact test@innovate.com and organisation OrganisationResource 6 \n" +
                 "Payload is:SilContact(ifsUuid=17a0e34c-719a-4db4-b011-ccd4c375ad79, experienceType=null, ifsAppID=null, email=test@innovate.com, lastName=Doe, firstName=Jon, title=null, " +
                 "jobTitle=null, address=null, organisation=SilOrganisation(name=OrganisationResource 6, registrationNumber=null, registeredAddress=SilAddress(buildingName=Line1, street=Line2, Line3, " +
-                "locality=County, town=Town, postcode=Postcode, country=Country), srcSysOrgId=6), sourceSystem=IFS, srcSysContactId=1) ";
+                "locality=County, town=Town, postcode=Postcode, country=Country), srcSysOrgId=6), sourceSystem=IFS, srcSysContactId=1, phoneNumber=null) ";
 
 
         long userId = 1L;
