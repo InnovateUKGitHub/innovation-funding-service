@@ -44,8 +44,11 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
     @Value("${sil.rest.crmDecisionmatrix}")
     private String silmDecisionmatrix;
 
+    @SneakyThrows
     @Override
     public ServiceResult<Void> updateContact(SilContact silContact) {
+        String silContactJson = objectWriter.writeValueAsString(silContact);
+        log.info("Json Payload: " + silContactJson);
         return handlingErrors(() -> {
                     final Either<ResponseEntity<SilCrmError>, ResponseEntity<Void>> response = adaptor.restPostWithEntity(silRestServiceUrl + silCrmContacts, silContact, Void.class, SilCrmError.class, HttpStatus.ACCEPTED);
                     return response.mapLeftOrRight(failure -> {
