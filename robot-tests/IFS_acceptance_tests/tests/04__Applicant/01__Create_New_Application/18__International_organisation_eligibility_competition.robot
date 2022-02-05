@@ -804,7 +804,8 @@ the user provides international organisation details
     the user enters text to a text field                               id = town  ${international_org_town}
     wait until keyword succeeds without screenshots   10s   200ms   input text     id = country  ${international_org_country}
     #the user should see country in dropdown                            id = country  ${international_org_country_complete}
-    the user clicks the button/link                                    jQuery = ul li:contains("${international_org_country_complete}")
+    wait until keyword succeeds without screenshots   10s   200ms   click element   jQuery = ul li:contains("${international_org_country_complete}")
+    #the user clicks the button/link                                    jQuery = ul li:contains("${international_org_country_complete}")
     the user clicks the button/link                                    id = ${button_id}
 
 the user gets an error message on not filling mandatory fields

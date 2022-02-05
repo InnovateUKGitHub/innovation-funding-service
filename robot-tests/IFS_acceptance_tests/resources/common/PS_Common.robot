@@ -175,7 +175,8 @@ Finance reviewer is added to the project
 The user selects finance reviewer
     [Arguments]   ${FlName}
     wait until keyword succeeds without screenshots   10s    200ms   input text    id = userId    ${FlName}
-    wait until keyword succeeds without screenshots   10s    200ms   the user clicks the button/link     jQuery = ul li:contains("${FlName}")
+    wait until keyword succeeds without screenshots   10s    200ms   click element     jQuery = ul li:contains("${FlName}")
+    #wait until keyword succeeds without screenshots   10s    200ms   the user clicks the button/link     jQuery = ul li:contains("${FlName}")
 
 The user adds a new team member
   [Arguments]  ${firstName}  ${email}
@@ -643,7 +644,8 @@ Search for MO
     [Arguments]  ${MO_name}  ${MO_fullname}
     the element should be disabled                      jQuery = button:contains("View Monitoring Officer")
     wait until keyword succeeds without screenshots     10s    200ms   input text   id = userId   ${MO_name}
-    the user clicks the button/link                     jQuery = ul li:contains("${MO_fullname}")
+    wait until keyword succeeds without screenshots     10s    200ms   click element   jQuery = ul li:contains("${MO_fullname}")
+    #the user clicks the button/link                     jQuery = ul li:contains("${MO_fullname}")
     the user clicks the button/link                     jQuery = button:contains("View Monitoring Officer")
 
 The internal user assign project to MO
@@ -651,7 +653,8 @@ The internal user assign project to MO
     the element should be disabled                    jQuery = button:contains("Assign")
     wait until keyword succeeds without screenshots   10s    200ms   input text         id = projectId   ${search_ID}
     #the user should see project in dropdown           id = projectId   ${search_ID}  ${project_name}
-    the user clicks the button/link                   jQuery = ul li:contains("${search_ID} - ${project_name}")
+    wait until keyword succeeds without screenshots   10s    200ms   click element  jQuery = ul li:contains("${search_ID} - ${project_name}")
+    #the user clicks the button/link                   jQuery = ul li:contains("${search_ID} - ${project_name}")
     the user clicks the button/link                   jQuery = button:contains("Assign")
 
 the user should see project in dropdown
@@ -815,7 +818,8 @@ enter the country in the autocomplete field
     [Arguments]         ${country}  ${completeCountryName}
     wait until keyword succeeds without screenshots   10s    200ms  input text    id = country        ${country}
     #wait for autosave
-    wait until keyword succeeds without screenshots    60s   5s    the user clicks the button/link     jQuery = ul li:contains("${completeCountryName}")
+    wait until keyword succeeds without screenshots    60s   5s    click element     jQuery = ul li:contains("${completeCountryName}")
+    #wait until keyword succeeds without screenshots    60s   5s    the user clicks the button/link     jQuery = ul li:contains("${completeCountryName}")
 
 the user should see project is live with review its progress link
     the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
