@@ -22,7 +22,7 @@ the user can remove file with multiple uploads
     the user clicks the button/link                    name=${name}
     wait until keyword succeeds without screenshots    60s  500ms   Page Should Not Contain  link = ${file_name}
     Page Should Contain                                Upload
-    Page Should Not Contain                            ${file_name}
+    #Page Should Not Contain                            ${file_name}
 
 #Download
 The user downloads the file
