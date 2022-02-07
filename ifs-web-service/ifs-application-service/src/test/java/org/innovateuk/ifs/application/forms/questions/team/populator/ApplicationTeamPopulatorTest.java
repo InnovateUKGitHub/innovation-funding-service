@@ -16,6 +16,7 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.ApplicationKtaInviteRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -78,9 +79,11 @@ public class ApplicationTeamPopulatorTest {
         UserResource collaborator = newUserResource().build();
         OrganisationResource leadOrganisation = newOrganisationResource()
                 .withName("Lead")
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
                 .build();
         OrganisationResource collboratorOrganisation = newOrganisationResource()
                 .withName("Collaborator")
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
                 .build();
 
         ProcessRoleResource leadRole = newProcessRoleResource()

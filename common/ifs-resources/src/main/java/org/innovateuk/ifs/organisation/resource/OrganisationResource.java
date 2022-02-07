@@ -153,6 +153,18 @@ public class OrganisationResource {
     }
 
     @JsonIgnore
+    public String getCompanyRegistrationNumber() {
+        switch(getOrganisationTypeEnum()) {
+            case BUSINESS:
+            case RTO:
+            case PUBLIC_SECTOR_OR_CHARITY:
+                return getCompaniesHouseNumber();
+            default:
+                return null;
+        }
+    }
+
+    @JsonIgnore
     public OrganisationTypeEnum getOrganisationTypeEnum() {
         return OrganisationTypeEnum.getFromId(organisationType);
     }

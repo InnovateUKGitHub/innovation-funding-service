@@ -113,6 +113,9 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
+    @Value("${ifs.ktp.phase2.enabled}")
+    private boolean isKTPPhase2Enabled;
+
     enum Notifications {
         INVITE_PROJECT_PARTNER_ORGANISATION
     }
@@ -241,7 +244,7 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
                                         paymentMilestoneWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
                                     }
 
-                                    if (competition.applicantNotRequiredForViabilityChecks(organisation.getOrganisationTypeEnum())) {
+                                    if (competition.applicantNotRequiredForViabilityChecks(isKTPPhase2Enabled, organisation.getOrganisationTypeEnum())) {
                                         viabilityWorkflowHandler.viabilityNotApplicable(partnerOrganisation, null);
                                     }
                                     if (competition.applicantNotRequiredForEligibilityChecks(organisation.getOrganisationTypeEnum())) {

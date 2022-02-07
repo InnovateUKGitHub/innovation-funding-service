@@ -25,6 +25,8 @@ Documentation     IFS-7195  Organisational eligibility category in Competition s
 ...
 ...               IFS-9679 MO Spend profile: IFS Admin only to be able to approve or reject spend profiles
 ...
+...               IFS-11131 Company registration number in Application Team
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin Applicant
@@ -620,7 +622,6 @@ GOL template to be updated with country for correspondents address
     And the user selects the radio button                                         spendProfileApproved  true
     And the user should not see an error in the page
     And the user clicks the button/link                                           jQuery = button.govuk-button:contains("Submit")
-#    Then Log in as a different user                                               &{ukLeadOrganisationCredentials}
     And the user navigates to the page                                            ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/template
     Then element should contain                                                    xpath = //p[1]     Argentina
 

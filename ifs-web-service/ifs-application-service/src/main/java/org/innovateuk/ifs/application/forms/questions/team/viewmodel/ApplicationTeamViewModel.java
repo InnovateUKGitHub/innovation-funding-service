@@ -22,9 +22,9 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
     private final boolean open;
     private final boolean complete;
     private final boolean ktpCompetition;
+    private final boolean ktpPhase2Enabled;
     private final ApplicationKtaInviteResource ktaInvite;
     private final ProcessRoleResource ktaProcessRole;
-    private final boolean ktpPhase2Enabled;
 
     public ApplicationTeamViewModel(long applicationId,
                                     String applicationName,
@@ -125,7 +125,9 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         return ktpCompetition;
     }
 
-    public boolean isKtpPhase2Enabled() { return ktpPhase2Enabled; }
+    public boolean isKtpPhase2Enabled() {
+        return ktpPhase2Enabled;
+    }
 
     public Long getKtaInvitePendingDays() {
         if (ktaInvite == null || InviteStatus.SENT != ktaInvite.getStatus()) {

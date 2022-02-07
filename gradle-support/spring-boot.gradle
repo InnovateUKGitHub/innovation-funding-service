@@ -26,3 +26,15 @@ bootJar {
     mainClassName = 'org.innovateuk.ifs.Application'
 }
 
+springBoot {
+    buildInfo {
+        properties {
+            additional = [
+                    'buildNumber': java.util.Optional.ofNullable(System.getenv("bamboo_buildNumber")).orElse("[not available]"),
+                    'gitCommitId': java.util.Optional.ofNullable(System.getenv("bamboo_planRepository_revision")).orElse("[not available]"),
+                    'gitBranch': java.util.Optional.ofNullable(System.getenv("bamboo_planRepository_branchName")).orElse("[not available]")
+            ]
+        }
+    }
+}
+

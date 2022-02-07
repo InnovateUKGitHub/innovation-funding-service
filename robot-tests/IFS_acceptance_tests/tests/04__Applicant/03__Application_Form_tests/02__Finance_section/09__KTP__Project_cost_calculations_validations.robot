@@ -29,6 +29,8 @@ Documentation     IFS-7790 KTP: Your finances - Edit
 ...
 ...               IFS-11128 Remove validation for 'Your project costs > Additional Costs'
 ...
+...               IFS-11138 Add Assessment deadline in supporters email
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../../resources/defaultResources.robot
@@ -256,9 +258,13 @@ KTA assessor assigned to application can view the read-only view for 'No' select
     And the user navigates to the page                                      ${server}/application/${KTPapplicationId}/summary
     Then the user should see read only view for non-fec declaration
 
+The supporter can view assessment deadline in the application review email
+    [Documentation]  IFS-11138
+    Given ifs admin invites a supporter to the ktp application
+    Then the user reads his email    ${supporter_credentials["email"]}    You have been invited to review an application    The deadline to review this application is midday Sunday 10th March 2024.
+
 Supporter can view the read-only view for 'No' selected fEC declaration
     [Documentation]  IFS-9246
-    [Setup]  ifs admin invites a supporter to the ktp application
     Given log in as a different user                                    &{supporter_credentials}
     When the user navigates to the page                                 ${server}/application/${KTPapplicationId}/summary
     Then the user should see read only view for non-fec declaration
