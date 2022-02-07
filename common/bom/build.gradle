@@ -7,9 +7,8 @@ javaPlatform {
 dependencies {
 
     // This BOM combines with these two boms - defer to these and only declare overrides and things not in these below
-    // See also build.gradle:13
-    api platform("org.springframework.boot:spring-boot-dependencies:2.5.9")
-    api platform("org.springframework.cloud:spring-cloud-dependencies:2020.0.3")
+    api platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+    api platform("org.springframework.cloud:spring-cloud-dependencies:2020.0.5")
 
     // These will appear in referencing modules (actual deps so keep it light)
     api("com.google.guava:guava")
