@@ -46,7 +46,7 @@ run_flyway_migrate() {
 
     cd ${project_root_dir}
 
-    ./gradlew -PopenshiftEnv=unused $profile -Pcloud=automated -Pifs.companies.house.key=unused ifs-data-layer:ifs-data-service:flywayMigrate
+    ./gradlew -PopenshiftEnv=unused $profile -Pcloud=automated -Pifs.companies.house.key=unused ifs-data-layer:ifs-data-service:flywayMigrate --stacktrace
 
     cd -
 }
