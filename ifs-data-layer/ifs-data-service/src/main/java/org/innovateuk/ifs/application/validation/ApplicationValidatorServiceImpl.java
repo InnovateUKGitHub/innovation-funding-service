@@ -206,19 +206,33 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
     public ValidationMessages validateFECCertificateUpload(Application application, Long markedAsCompleteById) {
         return getProcessRole(markedAsCompleteById).andOnSuccessReturn(role -> {
             OrganisationResource organisation = organisationService.findById(role.getOrganisationId()).getSuccess();
-            if (isFECCertificateNotUploaded(application.getId(), organisation.getId())) {
-                return new ValidationMessages(fieldError("fecCertificateFileUpload", null, "validation.application.fec.upload.required"));
+            Optional<ApplicationFinance> applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
+
+            ValidationMessages errorMessages = new ValidationMessages();
+            if (isFECCertificateNotUploaded(applicationFinance)) {
+                errorMessages.addError(fieldError("fecCertificateFileUpload", null, "validation.application.fec.upload.required"));
             }
-            return noErrors();
+            if (isFECCertificateExpiryNotSet(applicationFinance)) {
+                errorMessages.addError(fieldError("fecCertExpiryDate", null, "validation.application.fec.expiryDate.required"));
+            }
+
+            return errorMessages.hasErrors() ? errorMessages : noErrors();
         }).getSuccess();
     }
 
-    private boolean isFECCertificateNotUploaded(long applicationId, long organisationId) {
-        Optional<ApplicationFinance> applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
-
+    private boolean isFECCertificateNotUploaded(Optional<ApplicationFinance> applicationFinance) {
         if (applicationFinance.isPresent() && applicationFinance.get().getFecModelEnabled()) {
             return applicationFinance.map(af -> af.getFecFileEntry() == null).orElse(true);
         }
         return false;
     }
+
+    private boolean isFECCertificateExpiryNotSet(Optional<ApplicationFinance> applicationFinance) {
+        if (applicationFinance.isPresent() && applicationFinance.get().getFecModelEnabled()) {
+            return applicationFinance.map(af -> af.getFecCertExpiryDate() == null).orElse(true);
+        }
+        return false;
+    }
+
+
 }

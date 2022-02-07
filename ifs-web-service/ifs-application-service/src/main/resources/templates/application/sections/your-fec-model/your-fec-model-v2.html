@@ -48,8 +48,8 @@
                             <span class="govuk-error-message" th:each="err : ${#fields.errors('*{fecModelEnabled}')}" th:text="${err}" />
                         </th:block>
 
-                        <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
-                            <div class="govuk-radios__item" data-target="upload-fec"
+                        <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+                            <div class="govuk-radios__item" data-target="choice-yes"
                                  data-target-clear-validation="true" data-target-clear-form="true">
                                 <input class="govuk-radios__input"
                                        th:field="*{fecModelEnabled}"
@@ -59,12 +59,12 @@
                                        type="radio"
                                        value="true"
                                        required="required"
-                                       data-aria-controls="conditional-upload">
+                                       data-aria-controls="conditional-yes">
                                 <label class="govuk-label govuk-radios__label" for="fecModelEnabled-yes">
                                     Yes
                                 </label>
                             </div>
-                            <div class="govuk-radios__item">
+                            <div class="govuk-radios__item" data-target="choice-no">
                                 <input class="govuk-radios__input"
                                        th:field="*{fecModelEnabled}"
                                        th:classappend="${#fields.hasErrors('*{fecModelEnabled}')} ? 'govuk-input--error'"
@@ -73,44 +73,45 @@
                                        type="radio"
                                        value="false"
                                        required="required"
-                                >
+                                       data-aria-controls="conditional-no">
                                 <label class="govuk-label govuk-radios__label" for="fecModelEnabled-no">
                                     No
                                 </label>
                             </div>
-                            <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-upload">
-                                <div id="upload-fec" class="upload-section ">
-                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                        Upload your fEC certificate
-                                    </legend>
-                                    <p class="govuk-body  govuk-!-margin-top-1">You must upload your fEC certificate before you can mark this page as complete.
-                                        We need this to verify your fEC funding model. </p>
-                                    <details class="govuk-details govuk-!-margin-bottom-1" role="group">
-                                        <summary class="govuk-details__summary">
-                                            <span class="govuk-details__summary-text">What can I upload?</span>
-                                        </summary>
-                                        <div class="govuk-details__text">
-                                            <p class="govuk-body govuk-!-margin-bottom-0  govuk-!-font-weight-bold">Your fEC certificate must be:</p>
-                                            <ul class="govuk-list govuk-list--bullet">
-                                                <li>in portable document format (PDF) </li>
-                                                <li>less than 10 MB in size</li>
-                                            </ul>
-                                        </div>
-                                    </details>
-                                    <div class="govuk-form-group">
-                                        <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly ? 'readonly' : 'edit'},
-                                    @{/application/{applicationId}/form/{applicationFinanceId}/view-fec-certificate(applicationId=${model.applicationId},applicationFinanceId=${model.applicationFinanceId})},
-                                    ${form.fecCertificateFileName},
-                                    fecCertificateFile,
-                                    fecCertificateFile,
-                                    true,
-                                    remove_fecCertificateFile,
-                                    upload_fecCertificateFile)"/>
+                        </div>
+
+                        <div class="message-alert govuk-!-margin-top-9 " th:if="${form.displayBanner}">
+                            <p class="govuk-body">Changing your answer may affect any project costs already entered.</p>
+                        </div>
+
+                        <div class="" id="conditional-yes">
+                            <div id="choice-yes">
+                                <button id="edit_certificate" type="submit" name="edit-certificate"
+                                        class="govuk-!-margin-top-9 govuk-button" value="true">
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="" id="conditional-no">
+                            <div id="choice-no">
+                                <div class="form-footer govuk-!-margin-top-9" th:if="${model.open && !model.complete}">
+                                    <div class="form-footer__actions">
+                                        <button id="mark_as_complete" th:unless="${model.complete}" type="submit" name="mark-as-complete"
+                                                class="button-clear" value="true">Mark as complete
+                                        </button>
                                     </div>
                                 </div>
-                            </div>
 
+                                <div>
+                                    <button type="submit" th:unless="${model.readOnly}"
+                                            class="govuk-!-margin-top-6 govuk-button">
+                                        Save and return to project finances
+                                    </button>
+                                </div>
+                            </div>
                         </div>
+
                     </fieldset>
                 </div>
             </th:block>
@@ -121,13 +122,13 @@
                 </div>
 
                 <div class="govuk-grid-row govuk-table__cell govuk-!-margin-top-6">
-                    <div class="govuk-fieldset__legend--s govuk-grid-column-one-third">
+                    <h3 class="govuk-heading-s govuk-grid-column-one-third">
                         Will you be using the full economic costing (fEC) funding model?
-                    </div>
+                    </h3>
                     <div class="govuk-grid-column-one-third">
                         <p class="govuk-body" th:if="${!model.complete}">
                             Question not answered.</p>
-                        <p class="govuk-list readonly-data  govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+                        <p class="govuk-body"
                            th:if="${model.complete}"
                            th:text="${form.fecModelEnabled}? 'Yes' : 'No'"></p>
                     </div>
@@ -138,10 +139,11 @@
                         </button>
                     </div>
                 </div>
+
                 <th:block th:if="${form.fecModelEnabled != null and form.fecModelEnabled and model.complete != null and model.complete}">
-                    <div class="upload-section ">
-                        <h3 th:if="${model.readOnly}" class="govuk-heading-s govuk-!-margin-0">View fEC certificate</h3>
-                        <div class="govuk-form-group">
+                    <div class="govuk-grid-row govuk-table__cell ">
+                        <h3 class="govuk-heading-s govuk-grid-column-one-third">Your fEC certificate</h3>
+                        <div class="govuk-grid-column-one-third ">
                             <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly ? 'readonly' : 'edit'},
                                     @{/application/{applicationId}/form/{applicationFinanceId}/view-fec-certificate(applicationId=${model.applicationId},applicationFinanceId=${model.applicationFinanceId})},
                                     ${form.fecCertificateFileName},
@@ -151,32 +153,35 @@
                                     remove_fecCertificateFile,
                                     upload_fecCertificateFile)"/>
                         </div>
+                        <div th:if="${model.open}" class="alignright govuk-grid-column-one-third">
+                            <button id="mark_as_incomplete2" type="submit" name="edit-certificate"
+                                    class="button-clear" value="true"
+                                    th:text="${'Change'}">Change
+                            </button>
+                        </div>
+                    </div>
+                    <div class="govuk-grid-row govuk-table__cell ">
+                        <h3 class="govuk-heading-s govuk-grid-column-one-third">
+                            When does your fEC certificate expire?
+                        </h3>
+                        <div class="govuk-grid-column-one-third">
+                            <p class="govuk-body" th:text="${#temporals.format(form.fecCertExpiryDate, 'd MMMM yyyy')}"></p>
+                        </div>
+                        <div th:if="${model.open}" class="alignright govuk-grid-column-one-third">
+                            <button id="mark_as_incomplete3" type="submit" name="edit-certificate"
+                                    class="button-clear" value="true"
+                                    th:text="${'Change'}">Change
+                            </button>
+                        </div>
                     </div>
                 </th:block>
             </th:block>
 
-            <div class="message-alert  govuk-!-margin-top-9 " th:if="${form.displayBanner}">
-                <p class="govuk-body">Changing your answer may affect any project costs already entered.</p>
-            </div>
-
-            <div class="form-footer govuk-!-margin-top-9" th:if="${model.open && !model.complete}">
-                <div class="form-footer__actions">
-                    <button id="mark_as_complete" th:unless="${model.complete}" type="submit" name="mark-as-complete"
-                            class="button-clear" value="true">Mark as complete
-                    </button>
-                </div>
-            </div>
-
-            <div class="govuk-grid-row govuk-!-margin-top-9">
+            <div class="govuk-grid-row govuk-!-margin-top-9" th:if="${model.readOnly}">
                 <div class="govuk-grid-column-one-half">
                     <a th:href="${model.financesUrl}"
-                       th:if="${model.readOnly}"
                        class="govuk-!-margin-top-6 govuk-button govuk-button--secondary">Return to project finances
                     </a>
-                    <button type="submit" th:unless="${model.readOnly}"
-                            class="govuk-!-margin-top-6 govuk-button">
-                        Save and return to project finances
-                    </button>
                 </div>
                 <div th:unless="${#strings.isEmpty(model.lastUpdatedBy)}" class="alignright govuk-!-margin-top-6 govuk-body govuk-grid-column-one-half" th:if="${model.readOnly}">Last updated:
                     <th:block th:text="${#temporals.format(model.lastUpdatedOn, 'd MMMM hh:mma')}">--</th:block>

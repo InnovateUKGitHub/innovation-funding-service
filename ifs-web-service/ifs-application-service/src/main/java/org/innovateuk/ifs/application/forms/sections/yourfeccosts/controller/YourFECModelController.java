@@ -2,6 +2,8 @@ package org.innovateuk.ifs.application.forms.sections.yourfeccosts.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelForm;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.populator.YourFECViewModelPopulator;
@@ -44,12 +46,14 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.m
 /**
  * The Controller for the "Your FEC Model" page in the Application Form process.
  */
+@Slf4j
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-fec-model/organisation/{organisationId}/section/{sectionId}")
 public class YourFECModelController {
 
     private static final String VIEW_PAGE = "application/sections/your-fec-model/your-fec-model";
     private static final String VIEW_PAGE_V2 = "application/sections/your-fec-model/your-fec-model-v2";
+    private static final String EDIT_CERT_PAGE = "application/sections/your-fec-model/your-fec-certificate";
 
     @Value("${ifs.ktp.phase2.enabled}")
     private Boolean ktpPhase2Enabled;
@@ -130,13 +134,15 @@ public class YourFECModelController {
             Model model) {
 
         Supplier<String> successView = () -> redirectToYourFinances(applicationId);
-        Supplier<String> failureView = () ->  viewPage(applicationId, organisationId,sectionId,loggedInUser,model,form);
+        Supplier<String> failureView = () -> form.getFecModelEnabled() ? certificatePage(applicationId, organisationId,sectionId,loggedInUser,model,form) : viewPage(applicationId, organisationId,sectionId,loggedInUser,model,form);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             updateFECModelEnabled(applicationId, organisationId, form);
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
                 validationHandler.addAnyErrors(
                         sectionService.markAsComplete(sectionId, applicationId, getProcessRole(applicationId, loggedInUser.getId()).getId()),
-                        mappingErrorKeyToField("validation.application.fec.upload.required", "fecCertificateFile"), defaultConverters());
+                        mappingErrorKeyToField("validation.application.fec.upload.required", "fecCertificateFile"),
+                        ArrayUtils.add(defaultConverters(),
+                                mappingErrorKeyToField("validation.application.fec.expiryDate.required", "fecCertExpiryDate")));
                 return validationHandler.failNowOrSucceedWith(failureView, successView);
             });
         });
@@ -160,6 +166,43 @@ public class YourFECModelController {
         return viewPage(applicationId, organisationId,sectionId,loggedInUser,model,form);
     }
 
+    @GetMapping("/certificate")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
+    @SecuredBySpring(value = "VIEW_FEC_COSTS", description = "Applicants, stakeholders, internal users and kta can view the Your FEC model page")
+    public String certificatePage(
+            @PathVariable("applicationId") long applicationId,
+            @PathVariable("organisationId") long organisationId,
+            @PathVariable("sectionId") long sectionId,
+            UserResource loggedInUser,
+            Model model,
+            @ModelAttribute("form") YourFECModelForm form) {
+
+        formPopulator.populate(form, applicationId, organisationId);
+        YourFECViewModel yourFECViewModel =
+                getViewModel(applicationId, sectionId, organisationId, loggedInUser);
+
+        model.addAttribute("model", yourFECViewModel);
+        return EDIT_CERT_PAGE;
+    }
+
+    @PostMapping(params = "edit-certificate")
+    @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "MARK_FEC_COSTS_AS_INCOMPLETE", description = "Applicants can mark the ir fec model as incomplete")
+    public String editCertificate(
+            @PathVariable("applicationId") long applicationId,
+            @PathVariable("organisationId") long organisationId,
+            @PathVariable("sectionId") long sectionId,
+            UserResource loggedInUser,
+            Model model,
+            @ModelAttribute("form") YourFECModelForm form)  {
+
+        ProcessRoleResource processRole = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
+        sectionService.markAsInComplete(sectionId, applicationId, processRole.getId());
+        markYourProjectCostsAsIncomplete(applicationId,processRole.getId());
+        form.setDisplayBanner(true);
+        return certificatePage(applicationId, organisationId,sectionId,loggedInUser,model,form);
+    }
+
     private void updateFECModelEnabled(long applicationId,
                                        long organisationId,
                                        YourFECModelForm form) {
@@ -167,6 +210,7 @@ public class YourFECModelController {
         ApplicationFinanceResource finance =
                 applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
         finance.setFecModelEnabled(form.getFecModelEnabled());
+        finance.setFecCertExpiryDate(form.getFecCertExpiryDate());
         applicationFinanceRestService.update(finance.getId(), finance).getSuccess();
         yourProjectCostsAutosaver.resetCostRowEntriesBasedOnFecModelUpdate(applicationId, organisationId);
     }
@@ -194,7 +238,7 @@ public class YourFECModelController {
         }
 
         model.addAttribute("model", getViewModel(applicationId, sectionId, organisationId, user));
-        return ktpPhase2Enabled ? VIEW_PAGE_V2 : VIEW_PAGE;
+        return ktpPhase2Enabled ? EDIT_CERT_PAGE : VIEW_PAGE;
     }
 
     @PostMapping(params = "remove_fecCertificateFile")
