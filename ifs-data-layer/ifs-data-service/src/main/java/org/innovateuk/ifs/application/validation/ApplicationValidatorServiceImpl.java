@@ -25,6 +25,7 @@ import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
@@ -44,6 +45,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 @Service
 public class ApplicationValidatorServiceImpl extends BaseTransactionalService implements ApplicationValidatorService {
+
+    @Value("${ifs.ktp.phase2.enabled}")
+    private boolean ktpPhase2Enabled;
 
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;
@@ -228,7 +232,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
     }
 
     private boolean isFECCertificateExpiryNotSet(Optional<ApplicationFinance> applicationFinance) {
-        if (applicationFinance.isPresent() && applicationFinance.get().getFecModelEnabled()) {
+        if (ktpPhase2Enabled && applicationFinance.isPresent() && applicationFinance.get().getFecModelEnabled()) {
             return applicationFinance.map(af -> af.getFecCertExpiryDate() == null).orElse(true);
         }
         return false;
