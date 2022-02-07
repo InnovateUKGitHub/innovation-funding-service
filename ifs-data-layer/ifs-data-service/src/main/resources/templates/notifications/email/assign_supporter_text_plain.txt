@@ -2,11 +2,19 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name}
 
+<#if ktpPhase2Enabled>
+You have been invited to review this application and tell us if you are interested in supporting it.
+<#else>
 You have been invited to review this application for support opportunities:
+</#if>
 
 ${applicationId} : ${applicationName}
 
 You will be able to decide if your organisation wishes to offer support and provide feedback to the applicant.
+
+<#if ktpPhase2Enabled>
+The deadline to review this application is ${assessorDeadline}.
+</#if>
 
 ${link}
 

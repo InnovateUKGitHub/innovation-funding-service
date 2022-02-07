@@ -12,6 +12,8 @@ components:
 
 resources:
   - config-maps/spring-config.yml
+  - rbac/sba-rbac.yml
+  - routes/sba-route.yml
 
 patchesStrategicMerge:
   - data-layer/data-service/data-service-deployment.yml

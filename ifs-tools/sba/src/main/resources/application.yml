@@ -1,0 +1,18 @@
+server:
+  port: 7443
+spring:
+  cloud:
+    kubernetes:
+      discovery:
+        include-not-ready-addresses: true
+        all-namespaces: false
+  boot:
+    admin:
+      discovery:
+        converter:
+          management-context-path: /monitoring
+        ignored-services: "idp,kubernetes,sba,cache-provider,ifs-database,kube-dns,ldap,mail,shib,glusterfs-cluster,chrome"
+ifs:
+  sba:
+    username: ${IFS_SBA_USERNAME}
+    password: ${IFS_SBA_PASSWORD}
