@@ -12,6 +12,7 @@ public class KtpFinancialYears extends FinancialYearAccounts {
     @OneToMany(mappedBy="ktpFinancialYears", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<KtpFinancialYear> years;
 
+    //This column can be removed once ifs.ktp.phase2.enabled true in PRD
     @Column(columnDefinition = "int(11)")
     private Long groupEmployees;
 
