@@ -65,6 +65,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
     private final MultipleChoiceOptionResource selectedMultipleChoiceOption;
     private final boolean loansPartBEnabled;
     private final String salesForceURL;
+    private final Long competitionId;
 
     public GenericQuestionApplicationViewModel(long applicationId,
                                                String competitionName,
@@ -107,7 +108,8 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                                                String leadOrganisationName,
                                                String leadOrganisationCompaniesHouseNumber,
                                                boolean loansPartBEnabled,
-                                               String salesForceURL) {
+                                               String salesForceURL,
+                                               Long competitionId) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.questionId = questionId;
@@ -150,6 +152,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         this.leadOrganisationCompaniesHouseNumber = leadOrganisationCompaniesHouseNumber;
         this.loansPartBEnabled = loansPartBEnabled;
         this.salesForceURL = salesForceURL;
+        this.competitionId = competitionId;
     }
 
     @Override
@@ -242,7 +245,9 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         return maximumAppendices;
     }
 
-    public Long getMaximumAppendixSize() { return maximumAppendixSize; }
+    public Long getMaximumAppendixSize() {
+        return maximumAppendixSize;
+    }
 
     public Long getTemplateDocumentFormInputId() {
         return templateDocumentFormInputId;
@@ -417,6 +422,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         private String leadOrganisationCompaniesHouseNumber;
         private boolean loansPartBEnabled;
         private String salesForceURL;
+        private Long competitionId;
 
         private GenericQuestionApplicationViewModelBuilder() {
         }
@@ -635,6 +641,11 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
             return this;
         }
 
+        public GenericQuestionApplicationViewModelBuilder withCompetitionId(Long competitionId) {
+            this.competitionId = competitionId;
+            return this;
+        }
+
         public GenericQuestionApplicationViewModel build() {
             return new GenericQuestionApplicationViewModel(applicationId, competitionName, questionId, currentUser, applicationName,
                     questionName, questionNumber, questionSubtitle, questionDescription, questionDescription2, questionGuidanceTitle, questionGuidance,
@@ -642,7 +653,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                     appendices, maximumAppendices, maximumAppendixSize, templateDocumentFormInputId, templateDocumentTitle, templateDocumentFilename,
                     templateDocumentResponseFilename, templateDocumentResponseFileEntryId, lastUpdated, lastUpdatedByName, lastUpdatedBy,
                     open, complete, leadApplicant, assignButtonsViewModel, multipleChoiceFormInputId, multipleChoiceOptions, selectedMultipleChoiceOption,
-                    leadOrganisationName, leadOrganisationCompaniesHouseNumber, loansPartBEnabled, salesForceURL);
+                    leadOrganisationName, leadOrganisationCompaniesHouseNumber, loansPartBEnabled, salesForceURL, competitionId);
         }
     }
 }
