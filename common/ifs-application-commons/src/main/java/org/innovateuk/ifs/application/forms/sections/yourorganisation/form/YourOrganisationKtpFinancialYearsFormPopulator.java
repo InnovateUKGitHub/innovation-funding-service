@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesKtpYearsResource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -11,8 +12,12 @@ import java.util.stream.Collectors;
 @Component
 public class YourOrganisationKtpFinancialYearsFormPopulator {
 
+    @Value("${ifs.ktp.phase2.enabled}")
+    private Boolean ktpPhase2Enabled;
+
     public YourOrganisationKtpFinancialYearsForm populate(OrganisationFinancesKtpYearsResource finances) {
         return new YourOrganisationKtpFinancialYearsForm(
+                ktpPhase2Enabled,
                 finances.getOrganisationSize(),
                 finances.getYears().stream().map(year ->
                         new YourOrganisationKtpFinancialYearForm(
@@ -23,7 +28,8 @@ public class YourOrganisationKtpFinancialYearsFormPopulator {
                                 year.getLiabilities(),
                                 year.getShareholderValue(),
                                 year.getLoans(),
-                                year.getEmployees()
+                                year.getEmployees(),
+                                year.getCorporateGroupEmployees()
                         )
                     ).collect(Collectors.toList()),
                 finances.getGroupEmployees(),

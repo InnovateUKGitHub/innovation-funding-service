@@ -219,22 +219,27 @@
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                    <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                            ktp-year(form=${form}, field='employees', rowName='Number of full time employees in your company', readOnly=${readOnly}, min=0)" />
+                        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                                ktp-year(form=${form}, field='employees', rowName='Number of full time employees in your company', readOnly=${readOnly}, min=0)" />
+                        <th:block th:if="${form.ktpPhase2Enabled}">
+                            <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                                    ktp-year(form=${form}, field='corporateGroupEmployees', rowName='Number of full time employees in your corporate group (if applicable)', readOnly=${readOnly}, min=0)" />
+                        </th:block>
                     </tbody>
                 </table>
             </div>
         </fieldset>
-        <th:block th:insert="fragments/form-elements/textfield ::
-                        textfield-integer(
-                            label='Number of full time employees in your corporate group (if applicable)',
-                            id='groupEmployees',
-                            value=${form.groupEmployees},
-                            readOnly=${readOnly},
-                            placeholder='0',
-                            min=0
-                            )" />
-
+        <th:block th:unless="${form.ktpPhase2Enabled}">
+            <th:block th:insert="fragments/form-elements/textfield ::
+                            textfield-integer(
+                                label='Number of full time employees in your corporate group (if applicable)',
+                                id='groupEmployees',
+                                value=${form.groupEmployees},
+                                readOnly=${readOnly},
+                                placeholder='0',
+                                min=0
+                                )" />
+        </th:block>
         <th:block th:insert="this::state-aid-warning(${readOnly}, ${model})"/>
     </th:block>
 
