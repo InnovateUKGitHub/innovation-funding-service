@@ -51,13 +51,15 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...
 ...             IFS-11137 Content change mop-up relating to Loans Part B epic
 ...
+...             IFS-11303 CompetitionID on experience Cloud/community url parameters
+...
 
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
 Resource        ../../../resources/common/Applicant_Commons.robot
 Resource        ../../../resources/common/PS_Common.robot
-Resource          ../../../resources/common/Competition_Commons.robot
+Resource        ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
 ${loan_comp_PS}                            Project setup loan comp
@@ -81,7 +83,7 @@ ${spend_profile}                           ${server}/project-setup-management/pr
 
 *** Test Cases ***
 The user can navigate back to application overview in the same window from part b questions form
-    [Documentation]     IFS-10761
+    [Documentation]     IFS-10761  IFS-11303
     When the user creates a new application
     And the user clicks the button/link                           link = Business and financial information
     And the user clicks the button/link                           jQuery = a:contains("Continue")
