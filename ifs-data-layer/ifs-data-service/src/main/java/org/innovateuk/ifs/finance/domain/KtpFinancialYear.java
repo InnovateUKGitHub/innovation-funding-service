@@ -34,6 +34,9 @@ public class KtpFinancialYear {
     @Column(columnDefinition = "int(11)")
     private Long employees;
 
+    @Column(columnDefinition = "int(11)")
+    private Long corporateGroupEmployees;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="ktpFinancialYearsId", referencedColumnName="id", nullable = false, updatable = false)
     private KtpFinancialYears ktpFinancialYears;
@@ -134,5 +137,13 @@ public class KtpFinancialYear {
 
     public void setKtpFinancialYears(KtpFinancialYears ktpFinancialYears) {
         this.ktpFinancialYears = ktpFinancialYears;
+    }
+
+    public Long getCorporateGroupEmployees() {
+        return corporateGroupEmployees;
+    }
+
+    public void setCorporateGroupEmployees(Long corporateGroupEmployees) {
+        this.corporateGroupEmployees = corporateGroupEmployees;
     }
 }

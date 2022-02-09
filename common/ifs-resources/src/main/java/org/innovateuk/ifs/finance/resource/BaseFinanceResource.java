@@ -6,6 +6,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -28,6 +29,7 @@ public abstract class BaseFinanceResource {
     private FinancialYearAccountsResource financialYearAccounts;
     private Boolean fecModelEnabled;
     private Long fecFileEntry;
+    private LocalDate fecCertExpiryDate;
 
     public BaseFinanceResource(BaseFinanceResource originalFinance) {
         if (originalFinance != null) {
@@ -37,6 +39,7 @@ public abstract class BaseFinanceResource {
             this.organisationSize = originalFinance.getOrganisationSize();
             this.fecFileEntry = originalFinance.getFecFileEntry();
             this.fecModelEnabled = originalFinance.getFecModelEnabled();
+            this.fecCertExpiryDate = originalFinance.getFecCertExpiryDate();
         }
     }
 
@@ -45,9 +48,11 @@ public abstract class BaseFinanceResource {
     }
 
     public BaseFinanceResource(Boolean fecModelEnabled,
-                               Long fecFileEntry) {
+                               Long fecFileEntry,
+                               LocalDate fecCertExpiryDate) {
         this.fecModelEnabled = fecModelEnabled;
         this.fecFileEntry = fecFileEntry;
+        this.fecCertExpiryDate = fecCertExpiryDate;
     }
 
     public BaseFinanceResource(long id,
@@ -156,6 +161,12 @@ public abstract class BaseFinanceResource {
 
     public void setFecFileEntry(Long fecFileEntry) {
         this.fecFileEntry = fecFileEntry;
+    }
+
+    public LocalDate getFecCertExpiryDate() { return fecCertExpiryDate; }
+
+    public void setFecCertExpiryDate(LocalDate fecCertExpiryDate) {
+        this.fecCertExpiryDate = fecCertExpiryDate;
     }
 
     @JsonIgnore

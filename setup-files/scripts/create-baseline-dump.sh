@@ -4,7 +4,7 @@ cd "$(dirname "$0")"
 
 baselineversion="${1?please specify the new baseline version (e.g. V100_11_)}"
 
-echo "database host is  ${2}"
+echo "database host is ${2}"
 
 echo "creating baseline for version ${baselineversion}"
 mysql -h ${2} ifs -uroot -ppassword -e 'delete from user_role where exists (select 1 from user u where u.id = user_id and u.system_user = 1);'
