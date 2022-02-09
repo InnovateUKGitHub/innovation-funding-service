@@ -2,9 +2,18 @@
 <#import "layout/default.html" as layout>
 <@layout.default>
 <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name}</p>
+<#if ktpPhase2Enabled>
+<p style="margin: 0 0 1em 0;">You have been invited to review this application and tell us if you are interested in supporting it.</p>
+<#else>
 <p style="margin: 0 0 1em 0;">You have been invited to review this application for support opportunities:</p>
+</#if>
 <p style="margin: 0 0 1em 0;">${applicationId} : ${applicationName}</p>
 <p style="margin: 0 0 1em 0;">You will be able to decide if your organisation wishes to offer support and provide feedback to the applicant.</p>
+
+<#if ktpPhase2Enabled>
+<p style="margin: 0 0 1em 0;">The deadline to review this application is ${assessorDeadline}.</p>
+</#if>
+
 <@layout.button href="${link}" text="See this application" />
 <p style="margin: 0 0 1em 0;">Yours sincerely</p>
 <@layout.senderHTML />

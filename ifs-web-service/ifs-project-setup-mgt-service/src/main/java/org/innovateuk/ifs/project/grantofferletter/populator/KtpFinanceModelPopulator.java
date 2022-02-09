@@ -35,6 +35,7 @@ public class KtpFinanceModelPopulator {
                             claimPercentage, fundingRunningTotal))
                     .withClaimPercentage(claimPercentage)
                     .withFecModelEnabled(leadFinances.getFecModelEnabled())
+                    .withFecCertExpiryDate(leadFinances.getFecCertExpiryDate())
                     .build();
         } else {
             return aKtpFinanceModel()
@@ -49,6 +50,7 @@ public class KtpFinanceModelPopulator {
                     .withAcademicAndSecretarialSupport(row(calculateAcademicAndSecretarialSupport(project), claimPercentage, fundingRunningTotal))
                     .withClaimPercentage(claimPercentage)
                     .withFecModelEnabled(leadFinances.getFecModelEnabled())
+                    .withFecCertExpiryDate(leadFinances.getFecCertExpiryDate())
                     .build();
         }
     }
