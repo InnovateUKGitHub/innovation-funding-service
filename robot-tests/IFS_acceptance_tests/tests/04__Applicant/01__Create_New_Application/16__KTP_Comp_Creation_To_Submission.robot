@@ -166,7 +166,8 @@ ${singleRoleKTAEmail}                 singlerolekta@ktn-uk.test
 ${leadTeamMember}                     susan.brown@gmail.com
 ${uploadedPdf}                        testing_5MB.pdf
 ${estateValue}                        11000
-${currentTime}                        Get Current Time
+${currentTime}                        get current time
+${today}                              get today
 
 *** Test Cases ***
 The applicants should not see knowledge based organisations when creating a non-ktp applications
@@ -384,9 +385,6 @@ New lead applicant is shown a validation error when marking a non-selected optio
 
 New lead applicant makes a 'Yes' selection for the organisation's fEC model without uploading a document
      [Documentation]  IFS-9240
-#     When the user selects the radio button                 fecModelEnabled  fecModelEnabled-yes
-#     And The user clicks the button/link                    jQuery = button:contains("Next")
-#     And the user clicks the button/link                    jQuery = button:contains("Mark as complete")
      Then the user should see a field and summary error     You must upload a file.
 
 New lead applicant uploads a document for the organisation's fEC model and save the selection
@@ -1149,8 +1147,8 @@ the lead applicant marks the KTP project location as complete
 
 the user sees fEC model validation error message
      the user clicks the button/link                   jQuery = button:contains("Mark as complete")
-     the user should see the element                   span:contains("You must upload a file.")
-     the user should see the element                   span:contains("You must enter an expiry date.")
+     the user should see the element                   jQuery = span:contains("You must upload a file.")
+     the user should see the element                   jQuery = span:contains("You must enter an expiry date.")
 
 the partner applicant marks the KTP project location & organisation information as complete
     [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}

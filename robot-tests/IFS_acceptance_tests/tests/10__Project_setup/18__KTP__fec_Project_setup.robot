@@ -201,6 +201,7 @@ Custom Suite Setup
 
 the user completes your project finances section
     the user clicks the button/link        link = Your fEC model
+    And the user selects the radio button  fecModelEnabled  fecModelEnabled-no
     the user clicks the button/link        jQuery = button:contains("Mark as complete")
     the user clicks the button/link        link = Your funding
     the user selects the radio button      otherFunding  other-funding-no
