@@ -12,8 +12,6 @@ plugins {
     id "io.spring.dependency-management" version "1.0.11.RELEASE" apply false
     id "org.springframework.boot" version "2.4.2" apply false
     id "com.github.node-gradle.gulp" version "1.5.3" apply false
-    // Used in spring-boot build-info
-    id "com.gorylenko.gradle-git-properties" version "1.4.6" apply false
 }
 
 sonarqube {
