@@ -74,9 +74,9 @@ The user enters text to an autocomplete field
 #different from the keyword above, as we don't want to lose focus from the field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
     Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
-    click element    ${TEXT_FIELD}
+    Wait Until Keyword Succeeds Without Screenshots    10s    500ms    click element    ${TEXT_FIELD}
     #wait for autosave
-    Wait Until Element Is Visible Without Screenshots   jQuery = li:contains("${TEXT_INPUT}")
+#    Wait Until Element Is Visible Without Screenshots   jQuery = li:contains("${TEXT_INPUT}")
     Wait Until Keyword Succeeds Without Screenshots    10s    500ms    click element    jQuery = li:contains("${TEXT_INPUT}")
 
 The user edits autocomplete field

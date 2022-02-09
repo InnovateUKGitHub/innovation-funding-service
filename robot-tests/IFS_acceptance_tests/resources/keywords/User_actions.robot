@@ -181,7 +181,7 @@ the internal user navigates to the project setup competition
 
 the user refreshes until element appears on page
     [Arguments]  ${selector}
-    Wait Until Keyword Succeeds Without Screenshots     60s   2s   reload and check if element appears    ${selector}
+    Wait Until Keyword Succeeds Without Screenshots     120s   5s   reload and check if element appears    ${selector}
 
 reload and check if element appears
     [Arguments]  ${selector}
