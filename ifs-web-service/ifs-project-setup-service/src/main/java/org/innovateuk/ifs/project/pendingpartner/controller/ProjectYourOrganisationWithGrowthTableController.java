@@ -3,7 +3,9 @@ package org.innovateuk.ifs.project.pendingpartner.controller;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormSaver;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +26,8 @@ public class ProjectYourOrganisationWithGrowthTableController extends AbstractPr
     private ProjectYourOrganisationRestService yourOrganisationRestService;
     @Autowired
     private YourOrganisationWithGrowthTableFormSaver saver;
+    @Autowired
+    private OrganisationRestService organisationRestService;
 
     @Override
     protected String redirectToViewPage(long projectId, long organisationId) {
@@ -34,7 +38,8 @@ public class ProjectYourOrganisationWithGrowthTableController extends AbstractPr
 
     @Override
     protected YourOrganisationWithGrowthTableForm populateForm(long projectId, long organisationId) {
-        return withGrowthTableFormPopulator.populate(yourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess());
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        return withGrowthTableFormPopulator.populate(yourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess(), organisation);
     }
 
     @Override

@@ -3,7 +3,9 @@ package org.innovateuk.ifs.project.organisationdetails.view.controller;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsFormPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -30,8 +32,12 @@ public class OrganisationDetailsKtpFinancialYearsController extends AbstractOrga
         return "ktp-financial-years";
     }
 
+    @Autowired
+    private OrganisationRestService organisationRestService;
+
     @Override
     protected YourOrganisationKtpFinancialYearsForm getForm(long projectId, long organisationId) {
-        return formPopulator.populate(projectYourOrganisationRestService.getOrganisationKtpYears(projectId, organisationId).getSuccess());
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        return formPopulator.populate(projectYourOrganisationRestService.getOrganisationKtpYears(projectId, organisationId).getSuccess(), organisation);
     }
 }

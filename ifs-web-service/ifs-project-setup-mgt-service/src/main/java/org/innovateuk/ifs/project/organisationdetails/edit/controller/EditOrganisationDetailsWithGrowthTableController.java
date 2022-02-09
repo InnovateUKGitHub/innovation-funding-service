@@ -5,9 +5,11 @@ import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourO
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormSaver;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,10 +41,14 @@ public class EditOrganisationDetailsWithGrowthTableController extends AbstractEd
         return "with-growth-table";
     }
 
+    @Autowired
+    private OrganisationRestService organisationRestService;
+
     @Override
     protected YourOrganisationWithGrowthTableForm form(long projectId, long organisationId) {
         OrganisationFinancesWithGrowthTableResource financesWithGrowthTable = projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess();
-        return withGrowthTableFormPopulator.populate(financesWithGrowthTable);
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        return withGrowthTableFormPopulator.populate(financesWithGrowthTable, organisation);
     }
 
     @Override

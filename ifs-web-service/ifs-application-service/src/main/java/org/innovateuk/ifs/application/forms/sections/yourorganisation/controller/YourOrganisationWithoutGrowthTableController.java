@@ -5,6 +5,8 @@ import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourO
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormSaver;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
 import org.innovateuk.ifs.finance.service.ApplicationYourOrganisationRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,10 +28,14 @@ public class YourOrganisationWithoutGrowthTableController extends AbstractYourOr
     @Autowired
     private YourOrganisationWithoutGrowthTableFormSaver saver;
 
+    @Autowired
+    private OrganisationRestService organisationRestService;
+
     @Override
     protected YourOrganisationWithoutGrowthTableForm populateForm(long applicationId, long organisationId) {
         OrganisationFinancesWithoutGrowthTableResource finances = yourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(applicationId, organisationId).getSuccess();
-        return withoutGrowthTableFormPopulator.populate(finances);
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        return withoutGrowthTableFormPopulator.populate(finances, organisation);
     }
 
     @Override

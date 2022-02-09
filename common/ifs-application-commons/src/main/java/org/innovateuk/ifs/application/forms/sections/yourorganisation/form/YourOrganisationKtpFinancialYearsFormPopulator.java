@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesKtpYearsResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -11,8 +12,8 @@ import java.util.stream.Collectors;
 @Component
 public class YourOrganisationKtpFinancialYearsFormPopulator {
 
-    public YourOrganisationKtpFinancialYearsForm populate(OrganisationFinancesKtpYearsResource finances) {
-        return new YourOrganisationKtpFinancialYearsForm(
+    public YourOrganisationKtpFinancialYearsForm populate(OrganisationFinancesKtpYearsResource finances, OrganisationResource organisation) {
+        YourOrganisationKtpFinancialYearsForm yourOrgKtpForm = new YourOrganisationKtpFinancialYearsForm(
                 finances.getOrganisationSize(),
                 finances.getYears().stream().map(year ->
                         new YourOrganisationKtpFinancialYearForm(
@@ -25,8 +26,10 @@ public class YourOrganisationKtpFinancialYearsFormPopulator {
                                 year.getLoans(),
                                 year.getEmployees()
                         )
-                    ).collect(Collectors.toList()),
+                ).collect(Collectors.toList()),
                 finances.getGroupEmployees(),
                 finances.getFinancialYearEnd());
+        yourOrgKtpForm.setOrganisation(organisation);
+        return  yourOrgKtpForm;
     }
 }

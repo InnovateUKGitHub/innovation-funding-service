@@ -3,7 +3,9 @@ package org.innovateuk.ifs.project.organisationdetails.view.controller;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -30,8 +32,12 @@ public class OrganisationDetailsWithGrowthTableController extends AbstractOrgani
         return "with-growth-table";
     }
 
+    @Autowired
+    private OrganisationRestService organisationRestService;
+
     @Override
     protected YourOrganisationWithGrowthTableForm getForm(long projectId, long organisationId) {
-        return withGrowthTableFormPopulator.populate(projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess());
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        return withGrowthTableFormPopulator.populate(projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess(), organisation);
     }
 }

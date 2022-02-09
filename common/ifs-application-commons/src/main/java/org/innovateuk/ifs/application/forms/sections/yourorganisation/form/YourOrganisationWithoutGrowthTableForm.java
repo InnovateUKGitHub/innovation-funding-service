@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
@@ -10,6 +11,8 @@ import java.math.BigDecimal;
  * Form used to capture "Your organisation" information when a growth table is required.
  */
 public class YourOrganisationWithoutGrowthTableForm {
+
+    private OrganisationResource organisation;
 
     @NotNull(message = "{validation.yourorganisation.organisation.size.required}")
     private OrganisationSize organisationSize;
@@ -57,5 +60,13 @@ public class YourOrganisationWithoutGrowthTableForm {
 
     public void setHeadCount(Long headCount) {
         this.headCount = headCount;
+    }
+
+    public OrganisationResource getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(OrganisationResource organisation) {
+        this.organisation = organisation;
     }
 }

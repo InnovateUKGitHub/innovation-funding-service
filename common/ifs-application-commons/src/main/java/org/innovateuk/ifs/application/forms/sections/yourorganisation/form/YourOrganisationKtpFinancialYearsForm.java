@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.validation.constraints.LastFinancialYearEnd;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -12,6 +13,8 @@ import java.util.List;
  * Form used to capture "Your organisation" information when a the competition is ktp.
  */
 public class YourOrganisationKtpFinancialYearsForm {
+
+    private OrganisationResource organisation;
 
     @NotNull(message = "{validation.yourorganisation.organisation.size.required}")
     private OrganisationSize organisationSize;
@@ -66,5 +69,13 @@ public class YourOrganisationKtpFinancialYearsForm {
 
     public void setFinancialYearEnd(YearMonth financialYearEnd) {
         this.financialYearEnd = financialYearEnd;
+    }
+
+    public OrganisationResource getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(OrganisationResource organisation) {
+        this.organisation = organisation;
     }
 }

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -9,10 +10,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class YourOrganisationWithoutGrowthTableFormPopulator {
 
-    public YourOrganisationWithoutGrowthTableForm populate(OrganisationFinancesWithoutGrowthTableResource finances) {
-        return new YourOrganisationWithoutGrowthTableForm(
+    public YourOrganisationWithoutGrowthTableForm populate(OrganisationFinancesWithoutGrowthTableResource finances, OrganisationResource organisation) {
+        YourOrganisationWithoutGrowthTableForm yourOrganisationWithoutGrowthTableForm =  new YourOrganisationWithoutGrowthTableForm(
                 finances.getOrganisationSize(),
                 finances.getTurnover(),
                 finances.getHeadCount());
+        yourOrganisationWithoutGrowthTableForm.setOrganisation(organisation);
+        return  yourOrganisationWithoutGrowthTableForm;
     }
 }

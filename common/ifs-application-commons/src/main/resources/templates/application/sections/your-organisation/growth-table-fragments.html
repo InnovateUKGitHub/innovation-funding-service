@@ -160,7 +160,8 @@
         <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
                                         organisation-size(form=${form}, model=${model}, readOnly=${readOnly})" />
 
-        <th:block th:insert="fragments/form-elements/date ::
+        <th:block th:unless="${readOnly or model.internal}">
+          <th:block th:insert="fragments/form-elements/date ::
                 month-and-year(
                     legend='End of last financial year',
                     id='financialYearEnd',
@@ -171,6 +172,7 @@
                     readOnly=${readOnly},
                     pastDate=true,
                 )" />
+        </th:block>
 
 
 
@@ -266,27 +268,9 @@
 
     </th:block>
 
-    <th:block th:fragment="organisation-details(form, model, readOnly)">
-        <div class="table-organisation-details">
-            <table class="govuk-table">
-             <thead class="govuk-table__head">
-               <tr class="govuk-table__row">
-                 <th class="govuk-table__header" scope="col">Organisation name</th>
-                 <th class="govuk-table__header" scope="col">Registration number</th>
-                 <th class="govuk-table__header" scope="col">Registered address</th>
-                 <th class="govuk-table__header" scope="col">Sic code</th>
-               </tr>
-             </thead>
-             <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                <td class="govuk-table__cell" th:text="${organisation.name}"></td>
-               </tr>
-             </tbody>
-            </table>
-        </div>
-    </th:block>
 
     <th:block th:fragment="organisation-size(form, model, readOnly)">
+        <th:block th:unless="${readOnly or model.internal}">
             <th:block th:insert="fragments/form-elements/radiofield ::
                             radiofield(
                                 legend='Organisation size',
@@ -298,7 +282,8 @@
                                 requiredMessage=#{APPLICATION_ORGANISATION_SIZE_REQUIRED},
                                 readOnly=${readOnly},
                                 valueDescription=${form.organisationSize != null ? form.organisationSize.description : null},
-                            )" />
+                           )" />
+        </th:block>
     </th:block>
 
     <th:block th:fragment="state-aid-warning(readOnly, model)">
@@ -320,5 +305,50 @@
             <p class="govuk-body">The size of your organisation determines the level of funding you are eligible for.</p>
         </div>
     </th:block>
+
+<th:block th:fragment="organisation-details(form, model, readOnly)">
+    <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+         <table class="govuk-table govuk-!-margin-bottom-6">
+             <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Organisation name</th>
+                    <td class="govuk-table__cell"th:text="${form.organisation.name}"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Registration number</th>
+                    <td class="govuk-table__cell"th:text="${form.organisation.companiesHouseNumber}"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Registered address</th>
+                    <div th:if="${form.organisation.addresses != null}"
+                         ? th:each="address : ${form.organisation.addresses}">
+                        <td class="govuk-table__cell"ifs:utext="${address.getCombinedString()}"></td>
+                        : ''
+                    </div>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">SIC code</th>
+                    <div th:if="${form.organisation.sicCodes != null}"
+                         ? th:each="sicCode : ${form.organisation.sicCodes}">
+                        <td class="govuk-table__cell"ifs:utext="${sicCode}"></td>
+                        : ''
+                    </div>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Organisation size</th>
+                    <td class="govuk-table__cell"th:text="${form.organisationSize !=null ?
+                              form.organisationSize.description : ''}"></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">End of last financial year</th>
+                    <td class="govuk-table__cell" th:text="${form.financialYearEnd != null ?
+                        form.financialYearEnd.month : ''}"></td>
+                </tr>
+             </tbody>
+           </table>
+     </div>
+    </div>
+</th:block>
 
 </html>

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.validation.constraints.LastFinancialYearEnd;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -11,6 +12,8 @@ import java.time.YearMonth;
  * Form used to capture "Your organisation" information when a growth table is required.
  */
 public class YourOrganisationWithGrowthTableForm {
+
+    private OrganisationResource organisation;
 
     @NotNull(message = "{validation.yourorganisation.organisation.size.required}")
     private OrganisationSize organisationSize;
@@ -109,5 +112,13 @@ public class YourOrganisationWithGrowthTableForm {
 
     public void setResearchAndDevelopmentSpendAtLastFinancialYear(BigDecimal researchAndDevelopmentSpendAtLastFinancialYear) {
         this.researchAndDevelopmentSpendAtLastFinancialYear = researchAndDevelopmentSpendAtLastFinancialYear;
+    }
+
+    public OrganisationResource getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(OrganisationResource organisation) {
+        this.organisation = organisation;
     }
 }

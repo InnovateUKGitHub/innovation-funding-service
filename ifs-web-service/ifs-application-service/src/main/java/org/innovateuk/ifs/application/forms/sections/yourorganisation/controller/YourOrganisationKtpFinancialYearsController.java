@@ -35,7 +35,8 @@ public class YourOrganisationKtpFinancialYearsController extends AbstractYourOrg
     @Override
     protected YourOrganisationKtpFinancialYearsForm populateForm(long applicationId, long organisationId) {
         OrganisationFinancesKtpYearsResource finances = yourOrganisationRestService.getOrganisationKtpYears(applicationId, organisationId).getSuccess();
-        return formPopulator.populate(finances);
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        return formPopulator.populate(finances, organisation);
     }
 
     @Override
@@ -45,13 +46,9 @@ public class YourOrganisationKtpFinancialYearsController extends AbstractYourOrg
 
     @Override
     protected void update(long applicationId, long organisationId, YourOrganisationKtpFinancialYearsForm form) {
-//        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-//        if (organisation.getCompaniesHouseNumber().isEmpty()) {
-//
-//        } else {
-//
-//        }
-         saver.save(applicationId, organisationId, form, yourOrganisationRestService);
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        form.setOrganisation(organisation);
+        saver.save(applicationId, organisationId, form, yourOrganisationRestService);
     }
 
     @Override
