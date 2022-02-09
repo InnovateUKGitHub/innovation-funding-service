@@ -86,7 +86,8 @@ The user can navigate back to application overview in the same window from part 
     And the user clicks the button/link                           link = Business and financial information
     And the user clicks the button/link                           jQuery = a:contains("Continue")
     And the user logs in if username field present
-    Then title should be                                           Home
+    Then title should be                                          Home
+    And Url should contain competition id                         ${loan_comp_appl_id}
 
 The user can see b&fi application question as complete and shows edit online survey button
     [Documentation]    IFS-9484  IFS-10705  IFS-10703
@@ -534,3 +535,9 @@ the user enters empty data into date fields
     the user enters text to a text field   id = startDateDay  ${date}
     the user enters text to a text field   id = startDateMonth   ${month}
     the user enters text to a text field   id = startDateYear  ${year}
+
+Url should contain competition id
+    [Arguments]  ${competitionId}
+    ${Url} =   get location
+    Should Contain     ${Url}   CompetitionId=${competitionId}
+
