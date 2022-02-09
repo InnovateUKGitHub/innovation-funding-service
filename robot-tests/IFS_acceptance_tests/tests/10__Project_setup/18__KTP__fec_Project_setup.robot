@@ -368,6 +368,12 @@ the user can see the read-only page
     the user should see the element               Last updated: 8 February 04:05PM by you
     the user should see the element               link = Return to project finances
 
+the user enters empty data into date fields
+    [Arguments]  ${date}  ${month}  ${year}
+    the user enters text to a text field   id = fecCertExpiryDay  ${date}
+    the user enters text to a text field   id = fecCertExpiryMonth   ${month}
+    the user enters text to a text field   id = fecCertExpiryYear  ${year}
+
 Custom suite teardown
     Close browser and delete emails
     Disconnect from database
