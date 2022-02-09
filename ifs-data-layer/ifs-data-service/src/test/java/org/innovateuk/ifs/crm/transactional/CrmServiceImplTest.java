@@ -35,6 +35,7 @@ import org.innovateuk.ifs.sil.crm.resource.SilLoanAssessment;
 import org.innovateuk.ifs.sil.crm.service.SilCrmEndpoint;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
+import org.innovateuk.ifs.util.TimeMachine;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
