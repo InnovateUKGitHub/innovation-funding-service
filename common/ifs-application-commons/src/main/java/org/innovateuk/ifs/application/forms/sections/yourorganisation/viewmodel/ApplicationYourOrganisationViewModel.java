@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel
 
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.FormOption;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationDetailsReadOnlyForm;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
@@ -24,6 +25,7 @@ public class ApplicationYourOrganisationViewModel implements BaseAnalyticsViewMo
     private boolean showOrganisationSizeAlert;
     private boolean maximumFundingLevelConstant;
     private boolean internal;
+    private YourOrganisationDetailsReadOnlyForm orgDetailsForm;
 
 
     public ApplicationYourOrganisationViewModel(long applicationId, CompetitionResource competition,
@@ -93,5 +95,13 @@ public class ApplicationYourOrganisationViewModel implements BaseAnalyticsViewMo
             return fundingLevelDependsOnOrganisationSizeMessage + sizeDefinition;
         }
 
+    }
+
+    public YourOrganisationDetailsReadOnlyForm getOrgDetailsForm() {
+        return orgDetailsForm;
+    }
+
+    public void setOrgDetailsForm(YourOrganisationDetailsReadOnlyForm orgDetailsForm) {
+        this.orgDetailsForm = orgDetailsForm;
     }
 }

@@ -313,37 +313,34 @@
              <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Organisation name</th>
-                    <td class="govuk-table__cell"th:text="${form.organisation.name}"></td>
+                    <td class="govuk-table__cell"th:text="${model.orgDetailsForm.organisationName}"></td>
                 </tr>
+              <th:block th:if="${model.orgDetailsForm.isOrgDetailedDisplayRequired}">
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Registration number</th>
-                    <td class="govuk-table__cell"th:text="${form.organisation.companiesHouseNumber}"></td>
+                    <td class="govuk-table__cell"th:text="${model.orgDetailsForm.registrationNumber}"></td>
                 </tr>
-                <tr class="govuk-table__row">
+                <tr class="govuk-table__row form-group-row">
                     <th scope="row" class="govuk-table__header">Registered address</th>
-                    <div th:if="${form.organisation.addresses != null}"
-                         ? th:each="address : ${form.organisation.addresses}">
-                        <td class="govuk-table__cell"ifs:utext="${address.getCombinedString()}"></td>
-                        : ''
-                    </div>
+                      <td class="govuk-table__cell form-group-cell fix-left">
+                        <div th:each="addressLine : ${model.orgDetailsForm.getRegisteredAddressString()}" th:text="${addressLine}" />
+                      </td>
                 </tr>
-                <tr class="govuk-table__row">
+                  <tr class="govuk-table__row form-group-row">
                     <th scope="row" class="govuk-table__header">SIC code</th>
-                    <div th:if="${form.organisation.sicCodes != null}"
-                         ? th:each="sicCode : ${form.organisation.sicCodes}">
-                        <td class="govuk-table__cell"ifs:utext="${sicCode}"></td>
-                        : ''
-                    </div>
+                    <td class="govuk-table__cell form-group-cell fix-left">
+                       <div th:each="sicCode : ${model.orgDetailsForm.getSicCodesString()}" th:text="${sicCode}" />
+                    </td>
                 </tr>
+                </th:block>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Organisation size</th>
-                    <td class="govuk-table__cell"th:text="${form.organisationSize !=null ?
+                    <td class="govuk-table__cell" th:text="${form.organisationSize !=null ?
                               form.organisationSize.description : ''}"></td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">End of last financial year</th>
-                    <td class="govuk-table__cell" th:text="${form.financialYearEnd != null ?
-                        form.financialYearEnd.month : ''}"></td>
+                    <td class="govuk-table__cell" th:text="${form.getFinancialYearAndMonthString()}"></td>
                 </tr>
              </tbody>
            </table>

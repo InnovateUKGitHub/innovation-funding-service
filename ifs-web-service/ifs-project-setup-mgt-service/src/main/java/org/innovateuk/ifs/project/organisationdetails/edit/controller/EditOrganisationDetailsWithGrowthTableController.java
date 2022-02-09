@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.organisationdetails.edit.controller;
 
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationDetailsReadOnlyForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormSaver;
@@ -47,8 +48,7 @@ public class EditOrganisationDetailsWithGrowthTableController extends AbstractEd
     @Override
     protected YourOrganisationWithGrowthTableForm form(long projectId, long organisationId) {
         OrganisationFinancesWithGrowthTableResource financesWithGrowthTable = projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess();
-        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        return withGrowthTableFormPopulator.populate(financesWithGrowthTable, organisation);
+        return withGrowthTableFormPopulator.populate(financesWithGrowthTable);
     }
 
     @Override

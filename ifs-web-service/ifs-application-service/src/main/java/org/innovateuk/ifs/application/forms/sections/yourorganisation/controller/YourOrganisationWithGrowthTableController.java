@@ -5,8 +5,6 @@ import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourO
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormSaver;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.finance.service.ApplicationYourOrganisationRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,15 +27,22 @@ public class YourOrganisationWithGrowthTableController extends AbstractYourOrgan
     @Autowired
     private YourOrganisationWithGrowthTableFormSaver saver;
 
-    @Autowired
-    private OrganisationRestService organisationRestService;
-
     @Override
     protected YourOrganisationWithGrowthTableForm populateForm(long applicationId, long organisationId) {
         OrganisationFinancesWithGrowthTableResource finances = yourOrganisationRestService.getOrganisationFinancesWithGrowthTable(applicationId, organisationId).getSuccess();
-        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        return withGrowthTableFormPopulator.populate(finances, organisation);
+        return withGrowthTableFormPopulator.populate(finances);
     }
+
+
+    //   @Autowired
+ //   private OrganisationRestService organisationRestService;
+
+//    @Override
+//    protected YourOrganisationWithGrowthTableForm populateForm(long applicationId, long organisationId) {
+//        OrganisationFinancesWithGrowthTableResource finances = yourOrganisationRestService.getOrganisationFinancesWithGrowthTable(applicationId, organisationId).getSuccess();
+//        YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm = populateOrganisationDetails(applicationId, organisationId);
+//        return withGrowthTableFormPopulator.populate(finances, yourOrganisationDetailsReadOnlyForm);
+//    }
 
     @Override
     protected String formFragment() {

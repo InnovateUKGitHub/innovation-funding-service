@@ -13,8 +13,6 @@ import java.time.YearMonth;
  */
 public class YourOrganisationWithGrowthTableForm {
 
-    private OrganisationResource organisation;
-
     @NotNull(message = "{validation.yourorganisation.organisation.size.required}")
     private OrganisationSize organisationSize;
 
@@ -37,6 +35,8 @@ public class YourOrganisationWithGrowthTableForm {
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
     private BigDecimal researchAndDevelopmentSpendAtLastFinancialYear;
+
+    private YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm;
 
     public YourOrganisationWithGrowthTableForm(
             OrganisationSize organisationSize,
@@ -114,11 +114,11 @@ public class YourOrganisationWithGrowthTableForm {
         this.researchAndDevelopmentSpendAtLastFinancialYear = researchAndDevelopmentSpendAtLastFinancialYear;
     }
 
-    public OrganisationResource getOrganisation() {
-        return organisation;
+    public YourOrganisationDetailsReadOnlyForm getYourOrganisationDetailsReadOnlyForm() {
+        return yourOrganisationDetailsReadOnlyForm;
     }
 
-    public void setOrganisation(OrganisationResource organisation) {
-        this.organisation = organisation;
+    public void setYourOrganisationDetailsReadOnlyForm(YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm) {
+        this.yourOrganisationDetailsReadOnlyForm = yourOrganisationDetailsReadOnlyForm;
     }
 }

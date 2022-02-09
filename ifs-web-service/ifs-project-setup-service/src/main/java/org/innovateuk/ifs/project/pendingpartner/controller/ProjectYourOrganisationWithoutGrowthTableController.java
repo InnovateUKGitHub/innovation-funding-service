@@ -38,8 +38,7 @@ public class ProjectYourOrganisationWithoutGrowthTableController extends Abstrac
 
     @Override
     protected YourOrganisationWithoutGrowthTableForm populateForm(long projectId, long organisationId) {
-        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        return withoutGrowthTableFormPopulator.populate(yourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(projectId, organisationId).getSuccess(), organisation);
+        return withoutGrowthTableFormPopulator.populate(yourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(projectId, organisationId).getSuccess());
     }
 
     @Override

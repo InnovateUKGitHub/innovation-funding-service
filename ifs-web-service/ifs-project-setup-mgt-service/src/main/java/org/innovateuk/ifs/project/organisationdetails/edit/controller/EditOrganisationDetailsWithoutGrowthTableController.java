@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.organisationdetails.edit.controller;
 
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationDetailsReadOnlyForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormSaver;
@@ -46,8 +47,7 @@ public class EditOrganisationDetailsWithoutGrowthTableController extends Abstrac
     @Override
     protected YourOrganisationWithoutGrowthTableForm form(long projectId, long organisationId) {
         OrganisationFinancesWithoutGrowthTableResource financesWithoutGrowthTable = projectYourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(projectId, organisationId).getSuccess();
-        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        return withoutGrowthTableFormPopulator.populate(financesWithoutGrowthTable, organisation);
+        return withoutGrowthTableFormPopulator.populate(financesWithoutGrowthTable);
     }
 
     @Override

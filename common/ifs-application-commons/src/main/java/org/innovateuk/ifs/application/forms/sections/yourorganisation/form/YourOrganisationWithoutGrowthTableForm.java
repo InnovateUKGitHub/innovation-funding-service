@@ -12,8 +12,6 @@ import java.math.BigDecimal;
  */
 public class YourOrganisationWithoutGrowthTableForm {
 
-    private OrganisationResource organisation;
-
     @NotNull(message = "{validation.yourorganisation.organisation.size.required}")
     private OrganisationSize organisationSize;
 
@@ -24,6 +22,8 @@ public class YourOrganisationWithoutGrowthTableForm {
     @NotNull(message = "{validation.field.must.not.be.blank}")
     @Max(value = Integer.MAX_VALUE, message = "{validation.standard.integer.max.value.format}")
     private Long headCount;
+
+    private YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm;
 
     YourOrganisationWithoutGrowthTableForm(
             OrganisationSize organisationSize,
@@ -62,11 +62,11 @@ public class YourOrganisationWithoutGrowthTableForm {
         this.headCount = headCount;
     }
 
-    public OrganisationResource getOrganisation() {
-        return organisation;
+    public YourOrganisationDetailsReadOnlyForm getYourOrganisationDetailsReadOnlyForm() {
+        return yourOrganisationDetailsReadOnlyForm;
     }
 
-    public void setOrganisation(OrganisationResource organisation) {
-        this.organisation = organisation;
+    public void setYourOrganisationDetailsReadOnlyForm(YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm) {
+        this.yourOrganisationDetailsReadOnlyForm = yourOrganisationDetailsReadOnlyForm;
     }
 }

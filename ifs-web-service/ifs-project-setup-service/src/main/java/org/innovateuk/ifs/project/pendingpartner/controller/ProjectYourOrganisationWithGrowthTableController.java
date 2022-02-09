@@ -38,8 +38,7 @@ public class ProjectYourOrganisationWithGrowthTableController extends AbstractPr
 
     @Override
     protected YourOrganisationWithGrowthTableForm populateForm(long projectId, long organisationId) {
-        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        return withGrowthTableFormPopulator.populate(yourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess(), organisation);
+        return withGrowthTableFormPopulator.populate(yourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess());
     }
 
     @Override

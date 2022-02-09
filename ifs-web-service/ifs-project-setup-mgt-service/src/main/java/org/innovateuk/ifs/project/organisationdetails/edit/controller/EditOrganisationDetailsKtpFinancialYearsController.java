@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.organisationdetails.edit.controller;
 
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationDetailsReadOnlyForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsFormSaver;
@@ -47,8 +48,7 @@ public class EditOrganisationDetailsKtpFinancialYearsController extends Abstract
     @Override
     protected YourOrganisationKtpFinancialYearsForm form(long projectId, long organisationId) {
         OrganisationFinancesKtpYearsResource financesWithGrowthTable = projectYourOrganisationRestService.getOrganisationKtpYears(projectId, organisationId).getSuccess();
-        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        return formPopulator.populate(financesWithGrowthTable, organisation);
+        return formPopulator.populate(financesWithGrowthTable);
     }
 
     @Override

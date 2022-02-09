@@ -5,8 +5,6 @@ import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourO
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsFormSaver;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesKtpYearsResource;
 import org.innovateuk.ifs.finance.service.ApplicationYourOrganisationRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,14 +27,12 @@ public class YourOrganisationKtpFinancialYearsController extends AbstractYourOrg
     @Autowired
     private YourOrganisationKtpFinancialYearsFormSaver saver;
 
-    @Autowired
-    private OrganisationRestService organisationRestService;
-
     @Override
     protected YourOrganisationKtpFinancialYearsForm populateForm(long applicationId, long organisationId) {
         OrganisationFinancesKtpYearsResource finances = yourOrganisationRestService.getOrganisationKtpYears(applicationId, organisationId).getSuccess();
-        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        return formPopulator.populate(finances, organisation);
+       // YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm = populateOrganisationDetails(applicationId, organisationId);
+       // return formPopulator.populate(finances, yourOrganisationDetailsReadOnlyForm);
+        return formPopulator.populate(finances);
     }
 
     @Override
@@ -46,9 +42,7 @@ public class YourOrganisationKtpFinancialYearsController extends AbstractYourOrg
 
     @Override
     protected void update(long applicationId, long organisationId, YourOrganisationKtpFinancialYearsForm form) {
-        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        form.setOrganisation(organisation);
-        saver.save(applicationId, organisationId, form, yourOrganisationRestService);
+         saver.save(applicationId, organisationId, form, yourOrganisationRestService);
     }
 
     @Override
