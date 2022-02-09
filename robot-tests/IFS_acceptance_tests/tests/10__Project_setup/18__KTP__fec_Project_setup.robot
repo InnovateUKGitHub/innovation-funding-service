@@ -15,6 +15,8 @@ Documentation     IFS-9305  KTP fEC/Non-fEC: display correct finance table if fE
 ...
 ...               IFS-11129 Removal of Viability check for business
 ...
+...               IFS-11142 FEC Cost certificate - No
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../resources/defaultResources.robot
@@ -55,9 +57,12 @@ Lead applicant can view the correct project costs fields are displayed for the f
     And the user clicks the button/link       link = Your project finances
 
 Lead applicant edits the fec model to NO
-    [Documentation]  IFS-9305
+    [Documentation]  IFS-9305  IFS-11142
     Given the user edits the KTP fec model     fecModelEnabled-no
-    Then the user should see the element       jQuery = li:contains("Your fEC model") span:contains("Complete")
+    When The user clicks the button/link       link = your fEC model
+    Then the user can see the read-only page
+    And The user clicks the button/link        link = Return to project finances
+    And the user should see the element        jQuery = li:contains("Your fEC model") span:contains("Complete")
     And the user should see the element        jQuery = li:contains("Your project costs") span:contains("Incomplete")
 
 Lead applicant should view the correct project costs are displayed for non-fec selection
@@ -354,6 +359,12 @@ the user should see the non-FEC cost categories in the GOL
     the user should see the element         xpath = //td[text()="b. Academic and Secretarial Support"]/..//td[text()="${academicCostValue}"]
     the user should not see the element     xpath = //td[text()="e. Knowledge base supervisor"]
     the user should not see the element     xpath = //td[text()="viii Additional Associate Support"]
+
+the user can see the read-only page
+    the user should see the element               jQuery = h2:contains("fEC model is marked as complete")
+    the user should see the element               link = Change
+    the user should see the element               Last updated: 8 February 04:05PM by you
+    the user should see the element               link = Return to project finances
 
 Custom suite teardown
     Close browser and delete emails
