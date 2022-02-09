@@ -554,6 +554,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 return builder.withFecEnabled(Boolean.valueOf(financeRow.metadata.get(0)));
             case "Fec file uploaded":
                 return builder.withUploadedFecFile();
+            case "Fec cert expiry date":
+                return builder.withFecCertExpiryDate(LocalDate.parse(financeRow.metadata.get(0), DATE_PATTERN));
             case "Labour":
                 return builder.withLabourEntry(
                         financeRow.metadata.get(0),

@@ -121,7 +121,7 @@ public class FinanceChecksGenerator {
                 applicationFinanceForOrganisation.getOrganisationSize(),
                 newProject, growthTable, employeesAndTurnover, ktpFinancialYears,
                 applicationFinanceForOrganisation.getNorthernIrelandDeclaration(),
-                applicationFinanceForOrganisation.getFecModelEnabled(), applicationFinanceForOrganisation.getFecFileEntry());
+                applicationFinanceForOrganisation.getFecModelEnabled(), applicationFinanceForOrganisation.getFecFileEntry(), applicationFinanceForOrganisation.getFecCertExpiryDate());
 
         CompetitionResource competition = competitionService.getCompetitionById(applicationFinanceForOrganisation.getApplication().getCompetition().getId()).getSuccess();
 
