@@ -261,7 +261,7 @@ KTA assessor assigned to application can view the read-only view for 'No' select
 The supporter can view assessment deadline in the application review email
     [Documentation]  IFS-11138
     Given ifs admin invites a supporter to the ktp application
-    Then the user reads his email    ${supporter_credentials["email"]}    You have been invited to review an application    The deadline to review this application is midday Sunday 10th March 2024.
+    Then the user reads his email    ${supporter_credentials["email"]}    You have been invited to review an application    The deadline to review this application is midday Saturday 13th April 2024.
 
 Supporter can view the read-only view for 'No' selected fEC declaration
     [Documentation]  IFS-9246
