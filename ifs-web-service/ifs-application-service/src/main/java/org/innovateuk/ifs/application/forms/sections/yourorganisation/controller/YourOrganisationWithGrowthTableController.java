@@ -33,17 +33,6 @@ public class YourOrganisationWithGrowthTableController extends AbstractYourOrgan
         return withGrowthTableFormPopulator.populate(finances);
     }
 
-
-    //   @Autowired
- //   private OrganisationRestService organisationRestService;
-
-//    @Override
-//    protected YourOrganisationWithGrowthTableForm populateForm(long applicationId, long organisationId) {
-//        OrganisationFinancesWithGrowthTableResource finances = yourOrganisationRestService.getOrganisationFinancesWithGrowthTable(applicationId, organisationId).getSuccess();
-//        YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm = populateOrganisationDetails(applicationId, organisationId);
-//        return withGrowthTableFormPopulator.populate(finances, yourOrganisationDetailsReadOnlyForm);
-//    }
-
     @Override
     protected String formFragment() {
         return "with-growth-table";

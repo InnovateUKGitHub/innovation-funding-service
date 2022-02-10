@@ -32,16 +32,6 @@ public class YourOrganisationWithoutGrowthTableController extends AbstractYourOr
         return withoutGrowthTableFormPopulator.populate(finances);
     }
 
-//    @Autowired
-//    private OrganisationRestService organisationRestService;
-//
-//    @Override
-//    protected YourOrganisationWithoutGrowthTableForm populateForm(long applicationId, long organisationId) {
-//        OrganisationFinancesWithoutGrowthTableResource finances = yourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(applicationId, organisationId).getSuccess();
-//        YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm = populateOrganisationDetails(applicationId, organisationId);
-//        return withoutGrowthTableFormPopulator.populate(finances, yourOrganisationDetailsReadOnlyForm);
-//    }
-
     @Override
     protected String formFragment() {
         return "without-growth-table";

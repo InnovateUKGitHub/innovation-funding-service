@@ -15,13 +15,4 @@ public class YourOrganisationWithoutGrowthTableFormPopulator {
                 finances.getTurnover(),
                 finances.getHeadCount());
     }
-
-//    public YourOrganisationWithoutGrowthTableForm populate(OrganisationFinancesWithoutGrowthTableResource finances, YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm) {
-//        YourOrganisationWithoutGrowthTableForm yourOrganisationWithoutGrowthTableForm =  new YourOrganisationWithoutGrowthTableForm(
-//                finances.getOrganisationSize(),
-//                finances.getTurnover(),
-//                finances.getHeadCount());
-//        yourOrganisationWithoutGrowthTableForm.setYourOrganisationDetailsReadOnlyForm(yourOrganisationDetailsReadOnlyForm);
-//        return  yourOrganisationWithoutGrowthTableForm;
-//    }
 }

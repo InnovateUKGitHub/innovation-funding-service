@@ -25,29 +25,8 @@ public class YourOrganisationKtpFinancialYearsFormPopulator {
                                 year.getLoans(),
                                 year.getEmployees()
                         )
-                ).collect(Collectors.toList()),
+                    ).collect(Collectors.toList()),
                 finances.getGroupEmployees(),
                 finances.getFinancialYearEnd());
     }
-
-//    public YourOrganisationKtpFinancialYearsForm populate(OrganisationFinancesKtpYearsResource finances, YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm) {
-//        YourOrganisationKtpFinancialYearsForm yourOrgKtpForm = new YourOrganisationKtpFinancialYearsForm(
-//                finances.getOrganisationSize(),
-//                finances.getYears().stream().map(year ->
-//                        new YourOrganisationKtpFinancialYearForm(
-//                                year.getYear(),
-//                                year.getTurnover(),
-//                                year.getPreTaxProfit(),
-//                                year.getCurrentAssets(),
-//                                year.getLiabilities(),
-//                                year.getShareholderValue(),
-//                                year.getLoans(),
-//                                year.getEmployees()
-//                        )
-//                ).collect(Collectors.toList()),
-//                finances.getGroupEmployees(),
-//                finances.getFinancialYearEnd());
-//        yourOrgKtpForm.setYourOrganisationDetailsReadOnlyForm(yourOrganisationDetailsReadOnlyForm);
-//        return  yourOrgKtpForm;
-//    }
 }

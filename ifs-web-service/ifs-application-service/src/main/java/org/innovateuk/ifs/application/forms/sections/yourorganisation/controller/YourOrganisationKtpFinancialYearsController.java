@@ -30,8 +30,6 @@ public class YourOrganisationKtpFinancialYearsController extends AbstractYourOrg
     @Override
     protected YourOrganisationKtpFinancialYearsForm populateForm(long applicationId, long organisationId) {
         OrganisationFinancesKtpYearsResource finances = yourOrganisationRestService.getOrganisationKtpYears(applicationId, organisationId).getSuccess();
-       // YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm = populateOrganisationDetails(applicationId, organisationId);
-       // return formPopulator.populate(finances, yourOrganisationDetailsReadOnlyForm);
         return formPopulator.populate(finances);
     }
 

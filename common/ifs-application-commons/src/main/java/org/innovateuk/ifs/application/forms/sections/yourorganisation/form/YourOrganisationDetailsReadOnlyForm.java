@@ -8,15 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class YourOrganisationDetailsReadOnlyForm {
+
     private String organisationName;
     private String registrationNumber;
     private AddressResource addressResource;
     private List<OrganisationSicCodeResource> sicCodes = new ArrayList<>();
     private boolean isOrgDetailedDisplayRequired;
-
-    //SIC code
-    //Registered address
-
 
     public String getOrganisationName() {
         return organisationName;
