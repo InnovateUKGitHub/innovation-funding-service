@@ -10,13 +10,28 @@ import org.innovateuk.ifs.application.forms.sections.yourorganisation.populator.
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.ApplicationYourOrganisationViewModel;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesKtpYearsResource;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.service.ApplicationYourOrganisationRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
+import java.util.Collections;
+
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.OrganisationFinancesKtpYearsResourceBuilder.newOrganisationFinancesKtpYearsResource;
+import static org.innovateuk.ifs.finance.builder.OrganisationFinancesWithoutGrowthTableResourceBuilder.newOrganisationFinancesWithoutGrowthTableResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -37,6 +52,11 @@ public class YourOrganisationKtpFinancialYearsControllerTest extends AbstractAsy
     @Mock
     private YourOrganisationKtpFinancialYearsFormPopulator formPopulator;
 
+    @Mock
+    private OrganisationRestService organisationRestService;
+
+    private OrganisationResource organisationResource;
+
     private long competitionId = 111L;
     private long applicationId = 123L;
     private long sectionId = 456L;
@@ -47,6 +67,15 @@ public class YourOrganisationKtpFinancialYearsControllerTest extends AbstractAsy
         return new YourOrganisationKtpFinancialYearsController();
     }
 
+    @Before
+    public void setup() {
+        organisationResource = newOrganisationResource()
+                .withId(organisationId)
+                .withName("SmithZone Ltd")
+                .withOrganisationType(BUSINESS.getId())
+                .build();
+    }
+
     @Test
     public void viewPageAsKta() throws Exception {
         OrganisationFinancesKtpYearsResource organisationFinancesKtpYearsResource = newOrganisationFinancesKtpYearsResource().build();
@@ -55,7 +84,8 @@ public class YourOrganisationKtpFinancialYearsControllerTest extends AbstractAsy
         YourOrganisationKtpFinancialYearsForm yourOrganisationKtpFinancialYearsForm = mock(YourOrganisationKtpFinancialYearsForm.class);
         YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm = mock(YourOrganisationDetailsReadOnlyForm.class);
 
-   //     when(commonFinancesViewModelPopulator.populate(organisationId, applicationId, sectionId, getLoggedInUser())).thenReturn(commonYourProjectFinancesViewModel);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));
+        when(commonFinancesViewModelPopulator.populate(organisationId, applicationId, sectionId, getLoggedInUser())).thenReturn(commonYourProjectFinancesViewModel);
         when(viewModelPopulator.populate(applicationId, competitionId, organisationId)).thenReturn(applicationYourOrganisationViewModel);
         when(yourOrganisationRestService.getOrganisationKtpYears(applicationId, organisationId)).thenReturn(ServiceResult.serviceSuccess(organisationFinancesKtpYearsResource));
         when(formPopulator.populate(organisationFinancesKtpYearsResource)).thenReturn(yourOrganisationKtpFinancialYearsForm);
@@ -78,6 +108,7 @@ public class YourOrganisationKtpFinancialYearsControllerTest extends AbstractAsy
         ApplicationYourOrganisationViewModel applicationYourOrganisationViewModel = mock(ApplicationYourOrganisationViewModel.class);
         YourOrganisationKtpFinancialYearsForm yourOrganisationKtpFinancialYearsForm = mock(YourOrganisationKtpFinancialYearsForm.class);
 
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));
         when(commonFinancesViewModelPopulator.populate(organisationId, applicationId, sectionId, getLoggedInUser())).thenReturn(commonYourProjectFinancesViewModel);
         when(viewModelPopulator.populate(applicationId, competitionId, organisationId)).thenReturn(applicationYourOrganisationViewModel);
         when(yourOrganisationRestService.getOrganisationKtpYears(applicationId, organisationId)).thenReturn(ServiceResult.serviceSuccess(organisationFinancesKtpYearsResource));

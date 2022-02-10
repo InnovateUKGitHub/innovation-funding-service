@@ -91,6 +91,7 @@ public class EditOrganisationDetailsControllerWithoutGrowthTableTest extends Bas
                 .withId(organisationId)
                 .withName("SmithZone Ltd")
                 .withOrganisationType(BUSINESS.getId())
+                .withCompaniesHouseNumber()
                 .build();
         organisationFinancesWithoutGrowthTableResource = newOrganisationFinancesWithoutGrowthTableResource()
                 .withOrganisationSize(OrganisationSize.SMALL)

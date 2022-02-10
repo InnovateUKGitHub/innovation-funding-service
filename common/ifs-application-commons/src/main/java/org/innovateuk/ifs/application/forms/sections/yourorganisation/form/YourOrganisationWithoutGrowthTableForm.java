@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
@@ -22,8 +21,6 @@ public class YourOrganisationWithoutGrowthTableForm {
     @NotNull(message = "{validation.field.must.not.be.blank}")
     @Max(value = Integer.MAX_VALUE, message = "{validation.standard.integer.max.value.format}")
     private Long headCount;
-
-    private YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm;
 
     YourOrganisationWithoutGrowthTableForm(
             OrganisationSize organisationSize,
@@ -60,13 +57,5 @@ public class YourOrganisationWithoutGrowthTableForm {
 
     public void setHeadCount(Long headCount) {
         this.headCount = headCount;
-    }
-
-    public YourOrganisationDetailsReadOnlyForm getYourOrganisationDetailsReadOnlyForm() {
-        return yourOrganisationDetailsReadOnlyForm;
-    }
-
-    public void setYourOrganisationDetailsReadOnlyForm(YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm) {
-        this.yourOrganisationDetailsReadOnlyForm = yourOrganisationDetailsReadOnlyForm;
     }
 }

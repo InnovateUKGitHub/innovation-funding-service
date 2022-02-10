@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.validation.constraints.LastFinancialYearEnd;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -38,8 +37,6 @@ public class YourOrganisationWithGrowthTableForm {
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
     private BigDecimal researchAndDevelopmentSpendAtLastFinancialYear;
-
-    private YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm;
 
     public YourOrganisationWithGrowthTableForm(
             OrganisationSize organisationSize,
@@ -117,13 +114,6 @@ public class YourOrganisationWithGrowthTableForm {
         this.researchAndDevelopmentSpendAtLastFinancialYear = researchAndDevelopmentSpendAtLastFinancialYear;
     }
 
-    public YourOrganisationDetailsReadOnlyForm getYourOrganisationDetailsReadOnlyForm() {
-        return yourOrganisationDetailsReadOnlyForm;
-    }
-
-    public void setYourOrganisationDetailsReadOnlyForm(YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm) {
-        this.yourOrganisationDetailsReadOnlyForm = yourOrganisationDetailsReadOnlyForm;
-    }
     @JsonIgnore
     public String getFinancialYearAndMonthString() {
         if (financialYearEnd != null) {

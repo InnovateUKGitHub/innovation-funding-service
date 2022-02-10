@@ -19,17 +19,4 @@ public class YourOrganisationWithGrowthTableFormPopulator {
                 finances.getAnnualExportAtLastFinancialYear(),
                 finances.getResearchAndDevelopmentSpendAtLastFinancialYear());
     }
-
-//    public YourOrganisationWithGrowthTableForm populate(OrganisationFinancesWithGrowthTableResource finances, YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm) {
-//        YourOrganisationWithGrowthTableForm yourOrganisationWithGrowthTableForm = new YourOrganisationWithGrowthTableForm(
-//                finances.getOrganisationSize(),
-//                finances.getFinancialYearEnd(),
-//                finances.getHeadCountAtLastFinancialYear(),
-//                finances.getAnnualTurnoverAtLastFinancialYear(),
-//                finances.getAnnualProfitsAtLastFinancialYear(),
-//                finances.getAnnualExportAtLastFinancialYear(),
-//                finances.getResearchAndDevelopmentSpendAtLastFinancialYear());
-//        yourOrganisationWithGrowthTableForm.setYourOrganisationDetailsReadOnlyForm(yourOrganisationDetailsReadOnlyForm);
-//        return yourOrganisationWithGrowthTableForm;
-//    }
 }

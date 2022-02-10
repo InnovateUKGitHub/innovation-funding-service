@@ -170,9 +170,7 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
     }
 
     private CommonYourProjectFinancesViewModel getCommonFinancesViewModel(long applicationId, long sectionId, long organisationId, UserResource user) {
-        CommonYourProjectFinancesViewModel commonYourProjectFinancesViewModel = commonFinancesViewModelPopulator.populate(organisationId, applicationId, sectionId, user);
-        commonYourProjectFinancesViewModel.setOrgDetailsForm(populateOrganisationDetails(organisationId));
-        return  commonYourProjectFinancesViewModel;
+        return commonFinancesViewModelPopulator.populate(organisationId, applicationId, sectionId, user);
     }
 
     private String redirectToYourFinances(long applicationId) {
@@ -180,12 +178,12 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
         return "redirect:" + String.format("%s%d/form/FINANCE", APPLICATION_BASE_URL, applicationId);
     }
 
-    public YourOrganisationDetailsReadOnlyForm populateOrganisationDetails(long organisationId) {
+    private YourOrganisationDetailsReadOnlyForm populateOrganisationDetails(long organisationId) {
         YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm = new YourOrganisationDetailsReadOnlyForm();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         yourOrganisationDetailsReadOnlyForm.setOrganisationName(organisation.getName());
-        if (organisation.getCompanyRegistrationNumber().isEmpty()) {
+        if (organisation.getCompanyRegistrationNumber() == null || organisation.getCompanyRegistrationNumber().isEmpty()) {
             yourOrganisationDetailsReadOnlyForm.setOrgDetailedDisplayRequired(false);
             yourOrganisationDetailsReadOnlyForm.setRegistrationNumber("");
             yourOrganisationDetailsReadOnlyForm.setAddressResource(null);

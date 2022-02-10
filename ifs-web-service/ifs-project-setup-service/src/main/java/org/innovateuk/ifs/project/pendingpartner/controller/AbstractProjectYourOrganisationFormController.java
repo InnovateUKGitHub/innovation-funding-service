@@ -138,7 +138,7 @@ public abstract class AbstractProjectYourOrganisationFormController<F> extends A
                 organisationId);
     }
 
-    public YourOrganisationDetailsReadOnlyForm populateOrganisationDetails(long organisationId) {
+    private YourOrganisationDetailsReadOnlyForm populateOrganisationDetails(long organisationId) {
         YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm = new YourOrganisationDetailsReadOnlyForm();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
