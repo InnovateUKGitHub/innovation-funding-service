@@ -1058,12 +1058,13 @@ the user should see page not found error
     the user should see the element     jQuery = h1:contains("Page not found")
     the user should see the element     jQUery = span:contains("${compUrl}")
 
-the user completes competition setup sssessors
-    the user clicks the button/link    link = Assessors
-    the user clicks the button twice   jQuery = label[for^="assessors"]:contains("3")
-    the user selects the radio button  hasAssessmentPanel  0
-    the user selects the radio button  hasInterviewStage  0
-    the user selects the radio button  averageAssessorScore  0
-    the user clicks the button/link    jQuery = button:contains("Done")
-    the user clicks the button/link    link = Back to competition details
-    the user should see the element    jQuery = div:contains("Assessors") ~ .task-status-complete
+the user completes competition setup assessors
+    the user clicks the button/link         link = Assessors
+    the user clicks the button twice        jQuery = label[for^="assessors"]:contains("3")
+    the user selects the radio button       hasAssessmentPanel  0
+    the user selects the radio button       hasInterviewStage  0
+    the user selects the radio button       averageAssessorScore  0
+    the user clicks the button/link         jQuery = button:contains("Done")
+    reload and check if element appears     link = Back to competition details
+    the user clicks the button/link         link = Back to competition details
+    the user should see the element         jQuery = div:contains("Assessors") ~ .task-status-complete

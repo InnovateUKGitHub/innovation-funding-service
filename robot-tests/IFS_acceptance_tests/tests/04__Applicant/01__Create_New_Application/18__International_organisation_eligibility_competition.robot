@@ -506,7 +506,7 @@ Correspondence address field validations
     [Documentation]     IFS - 7241
     [Tags]
     Given the user navigates to the page                                   ${server}/project-setup/project/${ProjectID}/details
-    when the user clicks the button/link                                   link = Correspondence address
+    When the user clicks the button/link                                   link = Correspondence address
     And the user check for correspondence address titles and info text
     And the user clicks the button/link                                    id = save-project-address-button
     Then the user should see field and summary validation messages
@@ -1043,9 +1043,9 @@ the user fills correspondence address data
     the user enters text to a text field            id = zipCode            ${zipCode}
 
 the user should see read only view of completed correspondence address details
-    the user should see the element     jQuery = td:contains("Calle 11, San Sebastian,")
-    the user should see the element     jQuery = td:contains("Argentina, X5187XAB")
-    the user should see the element     id = project-address-status
+    wait until keyword succeeds without screenshots  5 s   100 ms     the user should see the element     jQuery = td:contains("Calle 11, San Sebastian,")
+    wait until keyword succeeds without screenshots  5 s   100 ms     the user should see the element     jQuery = td:contains("Argentina, X5187XAB")
+    wait until keyword succeeds without screenshots  5 s   100 ms     the user should see the element     id = project-address-status
 
 the user should see field and summary validation messages
     the user should see a field and summary error   ${countryValidationMessage}
