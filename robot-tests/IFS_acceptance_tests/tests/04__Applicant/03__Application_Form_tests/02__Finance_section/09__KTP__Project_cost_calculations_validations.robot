@@ -297,7 +297,7 @@ Business user can view read-only view of your organisation details
    Given log in as a different user                     &{collaborator1_credentials}
    And the user clicks the button/link                  link = ${ktpapplication}
    And the user clicks the button/link                  link = View application
-   And the user clicks the button/link                  id = accordion-questions-heading-3-1
+   #And the user clicks the button/link                  id = accordion-questions-heading-3-1
    When the user clicks the button/link                 jQuery = div:contains("Ludlow") ~ a:contains("View finances")
    And the user clicks the button/link                  link = Your organisation
    Then the user should see the correct employee data
