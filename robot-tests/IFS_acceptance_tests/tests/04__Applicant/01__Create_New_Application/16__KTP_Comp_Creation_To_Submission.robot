@@ -103,6 +103,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-11129 Removal of Viability check for business
 ...
+...            IFS-11136 Business Finances: Employee Data
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -135,6 +137,7 @@ ${costsValue}                         123
 @{shareHolderFunds}                   20000   15000   10000
 @{loans}                              35000   40000   45000
 @{employees}                          2000    1500    1200
+@{employeesCorporate}                 4000    2500    3200
 ${associateSalaryTable}               associate-salary-costs-table
 ${associateDevelopmentTable}          associate-development-costs-table
 ${kbOrgNameTextBoxValidation}         Please enter a knowledge base organisation name.
@@ -476,7 +479,7 @@ New lead applicant opens the KTP Project costs Guidance links in the new window
     [Teardown]  the user marks the project costs complete after editing
 
 New lead applicant invites a new partner organisation user and fills in project finances
-    [Documentation]  IFS-7812  IFS-7814  IFS-9239
+    [Documentation]  IFS-7812  IFS-7814  IFS-9239  IFS-11136
     Given the user clicks the button/link                           link = Back to application overview
     When the lead invites a partner and accepted the invitation
     Then the user completes partner project finances                ${ktpApplicationTitle}  yes
@@ -1204,7 +1207,10 @@ the user fills financial overview section
              \    the user enters text to a text field     id = years[${a}].employees  ${ELEMENT}
              \    ${a} =   Evaluate   ${a} + 1
 
-    the user enters text to a text field     id = groupEmployees  ${group_employees}
+    ${a} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{employeesCorporate}
+             \    the user enters text to a text field     id = years[${a}].corporateGroupEmployees  ${ELEMENT}
+             \    ${a} =   Evaluate   ${a} + 1
 
 the user approves Eligibility
     [Arguments]  ${project}
