@@ -59,7 +59,7 @@ Lead applicant can view the correct project costs fields are displayed for the f
 Lead applicant edits the fec model to NO
     [Documentation]  IFS-9305  IFS-11142
     Given the user edits the KTP fec model     fecModelEnabled-no
-    When The user clicks the button/link       link = your fEC model
+    When The user clicks the button/link       link = Your fEC model
     Then the user can see the read-only page
     And The user clicks the button/link        link = Return to project finances
     And the user should see the element        jQuery = li:contains("Your fEC model") span:contains("Complete")
