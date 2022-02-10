@@ -25,7 +25,8 @@ public class YourOrganisationKtpFinancialYearsFormSaver {
                         year.getLiabilities(),
                         year.getShareholderValue(),
                         year.getLoans(),
-                        year.getEmployees()
+                        year.getEmployees(),
+                        year.getCorporateGroupEmployees()
                 )).collect(Collectors.toList()),
                 form.getGroupEmployees(),
                 form.getFinancialYearEnd());
