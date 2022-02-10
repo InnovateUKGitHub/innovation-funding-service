@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.KtpYearResource;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesKtpYearsResource;
 import org.innovateuk.ifs.finance.service.YourOrganisationRestService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -22,7 +23,7 @@ public class YourOrganisationKtpFinancialYearsFormSaver {
                         year.getTurnover(),
                         year.getPreTaxProfit(),
                         year.getCurrentAssets(),
-                        year.getLiabilities(),
+                        form.isKtpPhase2Enabled() ? year.getCurrentAssets() : year.getLiabilities(),
                         year.getShareholderValue(),
                         year.getLoans(),
                         year.getEmployees(),

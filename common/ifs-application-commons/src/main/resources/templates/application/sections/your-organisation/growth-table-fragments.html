@@ -171,6 +171,8 @@
 
 
         <fieldset class="govuk-fieldset">
+            <input type="hidden"
+                   th:field="*{ktpPhase2Enabled}" />
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-1">
                 <h2 class="govuk-fieldset__heading">Financial overview</h2>
             </legend>
@@ -194,10 +196,16 @@
                                             ktp-year(form=${form}, field='turnover', rowName='Turnover (£)', readOnly=${readOnly})" />
                     <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
                                             ktp-year(form=${form}, field='preTaxProfit', rowName='Net pre-tax profits (£)', readOnly=${readOnly})" />
-                    <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                            ktp-year(form=${form}, field='currentAssets', rowName='Net current assets (£)', readOnly=${readOnly})" />
-                    <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                            ktp-year(form=${form}, field='liabilities', rowName='Liabilities (£)', readOnly=${readOnly})" />
+                    <th:block th:if="${form.ktpPhase2Enabled}">
+                        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                                ktp-year(form=${form}, field='currentAssets', rowName='Liabilities (£) / Net current assets (£)', readOnly=${readOnly})" />
+                    </th:block>
+                    <th:block th:unless="${form.ktpPhase2Enabled}">
+                        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                                ktp-year(form=${form}, field='currentAssets', rowName='Net current assets (£)', readOnly=${readOnly})" />
+                        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                                ktp-year(form=${form}, field='liabilities', rowName='Liabilities (£)', readOnly=${readOnly})" />
+                    </th:block>
                     <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
                                             ktp-year(form=${form}, field='shareholderValue', rowName='Value of shareholder funds (£)', readOnly=${readOnly})" />
                     <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
