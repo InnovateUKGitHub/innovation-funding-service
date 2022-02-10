@@ -141,28 +141,27 @@ public abstract class AbstractProjectYourOrganisationFormController<F> extends A
     private YourOrganisationDetailsReadOnlyForm populateOrganisationDetails(long organisationId) {
         YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm = new YourOrganisationDetailsReadOnlyForm();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+            yourOrganisationDetailsReadOnlyForm.setOrganisationName(organisation.getName());
+            if (organisation.getCompanyRegistrationNumber() == null || organisation.getCompanyRegistrationNumber().isEmpty()) {
+                yourOrganisationDetailsReadOnlyForm.setOrgDetailedDisplayRequired(false);
+                yourOrganisationDetailsReadOnlyForm.setRegistrationNumber("");
+                yourOrganisationDetailsReadOnlyForm.setAddressResource(null);
+                yourOrganisationDetailsReadOnlyForm.setSicCodes(null);
+            } else {
+                yourOrganisationDetailsReadOnlyForm.setOrgDetailedDisplayRequired(true);
+                yourOrganisationDetailsReadOnlyForm.setRegistrationNumber(organisation.getCompanyRegistrationNumber());
+                AddressResource addressResource = OrganisationAddressRestService.getOrganisationRegisterdAddressById(organisation.getId())
+                        .andOnSuccessReturn(addresses -> addresses.stream()
+                                .findFirst()
+                                .map(OrganisationAddressResource::getAddress)
+                                .orElse(new AddressResource()))
+                        .getSuccess();
 
-        yourOrganisationDetailsReadOnlyForm.setOrganisationName(organisation.getName());
-        if (organisation.getCompanyRegistrationNumber().isEmpty()) {
-            yourOrganisationDetailsReadOnlyForm.setOrgDetailedDisplayRequired(false);
-            yourOrganisationDetailsReadOnlyForm.setRegistrationNumber("");
-            yourOrganisationDetailsReadOnlyForm.setAddressResource(null);
-            yourOrganisationDetailsReadOnlyForm.setSicCodes(null);
-        } else {
-            yourOrganisationDetailsReadOnlyForm.setOrgDetailedDisplayRequired(true);
-            yourOrganisationDetailsReadOnlyForm.setRegistrationNumber(organisation.getCompanyRegistrationNumber());
-            AddressResource addressResource =  OrganisationAddressRestService.getOrganisationRegisterdAddressById(organisation.getId())
-                    .andOnSuccessReturn(addresses -> addresses.stream()
-                            .findFirst()
-                            .map(OrganisationAddressResource::getAddress)
-                            .orElse(new AddressResource()))
-                    .getSuccess();
-
-            yourOrganisationDetailsReadOnlyForm.setAddressResource(addressResource);
-            if (organisation.getSicCodes() != null && !organisation.getSicCodes().isEmpty()) {
-                yourOrganisationDetailsReadOnlyForm.setSicCodes(organisation.getSicCodes());
+                yourOrganisationDetailsReadOnlyForm.setAddressResource(addressResource);
+                if (organisation.getSicCodes() != null && !organisation.getSicCodes().isEmpty()) {
+                    yourOrganisationDetailsReadOnlyForm.setSicCodes(organisation.getSicCodes());
+                }
             }
-        }
         return yourOrganisationDetailsReadOnlyForm;
     }
 
