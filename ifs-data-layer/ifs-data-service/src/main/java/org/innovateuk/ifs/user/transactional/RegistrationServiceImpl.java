@@ -204,7 +204,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         user.setLastName(userResource.getLastName());
         user.setEmail(userResource.getEmail());
         user.setPhoneNumber(userResource.getPhoneNumber());
-        user.setAllowMarketingEmails(userResource.getAllowMarketingEmails());
+        user.setAllowMarketingEmails(userResource.isAllowMarketingEmails());
         user.setRoles(newHashSet(userResource.getRoles()));
         if (userCreationResource.getInviteHash() != null) {
             Invite invite = allInviteRepository.getByHash(userCreationResource.getInviteHash());
