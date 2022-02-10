@@ -1,20 +1,16 @@
 package org.innovateuk.ifs.project.organisationdetails.edit.controller;
 
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationDetailsReadOnlyForm;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.organisationdetails.edit.viewmodel.ProjectOrganisationSizeViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.user.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,9 +41,6 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
     @Autowired
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
-    @Autowired
-    private org.innovateuk.ifs.user.service.OrganisationAddressRestService OrganisationAddressRestService;
-
     @GetMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
     @SecuredBySpring(value = "READ", description = "Ifs Admin and Project finance users can view edit organisation size page")
@@ -59,6 +52,7 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
         model.addAttribute("model", getViewModel(projectId, organisationId));
         model.addAttribute("form", form(projectId, organisationId));
         model.addAttribute("formFragment", formFragment());
+
         return TEMPLATE;
     }
 
@@ -111,32 +105,4 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
     protected abstract ServiceResult<Void> update(long projectId,
                                                   long organisationId,
                                                   F form);
-
-//    public YourOrganisationDetailsReadOnlyForm populateOrganisationDetails(long organisationId) {
-//        YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm = new YourOrganisationDetailsReadOnlyForm();
-//        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-//
-//        yourOrganisationDetailsReadOnlyForm.setOrganisationName(organisation.getName());
-//        if (organisation.getCompanyRegistrationNumber().isEmpty()) {
-//            yourOrganisationDetailsReadOnlyForm.setOrgDetailedDisplayRequired(false);
-//            yourOrganisationDetailsReadOnlyForm.setRegistrationNumber("");
-//            yourOrganisationDetailsReadOnlyForm.setAddressResource(null);
-//            yourOrganisationDetailsReadOnlyForm.setSicCodes(null);
-//        } else {
-//            yourOrganisationDetailsReadOnlyForm.setOrgDetailedDisplayRequired(true);
-//            yourOrganisationDetailsReadOnlyForm.setRegistrationNumber(organisation.getCompanyRegistrationNumber());
-//            AddressResource addressResource =  OrganisationAddressRestService.getOrganisationRegisterdAddressById(organisation.getId())
-//                    .andOnSuccessReturn(addresses -> addresses.stream()
-//                            .findFirst()
-//                            .map(OrganisationAddressResource::getAddress)
-//                            .orElse(new AddressResource()))
-//                    .getSuccess();
-//
-//            yourOrganisationDetailsReadOnlyForm.setAddressResource(addressResource);
-//            if (organisation.getSicCodes() != null && !organisation.getSicCodes().isEmpty()) {
-//                yourOrganisationDetailsReadOnlyForm.setSicCodes(organisation.getSicCodes());
-//            }
-//        }
-//        return yourOrganisationDetailsReadOnlyForm;
-//    }
 }

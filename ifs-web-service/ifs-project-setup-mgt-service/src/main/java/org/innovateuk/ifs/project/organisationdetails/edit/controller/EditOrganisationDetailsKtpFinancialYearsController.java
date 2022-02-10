@@ -1,16 +1,13 @@
 package org.innovateuk.ifs.project.organisationdetails.edit.controller;
 
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationDetailsReadOnlyForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsFormSaver;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesKtpYearsResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,9 +38,6 @@ public class EditOrganisationDetailsKtpFinancialYearsController extends Abstract
     protected String formFragment() {
         return "ktp-financial-years";
     }
-
-    @Autowired
-    private OrganisationRestService organisationRestService;
 
     @Override
     protected YourOrganisationKtpFinancialYearsForm form(long projectId, long organisationId) {

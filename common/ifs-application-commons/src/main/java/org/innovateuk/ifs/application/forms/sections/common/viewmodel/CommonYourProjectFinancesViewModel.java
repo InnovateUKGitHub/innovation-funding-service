@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.common.viewmodel;
 
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationDetailsReadOnlyForm;
 
 /**
  * A view model that captures attributes common to all of the Your project finances sections.
@@ -18,7 +17,6 @@ public class CommonYourProjectFinancesViewModel implements BaseAnalyticsViewMode
     private final boolean h2020;
     private final boolean procurementCompetition;
     private final boolean international;
-    private YourOrganisationDetailsReadOnlyForm orgDetailsForm;
 
 
     public CommonYourProjectFinancesViewModel(String financesUrl,
@@ -86,13 +84,5 @@ public class CommonYourProjectFinancesViewModel implements BaseAnalyticsViewMode
 
     public boolean isInternational() {
         return international;
-    }
-
-    public YourOrganisationDetailsReadOnlyForm getOrgDetailsForm() {
-        return orgDetailsForm;
-    }
-
-    public void setOrgDetailsForm(YourOrganisationDetailsReadOnlyForm orgDetailsForm) {
-        this.orgDetailsForm = orgDetailsForm;
     }
 }
