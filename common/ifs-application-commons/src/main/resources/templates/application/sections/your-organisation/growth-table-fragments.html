@@ -209,7 +209,7 @@
                 </table>
             </div>
 
-            <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Employee data</h2>
+            <h2 class="govuk-fieldset__legend--m govuk-!-margin-bottom-2">Employee data</h2>
             <div class="table-overflow">
                 <table class="govuk-table">
                     <thead class="govuk-table__head">
@@ -217,7 +217,7 @@
                         <th class="govuk-table__header table-header-width-40-percent">Section</th>
                         <th th:each="year : ${form.years}"
                             class="govuk-table__header table-header-width-20-percent govuk-table__header--numeric"
-                            th:text="${year.yearText}"></th>
+                            th:text="${form.ktpPhase2Enabled ? year.employeeDataYearText : year.yearText}"></th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
