@@ -1546,7 +1546,8 @@ the user checks the read-only page
     the user should see the element               jQuery = h3:contains("Your fEC certificate") ~ div:contains("Change")
     the user should see the element               jQuery = h3:contains("When does your fEC certificate expire?") ~ div p:contains("1 December 2500")
     the user should see the element               jQuery = h3:contains("When does your fEC certificate expire?") ~ div:contains("Change")
-    the user should see the element               jQuery = div:contains("Last updated: ${dayInNumber} ${monthWord}")
+    Wait Until Page Contains Without Screenshots  Last updated: ${dayInNumber} ${monthWord}
+#    the user should see the element               jQuery = div:contains("Last updated: ${dayInNumber} ${monthWord}")
     the user should see the element               link = Return to project finances
 
 the user should see the right values
@@ -1572,7 +1573,8 @@ the user checks the read-only page view
     the user should see the element               jQuery = h3:contains("Will you be using the full economic costing (fEC) funding model?") ~ div p:contains("Yes")
     the user should see the element               jQuery = h3:contains("Your fEC certificate") ~ div a:contains("${uploadedPdf} (opens in a new window)")
     the user should see the element               jQuery = h3:contains("When does your fEC certificate expire?") ~ div p:contains("1 December 2500")
-    the user should see the element               jQuery = div:contains("Last updated: ${dayInNumber} ${monthWord}")
+    Wait Until Page Contains Without Screenshots  Last updated: ${dayInNumber} ${monthWord}
+#    the user should see the element               jQuery = div:contains("Last updated: ${dayInNumber} ${monthWord}")
     the user should see the element               link = Return to project finances
 
 the user enters empty data into date fields
