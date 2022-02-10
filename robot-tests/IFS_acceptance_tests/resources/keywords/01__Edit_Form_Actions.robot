@@ -111,7 +111,7 @@ the user selects the option from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
     Wait Until Element Is Visible Without Screenshots    ${drop-down}
     Wait Until Element Is Enabled   ${drop-down}
-    wait until keyword succeeds without screenshots   30s   200ms   Select From List By Label    ${drop-down}    ${option}
+    wait until keyword succeeds without screenshots   30 s   200 ms    Select From List By Label    ${drop-down}    ${option}
     mouse out    ${drop-down}
     #Error checking
     the user should not see an error in the page
