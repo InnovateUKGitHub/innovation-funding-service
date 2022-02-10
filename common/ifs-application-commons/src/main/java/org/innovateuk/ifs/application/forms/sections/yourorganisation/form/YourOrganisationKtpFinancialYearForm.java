@@ -58,7 +58,7 @@ public class YourOrganisationKtpFinancialYearForm {
     }
 
     /* view logic */
-    public String getEmployeeDataYearText() {
+    public String getPhase2YearText() {
         switch (year) {
             case 0:
                 return "Latest Period";

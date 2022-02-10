@@ -187,7 +187,7 @@
                         <th class="govuk-table__header table-header-width-40-percent">Section</th>
                         <th th:each="year : ${form.years}"
                             class="govuk-table__header table-header-width-20-percent govuk-table__header--numeric"
-                            th:text="${year.yearText}"></th>
+                            th:text="${form.ktpPhase2Enabled ? year.phase2YearText : year.yearText}"></th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -217,7 +217,7 @@
                         <th class="govuk-table__header table-header-width-40-percent">Section</th>
                         <th th:each="year : ${form.years}"
                             class="govuk-table__header table-header-width-20-percent govuk-table__header--numeric"
-                            th:text="${form.ktpPhase2Enabled ? year.employeeDataYearText : year.yearText}"></th>
+                            th:text="${form.ktpPhase2Enabled ? year.phase2YearText : year.yearText}"></th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
