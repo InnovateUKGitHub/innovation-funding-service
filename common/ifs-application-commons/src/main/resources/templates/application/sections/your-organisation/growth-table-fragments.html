@@ -46,7 +46,7 @@
         <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
                                     organisation-size(form=${form}, model=${model}, readOnly=${readOnly})" />
 
-
+        <th:block th:unless="${readOnly or model.internal}">
         <th:block th:insert="fragments/form-elements/date ::
                 month-and-year(
                     legend='End of last financial year',
@@ -58,6 +58,7 @@
                     readOnly=${readOnly},
                     pastDate=true,
                 )" />
+        </th:block>
 
         <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-0">
@@ -302,7 +303,7 @@
     <th:block th:fragment="organisation-size-alert(model)">
         <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.showOrganisationSizeAlert}">
             <h2 class="govuk-heading-s govuk-!-margin-0">Organisation size determines funding</h2>
-            <p class="govuk-body">The size of your organisation determines the level of funding you are eligible for.</p>
+            <p class="govuk-body">The organisation size is used to calculate your funding level. Changing this selection will reset your funding level.</p>
         </div>
     </th:block>
 

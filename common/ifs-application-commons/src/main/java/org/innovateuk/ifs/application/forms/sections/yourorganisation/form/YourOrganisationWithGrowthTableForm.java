@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.validation.constraints.LastFinancialYearEnd;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -7,6 +8,8 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.YearMonth;
+import java.time.format.TextStyle;
+import java.util.Locale;
 
 /**
  * Form used to capture "Your organisation" information when a growth table is required.
@@ -120,5 +123,13 @@ public class YourOrganisationWithGrowthTableForm {
 
     public void setYourOrganisationDetailsReadOnlyForm(YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm) {
         this.yourOrganisationDetailsReadOnlyForm = yourOrganisationDetailsReadOnlyForm;
+    }
+    @JsonIgnore
+    public String getFinancialYearAndMonthString() {
+        if (financialYearEnd != null) {
+            return financialYearEnd.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " " +
+                    financialYearEnd.getYear();
+        }
+        return "";
     }
 }

@@ -86,7 +86,7 @@ public class ApplicationYourOrganisationViewModel implements BaseAnalyticsViewMo
         String you = internal ? "the organisation" : "you";
         String url = fundingRules == FundingRules.STATE_AID ? STATE_AID_URL : NON_STATE_AID_URL;
 
-        String fundingLevelDependsOnOrganisationSizeMessage = String.format("<p class=\"govuk-body\">You must tell us the size of %s to determine the level of funding %s are eligible for.</p>", organisation, you);
+        String fundingLevelDependsOnOrganisationSizeMessage = String.format("<p class=\"govuk-body\">The size of %s determines the level of funding  %s are eligible for.</p>", organisation, you);
         String sizeDefinition = String.format("<p class=\"govuk-body\">Please use our <a href=\"%s\">guidance</a>(opens in a new window) to determine %s.</p>", url, organisation);
 
         if (maximumFundingLevelConstant) {
@@ -94,7 +94,6 @@ public class ApplicationYourOrganisationViewModel implements BaseAnalyticsViewMo
         } else {
             return fundingLevelDependsOnOrganisationSizeMessage + sizeDefinition;
         }
-
     }
 
     public YourOrganisationDetailsReadOnlyForm getOrgDetailsForm() {
@@ -104,4 +103,5 @@ public class ApplicationYourOrganisationViewModel implements BaseAnalyticsViewMo
     public void setOrgDetailsForm(YourOrganisationDetailsReadOnlyForm orgDetailsForm) {
         this.orgDetailsForm = orgDetailsForm;
     }
+
 }
