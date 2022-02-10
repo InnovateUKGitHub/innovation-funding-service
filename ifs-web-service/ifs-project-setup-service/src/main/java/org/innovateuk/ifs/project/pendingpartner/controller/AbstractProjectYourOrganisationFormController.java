@@ -1,13 +1,20 @@
 package org.innovateuk.ifs.project.pendingpartner.controller;
 
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationDetailsReadOnlyForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.ApplicationYourOrganisationViewModel;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.pendingpartner.populator.YourOrganisationViewModelPopulator;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
+import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationAddressRestService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
@@ -33,6 +40,10 @@ public abstract class AbstractProjectYourOrganisationFormController<F> extends A
     private YourOrganisationViewModelPopulator viewModelPopulator;
     @Autowired
     private PendingPartnerProgressRestService pendingPartnerProgressRestService;
+    @Autowired
+    private OrganisationRestService organisationRestService;
+    @Autowired
+    private OrganisationAddressRestService OrganisationAddressRestService;
 
     protected abstract String redirectToViewPage(long projectId, long organisationId);
     protected abstract F populateForm(long projectId, long organisationId);
@@ -116,7 +127,9 @@ public abstract class AbstractProjectYourOrganisationFormController<F> extends A
     }
 
     private ApplicationYourOrganisationViewModel getViewModel(long projectId, long organisationId, UserResource user) {
-        return viewModelPopulator.populate(projectId, organisationId, user);
+        ApplicationYourOrganisationViewModel applicationYourOrganisationViewModel = viewModelPopulator.populate(projectId, organisationId, user);
+        applicationYourOrganisationViewModel.setOrgDetailsForm(populateOrganisationDetails(organisationId));
+        return  applicationYourOrganisationViewModel;
     }
 
     private String redirectToLandingPage(long projectId, long organisationId) {
@@ -124,4 +137,34 @@ public abstract class AbstractProjectYourOrganisationFormController<F> extends A
                 projectId,
                 organisationId);
     }
+
+    public YourOrganisationDetailsReadOnlyForm populateOrganisationDetails(long organisationId) {
+        YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm = new YourOrganisationDetailsReadOnlyForm();
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+
+        yourOrganisationDetailsReadOnlyForm.setOrganisationName(organisation.getName());
+        if (organisation.getCompanyRegistrationNumber().isEmpty()) {
+            yourOrganisationDetailsReadOnlyForm.setOrgDetailedDisplayRequired(false);
+            yourOrganisationDetailsReadOnlyForm.setRegistrationNumber("");
+            yourOrganisationDetailsReadOnlyForm.setAddressResource(null);
+            yourOrganisationDetailsReadOnlyForm.setSicCodes(null);
+        } else {
+            yourOrganisationDetailsReadOnlyForm.setOrgDetailedDisplayRequired(true);
+            yourOrganisationDetailsReadOnlyForm.setRegistrationNumber(organisation.getCompanyRegistrationNumber());
+            AddressResource addressResource =  OrganisationAddressRestService.getOrganisationRegisterdAddressById(organisation.getId())
+                    .andOnSuccessReturn(addresses -> addresses.stream()
+                            .findFirst()
+                            .map(OrganisationAddressResource::getAddress)
+                            .orElse(new AddressResource()))
+                    .getSuccess();
+
+            yourOrganisationDetailsReadOnlyForm.setAddressResource(addressResource);
+            if (organisation.getSicCodes() != null && !organisation.getSicCodes().isEmpty()) {
+                yourOrganisationDetailsReadOnlyForm.setSicCodes(organisation.getSicCodes());
+            }
+        }
+        return yourOrganisationDetailsReadOnlyForm;
+    }
+
+
 }

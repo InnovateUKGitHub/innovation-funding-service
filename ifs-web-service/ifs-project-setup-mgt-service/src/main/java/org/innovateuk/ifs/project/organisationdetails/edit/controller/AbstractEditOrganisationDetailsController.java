@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.project.organisationdetails.edit.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationDetailsReadOnlyForm;
-import org.innovateuk.ifs.application.service.ApplicationOrganisationAddressRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -58,11 +56,9 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
             @PathVariable long organisationId,
             Model model) {
 
-        YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm = populateOrganisationDetails(organisationId);
         model.addAttribute("model", getViewModel(projectId, organisationId));
         model.addAttribute("form", form(projectId, organisationId));
         model.addAttribute("formFragment", formFragment());
-        model.addAttribute("orgDetailsForm", yourOrganisationDetailsReadOnlyForm);
         return TEMPLATE;
     }
 
@@ -116,31 +112,31 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
                                                   long organisationId,
                                                   F form);
 
-    public YourOrganisationDetailsReadOnlyForm populateOrganisationDetails(long organisationId) {
-        YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm = new YourOrganisationDetailsReadOnlyForm();
-        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-
-        yourOrganisationDetailsReadOnlyForm.setOrganisationName(organisation.getName());
-        if (organisation.getCompanyRegistrationNumber().isEmpty()) {
-            yourOrganisationDetailsReadOnlyForm.setOrgDetailedDisplayRequired(false);
-            yourOrganisationDetailsReadOnlyForm.setRegistrationNumber("");
-            yourOrganisationDetailsReadOnlyForm.setAddressResource(null);
-            yourOrganisationDetailsReadOnlyForm.setSicCodes(null);
-        } else {
-            yourOrganisationDetailsReadOnlyForm.setOrgDetailedDisplayRequired(true);
-            yourOrganisationDetailsReadOnlyForm.setRegistrationNumber(organisation.getCompanyRegistrationNumber());
-            AddressResource addressResource =  OrganisationAddressRestService.getOrganisationRegisterdAddressById(organisation.getId())
-                    .andOnSuccessReturn(addresses -> addresses.stream()
-                            .findFirst()
-                            .map(OrganisationAddressResource::getAddress)
-                            .orElse(new AddressResource()))
-                    .getSuccess();
-
-            yourOrganisationDetailsReadOnlyForm.setAddressResource(addressResource);
-            if (organisation.getSicCodes() != null && !organisation.getSicCodes().isEmpty()) {
-                yourOrganisationDetailsReadOnlyForm.setSicCodes(organisation.getSicCodes());
-            }
-        }
-        return yourOrganisationDetailsReadOnlyForm;
-    }
+//    public YourOrganisationDetailsReadOnlyForm populateOrganisationDetails(long organisationId) {
+//        YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm = new YourOrganisationDetailsReadOnlyForm();
+//        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+//
+//        yourOrganisationDetailsReadOnlyForm.setOrganisationName(organisation.getName());
+//        if (organisation.getCompanyRegistrationNumber().isEmpty()) {
+//            yourOrganisationDetailsReadOnlyForm.setOrgDetailedDisplayRequired(false);
+//            yourOrganisationDetailsReadOnlyForm.setRegistrationNumber("");
+//            yourOrganisationDetailsReadOnlyForm.setAddressResource(null);
+//            yourOrganisationDetailsReadOnlyForm.setSicCodes(null);
+//        } else {
+//            yourOrganisationDetailsReadOnlyForm.setOrgDetailedDisplayRequired(true);
+//            yourOrganisationDetailsReadOnlyForm.setRegistrationNumber(organisation.getCompanyRegistrationNumber());
+//            AddressResource addressResource =  OrganisationAddressRestService.getOrganisationRegisterdAddressById(organisation.getId())
+//                    .andOnSuccessReturn(addresses -> addresses.stream()
+//                            .findFirst()
+//                            .map(OrganisationAddressResource::getAddress)
+//                            .orElse(new AddressResource()))
+//                    .getSuccess();
+//
+//            yourOrganisationDetailsReadOnlyForm.setAddressResource(addressResource);
+//            if (organisation.getSicCodes() != null && !organisation.getSicCodes().isEmpty()) {
+//                yourOrganisationDetailsReadOnlyForm.setSicCodes(organisation.getSicCodes());
+//            }
+//        }
+//        return yourOrganisationDetailsReadOnlyForm;
+//    }
 }

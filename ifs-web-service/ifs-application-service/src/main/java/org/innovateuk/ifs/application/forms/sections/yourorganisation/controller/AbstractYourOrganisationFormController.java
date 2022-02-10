@@ -2,15 +2,12 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.controlle
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.checkerframework.checker.units.qual.A;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationDetailsReadOnlyForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.populator.ApplicationYourOrganisationViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.ApplicationYourOrganisationViewModel;
-import org.innovateuk.ifs.application.service.ApplicationOrganisationAddressRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
@@ -19,7 +16,6 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationAddressRestService;
@@ -32,8 +28,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
@@ -79,11 +73,9 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
         Future<ApplicationYourOrganisationViewModel> viewModelRequest = async(() ->
                 getViewModel(applicationId, competitionId, organisationId));
 
-        YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm = populateOrganisationDetails(organisationId);
         Future<F> formRequest = async(() ->
             populateForm(applicationId, organisationId)
         );
-
 
         model.addAttribute("commonFinancesModel", commonViewModelRequest);
         model.addAttribute("model", viewModelRequest);
@@ -178,7 +170,9 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
     }
 
     private CommonYourProjectFinancesViewModel getCommonFinancesViewModel(long applicationId, long sectionId, long organisationId, UserResource user) {
-        return commonFinancesViewModelPopulator.populate(organisationId, applicationId, sectionId, user);
+        CommonYourProjectFinancesViewModel commonYourProjectFinancesViewModel = commonFinancesViewModelPopulator.populate(organisationId, applicationId, sectionId, user);
+        commonYourProjectFinancesViewModel.setOrgDetailsForm(populateOrganisationDetails(organisationId));
+        return  commonYourProjectFinancesViewModel;
     }
 
     private String redirectToYourFinances(long applicationId) {

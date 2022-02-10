@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.controlle
 import org.innovateuk.ifs.AbstractAsyncWaitMockMVCTest;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationDetailsReadOnlyForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.populator.ApplicationYourOrganisationViewModelPopulator;
@@ -52,8 +53,9 @@ public class YourOrganisationKtpFinancialYearsControllerTest extends AbstractAsy
         CommonYourProjectFinancesViewModel commonYourProjectFinancesViewModel = mock(CommonYourProjectFinancesViewModel.class);
         ApplicationYourOrganisationViewModel applicationYourOrganisationViewModel = mock(ApplicationYourOrganisationViewModel.class);
         YourOrganisationKtpFinancialYearsForm yourOrganisationKtpFinancialYearsForm = mock(YourOrganisationKtpFinancialYearsForm.class);
+        YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm = mock(YourOrganisationDetailsReadOnlyForm.class);
 
-        when(commonFinancesViewModelPopulator.populate(organisationId, applicationId, sectionId, getLoggedInUser())).thenReturn(commonYourProjectFinancesViewModel);
+   //     when(commonFinancesViewModelPopulator.populate(organisationId, applicationId, sectionId, getLoggedInUser())).thenReturn(commonYourProjectFinancesViewModel);
         when(viewModelPopulator.populate(applicationId, competitionId, organisationId)).thenReturn(applicationYourOrganisationViewModel);
         when(yourOrganisationRestService.getOrganisationKtpYears(applicationId, organisationId)).thenReturn(ServiceResult.serviceSuccess(organisationFinancesKtpYearsResource));
         when(formPopulator.populate(organisationFinancesKtpYearsResource)).thenReturn(yourOrganisationKtpFinancialYearsForm);

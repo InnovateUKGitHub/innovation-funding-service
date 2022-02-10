@@ -3,9 +3,7 @@ package org.innovateuk.ifs.project.pendingpartner.controller;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsFormSaver;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +24,6 @@ public class ProjectYourOrganisationKtpFinancialYearsController extends Abstract
     private ProjectYourOrganisationRestService yourOrganisationRestService;
     @Autowired
     private YourOrganisationKtpFinancialYearsFormSaver saver;
-    @Autowired
-    private OrganisationRestService organisationRestService;
 
     @Override
     protected String redirectToViewPage(long projectId, long organisationId) {
