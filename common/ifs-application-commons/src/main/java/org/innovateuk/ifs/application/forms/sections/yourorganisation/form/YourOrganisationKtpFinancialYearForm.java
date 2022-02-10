@@ -56,4 +56,18 @@ public class YourOrganisationKtpFinancialYearForm {
             return "Year " + (year + 1);
         }
     }
+
+    /* view logic */
+    public String getPhase2YearText() {
+        switch (year) {
+            case 0:
+                return "Latest Period";
+            case 1:
+                return "Last audited year";
+            case 2:
+                return "Prior audited year";
+            default:
+                return "Year " + (year + 1);
+        }
+    }
 }
