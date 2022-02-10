@@ -233,12 +233,6 @@ Business user can view read-only view of the project cost table in finance overv
    And the user clicks the button/link                                 link = Finances overview
    Then the user should see the correct data in the finance tables
 
-Business user can view read-only view of your organisation details
-   [Documentation]   IFS-11136
-   When the user clicks the button/link                 jQuery = div:contains("Ludlow") ~ a:contains("View finances")
-   And the user clicks the button/link                  link = Your organisation
-   Then the user should see the correct employee data
-
 KTA user assigned to application can view the read-only view for 'No' selected fEC declaration
     [Documentation]  IFS-9246
     [Setup]  knowledge based applicant invites KTA user to the application
@@ -297,6 +291,15 @@ KB can view the project cost tabel in the print view
     When the user clicks the button/link                                                link = Print application
     Then the user should see the correct values in project cost table in print view
     [Teardown]   the user closes the last opened tab
+
+Business user can view read-only view of your organisation details
+   [Documentation]   IFS-11136
+   Given log in as a different user                     &{collaborator1_credentials}
+   And the user clicks the button/link                  link = ${KTPapplication}
+   And the user clicks the button/link                  link = Finances overview
+   When the user clicks the button/link                 jQuery = div:contains("Ludlow") ~ a:contains("View finances")
+   And the user clicks the button/link                  link = Your organisation
+   Then the user should see the correct employee data
 
 *** Keywords ***
 the user enters T&S costs
