@@ -43,7 +43,7 @@ public abstract class AbstractProjectYourOrganisationFormController<F> extends A
     @Autowired
     private OrganisationRestService organisationRestService;
     @Autowired
-    private OrganisationAddressRestService OrganisationAddressRestService;
+    private OrganisationAddressRestService organisationAddressRestService;
 
     protected abstract String redirectToViewPage(long projectId, long organisationId);
     protected abstract F populateForm(long projectId, long organisationId);
@@ -150,7 +150,7 @@ public abstract class AbstractProjectYourOrganisationFormController<F> extends A
             } else {
                 yourOrganisationDetailsReadOnlyForm.setOrgDetailedDisplayRequired(true);
                 yourOrganisationDetailsReadOnlyForm.setRegistrationNumber(organisation.getCompanyRegistrationNumber());
-                AddressResource addressResource = OrganisationAddressRestService.getOrganisationRegisterdAddressById(organisation.getId())
+                AddressResource addressResource = organisationAddressRestService.getOrganisationRegisterdAddressById(organisation.getId())
                         .andOnSuccessReturn(addresses -> addresses.stream()
                                 .findFirst()
                                 .map(OrganisationAddressResource::getAddress)
@@ -164,6 +164,4 @@ public abstract class AbstractProjectYourOrganisationFormController<F> extends A
             }
         return yourOrganisationDetailsReadOnlyForm;
     }
-
-
 }

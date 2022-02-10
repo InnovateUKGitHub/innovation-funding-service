@@ -46,7 +46,7 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
     @Autowired
     private OrganisationRestService organisationRestService;
     @Autowired
-    private OrganisationAddressRestService OrganisationAddressRestService;
+    private OrganisationAddressRestService organisationAddressRestService;
 
 
     protected abstract String redirectToViewPage(long applicationId, long competitionId, long organisationId, long sectionId);
@@ -191,7 +191,7 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
         } else {
             yourOrganisationDetailsReadOnlyForm.setOrgDetailedDisplayRequired(true);
             yourOrganisationDetailsReadOnlyForm.setRegistrationNumber(organisation.getCompanyRegistrationNumber());
-            AddressResource addressResource =  OrganisationAddressRestService.getOrganisationRegisterdAddressById(organisation.getId())
+            AddressResource addressResource =  organisationAddressRestService.getOrganisationRegisterdAddressById(organisation.getId())
                     .andOnSuccessReturn(addresses -> addresses.stream()
                             .findFirst()
                             .map(OrganisationAddressResource::getAddress)
