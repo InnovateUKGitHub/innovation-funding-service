@@ -195,6 +195,7 @@ Project finance user can see the approved non-FEC cost categories in the GOL
 
 *** Keywords ***
 Custom Suite Setup
+    Set predefined date variables
     Connect to Database                    @{database}
     The user logs-in in new browser        &{ktpLead}
     the user clicks the button/link        link = ${ktpApplication}
