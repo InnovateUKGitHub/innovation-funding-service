@@ -178,7 +178,7 @@ public class OrganisationDetailsKtpFinancialYearsControllerTest extends BaseCont
     }
 
     private OrganisationFinancesKtpYearsResource getFinances() {
-        return new OrganisationFinancesKtpYearsResource(OrganisationSize.SMALL, emptyList(), 6L, YearMonth.now());
+        return new OrganisationFinancesKtpYearsResource(1L, OrganisationSize.SMALL, emptyList(), 6L, "", YearMonth.now());
     }
 
     private ProjectResource getProject() {

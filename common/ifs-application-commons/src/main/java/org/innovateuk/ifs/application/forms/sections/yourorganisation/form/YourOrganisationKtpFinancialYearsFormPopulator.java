@@ -32,6 +32,8 @@ public class YourOrganisationKtpFinancialYearsFormPopulator {
                                 year.getCorporateGroupEmployees()
                         )
                     ).collect(Collectors.toList()),
+                finances.getHasAdditionalInfoSection(),
+                finances.getAdditionalInfo(),
                 finances.getGroupEmployees(),
                 finances.getFinancialYearEnd());
     }

@@ -11,6 +11,7 @@ import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestSer
 import org.innovateuk.ifs.project.organisationdetails.edit.viewmodel.ProjectOrganisationSizeViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -62,6 +63,7 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
     public String save(
             @PathVariable long projectId,
             @PathVariable long organisationId,
+            UserResource loggedInUser,
             @Valid @ModelAttribute("form") F form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
@@ -75,7 +77,7 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
         Supplier<String> successHandler = () -> redirectToOrganisationDetails(projectId, organisationId);
 
         return validationHandler.failNowOrSucceedWith(failureHandler,() -> {
-             validationHandler.addAnyErrors(update(projectId, organisationId, form));
+             validationHandler.addAnyErrors(update(projectId, organisationId, loggedInUser.getId(), form));
              return validationHandler.failNowOrSucceedWith(failureHandler, successHandler);
         });
     }
@@ -104,5 +106,6 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
 
     protected abstract ServiceResult<Void> update(long projectId,
                                                   long organisationId,
+                                                  long userId,
                                                   F form);
 }

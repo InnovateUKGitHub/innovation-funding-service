@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder.aFormInput;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.GuidanceRowBuilder.aGuidanceRow;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
@@ -35,6 +36,9 @@ import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 public class KtpTemplate implements FundingTypeTemplate {
 
     private static final Integer MAXIMUM_ASSESSOR_SCORE = 10;
+
+    @Value("${ifs.ktp.phase2.enabled}")
+    private Boolean ktpPhase2Enabled;
 
     @Value("${ifs.ktp.fec.finance.model.enabled}")
     private boolean fecFinanceModel;
@@ -58,7 +62,7 @@ public class KtpTemplate implements FundingTypeTemplate {
                     if (fecFinanceModel) {
                         financeSection.getChildSections().stream().filter(childSection ->
                                 childSection.getName().equals("Your project finances")).findAny().ifPresent(yourProjectFinancesSection ->
-                                yourProjectFinancesSection.withChildSections(fecChildSections()));
+                                yourProjectFinancesSection.withChildSections(ktpPhase2Enabled ? fecChildSectionsPhase2() : fecChildSections()));
                     }
                 });
 
@@ -102,6 +106,48 @@ public class KtpTemplate implements FundingTypeTemplate {
                         .withQuestions(newArrayList(
                                 aQuestionWithMultipleStatuses()
                         )))
+                ;
+
+    }
+
+    public List<SectionBuilder> fecChildSectionsPhase2() {
+        return
+                newArrayList(
+                        aSubSection()
+                                .withName("Your fEC model")
+                                .withType(SectionType.FEC_COSTS_FINANCES)
+                                .withQuestions(newArrayList(
+                                        aQuestionWithMultipleStatuses())),
+                        aSubSection()
+                                .withName("Your funding")
+                                .withType(SectionType.FUNDING_FINANCES)
+                                .withQuestions(newArrayList(
+                                        aQuestionWithMultipleStatuses()
+                                )),
+                        aSubSection()
+                                .withName("Your project costs")
+                                .withType(SectionType.PROJECT_COST_FINANCES)
+                                .withQuestions(newArrayList(
+                                        aQuestionWithMultipleStatuses()
+                                )),
+                        aSubSection()
+                                .withName("Your project location")
+                                .withType(SectionType.PROJECT_LOCATION)
+                                .withQuestions(newArrayList(
+                                        aQuestionWithMultipleStatuses()
+                                )),
+                        aSubSection()
+                                .withName("Your organisation")
+                                .withType(SectionType.ORGANISATION_FINANCES)
+                                .withQuestions(newArrayList(
+                                        aQuestionWithMultipleStatuses()
+                                                .withFormInputs(asList(aFormInput()
+                                                                .withDescription("Additional Information")
+                                                                .withType(FormInputType.TEXTAREA)
+                                                                .withScope(FormInputScope.APPLICATION)
+                                                                .withActive(true)
+                                                                .withWordCount(400)))
+                                )))
                 ;
 
     }

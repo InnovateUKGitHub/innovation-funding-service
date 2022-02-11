@@ -41,7 +41,7 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
     protected abstract String redirectToViewPage(long applicationId, long competitionId, long organisationId, long sectionId);
     protected abstract F populateForm(long applicationId, long organisationId);
     protected abstract String formFragment();
-    protected abstract void update(long applicationId, long organisationId, F form);
+    protected abstract void update(long applicationId, long organisationId, long userId, F form);
 
 
     @GetMapping
@@ -80,9 +80,10 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
     public String updateWithGrowthTable(
             @PathVariable long applicationId,
             @PathVariable long organisationId,
+            UserResource loggedInUser,
             @ModelAttribute F form) {
 
-        update(applicationId, organisationId, form);
+        update(applicationId, organisationId, loggedInUser.getId(), form);
         return redirectToYourFinances(applicationId);
     }
 
@@ -93,9 +94,10 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
     JsonNode autosaveWithGrowthTable(
             @PathVariable long applicationId,
             @PathVariable long organisationId,
+            UserResource loggedInUser,
             @ModelAttribute F form) {
 
-        update(applicationId, organisationId, form);
+        update(applicationId, organisationId, loggedInUser.getId(), form);
         return new ObjectMapper().createObjectNode();
     }
 
@@ -125,7 +127,7 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
 
         Supplier<String> successHandler = () -> {
 
-            update(applicationId, organisationId, form);
+            update(applicationId, organisationId, loggedInUser.getId(), form);
 
             ProcessRoleResource processRole = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
             ValidationMessages validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());

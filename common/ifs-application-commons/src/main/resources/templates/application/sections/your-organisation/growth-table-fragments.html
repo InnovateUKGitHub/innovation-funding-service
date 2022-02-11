@@ -176,7 +176,10 @@
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-1">
                 <h2 class="govuk-fieldset__heading">Financial overview</h2>
             </legend>
-            <span th:unless="${readOnly}" class="govuk-hint">Enter your organisation's audited figures for the last 3 financial years.</span><br>
+            <span th:unless="${readOnly}" class="govuk-hint">
+                <th:block th:if="${form.ktpPhase2Enabled}">Enter your organisation's most recent accounts. Management accounts are acceptable for the latest account period. Audited accounts should be provided for previous periods.</th:block>
+                <th:block th:unless="${form.ktpPhase2Enabled}">Enter your organisation's audited figures for the last 3 financial years.</th:block>
+            </span><br>
             <input type="hidden"
                    th:each="year, iter : ${form.years}"
                    th:field="*{years[__${iter.index}__].year}" />
@@ -214,6 +217,101 @@
                     </tbody>
                 </table>
             </div>
+
+            <th:block th:if="${form.ktpPhase2Enabled}">
+                <input type="hidden"
+                       th:field="*{hasAdditionalInfoSection}" />
+
+                <th:block th:if="${readOnly && form.hasAdditionalInfoSection}">
+                    <div class="govuk-form-group govuk-!-margin-bottom-6">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-1">
+                            <h2 class="govuk-fieldset__heading ">Additional information</h2>
+                        </legend>
+                        <p class="govuk-body govuk-!-margin-bottom-6">
+                            <th:block th:text="${form.additionalInfo}"></th:block>
+                        </p>
+
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-1">
+                            <h2 class="govuk-fieldset__heading ">Attachments</h2>
+                        </legend>
+
+                        <!-- TODO multi file upload -->
+                        <th:block th:with="maxSize='10 MB'"
+                                  th:insert="question-type/types :: fileupload-fragment(${readOnly ? 'readonly' : 'edit'},
+                                                            @{/application/{applicationId}/form/question/{questionId}/grant-agreement/download(applicationId=${model.applicationId},questionId=1)},
+                                                            ${form.additionalFile},
+                                                            additionalFile,
+                                                            additionalFile,
+                                                            true,
+                                                            removeAdditionalInfo,
+                                                            uploadAdditionalInfo)"/>
+                    </div>
+                </th:block>
+
+                <th:block th:if="${!readOnly && form.hasAdditionalInfoSection}">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('additionalInfo')} ? 'govuk-form-group--error'">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-1">
+                            <h2 class="govuk-fieldset__heading">Additional information</h2>
+                            <div class="govuk-hint">
+                                If the accounts show any of the following:
+                                <ul class="govuk-list--bullet">
+                                    <li>declining turnover</li>
+                                    <li>low net profit pre-tax</li>
+                                    <li>negative liquidity</li>
+                                    <li>high debt/equity</li>
+                                    <li>growth in long term loans</li>
+                                </ul>
+                                Provide details as to how the Company will be able to afford the project. You can provide separate attachments if necessary.
+                            </div>
+                        </legend>
+
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('additionalInfo')}"
+                              th:text="${err}"/>
+                        <div class="textarea-wrapped word-count" th:with="wordCount=400">
+                            <label class="govuk-visually-hidden"></label>
+                            <textarea class="govuk-textarea"
+                                      data-editor="md"
+                                      maxlength="5000"
+                                      th:field="*{additionalInfo}"
+                                      th:attr="data-max_words=${wordCount},
+                                  data-maxwordslength=5000,
+                                  data-maxwordslength-errormessage=${'Maximum word count exceeded. Please reduce your word count to ' + wordCount + '.'},
+                                  data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
+                                      id="comments"></textarea>
+                            <div class="textarea-footer" th:with="content=*{additionalInfo}" aria-live="polite" aria-atomic="true" role="status">
+                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${400}, currentWordsLeft=${#ifsUtil.wordsRemaining(400, content)})" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="upload-additional" class="upload-section " style="background:inherit;">
+                        <details class="govuk-details govuk-!-margin-bottom-1" role="group">
+                            <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text">What can I upload?</span>
+                            </summary>
+                            <div class="govuk-details__text">
+                                <p class="govuk-body govuk-!-margin-bottom-0  govuk-!-font-weight-bold">Your additional information must be:</p>
+                                <ul class="govuk-list govuk-list--bullet">
+                                    <li>in portable document format (PDF) </li>
+                                    <li>less than 10 MB in size</li>
+                                </ul>
+                            </div>
+                        </details>
+                        <div class="govuk-form-group">
+                            <th:block th:with="maxSize='10 MB'"
+                                      th:insert="question-type/types :: fileupload-fragment(${readOnly ? 'readonly' : 'edit'},
+                                                        @{/application/{applicationId}/form/question/{questionId}/grant-agreement/download(applicationId=${model.applicationId},questionId=1)},
+                                                        ${form.additionalFile},
+                                                        additionalFile,
+                                                        additionalFile,
+                                                        true,
+                                                        removeAdditionalInfo,
+                                                        uploadAdditionalInfo)"/>
+                        </div>
+                    </div>
+                </th:block>
+
+            </th:block>
 
             <h2 class="govuk-fieldset__legend--m govuk-!-margin-bottom-2">Employee data</h2>
             <div class="table-overflow">
