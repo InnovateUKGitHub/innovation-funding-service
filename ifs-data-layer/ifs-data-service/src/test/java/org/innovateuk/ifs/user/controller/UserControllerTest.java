@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.controller;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.Error;
@@ -52,6 +53,7 @@ import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_PASSWORD_RESE
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_VERIFY_EMAIL;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -84,7 +86,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     @Mock
     private CrmService crmService;
 
-    private final SilEDIStatus silStatus= new SilEDIStatus();
+    private final SilEDIStatus silStatus = new SilEDIStatus();
     private UserResource user;
 
     @Before
@@ -462,5 +464,32 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isUnauthorized());
     }
 
+    @Test
+    public void updateUserWithNoReviewDare() throws Exception {
+        silStatus.setEdiStatus(EDIStatus.COMPLETE);
+        silStatus.setEdiReviewDate(null);
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(null);
+
+        when(userServiceMock.updateDetails(user)).thenReturn(serviceSuccess(user));
+        String errorMsg = mockMvc.perform(patch("/user/v1/edi").contentType(APPLICATION_JSON).content(toJson(silStatus)))
+                .andDo(print())
+                .andExpect(status().isBadRequest()).andReturn().getResponse().getContentAsString();
+        assertTrue(StringUtils.contains(errorMsg, "EDI review date is required"));
+
+    }
+
+    @Test
+    public void updateUserWithNoEDIStatus() throws Exception {
+        silStatus.setEdiStatus(null);
+
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(null);
+
+        when(userServiceMock.updateDetails(user)).thenReturn(serviceSuccess(user));
+        String errorMsg = mockMvc.perform(patch("/user/v1/edi").contentType(APPLICATION_JSON).content(toJson(silStatus)))
+                .andDo(print())
+                .andExpect(status().isBadRequest()).andReturn().getResponse().getContentAsString();
+        assertTrue(StringUtils.contains(errorMsg, "EDI Status is required"));
+
+    }
 
 }

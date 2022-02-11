@@ -278,21 +278,21 @@ public class UserController {
     @PreAuthorize("permitAll()")
     @PatchMapping(value ="/v1/edi")
     public RestResult<Void> updateUser(
-            @RequestBody SilEDIStatus surveyStatus,
+            @Valid @RequestBody SilEDIStatus surveyStatus,
             BindingResult bindingResult, HttpServletRequest request) {
 
         if (bindingResult.hasErrors()) {
-            log.error(String.format("edi-update error: incorrect json: %s ", surveyStatus));
+            log.error(String.format("edi-status-update error: incorrect json: %s ", surveyStatus));
             return RestResult.restFailure(new Error(GENERAL_INVALID_ARGUMENT,
                     bindingResult.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.toList())));
         }
 
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         if (user == null) {
-            log.error("edi-update error: user not found ");
+            log.error("edi-status-update error: user not found ");
             return RestResult.restFailure(HttpStatus.UNAUTHORIZED);
         } else {
-            log.info(String.format("edi-update: user id=%d, name=%s ", user.getId(), user.getName()));
+            log.info(String.format("edi-status-update: user id=%d, name=%s ", user.getId(), user.getName()));
             user.setEdiStatus(surveyStatus.getEdiStatus());
             user.setEdiReviewDate(surveyStatus.getEdiReviewDate());
           return   userService.updateDetails(user).andOnSuccessReturnVoid().toPutResponseNoContentResponse();
