@@ -1033,7 +1033,6 @@ the comp admin creates competition with all sections details
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
     ...  ELSE IF  '${fundingType}' == 'KTP'  the user marks the KTP application details as done     ${compType}
     ...  ELSE  the user marks the application as done                                ${projectGrowth}  ${compType}  ${competition}
-    the user completes competition setup assessors
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user select no documents
     ...  ELSE  the user fills in the CS Documents in other projects
     the user clicks the button/link                                                  link = Public content
@@ -1057,14 +1056,3 @@ the user should see page not found error
     go to                               ${compUrl}
     the user should see the element     jQuery = h1:contains("Page not found")
     the user should see the element     jQUery = span:contains("${compUrl}")
-
-the user completes competition setup assessors
-    the user clicks the button/link         link = Assessors
-    the user clicks the button twice        jQuery = label[for^="assessors"]:contains("3")
-    the user selects the radio button       hasAssessmentPanel  0
-    the user selects the radio button       hasInterviewStage  0
-    the user selects the radio button       averageAssessorScore  0
-    the user clicks the button/link         jQuery = button:contains("Done")
-    reload and check if element appears     link = Back to competition details
-    the user clicks the button/link         link = Back to competition details
-    the user should see the element         jQuery = div:contains("Assessors") ~ .task-status-complete
