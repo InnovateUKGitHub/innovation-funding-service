@@ -465,7 +465,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     }
 
     @Test
-    public void updateUserWithNoReviewDare() throws Exception {
+    public void updateUserWithNoReviewDate() throws Exception {
         silStatus.setEdiStatus(EDIStatus.COMPLETE);
         silStatus.setEdiReviewDate(null);
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(null);
