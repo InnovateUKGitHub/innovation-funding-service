@@ -4,7 +4,6 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Safelist;
-import org.jsoup.safety.Whitelist;
 
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.stripToNull;
