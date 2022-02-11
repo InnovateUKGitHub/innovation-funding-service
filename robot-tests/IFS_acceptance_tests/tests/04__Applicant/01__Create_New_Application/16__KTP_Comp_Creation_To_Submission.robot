@@ -1168,7 +1168,8 @@ the user fills in the KTP organisation information
 
 the user checks the read only view for KTP Organisation
     the user clicks the button/link     link = Your organisation
-    the user should see the element     jQuery = dt:contains("${group_employees_header}") ~ dd:contains("${group_employees}")
+    the user should see the element     jQuery = td:contains("Number of full time employees in your company")+td:contains("2,000")+td:contains("1,500")+td:contains("1,200")
+    the user should see the element     jQuery = td:contains("Number of full time employees in your corporate group (if applicable)")+td:contains("4,000")+td:contains("2,500")+td:contains("3,200")
     the user clicks the button/link     link = Your project finances
 
 the user fills financial overview section
