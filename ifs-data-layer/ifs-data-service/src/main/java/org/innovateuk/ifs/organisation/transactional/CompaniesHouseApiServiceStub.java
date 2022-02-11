@@ -385,7 +385,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "active",
                 "1947-11-27",
                 "00445790 - Incorporated on 27 November 1947",
-                asList("47110"),
+                Collections.emptyList(),
                 asList("BETHELL, Melissa", "GILLILAND, Stewart Charles", "GOLSBY, Stephen William", "GROTE, Byron Elmer", "MURPHY, Ken",
                         "OLSSON, Anders Bertil Mikael", "OPPENHEIMER, Deanna Watson"));
     }
