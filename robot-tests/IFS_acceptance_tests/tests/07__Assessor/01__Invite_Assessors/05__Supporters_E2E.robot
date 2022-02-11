@@ -39,7 +39,7 @@ ${cofundingApplicationID}                 ${application_ids['${cofundingApplicat
 ${supporterOrg}                           The University of Surrey
 ${newApplication}                         New application
 &{fec_supporter_credentials}              email=douglas.alston@money.com    password=${short_password}
-${uploadedPdf}                            fec-file
+${uploadedPdf}                            fec-file384.pdf
 
 *** Test Cases ***
 The internal user can allocate applications
