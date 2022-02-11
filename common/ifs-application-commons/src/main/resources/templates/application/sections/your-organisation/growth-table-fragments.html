@@ -9,6 +9,9 @@
         <th:block th:insert="this::organisation-size-alert(${model})"/>
 
         <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                    organisation-details(form=${form}, model=${model}, readOnly=${readOnly})" />
+
+        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
                                     organisation-size(form=${form}, model=${model}, readOnly=${readOnly})" />
 
         <th:block th:insert="fragments/form-elements/textfield ::
@@ -339,10 +342,12 @@
                     <td class="govuk-table__cell" th:text="${form.organisationSize !=null ?
                               form.organisationSize.description : ''}"></td>
                 </tr>
+                <th:block th:unless="${form.getFinancialYearAndMonthString() == null}">
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">End of last financial year</th>
                     <td class="govuk-table__cell" th:text="${form.getFinancialYearAndMonthString()}"></td>
                 </tr>
+                </th:block>
              </tbody>
            </table>
      </div>
