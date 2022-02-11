@@ -279,7 +279,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         existingUser.setTitle(updatedUserResource.getTitle());
         existingUser.setLastName(updatedUserResource.getLastName());
         existingUser.setFirstName(updatedUserResource.getFirstName());
-        existingUser.setAllowMarketingEmails(updatedUserResource.getAllowMarketingEmails());
+        existingUser.setAllowMarketingEmails(updatedUserResource.isAllowMarketingEmails());
         return serviceSuccess(userRepository.save(existingUser));
     }
 

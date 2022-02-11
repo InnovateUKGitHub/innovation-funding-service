@@ -178,6 +178,7 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
 
     private ApplicationFinance setFecModel(ApplicationFinance dbFinance, ApplicationFinanceResource applicationFinance) {
         dbFinance.setFecModelEnabled(applicationFinance.getFecModelEnabled());
+        dbFinance.setFecCertExpiryDate(applicationFinance.getFecCertExpiryDate());
         dbFinance = setFecUpload(dbFinance, applicationFinance.getFecFileEntry());
 
         return dbFinance;

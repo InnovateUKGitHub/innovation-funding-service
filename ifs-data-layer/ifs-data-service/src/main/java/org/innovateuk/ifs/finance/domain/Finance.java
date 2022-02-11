@@ -11,6 +11,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import static javax.persistence.CascadeType.REMOVE;
 
@@ -51,7 +52,9 @@ public abstract class Finance {
     @JoinColumn(name = "fecFileEntryId", referencedColumnName = "id")
     private FileEntry fecFileEntry;
 
-    public Finance(Organisation organisation, OrganisationSize organisationSize,  GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover, KtpFinancialYears ktpFinancialYears, Boolean northernIrelandDeclaration, Boolean fecModelEnabled, FileEntry fecFileEntry) {
+    private LocalDate fecCertExpiryDate;
+
+    public Finance(Organisation organisation, OrganisationSize organisationSize,  GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover, KtpFinancialYears ktpFinancialYears, Boolean northernIrelandDeclaration, Boolean fecModelEnabled, FileEntry fecFileEntry, LocalDate fecCertExpiryDate) {
         this.organisation = organisation;
         this.organisationSize = organisationSize;
         this.growthTable = growthTable;
@@ -60,6 +63,7 @@ public abstract class Finance {
         this.northernIrelandDeclaration = northernIrelandDeclaration;
         this.fecModelEnabled = fecModelEnabled;
         this.fecFileEntry = fecFileEntry;
+        this.fecCertExpiryDate = fecCertExpiryDate;
     }
 
     public Finance(Organisation organisation) {
@@ -227,5 +231,13 @@ public abstract class Finance {
 
     public void setFecFileEntry(FileEntry fecFileEntry) {
         this.fecFileEntry = fecFileEntry;
+    }
+
+    public LocalDate getFecCertExpiryDate() {
+        return fecCertExpiryDate;
+    }
+
+    public void setFecCertExpiryDate(LocalDate fecCertExpiryDate) {
+        this.fecCertExpiryDate = fecCertExpiryDate;
     }
 }
