@@ -329,7 +329,7 @@ the user should see read only view for FEC declaration
 
 the user checks the read-only page
     # Due to us testing webtest data here, the file does not exist so we check for only no internal server errors. Page not found is OK in this case.
-    the user should see the element                                  jQuery = legend:contains("Will you be using the full economic costing (fEC) funding model?") > p:contains("Yes")
+    the user should see the element                                  jQuery = h3:contains("Will you be using the full economic costing (fEC) funding model?") ~ div p:contains("Yes")
     the user clicks the button/link                                  jQuery = h3:contains("View fEC certificate") ~ div a:contains("${uploadedPdf}")
     Select Window                                                    NEW
     the user should not see internal server and forbidden errors
