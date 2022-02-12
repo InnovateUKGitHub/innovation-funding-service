@@ -31,13 +31,11 @@ public class HecpTemplate implements FundingTypeTemplate {
     @Override
     public Competition initialiseFinanceTypes(Competition competition) {
         List<FinanceRowType> types = newArrayList(
-                LABOUR,
-                OVERHEADS,
-                MATERIALS,
-                CAPITAL_USAGE,
+                PERSONNEL_COSTS,
                 SUBCONTRACTING_COSTS,
                 TRAVEL,
                 EQUIPMENT,
+                OTHER_GOODS,
                 OTHER_COSTS,
                 FINANCE,
                 OTHER_FUNDING,

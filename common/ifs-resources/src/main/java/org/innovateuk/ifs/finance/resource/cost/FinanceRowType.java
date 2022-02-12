@@ -50,6 +50,8 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     INDIRECT_COSTS("indirect costs", "Indirect costs", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
 
     /* HECP TCP */
+    PERSONNEL_COSTS("equipment", "Indirect costs", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
+    OTHER_GOODS("other_goods", "Other goods, works and services", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
     EQUIPMENT("equipment", "Indirect costs", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION);
 
     enum FinanceRowOptions {
@@ -144,13 +146,13 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
         return Stream.of(values())
                 .filter(financeRowType -> (financeRowType == FinanceRowType.OTHER_COSTS
                         || financeRowType == FinanceRowType.FINANCE
-                        || financeRowType == FinanceRowType.LABOUR
+                        || financeRowType == FinanceRowType.PERSONNEL_COSTS
                         || financeRowType == FinanceRowType.OVERHEADS
-                        || financeRowType == FinanceRowType.MATERIALS
-                        || financeRowType == FinanceRowType.CAPITAL_USAGE
+                        || financeRowType == FinanceRowType.OTHER_GOODS
                         || financeRowType == FinanceRowType.SUBCONTRACTING_COSTS
                         || financeRowType == FinanceRowType.TRAVEL
-                        || financeRowType == FinanceRowType.EQUIPMENT))
+                        || financeRowType == FinanceRowType.EQUIPMENT
+                        || financeRowType == FinanceRowType.INDIRECT_COSTS))
                 .collect(Collectors.toList());
     }
 }
