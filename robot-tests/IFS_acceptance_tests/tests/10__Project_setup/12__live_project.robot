@@ -256,7 +256,7 @@ Live Project User is able to join an application within the same organisation
     Given the user clicks the button/link                                           link = Application team
     When the user clicks the button/link                                            jQuery = button:contains("Add person to ${secondKTPOrgName}")
     And the user invites a person to the same organisation                          Troy Ward  troy.ward@gmail.com
-    And the user accepts invitation to join application under same organisation
+    And the user accepts invitation to join application under same organisation     troy.ward@gmail.com   ${short_password}   Invitation to contribute in KTP new competition   You are invited by Steve Smith to participate in an application for funding through the Innovation Funding Service.
     Then The user should see the element                                            jQuery = td:contains("Troy Ward")
 
 Live project user is able to join an application as a different organisation
@@ -278,13 +278,13 @@ the user accepts invitation to collaborate
      the user clicks the button/link                jQuery = button:contains("Save and continue")
      the user clicks the button/link                link = Application team
 
-the user accepts invitation to join application under same organisation
-     Logout as user
-     the user reads his email and clicks the link     troy.ward@gmail.com  Invitation to contribute in KTP new competition  You are invited by Steve Smith to participate in an application for funding through the Innovation Funding Service.  2
-     the user clicks the button/link                  jQuery = a:contains("Continue")
-     login to application                             troy.ward@gmail.com  ${short_password}
-     the user clicks the button/link                  jQuery = a:contains("Confirm and accept invitation")
-     the user clicks the button/link                  jQuery = a:contains("Application team")
+#the user accepts invitation to join application under same organisation
+#     Logout as user
+#     the user reads his email and clicks the link     troy.ward@gmail.com  Invitation to contribute in KTP new competition  You are invited by Steve Smith to participate in an application for funding through the Innovation Funding Service.  2
+#     the user clicks the button/link                  jQuery = a:contains("Continue")
+#     login to application                             troy.ward@gmail.com  ${short_password}
+#     the user clicks the button/link                  jQuery = a:contains("Confirm and accept invitation")
+#     the user clicks the button/link                  jQuery = a:contains("Application team")
 
 the user selects a knowledge based organisation
     [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}

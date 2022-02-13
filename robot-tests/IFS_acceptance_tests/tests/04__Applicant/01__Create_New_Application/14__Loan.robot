@@ -85,12 +85,57 @@ ${spend_profile}                           ${server}/project-setup-management/pr
 The user can navigate back to application overview in the same window from part b questions form
     [Documentation]     IFS-10761  IFS-11303
     When the user creates a new application
-    And the user clicks the button/link                           link = Business and financial information
-    And the user clicks the button/link                           jQuery = a:contains("Continue")
+    And the user clicks the button/link              link = Application details
+    And the user fills in the Application details    loans b&fi application  ${tomorrowday}  ${month}  ${nextyear}
+    And the user clicks the button/link              link = Business and financial information
+    And the user clicks the button/link              jQuery = a:contains("Continue")
     And the user logs in if username field present
-    Then title should be                                          Home
-    And Url should contain competition id                         ${loan_comp_appl_id}
+    Then title should be                             Home
+    And Url should contain competition id            ${loan_comp_appl_id}
 
+The member applicant can not continue button see B&FI question when the question is not assigned to member
+    [Documentation]    IFS-11271
+    Given the user navigates to the page         ${server}/applicant/dashboard
+    And The user clicks the button/link          link = loans b&fi application
+    When add a member to the lead organisation
+    And the user clicks the button/link          link = Business and financial information
+    Then the user should not see the element     jQuery = a:contains("Continue")
+
+Lead applicant assigns B&FI question to member of the same organisation
+    [Documentation]    IFS-11271
+    Given log in as a different user                                    &{lead_applicant_credentials}
+    And the user navigates to the page                                  ${server}/applicant/dashboard
+    And The user clicks the button/link                                 link = loans b&fi application
+    When lead assigns b&fi question to member in the same organisation  Business and financial information
+    Then the user should see the element                                jQuery = p:contains("This question is assigned to Troy Ward.")
+
+Member can access salesforce form through B&FI question
+    [Documentation]    IFS-11271
+    Given log in as a different user                 &{troy_ward_crendentials}
+    And the user navigates to the page               ${server}/applicant/dashboard
+    When The user clicks the button/link             link = loans b&fi application
+    And the user clicks the button/link              link = Business and financial information
+    And the user clicks the button/link              jQuery = a:contains("Continue")
+    And the user logs in if username field present
+    Then title should be                             Home
+
+Member can mark the B&FI question as complete
+    [Documentation]    IFS-11271
+    Given the sales force submits/unsubmits b&fi survey    1
+    When the user navigates to the page                    ${server}/applicant/dashboard
+    And the user clicks the button/link                    link = loans b&fi application
+    Then the user should see the element                   jQuery = .section-complete + button:contains("Business and financial information")
+    And the user can see B&FI question as complete
+
+lead applicant sees B&FI question as complete when member completes it
+    [Documentation]    IFS-11271
+    Given log in as a different user                &{lead_applicant_credentials}
+    When the user navigates to the page             ${server}/applicant/dashboard
+    And The user clicks the button/link             link = loans b&fi application
+    Then the user should see the element            jQuery = .section-complete + button:contains("Business and financial information")
+    And the user can see B&FI question as complete
+
+#below test cases uses web test data comp Loan Competition and Loan Application.
 The user can see b&fi application question as complete and shows edit online survey button
     [Documentation]    IFS-9484  IFS-10705  IFS-10703
     Given the user navigates to the page                    ${server}/applicant/dashboard
@@ -98,7 +143,7 @@ The user can see b&fi application question as complete and shows edit online sur
     And the user clicks the button/link                     link = Business and financial information
     Then the user should see b&fi question details
 
-the user can open the sales force new tab on clicking conitnue button in incomplete status of b&fi question
+The user can open the sales force new tab on clicking conitnue button in incomplete status of b&fi question
     [Documentation]   IFS-10703
     Given the sales force submits/unsubmits b&fi survey     0
     When the user clicks the button/link                    jQuery = a:contains("Continue")
@@ -465,7 +510,6 @@ the user should see b&fi question details
     the user should see the element     jQuery = p:contains("Business and financial details")
     the user should see the element     jQuery = p:contains("Financial information")
 
-
 the user shoulds see b&fi link
     the user clicks the button/link      link = Business and financial information
     the user should see the element      jQuery = a:contains("Business and financial information")
@@ -543,3 +587,24 @@ Url should contain competition id
     ${Url} =   get location
     Should Contain     ${Url}   CompetitionId=${competitionId}
 
+add a member to the lead organisation
+    the user clicks the button/link                                             link = Application team
+    the user clicks the button/link                                             id = edit
+    the user clicks the button/link                                             jQuery = button:contains("Add person to Empire Ltd")
+    the user invites a person to the same organisation                          Troy Ward  troy.ward@gmail.com
+    the user accepts invitation to join application under same organisation     troy.ward@gmail.com   ${short_password}   Invitation to contribute in Loan Competition   You are invited by Steve Smith to participate in an application for funding through the Innovation Funding Service.
+
+lead assigns b&fi question to member in the same organisation
+    [Arguments]  ${questionLink}
+    the user clicks the button/link       link = ${questionLink}
+    the user clicks the button/link       id = edit
+    the user clicks the button/link       link = Assign to someone else.
+    ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery = [for="assignee1"]label:contains("Steve Smith")
+    Run Keyword If   '${status}' == 'PASS'    the user selects the radio button     assignee   assignee2
+    ...                              ELSE     the user selects the radio button     assignee   assignee1
+    the user clicks the button/link       css = button[type="submit"]
+
+the user can see B&FI question as complete
+    the user clicks the button/link     link = Business and financial information
+    the user should see the element     jQuery = a:contains("Continue")
+    the user should see the element     jQuery = p:contains("This question is marked as complete.")
