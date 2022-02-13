@@ -119,4 +119,12 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
     public UserResourceBuilder withModifiedBy(String... modifiedBys) {
         return withArray((modifiedBy, user) -> setField("modifiedBy", modifiedBy, user), modifiedBys);
     }
+
+    public UserResourceBuilder withEdiStatus(EDIStatus... ediStatuses) {
+        return withArray((ediStatus, user) -> user.setEdiStatus(ediStatus), ediStatuses);
+    }
+
+    public UserResourceBuilder withEdiStatusReviewDate(ZonedDateTime... ediStatusReviewDates) {
+        return withArray((ediStatusReviewDate, user) -> setField("ediReviewDate", ediStatusReviewDate, user), ediStatusReviewDates);
+    }
 }
