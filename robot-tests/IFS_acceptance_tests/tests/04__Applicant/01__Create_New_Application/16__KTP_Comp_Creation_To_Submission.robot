@@ -103,6 +103,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-11129 Removal of Viability check for business
 ...
+...            IFS-11143 FEC Cost certificate - Yes
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -164,6 +166,7 @@ ${singleRoleKTAEmail}                 singlerolekta@ktn-uk.test
 ${leadTeamMember}                     susan.brown@gmail.com
 ${uploadedPdf}                        testing_5MB.pdf
 ${estateValue}                        11000
+
 
 *** Test Cases ***
 The applicants should not see knowledge based organisations when creating a non-ktp applications
@@ -375,22 +378,23 @@ New lead applicant is shown a validation error when marking a non-selected optio
      [Documentation]  IFS-9239
      When the user clicks the button/link                      link = your fEC model
      And the user should see the element                       jQuery = h1:contains("Your fEC model")
+     And the user selects the radio button                     fecModelEnabled  fecModelEnabled-yes
+     And The user clicks the button/link                       jQuery = button:contains("Next")
      Then the user sees fEC model validation error message
 
 New lead applicant makes a 'Yes' selection for the organisation's fEC model without uploading a document
      [Documentation]  IFS-9240
-     When the user selects the radio button                 fecModelEnabled  fecModelEnabled-yes
-     And the user clicks the button/link                    jQuery = button:contains("Mark as complete")
      Then the user should see a field and summary error     You must upload a file.
 
 New lead applicant uploads a document for the organisation's fEC model and save the selection
-     [Documentation]  IFS-9240
-     When the user uploads the file          css = .inputfile   testing_5MB.pdf
-     Then the user clicks the button/link    jQuery = button:contains("Mark as complete")
-     And The user should see the element     jQuery = li:contains("Your fEC model") span:contains("Complete")
+     [Documentation]  IFS-9240  IFS-11143
+     When the user uploads the file                      css = .inputfile   testing_5MB.pdf
+     And the user enters empty data into date fields     01  12  2500
+     Then the user clicks the button/link                jQuery = button:contains("Mark as complete")
+     And The user should see the element                 jQuery = li:contains("Your fEC model") span:contains("Complete")
 
 New lead applicant view the read-only page once marked as complete
-     [Documentation]  IFS-9240  IFS-9774
+     [Documentation]  IFS-9240  IFS-9774 IFS-11143
      When the user clicks the button/link          link = Your fEC model
      Then the user checks the read-only page
 
@@ -1142,7 +1146,8 @@ the lead applicant marks the KTP project location as complete
 
 the user sees fEC model validation error message
      the user clicks the button/link                   jQuery = button:contains("Mark as complete")
-     the user should see a field and summary error     You must select an option.
+     the user should see the element                   jQuery = span:contains("You must upload a file.")
+     the user should see the element                   jQuery = span:contains("You must enter an expiry date.")
 
 the partner applicant marks the KTP project location & organisation information as complete
     [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}
@@ -1534,9 +1539,16 @@ the user marks the project costs complete after editing
     the user fills in ktp project costs
 
 the user checks the read-only page
-    the user should see the element               jQuery = legend:contains("Will you be using the full economic costing (fEC) funding model?") > p:contains("Yes")
-    the user should see the element               jQuery = h3:contains("View fEC certificate") ~ div a:contains("${uploadedPdf}")
-    open pdf link                                 link = ${uploadedPdf} (opens in a new window)
+    the user should see the element               jQuery = h2:contains("fEC model is marked as complete")
+    the user should see the element               jQuery = h3:contains("Will you be using the full economic costing (fEC) funding model?") ~ div p:contains("Yes")
+    the user should see the element               jQuery = h3:contains("Will you be using the full economic costing (fEC) funding model?") ~ div:contains("Change")
+    the user should see the element               jQuery = h3:contains("Your fEC certificate") ~ div a:contains("${uploadedPdf} (opens in a new window)")
+    the user should see the element               jQuery = h3:contains("Your fEC certificate") ~ div:contains("Change")
+    the user should see the element               jQuery = h3:contains("When does your fEC certificate expire?") ~ div p:contains("1 December 2500")
+    the user should see the element               jQuery = h3:contains("When does your fEC certificate expire?") ~ div:contains("Change")
+    Wait Until Page Contains Without Screenshots  Last updated:
+#    the user should see the element               jQuery = div:contains("Last updated: ${dayInNumber} ${monthWord}")
+    the user should see the element               link = Return to project finances
 
 the user should see the right values
     [Arguments]   ${sectionTotal}    ${section}    ${total}
@@ -1554,4 +1566,21 @@ non-applicant user navigates to your FEC model page
 the user should see read only view for FEC declaration
     non-applicant user navigates to your FEC model page
     the user should not see the element                     jQuery = button:contains("Edit your fEC Model")
-    the user checks the read-only page
+    the user checks the read-only page view
+
+the user checks the read-only page view
+    the user should see the element               jQuery = h2:contains("fEC model is marked as complete")
+    the user should see the element               jQuery = h3:contains("Will you be using the full economic costing (fEC) funding model?") ~ div p:contains("Yes")
+    the user should see the element               jQuery = h3:contains("Your fEC certificate") ~ div a:contains("${uploadedPdf} (opens in a new window)")
+    the user should see the element               jQuery = h3:contains("When does your fEC certificate expire?") ~ div p:contains("1 December 2500")
+    Wait Until Page Contains Without Screenshots  Last updated:
+#    the user should see the element               jQuery = div:contains("Last updated: ${dayInNumber} ${monthWord}")
+    the user should see the element               link = Return to project finances
+
+the user enters empty data into date fields
+    [Arguments]  ${date}  ${month}  ${year}
+    the user enters text to a text field   id = fecCertExpiryDay  ${date}
+    the user enters text to a text field   id = fecCertExpiryMonth   ${month}
+    the user enters text to a text field   id = fecCertExpiryYear  ${year}
+
+

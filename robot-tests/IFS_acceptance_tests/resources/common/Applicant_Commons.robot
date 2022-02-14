@@ -971,7 +971,7 @@ the user completes the application details section
 the user edits the KTP fec model
     [Arguments]   ${fecModelID}
     the user clicks the button/link        link = Your fEC model
-    the user clicks the button/link        jQuery = button:contains("Edit your fEC Model")
+    the user clicks the button/link        jQuery = button:contains("Change")
     the user selects the radio button      fecModelEnabled  ${fecModelID}
     the user clicks the button/link        jQuery = button:contains("Mark as complete")
 
