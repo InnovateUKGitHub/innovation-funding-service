@@ -122,19 +122,19 @@ Member can access salesforce form through B&FI question
 Member can mark the B&FI question as complete
     [Documentation]    IFS-11271
     [Setup]  Requesting application ID of loan competiton
-    Given the sales force submits/unsubmits b&fi survey    1  ${newLoansApplicationID}
-    When the user navigates to the page                    ${server}/applicant/dashboard
-    And the user clicks the button/link                    link = loans b&fi application
-    Then the user should see the element                   jQuery = .section-complete + button:contains("Business and financial information")
-    And the user can see B&FI question as complete
+    Given the sales force submits/unsubmits b&fi survey     1  ${newLoansApplicationID}
+    When the user navigates to the page                     ${server}/applicant/dashboard
+    And the user clicks the button/link                     link = loans b&fi application
+    And the user clicks the button/link                     link = Business and financial information
+    Then the user can see B&FI question as complete
 
 lead applicant sees B&FI question as complete when member completes it
     [Documentation]    IFS-11271
-    Given log in as a different user                &{lead_applicant_credentials}
-    When the user navigates to the page             ${server}/applicant/dashboard
-    And The user clicks the button/link             link = loans b&fi application
-    Then the user should see the element            jQuery = .section-complete + button:contains("Business and financial information")
-    And the user can see B&FI question as complete
+    Given log in as a different user                    &{lead_applicant_credentials}
+    When the user navigates to the page                 ${server}/applicant/dashboard
+    And The user clicks the button/link                 link = loans b&fi application
+    And the user clicks the button/link                 link = Business and financial information
+    Then the user can see B&FI question as complete
 
 #below test cases uses web test data comp Loan Competition and Loan Application.
 The user can see b&fi application question as complete and shows edit online survey button
@@ -605,7 +605,6 @@ lead assigns b&fi question to member in the same organisation
     the user clicks the button/link       css = button[type="submit"]
 
 the user can see B&FI question as complete
-    the user clicks the button/link     link = Business and financial information
     the user should see the element     jQuery = a:contains("Continue")
     the user should see the element     jQuery = p:contains("This question is marked as complete.")
 
