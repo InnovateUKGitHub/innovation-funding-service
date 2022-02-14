@@ -321,6 +321,7 @@ Applicant checks successful and unsuccessful project status
 
 *** Keywords ***
 Custom suite setup
+    Set predefined date variables
     the user logs-in in new browser                       &{lead_applicant_credentials}
     the user clicks the application tile if displayed
     Connect to database  @{database}
