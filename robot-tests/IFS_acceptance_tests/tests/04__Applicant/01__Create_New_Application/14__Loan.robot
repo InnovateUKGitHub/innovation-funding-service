@@ -107,7 +107,7 @@ Lead applicant assigns B&FI question to member of the same organisation
     And the user navigates to the page                                  ${server}/applicant/dashboard
     And The user clicks the button/link                                 link = loans b&fi application
     When lead assigns b&fi question to member in the same organisation  Business and financial information
-    Then the user should see the element                                jQuery = p:contains("This question is assigned to Troy Ward.")
+    Then the user should see the element                                jQuery = p:contains("This question is assigned to"):contains("Troy Ward")
 
 Member can access salesforce form through B&FI question
     [Documentation]    IFS-11271
@@ -121,7 +121,8 @@ Member can access salesforce form through B&FI question
 
 Member can mark the B&FI question as complete
     [Documentation]    IFS-11271
-    Given the sales force submits/unsubmits b&fi survey    1
+    [Setup]  Requesting application ID of loan competiton
+    Given the sales force submits/unsubmits b&fi survey    1  ${newLoansApplicationID}
     When the user navigates to the page                    ${server}/applicant/dashboard
     And the user clicks the button/link                    link = loans b&fi application
     Then the user should see the element                   jQuery = .section-complete + button:contains("Business and financial information")
@@ -145,7 +146,7 @@ The user can see b&fi application question as complete and shows edit online sur
 
 The user can open the sales force new tab on clicking conitnue button in incomplete status of b&fi question
     [Documentation]   IFS-10703
-    Given the sales force submits/unsubmits b&fi survey     0
+    Given the sales force submits/unsubmits b&fi survey     0  ${loanApplicationID}
     When the user clicks the button/link                    jQuery = a:contains("Continue")
     And the user logs in if username field present
     Then title should be                                    Home
@@ -166,7 +167,7 @@ The user will not be able to mark the application as complete without completing
 
 The user can see the business and financial information application question in application overview as complete
     [Documentation]    IFS-9484  IFS-10705
-    When the sales force submits/unsubmits b&fi survey     1
+    When the sales force submits/unsubmits b&fi survey     1  ${loanApplicationID}
     Then the user should see the element                   jQuery = .section-complete + button:contains("Business and financial information")
 
 Return and edit button should not change the status of B&FI question
@@ -558,8 +559,8 @@ the application is assigned to a assessor
     the user clicks the button/link       jQuery = button:contains("Confirm")
 
 the sales force submits/unsubmits b&fi survey
-    [Arguments]  ${completeStatus}
-    execute sql string  UPDATE `${database_name}`.`question_status` SET `marked_as_complete`=${completeStatus} WHERE `application_id`='${loanApplicationID}' and `question_id`='739';
+    [Arguments]  ${completeStatus}  ${applicationID}
+    execute sql string  UPDATE `${database_name}`.`question_status` SET `marked_as_complete`=${completeStatus} WHERE `application_id`='${applicationID}' and `question_id`='739';
     reload page
 
 the user creates a new application
@@ -607,3 +608,7 @@ the user can see B&FI question as complete
     the user clicks the button/link     link = Business and financial information
     the user should see the element     jQuery = a:contains("Continue")
     the user should see the element     jQuery = p:contains("This question is marked as complete.")
+
+Requesting application ID of loan competiton
+     ${newLoansApplicationID} =     get application id by name         loans b&fi application
+     Set suite variable             ${newLoansApplicationID}
