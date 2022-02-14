@@ -73,10 +73,11 @@ public class YourOrganisationKtpFinancialYearsForm {
 
     @JsonIgnore
     public String getFinancialYearAndMonthString() {
+        String financialYearAndMonthString = "";
        if (financialYearEnd != null) {
-          return financialYearEnd.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " " +
+           financialYearAndMonthString = financialYearEnd.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " " +
                    financialYearEnd.getYear();
        }
-       return "";
+       return financialYearAndMonthString;
     }
 }
