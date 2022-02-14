@@ -597,7 +597,6 @@ add a member to the lead organisation
 lead assigns b&fi question to member in the same organisation
     [Arguments]  ${questionLink}
     the user clicks the button/link       link = ${questionLink}
-    the user clicks the button/link       id = edit
     the user clicks the button/link       link = Assign to someone else.
     ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery = [for="assignee1"]label:contains("Steve Smith")
     Run Keyword If   '${status}' == 'PASS'    the user selects the radio button     assignee   assignee2
