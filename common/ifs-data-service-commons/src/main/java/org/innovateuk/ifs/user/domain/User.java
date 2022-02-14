@@ -5,13 +5,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
-import org.innovateuk.ifs.user.resource.Authority;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.Title;
-import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.user.resource.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -69,6 +67,28 @@ public class User extends AuditableEntity implements Serializable {
     @OrderColumn(name="accepted_date")
     private Set<Long> termsAndConditionsIds = new LinkedHashSet<>();
 
+    public EDIStatus getEdiStatus() {
+        return ediStatus;
+    }
+
+    public void setEdiStatus(EDIStatus ediStatus) {
+        this.ediStatus = ediStatus;
+    }
+
+    public ZonedDateTime getEdiReviewDate() {
+        return ediReviewDate;
+    }
+
+    public void setEdiReviewDate(ZonedDateTime ediReviewDate) {
+        this.ediReviewDate = ediReviewDate;
+    }
+
+    @Enumerated(STRING)
+    @Column(name="edi_status")
+    private EDIStatus ediStatus;
+
+    @Column(name="edi_review_date")
+    private ZonedDateTime ediReviewDate;
     public User() {
         // no-arg constructor
     }

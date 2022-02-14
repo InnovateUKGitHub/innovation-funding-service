@@ -10,6 +10,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.resource.EDIStatus;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.After;
@@ -18,6 +19,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,6 +52,8 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         application.setId(APPLICATION_ID);
         processRoles.add(newProcessRole().withId(leadApplicantProcessRole).withApplication(application).build());
         User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", "123abc");
+        user.setEdiReviewDate(ZonedDateTime.now());
+        user.setEdiStatus(EDIStatus.COMPLETE);
         processRoles.get(0).setUser(user);
         user.addRole(Role.APPLICANT);
         swapOutForUser(userMapper.mapToResource(user));

@@ -19,6 +19,6 @@ public class SilContact {
     private SilOrganisation organisation;
     private final String sourceSystem = "IFS";
     private String srcSysContactId;
-
+    private String phoneNumber;
 
 }

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.sil.crm.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.SneakyThrows;
@@ -44,8 +45,11 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
     @Value("${sil.rest.crmDecisionmatrix}")
     private String silmDecisionmatrix;
 
+    @SneakyThrows(JsonProcessingException.class)
     @Override
     public ServiceResult<Void> updateContact(SilContact silContact) {
+        String silContactJson = objectWriter.writeValueAsString(silContact);
+        log.info("Json Payload: " + silContactJson);
         return handlingErrors(() -> {
                     final Either<ResponseEntity<SilCrmError>, ResponseEntity<Void>> response = adaptor.restPostWithEntity(silRestServiceUrl + silCrmContacts, silContact, Void.class, SilCrmError.class, HttpStatus.ACCEPTED);
                     return response.mapLeftOrRight(failure -> {
@@ -58,7 +62,7 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
     }
 
 
-    @SneakyThrows
+    @SneakyThrows(JsonProcessingException.class)
     @Override
     public ServiceResult<Void> updateLoanApplicationState(SilLoanApplication silApplication) {
         String silApplicationJson = objectWriter.writeValueAsString(silApplication);
@@ -76,7 +80,7 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
     }
 
     @Override
-    @SneakyThrows
+    @SneakyThrows(JsonProcessingException.class)
     public ServiceResult<Void> updateLoanAssessment(SilLoanAssessment silLoanAssessment) {
         String silApplicationJson = objectWriter.writeValueAsString(silLoanAssessment);
         log.info("Json Payload: " + silApplicationJson);

@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Map;
@@ -82,7 +83,7 @@ public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<You
     private ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
 
     private YourFECViewModel yourFECViewModel =
-            new YourFECViewModel("/finances", "Competition name", "Application name", 1L, 2L, false, false, true, false, false, applicationFinance.getId());
+            new YourFECViewModel("/finances", "Competition name", "Application name", 1L, 2L, false, false, true, false, false, applicationFinance.getId(), "", null);
 
     @Test
     public void viewPage() throws Exception {
@@ -106,10 +107,12 @@ public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<You
 
         when(YourFECViewModelPopulatorMock.populate(organisationId, applicationId, sectionId, getLoggedInUser())).thenReturn(yourFECViewModel);
 
+        ReflectionTestUtils.setField(controller, "ktpPhase2Enabled", true);
+
         MvcResult result = mockMvc.perform(get("/application/{applicationId}/form/your-fec-model/" +
                 "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId))
                 .andExpect(status().isOk())
-                .andExpect(view().name("application/sections/your-fec-model/your-fec-model"))
+                .andExpect(view().name("application/sections/your-fec-model/your-fec-model-v2"))
                 .andReturn();
 
         Map<String, Object> model = result.getModelAndView().getModel();
@@ -205,11 +208,13 @@ public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<You
         when(sectionRestServiceMock.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(restSuccess(singletonList(financeSection)));
         when(sectionStatusRestServiceMock.markAsInComplete(financeSection.getId(), applicationId, processRole.getId())).thenReturn(restSuccess());
 
+        ReflectionTestUtils.setField(controller, "ktpPhase2Enabled", true);
+
         mockMvc.perform(post("/application/{applicationId}/form/your-fec-model/" +
                 "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId)
                 .param("mark-as-incomplete", ""))
                 .andExpect(status().isOk())
-                .andExpect(view().name("application/sections/your-fec-model/your-fec-model"))
+                .andExpect(view().name("application/sections/your-fec-model/your-fec-model-v2"))
                 .andReturn();
 
         verify(processRoleRestServiceMock, times(1)).findProcessRole(loggedInUser.getId(), applicationId);

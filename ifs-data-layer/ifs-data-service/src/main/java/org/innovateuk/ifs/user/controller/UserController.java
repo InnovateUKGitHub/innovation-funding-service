@@ -2,23 +2,11 @@ package org.innovateuk.ifs.user.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomUtils;
-import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.ApplicationInvite;
-import org.innovateuk.ifs.invite.domain.Invite;
-import org.innovateuk.ifs.invite.domain.InviteHistory;
-import org.innovateuk.ifs.invite.domain.InviteOrganisation;
-import org.innovateuk.ifs.invite.repository.InviteHistoryRepository;
-import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
-import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
-import org.innovateuk.ifs.invite.transactional.ApplicationInviteServiceImpl;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
@@ -34,7 +22,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.ZonedDateTime;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -79,7 +66,6 @@ public class UserController {
 
     @Autowired
     private CrmService crmService;
-
 
     @GetMapping("/uid/{uid}")
     public RestResult<UserResource> getUserByUid(@PathVariable String uid) {

@@ -25,6 +25,7 @@ import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
@@ -44,6 +45,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 @Service
 public class ApplicationValidatorServiceImpl extends BaseTransactionalService implements ApplicationValidatorService {
+
+    @Value("${ifs.ktp.phase2.enabled}")
+    private boolean ktpPhase2Enabled;
 
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;
@@ -206,19 +210,33 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
     public ValidationMessages validateFECCertificateUpload(Application application, Long markedAsCompleteById) {
         return getProcessRole(markedAsCompleteById).andOnSuccessReturn(role -> {
             OrganisationResource organisation = organisationService.findById(role.getOrganisationId()).getSuccess();
-            if (isFECCertificateNotUploaded(application.getId(), organisation.getId())) {
-                return new ValidationMessages(fieldError("fecCertificateFileUpload", null, "validation.application.fec.upload.required"));
+            Optional<ApplicationFinance> applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
+
+            ValidationMessages errorMessages = new ValidationMessages();
+            if (isFECCertificateNotUploaded(applicationFinance)) {
+                errorMessages.addError(fieldError("fecCertificateFileUpload", null, "validation.application.fec.upload.required"));
             }
-            return noErrors();
+            if (isFECCertificateExpiryNotSet(applicationFinance)) {
+                errorMessages.addError(fieldError("fecCertExpiryDate", null, "validation.application.fec.expiryDate.required"));
+            }
+
+            return errorMessages.hasErrors() ? errorMessages : noErrors();
         }).getSuccess();
     }
 
-    private boolean isFECCertificateNotUploaded(long applicationId, long organisationId) {
-        Optional<ApplicationFinance> applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
-
+    private boolean isFECCertificateNotUploaded(Optional<ApplicationFinance> applicationFinance) {
         if (applicationFinance.isPresent() && applicationFinance.get().getFecModelEnabled()) {
             return applicationFinance.map(af -> af.getFecFileEntry() == null).orElse(true);
         }
         return false;
     }
+
+    private boolean isFECCertificateExpiryNotSet(Optional<ApplicationFinance> applicationFinance) {
+        if (ktpPhase2Enabled && applicationFinance.isPresent() && applicationFinance.get().getFecModelEnabled()) {
+            return applicationFinance.map(af -> af.getFecCertExpiryDate() == null).orElse(true);
+        }
+        return false;
+    }
+
+
 }
