@@ -61,7 +61,7 @@ public class YourOrganisationKtpFinancialYearForm {
     public String getPhase2YearText() {
         switch (year) {
             case 0:
-                return "Latest Period";
+                return "Latest period";
             case 1:
                 return "Last audited year";
             case 2:
