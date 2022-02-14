@@ -590,7 +590,6 @@ Url should contain competition id
 
 add a member to the lead organisation
     the user clicks the button/link                                             link = Application team
-    the user clicks the button/link                                             id = edit
     the user clicks the button/link                                             jQuery = button:contains("Add person to Empire Ltd")
     the user invites a person to the same organisation                          Troy Ward  troy.ward@gmail.com
     the user accepts invitation to join application under same organisation     troy.ward@gmail.com   ${short_password}   Invitation to contribute in Loan Competition   You are invited by Steve Smith to participate in an application for funding through the Innovation Funding Service.
