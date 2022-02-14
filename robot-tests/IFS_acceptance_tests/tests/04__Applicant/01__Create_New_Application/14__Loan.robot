@@ -53,7 +53,8 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...
 ...             IFS-11303 CompetitionID on experience Cloud/community url parameters
 ...
-
+...             IFS-11271 IFS to SF Assigning business and financial information question
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
