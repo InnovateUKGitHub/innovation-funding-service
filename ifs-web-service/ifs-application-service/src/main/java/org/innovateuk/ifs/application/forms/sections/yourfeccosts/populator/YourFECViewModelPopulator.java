@@ -3,7 +3,9 @@ package org.innovateuk.ifs.application.forms.sections.yourfeccosts.populator;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.viewmodel.YourFECViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -17,7 +19,9 @@ import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 
@@ -36,6 +40,8 @@ public class YourFECViewModelPopulator {
     private ProcessRoleRestService processRoleRestService;
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
+    @Autowired
+    private QuestionStatusRestService questionStatusRestService;
 
     public YourFECViewModel populate(long organisationId, long applicationId, long sectionId, UserResource user) {
 
@@ -48,6 +54,12 @@ public class YourFECViewModelPopulator {
         ApplicationFinanceResource applicationFinanceResource = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
 
         List<Long> completedSectionIds = sectionService.getCompleted(applicationId, organisationId);
+
+        Long fecModelQuestionId = sectionService.getById(sectionId).getQuestions().get(0);
+
+        Optional<QuestionStatusResource> questionStatusResource = questionStatusRestService.getMarkedAsCompleteByQuestionApplicationAndOrganisation(fecModelQuestionId, applicationId, organisationId).getSuccess();
+        String lastUpdatedBy = questionStatusResource.isPresent() ? (user.getName().equals(questionStatusResource.get().getMarkedAsCompleteByUserName()) ? "you" : questionStatusResource.get().getMarkedAsCompleteByUserName()) : "";
+        ZonedDateTime lastUpdatedOn = questionStatusResource.isPresent() ? questionStatusResource.get().getMarkedAsCompleteOn() : null;
 
         boolean sectionMarkedAsComplete = completedSectionIds.contains(sectionId);
 
@@ -67,7 +79,9 @@ public class YourFECViewModelPopulator {
                 sectionMarkedAsComplete,
                 competition.isProcurement(),
                 organisation.isInternational(),
-                applicationFinanceResource.getId());
+                applicationFinanceResource.getId(),
+                lastUpdatedBy,
+                lastUpdatedOn);
     }
 
     private String getYourFinancesUrl(long applicationId, long organisationId) {

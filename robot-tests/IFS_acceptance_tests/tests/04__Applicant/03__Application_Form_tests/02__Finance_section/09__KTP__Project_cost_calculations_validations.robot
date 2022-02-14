@@ -31,6 +31,8 @@ Documentation     IFS-7790 KTP: Your finances - Edit
 ...
 ...               IFS-11138 Add Assessment deadline in supporters email
 ...
+...               IFS-11136 Business Finances: Employee Data
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../../resources/defaultResources.robot
@@ -64,6 +66,7 @@ ${academicSecretarialCost}                academic-secretarial-costs
 @{shareHolderFunds}                       20000   15000   10000
 @{loans}                                  35000   40000   45000
 @{employees}                              2000    1500    1200
+@{employeesCorporate}                     4000    2500    3200
 
 *** Test Cases ***
 New lead applicant can make a 'No' selection for the organisation's fEC model and save the selection
@@ -289,6 +292,15 @@ KB can view the project cost tabel in the print view
     When the user clicks the button/link                                                link = Print application
     Then the user should see the correct values in project cost table in print view
     [Teardown]   the user closes the last opened tab
+
+Business user can view read-only view of your organisation details
+   [Documentation]   IFS-11136
+   Given log in as a different user                     &{collaborator1_credentials}
+   And the user clicks the button/link                  link = ${ktpapplication}
+   And the user clicks the button/link                  link = View application
+   When the user clicks the button/link                 jQuery = div:contains("Ludlow") ~ a:contains("View finances")
+   And the user clicks the button/link                  link = Your organisation
+   Then the user should see the correct employee data
 
 *** Keywords ***
 the user enters T&S costs
@@ -517,7 +529,10 @@ the user fills financial overview section
              \    the user enters text to a text field     id = years[${a}].employees  ${ELEMENT}
              \    ${a} =   Evaluate   ${a} + 1
 
-    the user enters text to a text field     id = groupEmployees  200
+    ${a} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{employeesCorporate}
+             \    the user enters text to a text field     id = years[${a}].corporateGroupEmployees  ${ELEMENT}
+             \    ${a} =   Evaluate   ${a} + 1
 
 the user invites a registered KTA user to assess competition
     log in as a different user               &{Comp_admin1_credentials}
@@ -566,3 +581,6 @@ get assessment deadline date using competition id
     Set suite variable   ${monthInDate}
     Set suite variable   ${yearInDate}
 
+the user should see the correct employee data
+    the user should see the element   jQuery = td:contains("Number of full time employees in your company")+td:contains("2,000")+td:contains("1,500")+td:contains("1,200")
+    the user should see the element   jQuery = td:contains("Number of full time employees in your corporate group (if applicable)")+td:contains("4,000")+td:contains("2,500")+td:contains("3,200")
