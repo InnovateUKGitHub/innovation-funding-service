@@ -579,11 +579,12 @@ internal user generates the contract
     the user clicks the button/link    jQuery = button:contains("Send contract")
 
 the user creates a new sbri application
-    the user select the competition and starts application     ${openSBRICompetitionName}
-    the user selects the radio button                          createNewApplication  true      #Yes, I want to create a new application.
-    the user clicks the button/link                            jQuery = .govuk-button:contains("Continue")
-    the user clicks the button twice                           jQuery = label:contains("Ward Ltd")
-    the user clicks the button/link                            css = .govuk-button[type="submit"]    #Save and continue
+    the user select the competition and starts application                          ${openSBRICompetitionName}
+    the user selects the radio button                                               createNewApplication  true      #Yes, I want to create a new application.
+    the user clicks the button/link                                                 jQuery = .govuk-button:contains("Continue")
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots     Element Should Be Visible  jQuery = label:contains("Ward Ltd")
+    Run Keyword if  '${status}' == 'PASS'    the user clicks the button twice       jQuery = label:contains("Ward Ltd")
+    the user clicks the button/link                                                 css = .govuk-button[type="submit"]    #Save and continue
 
 the user fills in SBRI Application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
