@@ -541,7 +541,7 @@ the allocated assessor accepts invite to assess the competition
     the user should be redirected to the correct page     ${server}/assessment/assessor/dashboard
 
 ifs admin invites a supporter to the ktp application
-    log in as a different user               &{ifs_admin_user_credentials}
+    the user navigates to the page           ${server}/management/dashboard/live
     the user clicks the button/link          link = ${KTPcompetiton}
     the user clicks the button/link          link = Manage supporters
     the user clicks the button/link          link = Assign supporters to applications
@@ -553,6 +553,7 @@ ifs admin invites a supporter to the ktp application
 
 get assessment deadline date using competition id
     [Arguments]  ${competition_id}
+    log in as a different user        &{ifs_admin_user_credentials}
     the user navigates to the page   ${server}/management/competition/setup/${competition_id}/section/milestones
     ${assessmentDeadLineWeekDay} =  get text   css = tr:nth-of-type(7) td:nth-of-type(3)
     ${assessmentDeadLineDate} =  get text   css = tr:nth-of-type(7) td:nth-of-type(4)
