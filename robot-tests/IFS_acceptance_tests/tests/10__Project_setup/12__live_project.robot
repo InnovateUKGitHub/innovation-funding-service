@@ -257,6 +257,7 @@ Live Project User is able to join an application within the same organisation
     When the user clicks the button/link                                            jQuery = button:contains("Add person to ${secondKTPOrgName}")
     And the user invites a person to the same organisation                          Troy Ward  troy.ward@gmail.com
     And the user accepts invitation to join application under same organisation     troy.ward@gmail.com   ${short_password}   Invitation to contribute in KTP new competition   You are invited by Steve Smith to participate in an application for funding through the Innovation Funding Service.
+    And the user clicks the button/link                                             jQuery = a:contains("Application team")
     Then The user should see the element                                            jQuery = td:contains("Troy Ward")
 
 Live project user is able to join an application as a different organisation
