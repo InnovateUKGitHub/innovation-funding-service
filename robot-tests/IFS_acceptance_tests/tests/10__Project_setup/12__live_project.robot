@@ -279,21 +279,12 @@ the user accepts invitation to collaborate
      the user clicks the button/link                jQuery = button:contains("Save and continue")
      the user clicks the button/link                link = Application team
 
-#the user accepts invitation to join application under same organisation
-#     Logout as user
-#     the user reads his email and clicks the link     troy.ward@gmail.com  Invitation to contribute in KTP new competition  You are invited by Steve Smith to participate in an application for funding through the Innovation Funding Service.  2
-#     the user clicks the button/link                  jQuery = a:contains("Continue")
-#     login to application                             troy.ward@gmail.com  ${short_password}
-#     the user clicks the button/link                  jQuery = a:contains("Confirm and accept invitation")
-#     the user clicks the button/link                  jQuery = a:contains("Application team")
-
 the user selects a knowledge based organisation
     [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
      input text                           id = knowledgeBase        ${knowledgeBase}
      the user clicks the button/link      jQuery = ul li:contains("${completeKBOrganisartionName}")
      the user clicks the button/link      JQuery = button:contains("Confirm")
      the user clicks the button/link      JQuery = button:contains("Save and continue")
-
 
 project setup is completed and project is now live
     log in as a different user         &{leadApplicantCredentials}
