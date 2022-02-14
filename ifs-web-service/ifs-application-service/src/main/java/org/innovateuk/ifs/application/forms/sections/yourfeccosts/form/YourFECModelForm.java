@@ -1,14 +1,27 @@
 package org.innovateuk.ifs.application.forms.sections.yourfeccosts.form;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+
+import static org.springframework.util.StringUtils.hasText;
 
 /**
  * Form used to capture project fEC Model information
  */
+@NoArgsConstructor
+@Setter
+@Getter
 public class YourFECModelForm {
 
     @NotNull(message = "{validation.finance.fecmodel.fecModelEnabled.blank}")
@@ -18,47 +31,25 @@ public class YourFECModelForm {
     private MultipartFile fecCertificateFile;
     private boolean displayBanner;
 
-    public YourFECModelForm() {
+    private String fecCertExpiryYear;
+    private String fecCertExpiryMonth;
+    private String fecCertExpiryDay;
+
+    public void setFecCertExpiryDate(LocalDate fecCertExpiryDate) {
+        if(fecCertExpiryDate != null) {
+            fecCertExpiryYear = String.valueOf(fecCertExpiryDate.getYear());
+            fecCertExpiryMonth = String.valueOf(fecCertExpiryDate.getMonthValue());
+            fecCertExpiryDay = String.valueOf(fecCertExpiryDate.getDayOfMonth());
+        }
     }
 
-    public Boolean getFecModelEnabled() {
-        return fecModelEnabled;
-    }
-
-    public void setFecModelEnabled(Boolean fecModelEnabled) {
-        this.fecModelEnabled = fecModelEnabled;
-    }
-
-    public Long getFecFileEntryId() {
-        return fecFileEntryId;
-    }
-
-    public void setFecFileEntryId(Long fecFileEntryId) {
-        this.fecFileEntryId = fecFileEntryId;
-    }
-
-    public String getFecCertificateFileName() {
-        return fecCertificateFileName;
-    }
-
-    public void setFecCertificateFileName(String fecCertificateFileName) {
-        this.fecCertificateFileName = fecCertificateFileName;
-    }
-
-    public MultipartFile getFecCertificateFile() {
-        return fecCertificateFile;
-    }
-
-    public void setFecCertificateFile(MultipartFile fecCertificateFile) {
-        this.fecCertificateFile = fecCertificateFile;
-    }
-
-    public boolean isDisplayBanner() {
-        return displayBanner;
-    }
-
-    public void setDisplayBanner(boolean displayBanner) {
-        this.displayBanner = displayBanner;
+    public LocalDate getFecCertExpiryDate() {
+        try {
+            return (hasText(fecCertExpiryYear) && hasText(fecCertExpiryMonth) && hasText(fecCertExpiryDay)) ?
+                    LocalDate.of(Integer.valueOf(fecCertExpiryYear), Integer.valueOf(fecCertExpiryMonth), Integer.valueOf(fecCertExpiryDay)) : null;
+        } catch (DateTimeException e) {
+            return null;
+        }
     }
 
     @Override
@@ -72,6 +63,9 @@ public class YourFECModelForm {
                 .append(fecCertificateFileName, that.fecCertificateFileName)
                 .append(fecCertificateFile, that.fecCertificateFile)
                 .append(displayBanner, that.displayBanner)
+                .append(fecCertExpiryYear, that.fecCertExpiryYear)
+                .append(fecCertExpiryMonth, that.fecCertExpiryMonth)
+                .append(fecCertExpiryDay, that.fecCertExpiryDay)
                 .isEquals();
     }
 
@@ -83,6 +77,9 @@ public class YourFECModelForm {
                 .append(fecCertificateFileName)
                 .append(fecCertificateFile)
                 .append(displayBanner)
+                .append(fecCertExpiryYear)
+                .append(fecCertExpiryMonth)
+                .append(fecCertExpiryDay)
                 .toHashCode();
     }
 }

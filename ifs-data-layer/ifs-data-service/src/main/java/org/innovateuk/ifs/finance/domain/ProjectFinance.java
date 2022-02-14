@@ -10,6 +10,7 @@ import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
@@ -47,13 +48,13 @@ public class ProjectFinance extends Finance {
         this.project = project;
     }
 
-    public ProjectFinance(Organisation organisation, OrganisationSize organisationSize, Project project, GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover, KtpFinancialYears ktpFinancialYears, Boolean northernIrelandDeclaration, Boolean fecModelEnabled, FileEntry fecFileEntry) {
-        super(organisation, organisationSize, growthTable, employeesAndTurnover, ktpFinancialYears, northernIrelandDeclaration, fecModelEnabled, fecFileEntry);
+    public ProjectFinance(Organisation organisation, OrganisationSize organisationSize, Project project, GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover, KtpFinancialYears ktpFinancialYears, Boolean northernIrelandDeclaration, Boolean fecModelEnabled, FileEntry fecFileEntry, LocalDate fecCertExpiryDate) {
+        super(organisation, organisationSize, growthTable, employeesAndTurnover, ktpFinancialYears, northernIrelandDeclaration, fecModelEnabled, fecFileEntry, fecCertExpiryDate);
         this.project = project;
     }
 
     public ProjectFinance(Organisation organisation, OrganisationSize organisationSize, Project project) {
-        this(organisation, organisationSize, project, null, null, null, null, null, null);
+        this(organisation, organisationSize, project, null, null, null, null, null, null, null);
     }
 
     public Project getProject() {

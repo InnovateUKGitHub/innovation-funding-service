@@ -1,10 +1,14 @@
 package org.innovateuk.ifs.finance.resource;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.math.BigDecimal;
 
+@Getter
+@Setter
 public class KtpYearResource {
 
     private Integer year;
@@ -15,10 +19,11 @@ public class KtpYearResource {
     private BigDecimal shareholderValue;
     private BigDecimal loans;
     private Long employees;
+    private Long corporateGroupEmployees;
 
     public KtpYearResource() {}
 
-    public KtpYearResource(Integer year, BigDecimal turnover, BigDecimal preTaxProfit, BigDecimal currentAssets, BigDecimal liabilities, BigDecimal shareholderValue, BigDecimal loans, Long employees) {
+    public KtpYearResource(Integer year, BigDecimal turnover, BigDecimal preTaxProfit, BigDecimal currentAssets, BigDecimal liabilities, BigDecimal shareholderValue, BigDecimal loans, Long employees, Long corporateGroupEmployees) {
         this.year = year;
         this.turnover = turnover;
         this.preTaxProfit = preTaxProfit;
@@ -27,70 +32,7 @@ public class KtpYearResource {
         this.shareholderValue = shareholderValue;
         this.loans = loans;
         this.employees = employees;
-    }
-
-    public Integer getYear() {
-        return year;
-    }
-
-    public void setYear(Integer year) {
-        this.year = year;
-    }
-
-    public BigDecimal getTurnover() {
-        return turnover;
-    }
-
-    public void setTurnover(BigDecimal turnover) {
-        this.turnover = turnover;
-    }
-
-    public BigDecimal getPreTaxProfit() {
-        return preTaxProfit;
-    }
-
-    public void setPreTaxProfit(BigDecimal preTaxProfit) {
-        this.preTaxProfit = preTaxProfit;
-    }
-
-    public BigDecimal getCurrentAssets() {
-        return currentAssets;
-    }
-
-    public void setCurrentAssets(BigDecimal currentAssets) {
-        this.currentAssets = currentAssets;
-    }
-
-    public BigDecimal getLiabilities() {
-        return liabilities;
-    }
-
-    public void setLiabilities(BigDecimal liabilities) {
-        this.liabilities = liabilities;
-    }
-
-    public BigDecimal getShareholderValue() {
-        return shareholderValue;
-    }
-
-    public void setShareholderValue(BigDecimal shareholderValue) {
-        this.shareholderValue = shareholderValue;
-    }
-
-    public BigDecimal getLoans() {
-        return loans;
-    }
-
-    public void setLoans(BigDecimal loans) {
-        this.loans = loans;
-    }
-
-    public Long getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(Long employees) {
-        this.employees = employees;
+        this.corporateGroupEmployees = corporateGroupEmployees;
     }
 
     @Override
@@ -110,6 +52,7 @@ public class KtpYearResource {
                 .append(shareholderValue, that.shareholderValue)
                 .append(loans, that.loans)
                 .append(employees, that.employees)
+                .append(corporateGroupEmployees, that.corporateGroupEmployees)
                 .isEquals();
     }
 
@@ -124,6 +67,7 @@ public class KtpYearResource {
                 .append(shareholderValue)
                 .append(loans)
                 .append(employees)
+                .append(corporateGroupEmployees)
                 .toHashCode();
     }
 }

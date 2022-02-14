@@ -181,6 +181,8 @@
 
 
         <fieldset class="govuk-fieldset">
+            <input type="hidden"
+                   th:field="*{ktpPhase2Enabled}" />
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-1">
                 <h2 class="govuk-fieldset__heading">Financial overview</h2>
             </legend>
@@ -195,7 +197,7 @@
                         <th class="govuk-table__header table-header-width-40-percent">Section</th>
                         <th th:each="year : ${form.years}"
                             class="govuk-table__header table-header-width-20-percent govuk-table__header--numeric"
-                            th:text="${year.yearText}"></th>
+                            th:text="${form.ktpPhase2Enabled ? year.phase2YearText : year.yearText}"></th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -217,7 +219,7 @@
                 </table>
             </div>
 
-            <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Employee data</h2>
+            <h2 class="govuk-fieldset__legend--m govuk-!-margin-bottom-2">Employee data</h2>
             <div class="table-overflow">
                 <table class="govuk-table">
                     <thead class="govuk-table__head">
@@ -225,26 +227,31 @@
                         <th class="govuk-table__header table-header-width-40-percent">Section</th>
                         <th th:each="year : ${form.years}"
                             class="govuk-table__header table-header-width-20-percent govuk-table__header--numeric"
-                            th:text="${year.yearText}"></th>
+                            th:text="${form.ktpPhase2Enabled ? year.phase2YearText : year.yearText}"></th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                    <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                            ktp-year(form=${form}, field='employees', rowName='Number of full time employees in your company', readOnly=${readOnly}, min=0)" />
+                        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                                ktp-year(form=${form}, field='employees', rowName='Number of full time employees in your company', readOnly=${readOnly}, min=0)" />
+                        <th:block th:if="${form.ktpPhase2Enabled}">
+                            <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                                    ktp-year(form=${form}, field='corporateGroupEmployees', rowName='Number of full time employees in your corporate group (if applicable)', readOnly=${readOnly}, min=0)" />
+                        </th:block>
                     </tbody>
                 </table>
             </div>
         </fieldset>
-        <th:block th:insert="fragments/form-elements/textfield ::
-                        textfield-integer(
-                            label='Number of full time employees in your corporate group (if applicable)',
-                            id='groupEmployees',
-                            value=${form.groupEmployees},
-                            readOnly=${readOnly},
-                            placeholder='0',
-                            min=0
-                            )" />
-
+        <th:block th:unless="${form.ktpPhase2Enabled}">
+            <th:block th:insert="fragments/form-elements/textfield ::
+                            textfield-integer(
+                                label='Number of full time employees in your corporate group (if applicable)',
+                                id='groupEmployees',
+                                value=${form.groupEmployees},
+                                readOnly=${readOnly},
+                                placeholder='0',
+                                min=0
+                                )" />
+        </th:block>
         <th:block th:insert="this::state-aid-warning(${readOnly}, ${model})"/>
     </th:block>
 
