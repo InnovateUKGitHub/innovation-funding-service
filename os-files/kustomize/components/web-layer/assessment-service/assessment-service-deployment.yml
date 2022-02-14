@@ -30,19 +30,19 @@ spec:
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
-            path: /assessment/monitoring/health
+            path: /monitoring/assessment
             port: 8080
-          initialDelaySeconds: 180
-          periodSeconds: 31
+          initialDelaySeconds: 30
+          periodSeconds: 30
           timeoutSeconds: 5
           successThreshold: 1
           failureThreshold: 3
         readinessProbe:
           httpGet:
-            path: /assessment/monitoring/health
+            path: /monitoring/assessment
             port: 8080
-          initialDelaySeconds: 180
-          periodSeconds: 5
+          initialDelaySeconds: 30
+          periodSeconds: 30
           timeoutSeconds: 5
           successThreshold: 1
           failureThreshold: 1

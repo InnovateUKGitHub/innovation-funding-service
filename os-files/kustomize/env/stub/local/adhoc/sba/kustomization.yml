@@ -12,6 +12,7 @@ components:
 
 resources:
   - sba-secret.yml
+  - rbac/sba-rbac.yml
 
 patchesStrategicMerge:
   - sba.yml
