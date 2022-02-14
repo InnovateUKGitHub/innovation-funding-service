@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationDetailsReadOnlyForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.populator.ApplicationYourOrganisationViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.ApplicationYourOrganisationViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationDetailsReadOnlyViewModel;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
@@ -165,7 +165,8 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
 
     private ApplicationYourOrganisationViewModel getViewModel(long applicationId, long competitionId, long organisationId) {
         ApplicationYourOrganisationViewModel applicationYourOrganisationViewModel = viewModelPopulator.populate(applicationId, competitionId, organisationId);
-        applicationYourOrganisationViewModel.setOrgDetailsForm(populateOrganisationDetails(organisationId));
+        applicationYourOrganisationViewModel.setOrgDetailsViewModel(populateOrganisationDetails(organisationId));
+        applicationYourOrganisationViewModel.setPartnerOrgDisplay(false);
         return applicationYourOrganisationViewModel;
     }
 
@@ -178,19 +179,20 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
         return "redirect:" + String.format("%s%d/form/FINANCE", APPLICATION_BASE_URL, applicationId);
     }
 
-    private YourOrganisationDetailsReadOnlyForm populateOrganisationDetails(long organisationId) {
-        YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm = new YourOrganisationDetailsReadOnlyForm();
+    private YourOrganisationDetailsReadOnlyViewModel populateOrganisationDetails(long organisationId) {
+        YourOrganisationDetailsReadOnlyViewModel yourOrganisationDetailsReadOnlyViewModel = new YourOrganisationDetailsReadOnlyViewModel();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
-        yourOrganisationDetailsReadOnlyForm.setOrganisationName(organisation.getName());
+        yourOrganisationDetailsReadOnlyViewModel.setOrganisationName(organisation.getName());
+        yourOrganisationDetailsReadOnlyViewModel.setOrganisationType(organisation.getOrganisationTypeName());
         if (organisation.getCompanyRegistrationNumber() == null || organisation.getCompanyRegistrationNumber().isEmpty()) {
-            yourOrganisationDetailsReadOnlyForm.setOrgDetailedDisplayRequired(false);
-            yourOrganisationDetailsReadOnlyForm.setRegistrationNumber("");
-            yourOrganisationDetailsReadOnlyForm.setAddressResource(null);
-            yourOrganisationDetailsReadOnlyForm.setSicCodes(null);
+            yourOrganisationDetailsReadOnlyViewModel.setOrgDetailedDisplayRequired(false);
+            yourOrganisationDetailsReadOnlyViewModel.setRegistrationNumber("");
+            yourOrganisationDetailsReadOnlyViewModel.setAddressResource(null);
+            yourOrganisationDetailsReadOnlyViewModel.setSicCodes(null);
         } else {
-            yourOrganisationDetailsReadOnlyForm.setOrgDetailedDisplayRequired(true);
-            yourOrganisationDetailsReadOnlyForm.setRegistrationNumber(organisation.getCompanyRegistrationNumber());
+            yourOrganisationDetailsReadOnlyViewModel.setOrgDetailedDisplayRequired(true);
+            yourOrganisationDetailsReadOnlyViewModel.setRegistrationNumber(organisation.getCompanyRegistrationNumber());
             AddressResource addressResource =  organisationAddressRestService.getOrganisationRegisterdAddressById(organisation.getId())
                     .andOnSuccessReturn(addresses -> addresses.stream()
                             .findFirst()
@@ -198,11 +200,11 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
                            .orElse(new AddressResource()))
                     .getSuccess();
 
-             yourOrganisationDetailsReadOnlyForm.setAddressResource(addressResource);
+            yourOrganisationDetailsReadOnlyViewModel.setAddressResource(addressResource);
             if (organisation.getSicCodes() != null && !organisation.getSicCodes().isEmpty()) {
-                yourOrganisationDetailsReadOnlyForm.setSicCodes(organisation.getSicCodes());
+                yourOrganisationDetailsReadOnlyViewModel.setSicCodes(organisation.getSicCodes());
             }
         }
-        return yourOrganisationDetailsReadOnlyForm;
+        return yourOrganisationDetailsReadOnlyViewModel;
     }
 }

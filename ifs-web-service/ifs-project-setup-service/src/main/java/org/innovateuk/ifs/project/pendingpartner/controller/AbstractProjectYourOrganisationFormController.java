@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.pendingpartner.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationDetailsReadOnlyForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.ApplicationYourOrganisationViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationDetailsReadOnlyViewModel;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -11,7 +11,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.pendingpartner.populator.YourOrganisationViewModelPopulator;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
-import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -128,7 +127,7 @@ public abstract class AbstractProjectYourOrganisationFormController<F> extends A
 
     private ApplicationYourOrganisationViewModel getViewModel(long projectId, long organisationId, UserResource user) {
         ApplicationYourOrganisationViewModel applicationYourOrganisationViewModel = viewModelPopulator.populate(projectId, organisationId, user);
-        applicationYourOrganisationViewModel.setOrgDetailsForm(populateOrganisationDetails(organisationId));
+        applicationYourOrganisationViewModel.setOrgDetailsViewModel(populateOrganisationDetails(organisationId));
         return  applicationYourOrganisationViewModel;
     }
 
@@ -138,18 +137,19 @@ public abstract class AbstractProjectYourOrganisationFormController<F> extends A
                 organisationId);
     }
 
-    private YourOrganisationDetailsReadOnlyForm populateOrganisationDetails(long organisationId) {
-        YourOrganisationDetailsReadOnlyForm yourOrganisationDetailsReadOnlyForm = new YourOrganisationDetailsReadOnlyForm();
+    private YourOrganisationDetailsReadOnlyViewModel populateOrganisationDetails(long organisationId) {
+        YourOrganisationDetailsReadOnlyViewModel yourOrganisationDetailsReadOnlyViewModel = new YourOrganisationDetailsReadOnlyViewModel();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-            yourOrganisationDetailsReadOnlyForm.setOrganisationName(organisation.getName());
+        yourOrganisationDetailsReadOnlyViewModel.setOrganisationName(organisation.getName());
+        yourOrganisationDetailsReadOnlyViewModel.setOrganisationType(organisation.getOrganisationTypeName());
             if (organisation.getCompanyRegistrationNumber() == null || organisation.getCompanyRegistrationNumber().isEmpty()) {
-                yourOrganisationDetailsReadOnlyForm.setOrgDetailedDisplayRequired(false);
-                yourOrganisationDetailsReadOnlyForm.setRegistrationNumber("");
-                yourOrganisationDetailsReadOnlyForm.setAddressResource(null);
-                yourOrganisationDetailsReadOnlyForm.setSicCodes(null);
+                yourOrganisationDetailsReadOnlyViewModel.setOrgDetailedDisplayRequired(false);
+                yourOrganisationDetailsReadOnlyViewModel.setRegistrationNumber("");
+                yourOrganisationDetailsReadOnlyViewModel.setAddressResource(null);
+                yourOrganisationDetailsReadOnlyViewModel.setSicCodes(null);
             } else {
-                yourOrganisationDetailsReadOnlyForm.setOrgDetailedDisplayRequired(true);
-                yourOrganisationDetailsReadOnlyForm.setRegistrationNumber(organisation.getCompanyRegistrationNumber());
+                yourOrganisationDetailsReadOnlyViewModel.setOrgDetailedDisplayRequired(true);
+                yourOrganisationDetailsReadOnlyViewModel.setRegistrationNumber(organisation.getCompanyRegistrationNumber());
                 AddressResource addressResource = organisationAddressRestService.getOrganisationRegisterdAddressById(organisation.getId())
                         .andOnSuccessReturn(addresses -> addresses.stream()
                                 .findFirst()
@@ -157,11 +157,11 @@ public abstract class AbstractProjectYourOrganisationFormController<F> extends A
                                 .orElse(new AddressResource()))
                         .getSuccess();
 
-                yourOrganisationDetailsReadOnlyForm.setAddressResource(addressResource);
+                yourOrganisationDetailsReadOnlyViewModel.setAddressResource(addressResource);
                 if (organisation.getSicCodes() != null && !organisation.getSicCodes().isEmpty()) {
-                    yourOrganisationDetailsReadOnlyForm.setSicCodes(organisation.getSicCodes());
+                    yourOrganisationDetailsReadOnlyViewModel.setSicCodes(organisation.getSicCodes());
                 }
             }
-        return yourOrganisationDetailsReadOnlyForm;
+        return yourOrganisationDetailsReadOnlyViewModel;
     }
 }

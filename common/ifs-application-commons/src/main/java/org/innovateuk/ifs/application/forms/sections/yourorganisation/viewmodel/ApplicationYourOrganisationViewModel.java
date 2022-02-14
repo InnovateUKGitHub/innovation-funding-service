@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel
 
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.FormOption;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationDetailsReadOnlyForm;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
@@ -25,7 +24,8 @@ public class ApplicationYourOrganisationViewModel implements BaseAnalyticsViewMo
     private boolean showOrganisationSizeAlert;
     private boolean maximumFundingLevelConstant;
     private boolean internal;
-    private YourOrganisationDetailsReadOnlyForm orgDetailsForm;
+    private YourOrganisationDetailsReadOnlyViewModel orgDetailsViewModel;
+    private boolean partnerOrgDisplay;
 
 
     public ApplicationYourOrganisationViewModel(long applicationId, CompetitionResource competition,
@@ -83,11 +83,12 @@ public class ApplicationYourOrganisationViewModel implements BaseAnalyticsViewMo
 
     public String getHint() {
         String organisation = internal ? "the organisation" : "your organisation";
+        String orgSize = internal ? "the organisation's size" : "your organisation size";
         String you = internal ? "the organisation" : "you";
         String url = fundingRules == FundingRules.STATE_AID ? STATE_AID_URL : NON_STATE_AID_URL;
 
         String fundingLevelDependsOnOrganisationSizeMessage = String.format("<p class=\"govuk-body\">The size of %s determines the level of funding  %s are eligible for.</p>", organisation, you);
-        String sizeDefinition = String.format("<p class=\"govuk-body\">Please use our <a href=\"%s\">guidance</a>(opens in a new window) to determine %s.</p>", url, organisation);
+        String sizeDefinition = String.format("<p class=\"govuk-body\">Please use our <a href=\"%s\"> guidance </a> (opens in a new window) to determine %s.</p>", url, orgSize);
 
         if (maximumFundingLevelConstant) {
             return sizeDefinition;
@@ -96,12 +97,19 @@ public class ApplicationYourOrganisationViewModel implements BaseAnalyticsViewMo
         }
     }
 
-    public YourOrganisationDetailsReadOnlyForm getOrgDetailsForm() {
-        return orgDetailsForm;
+    public boolean isPartnerOrgDisplay() {
+        return partnerOrgDisplay;
     }
 
-    public void setOrgDetailsForm(YourOrganisationDetailsReadOnlyForm orgDetailsForm) {
-        this.orgDetailsForm = orgDetailsForm;
+    public void setPartnerOrgDisplay(boolean partnerOrgDisplay) {
+        this.partnerOrgDisplay = partnerOrgDisplay;
     }
 
+    public YourOrganisationDetailsReadOnlyViewModel getOrgDetailsViewModel() {
+        return orgDetailsViewModel;
+    }
+
+    public void setOrgDetailsViewModel(YourOrganisationDetailsReadOnlyViewModel orgDetailsViewModel) {
+        this.orgDetailsViewModel = orgDetailsViewModel;
+    }
 }

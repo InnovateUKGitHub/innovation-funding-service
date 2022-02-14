@@ -19,9 +19,6 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle=${organisationDetails.organisationName},subTitle=|${organisationDetails.projectName}|,size='govuk-heading-xl'"/>
 
-        <th:block
-            th:insert="project/fragments/organisation-details-fragment :: organisation-details-view (organisationDetails=${organisationDetails})"/>
-
         <th:block th:unless="${organisationDetails.knowledgeBase && organisationDetails.ktpCompetition}">
             <div th:if="${yourOrganisation != null}">
                 <h2 class="govuk-heading-m">Organisation size</h2>
