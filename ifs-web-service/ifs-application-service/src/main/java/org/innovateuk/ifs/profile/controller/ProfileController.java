@@ -69,7 +69,7 @@ public class ProfileController {
         form.setFirstName(user.getFirstName());
         form.setLastName(user.getLastName());
         form.setPhoneNumber(user.getPhoneNumber());
-        form.setAllowMarketingEmails(user.getAllowMarketingEmails());
+        form.setAllowMarketingEmails(user.isAllowMarketingEmails());
 		return form;
     }
 
@@ -113,7 +113,7 @@ public class ProfileController {
                 userDetailsForm.getLastName(),
                 ofNullable(loggedInUser.getTitle()).map(Title::getDisplayName).orElse(null),
                 userDetailsForm.getPhoneNumber(),
-                userDetailsForm.getAllowMarketingEmails());
+                userDetailsForm.isAllowMarketingEmails());
     }
 
     private void addEnvelopeErrorsToBindingResultErrors(List<Error> errors, BindingResult bindingResult) {

@@ -41,6 +41,7 @@ public class YourFECModelFormPopulator {
                 .orElse(null);
 
         form.setFecCertificateFileName(fecCertificateFileName);
+        form.setFecCertExpiryDate(applicationFinance.getFecCertExpiryDate());
         return form;
     }
 }

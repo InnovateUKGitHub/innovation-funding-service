@@ -48,7 +48,7 @@ public class KtpFinancialYear {
         this.ktpFinancialYears = ktpFinancialYears;
     }
 
-    public KtpFinancialYear(Integer year, BigDecimal turnover, BigDecimal preTaxProfit, BigDecimal currentAssets, BigDecimal liabilities, BigDecimal shareholderValue, BigDecimal loans, Long employees, KtpFinancialYears ktpFinancialYears) {
+    public KtpFinancialYear(Integer year, BigDecimal turnover, BigDecimal preTaxProfit, BigDecimal currentAssets, BigDecimal liabilities, BigDecimal shareholderValue, BigDecimal loans, Long employees, Long corporateGroupEmployees, KtpFinancialYears ktpFinancialYears) {
         this(year, ktpFinancialYears);
         this.turnover = turnover;
         this.preTaxProfit = preTaxProfit;
@@ -57,10 +57,11 @@ public class KtpFinancialYear {
         this.shareholderValue = shareholderValue;
         this.loans = loans;
         this.employees = employees;
+        this.corporateGroupEmployees = corporateGroupEmployees;
     }
 
     public KtpFinancialYear(KtpFinancialYear year, KtpFinancialYears ktpFinancialYears) {
-        this(year.getYear(), year.getTurnover(), year.getPreTaxProfit(), year.getCurrentAssets(), year.getLiabilities(), year.getShareholderValue(), year.getLoans(), year.getEmployees(), ktpFinancialYears);
+        this(year.getYear(), year.getTurnover(), year.getPreTaxProfit(), year.getCurrentAssets(), year.getLiabilities(), year.getShareholderValue(), year.getLoans(), year.getEmployees(), year.getCorporateGroupEmployees(), ktpFinancialYears);
     }
 
     public Long getId() {

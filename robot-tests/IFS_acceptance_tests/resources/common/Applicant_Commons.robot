@@ -971,7 +971,7 @@ the user completes the application details section
 the user edits the KTP fec model
     [Arguments]   ${fecModelID}
     the user clicks the button/link        link = Your fEC model
-    the user clicks the button/link        jQuery = button:contains("Edit your fEC Model")
+    the user clicks the button/link        jQuery = button:contains("Change")
     the user selects the radio button      fecModelEnabled  ${fecModelID}
     the user clicks the button/link        jQuery = button:contains("Mark as complete")
 
@@ -1021,3 +1021,11 @@ The user completes the research category
     the user clicks the button/link      id=application-question-complete
     the user clicks the button/link      link = Back to application overview
     the user should see the element      jQuery=li:contains("Research category") > .task-status-complete
+
+the user accepts invitation to join application under same organisation
+    [Arguments]  ${email}  ${password}  ${emailSubject}  ${emailBody}
+    Logout as user
+    the user reads his email and clicks the link     ${email}  ${emailSubject}  ${emailBody}  2
+    the user clicks the button/link                  jQuery = a:contains("Continue")
+    login to application                             ${email}  ${password}
+    the user clicks the button/link                  jQuery = a:contains("Confirm and accept invitation")
