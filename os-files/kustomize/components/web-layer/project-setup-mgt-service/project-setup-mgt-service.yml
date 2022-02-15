@@ -6,6 +6,7 @@ metadata:
     app: project-setup-mgt-svc
   annotations:
     javaDebug: javaDebug
+    management.context-path: /project-setup-management
 spec:
   ports:
     - name: 8080-tcp
