@@ -776,13 +776,13 @@ User deletes the competition
     And the user clicks the button/link             css = .delete-modal button[type="submit"]
     Then the user should see page not found error   ${deletedCompUrl}
 
-User deletes the competition on completing all competition details
-    [Documentation]  IFS-8496
-    Given the comp admin creates competition with all sections details    ${business_type_id}  Competition to Delete  EOI  ${compType_Programme}  NOT_AID  GRANT  PROJECT_SETUP  no  1  true  collaborative  No
-    When the user clicks the button/link                                  link = Delete competition
-    And the user clicks the button/link                                   css = .delete-modal button[type="submit"]
-    And the user navigates to the page                                    ${CA_UpcomingComp}
-    Then The user should not see the element                              link = Competition to Delete
+#User deletes the competition on completing all competition details
+#    [Documentation]  IFS-8496
+#    Given the comp admin creates competition with all sections details    ${business_type_id}  Competition to Delete  EOI  ${compType_Programme}  NOT_AID  GRANT  PROJECT_SETUP  no  1  true  collaborative  No
+#    When the user clicks the button/link                                  link = Delete competition
+#    And the user clicks the button/link                                   css = .delete-modal button[type="submit"]
+#    And the user navigates to the page                                    ${CA_UpcomingComp}
+#    Then The user should not see the element                              link = Competition to Delete
 
 User cannot delete competition with assessors
     [Documentation]  IFS-1084
