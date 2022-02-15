@@ -1033,6 +1033,7 @@ the comp admin creates competition with all sections details
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
     ...  ELSE IF  '${fundingType}' == 'KTP'  the user marks the KTP application details as done     ${compType}
     ...  ELSE  the user marks the application as done                                ${projectGrowth}  ${compType}  ${competition}
+    the user fills in the CS Assessors                                               ${fundingType}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user select no documents
     ...  ELSE  the user fills in the CS Documents in other projects
     the user clicks the button/link                                                  link = Public content
