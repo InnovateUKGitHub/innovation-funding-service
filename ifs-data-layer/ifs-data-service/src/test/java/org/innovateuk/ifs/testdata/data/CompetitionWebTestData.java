@@ -599,6 +599,7 @@ public class CompetitionWebTestData {
     private static CompetitionLineBuilder loanCompetition() {
         return anIfsCompetition()
                 .withFundingType(FundingType.LOAN)
+                .withCollaborationLevel(CollaborationLevel.SINGLE)
                 .withResubmission(true);
     }
 
