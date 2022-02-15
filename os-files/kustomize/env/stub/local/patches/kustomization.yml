@@ -4,4 +4,4 @@ components:
   - wait-for-data-service-patch
   - slow-startup-patch
   - resource-limit-patch
-#  - health-endpoint-patch
+  - health-endpoint-patch
