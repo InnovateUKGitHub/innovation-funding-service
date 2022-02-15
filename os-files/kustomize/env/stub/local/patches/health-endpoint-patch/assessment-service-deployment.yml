@@ -9,5 +9,5 @@ spec:
         - name: spring-boot-service-container
           startupProbe:
             httpGet:
-              path: /assessment/health
+              path: /assessment/monitoring/health
               port: 8080
