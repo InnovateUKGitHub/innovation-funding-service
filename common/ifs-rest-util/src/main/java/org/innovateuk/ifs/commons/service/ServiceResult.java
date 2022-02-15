@@ -208,7 +208,15 @@ public class ServiceResult<T> extends BaseFailingOrSucceedingResult<T, ServiceFa
     public RestResult<Void> toPutResponse() {
         return handleSuccessOrFailure(failure -> toRestFailure(), success -> RestResult.toPutResponse());
     }
-
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a PUT request that is
+     * updating data.
+     * <p>
+     * This will be a bodiless RestResult with a "204 - NO CONTENT" response.
+     */
+    public RestResult<Void> toPutResponseNoContentResponse( ) {
+        return handleSuccessOrFailure(failure -> toRestFailure(), success -> RestResult.toPutResponseNoContent());
+    }
     /**
      * @deprecated PUTs shouldn't generally return results in their bodies
      * <p>
