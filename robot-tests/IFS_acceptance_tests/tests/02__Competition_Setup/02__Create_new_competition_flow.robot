@@ -787,7 +787,8 @@ User deletes the competition
 User cannot delete competition with assessors
     [Documentation]  IFS-1084
     [Tags]  HappyPath
-    Given the user clicks the button/link       link = Photonics for health
+    Given the user navigates to the page        ${server}/management/dashboard/upcoming
+    And the user clicks the button/link         link = Photonics for health
     And The user clicks the button/link         link = View and update competition details
     When the user clicks the button/link        link = Delete competition
     And the user clicks the button/link         css = .delete-modal button[type="submit"]
