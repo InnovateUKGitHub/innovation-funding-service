@@ -7,7 +7,6 @@ the user uploads the file
     [Arguments]  ${selector}  ${file}
     Choose File  ${selector}  ${UPLOAD_FOLDER}/${file}
     Wait Until Page Does Not Contain Without Screenshots    Uploading   30s
-    wait until keyword succeeds without screenshots         60 s  500 ms   Page Should Contain    ${file} (opens in a new window)
 
 the user can remove the uploaded file
     [Arguments]  ${name}  ${file_name}
@@ -20,7 +19,6 @@ the user can remove the uploaded file
 
 the user can remove file with multiple uploads
     [Arguments]  ${name}  ${file_name}
-    Reload Page
     the user clicks the button/link                         name=${name}
     wait until keyword succeeds without screenshots         60 s  500 ms   Page Should Not Contain  link = ${file_name} (opens in a new window)
     Page Should Contain                                     Upload
