@@ -30,7 +30,7 @@ spec:
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
-              path: /project-setup-management/monitoring/health
+              path: /project-setup-management/health
               port: 8080
             initialDelaySeconds: 180
             periodSeconds: 31
@@ -39,7 +39,7 @@ spec:
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /project-setup-management/monitoring/health
+              path: /project-setup-management/health
               port: 8080
             initialDelaySeconds: 180
             periodSeconds: 5
