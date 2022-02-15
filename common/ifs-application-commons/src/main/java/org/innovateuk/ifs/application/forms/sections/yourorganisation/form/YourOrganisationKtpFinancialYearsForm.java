@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.validation.constraints.LastFinancialYearEnd;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
@@ -11,7 +13,11 @@ import java.util.List;
 /**
  * Form used to capture "Your organisation" information when a the competition is ktp.
  */
+@Getter
+@Setter
 public class YourOrganisationKtpFinancialYearsForm {
+
+    private boolean ktpPhase2Enabled;
 
     @NotNull(message = "{validation.yourorganisation.organisation.size.required}")
     private OrganisationSize organisationSize;
@@ -29,42 +35,12 @@ public class YourOrganisationKtpFinancialYearsForm {
     public YourOrganisationKtpFinancialYearsForm() {
     }
 
-    public YourOrganisationKtpFinancialYearsForm(OrganisationSize organisationSize, List<YourOrganisationKtpFinancialYearForm> years, Long groupEmployees, YearMonth financialYearEnd) {
+    public YourOrganisationKtpFinancialYearsForm(boolean ktpPhase2Enabled, OrganisationSize organisationSize, List<YourOrganisationKtpFinancialYearForm> years, Long groupEmployees, YearMonth financialYearEnd) {
+        this.ktpPhase2Enabled = ktpPhase2Enabled;
         this.organisationSize = organisationSize;
         this.years = years;
         this.groupEmployees = groupEmployees;
         this.financialYearEnd = financialYearEnd;
     }
 
-    public OrganisationSize getOrganisationSize() {
-        return organisationSize;
-    }
-
-    public void setOrganisationSize(OrganisationSize organisationSize) {
-        this.organisationSize = organisationSize;
-    }
-
-    public List<YourOrganisationKtpFinancialYearForm> getYears() {
-        return years;
-    }
-
-    public void setYears(List<YourOrganisationKtpFinancialYearForm> years) {
-        this.years = years;
-    }
-
-    public Long getGroupEmployees() {
-        return groupEmployees;
-    }
-
-    public void setGroupEmployees(Long groupEmployees) {
-        this.groupEmployees = groupEmployees;
-    }
-
-    public YearMonth getFinancialYearEnd() {
-        return financialYearEnd;
-    }
-
-    public void setFinancialYearEnd(YearMonth financialYearEnd) {
-        this.financialYearEnd = financialYearEnd;
-    }
 }

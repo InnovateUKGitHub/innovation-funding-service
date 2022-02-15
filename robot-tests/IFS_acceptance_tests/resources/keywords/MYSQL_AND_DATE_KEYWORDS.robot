@@ -121,6 +121,11 @@ get today
     # This format is like: 4 February 2017
     [Return]    ${today}
 
+get todays day
+    ${todaysDay} =    Get Current Date  UTC   result_format=%-d   exclude_millis=true
+    # This format is like: 4
+    [Return]    ${todaysDay}
+
 get today short month
     ${today} =    Get Current Date  UTC   result_format=%-d %b %Y    exclude_millis=true
     # This format is like: 4 Feb 2017
@@ -262,6 +267,8 @@ Set global date variables
     set global variable  ${nextyearintwodigits}
     ${tomorrowMonthWord} =      get tomorrow month as word
     set global variable  ${tomorrowMonthWord}
+    ${dayInNumber} =      get todays day
+    set global variable  ${dayInNumber}
 
 Delete user from terms and conditions database
     [Arguments]    ${user_id}

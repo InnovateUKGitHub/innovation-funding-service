@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.profile.viewmodel;
 
+import org.innovateuk.ifs.user.resource.EDIStatus;
+
+import java.time.ZonedDateTime;
 import java.util.Set;
 
 /**
@@ -12,14 +15,29 @@ public class UserProfileViewModel {
     private final boolean allowMarketingEmails;
     private final Set<OrganisationProfileViewModel> organisations;
     private final boolean monitoringOfficer;
+    private final EDIStatus ediStatus;
+    private final ZonedDateTime ediReviewDate;
 
-    public UserProfileViewModel(String name, String phoneNumber, String emailAddress, boolean allowMarketingEmails, Set<OrganisationProfileViewModel> organisations, boolean monitoringOfficer) {
+
+    public EDIStatus getEdiStatus() {
+        return ediStatus;
+    }
+
+    public ZonedDateTime getEdiReviewDate() {
+        return ediReviewDate;
+    }
+
+    public UserProfileViewModel(String name, String phoneNumber, String emailAddress, boolean allowMarketingEmails,
+                                Set<OrganisationProfileViewModel> organisations, boolean monitoringOfficer,
+                                EDIStatus ediStatus, ZonedDateTime ediReviewDate) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.emailAddress = emailAddress;
         this.allowMarketingEmails = allowMarketingEmails;
         this.organisations = organisations;
         this.monitoringOfficer = monitoringOfficer;
+        this.ediStatus=ediStatus;
+        this.ediReviewDate = ediReviewDate;
     }
 
     public String getName() {

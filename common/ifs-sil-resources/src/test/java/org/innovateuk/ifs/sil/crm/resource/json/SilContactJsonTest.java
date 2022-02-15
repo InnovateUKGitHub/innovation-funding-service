@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class SilContactJsonTest {
 
-    private static final String contactToString = "SilContact(ifsUuid=null, experienceType=null, ifsAppID=null, email=email, lastName=last name, firstName=first name, title=title, jobTitle=job title, address=SilAddress(buildingName=building name, street=street, locality=locality, town=town, postcode=postcode, country=country), organisation=SilOrganisation(name=name, registrationNumber=registration number, registeredAddress=SilAddress(buildingName=building name, street=street, locality=locality, town=town, postcode=postcode, country=country), srcSysOrgId=sys org id), sourceSystem=IFS, srcSysContactId=sys contact id)";
+    private static final String contactToString = "SilContact(ifsUuid=null, experienceType=null, ifsAppID=null, email=email, lastName=last name, firstName=first name, title=title, jobTitle=job title, address=SilAddress(buildingName=building name, street=street, locality=locality, town=town, postcode=postcode, country=country), organisation=SilOrganisation(name=name, registrationNumber=registration number, registeredAddress=SilAddress(buildingName=building name, street=street, locality=locality, town=town, postcode=postcode, country=country), srcSysOrgId=sys org id), sourceSystem=IFS, srcSysContactId=sys contact id, phoneNumber=88888888888)";
     String baseCrmPayloadFromFile;
     String extraCrmPayloadFromFile;
 
@@ -55,6 +55,7 @@ public class SilContactJsonTest {
         silContact.setAddress(address);
         silContact.setJobTitle("job title");
         silContact.setOrganisation(organisation);
+        silContact.setPhoneNumber("88888888888");
         silContact.setSrcSysContactId("sys contact id");
 
         String crmDataGenerated = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(silContact);
@@ -97,6 +98,7 @@ public class SilContactJsonTest {
         silContact.setOrganisation(organisation);
         silContact.setSrcSysContactId("sys contact id");
         silContact.setIfsAppID("1");
+        silContact.setPhoneNumber("88888888888");
         silContact.setExperienceType("LOAN");
         silContact.setIfsUuid("d39f211d-a1aa-4973-bd0d-9a746851559e");
 

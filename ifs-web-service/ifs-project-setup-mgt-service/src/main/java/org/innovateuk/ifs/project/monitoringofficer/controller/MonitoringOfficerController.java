@@ -242,6 +242,6 @@ public class MonitoringOfficerController {
                 userResource.getLastName(),
                 ofNullable(userResource.getTitle()).map(Title::getDisplayName).orElse(null),
                 phoneNumber,
-                userResource.getAllowMarketingEmails());
+                userResource.isAllowMarketingEmails());
     }
 }
