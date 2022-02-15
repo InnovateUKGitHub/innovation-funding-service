@@ -366,6 +366,16 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
         });
     }
 
+    public IndustrialCostDataBuilder withFecCertExpiryDate(LocalDate fecCertExpiryDate) {
+        return with(data -> {
+            ApplicationFinanceResource applicationFinance =
+                    financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
+                            getSuccess();
+            applicationFinance.setFecCertExpiryDate(fecCertExpiryDate);
+            financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
+        });
+    }
+
     public IndustrialCostDataBuilder withUploadedFecFile() {
         return with(data -> {
             FileEntry fileEntry = fileEntryRepository.save(

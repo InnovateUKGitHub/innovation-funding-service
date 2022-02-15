@@ -147,7 +147,7 @@ The Lead's inputs should not be visible in other application invites
     [Tags]
     Then the user should not see the element  css = li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input
 
-Supprot user accepts the pending invite on application team
+Support user accepts the pending invite on application team
     [Documentation]  IFS-6152
     Given log in as a different user       &{support_user_credentials}
     And the user navigates to the page     ${server}/management/competition/${openCompetitionBusinessRTO}/applications/all

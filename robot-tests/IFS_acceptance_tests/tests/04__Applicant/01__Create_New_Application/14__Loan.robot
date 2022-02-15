@@ -51,13 +51,16 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...
 ...             IFS-11137 Content change mop-up relating to Loans Part B epic
 ...
-
+...             IFS-11303 CompetitionID on experience Cloud/community url parameters
+...
+...             IFS-11271 IFS to SF Assigning business and financial information question
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
 Resource        ../../../resources/common/Applicant_Commons.robot
 Resource        ../../../resources/common/PS_Common.robot
-Resource          ../../../resources/common/Competition_Commons.robot
+Resource        ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
 ${loan_comp_PS}                            Project setup loan comp
@@ -81,13 +84,60 @@ ${spend_profile}                           ${server}/project-setup-management/pr
 
 *** Test Cases ***
 The user can navigate back to application overview in the same window from part b questions form
-    [Documentation]     IFS-10761
+    [Documentation]     IFS-10761  IFS-11303
     When the user creates a new application
-    And the user clicks the button/link                           link = Business and financial information
-    And the user clicks the button/link                           jQuery = a:contains("Continue")
+    And the user clicks the button/link              link = Application details
+    And the user fills in the Application details    loans b&fi application  ${tomorrowday}  ${month}  ${nextyear}
+    And the user clicks the button/link              link = Business and financial information
+    And the user clicks the button/link              jQuery = a:contains("Continue")
     And the user logs in if username field present
-    Then title should be                                           Home
+    Then title should be                             Home
+    And Url should contain competition id            ${loan_comp_appl_id}
 
+The member applicant can not continue button see B&FI question when the question is not assigned to member
+    [Documentation]    IFS-11271
+    Given the user navigates to the page         ${server}/applicant/dashboard
+    And The user clicks the button/link          link = loans b&fi application
+    When add a member to the lead organisation
+    And the user clicks the button/link          link = Business and financial information
+    Then the user should not see the element     jQuery = a:contains("Continue")
+
+Lead applicant assigns B&FI question to member of the same organisation
+    [Documentation]    IFS-11271
+    Given log in as a different user                                    &{lead_applicant_credentials}
+    And the user navigates to the page                                  ${server}/applicant/dashboard
+    And The user clicks the button/link                                 link = loans b&fi application
+    When lead assigns b&fi question to member in the same organisation  Business and financial information
+    Then the user should see the element                                jQuery = p:contains("This question is assigned to"):contains("Troy Ward")
+
+Member can access salesforce form through B&FI question
+    [Documentation]    IFS-11271
+    Given log in as a different user                 &{troy_ward_crendentials}
+    And the user navigates to the page               ${server}/applicant/dashboard
+    When The user clicks the button/link             link = loans b&fi application
+    And the user clicks the button/link              link = Business and financial information
+    And the user clicks the button/link              jQuery = a:contains("Continue")
+    And the user logs in if username field present
+    Then title should be                             Home
+
+Member can mark the B&FI question as complete
+    [Documentation]    IFS-11271
+    [Setup]  Requesting application ID of loan competiton
+    Given the sales force submits/unsubmits b&fi survey     1  ${newLoansApplicationID}
+    When the user navigates to the page                     ${server}/applicant/dashboard
+    And the user clicks the button/link                     link = loans b&fi application
+    And the user clicks the button/link                     link = Business and financial information
+    Then the user can see B&FI question as complete
+
+lead applicant sees B&FI question as complete when member completes it
+    [Documentation]    IFS-11271
+    Given log in as a different user                    &{lead_applicant_credentials}
+    When the user navigates to the page                 ${server}/applicant/dashboard
+    And The user clicks the button/link                 link = loans b&fi application
+    And the user clicks the button/link                 link = Business and financial information
+    Then the user can see B&FI question as complete
+
+#below test cases uses web test data comp Loan Competition and Loan Application.
 The user can see b&fi application question as complete and shows edit online survey button
     [Documentation]    IFS-9484  IFS-10705  IFS-10703
     Given the user navigates to the page                    ${server}/applicant/dashboard
@@ -95,9 +145,9 @@ The user can see b&fi application question as complete and shows edit online sur
     And the user clicks the button/link                     link = Business and financial information
     Then the user should see b&fi question details
 
-the user can open the sales force new tab on clicking conitnue button in incomplete status of b&fi question
+The user can open the sales force new tab on clicking conitnue button in incomplete status of b&fi question
     [Documentation]   IFS-10703
-    Given the sales force submits/unsubmits b&fi survey     0
+    Given the sales force submits/unsubmits b&fi survey     0  ${loanApplicationID}
     When the user clicks the button/link                    jQuery = a:contains("Continue")
     And the user logs in if username field present
     Then title should be                                    Home
@@ -118,7 +168,7 @@ The user will not be able to mark the application as complete without completing
 
 The user can see the business and financial information application question in application overview as complete
     [Documentation]    IFS-9484  IFS-10705
-    When the sales force submits/unsubmits b&fi survey     1
+    When the sales force submits/unsubmits b&fi survey     1  ${loanApplicationID}
     Then the user should see the element                   jQuery = .section-complete + button:contains("Business and financial information")
 
 Return and edit button should not change the status of B&FI question
@@ -273,6 +323,7 @@ Applicant checks successful and unsuccessful project status
 
 *** Keywords ***
 Custom suite setup
+    Set predefined date variables
     the user logs-in in new browser                       &{lead_applicant_credentials}
     the user clicks the application tile if displayed
     Connect to database  @{database}
@@ -462,7 +513,6 @@ the user should see b&fi question details
     the user should see the element     jQuery = p:contains("Business and financial details")
     the user should see the element     jQuery = p:contains("Financial information")
 
-
 the user shoulds see b&fi link
     the user clicks the button/link      link = Business and financial information
     the user should see the element      jQuery = a:contains("Business and financial information")
@@ -510,8 +560,8 @@ the application is assigned to a assessor
     the user clicks the button/link       jQuery = button:contains("Confirm")
 
 the sales force submits/unsubmits b&fi survey
-    [Arguments]  ${completeStatus}
-    execute sql string  UPDATE `${database_name}`.`question_status` SET `marked_as_complete`=${completeStatus} WHERE `application_id`='${loanApplicationID}' and `question_id`='739';
+    [Arguments]  ${completeStatus}  ${applicationID}
+    execute sql string  UPDATE `${database_name}`.`question_status` SET `marked_as_complete`=${completeStatus} WHERE `application_id`='${applicationID}' and `question_id`='739';
     reload page
 
 the user creates a new application
@@ -534,3 +584,31 @@ the user enters empty data into date fields
     the user enters text to a text field   id = startDateDay  ${date}
     the user enters text to a text field   id = startDateMonth   ${month}
     the user enters text to a text field   id = startDateYear  ${year}
+
+Url should contain competition id
+    [Arguments]  ${competitionId}
+    ${Url} =   get location
+    Should Contain     ${Url}   CompetitionId=${competitionId}
+
+add a member to the lead organisation
+    the user clicks the button/link                                             link = Application team
+    the user clicks the button/link                                             jQuery = button:contains("Add person to Empire Ltd")
+    the user invites a person to the same organisation                          Troy Ward  troy.ward@gmail.com
+    the user accepts invitation to join application under same organisation     troy.ward@gmail.com   ${short_password}   Invitation to contribute in Loan Competition   You are invited by Steve Smith to participate in an application for funding through the Innovation Funding Service.
+
+lead assigns b&fi question to member in the same organisation
+    [Arguments]  ${questionLink}
+    the user clicks the button/link       link = ${questionLink}
+    the user clicks the button/link       link = Assign to someone else.
+    ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery = [for="assignee1"]label:contains("Steve Smith")
+    Run Keyword If   '${status}' == 'PASS'    the user selects the radio button     assignee   assignee2
+    ...                              ELSE     the user selects the radio button     assignee   assignee1
+    the user clicks the button/link       css = button[type="submit"]
+
+the user can see B&FI question as complete
+    the user should see the element     jQuery = a:contains("Continue")
+    the user should see the element     jQuery = p:contains("This question is marked as complete.")
+
+Requesting application ID of loan competiton
+     ${newLoansApplicationID} =     get application id by name         loans b&fi application
+     Set suite variable             ${newLoansApplicationID}

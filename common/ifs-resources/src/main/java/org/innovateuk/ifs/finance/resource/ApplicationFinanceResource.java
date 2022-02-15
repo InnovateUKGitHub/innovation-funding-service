@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.finance.resource;
 
+import java.time.LocalDate;
+
 /**
  * Application finance resource holds the organisation's finance resources for an application
  */
@@ -29,8 +31,8 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
         this.financeFileEntry = financeFileEntry;
     }
 
-    public ApplicationFinanceResource(Boolean fecModelEnabled, Long fecFileEntry) {
-        super(fecModelEnabled, fecFileEntry);
+    public ApplicationFinanceResource(Boolean fecModelEnabled, Long fecFileEntry, LocalDate fecCertExpiryDate) {
+        super(fecModelEnabled, fecFileEntry, fecCertExpiryDate);
     }
 
     public ApplicationFinanceResource(long id,
