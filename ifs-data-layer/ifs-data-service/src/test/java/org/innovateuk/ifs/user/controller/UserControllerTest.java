@@ -94,6 +94,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         user = newUserResource().withId(1L).build();
         silStatus.setEdiStatus(EDIStatus.INPROGRESS);
         silStatus.setEdiReviewDate(ZonedDateTime.now(ZoneId.of("UTC")));
+        when(userServiceMock.updateDetails(user)).thenReturn(serviceSuccess(user));
     }
 
     @Test
@@ -436,7 +437,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         silStatus.setEdiStatus(EDIStatus.INPROGRESS);
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
 
-        when(userServiceMock.updateDetails(user)).thenReturn(serviceSuccess(user));
+
         mockMvc.perform(patch("/user/v1/edi").contentType(APPLICATION_JSON).content(toJson(silStatus)))
                 .andDo(print())
                 .andExpect(status().isNoContent());

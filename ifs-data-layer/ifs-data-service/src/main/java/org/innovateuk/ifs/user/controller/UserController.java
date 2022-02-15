@@ -27,6 +27,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.EnumSet;
@@ -34,6 +35,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_INVALID_ARGUMENT;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -276,7 +278,7 @@ public class UserController {
     }
 
     @PreAuthorize("permitAll()")
-    @PatchMapping(value ="/v1/edi")
+    @PatchMapping(value = "/v1/edi")
     public RestResult<Void> updateUser(
             @Valid @RequestBody SilEDIStatus surveyStatus,
             BindingResult bindingResult, HttpServletRequest request) {
@@ -284,7 +286,11 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             log.error(String.format("edi-status-update error: incorrect json: %s ", surveyStatus));
             return RestResult.restFailure(new Error(GENERAL_INVALID_ARGUMENT,
-                    bindingResult.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.toList())));
+                    bindingResult
+                            .getAllErrors()
+                            .stream()
+                            .map(ObjectError::getDefaultMessage)
+                            .collect(Collectors.toList())));
         }
 
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
@@ -295,7 +301,10 @@ public class UserController {
             log.info(String.format("edi-status-update: user id=%d, name=%s ", user.getId(), user.getName()));
             user.setEdiStatus(surveyStatus.getEdiStatus());
             user.setEdiReviewDate(surveyStatus.getEdiReviewDate());
-          return   userService.updateDetails(user).andOnSuccessReturnVoid().toPutResponseNoContentResponse();
+            return userService
+                    .updateDetails(user)
+                    .andOnSuccessReturnVoid()
+                    .toPutResponseNoContentResponse();
 
         }
     }
