@@ -3,6 +3,7 @@ package org.innovateuk.ifs.starters.stubdev;
 import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.starters.stubdev.filter.RewriteFilter;
+import org.innovateuk.ifs.starters.stubdev.security.StubAuthFilter;
 import org.innovateuk.ifs.starters.stubdev.util.WarningLogger;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -39,5 +40,10 @@ public class IfsStubDevAutoConfiguration {
     @Bean
     public Filter filter() {
         return new RewriteFilter();
+    }
+
+    @Bean
+    public StubAuthFilter stubAuthFilter() {
+        return new StubAuthFilter();
     }
 }

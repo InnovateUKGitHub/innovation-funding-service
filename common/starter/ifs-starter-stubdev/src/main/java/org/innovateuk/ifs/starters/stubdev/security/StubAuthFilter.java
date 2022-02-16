@@ -40,5 +40,6 @@ public class StubAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         SecurityContextHolder.getContext().setAuthentication(DEFAULT_USER);
+        doFilter(request, response, filterChain);
     }
 }
