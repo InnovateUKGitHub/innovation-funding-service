@@ -27,13 +27,6 @@ import java.util.stream.Collectors;
 @Component
 public class YourOrganisationKtpFinancialYearsFormSaver {
 
-//    @Autowired
-//    private QuestionRestService questionRestService;
-//    @Autowired
-//    private FormInputRestService formInputRestService;
-//    @Autowired
-//    private FormInputResponseRestService formInputResponseRestService;
-
     public ServiceResult<Void> save(long targetId, long organisationId, long userId, YourOrganisationKtpFinancialYearsForm form, YourOrganisationRestService service) {
             OrganisationFinancesKtpYearsResource finances = new OrganisationFinancesKtpYearsResource(userId,
                 form.getOrganisationSize(),
@@ -56,9 +49,4 @@ public class YourOrganisationKtpFinancialYearsFormSaver {
         return service.updateOrganisationFinancesKtpYears(targetId, organisationId, finances);
     }
 
-//    private ServiceResult<ValidationMessages> updateAdditionInfo(long targetId, long organisationId, long sectionId, long userId, YourOrganisationKtpFinancialYearsForm form) {
-//        Optional<QuestionResource> questionResource = questionRestService.getQuestionsBySectionIdAndType(sectionId, QuestionType.GENERAL).getSuccess().stream().findFirst();
-//        Optional<FormInputResource> formInputResource = formInputRestService.getByQuestionId(questionResource.get().getId()).getSuccess().stream().findFirst();
-//        return formInputResponseRestService.saveQuestionResponse(userId, targetId, formInputResource.get().getId(), form.getAdditionalInfo(), null, true).toServiceResult();
-//    }
 }

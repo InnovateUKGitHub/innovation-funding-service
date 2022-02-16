@@ -231,20 +231,6 @@
                             <th:block th:text="${form.additionalInfo}"></th:block>
                         </p>
 
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-1">
-                            <h2 class="govuk-fieldset__heading ">Attachments</h2>
-                        </legend>
-
-                        <!-- TODO multi file upload -->
-                        <th:block th:with="maxSize='10 MB'"
-                                  th:insert="question-type/types :: fileupload-fragment(${readOnly ? 'readonly' : 'edit'},
-                                                            @{/application/{applicationId}/form/question/{questionId}/grant-agreement/download(applicationId=${model.applicationId},questionId=1)},
-                                                            ${form.additionalFile},
-                                                            additionalFile,
-                                                            additionalFile,
-                                                            true,
-                                                            removeAdditionalInfo,
-                                                            uploadAdditionalInfo)"/>
                     </div>
                 </th:block>
 
@@ -284,31 +270,6 @@
                         </div>
                     </div>
 
-                    <div id="upload-additional" class="upload-section " style="background:inherit;">
-                        <details class="govuk-details govuk-!-margin-bottom-1" role="group">
-                            <summary class="govuk-details__summary">
-                                <span class="govuk-details__summary-text">What can I upload?</span>
-                            </summary>
-                            <div class="govuk-details__text">
-                                <p class="govuk-body govuk-!-margin-bottom-0  govuk-!-font-weight-bold">Your additional information must be:</p>
-                                <ul class="govuk-list govuk-list--bullet">
-                                    <li>in portable document format (PDF) </li>
-                                    <li>less than 10 MB in size</li>
-                                </ul>
-                            </div>
-                        </details>
-                        <div class="govuk-form-group">
-                            <th:block th:with="maxSize='10 MB'"
-                                      th:insert="question-type/types :: fileupload-fragment(${readOnly ? 'readonly' : 'edit'},
-                                                        @{/application/{applicationId}/form/question/{questionId}/grant-agreement/download(applicationId=${model.applicationId},questionId=1)},
-                                                        ${form.additionalFile},
-                                                        additionalFile,
-                                                        additionalFile,
-                                                        true,
-                                                        removeAdditionalInfo,
-                                                        uploadAdditionalInfo)"/>
-                        </div>
-                    </div>
                 </th:block>
 
             </th:block>

@@ -62,7 +62,7 @@ public class KtpTemplate implements FundingTypeTemplate {
                     if (fecFinanceModel) {
                         financeSection.getChildSections().stream().filter(childSection ->
                                 childSection.getName().equals("Your project finances")).findAny().ifPresent(yourProjectFinancesSection ->
-                                yourProjectFinancesSection.withChildSections(ktpPhase2Enabled ? fecChildSectionsPhase2() : fecChildSections()));
+                                yourProjectFinancesSection.withChildSections(fecChildSections()));
                     }
                 });
 
@@ -75,7 +75,7 @@ public class KtpTemplate implements FundingTypeTemplate {
    }
 
     public List<SectionBuilder> fecChildSections() {
-        return
+        List<SectionBuilder> list =
         newArrayList(
                 aSubSection()
                         .withName("Your fEC model")
@@ -99,7 +99,21 @@ public class KtpTemplate implements FundingTypeTemplate {
                         .withType(SectionType.PROJECT_LOCATION)
                         .withQuestions(newArrayList(
                                 aQuestionWithMultipleStatuses()
-                        )),
+                        )));
+
+        list.add(ktpPhase2Enabled ?
+                aSubSection()
+                        .withName("Your organisation")
+                        .withType(SectionType.ORGANISATION_FINANCES)
+                        .withQuestions(newArrayList(
+                                aQuestionWithMultipleStatuses()
+                                        .withFormInputs(asList(aFormInput()
+                                                .withDescription("Additional Information")
+                                                .withType(FormInputType.TEXTAREA)
+                                                .withScope(FormInputScope.APPLICATION)
+                                                .withActive(true)
+                                                .withWordCount(400)))
+                        )) :
                 aSubSection()
                         .withName("Your organisation")
                         .withType(SectionType.ORGANISATION_FINANCES)
@@ -107,49 +121,7 @@ public class KtpTemplate implements FundingTypeTemplate {
                                 aQuestionWithMultipleStatuses()
                         )))
                 ;
-
-    }
-
-    public List<SectionBuilder> fecChildSectionsPhase2() {
-        return
-                newArrayList(
-                        aSubSection()
-                                .withName("Your fEC model")
-                                .withType(SectionType.FEC_COSTS_FINANCES)
-                                .withQuestions(newArrayList(
-                                        aQuestionWithMultipleStatuses())),
-                        aSubSection()
-                                .withName("Your funding")
-                                .withType(SectionType.FUNDING_FINANCES)
-                                .withQuestions(newArrayList(
-                                        aQuestionWithMultipleStatuses()
-                                )),
-                        aSubSection()
-                                .withName("Your project costs")
-                                .withType(SectionType.PROJECT_COST_FINANCES)
-                                .withQuestions(newArrayList(
-                                        aQuestionWithMultipleStatuses()
-                                )),
-                        aSubSection()
-                                .withName("Your project location")
-                                .withType(SectionType.PROJECT_LOCATION)
-                                .withQuestions(newArrayList(
-                                        aQuestionWithMultipleStatuses()
-                                )),
-                        aSubSection()
-                                .withName("Your organisation")
-                                .withType(SectionType.ORGANISATION_FINANCES)
-                                .withQuestions(newArrayList(
-                                        aQuestionWithMultipleStatuses()
-                                                .withFormInputs(asList(aFormInput()
-                                                                .withDescription("Additional Information")
-                                                                .withType(FormInputType.TEXTAREA)
-                                                                .withScope(FormInputScope.APPLICATION)
-                                                                .withActive(true)
-                                                                .withWordCount(400)))
-                                )))
-                ;
-
+        return list;
     }
 
     @Override

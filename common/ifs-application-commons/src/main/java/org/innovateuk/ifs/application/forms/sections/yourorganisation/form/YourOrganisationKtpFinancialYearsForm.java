@@ -31,8 +31,6 @@ public class YourOrganisationKtpFinancialYearsForm {
     private Boolean hasAdditionalInfoSection;
     private String additionalInfo;
 
-    private MultipartFile additionalFile;
-
     @LastFinancialYearEnd(messageNotNull = "{validation.standard.mm.yyyy.format}",
             messagePastYearMonth = "{validation.standard.past.mm.yyyy.not.past.format}",
             messagePositiveYearMonth = "{validation.standard.mm.yyyy.format}")

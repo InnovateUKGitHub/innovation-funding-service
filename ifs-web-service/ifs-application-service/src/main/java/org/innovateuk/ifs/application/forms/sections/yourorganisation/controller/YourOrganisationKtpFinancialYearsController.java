@@ -72,47 +72,4 @@ public class YourOrganisationKtpFinancialYearsController extends AbstractYourOrg
                         sectionId);
     }
 
-    /*
-    @PostMapping(params = "uploadAdditionalInfo")
-    public String uploadAdditionalInfo(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) GrantAgreementForm form,
-                                       @SuppressWarnings("unused") BindingResult bindingResult,
-                                       ValidationHandler validationHandler,
-                                       Model model,
-                                       @PathVariable long applicationId,
-                                       @PathVariable long questionId,
-                                       UserResource user) {
-
-        Supplier<String> failureAndSuccessView = () -> redirectToViewPage(form, bindingResult, model, applicationId, questionId, user);
-        MultipartFile file = form.getGrantAgreement();
-        return validationHandler.performFileUpload("grantAgreement", failureAndSuccessView, () -> euGrantTransferRestService
-                .uploadGrantAgreement(applicationId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file)));
-    }
-
-    @PostMapping(params = "removeAdditionalInfo")
-    public String removeAdditionalInfo(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) GrantAgreementForm form,
-                                       @SuppressWarnings("unused") BindingResult bindingResult,
-                                       ValidationHandler validationHandler,
-                                       Model model,
-                                       @PathVariable long applicationId,
-                                       @PathVariable long questionId,
-                                       UserResource user) {
-
-        RestResult<Void> sendResult = euGrantTransferRestService
-                .deleteGrantAgreement(applicationId);
-
-        Supplier<String> failureAndSuccesView = () -> redirectToViewPage(form, bindingResult, model, applicationId, questionId, user);
-
-        return validationHandler.addAnyErrors(sendResult.getErrors())
-                .failNowOrSucceedWith(failureAndSuccesView, failureAndSuccesView);
-    }
-
-    @GetMapping("/download")
-    public @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadAdditionalInfo(@PathVariable long applicationId) {
-        CompetitionSetupQuestionResource question = questionSetupCompetitionRestService.getByQuestionId(questionId).getSuccess();
-        return getFileResponseEntity(formInputRestService.downloadFile(question.getTemplateFormInput()).getSuccess(),
-                formInputRestService.findFile(question.getTemplateFormInput()).getSuccess());
-    }
-*/
-
 }
