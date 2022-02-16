@@ -1,0 +1,5 @@
+server:
+  port: 8080
+ifs:
+  web:
+    baseURL: "https://localhost:8080"
