@@ -2,8 +2,10 @@ package org.innovateuk.ifs.security;
 
 import com.google.common.collect.ImmutableList;
 import lombok.extern.slf4j.Slf4j;
+import org.innovateuk.ifs.IfsProfileConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.csrf.CsrfException;
@@ -52,6 +54,7 @@ import java.util.regex.Pattern;
  */
 @Service
 @Slf4j
+@Profile(IfsProfileConstants.NOT_STUBDEV)
 final class CsrfStatelessFilter extends OncePerRequestFilter {
 
     private static final String CSRF_COOKIE_NAME = "CSRF-TOKEN";

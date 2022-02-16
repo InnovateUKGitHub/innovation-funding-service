@@ -28,7 +28,10 @@ public class StubAlertService implements AlertRestService {
 
     @Override
     public RestResult<List<AlertResource>> findAllVisibleByType(AlertType type) {
-        return RestResult.restSuccess(new ArrayList<>());
+        return RestResult.restSuccess(ImmutableList.of(
+                new AlertResource(1L, "Stub Mode", AlertType.MAINTENANCE,
+                        ZonedDateTime.now().minusDays(1L), ZonedDateTime.now().plusDays(1L)))
+        );
     }
 
     @Override
