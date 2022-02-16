@@ -19,12 +19,11 @@ the user can remove the uploaded file
 
 the user can remove file with multiple uploads
     [Arguments]  ${name}  ${file_name}
-    wait until keyword succeeds without screenshots        10s  200ms  click element  jQuery = a:contains("${file_name} (opens in a new window)") + button:contains("Remove")
-    #the user clicks the button/link                         name=${name}
-    the user refreshes until element disappears on page     jQuery = a:contains("${file_name} (opens in a new window)")
-    Wait Until Page Does Not Contain Without Screenshots    ${file_name} (opens in a new window)   60s
+    the user clicks the button/link                         css = .file-list li:nth-child(1) button
+    #the user clicks the button/link                        name=${name}
     Wait Until Page Does Not Contain Without Screenshots    Removing   60s
-    Wait Until Page Does Not Contain Without Screenshots    Remove     6s
+    Wait Until Page Does Not Contain Without Screenshots    Remove     60s
+    Wait Until Page Does Not Contain Without Screenshots    ${file_name} (opens in a new window)   60s
     Page Should Contain                                     Upload
     #Page Should Not Contain                                ${file_name}
 
