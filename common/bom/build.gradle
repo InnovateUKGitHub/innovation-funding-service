@@ -14,6 +14,7 @@ dependencies {
     api("com.google.guava:guava")
     api("org.slf4j:slf4j-api")
     api("org.projectlombok:lombok")
+    api project(":common:api:static")
 
     // These are suggested versions
     // (dependent modules will still need to declare the dependency (without version)

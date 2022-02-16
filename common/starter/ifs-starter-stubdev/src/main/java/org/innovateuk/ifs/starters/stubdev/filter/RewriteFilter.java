@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.starters.stubdev;
+package org.innovateuk.ifs.starters.stubdev.filter;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMap;
@@ -11,7 +11,7 @@ import java.io.PrintWriter;
 import java.util.Map;
 
 /**
- * This might be better a thymeleaf pre-post processor TBF
+ * This might be better a thymeleaf post processor TBF
  */
 
 @Slf4j

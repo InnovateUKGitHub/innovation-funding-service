@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.starters.stubdev;
+package org.innovateuk.ifs.starters.stubdev.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

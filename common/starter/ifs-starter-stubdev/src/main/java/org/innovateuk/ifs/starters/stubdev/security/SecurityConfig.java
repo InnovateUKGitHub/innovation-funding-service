@@ -1,5 +1,7 @@
-package org.innovateuk.ifs.starters.stubdev;
+package org.innovateuk.ifs.starters.stubdev.security;
 
+import org.innovateuk.ifs.IfsProfileConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
@@ -10,8 +12,11 @@ import org.springframework.security.web.header.writers.StaticHeadersWriter;
 
 @Configuration
 @Order(1)
-@Profile("dev")
+@Profile(IfsProfileConstants.STUB_DEV)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    public StubAuthFilter stubAuthFilter;
 
     public SecurityConfig() {
         super(true);
@@ -24,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 (authorizeRequests) -> authorizeRequests.antMatchers("/**").permitAll()
         )
             .csrf().disable()
+                .addFilter(stubAuthFilter)
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .anonymous().and()
             .exceptionHandling().and()

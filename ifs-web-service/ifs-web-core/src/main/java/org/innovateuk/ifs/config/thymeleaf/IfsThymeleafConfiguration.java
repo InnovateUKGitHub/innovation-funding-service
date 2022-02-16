@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.config.thymeleaf;
 
+import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.config.thymeleaf.dialect.IfSThymeleafDialect;
 import org.innovateuk.ifs.config.thymeleaf.postprocessor.IfsThymeleafPostProcessorDialect;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class IfsThymeleafConfiguration {
     }
 
     @Configuration
-    @Profile("debug")
+    @Profile(IfsProfileConstants.DEBUG)
     protected static class IfsThymeleafPostProcessorDialectConfiguration {
 
         @Bean

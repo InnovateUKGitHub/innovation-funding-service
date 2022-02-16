@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.starters.stubdev;
+package org.innovateuk.ifs.starters.stubdev.filter;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
