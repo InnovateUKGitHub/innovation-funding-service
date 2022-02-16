@@ -6,8 +6,9 @@ Resource          ../common/Applicant_Commons.robot
 log in and create new application if there is not one already
     [Arguments]  ${application_name}
     Given the user logs-in in new browser  &{lead_applicant_credentials}
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain  ${application_name}
-    Run Keyword If    '${status}' == 'FAIL'    Run keywords  Create new application with the same user  ${application_name}  ${BUSINESS_TYPE_ID}  AND  the user selects Research category  Industrial research
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain   ${application_name}
+    Run Keyword If    '${status}' == 'FAIL'    Run keywords  Create new application with the same user  ${application_name}  ${BUSINESS_TYPE_ID}
+    ...                                AND     the user selects Research category                       Industrial research
 
 Login new application invite academic
     [Arguments]  ${recipient}  ${subject}  ${pattern}
@@ -117,16 +118,17 @@ the user marks the section as complete procurement
 
 Create new application with the same user
     [Arguments]  ${Application_title}   ${orgType}
-    the user navigates to the page             ${openCompetitionBusinessRTO_overview}
-    the user clicks the button/link            jQuery=a:contains("Start new application")
+    the user navigates to the page                              ${openCompetitionBusinessRTO_overview}
+    the user clicks the button/link                             jQuery=a:contains("Start new application")
     check if there is an existing application in progress for this competition
-    the user clicks the button/link            link=Apply with a different organisation
-    the user selects the radio button          organisationTypeId  ${orgType}
-    the user clicks the button/link            jQuery = button:contains("Save and continue")
-    the user search for organisation name on Companies house   ITV  ITV PLC
-    the user clicks the button/link            link=Application details
-    the user enters text to a text field       css=[id="name"]  ${Application_title}
-    the user clicks the button/link            jQuery=button:contains("Save and return")
+    the user clicks the button/link                             link=Apply with a different organisation
+    the user selects the radio button                           organisationTypeId  ${orgType}
+    the user clicks the button/link                             jQuery = button:contains("Save and continue")
+    the user search for organisation name on Companies house    ITV  ITV PLC
+    the user clicks the button/link                             link=Application details
+    wait until keyword succeeds without screenshots             10 s  200 ms  Input Text  css=[id="name"]  ${Application_title}
+    #the user enters text to a text field     css=[id="name"]  ${Application_title}
+    the user clicks the button/link                             jQuery=button:contains("Save and return")
 
 check if there is an existing application in progress for this competition
     wait until page contains element    css=body
