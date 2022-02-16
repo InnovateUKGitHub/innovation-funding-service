@@ -39,6 +39,8 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...
 ...             IFS-9579 MO documents: Change of internal approve/reject authority
 ...
+...             IFS-11140 Business Finance - Companies House Details Addition
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../resources/common/PS_Common.robot
@@ -301,9 +303,16 @@ The new partner can complete Your organisation
     When the user completes your organisation
     Then the user should see the element     jQuery = li div:contains("Your organisation") ~ .task-status-complete
 
+The new partner can view organisation details
+    [Documentation]  IFS-11140
+    When the user clicks the button/link                link = Your organisation
+    Then the user checks for companies house details    FIRSTGROUP PLC  SC157176  395 King Street  Aberdeen  ${EMPTY}  AB24 5RP  49100  Medium
+    And the user should see the element                 jQuery = th:contains("End of last financial year")+td:contains("December 2016")
+
 The new partner completes your funding
     [Documentation]  IFS-6491  IFS-6725
-    Given The user clicks the button/link   link = Your funding
+    Given the user clicks the button/link   link = Your project finances
+    And The user clicks the button/link     link = Your funding
     When the user completes your funding
     Then the user should see the element    jQuery = li div:contains("Your funding") ~ .task-status-complete
 

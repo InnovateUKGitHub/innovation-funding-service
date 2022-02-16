@@ -782,11 +782,8 @@ a new organisation is able to accept project invite
     the user should see the element                               jQuery = h1:contains("Join project")
 
 the user completes your organisation
-#    the user enters text to a text field                    css = #financialYearEndMonthValue    12
-#    the user enters text to a text field                    css = #financialYearEndYearValue    2016
-    the user checks for companies house details    FIRSTGROUP PLC  SC157176  395 King Street  ${EMPTY}  Aberdeen  AB24 5RP  49100  Micro or small
-    #Then the user should see the element           jQuery = dt:contains("Organisation size") + dd:contains("Micro")
-    the user should see the element                jQuery = th:contains("End of last financial year")+td:contains("December 2016")
+    the user enters text to a text field                    css = #financialYearEndMonthValue    12
+    the user enters text to a text field                    css = #financialYearEndYearValue    2016
     the user selects the radio button                       organisationSize  MEDIUM
     the user enters text to a text field                    css = #annualTurnoverAtLastFinancialYear   5600
     the user enters text to a text field                    css = #annualProfitsAtLastFinancialYear    3000
