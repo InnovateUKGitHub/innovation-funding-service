@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Terms and conditions of an Innovate UK Horizon Europe Contingency Programme'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Terms and conditions of an Horizon Europe Guarantee award'" />
 </head>
 <body class="govuk-template__body grant-terms-conditions">
 
@@ -12,28 +12,44 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Horizon Europe Contingency Programme Privacy Notice',size='govuk-heading-l'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Terms and conditions of an Horizon Europe Guarantee award',size='govuk-heading-l'" />
 
         <th:block th:fragment="terms-and-conditions-content">
-            <p class="govuk-body">
-                Any personal data that you provide to UK Research and Innovation in connection to pre-registering and
-                then applying to the Horizon Europe Contingency Programme will be processed in
-                accordance with current UK data protection legislation and the EU General Data Protection Regulations
-                2016 / 679 (GDPR) where appropriate.
-            </p>
-
-            <p class="govuk-body">
-                This may also involve sharing of confidential and commercially sensitive information when you
-                pre-register and apply.
-            </p>
-
-            <p class="govuk-body">
-                Further information can be found in the
-                <a class="govuk-link" href="https://www.ukri.org/about-us/privacy-notice/" target="_blank">
-                    UK Research and Innovation Privacy Notice (opens in a new window)</a> and the supporting
-                <a class="govuk-link" href="https://www.gov.uk/government/publications/privacy-notice-and-information-management-policy-innovate-uk" target="_blank">
-                    Innovate UK Privacy Notice and Information Management Policy (opens in a new window)</a>.
-            </p>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <ol class="govuk-list ifs-list--number">
+                        <li>
+                            DEFINITIONS
+                            <ol class="ifs-list--number">
+                                <li>1.1	In this Grant Offer Letter, unless the context otherwise requires, the following words and phrases shall have the following meanings:</li>
+                                <p><strong>Associated Partner:</strong> means a UK organisation listed in Article 9 of the HE Agreement.</p>
+                                <p><strong>Auditor:</strong> has the meaning set out in clause 5.15.</p>
+                                <p><strong>Beneficiary:</strong> means an organisation or organisations with “beneficiary” status under the relevant HE Agreement;</p>
+                                <p><strong>Confidential Information:</strong> means each and all information, documents and data (whether verbal or written and in whatever form, including electronic) relating to each of the Grant Offer Letter, the Project and the business, marketing, operations, affairs, activities, products, customers, suppliers or intellectual property of a party or a member of the party’s Group, including any information, document or data which is marked as confidential or which should by its nature be reasonably understood to be confidential by the other party.</p>
+                                <p><strong>Consortium Agreement:</strong> means, where the Recipient is part of a consortium for the purposes of the HE project, the agreement between the Coordinator, the Recipient, and other members (if any) specifying the terms of the Recipient’s participation in the project funded by HE.</p>
+                                <p><strong>Controller:</strong> shall have the same meaning as set out in the Data Protection Act 2018.</p>
+                                <p><strong>Coordinator:</strong> means the signatory beneficiary to the HE Agreement responsible for liaising with the EU granting authority and, in the case of consortiums, representing the consortium.</p>
+                                <p><strong>EIR:</strong> means the Environmental Information Regulations 2004 together with any guidance and/or codes of practice issued by the Information Commissioner or relevant government department in relation to such regulations.</p>
+                                <p><strong>Eligible Costs:</strong> means costs approved by UKRI and communicated to the Recipient before the issuing of the Grant Offer Letter.</p>
+                                <p><strong>End Date:</strong>means the earlier of:
+                                <p>(a) the end date specified as such in Annex 1;</p>
+                                <p>(b) the date on which the Grant Offer Letter is terminated in accordance with its terms or otherwise by operation of Law;</p>
+                                <p>(c) the date on which the HE Agreement expires or is terminated in accordance with its terms; and;</p>
+                                <p>(d) such date agreed by the parties in writing</p>
+                                </p>
+                                <p><strong>EU:</strong>means the European Union (represented by the European Commission) and, where the context so requires, shall include the European institution named as the first party to the HE Agreement.</p>
+                                <p><strong>Final Report:</strong>means a report provided by the Recipient at the end of the Term detailing the outputs, outcomes and impacts of the Project to date.</p>
+                                <p><strong>FOIA:</strong>means the Freedom of Information Act 2000 and any subordinate legislation made under the Act from time to time, together with any guidance and/or codes of practice issued by the Information Commissioner or relevant government department in relation to such legislation.</p>
+                                <p><strong>Force Majeure Event:</strong>means any event or occurrence which is outside the reasonable control of the relevant party and which is not attributable to any act or failure to take preventative action by that party. This includes but is not limited to, fire, flood, violent storm, explosion, malicious damage, armed conflict, acts of terrorism, nuclear, biological or chemical warfare, and expressly excludes any industrial action occurring within the Recipient's organisation.</p>
+                                <p><strong>Grant:</strong>means the sum specified as such in Annex 1 reflecting the maximum amount of funding to be provided by UKRI to the Recipient pursuant to this Grant Offer Letter (as may be adjusted from time to time pursuant to clause 5.4).</p>
+                                <p><strong>Grant Offer Letter:</strong>means the award letter and its annexes.</p>
+                                <p><strong>Grant Offer Letter:</strong>means the award letter and its annexes.</p>
+                                <p><strong>Group:</strong>means in relation to each party, the party itself, any subsidiary or holding company from time to time of the party, and any subsidiary from time to time of a holding company of the party.</p>
+                            </ol>
+                        </li>
+                    </ol>
+                </div>
+            </div>
         </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
