@@ -2,7 +2,9 @@ package org.innovateuk.ifs.user.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.util.StringUtils;
@@ -25,7 +27,8 @@ import static org.innovateuk.ifs.user.resource.Role.*;
  * User Data Transfer Object
  * Serializable so that it can be persisted in a redis cache.
  */
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class UserResource implements Serializable {
     private static final long serialVersionUID = 746809237007138492L;

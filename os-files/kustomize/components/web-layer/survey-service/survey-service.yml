@@ -5,6 +5,7 @@ metadata:
   name: survey-svc
   annotations:
     javaDebug: javaDebug
+    management.context-path: /survey/monitoring
 spec:
   ports:
     - name: 8080-tcp
