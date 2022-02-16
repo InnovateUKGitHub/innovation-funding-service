@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 @Slf4j
 public class WarningLogger {
 
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(initialDelay = 500, fixedDelay = 60000)
     public void repeated() {
         log.error("XX Warning - dev tools and ifs stub mode is running XX");
     }
