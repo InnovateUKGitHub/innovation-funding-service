@@ -3,6 +3,11 @@
 // although anything shared over all modules with no dependencies can go in here.
 
 apply plugin: 'java'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+
 dependencies {
     // This needs to have zero dependencies to fulfil its purpose
 }
