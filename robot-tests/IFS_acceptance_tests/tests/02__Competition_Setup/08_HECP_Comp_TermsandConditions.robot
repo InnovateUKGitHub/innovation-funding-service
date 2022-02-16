@@ -9,8 +9,8 @@ Resource          ../../resources/common/Competition_Commons.robot
 
 *** Variables ***
 ${hecpCompetitionName}             HECP competition
-${hecpTermsAndConditionsLink}      Horizon Europe Contingency Programme Privacy Notice (opens in a new window)
-${hecpTermsAndConditionsTitle}     Terms and conditions of an Innovate UK Horizon Europe Contingency Programme - Innovation Funding Service
+${hecpTermsAndConditionsLink}      Horizon Europe Guarantee – EIT KICs 2021 (opens in a new window)
+${hecpTermsAndConditionsTitle}     Terms and conditions of an Horizon Europe Guarantee – EIT KICs 2021 grant - Innovation Funding Service
 
 
 *** Test Cases ***
@@ -24,7 +24,7 @@ HECP terms and conditions not pre selected for any funding or competition type
 
 Comp admin marks HECP terms and conditions section as complete
     [Documentation]  IFS-10926
-    When the user clicks the button twice     jQuery = label:contains("Horizon Europe Contingency Programme Privacy Notice")
+    When the user clicks the button twice     jQuery = label:contains("Horizon Europe Guarantee – EIT KICs 2021")
     And the user clicks the button/link       jQuery = button:contains("Done")
     And the user clicks the button/link       link = Back to competition details
     Then the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
@@ -34,7 +34,7 @@ HECP terms and conditions are correct
     Given the user clicks the button/link                link = Terms and conditions
     When the user clicks the button/link                 link = ${hecpTermsAndConditionsLink}
     And select window                                    title = ${hecpTermsAndConditionsTitle}
-    Then the user should see the element                 jQuery = h1:contains("Horizon Europe Contingency Programme Privacy Notice")
+    Then the user should see the element                 jQuery = h1:contains("Terms and conditions of an Horizon Europe Guarantee – EIT KICs 2021 grant")
     [Teardown]   the user closes the last opened tab
 
 
