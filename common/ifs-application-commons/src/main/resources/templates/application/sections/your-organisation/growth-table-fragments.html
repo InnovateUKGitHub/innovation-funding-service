@@ -339,13 +339,13 @@
                     <td class="govuk-table__cell"th:text="${model.orgDetailsViewModel.registrationNumber}"></td>
                 </tr>
                 <tr class="govuk-table__row form-group-row">
-                    <th scope="row" class="govuk-table__header">Registered address</th>
+                    <th scope="row" class="govuk-table__header vertical-align-top">Registered address</th>
                       <td class="govuk-table__cell form-group-cell fix-left">
                         <div th:each="addressLine : ${model.orgDetailsViewModel.getRegisteredAddressString()}" th:text="${addressLine}" />
                       </td>
                 </tr>
                   <tr class="govuk-table__row form-group-row">
-                    <th scope="row" class="govuk-table__header">SIC code</th>
+                    <th scope="row" class="govuk-table__header vertical-align-top">SIC code</th>
                     <td class="govuk-table__cell form-group-cell fix-left">
                        <div th:each="sicCode : ${model.orgDetailsViewModel.getSicCodesString()}" th:text="${sicCode}" />
                     </td>
