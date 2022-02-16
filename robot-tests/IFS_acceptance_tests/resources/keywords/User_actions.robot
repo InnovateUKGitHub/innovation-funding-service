@@ -209,3 +209,12 @@ the user tries to select the option again
     the user clicks the button/link     ${locator}
     wait for autosave
     click element                       jQuery = ul li:contains("${searchWord}")
+
+the user refreshes until element disappears on page
+    [Arguments]  ${selector}
+    Wait Until Keyword Succeeds Without Screenshots     120s   5s   reload and check if element disappears    ${selector}
+
+reload and check if element disappears
+    [Arguments]  ${selector}
+    the user reloads the page
+    wait until page does not contain without screenshots   ${selector}     1s

@@ -337,13 +337,14 @@ the user completes the application
     the finance overview is marked as incomplete
 
 the partner selects new answer choice
-     the user clicks the button/link                    name = removeAppendix
-     wait until keyword succeeds without screenshots    60 s  500 ms  the user should not see the element  link = ${valid_pdf}
-     the user can remove file with multiple uploads     removeAppendix    ${ods_file}
-     input text                                         id = multipleChoiceOptionId  ${answerToSelect}
-     the user clicks the button/link                    jQuery = ul li:contains("${answerToSelect}")
-     the user clicks the button/link                    jQuery = button:contains("Assign to lead for review")
-     the user should see the element                    jQuery = p:contains("This question is assigned to"):contains("Steve Smith")
+     the user clicks the button/link                        name = removeAppendix
+     the user refreshes until element disappears on page    link = ${valid_pdf} (opens in a new window)
+     Wait Until Page Does Not Contain Without Screenshots   ${valid_pdf} (opens in a new window)   60s
+     the user can remove file with multiple uploads         removeAppendix    ${ods_file}
+     input text                                             id = multipleChoiceOptionId  ${answerToSelect}
+     the user clicks the button/link                        jQuery = ul li:contains("${answerToSelect}")
+     the user clicks the button/link                        jQuery = button:contains("Assign to lead for review")
+     the user should see the element                        jQuery = p:contains("This question is assigned to"):contains("Steve Smith")
 
 the finance overview is marked as incomplete
     the user clicks the button/link    link = Finances overview
