@@ -6,6 +6,7 @@ metadata:
     app: competition-mgt-svc
   annotations:
     javaDebug: javaDebug
+    management.context-path: /management/monitoring
 spec:
   ports:
     - name: 8080-tcp
