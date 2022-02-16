@@ -100,19 +100,24 @@
             </details>
         </th:block>
 
-        <th:block th:if="${model.isLoansPartBEnabled() and model.complete and  (model.questionType == model.getLoansBusinessAndFinancialInformation())}">
-            <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}"
-                 ifs:utext="${model.questionDescription}"/>
-            <div class="govuk-hint wysiwyg-styles">
-                <p><strong>Edit the online business survey</strong></p>
-                <p>At any stage, you can return here to carry on editing incomplete form.</p>
-            </div>
-            <div>
-                <a class="govuk-button"
-                   th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}"
-                   value="open-salesforce"
-                   type="Continue">Continue</a>
-            </div>
+        <th:block th:if="${model.isLoansPartBEnabled() and (model.questionType == model.getLoansBusinessAndFinancialInformation())}">
+            <th:block th:if="${model.readOnly || model.complete}">
+                <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}"
+                     ifs:utext="${model.questionDescription}"/>
+            </th:block>
+
+            <th:block th:if="${model.complete && (model.leadApplicant || model.assignButtonsViewModel.assignedToCurrentUser)}">
+                <div class="govuk-hint wysiwyg-styles">
+                    <p><strong>Edit the online business survey</strong></p>
+                    <p>At any stage, you can return here to carry on editing incomplete form.</p>
+                </div>
+                <div>
+                    <a class="govuk-button"
+                       th:href="@{${model.getLoansQuestionsFormSalesForceURL()}}"
+                       value="open-salesforce"
+                       type="Continue">Continue</a>
+                </div>
+            </th:block>
         </th:block>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"

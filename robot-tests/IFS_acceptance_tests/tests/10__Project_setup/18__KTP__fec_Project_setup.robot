@@ -15,6 +15,8 @@ Documentation     IFS-9305  KTP fEC/Non-fEC: display correct finance table if fE
 ...
 ...               IFS-11129 Removal of Viability check for business
 ...
+...               IFS-11142 FEC Cost certificate - No
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../resources/defaultResources.robot
@@ -55,9 +57,12 @@ Lead applicant can view the correct project costs fields are displayed for the f
     And the user clicks the button/link       link = Your project finances
 
 Lead applicant edits the fec model to NO
-    [Documentation]  IFS-9305
+    [Documentation]  IFS-9305  IFS-11142
     Given the user edits the KTP fec model     fecModelEnabled-no
-    Then the user should see the element       jQuery = li:contains("Your fEC model") span:contains("Complete")
+    When The user clicks the button/link       link = Your fEC model
+    Then the user can see the read-only page
+    And The user clicks the button/link        link = Return to project finances
+    And the user should see the element        jQuery = li:contains("Your fEC model") span:contains("Complete")
     And the user should see the element        jQuery = li:contains("Your project costs") span:contains("Incomplete")
 
 Lead applicant should view the correct project costs are displayed for non-fec selection
@@ -190,12 +195,15 @@ Project finance user can see the approved non-FEC cost categories in the GOL
 
 *** Keywords ***
 Custom Suite Setup
+    Set predefined date variables
     Connect to Database                    @{database}
     The user logs-in in new browser        &{ktpLead}
     the user clicks the button/link        link = ${ktpApplication}
 
 the user completes your project finances section
     the user clicks the button/link        link = Your fEC model
+    The user clicks the button/link        jQuery = button:contains("Next")
+    the user enters empty data into date fields     01  12  2500
     the user clicks the button/link        jQuery = button:contains("Mark as complete")
     the user clicks the button/link        link = Your funding
     the user selects the radio button      otherFunding  other-funding-no
@@ -354,6 +362,19 @@ the user should see the non-FEC cost categories in the GOL
     the user should see the element         xpath = //td[text()="b. Academic and Secretarial Support"]/..//td[text()="${academicCostValue}"]
     the user should not see the element     xpath = //td[text()="e. Knowledge base supervisor"]
     the user should not see the element     xpath = //td[text()="viii Additional Associate Support"]
+
+the user can see the read-only page
+    the user should see the element               jQuery = h2:contains("fEC model is marked as complete")
+    the user should see the element               jQuery = h3:contains("Will you be using the full economic costing (fEC) funding model?") ~ div:contains("Change")
+    Wait Until Page Contains Without Screenshots  Last updated:
+#    the user should see the element               Last updated: 8 February 04:05PM by you
+    the user should see the element               link = Return to project finances
+
+the user enters empty data into date fields
+    [Arguments]  ${date}  ${month}  ${year}
+    the user enters text to a text field   id = fecCertExpiryDay  ${date}
+    the user enters text to a text field   id = fecCertExpiryMonth   ${month}
+    the user enters text to a text field   id = fecCertExpiryYear  ${year}
 
 Custom suite teardown
     Close browser and delete emails

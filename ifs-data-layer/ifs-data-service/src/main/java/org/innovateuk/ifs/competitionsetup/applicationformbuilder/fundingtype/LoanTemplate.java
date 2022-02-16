@@ -161,7 +161,7 @@ public class LoanTemplate implements FundingTypeTemplate {
                         "<p><strong>Complete the online business survey</strong></p>" +
                                 "<p>At any stage, you can return here to carry on editing incomplete form.</p>"
                 )
-                .withAssignEnabled(false);
+                .withAssignEnabled(true);
     }
 
     private void addLoanProjectSetupColumns(Competition competition) {

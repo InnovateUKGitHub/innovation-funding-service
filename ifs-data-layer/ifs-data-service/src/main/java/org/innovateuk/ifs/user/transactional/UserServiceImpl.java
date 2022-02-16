@@ -220,15 +220,15 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     @Transactional
     public ServiceResult<Void> changePassword(String hash, String password) {
         return tokenService.getPasswordResetToken(hash).andOnSuccess(token ->
-            find(user(token.getClassPk())).andOnSuccess(user -> {
+                find(user(token.getClassPk())).andOnSuccess(user -> {
 
-                UserResource userResource = userMapper.mapToResource(user);
+                    UserResource userResource = userMapper.mapToResource(user);
 
-                return passwordPolicyValidator.validatePassword(password, userResource).andOnSuccess(() ->
-                        identityProviderService.updateUserPassword(userResource.getUid(), password).andOnSuccessReturnVoid(() ->
-                            tokenRepository.delete(token))
-                );
-            })
+                    return passwordPolicyValidator.validatePassword(password, userResource).andOnSuccess(() ->
+                            identityProviderService.updateUserPassword(userResource.getUid(), password).andOnSuccessReturnVoid(() ->
+                                    tokenRepository.delete(token))
+                    );
+                })
         );
     }
 
@@ -247,7 +247,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         return aggregate(oldResult, newResult).andOnSuccessReturnVoid();
     }
 
-    private void logEmailChange(String oldEmail, String newEmail){
+    private void logEmailChange(String oldEmail, String newEmail) {
         LOG.info("Updated email from  " + oldEmail + " to " + newEmail);
     }
 
@@ -280,6 +280,8 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         existingUser.setLastName(updatedUserResource.getLastName());
         existingUser.setFirstName(updatedUserResource.getFirstName());
         existingUser.setAllowMarketingEmails(updatedUserResource.isAllowMarketingEmails());
+        existingUser.setEdiStatus(updatedUserResource.getEdiStatus());
+        existingUser.setEdiReviewDate(updatedUserResource.getEdiReviewDate());
         return serviceSuccess(userRepository.save(existingUser));
     }
 
@@ -382,10 +384,10 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     @UserUpdate
     public ServiceResult<UserResource> agreeNewTermsAndConditions(long userId) {
         return termsAndConditionsService.getLatestSiteTermsAndConditions().andOnSuccess(latest ->
-                getUser(userId).andOnSuccessReturn(user -> {
-                    user.getTermsAndConditionsIds().add(latest.getId());
-                    return userRepository.save(user);
-                }))
+                        getUser(userId).andOnSuccessReturn(user -> {
+                            user.getTermsAndConditionsIds().add(latest.getId());
+                            return userRepository.save(user);
+                        }))
                 .andOnSuccessReturn(userMapper::mapToResource);
     }
 
@@ -416,7 +418,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     private ServiceResult<User> validateRoleDoesNotExist(User user, Role role) {
-        if(user.getRoles().contains(role)) {
+        if (user.getRoles().contains(role)) {
             return serviceFailure(USER_ADD_ROLE_ROLE_ALREADY_EXISTS);
         }
         return serviceSuccess(user);
@@ -449,7 +451,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         List<Long> invalidApplications = new ArrayList(intersection(newEmailInviteApplicationIds, userApplicationIds));
 
         if (!invalidApplications.isEmpty()) {
-            return serviceFailure(new Error(USER_EMAIL_UPDATE_EMAIL_EXISTS_ON_APPLICATION, invalidApplications.get(0)) );
+            return serviceFailure(new Error(USER_EMAIL_UPDATE_EMAIL_EXISTS_ON_APPLICATION, invalidApplications.get(0)));
         }
 
         return serviceSuccess(user);
@@ -481,9 +483,9 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
         if (!invalidProjects.isEmpty()) {
 
-          Long applicationId = projectRepository.findById(invalidProjects.get(0)).get().getApplication().getId();
+            Long applicationId = projectRepository.findById(invalidProjects.get(0)).get().getApplication().getId();
 
-            return serviceFailure(new Error(USER_EMAIL_UPDATE_EMAIL_EXISTS_ON_APPLICATION, applicationId) );
+            return serviceFailure(new Error(USER_EMAIL_UPDATE_EMAIL_EXISTS_ON_APPLICATION, applicationId));
         }
 
         return serviceSuccess(user);
@@ -502,7 +504,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         searchString = StringUtils.trim(searchString);
 
         if (StringUtils.isEmpty(searchString) || StringUtils.length(searchString) < 3) {
-            return serviceFailure(new Error(USER_SEARCH_INVALID_INPUT_LENGTH, singletonList(3)) );
+            return serviceFailure(new Error(USER_SEARCH_INVALID_INPUT_LENGTH, singletonList(3)));
         } else {
             return serviceSuccess();
         }
