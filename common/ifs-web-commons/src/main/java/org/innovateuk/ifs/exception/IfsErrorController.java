@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.exception;
 
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.stereotype.Controller;
@@ -25,7 +26,8 @@ public class IfsErrorController extends BasicErrorController {
 
     @Override
     public ModelAndView errorHtml(HttpServletRequest request, HttpServletResponse response) {
-        final Map<String, Object> errorAttributes = getErrorAttributes(request, false);
+        final Map<String, Object> errorAttributes = getErrorAttributes(request,
+                ErrorAttributeOptions.defaults().excluding(ErrorAttributeOptions.Include.STACK_TRACE));
         final Object status = errorAttributes.get("status");
         if (status instanceof Integer){
             if (status.equals(NOT_FOUND.value())) {

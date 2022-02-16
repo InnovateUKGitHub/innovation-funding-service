@@ -1032,3 +1032,12 @@ the user checks for companies house details
     the user should see the element   jQuery = td div:contains("${addressPostcode}")
     the user should see the element   jQuery = th:contains("SIC code")+td div:contains("${sicCode}")
     the user should see the element   jQuery = th:contains("Organisation size")+td:contains("${organisationSize}")
+
+the user accepts invitation to join application under same organisation
+    [Arguments]  ${email}  ${password}  ${emailSubject}  ${emailBody}
+    Logout as user
+    the user reads his email and clicks the link     ${email}  ${emailSubject}  ${emailBody}  2
+    the user clicks the button/link                  jQuery = a:contains("Continue")
+    login to application                             ${email}  ${password}
+    the user clicks the button/link                  jQuery = a:contains("Confirm and accept invitation")
+
