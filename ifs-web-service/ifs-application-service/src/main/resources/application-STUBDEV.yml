@@ -3,3 +3,6 @@ server:
 ifs:
   web:
     baseURL: "https://localhost:8080"
+  starters:
+    stubdev:
+      enableClientMethodTiming: true

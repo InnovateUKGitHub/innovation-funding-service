@@ -13,6 +13,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "javax.servlet:javax.servlet-api"
     implementation "io.projectreactor:reactor-core"
+    implementation "org.springframework.boot:spring-boot-starter-aop"
 
     testImplementation("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
