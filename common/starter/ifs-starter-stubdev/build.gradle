@@ -1,0 +1,22 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+
+test {
+    useJUnitPlatform {
+    }
+}
+
+dependencies {
+
+    api platform(project(":common:bom"))
+
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "javax.servlet:javax.servlet-api"
+    implementation "io.projectreactor:reactor-core"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation('org.mockito:mockito-junit-jupiter')
+
+}

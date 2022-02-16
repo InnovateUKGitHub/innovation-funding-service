@@ -10,6 +10,7 @@ include("common:api:audit-api")
 // Starters - should only depend on external libs (mostly spring)
 include("common:starter:ifs-starter-logging")
 include("common:starter:ifs-starter-audit")
+include("common:starter:ifs-starter-stubdev")
 
 // Commons - can be split and deprecated
 include("common:ifs-commons")
