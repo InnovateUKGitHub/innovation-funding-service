@@ -15,7 +15,7 @@ import java.util.List;
 
 @Service
 @Primary
-@Profile(IfsProfileConstants.STUB_DEV)
+@Profile(IfsProfileConstants.STUBDEV)
 public class StubAlertService implements AlertRestService {
 
     @Override

@@ -12,7 +12,7 @@ import org.springframework.security.web.header.writers.StaticHeadersWriter;
 
 @Configuration
 @Order(1)
-@Profile(IfsProfileConstants.STUB_DEV)
+@Profile(IfsProfileConstants.STUBDEV)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired

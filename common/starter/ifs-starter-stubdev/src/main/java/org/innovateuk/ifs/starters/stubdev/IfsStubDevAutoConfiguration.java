@@ -26,7 +26,7 @@ import javax.servlet.Filter;
  */
 @Slf4j
 @Configuration
-@Profile(IfsProfileConstants.STUB_DEV)
+@Profile(IfsProfileConstants.STUBDEV)
 @ConditionalOnClass(name = "org.springframework.boot.devtools.livereload.LiveReloadServer")
 @AutoConfigureAfter(name = "org.springframework.boot.devtools.autoconfigure.LocalDevToolsAutoConfiguration")
 public class IfsStubDevAutoConfiguration {
