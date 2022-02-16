@@ -339,9 +339,8 @@ the user completes the application
 the partner selects new answer choice
      the user clicks the button/link                        css = .file-list li:nth-child(1) button
      Wait Until Page Does Not Contain Without Screenshots   Removing   60s
-     Wait Until Page Does Not Contain Without Screenshots   Remove     60s
      Wait Until Page Does Not Contain Without Screenshots   ${valid_pdf} (opens in a new window)   60s
-     the user can remove file with multiple uploads         removeAppendix    ${ods_file}
+     the user can remove file with multiple uploads         ${ods_file}
      input text                                             id = multipleChoiceOptionId  ${answerToSelect}
      the user clicks the button/link                        jQuery = ul li:contains("${answerToSelect}")
      the user clicks the button/link                        jQuery = button:contains("Assign to lead for review")
