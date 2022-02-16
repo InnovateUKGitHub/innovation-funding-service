@@ -32,8 +32,9 @@ User is able to cancel edit organisation size
     [Documentation]  IFS-6923
     [Setup]  the user clicks the button/link    jQuery = a:contains("Edit organisation")
     Given the user enters text to a text field  id = financialYearEndYearValue   1993
-    when the user clicks the button/link        jQUery = a:contains("Cancel and return to")
-    Then the user should see the element        jQuery = strong:contains("2020")
+    When the user clicks the button/link        jQUery = a:contains("Cancel and return to")
+    Then the user should see the element        jQuery = th:contains("End of last financial year")+td:contains("${Month} ${Year}")
+    #Then the user should see the element        jQuery = strong:contains("2020")
 
 Edit organisation size page with growth table validations
      [Documentation]  IFS-6923
