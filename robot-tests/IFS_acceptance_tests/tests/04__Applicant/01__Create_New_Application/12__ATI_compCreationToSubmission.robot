@@ -337,8 +337,8 @@ the user completes the application
     the finance overview is marked as incomplete
 
 the partner selects new answer choice
-     the user clicks the button/link                        name = removeAppendix
-     the user refreshes until element disappears on page    link = ${valid_pdf} (opens in a new window)
+     the user clicks the button/link                        jQuery = a:contains("${valid_pdf} (opens in a new window)") + button:contains("Remove")
+     the user refreshes until element disappears on page    jQuery = a:contains("${valid_pdf} (opens in a new window)")
      Wait Until Page Does Not Contain Without Screenshots   ${valid_pdf} (opens in a new window)   60s
      the user can remove file with multiple uploads         removeAppendix    ${ods_file}
      input text                                             id = multipleChoiceOptionId  ${answerToSelect}
