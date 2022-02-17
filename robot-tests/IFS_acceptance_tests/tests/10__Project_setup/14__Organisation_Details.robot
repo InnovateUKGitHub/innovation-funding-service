@@ -35,7 +35,6 @@ User is able to cancel edit organisation size
     Given the user enters text to a text field  id = financialYearEndYearValue   1993
     When the user clicks the button/link        jQUery = a:contains("Cancel and return to")
     Then the user should see the element        jQuery = th:contains("End of last financial year")+td:contains("January 2020")
-    #Then the user should see the element        jQuery = strong:contains("2020")
 
 Edit organisation size page with growth table validations
      [Documentation]  IFS-6923
@@ -159,22 +158,15 @@ The user should see further organisation details
     [Arguments]  ${organisationType}  ${organisationName}  ${registredNumber}  ${addressLine}  ${addressCity}  ${addressTown}  ${addressPostcode}  ${sicCode}  ${organisationSize}
     the user should see the element   jQuery = h2:contains("Organisation details")
     the user should see the element   jQuery = h3:contains("Organisation type") + p:contains("${organisationType}")
-#    the user should see the element   jQuery = h3:contains("Registered name") + p:contains("${RegName}")
-#    the user should see the element   jQuery = h3:contains("Registration number") + p:contains("${RegNumber}")
     the user checks for companies house details    ${organisationName}  ${registredNumber}  ${addressLine}  ${addressCity}  ${addressTown}  ${addressPostcode}  ${sicCode}  ${organisationSize}
 
 The user should see Organisation size details
     [Arguments]  ${Turnover}  ${Employees}
-    #the user should see the element    jQuery = th:contains("Organisation size") + td:contains("${OrgSize}")
     the user should see the element    jQuery = dt:contains("Turnover") + dd:contains("${Turnover}")
     the user should see the element    jQuery = dt:contains(Full time employees) + dd:contains(${Employees})
 
 The user should see Organisation size details with a growth table
     [Arguments]  ${AnnualTurnover}  ${AnnualProfits}  ${AnnualExport}  ${ReasearchDevelopmentSpend}  ${Employees}
-#    the user should see the element    jQuery = th:contains("End of last financial year")+td:contains("${Month} ${Year}")
-#    the user should see the element    jQuery = strong:contains("${Month}")
-#    the user should see the element    jQuery = strong:contains("${Year}")
-#    the user should see the element    jQuery = th:contains("Organisation size") + td:contains("${OrgSize}")
     the user should see the element    jQuery = td:contains("${AnnualTurnover}")
     the user should see the element    jQuery = td:contains("${AnnualProfits}")
     the user should see the element    jQuery = td:contains("${AnnualExport}")
