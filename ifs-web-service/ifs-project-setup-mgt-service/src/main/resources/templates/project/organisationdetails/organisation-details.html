@@ -21,7 +21,7 @@
 
         <th:block th:unless="${organisationDetails.knowledgeBase && organisationDetails.ktpCompetition}">
             <div th:if="${yourOrganisation != null}">
-                <h2 class="govuk-heading-m">Organisation size</h2>
+                <h2 class="govuk-heading-m">Organisation details</h2>
 
                 <form th:object="${form}">
                     <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
