@@ -238,9 +238,6 @@ Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
     Connect to database  @{database}
-Custom Suite Teardown
-    the user closes the browser
-    Disconnect from database
 
 assign the application to assessor
     [Arguments]   ${applicationName}
@@ -271,3 +268,7 @@ the assessor accepts an invite to an application
     the user clicks the button/link       link = ${hestaCompetitionName}
     the user selects the radio button     acceptInvitation  true
     the user clicks the button/link       jQuery = button:contains("Confirm")
+
+Custom Suite Teardown
+    the user closes the browser
+    Disconnect from database
