@@ -1,0 +1,17 @@
+ifs:
+  starters:
+    stubdev:
+      projectRootDirectory: "file:/Users/Mark.Dewey/Documents/dev/innovation-funding-service"
+      enableClientMethodTiming: false
+  tomcat:
+    ajp:
+      enable: false
+  spring:
+    thymeleaf:
+      cache: false
+      mode: HTML
+      encoding: UTF-8
+      checkTemplate: true
+    resources:
+      cache:
+        period: 0

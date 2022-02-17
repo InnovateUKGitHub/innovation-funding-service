@@ -1,15 +1,12 @@
 package org.innovateuk.ifs.config.thymeleaf;
 
-import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.config.thymeleaf.dialect.IfSThymeleafDialect;
-import org.innovateuk.ifs.config.thymeleaf.postprocessor.IfsThymeleafPostProcessorDialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -34,16 +31,6 @@ public class IfsThymeleafConfiguration {
         @Bean
         public IDialect ifSThymeleafDialect() {
             return new IfSThymeleafDialect();
-        }
-    }
-
-    @Configuration
-    @Profile(IfsProfileConstants.STUBDEV)
-    protected static class IfsThymeleafPostProcessorDialectConfiguration {
-
-        @Bean
-        public IDialect ifsThymeleafPostProcessorDialect() {
-            return new IfsThymeleafPostProcessorDialect();
         }
     }
 
