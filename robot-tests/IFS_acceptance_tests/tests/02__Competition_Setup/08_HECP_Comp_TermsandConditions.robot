@@ -13,7 +13,7 @@ Resource          ../../resources/common/Competition_Commons.robot
 ${hecpKICsCompetitionName}              HECP KICs competition
 ${hecpCompetitionName}                  HECP competition
 ${hecpKicsTermsAndConditionsLink}       Horizon Europe Guarantee – EIT KICs 2021 (opens in a new window)
-${hecpKicsTermsAndConditionsTitle}      Terms and conditions for Horizon Europe Guarantee - EIT KICs 2021 grant - Innovation Funding Service
+${hecpKicsTermsAndConditionsTitle}      Terms and conditions for Horizon Europe Guarantee – EIT KICs 2021 grant - Innovation Funding Service
 ${hecpTermsAndConditionsLink}           Horizon Europe Guarantee (opens in a new window)
 ${hecpTermsAndConditionsTitle}          Terms and conditions for Horizon Europe Guarantee grant - Innovation Funding Service
 
@@ -38,7 +38,8 @@ HECP terms and conditions are correct
     [Documentation]  IFS-10926
     Given the user clicks the button/link                link = Terms and conditions
     When the user clicks the button/link                 link = ${hecpKicsTermsAndConditionsLink}
-    And select window                                    title = ${hecpKicsTermsAndConditionsTitle}
+    #And select window                                    title = ${hecpKicsTermsAndConditionsTitle}
+    And select window                                    NEW
     Then the user should see the element                 jQuery = h1:contains("Terms and conditions for Horizon Europe Guarantee – EIT KICs 2021 grant")
     [Teardown]   the user closes the last opened tab
 
