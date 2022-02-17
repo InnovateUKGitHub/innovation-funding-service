@@ -130,7 +130,6 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
             rows = section.getQuestions()
                     .stream()
                     .map(data.getQuestions()::get)
-                    .filter(question -> !question.getQuestionSetupType().equals(QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION))
                     .map(question -> getApplicationOverviewRowViewModel(data, question, section))
                     .collect(toCollection(LinkedHashSet::new));
         }
