@@ -34,6 +34,9 @@ public class KtpFinancialYear {
     @Column(columnDefinition = "int(11)")
     private Long employees;
 
+    @Column(columnDefinition = "int(11)")
+    private Long corporateGroupEmployees;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="ktpFinancialYearsId", referencedColumnName="id", nullable = false, updatable = false)
     private KtpFinancialYears ktpFinancialYears;
@@ -45,7 +48,7 @@ public class KtpFinancialYear {
         this.ktpFinancialYears = ktpFinancialYears;
     }
 
-    public KtpFinancialYear(Integer year, BigDecimal turnover, BigDecimal preTaxProfit, BigDecimal currentAssets, BigDecimal liabilities, BigDecimal shareholderValue, BigDecimal loans, Long employees, KtpFinancialYears ktpFinancialYears) {
+    public KtpFinancialYear(Integer year, BigDecimal turnover, BigDecimal preTaxProfit, BigDecimal currentAssets, BigDecimal liabilities, BigDecimal shareholderValue, BigDecimal loans, Long employees, Long corporateGroupEmployees, KtpFinancialYears ktpFinancialYears) {
         this(year, ktpFinancialYears);
         this.turnover = turnover;
         this.preTaxProfit = preTaxProfit;
@@ -54,10 +57,11 @@ public class KtpFinancialYear {
         this.shareholderValue = shareholderValue;
         this.loans = loans;
         this.employees = employees;
+        this.corporateGroupEmployees = corporateGroupEmployees;
     }
 
     public KtpFinancialYear(KtpFinancialYear year, KtpFinancialYears ktpFinancialYears) {
-        this(year.getYear(), year.getTurnover(), year.getPreTaxProfit(), year.getCurrentAssets(), year.getLiabilities(), year.getShareholderValue(), year.getLoans(), year.getEmployees(), ktpFinancialYears);
+        this(year.getYear(), year.getTurnover(), year.getPreTaxProfit(), year.getCurrentAssets(), year.getLiabilities(), year.getShareholderValue(), year.getLoans(), year.getEmployees(), year.getCorporateGroupEmployees(), ktpFinancialYears);
     }
 
     public Long getId() {
@@ -134,5 +138,13 @@ public class KtpFinancialYear {
 
     public void setKtpFinancialYears(KtpFinancialYears ktpFinancialYears) {
         this.ktpFinancialYears = ktpFinancialYears;
+    }
+
+    public Long getCorporateGroupEmployees() {
+        return corporateGroupEmployees;
+    }
+
+    public void setCorporateGroupEmployees(Long corporateGroupEmployees) {
+        this.corporateGroupEmployees = corporateGroupEmployees;
     }
 }

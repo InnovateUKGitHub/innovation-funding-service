@@ -494,6 +494,15 @@ public class RestResult<T> extends BaseFailingOrSucceedingResult<T, RestFailure>
     public static RestResult<Void> toPutResponse() {
         return restSuccess();
     }
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a PUT request that is
+     * updating data.
+     *
+     * This will be a bodiless RestResult with a "204 - NO CONTENT" response.
+     */
+    public static RestResult<Void> toPutResponseNoContent() {
+        return restSuccess(NO_CONTENT);
+    }
 
     /**
      * @deprecated PUTs shouldn't generally return results in their bodies
