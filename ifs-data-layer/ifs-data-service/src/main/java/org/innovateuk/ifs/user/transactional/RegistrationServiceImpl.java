@@ -30,6 +30,7 @@ import org.innovateuk.ifs.user.resource.UserCreationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -104,6 +105,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
 
+    @Value("${ifs.edi.update.enabled}")
+    private boolean isEdiUpdateEnabled;
 
     @Override
     @Transactional
@@ -323,8 +326,10 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             applicationInviteService.updateInviteHistory(applicationInviteResource);
 
         }
-
-
+        if(isEdiUpdateEnabled) {
+            return getUser(userId)
+                    .andOnSuccessReturnVoid(this::activateUser);
+        }
         return getUser(userId)
                 .andOnSuccess(this::activateUser)
                 .andOnSuccessReturnVoid(this::sendApplicantDiversitySurvey);
