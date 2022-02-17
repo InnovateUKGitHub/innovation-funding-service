@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.innovateuk.ifs.starters.audit.cfg.AuditAutoConfiguration.AMQP_PROFILE;
+import static org.innovateuk.ifs.IfsProfileConstants.AMQP_PROFILE;
 import static org.innovateuk.ifs.starters.audit.cfg.rabbit.RabbitAuditConfiguration.AUDIT_OBJECT_MAPPER_BEAN_NAME;
 import static org.innovateuk.ifs.starters.audit.cfg.rabbit.RabbitAuditConfiguration.AUDIT_QUEUE_BEAN_NAME;
 import static org.junit.jupiter.api.Assertions.assertThrows;

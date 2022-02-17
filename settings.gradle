@@ -5,11 +5,13 @@
 // The intention is to migrate api in here
 include("common")
 include("common:api")
+include("common:api:static")
 include("common:api:audit-api")
 
 // Starters - should only depend on external libs (mostly spring)
 include("common:starter:ifs-starter-logging")
 include("common:starter:ifs-starter-audit")
+include("common:starter:ifs-starter-stubdev")
 
 // Commons - can be split and deprecated
 include("common:ifs-commons")
@@ -76,3 +78,6 @@ include("robot-tests")
 
 // Tools...
 include("ifs-tools:sba")
+include 'common:api:shared'
+findProject(':common:api:shared')?.name = 'shared'
+

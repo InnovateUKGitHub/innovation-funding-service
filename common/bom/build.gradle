@@ -14,6 +14,7 @@ dependencies {
     api("com.google.guava:guava")
     api("org.slf4j:slf4j-api")
     api("org.projectlombok:lombok")
+    api project(":common:api:static")
 
     // These are suggested versions
     // (dependent modules will still need to declare the dependency (without version)
@@ -40,6 +41,7 @@ dependencies {
         // Starters - keep it light, only targeted spring libs
         api project(":common:starter:ifs-starter-logging")
         api project(":common:starter:ifs-starter-audit")
+        api project(":common:starter:ifs-starter-stubdev")
 
         api project(":common:ifs-commons")
         api project(":common:ifs-commons-test")

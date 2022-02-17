@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.questionnaire.config.controller;
 
 
+import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.questionnaire.config.form.QuestionnaireQuestionConfigForm;
 import org.innovateuk.ifs.questionnaire.config.form.QuestionnaireQuestionOptionForm;
@@ -28,7 +29,7 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/questionnaire-configure")
 @PreAuthorize("permitAll")
-@Profile("questionnaire-configure")
+@Profile(IfsProfileConstants.QUESTIONNAIRE_CONFIGURE)
 public class QuestionnaireConfigWebController {
 
     @Autowired
