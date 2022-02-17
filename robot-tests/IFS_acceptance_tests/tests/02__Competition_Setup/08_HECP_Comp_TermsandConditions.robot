@@ -10,17 +10,11 @@ Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Competition_Commons.robot
 
 *** Variables ***
-<<<<<<< HEAD
-${hecpCompetitionName}             HECP competition
-${hecpTermsAndConditionsLink}      Horizon Europe Guarantee – EIT KICs 2021 (opens in a new window)
-${hecpTermsAndConditionsTitle}     Terms and conditions of an Horizon Europe Guarantee – EIT KICs 2021 grant - Innovation Funding Service
-=======
 ${hecpCompetitionName}                  HECP competition
-${hecpKicsTermsAndConditionsLink}       Horizon Europe Guarantee - EIT KICs 2021 (opens in a new window)
+${hecpKicsTermsAndConditionsLink}       Horizon Europe Guarantee – EIT KICs 2021 (opens in a new window)
 ${hecpKicsTermsAndConditionsTitle}      Terms and conditions for Horizon Europe Guarantee - EIT KICs 2021 grant - Innovation Funding Service
 ${hecpTermsAndConditionsLink}           Horizon Europe Guarantee (opens in a new window)
 ${hecpTermsAndConditionsTitle}          Terms and conditions for Horizon Europe Guarantee grant - Innovation Funding Service
->>>>>>> bc59f7e7c539a20648ebfcebae317bee7eee1307
 
 
 *** Test Cases ***
@@ -34,7 +28,7 @@ HECP KICs terms and conditions not pre selected for any funding or competition t
 
 Comp admin marks HECP terms and conditions section as complete
     [Documentation]  IFS-10926
-    When the user clicks the button twice     jQuery = label:contains("Horizon Europe Guarantee - EIT KICs 2021")
+    When the user clicks the button/link      jQuery = label:contains("Horizon Europe Guarantee – EIT KICs 2021")
     And the user clicks the button/link       jQuery = button:contains("Done")
     And the user clicks the button/link       link = Back to competition details
     Then the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
@@ -57,11 +51,7 @@ HECP terms and conditions not pre selected for any funding or competition type
 
 Comp admin marks HECP terms and conditions section as complete
     [Documentation]  IFS-10926
-<<<<<<< HEAD
     When the user clicks the button twice     jQuery = label:contains("Horizon Europe Guarantee – EIT KICs 2021")
-=======
-    When the user clicks the button twice     jQuery = label:contains("Horizon Europe Guarantee")
->>>>>>> bc59f7e7c539a20648ebfcebae317bee7eee1307
     And the user clicks the button/link       jQuery = button:contains("Done")
     And the user clicks the button/link       link = Back to competition details
     Then the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
@@ -71,11 +61,7 @@ HECP terms and conditions are correct
     Given the user clicks the button/link                link = Terms and conditions
     When the user clicks the button/link                 link = ${hecpTermsAndConditionsLink}
     And select window                                    title = ${hecpTermsAndConditionsTitle}
-<<<<<<< HEAD
     Then the user should see the element                 jQuery = h1:contains("Terms and conditions of an Horizon Europe Guarantee – EIT KICs 2021 grant")
-=======
-    Then the user should see the element                 jQuery = h1:contains("Horizon Europe Guarantee")
->>>>>>> bc59f7e7c539a20648ebfcebae317bee7eee1307
     [Teardown]   the user closes the last opened tab
 
 
