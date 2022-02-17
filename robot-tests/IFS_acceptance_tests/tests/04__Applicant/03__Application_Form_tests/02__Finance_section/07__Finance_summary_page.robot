@@ -243,18 +243,16 @@ Innovation lead can see read only view of collaborator Your project costs for La
 Innovation lead can see read only view of Your organisation
     [Documentation]  IFS-802
     [Tags]  InnovationLead
-    When the user clicks the button/link           jQuery = a:contains("Your project finances")
-    Then the user should see the element           jQuery = p:contains("Please complete your project finances.")
-    When the user clicks the button/link           jQuery = a:contains("Your organisation")
-    Then the user checks for companies house details    Ludlow  53532322  20  Cardiff  South Glamorgan  CF9 7TY  64209  Micro or small
-    #Then the user should see the element           jQuery = dt:contains("Organisation size") + dd:contains("Micro")
-    And the user should see the element            jQuery = th:contains("End of last financial year")+td:contains("January 2020")
-    #And the user should see the element            jQuery = strong:contains("2020")
-    And the user should see the element            jQuery = td:contains("Annual turnover") + td:contains("100,000")
-    And the user should see the element            jQuery = td:contains("Annual profits") + td:contains("200,000")
-    And the user should see the element            jQuery = td:contains("Annual export") + td:contains("300,000")
-    And the user should see the element            jQuery = td:contains("Research and development spend") + td:contains("400,000")
-    And the user should see the element            jQuery = dt:contains("Full time employees") + dd:contains("60")
+    When the user clicks the button/link                jQuery = a:contains("Your project finances")
+    Then the user should see the element                jQuery = p:contains("Please complete your project finances.")
+    When the user clicks the button/link                jQuery = a:contains("Your organisation")
+    Then the user checks for companies house details    Ludlow  53532322  100 Victoria Embankment  London  ${EMPTY}  EC4Y 0HQ  64209  Micro or small
+    And the user should see the element                 jQuery = th:contains("End of last financial year")+td:contains("January 2020")
+    And the user should see the element                 jQuery = td:contains("Annual turnover") + td:contains("100,000")
+    And the user should see the element                 jQuery = td:contains("Annual profits") + td:contains("200,000")
+    And the user should see the element                 jQuery = td:contains("Annual export") + td:contains("300,000")
+    And the user should see the element                 jQuery = td:contains("Research and development spend") + td:contains("400,000")
+    And the user should see the element                 jQuery = dt:contains("Full time employees") + dd:contains("60")
 
 Innovation lead can see read only view of Your funding
     [Documentation]  IFS-802
