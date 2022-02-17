@@ -2,6 +2,7 @@ package org.innovateuk.ifs.config.thymeleaf;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.config.thymeleaf.dialect.IfSThymeleafDialect;
 import org.innovateuk.ifs.config.thymeleaf.postprocessor.IfsThymeleafPostProcessorDialect;
 import org.junit.Test;
@@ -24,7 +25,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({"debug"})
+@ActiveProfiles(IfsProfileConstants.STUBDEV)
 public class IfsThymeleafConfigurationDevTest {
 
     @Autowired

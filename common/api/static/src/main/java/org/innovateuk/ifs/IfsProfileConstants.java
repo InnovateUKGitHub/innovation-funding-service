@@ -7,8 +7,6 @@ package org.innovateuk.ifs;
  */
 public class IfsProfileConstants {
 
-    public static final String DEBUG = "DEBUG";
-
     public static final String STUBDEV = "STUBDEV";
     public static final String NOT_STUBDEV = "!" + STUBDEV;
 

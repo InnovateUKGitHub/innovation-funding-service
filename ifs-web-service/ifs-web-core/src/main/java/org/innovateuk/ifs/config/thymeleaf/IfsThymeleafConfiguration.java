@@ -38,7 +38,7 @@ public class IfsThymeleafConfiguration {
     }
 
     @Configuration
-    @Profile(IfsProfileConstants.DEBUG)
+    @Profile(IfsProfileConstants.STUBDEV)
     protected static class IfsThymeleafPostProcessorDialectConfiguration {
 
         @Bean

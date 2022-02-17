@@ -3,6 +3,21 @@ server:
 ifs:
   web:
     baseURL: "https://localhost:8080"
+  data:
+    service:
+      rest:
+        baseURL: "http://localhost:8090"
   starters:
     stubdev:
-      enableClientMethodTiming: true
+      projectRootDirectory: "${PROJECT_ROOT:/Users/Mark.Dewey/Documents/dev/innovation-funding-service}"
+      webCoreResourcesDirectory: "${starters.stubdev.projectRootDirectory}/ifs-web-service/ifs-web-core/src/main/resources"
+      webCoreTemplates: "${starters.stubdev.webCoreResourcesDirectory}/templates"
+      serviceResourcesDirectory: "${starters.stubdev.projectRootDirectory}/ifs-web-service/ifs-application-service/src/main/resources"
+      serviceResourcesTemplates: "${starters.stubdev.serviceResourcesDirectory}/templates"
+      enableClientMethodTiming: false
+tomcat:
+  ajp:
+    enable: false
+spring:
+  thymeleaf:
+    cache: false
