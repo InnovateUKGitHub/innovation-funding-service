@@ -3,11 +3,14 @@ package org.innovateuk.ifs.user.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
+import org.innovateuk.ifs.sil.crm.resource.SilEDIStatus;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
@@ -19,14 +22,21 @@ import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_INVALID_ARGUMENT;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder.anUserCreationResource;
@@ -54,6 +64,8 @@ public class UserController {
     @Autowired
     private BaseUserService baseUserService;
 
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
 
     @Autowired
     private UserService userService;
@@ -263,5 +275,37 @@ public class UserController {
     public RestResult<Void> grantRole(@PathVariable long id,
                                       @PathVariable Role role) {
         return userService.grantRole(new GrantRoleCommand(id, role)).toPostResponse();
+    }
+
+    @PreAuthorize("permitAll()")
+    @PatchMapping(value = "/v1/edi")
+    public RestResult<Void> updateUser(
+            @Valid @RequestBody SilEDIStatus surveyStatus,
+            BindingResult bindingResult, HttpServletRequest request) {
+
+        if (bindingResult.hasErrors()) {
+            log.error(String.format("edi-status-update error: incorrect json: %s ", surveyStatus));
+            return RestResult.restFailure(new Error(GENERAL_INVALID_ARGUMENT,
+                    bindingResult
+                            .getAllErrors()
+                            .stream()
+                            .map(ObjectError::getDefaultMessage)
+                            .collect(Collectors.toList())));
+        }
+
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        if (user == null) {
+            log.error("edi-status-update error: user not found ");
+            return RestResult.restFailure(HttpStatus.UNAUTHORIZED);
+        } else {
+            log.info(String.format("edi-status-update: user id=%d, name=%s ", user.getId(), user.getName()));
+            user.setEdiStatus(surveyStatus.getEdiStatus());
+            user.setEdiReviewDate(surveyStatus.getEdiReviewDate());
+            return userService
+                    .updateDetails(user)
+                    .andOnSuccessReturnVoid()
+                    .toPutResponseNoContentResponse();
+
+        }
     }
 }

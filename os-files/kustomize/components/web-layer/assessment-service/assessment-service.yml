@@ -6,6 +6,7 @@ metadata:
     app: assessment-svc
   annotations:
     javaDebug: javaDebug
+    management.context-path: /assessment/monitoring
 spec:
   ports:
     - name: 8080-tcp
