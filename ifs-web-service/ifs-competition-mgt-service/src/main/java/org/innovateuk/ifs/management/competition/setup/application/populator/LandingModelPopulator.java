@@ -24,6 +24,7 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.form.resource.SectionType.APPLICATION_QUESTIONS;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
@@ -52,7 +53,13 @@ public class LandingModelPopulator implements CompetitionSetupSectionModelPopula
     @Override
     public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
         List<SectionResource> sections = sectionService.getAllByCompetitionId(competitionResource.getId());
-        List<QuestionResource> questionResources = questionRestService.findByCompetition(competitionResource.getId()).getSuccess();
+        List<QuestionResource> questionResources = questionRestService
+                .findByCompetition(competitionResource.getId())
+                .getSuccess()
+                .stream()
+                .filter(questionResource ->!EQUALITY_DIVERSITY_INCLUSION.equals(questionResource.getQuestionSetupType()))
+                .collect(toList());
+
         List<SectionResource> parentSections = sections.stream()
                 .filter(sectionResource -> sectionResource.getParentSection() == null)
                 .collect(Collectors.toList());
