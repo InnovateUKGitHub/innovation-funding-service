@@ -1,8 +1,7 @@
 server:
   port: 8080
-ifs:
-  web:
-    baseURL: "https://localhost:8080"
-  starters:
-    stubdev:
-      enableClientMethodTiming: true
+spring:
+  thymeleaf:
+    prefix: "${ifs.starters.stubdev.projectRootDirectory}/ifs-web-service/ifs-application-service/src/main/resources/templates/"
+  resources:
+    static-locations: "${ifs.starters.stubdev.projectRootDirectory}/ifs-web-service/ifs-application-service/src/main/resources/static/"

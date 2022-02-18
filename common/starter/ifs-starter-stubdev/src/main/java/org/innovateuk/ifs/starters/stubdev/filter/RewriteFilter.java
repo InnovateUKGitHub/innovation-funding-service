@@ -24,7 +24,8 @@ public class RewriteFilter implements Filter {
         "https://localhost:8080/competition/", "http://localhost:8083/competition/",
         "https://localhost:8080/project-setup-management/", "http://localhost:8084/project-setup-management/",
         "https://localhost:8080/project-setup/", "http://localhost:8085/project-setup/",
-        "https://localhost:8080/survey/", "http://localhost:8086/survey/"
+        "https://localhost:8080/survey/", "http://localhost:8086/survey/",
+        "https://localhost:8080/", "http://localhost:8080/"
     );
 
     @Override
