@@ -298,10 +298,10 @@ The new partner cannot complete funding without organisation
 
 The new partner can complete Your organisation
     [Documentation]  IFS-6491
-    Given the user clicks the button/link    link = Your organisation
-    And the user should see the element      jQuery = span:contains("The size of your organisation determines the level of funding you are eligible for.")
+    Given the user clicks the button/link       link = Your organisation
+    And page should contain                     jQuery = span:contains("The size of your organisation determines the level of funding you are eligible for.")
     When the user completes your organisation
-    Then the user should see the element     jQuery = li div:contains("Your organisation") ~ .task-status-complete
+    Then the user should see the element        jQuery = li div:contains("Your organisation") ~ .task-status-complete
 
 The new partner can view organisation details
     [Documentation]  IFS-11140

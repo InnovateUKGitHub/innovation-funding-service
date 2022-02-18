@@ -1030,7 +1030,7 @@ the user checks for companies house details
     the user should see the element   jQuery = td div:contains("${addressCity}")
     the user should see the element   jQuery = td div:contains("${addressTown}")
     the user should see the element   jQuery = td div:contains("${addressPostcode}")
-    the user should see the element   jQuery = th:contains("SIC code")+td div:contains("${sicCode}")
+    the user should see the element   jQuery = th:contains("SIC code")+td:contains("${sicCode}")
     the user should see the element   jQuery = th:contains("Organisation size")+td:contains("${organisationSize}")
 
 the user accepts invitation to join application under same organisation
