@@ -1,10 +1,14 @@
 package org.innovateuk.ifs.project.organisationdetails.view.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationDetailsReadOnlyViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrganisationDetailsViewModel {
 
@@ -123,5 +127,15 @@ public class OrganisationDetailsViewModel {
 
     public void setPartnerOrgDisplay(boolean partnerOrgDisplay) {
         partnerOrgDisplay = partnerOrgDisplay;
+    }
+
+    @JsonIgnore
+    public List<String> getRegisteredAddressString() {
+        List<String> addressData = new ArrayList<String>();
+        addressData.add(getAddressLine1());
+        addressData.add(getTown());
+        addressData.add(getCounty());
+        addressData.add(getPostcode());
+        return addressData;
     }
 }
