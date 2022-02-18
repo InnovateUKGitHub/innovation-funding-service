@@ -56,7 +56,10 @@ public class IfsStubDevAutoConfiguration {
         log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
         log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
         log.info("XXXXXXXXXXXXXXXXXXXXXXXXX STUB DEV XXXXXXXXXXXXXXXXXXXXXXXXX");
-        log.info(stubDevConfigurationProperties.toString());
+        log.info(stubDevConfigurationProperties.getProjectRootDirectory());
+        log.info(stubDevConfigurationProperties.getWebCoreTemplates());
+        log.info("" + stubDevConfigurationProperties.isEnableClientMethodTiming());
+        log.info("" + stubDevConfigurationProperties.isValidateHtml());
         log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
     }
 
@@ -86,7 +89,7 @@ public class IfsStubDevAutoConfiguration {
         SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
         resolver.setApplicationContext(this.applicationContext);
         resolver.setPrefix(stubDevConfigurationProperties.getProjectRootDirectory()
-                + "/ifs-web-service/ifs-web-core/src/main/resources/templates/");
+                + stubDevConfigurationProperties.getWebCoreTemplates());
         resolver.setSuffix(".html");
         resolver.setTemplateMode(TemplateMode.HTML);
         resolver.setCharacterEncoding(StandardCharsets.UTF_8.name());

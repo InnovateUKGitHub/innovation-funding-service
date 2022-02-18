@@ -1,23 +1,7 @@
 server:
   port: 8085
-ifs:
-  web:
-    baseURL: "https://localhost:8080"
-  data:
-    service:
-      rest:
-        baseURL: "http://localhost:8090"
-  starters:
-    stubdev:
-      projectRootDirectory: "${PROJECT_ROOT:/Users/Mark.Dewey/Documents/dev/innovation-funding-service}"
-      webCoreResourcesDirectory: "${starters.stubdev.projectRootDirectory}/ifs-web-service/ifs-web-core/src/main/resources"
-      webCoreTemplates: "${starters.stubdev.webCoreResourcesDirectory}/templates"
-      serviceResourcesDirectory: "${starters.stubdev.projectRootDirectory}/ifs-web-service/ifs-application-service/src/main/resources"
-      serviceResourcesTemplates: "${starters.stubdev.serviceResourcesDirectory}/templates"
-      enableClientMethodTiming: false
-tomcat:
-  ajp:
-    enable: false
 spring:
   thymeleaf:
-    cache: false
+    prefix: "${ifs.starters.stubdev.projectRootDirectory}/ifs-web-service/ifs-project-setup-service/src/main/resources/templates/"
+  resources:
+    static-locations: "${ifs.starters.stubdev.projectRootDirectory}/ifs-web-service/ifs-project-setup-service/src/main/resources/static/"

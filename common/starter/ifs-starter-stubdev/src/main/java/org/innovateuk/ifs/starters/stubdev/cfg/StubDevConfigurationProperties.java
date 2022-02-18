@@ -30,5 +30,10 @@ public class StubDevConfigurationProperties {
      */
     private String projectRootDirectory = "unset";
 
+    /**
+     * Use this to serve static files from the filesystem
+     */
+    private String webCoreTemplates = "/ifs-web-service/ifs-web-core/src/main/resources/templates/";
+
 
 }

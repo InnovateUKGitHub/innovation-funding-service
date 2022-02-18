@@ -1,12 +1,5 @@
 server:
   port: 8082
-ifs:
-  web:
-    baseURL: "https://localhost:8080"
-  data:
-    service:
-      rest:
-        baseURL: "http://localhost:8090"
 spring:
   thymeleaf:
     prefix: "${ifs.starters.stubdev.projectRootDirectory}/ifs-web-service/ifs-competition-mgt-service/src/main/resources/templates/"
