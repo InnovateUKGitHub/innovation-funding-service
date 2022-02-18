@@ -25,7 +25,7 @@ IFS Admin able to view further Organisation details by selecting an organisation
     [Documentation]  IFS-6697  IFS-11140
     Given the user navigates to View partner details page                      ${GrowthTableCompetitionLink}
     When the user selects an organisation                                      ${SmithZoneRadioBttnValue}
-    Then the user should see further organisation details                      Business  SmithZone  89082442  100 Victoria Embankment  London  ${EMPTY}  EC4Y 0HQ  64209  Micro or small
+    Then the user should see further organisation details                      Business  SmithZone  89082442  31 South Road  Swindon  Wiltshire  SN3 1BL  ${EMPTY}  Micro or small
     And the user should see Organisation size details with a growth table      1  2020  100,000  200,000  300,000  400,000  60
     And the user should see the element                                        jQuery = th:contains("End of last financial year")+td:contains("January 2020")
 
@@ -61,7 +61,7 @@ Finance checks can't be approved if the updated funding level exceeds the permit
 IFS Admin able to view further Organisation details without a growth table
     [Documentation]  IFS-6697  IFS-11140
     Given the user navigates to View partner details page   ${NoGrowthTableCompetitionLink}
-    Then the user should see further organisation details   Business  Ward Ltd  55522234  100 Victoria Embankment  London  ${EMPTY}  EC4Y 0HQ  64209  Micro or small
+    Then the user should see further organisation details   Business  Ward Ltd  55522234  12 North Star Avenue  Swindon  Wiltshire  SN2 1EU  ${EMPTY}  Micro or small
     And the user should see organisation size details       700,000  50
 
 IFS Admin able to edit further Organisation details without a growth table
@@ -77,7 +77,7 @@ Finance user is able to view further Organisation details by selecting an organi
     [Setup]  log in as a different user                                        &{internal_finance_credentials}
     Given the user navigates to View partner details page                      ${GrowthTableCompetitionLink}
     When the user selects an organisation                                      ${SmithZoneRadioBttnValue}
-    Then the user should see further organisation details                      Business  SmithZone  89082442  100 Victoria Embankment  London  ${EMPTY}  EC4Y 0HQ  64209  Large
+    Then the user should see further organisation details                      Business  SmithZone  89082442  31 South Road  Swindon  Wiltshire  SN3 1BL  ${EMPTY}  Large
     And the user should see Organisation size details with a growth table      12  2019  600,000  500,000  400,000  300,000  200
     And the user should see the element                                        jQuery = th:contains("End of last financial year")+td:contains("December 2019")
 
@@ -91,7 +91,7 @@ Finance user is able to edit organisation size with a growth table
 Finance user is able to view further Organisation details without a growth table
     [Documentation]  IFS-6697  IFS-11140
     Given the user navigates to View partner details page   ${NoGrowthTableCompetitionLink}
-    Then the user should see further organisation details   Business  Ward Ltd  55522234  100 Victoria Embankment  London  ${EMPTY}  EC4Y 0HQ  64209  Large
+    Then the user should see further organisation details   Business  Ward Ltd  55522234  12 North Star Avenue  Swindon  Wiltshire  SN2 1EU  ${EMPTY}  Large
     And the user should see organisation size details       9,000,000  300
 
 Finance user is able to edit further Organisation details without a growth table
@@ -105,7 +105,7 @@ Support user is able to view further Organisation details by selecting an organi
     [Documentation]  IFS-6697  IFS-6923
     [Setup]  log in as a different user                          &{support_user_credentials}
     Given the user navigates to View partner details page        ${NoGrowthTableCompetitionLink}
-    When the user should see further organisation details        Business  Ward Ltd  55522234  100 Victoria Embankment  London  ${EMPTY}  EC4Y 0HQ  64209  Micro or small
+    When the user should see further organisation details        Business  Ward Ltd  55522234  12 North Star Avenue  Swindon  Wiltshire  SN2 1EU  ${EMPTY}  Micro or small
     And the user should see organisation size details            800,000  200
     Then the user should not see the element                     jQuery = a:contains("Edit organisation")
 
@@ -113,7 +113,7 @@ Comp Admin user is able to view further Organisation details by selecting an org
     [Documentation]  IFS-6697  IFS-6923
     [Setup]  log in as a different user                          &{Comp_admin1_credentials}
     Given the user navigates to View partner details page        ${NoGrowthTableCompetitionLink}
-    When the user should see further organisation details        Business  Ward Ltd  55522234  100 Victoria Embankment  London  ${EMPTY}  EC4Y 0HQ  64209  Micro or small
+    When the user should see further organisation details        Business  Ward Ltd  55522234  12 North Star Avenue  Swindon  Wiltshire  SN2 1EU  ${EMPTY}  Micro or small
     And the user should see organisation size details            800,000  200
     Then the user should not see the element                     jQuery = a:contains("Edit organisation")
 
@@ -121,7 +121,7 @@ Innovation Lead user is able to view further Organisation details by selecting a
     [Documentation]  IFS-6697  IFS-6923
     [Setup]  log in as a different user                          &{innovation_lead_one}
     Given the user navigates to view partner details page        ${NoGrowthTableCompetitionLink}
-    When the user should see further organisation details        Business  Ward Ltd  55522234  100 Victoria Embankment  London  ${EMPTY}  EC4Y 0HQ  64209  Micro or small
+    When the user should see further organisation details        Business  Ward Ltd  55522234  12 North Star Avenue  Swindon  Wiltshire  SN2 1EU  ${EMPTY}  Micro or small
     And the user should see organisation size details            800,000  200
     Then the user should not see the element                     jQuery = a:contains("Edit organisation")
 
