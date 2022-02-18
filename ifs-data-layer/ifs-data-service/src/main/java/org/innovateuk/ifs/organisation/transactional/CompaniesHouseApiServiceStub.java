@@ -5,6 +5,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,8 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
@@ -26,6 +30,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 @Service
 @ConditionalOnProperty(name = "ifs.data.companies.house.lookup.enabled", havingValue = "false")
 public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
+    private static final Logger LOG = LoggerFactory.getLogger(CompaniesHouseApiServiceStub.class);
     protected static final int  INDEX_POSITION = 0;
     private static final String TOTAL_SEARCH_RESULTS = "14";
 
@@ -68,6 +73,10 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
     @Override
     public ServiceResult<OrganisationSearchResult> getOrganisationById(String id) {
         if (isImprovedSearchEnabled) {
+            if (getImprovedResultById(id) == null) {
+                LOG.info("Organisation ID is not matched with the existing organisation stub data" + id);
+                return serviceFailure(GENERAL_NOT_FOUND);
+            }
             return serviceSuccess(getImprovedResultById(id));
         } else {
             return serviceSuccess(getDummyResultById(id));
@@ -100,7 +109,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
             case "09400267" : return  getUniace(false);
             case "09595911" : return getVirginMoney(false);
             case "05337108" : return  getWorth(false);
-            default : return getRoyalMail(false);
+            default : return null;
         }
     }
 
