@@ -73,11 +73,12 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
     @Override
     public ServiceResult<OrganisationSearchResult> getOrganisationById(String id) {
         if (isImprovedSearchEnabled) {
-            if (getImprovedResultById(id) == null) {
+            OrganisationSearchResult result = getImprovedResultById(id);
+            if (result == null) {
                 LOG.info("Organisation ID is not matched with the existing organisation stub data" + id);
                 return serviceFailure(GENERAL_NOT_FOUND);
             }
-            return serviceSuccess(getImprovedResultById(id));
+            return serviceSuccess(result);
         } else {
             return serviceSuccess(getDummyResultById(id));
         }
