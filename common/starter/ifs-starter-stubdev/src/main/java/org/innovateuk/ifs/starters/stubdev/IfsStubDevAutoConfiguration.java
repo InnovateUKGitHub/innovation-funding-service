@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,10 +29,7 @@ import static org.innovateuk.ifs.starters.stubdev.Constants.STUB_DEV_PROPS_PREFI
 
 
 /**
- *
  * Auto Configuration for Stub Dev mode. Consists of a number of components, see each for details.
- *
- *
  *
  * Guarantee that we only run in dev by running conditionally on devtools class LiveReloadServer.
  * @ConditionalOnClass(name = "org.springframework.boot.devtools.livereload.LiveReloadServer")
@@ -41,6 +39,7 @@ import static org.innovateuk.ifs.starters.stubdev.Constants.STUB_DEV_PROPS_PREFI
 @Slf4j
 @Configuration
 @Profile(IfsProfileConstants.STUBDEV)
+@EnableConfigurationProperties(StubDevConfigurationProperties.class)
 @ConditionalOnClass(name = "org.springframework.boot.devtools.livereload.LiveReloadServer")
 @AutoConfigureAfter(name = "org.springframework.boot.devtools.autoconfigure.LocalDevToolsAutoConfiguration")
 public class IfsStubDevAutoConfiguration {
@@ -52,14 +51,14 @@ public class IfsStubDevAutoConfiguration {
     private ApplicationContext applicationContext;
 
     @PostConstruct
-    public void init() {
-        log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+    public void logSettings() {
         log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
         log.info("XXXXXXXXXXXXXXXXXXXXXXXXX STUB DEV XXXXXXXXXXXXXXXXXXXXXXXXX");
         log.info(stubDevConfigurationProperties.getProjectRootDirectory());
         log.info(stubDevConfigurationProperties.getWebCoreTemplates());
         log.info("" + stubDevConfigurationProperties.isEnableClientMethodTiming());
         log.info("" + stubDevConfigurationProperties.isValidateHtml());
+        log.info("" + stubDevConfigurationProperties.isLogThymeLeafTemplates());
         log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
     }
 
@@ -87,6 +86,7 @@ public class IfsStubDevAutoConfiguration {
     @Bean
     public ITemplateResolver webCoreTemplateResolver() {
         SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
+        resolver.setName("WEB_CORE_TEMPLATE_RESOLVER");
         resolver.setApplicationContext(this.applicationContext);
         resolver.setPrefix(stubDevConfigurationProperties.getProjectRootDirectory()
                 + stubDevConfigurationProperties.getWebCoreTemplates());

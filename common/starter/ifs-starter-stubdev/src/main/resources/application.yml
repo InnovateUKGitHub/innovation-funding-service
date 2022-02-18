@@ -11,6 +11,7 @@ ifs:
       enableClientMethodTiming: false
       validateHtml: false
       webCoreTemplates: "/ifs-web-service/ifs-web-core/src/main/resources/templates/"
+      logThymeLeafTemplates: false
 tomcat:
   ajp:
     enable: false

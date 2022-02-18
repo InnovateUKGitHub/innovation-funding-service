@@ -35,5 +35,8 @@ public class StubDevConfigurationProperties {
      */
     private String webCoreTemplates = "/ifs-web-service/ifs-web-core/src/main/resources/templates/";
 
-
+    /**
+     * Enable trace logging in thymeleaf to log template calls
+     */
+    private boolean logThymeLeafTemplates;
 }
