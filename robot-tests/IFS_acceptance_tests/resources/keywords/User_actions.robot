@@ -188,16 +188,26 @@ reload and check if element appears
     the user reloads the page
     Wait Until Page Contains Element Without Screenshots    ${selector}     1s
 
+#the user selects option from type ahead
+#    [Arguments]   ${inputId}  ${searchTerm}  ${optionSelector}
+#    the user clicks the button/link                       id = ${inputId}
+#    wait for autosave
+#    the user should see option in type ahead field        id = ${inputId}  ${optionSelector}
+#    wait for autosave
+#    mouse out                                             id = ${inputId}
+
 the user selects option from type ahead
     [Arguments]   ${inputId}  ${searchTerm}  ${optionSelector}
+    mouse over                                            id = ${inputId}
+    page should contain element                           id = ${inputId}   5s
     the user clicks the button/link                       id = ${inputId}
-    wait for autosave
     the user should see option in type ahead field        id = ${inputId}  ${optionSelector}
     wait for autosave
     mouse out                                             id = ${inputId}
 
 the user should see option in type ahead field
     [Arguments]  ${locator}  ${searchWord}
+    Mouse down                                            jQuery = ul li:contains("${searchWord}")
     :FOR    ${i}    IN RANGE  10
     \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots   click element    jQuery = ul li:contains("${searchWord}")
     \  Exit For Loop If  '${status}'=='PASS'
