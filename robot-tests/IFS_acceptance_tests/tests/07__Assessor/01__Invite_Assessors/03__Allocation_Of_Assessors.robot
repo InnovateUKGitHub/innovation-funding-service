@@ -115,10 +115,11 @@ Custom suite teardown
 
 The user sorts by
     [Arguments]  ${sortOption}
+    reload and check if element appears                  id = sort-by
     the user clicks the button/link                      id = sort-by
     the user selects the option from the drop-down menu  ${sortOption}  id = sort-by
     wait until keyword succeeds without screenshots      30 s   1 s    click element    jQuery = button:contains("Sort")
-    #the user clicks the button/link                      jQuery = button:contains("Sort")
+    wait until keyword succeeds without screenshots      30 s   1 s    page should contain element    id = sort-by
 
 get assessment period id and set as suite variable
     [Arguments]  ${competitionID}
