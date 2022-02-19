@@ -74,6 +74,7 @@ public abstract class AbstractFinanceService<D extends Finance, F extends BaseFi
             dbYear.setShareholderValue(year.getShareholderValue());
             dbYear.setLoans(year.getLoans());
             dbYear.setEmployees(year.getEmployees());
+            dbYear.setCorporateGroupEmployees(year.getCorporateGroupEmployees());
 
         });
         dbYears.setGroupEmployees(ktpYearsResource.getGroupEmployees());

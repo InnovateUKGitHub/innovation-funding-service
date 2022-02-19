@@ -2,13 +2,16 @@ package org.innovateuk.ifs.user.controller;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteServiceImpl;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
+import org.innovateuk.ifs.sil.crm.resource.SilEDIStatus;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
@@ -17,16 +20,22 @@ import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
+import org.innovateuk.ifs.util.TimeMachine;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.util.LinkedMultiValueMap;
 
+import java.math.BigDecimal;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
 import static java.time.ZonedDateTime.now;
+import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.core.Is.is;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_CANNOT_BE_WITHDRAWN;
@@ -44,16 +53,19 @@ import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_PASSWORD_RESE
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_VERIFY_EMAIL;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class UserControllerTest extends BaseControllerMockMVCTest<UserController> {
 
     @Mock
     private UserService userServiceMock;
-
+    @Mock
+    private UserAuthenticationService userAuthenticationService;
     @Mock
     private RegistrationService registrationServiceMock;
 
@@ -73,6 +85,17 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Mock
     private CrmService crmService;
+
+    private final SilEDIStatus silStatus = new SilEDIStatus();
+    private UserResource user;
+
+    @Before
+    public void setup() {
+        user = newUserResource().withId(1L).build();
+        silStatus.setEdiStatus(EDIStatus.INPROGRESS);
+        silStatus.setEdiReviewDate(ZonedDateTime.now(ZoneId.of("UTC")));
+        when(userServiceMock.updateDetails(user)).thenReturn(serviceSuccess(user));
+    }
 
     @Test
     public void resendEmailVerificationNotification() throws Exception {
@@ -112,7 +135,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         when(baseUserServiceMock.findAll()).thenReturn(serviceSuccess(users));
         mockMvc.perform(get("/user/find-all/")
-                .header("IFS_AUTH_TOKEN", "123abc"))
+                        .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("[0]id", is((Number) testUser1.getId().intValue())))
                 .andExpect(jsonPath("[0]firstName", is(testUser1.getFirstName())))
@@ -137,7 +160,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         when(baseUserServiceMock.getUserById(testUser1.getId())).thenReturn(serviceSuccess(testUser1));
         mockMvc.perform(get("/user/id/" + testUser1.getId())
-                .header("IFS_AUTH_TOKEN", "123abc"))
+                        .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is((Number) testUser1.getId().intValue())))
                 .andExpect(jsonPath("firstName", is(testUser1.getFirstName())))
@@ -152,7 +175,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final String hash = "bf5b6392-1e08-4acc-b667-f0a16d6744de";
         when(userServiceMock.changePassword(hash, password)).thenReturn(serviceSuccess(null));
         mockMvc.perform(post("/user/" + URL_PASSWORD_RESET + "/{hash}", hash).content(password)
-                .header("IFS_AUTH_TOKEN", "123abc"))
+                        .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
     }
@@ -164,9 +187,9 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final Long appId = 1L;
         final Long compId = 1L;
 
-        ObjectNode node =  JsonNodeFactory.instance.objectNode();
-        node.put("inviteId",111L);
-        final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(),node );
+        ObjectNode node = JsonNodeFactory.instance.objectNode();
+        node.put("inviteId", 111L);
+        final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(), node);
         when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
 
         ApplicationResource applicationResource = new ApplicationResource();
@@ -175,11 +198,11 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
 
         when(tokenServiceMock.handleExtraAttributes(any())).thenReturn(serviceSuccess((applicationResource)));
-        when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(anyLong(),anyLong())).thenReturn(serviceSuccess());
+        when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(anyLong(), anyLong())).thenReturn(serviceSuccess());
 
 
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
-                .header("IFS_AUTH_TOKEN", "123abc"))
+                        .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
 
@@ -190,17 +213,17 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     public void verifyEmailWithoutExtraAttributes() throws Exception {
         final String hash = "8eda60ad3441ee883cc95417e2abaa036c308dd9eb19468fcc8597fb4cb167c32a7e5daf5e237385";
         final Long userId = 1L;
-        ObjectNode node =  JsonNodeFactory.instance.objectNode();
-        node.put("inviteId",111L);
-        final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(),node );
+        ObjectNode node = JsonNodeFactory.instance.objectNode();
+        node.put("inviteId", 111L);
+        final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(), node);
 
         when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
 
 
         when(tokenServiceMock.handleExtraAttributes(token)).thenReturn(serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN));
-        when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(anyLong(),anyLong())).thenReturn(serviceSuccess());
+        when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(anyLong(), anyLong())).thenReturn(serviceSuccess());
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
-                .header("IFS_AUTH_TOKEN", "123abc"))
+                        .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
 
@@ -235,24 +258,32 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final Error error = notFoundError(Token.class, hash);
         when(userServiceMock.changePassword(hash, password)).thenReturn(serviceFailure(error));
         mockMvc.perform(post("/user/" + URL_PASSWORD_RESET + "/" + hash).content(password)
-                .header("IFS_AUTH_TOKEN", "123abc"))
+                        .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isNotFound())
                 .andExpect(contentError(error));
     }
 
     @Test
     public void userControllerShouldReturnUserByUid() throws Exception {
-        UserResource testUser1 = newUserResource().withUID("aebr34-ab345g-234gae-agewg").withId(1L).withFirstName("test").withLastName("User1").withEmail("email1@email.nl").build();
+        ZonedDateTime fixedClock = ZonedDateTime.parse("2021-10-12T00:00:00.0Z");
+        TimeMachine.useFixedClockAt(fixedClock);
+
+        UserResource testUser1 = newUserResource().withUID("aebr34-ab345g-234gae-agewg").withId(1L)
+                .withFirstName("test").withLastName("User1").withEmail("email1@email.nl").withEdiStatus(EDIStatus.COMPLETE)
+                .withEdiStatusReviewDate(fixedClock).build();
+
 
         when(baseUserServiceMock.getUserResourceByUid(testUser1.getUid())).thenReturn(serviceSuccess(testUser1));
 
         mockMvc.perform(get("/user/uid/" + testUser1.getUid())
-                .header("IFS_AUTH_TOKEN", "123abc"))
+                        .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is((Number) testUser1.getId().intValue())))
                 .andExpect(jsonPath("firstName", is(testUser1.getFirstName())))
                 .andExpect(jsonPath("lastName", is(testUser1.getLastName())))
                 .andExpect(jsonPath("imageUrl", is(testUser1.getImageUrl())))
+                .andExpect(jsonPath("ediStatus", is(testUser1.getEdiStatus().name())))
+                .andExpect(jsonPath("ediReviewDate", is(closeTo(new BigDecimal(testUser1.getEdiReviewDate().toEpochSecond()), BigDecimal.valueOf(0.0)))))
                 .andExpect(jsonPath("uid", is(testUser1.getUid())));
     }
 
@@ -270,7 +301,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         when(userServiceMock.findByEmail(user.getEmail())).thenReturn(serviceFailure(notFoundError(User.class, user.getEmail())));
 
         mockMvc.perform(get("/user/find-by-email/" + user.getEmail() + "/", "json")
-                .contentType(APPLICATION_JSON))
+                        .contentType(APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
@@ -282,7 +313,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         when(userServiceMock.findByEmail(email)).thenReturn(serviceFailure(notFoundError(User.class, email)));
 
         mockMvc.perform(get("/user/find-by-email/" + email + "/", "json")
-                .contentType(APPLICATION_JSON))
+                        .contentType(APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
@@ -338,8 +369,8 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         when(registrationServiceMock.editInternalUser(any(), any())).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(post("/user/internal/edit")
-                .contentType(APPLICATION_JSON)
-                .content(toJson(editUserResource)))
+                        .contentType(APPLICATION_JSON)
+                        .content(toJson(editUserResource)))
                 .andExpect(status().isOk());
 
         verify(registrationServiceMock).editInternalUser(any(), any());
@@ -387,4 +418,79 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         verify(userServiceMock).grantRole(new GrantRoleCommand(userId, grantRole));
     }
+
+
+    @Test
+    public void updateUserEDIStatusCOMPLETE() throws Exception {
+
+        silStatus.setEdiStatus(EDIStatus.COMPLETE);
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
+
+        when(userServiceMock.updateDetails(user)).thenReturn(serviceSuccess(user));
+        mockMvc.perform(patch("/user/v1/edi").contentType(APPLICATION_JSON).content(toJson(silStatus)))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void updateUserEDIStatusINPROGRESS() throws Exception {
+        silStatus.setEdiStatus(EDIStatus.INPROGRESS);
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
+
+
+        mockMvc.perform(patch("/user/v1/edi").contentType(APPLICATION_JSON).content(toJson(silStatus)))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void updateUserEDIStatusINCOMPLETE() throws Exception {
+        silStatus.setEdiStatus(EDIStatus.INCOMPLETE);
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
+
+        when(userServiceMock.updateDetails(user)).thenReturn(serviceSuccess(user));
+        mockMvc.perform(patch("/user/v1/edi").contentType(APPLICATION_JSON).content(toJson(silStatus)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void updateUserWithIncorrectAuthToken() throws Exception {
+        silStatus.setEdiStatus(EDIStatus.COMPLETE);
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(null);
+
+        when(userServiceMock.updateDetails(user)).thenReturn(serviceSuccess(user));
+        mockMvc.perform(patch("/user/v1/edi").contentType(APPLICATION_JSON).content(toJson(silStatus)))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void updateUserWithNoReviewDate() throws Exception {
+        silStatus.setEdiStatus(EDIStatus.COMPLETE);
+        silStatus.setEdiReviewDate(null);
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(null);
+
+        when(userServiceMock.updateDetails(user)).thenReturn(serviceSuccess(user));
+        String errorMsg = mockMvc.perform(patch("/user/v1/edi").contentType(APPLICATION_JSON).content(toJson(silStatus)))
+                .andDo(print())
+                .andExpect(status().isBadRequest()).andReturn().getResponse().getContentAsString();
+        assertTrue(StringUtils.contains(errorMsg, "EDI review date is required"));
+
+    }
+
+    @Test
+    public void updateUserWithNoEDIStatus() throws Exception {
+        silStatus.setEdiStatus(null);
+
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(null);
+
+        when(userServiceMock.updateDetails(user)).thenReturn(serviceSuccess(user));
+        String errorMsg = mockMvc.perform(patch("/user/v1/edi").contentType(APPLICATION_JSON).content(toJson(silStatus)))
+                .andDo(print())
+                .andExpect(status().isBadRequest()).andReturn().getResponse().getContentAsString();
+        assertTrue(StringUtils.contains(errorMsg, "EDI Status is required"));
+
+    }
+
 }

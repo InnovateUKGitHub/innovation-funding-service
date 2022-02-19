@@ -94,6 +94,7 @@ public class GenericQuestionApplicationModelPopulator {
                 .withLeadOrganisationCompaniesHouseNumber(leadOrganisation.getCompaniesHouseNumber())
                 .withLoansPartBEnabled(ifsLoanPartBEnabled)
                 .withLoansFormQuestionsSalesForceURL(salesForceURL)
+                .withCompetitionId(competition.getId())
                 .build();
     }
 

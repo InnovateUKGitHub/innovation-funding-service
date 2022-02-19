@@ -32,7 +32,7 @@ import static java.util.Optional.ofNullable;
 @Controller
 @RequestMapping("/profile")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ProfileController.class)
-@PreAuthorize("hasAnyAuthority('applicant, monitoring_officer')")
+@PreAuthorize("hasAnyAuthority('applicant', 'monitoring_officer')")
 public class ProfileController {
 
     private UserService userService;
@@ -69,7 +69,7 @@ public class ProfileController {
         form.setFirstName(user.getFirstName());
         form.setLastName(user.getLastName());
         form.setPhoneNumber(user.getPhoneNumber());
-        form.setAllowMarketingEmails(user.getAllowMarketingEmails());
+        form.setAllowMarketingEmails(user.isAllowMarketingEmails());
 		return form;
     }
 
@@ -113,7 +113,7 @@ public class ProfileController {
                 userDetailsForm.getLastName(),
                 ofNullable(loggedInUser.getTitle()).map(Title::getDisplayName).orElse(null),
                 userDetailsForm.getPhoneNumber(),
-                userDetailsForm.getAllowMarketingEmails());
+                userDetailsForm.isAllowMarketingEmails());
     }
 
     private void addEnvelopeErrorsToBindingResultErrors(List<Error> errors, BindingResult bindingResult) {

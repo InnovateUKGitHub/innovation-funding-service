@@ -389,8 +389,8 @@ The user fills in the Competition Setup Project eligibility section
     the user clicks the button twice                     css = label[for="single-or-collaborative-single"]
     the user clicks the button twice                     css = label[for="lead-applicant-type-${organisationType}"]
     the user selects the option from the drop-down menu  None     researchParticipation
-    the user clicks the button/link                      css = label[for="comp-resubmissions-no"]
-    the user clicks the button/link                      css = label[for="comp-resubmissions-no"]
+    the user clicks the button twice                     css = label[for="comp-resubmissions-no"]
+    #the user clicks the button/link                      css = label[for="comp-resubmissions-no"]
     the user clicks the button/link                      jQuery = button:contains("Done")
     the user clicks the button/link                      link = Back to competition details
     the user should see the element                      jQuery = div:contains("Project eligibility") ~ .task-status-complete

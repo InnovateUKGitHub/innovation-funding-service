@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block
+            th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Your fEC model - ${applicationName}|"/>
+    </th:block>
+</head>
+<body class="govuk-template__body your-fec-model app-form">
+<th:block th:insert="fragments/layout :: global-header"/>
+<th:block th:insert="fragments/layout :: body-start" />
+
+<div class="govuk-width-container">
+
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to your project finances',linkClass='link-back',linkUrl=${model.financesUrl}"/>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
+        </div>
+
+        <th:block
+                th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+            <th:block th:insert="fragments/layout :: page-title"
+                      th:with="pageTitle='Your fEC model',subTitle=${applicationName},size='govuk-heading-xl'"/>
+        </th:block>
+        <form th:object="${form}"
+              th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              enctype="multipart/form-data"
+              novalidate="novalidate"
+              method="POST">
+
+            <th:block th:unless="${model.readOnly}">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('fecModelEnabled')} ? 'govuk-form-group--error'">
+                    <fieldset class="govuk-fieldset" aria-describedby="fec-hint">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            Will you be using the full economic costing (fEC) funding model?
+                        </legend>
+                        <div id="fec-hint" class="govuk-hint">
+                            This is used to calculate your project costs. An fEC certificate will be required.
+                        </div>
+                        <th:block th:if="${#fields.hasErrors('*{fecModelEnabled}')} ? 'govuk-form-group--error'">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('*{fecModelEnabled}')}" th:text="${err}" />
+                        </th:block>
+
+                        <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+                            <div class="govuk-radios__item" data-target="choice-yes"
+                                 data-target-clear-validation="true" data-target-clear-form="true">
+                                <input class="govuk-radios__input"
+                                       th:field="*{fecModelEnabled}"
+                                       th:classappend="${#fields.hasErrors('*{fecModelEnabled}')} ? 'govuk-input--error'"
+                                       th:attr="data-required-errormessage= #{validation.finance.fecmodel.fecModelEnabled.blank}"
+                                       id="fecModelEnabled-yes"
+                                       type="radio"
+                                       value="true"
+                                       required="required"
+                                       data-aria-controls="conditional-yes">
+                                <label class="govuk-label govuk-radios__label" for="fecModelEnabled-yes">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item" data-target="choice-no">
+                                <input class="govuk-radios__input"
+                                       th:field="*{fecModelEnabled}"
+                                       th:classappend="${#fields.hasErrors('*{fecModelEnabled}')} ? 'govuk-input--error'"
+                                       th:attr="data-required-errormessage= #{validation.finance.fecmodel.fecModelEnabled.blank}"
+                                       id="fecModelEnabled-no"
+                                       type="radio"
+                                       value="false"
+                                       required="required"
+                                       data-aria-controls="conditional-no">
+                                <label class="govuk-label govuk-radios__label" for="fecModelEnabled-no">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="message-alert govuk-!-margin-top-9 " th:if="${form.displayBanner}">
+                            <p class="govuk-body">Changing your answer may affect any project costs already entered.</p>
+                        </div>
+
+                        <div class="" id="conditional-yes">
+                            <div id="choice-yes">
+                                <button id="edit_certificate" type="submit" name="edit-certificate"
+                                        class="govuk-!-margin-top-9 govuk-button" value="true">
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="" id="conditional-no">
+                            <div id="choice-no">
+                                <div class="form-footer govuk-!-margin-top-9" th:if="${model.open && !model.complete}">
+                                    <div class="form-footer__actions">
+                                        <button id="mark_as_complete" th:unless="${model.complete}" type="submit" name="mark-as-complete"
+                                                class="button-clear" value="true">Mark as complete
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <button type="submit" th:unless="${model.readOnly}"
+                                            class="govuk-!-margin-top-6 govuk-button">
+                                        Save and return to project finances
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </div>
+            </th:block>
+
+            <th:block th:if="${model.readOnly}">
+                <div th:if="${model.complete}" class="success-alert">
+                    <h2 class="govuk-heading-s govuk-!-margin-0">fEC model is marked as complete</h2>
+                </div>
+
+                <div class="govuk-grid-row govuk-table__cell govuk-!-margin-top-6">
+                    <h3 class="govuk-heading-s govuk-grid-column-one-third">
+                        Will you be using the full economic costing (fEC) funding model?
+                    </h3>
+                    <div class="govuk-grid-column-one-third">
+                        <p class="govuk-body" th:if="${!model.complete}">
+                            Question not answered.</p>
+                        <p class="govuk-body"
+                           th:if="${model.complete}"
+                           th:text="${form.fecModelEnabled}? 'Yes' : 'No'"></p>
+                    </div>
+                    <div th:if="${model.open}" class="alignright govuk-grid-column-one-third">
+                        <button id="mark_as_incomplete" th:if="${model.complete}" type="submit" name="mark-as-incomplete"
+                                class="button-clear" value="true"
+                                th:text="${'Change'}">Change
+                        </button>
+                    </div>
+                </div>
+
+                <th:block th:if="${form.fecModelEnabled != null and form.fecModelEnabled and model.complete != null and model.complete}">
+                    <div class="govuk-grid-row govuk-table__cell ">
+                        <h3 class="govuk-heading-s govuk-grid-column-one-third">Your fEC certificate</h3>
+                        <div class="govuk-grid-column-one-third ">
+                            <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly ? 'readonly' : 'edit'},
+                                    @{/application/{applicationId}/form/{applicationFinanceId}/view-fec-certificate(applicationId=${model.applicationId},applicationFinanceId=${model.applicationFinanceId})},
+                                    ${form.fecCertificateFileName},
+                                    fecCertificateFile,
+                                    fecCertificateFile,
+                                    true,
+                                    remove_fecCertificateFile,
+                                    upload_fecCertificateFile)"/>
+                        </div>
+                        <div th:if="${model.open}" class="alignright govuk-grid-column-one-third">
+                            <button id="mark_as_incomplete2" type="submit" name="edit-certificate"
+                                    class="button-clear" value="true"
+                                    th:text="${'Change'}">Change
+                            </button>
+                        </div>
+                    </div>
+                    <div class="govuk-grid-row govuk-table__cell ">
+                        <h3 class="govuk-heading-s govuk-grid-column-one-third">
+                            When does your fEC certificate expire?
+                        </h3>
+                        <div class="govuk-grid-column-one-third">
+                            <p class="govuk-body" th:text="${#temporals.format(form.fecCertExpiryDate, 'd MMMM yyyy')}"></p>
+                        </div>
+                        <div th:if="${model.open}" class="alignright govuk-grid-column-one-third">
+                            <button id="mark_as_incomplete3" type="submit" name="edit-certificate"
+                                    class="button-clear" value="true"
+                                    th:text="${'Change'}">Change
+                            </button>
+                        </div>
+                    </div>
+                </th:block>
+            </th:block>
+
+            <div class="govuk-grid-row govuk-!-margin-top-9" th:if="${model.readOnly}">
+                <div class="govuk-grid-column-one-half">
+                    <a th:href="${model.financesUrl}"
+                       class="govuk-!-margin-top-6 govuk-button govuk-button--secondary">Return to project finances
+                    </a>
+                </div>
+                <div th:unless="${#strings.isEmpty(model.lastUpdatedBy)}" class="alignright govuk-!-margin-top-6 govuk-body govuk-grid-column-one-half" th:if="${model.readOnly}">Last updated:
+                    <th:block th:text="${#temporals.format(model.lastUpdatedOn, 'd MMMM hh:mma')}">--</th:block>
+                    by
+                    <th:block th:text="${model.lastUpdatedBy}">--</th:block>
+                </div>
+            </div>
+
+        </form>
+        <th:block th:fragment="main-content-end">
+            <p class="govuk-body govuk-!-margin-top-9 user-feedback"><span class="govuk-!-font-weight-bold">Need help with this service?</span>
+                <a class="govuk-link" href="/info/contact">Contact us</a></p>
+        </th:block>
+    </main>
+
+</div>
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
+'
+</body>
+</html>

@@ -14,6 +14,6 @@ public class ActivityLogRestServiceImpl extends BaseRestService implements Activ
 
     @Override
     public RestResult<List<ActivityLogResource>> findByApplicationId(long applicationId) {
-        return getWithRestResult(String.format("activity-log?applicationId=%d", applicationId), activityLogResourceListType());
+        return getWithRestResult(String.format("/activity-log?applicationId=%d", applicationId), activityLogResourceListType());
     }
 }
