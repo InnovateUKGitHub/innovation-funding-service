@@ -299,7 +299,7 @@ The new partner cannot complete funding without organisation
 The new partner can complete Your organisation
     [Documentation]  IFS-6491
     Given the user clicks the button/link       link = Your organisation
-    And page should contain                     jQuery = span:contains("The size of your organisation determines the level of funding you are eligible for.")
+    And page should contain                     The size of your organisation determines the level of funding you are eligible for.
     When the user completes your organisation
     Then the user should see the element        jQuery = li div:contains("Your organisation") ~ .task-status-complete
 
