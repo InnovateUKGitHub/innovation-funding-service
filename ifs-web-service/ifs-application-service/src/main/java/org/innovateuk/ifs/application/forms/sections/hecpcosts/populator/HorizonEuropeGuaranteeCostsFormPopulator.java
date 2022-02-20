@@ -1,25 +1,24 @@
-package org.innovateuk.ifs.application.forms.sections.h2020costs.populator;
+package org.innovateuk.ifs.application.forms.sections.hecpcosts.populator;
 
-import org.innovateuk.ifs.application.forms.sections.h2020costs.form.Horizon2020CostsForm;
-import org.innovateuk.ifs.application.forms.sections.h2020costs.form.HorizonEuropeCostsForm;
+import org.innovateuk.ifs.application.forms.sections.hecpcosts.form.HorizonEuropeGuaranteeCostsForm;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HecpCostsFormPopulator {
+public class HorizonEuropeGuaranteeCostsFormPopulator {
 
     private final ApplicationFinanceRestService applicationFinanceRestService;
 
-    public HecpCostsFormPopulator(ApplicationFinanceRestService applicationFinanceRestService) {
+    public HorizonEuropeGuaranteeCostsFormPopulator(ApplicationFinanceRestService applicationFinanceRestService) {
         this.applicationFinanceRestService = applicationFinanceRestService;
     }
 
-    public HorizonEuropeCostsForm populate(long applicationId, long organisationId) {
+    public HorizonEuropeGuaranteeCostsForm populate(long applicationId, long organisationId) {
         ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
 
-        HorizonEuropeCostsForm form = new HorizonEuropeCostsForm();
+        HorizonEuropeGuaranteeCostsForm form = new HorizonEuropeGuaranteeCostsForm();
 
         form.setLabour(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.LABOUR).getTotal().toBigInteger());
         form.setOverhead(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.OVERHEADS).getTotal().toBigInteger());

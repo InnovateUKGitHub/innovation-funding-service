@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.forms.sections.hecpcosts.controller;
 
-import org.innovateuk.ifs.application.forms.sections.h2020costs.form.HorizonEuropeCostsForm;
-import org.innovateuk.ifs.application.forms.sections.h2020costs.populator.HecpCostsFormPopulator;
-import org.innovateuk.ifs.application.forms.sections.h2020costs.saver.HorizonEuropeCostsSaver;
+import org.innovateuk.ifs.application.forms.sections.hecpcosts.form.HorizonEuropeGuaranteeCostsForm;
+import org.innovateuk.ifs.application.forms.sections.hecpcosts.populator.HorizonEuropeGuaranteeCostsFormPopulator;
+import org.innovateuk.ifs.application.forms.sections.hecpcosts.saver.HorizonEuropeGuaranteeCostsSaver;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator.YourProjectCostsViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
@@ -29,18 +29,18 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/hecp-costs/organisation/{organisationId}/section/{sectionId}")
 @PreAuthorize("hasAuthority('applicant')")
-@SecuredBySpring(value = "YOUR_PROJECT_COSTS_APPLICANT", description = "Applicants can all fill out the hecp costs section of the application.")
-public class HecpCostsController extends AsyncAdaptor {
+@SecuredBySpring(value = "YOUR_PROJECT_COSTS_APPLICANT", description = "Applicants can all fill out the Horizon Europe Guarantee costs section of the application.")
+public class HorizonEuropeGuaranteeCostsController extends AsyncAdaptor {
     private static final String VIEW = "application/sections/your-project-costs/hecp-costs";
 
     @Autowired
-    private HecpCostsFormPopulator formPopulator;
+    private HorizonEuropeGuaranteeCostsFormPopulator formPopulator;
 
     @Autowired
     private YourProjectCostsViewModelPopulator viewModelPopulator;
 
     @Autowired
-    private HorizonEuropeCostsSaver saver;
+    private HorizonEuropeGuaranteeCostsSaver saver;
 
     @Autowired
     private SectionStatusRestService sectionStatusRestService;
@@ -50,15 +50,15 @@ public class HecpCostsController extends AsyncAdaptor {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder')")
-    @SecuredBySpring(value = "VIEW_H2020_COSTS", description = "Applicants and internal users can view the Your project costs page")
-    public String viewHecpCosts(Model model,
-                                UserResource user,
-                                @PathVariable long applicationId,
-                                @PathVariable long organisationId,
-                                @PathVariable long sectionId) {
-        HorizonEuropeCostsForm form = formPopulator.populate(applicationId, organisationId);
+    @SecuredBySpring(value = "VIEW_HECP_COSTS", description = "Applicants and internal users can view the Your project costs page")
+    public String viewHorizonEuropeGuaranteeCosts(Model model,
+                                                  UserResource user,
+                                                  @PathVariable long applicationId,
+                                                  @PathVariable long organisationId,
+                                                  @PathVariable long sectionId) {
+        HorizonEuropeGuaranteeCostsForm form = formPopulator.populate(applicationId, organisationId);
         model.addAttribute("form", form);
-        return viewHecpCosts(user, model, applicationId, sectionId, organisationId);
+        return viewHorizonEuropeGuaranteeCosts(user, model, applicationId, sectionId, organisationId);
     }
 
     @PostMapping
@@ -68,7 +68,7 @@ public class HecpCostsController extends AsyncAdaptor {
                                        @PathVariable long applicationId,
                                        @PathVariable long organisationId,
                                        @PathVariable long sectionId,
-                                       @ModelAttribute("form") HorizonEuropeCostsForm form) {
+                                       @ModelAttribute("form") HorizonEuropeGuaranteeCostsForm form) {
         saver.save(form, applicationId, organisationId);
         return redirectToYourFinances(applicationId);
     }
@@ -80,11 +80,11 @@ public class HecpCostsController extends AsyncAdaptor {
                            @PathVariable long applicationId,
                            @PathVariable long organisationId,
                            @PathVariable long sectionId,
-                           @Valid @ModelAttribute("form") HorizonEuropeCostsForm form,
+                           @Valid @ModelAttribute("form") HorizonEuropeGuaranteeCostsForm form,
                            BindingResult bindingResult,
                            ValidationHandler validationHandler) {
         Supplier<String> successView = () -> redirectToYourFinances(applicationId);
-        Supplier<String> failureView = () -> viewHecpCosts(user, model, applicationId, sectionId, organisationId);
+        Supplier<String> failureView = () -> viewHorizonEuropeGuaranteeCosts(user, model, applicationId, sectionId, organisationId);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saver.save(form, applicationId, organisationId));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -109,7 +109,7 @@ public class HecpCostsController extends AsyncAdaptor {
         return String.format("redirect:/application/%d/form/%s", applicationId, SectionType.FINANCE.name());
     }
 
-    private String viewHecpCosts(UserResource user, Model model, long applicationId, long sectionId, long organisationId) {
+    private String viewHorizonEuropeGuaranteeCosts(UserResource user, Model model, long applicationId, long sectionId, long organisationId) {
         YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user);
         model.addAttribute("model", viewModel);
         return VIEW;

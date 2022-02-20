@@ -1,7 +1,6 @@
-package org.innovateuk.ifs.application.forms.sections.h2020costs.saver;
+package org.innovateuk.ifs.application.forms.sections.hecpcosts.saver;
 
-import org.innovateuk.ifs.application.forms.sections.h2020costs.form.HorizonEuropeCostsForm;
-import org.innovateuk.ifs.application.forms.sections.h2020costs.form.HorizonEuropeCostsForm;
+import org.innovateuk.ifs.application.forms.sections.hecpcosts.form.HorizonEuropeGuaranteeCostsForm;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
@@ -17,17 +16,17 @@ import java.math.BigInteger;
 import java.util.Optional;
 
 @Component
-public class HorizonEuropeCostsSaver {
+public class HorizonEuropeGuaranteeCostsSaver {
 
     private final ApplicationFinanceRestService applicationFinanceRestService;
     private final ApplicationFinanceRowRestService financeRowRestService;
 
-    public HorizonEuropeCostsSaver(ApplicationFinanceRestService applicationFinanceRestService, ApplicationFinanceRowRestService financeRowRestService) {
+    public HorizonEuropeGuaranteeCostsSaver(ApplicationFinanceRestService applicationFinanceRestService, ApplicationFinanceRowRestService financeRowRestService) {
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.financeRowRestService = financeRowRestService;
     }
 
-    public ServiceResult<Void> save(HorizonEuropeCostsForm form, long applicationId, long organisationId) {
+    public ServiceResult<Void> save(HorizonEuropeGuaranteeCostsForm form, long applicationId, long organisationId) {
         ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
 
         saveLabour(form, applicationFinance);
@@ -41,7 +40,7 @@ public class HorizonEuropeCostsSaver {
         return ServiceResult.serviceSuccess();
     }
 
-    private void saveLabour(HorizonEuropeCostsForm form, ApplicationFinanceResource applicationFinance) {
+    private void saveLabour(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
         LabourCostCategory category = (LabourCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.LABOUR);
         Optional<LabourCost> cost = category.getCosts().stream().findAny().map(LabourCost.class::cast);
 
@@ -60,7 +59,7 @@ public class HorizonEuropeCostsSaver {
         }
     }
 
-    private void saveOverhead(HorizonEuropeCostsForm form, ApplicationFinanceResource applicationFinance) {
+    private void saveOverhead(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
         OverheadCostCategory category = (OverheadCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.OVERHEADS);
         Overhead cost = category.getCosts().stream().findAny().map(Overhead.class::cast).get();
 
@@ -68,14 +67,14 @@ public class HorizonEuropeCostsSaver {
             cost.setRateType(OverheadRateType.NONE);
             cost.setRate(0);
         } else {
-            cost.setRateType(OverheadRateType.HORIZON_2020_TOTAL);
+            cost.setRateType(OverheadRateType.HORIZON_EUROPE_GUARANTEE_TOTAL);
             cost.setRate(form.getOverhead().intValue());
         }
         financeRowRestService.update(cost);
     }
 
 
-    private void saveMaterial(HorizonEuropeCostsForm form, ApplicationFinanceResource applicationFinance) {
+    private void saveMaterial(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
         DefaultCostCategory category = (DefaultCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.MATERIALS);
         Optional<Materials> cost = category.getCosts().stream().findAny().map(Materials.class::cast);
 
@@ -90,7 +89,7 @@ public class HorizonEuropeCostsSaver {
         }
     }
 
-    private void saveCapital(HorizonEuropeCostsForm form, ApplicationFinanceResource applicationFinance) {
+    private void saveCapital(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
         DefaultCostCategory category = (DefaultCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.CAPITAL_USAGE);
         Optional<CapitalUsage> cost = category.getCosts().stream().findAny().map(CapitalUsage.class::cast);
 
@@ -109,7 +108,7 @@ public class HorizonEuropeCostsSaver {
         }
     }
 
-    private void saveSubcontracting(HorizonEuropeCostsForm form, ApplicationFinanceResource applicationFinance) {
+    private void saveSubcontracting(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
         DefaultCostCategory category = (DefaultCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.SUBCONTRACTING_COSTS);
         Optional<SubContractingCost> cost = category.getCosts().stream().findAny().map(SubContractingCost.class::cast);
 
@@ -125,7 +124,7 @@ public class HorizonEuropeCostsSaver {
         }
     }
 
-    private void saveTravel(HorizonEuropeCostsForm form, ApplicationFinanceResource applicationFinance) {
+    private void saveTravel(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
         DefaultCostCategory category = (DefaultCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.TRAVEL);
         Optional<TravelCost> cost = category.getCosts().stream().findAny().map(TravelCost.class::cast);
 
@@ -140,7 +139,7 @@ public class HorizonEuropeCostsSaver {
         }
     }
 
-    private void saveOther(HorizonEuropeCostsForm form, ApplicationFinanceResource applicationFinance) {
+    private void saveOther(HorizonEuropeGuaranteeCostsForm form, ApplicationFinanceResource applicationFinance) {
         DefaultCostCategory category = (DefaultCostCategory) applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.OTHER_COSTS);
         Optional<OtherCost> cost = category.getCosts().stream().findAny().map(OtherCost.class::cast);
 

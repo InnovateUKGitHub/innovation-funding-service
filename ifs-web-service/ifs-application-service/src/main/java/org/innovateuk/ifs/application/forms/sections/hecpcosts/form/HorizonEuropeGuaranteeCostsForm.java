@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.application.forms.sections.h2020costs.form;
+package org.innovateuk.ifs.application.forms.sections.hecpcosts.form;
 
 import java.math.BigInteger;
 
-public class HorizonEuropeCostsForm {
+public class HorizonEuropeGuaranteeCostsForm {
 
     private BigInteger labour;
     private BigInteger overhead;

@@ -64,7 +64,7 @@
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('overhead')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" th:for="overhead">
-                    <span>Overhead</span>
+                    <span>Indirect costs</span>
                 </label>
                 <th:block
                         th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=overhead)"/>

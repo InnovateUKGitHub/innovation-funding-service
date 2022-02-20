@@ -34,7 +34,7 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
         competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Horizon Europe Guarantee"));
         competition.setAcademicGrantPercentage(100);
         competition.setMinProjectDuration(1);
-        competition.setMaxProjectDuration(36);
+        competition.setMaxProjectDuration(84);
         return competition;
     }
 
@@ -43,19 +43,21 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
         return newArrayList(
                 projectDetails()
                         .withQuestions(newArrayList(
-                                applicationDetails()
-                                        .withQuestionSetupType(QuestionSetupType.GRANT_TRANSFER_DETAILS),
+                                applicationDetails(),
                                 applicationTeam(),
                                 aQuestion()
-                                        .withShortName("Horizon Europe grant agreement")
-                                        .withName("Horizon Europe grant agreement")
+                                        .withShortName("Horizon Europe Guarantee grant agreement")
+                                        .withName("Horizon Europe Guarantee grant agreement")
                                         .withAssignEnabled(false)
                                         .withMultipleStatuses(false)
                                         .withMarkAsCompletedEnabled(true)
                                         .withType(QuestionType.LEAD_ONLY)
                                         .withQuestionSetupType(QuestionSetupType.GRANT_AGREEMENT),
                                 publicDescription(),
-                                equalityDiversityAndInclusion(),
+                                equalityDiversityAndInclusion()
+                        )),
+                applicationQuestions()
+                        .withQuestions(newArrayList(
                                 horizonEuropeGuaranteeDefaultQuestions()
                         )),
                 finances(),
@@ -65,6 +67,7 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
 
     public static QuestionBuilder horizonEuropeGuaranteeDefaultQuestions() {
         QuestionBuilder horizonEuropeGuaranteeQuestion = genericQuestion();
+
         horizonEuropeGuaranteeQuestion.getFormInputs().stream()
                 .filter(fi -> fi.getScope().equals(ASSESSMENT))
                 .forEach(fi -> fi.withActive(false));
