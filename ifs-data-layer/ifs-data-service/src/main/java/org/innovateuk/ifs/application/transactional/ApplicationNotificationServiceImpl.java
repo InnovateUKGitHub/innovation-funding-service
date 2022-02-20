@@ -283,7 +283,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         return new Notification(
                 from,
                 to,
-                Notifications.HESTA_APPLICATION_SUBMITTED,
+                Notifications.HORIZON_EUROPE_GUARANTEE_APPLICATION_SUBMITTED,
                 notificationArguments
         );
     }
@@ -292,7 +292,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         APPLICATION_SUBMITTED,
         APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
         KTP_APPLICATION_ASSESSOR_FEEDBACK_PUBLISHED,
-        HESTA_APPLICATION_SUBMITTED,
+        HORIZON_EUROPE_GUARANTEE_APPLICATION_SUBMITTED,
         HORIZON_2020_APPLICATION_SUBMITTED,
         APPLICATION_INELIGIBLE,
         LOANS_APPLICATION_SUBMITTED,

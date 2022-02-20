@@ -66,11 +66,14 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
     }
 
     public static QuestionBuilder horizonEuropeGuaranteeDefaultQuestions() {
-        QuestionBuilder horizonEuropeGuaranteeQuestion = genericQuestion();
+        QuestionBuilder horizonEuropeGuaranteeQuestion =
+                genericQuestion()
+                        .withName("Placeholder question");
 
         horizonEuropeGuaranteeQuestion.getFormInputs().stream()
                 .filter(fi -> fi.getScope().equals(ASSESSMENT))
                 .forEach(fi -> fi.withActive(false));
         return horizonEuropeGuaranteeQuestion;
     }
+
 }

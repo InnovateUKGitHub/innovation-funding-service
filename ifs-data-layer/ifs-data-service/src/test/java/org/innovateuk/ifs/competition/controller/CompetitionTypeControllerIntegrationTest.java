@@ -47,7 +47,7 @@ public class CompetitionTypeControllerIntegrationTest extends BaseControllerInte
                         "Assessment only",
                         "Expression of interest",
                         "Generic",
-                        "Hesta",
+                        "Horizon Europe Guarantee",
                         "Horizon 2020",
                         "Programme",
                         "SBRI",
