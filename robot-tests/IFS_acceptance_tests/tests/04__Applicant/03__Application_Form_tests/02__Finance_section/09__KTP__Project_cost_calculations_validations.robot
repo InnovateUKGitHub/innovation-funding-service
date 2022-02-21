@@ -490,7 +490,7 @@ the user fills in the KTP organisation information
     the user enters text to a text field                                           name = financialYearEndMonthValue  04
     the user enters text to a text field                                           name = financialYearEndYearValue   2020
     the user fills financial overview section
-    the user enters text to a text field                                           jQuery = textarea[id$="comments"]  Your organisation
+    the user enters text to a text field                                           css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
     the user clicks the button/link                                                jQuery = button:contains("Mark as complete")
     the user should see the element                                                jQuery = li:contains("Your organisation") span:contains("Complete")
 
