@@ -492,6 +492,8 @@ the user fills in the KTP organisation information
     the user fills financial overview section
     the user enters text to a text field                                           css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
     the user clicks the button/link                                                jQuery = button:contains("Mark as complete")
+    the user clicks the button/link                                                link = Your organisation
+    the user should see the read only view of organization details
     the user should see the element                                                jQuery = li:contains("Your organisation") span:contains("Complete")
 
 the user fills financial overview section
@@ -585,3 +587,8 @@ get assessment deadline date using competition id
 the user should see the correct employee data
     the user should see the element   jQuery = td:contains("Number of full time employees in your company")+td:contains("2,000")+td:contains("1,500")+td:contains("1,200")
     the user should see the element   jQuery = td:contains("Number of full time employees in your corporate group (if applicable)")+td:contains("4,000")+td:contains("2,500")+td:contains("3,200")
+
+the user should see the read only view of organization details
+    the user should see the element         jQuery = h1:contains("Your organisation")
+    the user should see the element         jQuery = tth:contains("Latest period") ~ th:contains("Last audited year") ~ th:contains("Prior audited year")
+    the user clicks the button/link         link = Return to finances
