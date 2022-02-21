@@ -56,11 +56,7 @@ public class IfsStubDevAutoConfiguration {
     public void logSettings() {
         log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
         log.info("XXXXXXXXXXXXXXXXXXXXXXXXX STUB DEV XXXXXXXXXXXXXXXXXXXXXXXXX");
-        log.info(stubDevConfigurationProperties.getProjectRootDirectory());
-        log.info(stubDevConfigurationProperties.getWebCoreTemplates());
-        log.info("" + stubDevConfigurationProperties.isEnableClientMethodTiming());
-        log.info("" + stubDevConfigurationProperties.isValidateHtml());
-        log.info("" + stubDevConfigurationProperties.isLogThymeLeafTemplates());
+        log.info(stubDevConfigurationProperties.toString());
         log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
     }
 

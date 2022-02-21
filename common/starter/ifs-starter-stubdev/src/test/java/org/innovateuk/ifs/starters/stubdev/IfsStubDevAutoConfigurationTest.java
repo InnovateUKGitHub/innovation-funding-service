@@ -6,6 +6,7 @@ import org.innovateuk.ifs.starters.stubdev.cfg.StubDevConfigurationProperties;
 import org.innovateuk.ifs.starters.stubdev.filter.RewriteFilter;
 import org.innovateuk.ifs.starters.stubdev.security.StubUidSupplier;
 import org.innovateuk.ifs.starters.stubdev.thymeleaf.IfsThymeleafPostProcessorDialect;
+import org.innovateuk.ifs.starters.stubdev.util.TimerAspect;
 import org.innovateuk.ifs.starters.stubdev.util.WarningLogger;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeansException;
@@ -18,6 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import java.util.List;
+import java.util.Timer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -31,7 +33,14 @@ public class IfsStubDevAutoConfigurationTest {
             StubUidSupplier.class,
             ITemplateResolver.class,
             RewriteFilter.class,
-            StubDevConfigurationProperties.class
+            StubDevConfigurationProperties.class,
+            IfsStubDevAutoConfiguration.class
+    );
+
+    // Require properties to be set
+    private static final List UNCOMMON = ImmutableList.of(
+            IfsThymeleafPostProcessorDialect.class,
+            TimerAspect.class
     );
 
     private static final String PROFILE_PROP = AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME + "=" + IfsProfileConstants.STUBDEV;
@@ -40,12 +49,12 @@ public class IfsStubDevAutoConfigurationTest {
     public void testConfigWithDevtoolsAndProfileAndThymleafDebug() {
         new ApplicationContextRunner()
                 .withSystemProperties(PROFILE_PROP)
-                .withSystemProperties(STUB_DEV_PROPS_PREFIX + ".validateHtml=true")
+                .withSystemProperties(STUB_DEV_PROPS_PREFIX + ".validateHtml=true", STUB_DEV_PROPS_PREFIX + ".enableClientMethodTiming=true")
                 .withConfiguration(
                         AutoConfigurations.of(LocalDevToolsAutoConfiguration.class, IfsStubDevAutoConfiguration.class)
-                ).run((context) -> {
+                ).withBean(TimerAspect.class).run((context) -> {
                     assertFound(context, COMMON);
-                    assertFound(context, ImmutableList.of(IfsThymeleafPostProcessorDialect.class));
+                    assertFound(context, UNCOMMON);
                 });
     }
 
@@ -57,7 +66,7 @@ public class IfsStubDevAutoConfigurationTest {
                         AutoConfigurations.of(LocalDevToolsAutoConfiguration.class, IfsStubDevAutoConfiguration.class)
                 ).run((context) -> {
                     assertFound(context, COMMON);
-                    assertNotFound(context, ImmutableList.of(IfsThymeleafPostProcessorDialect.class));
+                    assertNotFound(context, UNCOMMON);
                 });
     }
 
@@ -68,7 +77,7 @@ public class IfsStubDevAutoConfigurationTest {
                         AutoConfigurations.of(LocalDevToolsAutoConfiguration.class, IfsStubDevAutoConfiguration.class)
                 ).run((context) -> {
                     assertNotFound(context, COMMON);
-                    assertNotFound(context, ImmutableList.of(IfsThymeleafPostProcessorDialect.class));
+                    assertNotFound(context, UNCOMMON);
                 });
     }
 
@@ -79,7 +88,7 @@ public class IfsStubDevAutoConfigurationTest {
                         AutoConfigurations.of(IfsStubDevAutoConfiguration.class)
                 ).run((context) -> {
                     assertNotFound(context, COMMON);
-                    assertNotFound(context, ImmutableList.of(IfsThymeleafPostProcessorDialect.class));
+                    assertNotFound(context, UNCOMMON);
                 });
     }
 
