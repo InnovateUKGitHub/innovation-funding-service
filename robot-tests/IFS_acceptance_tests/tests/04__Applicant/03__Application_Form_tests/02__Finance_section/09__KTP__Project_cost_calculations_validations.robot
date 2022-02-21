@@ -590,5 +590,5 @@ the user should see the correct employee data
 
 the user should see the read only view of organization details
     the user should see the element         jQuery = h1:contains("Your organisation")
-    the user should see the element         jQuery = tth:contains("Latest period") ~ th:contains("Last audited year") ~ th:contains("Prior audited year")
+    the user should see the element         jQuery = th:contains("Latest period") ~ th:contains("Last audited year") ~ th:contains("Prior audited year")
     the user clicks the button/link         link = Return to finances
