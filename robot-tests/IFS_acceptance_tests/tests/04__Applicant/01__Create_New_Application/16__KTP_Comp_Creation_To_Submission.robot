@@ -1193,10 +1193,10 @@ the user fills financial overview section
              \    the user enters text to a text field     id = years[${k}].currentAssets  ${ELEMENT}
              \    ${k} =   Evaluate   ${k} + 1
 
-    ${l} =  Set Variable   0
-        :FOR   ${ELEMENT}   IN    @{liabilities}
-             \    the user enters text to a text field     id = years[${l}].liabilities  ${ELEMENT}
-             \    ${l} =   Evaluate   ${l} + 1
+#    ${l} =  Set Variable   0
+#        :FOR   ${ELEMENT}   IN    @{liabilities}
+#             \    the user enters text to a text field     id = years[${l}].liabilities  ${ELEMENT}
+#             \    ${l} =   Evaluate   ${l} + 1
 
     ${m} =  Set Variable   0
         :FOR   ${ELEMENT}   IN    @{shareHolderFunds}
