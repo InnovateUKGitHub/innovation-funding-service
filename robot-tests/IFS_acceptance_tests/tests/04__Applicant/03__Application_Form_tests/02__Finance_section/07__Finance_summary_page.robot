@@ -186,7 +186,6 @@ Support User can see the read only view of Your organisation
     Then the user should see the element                css = .your-finances > p  # Please complete your project finances.
     When the user clicks the button/link                link = Your organisation
     Then the user checks for companies house details    Empire Ltd  60674010  1  Sheffield  South Yorkshire  S1 2ED  ${EMPTY}  Micro or small
-    #Then the user should see the element               jQuery = dt:contains("Organisation size") + dd:contains("Micro")
     And the user should see the element                 jQuery = dt:contains("Turnover") + dd:contains("0")
 
 Support User can see the read only view of Your funding
