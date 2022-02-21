@@ -878,6 +878,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         assertTrue(result.isSuccess());
         assertEquals(INPROGRESS, user.getEdiStatus());
+        assertEquals(userResource.getEdiReviewDate(), user.getEdiReviewDate());
     }
 
     @Test
@@ -893,6 +894,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         assertTrue(result.isSuccess());
         assertEquals(COMPLETE, user.getEdiStatus());
+        assertEquals(userResource.getEdiReviewDate(), user.getEdiReviewDate());
     }
 
     @Test
@@ -914,6 +916,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         ServiceResult<UserResource> result2 = service.updateDetails(userResource);
         assertTrue(result2.isSuccess());
         assertEquals(COMPLETE, user.getEdiStatus());
+        assertEquals(userResource.getEdiReviewDate(), user.getEdiReviewDate());
+
+
     }
 
     @Test
@@ -993,7 +998,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     private static User basicUser() {
-        String emailToFind = "master@gmail.com";
+
         return newUser().withUid("uid")
                 .withFirstName("Bob")
                 .withLastName("Man")
