@@ -12,6 +12,7 @@ ifs:
       validateHtml: false
       webCoreTemplates: "/ifs-web-service/ifs-web-core/src/main/resources/templates/"
       logThymeLeafTemplates: false
+      defaultUuid: "79320212-3272-4f86-bf60-cb406c27c0f8"
 tomcat:
   ajp:
     enable: false

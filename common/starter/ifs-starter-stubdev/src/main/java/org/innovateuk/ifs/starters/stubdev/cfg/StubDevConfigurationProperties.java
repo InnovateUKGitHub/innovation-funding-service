@@ -39,4 +39,9 @@ public class StubDevConfigurationProperties {
      * Enable trace logging in thymeleaf to log template calls
      */
     private boolean logThymeLeafTemplates;
+
+    /**
+     * This is the default stub user
+     */
+    private String defaultUuid;
 }

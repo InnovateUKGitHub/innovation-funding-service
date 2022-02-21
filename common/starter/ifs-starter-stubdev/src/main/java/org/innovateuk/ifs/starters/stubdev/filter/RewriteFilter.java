@@ -2,7 +2,8 @@ package org.innovateuk.ifs.starters.stubdev.filter;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMap;
-import lombok.extern.slf4j.Slf4j;
+import org.innovateuk.ifs.starters.stubdev.security.StubUidSupplier;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +18,9 @@ import java.util.Map;
  * Use a servlet filter to rewrite urls
  */
 public class RewriteFilter implements Filter {
+
+    @Autowired
+    private StubUidSupplier stubUidSupplier;
 
     ImmutableMap<String, String> replacements = ImmutableMap.of(
         "https://localhost:8080/assessment/", "http://localhost:8081/assessment/",
@@ -39,7 +43,8 @@ public class RewriteFilter implements Filter {
             for(Map.Entry<String, String> entry : replacements.entrySet()) {
                 alteredContent = alteredContent.replaceAll(entry.getKey(), entry.getValue());
             }
-            alteredContent = alteredContent.replaceAll("Innovation Funding Service", "STUB IFS " + timer.stop());
+            alteredContent = alteredContent.replaceAll("Innovation Funding Service",
+                    "Stub IFS  as " + stubUidSupplier.getUid(null) + " in " + timer.stop());
             response.setContentLength(alteredContent.length());
             PrintWriter responseWriter = response.getWriter();
             responseWriter.write(alteredContent);

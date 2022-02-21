@@ -6,8 +6,14 @@ import javax.servlet.http.HttpServletRequest;
 
 public class StubUidSupplier implements UidSupplier {
 
+    private String currentUserUuid = "unset";
+
     @Override
     public String getUid(HttpServletRequest request) {
-        return "79320212-3272-4f86-bf60-cb406c27c0f8";
+        return currentUserUuid;
+    }
+
+    protected void setUuid(String userUuid) {
+        this.currentUserUuid = userUuid;
     }
 }
