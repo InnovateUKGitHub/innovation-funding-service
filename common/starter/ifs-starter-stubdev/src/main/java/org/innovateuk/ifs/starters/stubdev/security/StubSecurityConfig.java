@@ -21,9 +21,6 @@ import org.springframework.security.web.header.writers.StaticHeadersWriter;
 @Profile(IfsProfileConstants.STUBDEV)
 public class StubSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    public StubAuthFilter stubAuthFilter;
-
     public StubSecurityConfig() {
         super(true);
     }
@@ -35,7 +32,6 @@ public class StubSecurityConfig extends WebSecurityConfigurerAdapter {
                 (authorizeRequests) -> authorizeRequests.antMatchers("/**").permitAll()
         )
             .csrf().disable()
-                .addFilterBefore(stubAuthFilter, UsernamePasswordAuthenticationFilter.class)
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .anonymous().and()
             .exceptionHandling().and()

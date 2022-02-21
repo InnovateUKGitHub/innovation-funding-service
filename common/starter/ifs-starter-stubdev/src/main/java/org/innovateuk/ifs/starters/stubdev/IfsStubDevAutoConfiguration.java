@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.starters.stubdev.cfg.StubDevConfigurationProperties;
 import org.innovateuk.ifs.starters.stubdev.filter.RewriteFilter;
-import org.innovateuk.ifs.starters.stubdev.security.StubAuthFilter;
+import org.innovateuk.ifs.starters.stubdev.security.StubUidSupplier;
 import org.innovateuk.ifs.starters.stubdev.thymeleaf.IfsThymeleafPostProcessorDialect;
 import org.innovateuk.ifs.starters.stubdev.util.WarningLogger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
@@ -73,11 +74,6 @@ public class IfsStubDevAutoConfiguration {
     }
 
     @Bean
-    public StubAuthFilter stubAuthFilter() {
-        return new StubAuthFilter();
-    }
-
-    @Bean
     @ConditionalOnProperty(prefix=STUB_DEV_PROPS_PREFIX, name="validateHtml", havingValue="true")
     public IDialect ifsThymeleafPostProcessorDialect() {
         return new IfsThymeleafPostProcessorDialect();
@@ -96,6 +92,12 @@ public class IfsStubDevAutoConfiguration {
         resolver.setCacheable(false);
         resolver.setCheckExistence(true);
         return resolver;
+    }
+
+    @Bean
+    @Primary
+    public StubUidSupplier stubUidSupplier() {
+        return new StubUidSupplier();
     }
 
 }

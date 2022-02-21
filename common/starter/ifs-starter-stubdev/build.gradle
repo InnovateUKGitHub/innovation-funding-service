@@ -9,6 +9,9 @@ dependencies {
 
     api platform(project(":common:bom"))
 
+    // Ideally this wouldn't require an IFS dep
+    api project(":common:ifs-security")
+
     implementation "org.springframework.boot:spring-boot-actuator"
     implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
     implementation "org.springframework.boot:spring-boot-starter"
