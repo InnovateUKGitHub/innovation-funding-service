@@ -32,7 +32,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
     private static final Logger LOG = LoggerFactory.getLogger(CompaniesHouseApiServiceStub.class);
     protected static final int  INDEX_POSITION = 0;
-    private static final String TOTAL_SEARCH_RESULTS = "14";
+    private static final String TOTAL_SEARCH_RESULTS = "15";
 
     @Value("${ifs.new.organisation.search.enabled}")
     private boolean isImprovedSearchEnabled = false;
@@ -62,11 +62,11 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
 
     private List<OrganisationSearchResult> getFirstPageSearchResults() {
         return asList(getAmadeus(true), getASOS(true), getAVIVA(true), getBBC(true), getCineWorld(true), getFirstGroupPlc(true),
-                getITV(true), getRoyalMail(true), getSAGA(true), getTescoAqua(true));
+                getHampshireCounty(true), getITV(true), getRoyalMail(true), getSAGA(true));
     }
 
     private List<OrganisationSearchResult> getSecondPageSearchResults() {
-        return asList( getTesco(true), getUniace(true), getVirginMoney(true), getWorth(true));
+        return asList( getTescoAqua(true), getTesco(true), getUniace(true), getVirginMoney(true), getWorth(true));
 
     }
 
@@ -102,14 +102,15 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
             case "07520089" : return getBBC(false);
             case "04081830" : return getCineWorld(false);
             case "SC157176" : return getFirstGroupPlc(false);
+            case "11600829" : return getHampshireCounty(false);
             case "04967001" : return getITV(false);
             case "08680755" : return getRoyalMail(false);
             case "08804263" : return getSAGA(false);
             case "05888959" : return getTescoAqua(false);
             case "00445790" : return getTesco(false);
-            case "09400267" : return  getUniace(false);
+            case "09400267" : return getUniace(false);
             case "09595911" : return getVirginMoney(false);
-            case "05337108" : return  getWorth(false);
+            case "05337108" : return getWorth(false);
             default : return null;
         }
     }
@@ -301,6 +302,25 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                  asList("GREEN, Anthony Charles","GREGORY, Matthew","GUNNING, Stephen William Lawrence","MANGOLD, Ryan Dirk",
                         "MARTIN, David Robert","ROBBIE, David Andrew"));
        }
+    private OrganisationSearchResult getHampshireCounty(boolean isSearch) {
+        return buildDummyOrganisationSearchResult(isSearch,
+                "The Ageas Bowl Botley Road, West End, Southampton, United Kingdom, SO30 3XH",
+                "The Ageas Bowl Botley Road, West End",
+                "",
+                "",
+                "Southampton",
+                "",
+                "SO30 3XH",
+                "11600829",
+                "HAMPSHIRE CRICKET COMPANY LIMITED",
+                "ltd",
+                "active",
+                "2018-10-02",
+                "11600829 - Incorporated on on 2 October 2018",
+                asList("93199"),
+                asList("BRANSGROVE, Roderick Granville", "EDWARDS, Charlotte Marie", "JANMOHAMED, Feroze Issa Ismail",
+                        "MANN, David", "PIKE, Nicholas Simon", "WHITE, Giles William", "LASHMAR, Michael William"));
+    }
 
     private OrganisationSearchResult getITV(boolean isSearch) {
         return buildDummyOrganisationSearchResult(isSearch,
@@ -395,7 +415,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "active",
                 "1947-11-27",
                 "00445790 - Incorporated on 27 November 1947",
-                Collections.emptyList(),
+                asList("47110"),
                 asList("BETHELL, Melissa", "GILLILAND, Stewart Charles", "GOLSBY, Stephen William", "GROTE, Byron Elmer", "MURPHY, Ken",
                         "OLSSON, Anders Bertil Mikael", "OPPENHEIMER, Deanna Watson"));
     }
