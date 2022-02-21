@@ -43,7 +43,17 @@
                     these people accept or are removed.</p>
             </div>
 
-            <th:block th:if="${model.ktpPhase2Enabled}">
+            <th:block th:if="${model.isEDIUpdateEnabled}">
+                <p class="govuk-body">These are the organisations that will work together on the project. You can invite
+                    people from these organisations to help you with the application. </p>
+                <p class="govuk-body">Your team members can complete the equality, diversity and inclusion survey in the profile
+                    section <a href="/profile/view" class="govuk-link"> here. </a></p>
+                <p class="govuk-body" th:unless="${model.collaborationLevelSingle}">You must read the <a
+                        href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service"
+                        class="govuk-link" target="_blank">general guidance</a> (opens in a new window) before you start.</p>
+            </th:block>
+
+            <th:block th:unless="${model.isEDIUpdateEnabled}">
                 <p class="govuk-body">These are the organisations that will work together on the project. You can invite
                     people
                     from these organisations to help you with the application. They can also invite other people from their own
@@ -53,17 +63,6 @@
                     href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service"
                     class="govuk-link" target="_blank">general guidance</a> (opens in a new window) before you start.</p>
             </th:block>
-            <th:block th:unless="${model.ktpPhase2Enabled}">
-                <p class="govuk-body">These are the organisations that will work together on the project. You can invite
-                    people
-                    from these organisations to help you with the application. They can invite other people from their own
-                    organisation.</p>
-
-                <p class="govuk-body" th:unless="${model.collaborationLevelSingle}">You must read the <a
-                        href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service"
-                        class="govuk-link" target="_blank">general guidance (opens in a new window)</a> before you start.</p>
-            </th:block>
-
         </th:block>
 
             <th:block th:each="organisation, iterator: ${model.organisations}">
@@ -122,6 +121,9 @@
                             <tr class="govuk-table__row">
                                 <th scope="col" class="govuk-table__header govuk-!-width-one-third">Full name</th>
                                 <th scope="col" class="govuk-table__header govuk-!-width-one-third">Email</th>
+                                <th:block th:if="${model.isEDIUpdateEnabled}">
+                                <th scope="col" class="govuk-table__header govuk-!-width-one-third">EDI status</th>
+                                </th:block>
                                 <th scope="col" class="govuk-table__header govuk-!-width-one-third"><span
                                     class="govuk-visually-hidden">Remove</span></th>
                             </tr>
@@ -135,6 +137,8 @@
                                 <td class="govuk-table__cell ifs-table__email"
                                     th:text="${row.email}"
                                     th:classappend="${row.invite ? 'hint' : ''}"></td>
+                                <td class="govuk-table__cell "
+                                    th:text="${row.ediStatus}"></td>
                                 <td class="govuk-table__cell alignright"
                                     th:classappend="${row.invite ? 'hint' : ''}">
                                     <th:block th:if="${organisation.editable and !model.readOnly and !row.lead}">

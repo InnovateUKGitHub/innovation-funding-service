@@ -73,6 +73,9 @@ public class ApplicationTeamPopulator {
     @Autowired
     private ApplicationOrganisationAddressRestService applicationOrganisationAddressRestService;
 
+    @Value("${ifs.edi.update.enabled}")
+    private boolean isEDIUpdateEnabled;
+
     public ApplicationTeamViewModel populate(long applicationId, long questionId, UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
@@ -122,7 +125,7 @@ public class ApplicationTeamPopulator {
                 application.isOpen() && competition.isOpen(),
                 questionStatuses.stream().anyMatch(QuestionStatusResource::getMarkedAsComplete),
                 competition.isKtp(), ktpPhase2Enabled,
-                ktaInvite, ktaProcessRole);
+                ktaInvite, ktaProcessRole, isEDIUpdateEnabled);
     }
 
     private ApplicationTeamOrganisationViewModel toInviteOrganisationTeamViewModel(InviteOrganisationResource organisationInvite, boolean leadApplicant) {
@@ -142,7 +145,7 @@ public class ApplicationTeamPopulator {
 
     private ApplicationTeamOrganisationViewModel toOrganisationTeamViewModel(long applicationId, OrganisationResource organisation, Collection<ProcessRoleResource> processRoles, InviteOrganisationResource organisationInvite, boolean leadApplicant, UserResource user) {
         List<ApplicationTeamRowViewModel> userRows = processRoles.stream()
-                .map(pr -> ApplicationTeamRowViewModel.fromProcessRole(pr, findInviteIdFromProcessRole(pr, organisationInvite)))
+                .map(pr -> ApplicationTeamRowViewModel.fromProcessRole(pr, findInviteIdFromProcessRole(pr, organisationInvite), user))
                 .collect(toList());
 
         Optional<InviteOrganisationResource> maybeOrganisationInvite = ofNullable(organisationInvite);

@@ -25,6 +25,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
     private final boolean ktpPhase2Enabled;
     private final ApplicationKtaInviteResource ktaInvite;
     private final ProcessRoleResource ktaProcessRole;
+    private final boolean isEDIUpdateEnabled;
 
     public ApplicationTeamViewModel(long applicationId,
                                     String applicationName,
@@ -39,7 +40,8 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
                                     boolean ktpCompetition,
                                     boolean ktpPhase2Enabled,
                                     ApplicationKtaInviteResource ktaInvite,
-                                    ProcessRoleResource ktaProcessRole
+                                    ProcessRoleResource ktaProcessRole,
+                                    boolean isEDIUpdateEnabled
                                     ) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
@@ -55,6 +57,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         this.ktpPhase2Enabled = ktpPhase2Enabled;
         this.ktaInvite = ktaInvite;
         this.ktaProcessRole = ktaProcessRole;
+        this.isEDIUpdateEnabled = isEDIUpdateEnabled;
     }
 
     @Override
@@ -169,4 +172,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         return null;
     }
 
+    public boolean isEDIUpdateEnabled() {
+        return isEDIUpdateEnabled;
+    }
 }
