@@ -44,7 +44,7 @@
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('labour')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" th:for="labour">
-                    <span>Personnel Costs</span>
+                    <span>Personnel costs</span>
                 </label>
                 <th:block
                         th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=labour)"/>
@@ -124,7 +124,7 @@
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('subcontracting')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" th:for="subcontracting">
-                    <span>Subcontracting Costs</span>
+                    <span>Subcontracting costs</span>
                 </label>
                 <th:block
                         th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=subcontracting)"/>
