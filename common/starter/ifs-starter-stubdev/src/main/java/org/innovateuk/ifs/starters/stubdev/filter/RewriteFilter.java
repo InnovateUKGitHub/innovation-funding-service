@@ -2,8 +2,12 @@ package org.innovateuk.ifs.starters.stubdev.filter;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMap;
+import org.innovateuk.ifs.starters.stubdev.cfg.RewriteRule;
+import org.innovateuk.ifs.starters.stubdev.cfg.StubDevConfigurationProperties;
 import org.innovateuk.ifs.starters.stubdev.security.StubUidSupplier;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.MimeType;
+import org.springframework.util.MimeTypeUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
@@ -22,15 +26,8 @@ public class RewriteFilter implements Filter {
     @Autowired
     private StubUidSupplier stubUidSupplier;
 
-    ImmutableMap<String, String> replacements = ImmutableMap.of(
-        "https://localhost:8080/assessment/", "http://localhost:8081/assessment/",
-        "https://localhost:8080/management/", "http://localhost:8082/management/",
-        "https://localhost:8080/competition/", "http://localhost:8083/competition/",
-        "https://localhost:8080/project-setup-management/", "http://localhost:8084/project-setup-management/",
-        "https://localhost:8080/project-setup/", "http://localhost:8085/project-setup/",
-        "https://localhost:8080/survey/", "http://localhost:8086/survey/",
-        "https://localhost:8080/", "http://localhost:8080/"
-    );
+    @Autowired
+    private StubDevConfigurationProperties stubDevConfigurationProperties;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -38,10 +35,10 @@ public class RewriteFilter implements Filter {
         Stopwatch timer = Stopwatch.createStarted();
         CharResponseWrapper wrapper = new CharResponseWrapper((HttpServletResponse) response);
         chain.doFilter(request, wrapper);
-        if (wrapper.getContentType() != null && wrapper.getContentType().contains("text/html")) {
+        if (wrapper.getContentType() != null && wrapper.getContentType().contains(MimeTypeUtils.TEXT_HTML_VALUE)) {
             String alteredContent = wrapper.toString();
-            for(Map.Entry<String, String> entry : replacements.entrySet()) {
-                alteredContent = alteredContent.replaceAll(entry.getKey(), entry.getValue());
+            for(RewriteRule rewriteRule : stubDevConfigurationProperties.getRewriteRules()) {
+                alteredContent = alteredContent.replaceAll(rewriteRule.getExisting(), rewriteRule.getRewrite());
             }
             alteredContent = alteredContent.replaceAll("Innovation Funding Service",
                     "Stub IFS  as " + stubUidSupplier.getUid(null) + " in " + timer.stop());

@@ -41,7 +41,8 @@ import static org.innovateuk.ifs.starters.stubdev.Constants.STUB_DEV_PROPS_PREFI
 @Configuration
 @Profile(IfsProfileConstants.STUBDEV)
 @EnableConfigurationProperties(StubDevConfigurationProperties.class)
-@ConditionalOnClass(name = "org.springframework.boot.devtools.livereload.LiveReloadServer")
+@ConditionalOnClass(name = {"org.springframework.boot.devtools.livereload.LiveReloadServer",
+        "org.springframework.boot.devtools.autoconfigure.LocalDevToolsAutoConfiguration"})
 @AutoConfigureAfter(name = "org.springframework.boot.devtools.autoconfigure.LocalDevToolsAutoConfiguration")
 public class IfsStubDevAutoConfiguration {
 
@@ -55,11 +56,7 @@ public class IfsStubDevAutoConfiguration {
     public void logSettings() {
         log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
         log.info("XXXXXXXXXXXXXXXXXXXXXXXXX STUB DEV XXXXXXXXXXXXXXXXXXXXXXXXX");
-        log.info(stubDevConfigurationProperties.getProjectRootDirectory());
-        log.info(stubDevConfigurationProperties.getWebCoreTemplates());
-        log.info("" + stubDevConfigurationProperties.isEnableClientMethodTiming());
-        log.info("" + stubDevConfigurationProperties.isValidateHtml());
-        log.info("" + stubDevConfigurationProperties.isLogThymeLeafTemplates());
+        log.info(stubDevConfigurationProperties.toString());
         log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
     }
 

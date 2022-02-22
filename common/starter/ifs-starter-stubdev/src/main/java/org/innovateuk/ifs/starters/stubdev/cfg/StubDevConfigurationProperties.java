@@ -6,6 +6,8 @@ import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 import static org.innovateuk.ifs.starters.stubdev.Constants.STUB_DEV_PROPS_PREFIX;
 
 @Getter
@@ -44,4 +46,9 @@ public class StubDevConfigurationProperties {
      * This is the default stub user
      */
     private String defaultUuid;
+
+    /**
+     * Rewrite rules
+     */
+    private List<RewriteRule> rewriteRules;
 }

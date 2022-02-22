@@ -1,24 +1,23 @@
 package org.innovateuk.ifs.starters.stubdev.util;
 
-import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.ThreadContext;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
-import javax.annotation.PostConstruct;
-
 import static org.innovateuk.ifs.starters.stubdev.Constants.STUB_DEV_PROPS_PREFIX;
 
 @Aspect
-@Slf4j
 @Component
 @ConditionalOnProperty(prefix=STUB_DEV_PROPS_PREFIX, name="enableClientMethodTiming", havingValue="true")
 public class TimerAspect {
+
+    private static final Logger log = LoggerFactory.getLogger(TimerAspect.class);
 
     @Around("execution(* org.innovateuk.ifs..service.*.*(..))")
     public Object methodTimeLogger(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {

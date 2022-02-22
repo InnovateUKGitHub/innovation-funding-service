@@ -11,7 +11,7 @@ public class WarningLogger {
 
     @Scheduled(initialDelay = 500, fixedDelay = 60000)
     public void repeated() {
-        log.error("XX Warning - dev tools and ifs stub mode is running XX");
+        log.error("XX Dev tools and ifs stub mode is running XX");
     }
 
 }
