@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.starters.stubdev.auth;
+package org.innovateuk.ifs.starters.stubdev.security;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;

@@ -1,11 +1,9 @@
-package org.innovateuk.ifs.starters.stubdev.auth;
+package org.innovateuk.ifs.starters.stubdev.security;
 
 import com.google.common.collect.ImmutableList;
 import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.starters.stubdev.IfsStubDevAutoConfiguration;
 import org.innovateuk.ifs.starters.stubdev.cfg.StubDevConfigurationProperties;
-import org.innovateuk.ifs.starters.stubdev.security.StubSecurityConfig;
-import org.innovateuk.ifs.starters.stubdev.security.StubUserSwitchController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
