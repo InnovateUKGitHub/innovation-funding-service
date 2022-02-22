@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 
 /**
- * Final failsafe - log that we are in dev stub mode with devtools running
+ * Log that we are in dev stub mode with devtools running.
  */
 @Slf4j
 public class WarningLogger {

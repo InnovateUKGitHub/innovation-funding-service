@@ -26,7 +26,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.Filter;
 import java.nio.charset.StandardCharsets;
 
-import static org.innovateuk.ifs.starters.stubdev.Constants.STUB_DEV_PROPS_PREFIX;
+import static org.innovateuk.ifs.starters.stubdev.cfg.StubDevConstants.STUB_DEV_PROPS_PREFIX;
 
 
 /**
@@ -76,6 +76,10 @@ public class IfsStubDevAutoConfiguration {
         return new IfsThymeleafPostProcessorDialect();
     }
 
+    /**
+     * Sets up serving thymeleaf fragments from web-core filesystem
+     * @return the web-core template resolver
+     */
     @Bean
     public ITemplateResolver webCoreTemplateResolver() {
         SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();

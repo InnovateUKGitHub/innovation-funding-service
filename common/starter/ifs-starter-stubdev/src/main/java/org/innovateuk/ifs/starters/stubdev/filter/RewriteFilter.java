@@ -17,9 +17,9 @@ import java.util.Map;
 
 
 /**
- * Work around the web tier wanting to all be on port 8080 for local non-container dev.
+ * Heavy work around for the web tier wanting to all be on port 8080 for local non-container dev.
  *
- * Use a servlet filter to rewrite urls
+ * Use a servlet filter to rewrite urls based on context. Url mappings are in the yml config.
  */
 public class RewriteFilter implements Filter {
 

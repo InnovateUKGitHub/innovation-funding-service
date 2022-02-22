@@ -10,8 +10,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
-import static org.innovateuk.ifs.starters.stubdev.Constants.STUB_DEV_PROPS_PREFIX;
+import static org.innovateuk.ifs.starters.stubdev.cfg.StubDevConstants.STUB_DEV_PROPS_PREFIX;
 
+/**
+ * Conditionally time method calls and prints the output for methods matching the aop selector.
+ *
+ * The selector matches client calls to the data layer.
+ */
 @Aspect
 @Component
 @ConditionalOnProperty(prefix=STUB_DEV_PROPS_PREFIX, name="enableClientMethodTiming", havingValue="true")

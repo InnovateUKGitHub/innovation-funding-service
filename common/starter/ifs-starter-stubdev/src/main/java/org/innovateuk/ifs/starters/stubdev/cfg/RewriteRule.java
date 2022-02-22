@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Convenience pair implementation for use in StubDevConfigurationProperties
+ */
 @Getter
 @Setter
 @NoArgsConstructor

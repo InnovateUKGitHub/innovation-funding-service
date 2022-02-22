@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.starters.stubdev.Constants.STUB_DEV_PROPS_PREFIX;
+import static org.innovateuk.ifs.starters.stubdev.cfg.StubDevConstants.STUB_DEV_PROPS_PREFIX;
 
 @Getter
 @Setter
@@ -48,7 +48,8 @@ public class StubDevConfigurationProperties {
     private String defaultUuid;
 
     /**
-     * Rewrite rules
+     * Rewrite rules for rewriting urls in responses
+     * See Rewrite Filter
      */
     private List<RewriteRule> rewriteRules;
 }

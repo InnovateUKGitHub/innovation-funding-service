@@ -5,6 +5,9 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.CharArrayWriter;
 import java.io.PrintWriter;
 
+/**
+ * Used to wrap the response so that it can be edited.
+ */
 public class CharResponseWrapper extends HttpServletResponseWrapper {
     private CharArrayWriter writer;
 

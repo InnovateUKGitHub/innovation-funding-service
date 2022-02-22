@@ -10,6 +10,11 @@ import javax.annotation.PostConstruct;
 
 import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
+/**
+ * Convenience controller method used to swap users out at runtime.
+ *
+ * Also sets up the default user on construction.
+ */
 @RestController
 public class StubUserSwitchController {
 
@@ -26,6 +31,14 @@ public class StubUserSwitchController {
         stubUidSupplier.setUuid(stubDevConfigurationProperties.getDefaultUuid());
     }
 
+    /**
+     * Sets the active stub user.
+     *
+     * Technically should be PUT, but its more convenient this way.
+     *
+     * @param uuid the user uuid that must exist in the database
+     * @return a simple text response with the set value
+     */
     @GetMapping(value = PATH_PREFIX + "{uuid}", produces = TEXT_PLAIN_VALUE)
     public String setUser(@PathVariable String uuid) {
         stubUidSupplier.setUuid(uuid);
