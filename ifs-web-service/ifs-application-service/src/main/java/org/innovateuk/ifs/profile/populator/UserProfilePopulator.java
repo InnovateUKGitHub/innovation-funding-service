@@ -6,6 +6,7 @@ import org.innovateuk.ifs.profile.viewmodel.UserProfileViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,6 +17,12 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
 @Component
 public class UserProfilePopulator {
+
+    @Value("${ifs.edi.update.enabled}")
+    private boolean ediUpdateEnabled;
+
+    @Value("${ifs.edi.salesforce.page.url}")
+    private String ediUpdateUrl;
 
     @Autowired
     private OrganisationRestService organisationRestService;
@@ -29,7 +36,7 @@ public class UserProfilePopulator {
         } else {
             name = user.getName();
         }
-        return new UserProfileViewModel(name, user.getPhoneNumber(), user.getEmail(), user.isAllowMarketingEmails(), organisationViewModels, user.hasAnyRoles(MONITORING_OFFICER),user.getEdiStatus(),user.getEdiReviewDate());
+        return new UserProfileViewModel(name, user.getPhoneNumber(), user.getEmail(), user.isAllowMarketingEmails(), organisationViewModels, user.hasAnyRoles(MONITORING_OFFICER),user.getEdiStatus(),user.getEdiReviewDate(), ediUpdateEnabled, ediUpdateUrl);
     }
 
     private OrganisationProfileViewModel toOrganisationViewModel(OrganisationResource organisation) {
