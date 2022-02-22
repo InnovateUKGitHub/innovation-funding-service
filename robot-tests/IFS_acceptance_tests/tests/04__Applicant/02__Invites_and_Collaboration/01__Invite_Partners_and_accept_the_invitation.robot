@@ -190,7 +190,7 @@ Partner should be able to log-in and see the new company name
     Then the user should be redirected to the correct page  ${APPLICANT_DASHBOARD_URL}
     And the user can see the updated company name throughout the application
     And the user should see the element                     jQuery = td:contains("Company registration number")+td:contains("SC157176")
-#    And the user reads his email and clicks the link        ${invite_email}    Innovate UK applicant questionnaire    diversity survey
+    And The user should not see the element                 ${invite_email}    Innovate UK applicant questionnaire    diversity survey
     [Teardown]    the user navigates to the page            ${APPLICANT_DASHBOARD_URL}
 
 Partner can see the Application team

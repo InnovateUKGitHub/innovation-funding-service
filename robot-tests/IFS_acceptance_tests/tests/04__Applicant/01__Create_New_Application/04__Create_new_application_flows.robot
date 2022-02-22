@@ -46,7 +46,7 @@ Non registered users sign-up companies house route
     Given Applicant goes to the registration form
     When the user verifies email                      Phil    Smith    ${test_mailbox_one}+business@gmail.com
     Then the user directed to correct dashboard       ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-#    And the user reads hisg email and clicks the link  ${test_mailbox_one}+business@gmail.com    Innovate UK applicant questionnaire    diversity survey
+#    And the user reads his email and clicks the link  ${test_mailbox_one}+business@gmail.com    Innovate UK applicant questionnaire    diversity survey
 
 Applicant can still access the application from dashboard on saving the apllication with an empty application name
     [Documentation]  IFS-8646
