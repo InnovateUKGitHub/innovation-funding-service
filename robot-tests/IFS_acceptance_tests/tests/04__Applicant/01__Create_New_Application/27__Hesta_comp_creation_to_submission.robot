@@ -84,7 +84,7 @@ Lead applicant receives email notifiction when internal user marks application u
     And Requesting IDs of this competition                                          ${hestaCompetitionName}
     And the user successfully completes application                                 barry   barrington   ${newLeadApplicantEmail}   ${newHestaApplicationName}
     And the user clicks the button/link                                             link = Your project finances
-    And the user marks the finances as complete                                     ${newHestaApplicationName}  labour costs  54,000  no
+    And the user completes hecp project finances                                    ${hestaApplicationName}  no
     And the user can submit the application
     And Log in as a different user                                                  &{Comp_admin1_credentials}
     And The user clicks the button/link                                             link = ${hestaCompetitionName}
@@ -318,7 +318,6 @@ The user is able to complete hecp public description section
 
 The user is able to complete horizon grant agreement section
     the user clicks the button/link           jQuery = a:contains("Horizon Europe Guarantee grant agreement")
-    #the user should see the element           jQuery = h1:contains("Horizon 2020 grant agreement")
     the user should see the element           jQuery = h1:contains("grant agreement")
     the user uploads the file                 id = grantAgreement  ${valid_pdf}
     the user clicks the button/link           id = mark-as-complete

@@ -38,7 +38,6 @@ HECP terms and conditions are correct
     [Documentation]  IFS-10926
     Given the user clicks the button/link                link = Terms and conditions
     When the user clicks the button/link                 link = ${hecpKicsTermsAndConditionsLink}
-    #And select window                                    title = ${hecpKicsTermsAndConditionsTitle}
     And select window                                    NEW
     Then the user should see the element                 jQuery = h1:contains("Terms and conditions for Horizon Europe Guarantee – EIT KICs 2021 grant")
     [Teardown]   the user closes the last opened tab
