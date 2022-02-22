@@ -62,6 +62,18 @@ public class IfsStubDevAutoConfigurationTest {
     }
 
     @Test
+    public void testConfigWithDevtoolsAndWrongProfile() {
+        new ApplicationContextRunner()
+                .withSystemProperties(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME + "=" + IfsProfileConstants.AMQP_PROFILE)
+                .withConfiguration(
+                        AutoConfigurations.of(LocalDevToolsAutoConfiguration.class, IfsStubDevAutoConfiguration.class)
+                ).run((context) -> {
+                    assertNotFound(context, COMMON);
+                    assertNotFound(context, UNCOMMON);
+                });
+    }
+
+    @Test
     public void testConfigWithDevtoolsAndProfile() {
         new ApplicationContextRunner()
                 .withSystemProperties(PROFILE_PROP)
