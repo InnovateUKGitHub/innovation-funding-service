@@ -20,6 +20,7 @@ dependencies {
     implementation "io.projectreactor:reactor-core"
     implementation "org.springframework.boot:spring-boot-starter-aop"
 
+    testImplementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter-api")

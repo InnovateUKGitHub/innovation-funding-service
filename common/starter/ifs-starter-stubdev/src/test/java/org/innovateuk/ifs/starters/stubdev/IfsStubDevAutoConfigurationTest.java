@@ -15,14 +15,13 @@ import org.springframework.boot.devtools.autoconfigure.LocalDevToolsAutoConfigur
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.AbstractEnvironment;
-import org.springframework.test.context.ActiveProfiles;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import java.util.List;
-import java.util.Timer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.innovateuk.ifs.starters.stubdev.Constants.STUB_DEV_PROPS_PREFIX;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -49,7 +48,11 @@ public class IfsStubDevAutoConfigurationTest {
     public void testConfigWithDevtoolsAndProfileAndThymleafDebug() {
         new ApplicationContextRunner()
                 .withSystemProperties(PROFILE_PROP)
-                .withSystemProperties(STUB_DEV_PROPS_PREFIX + ".validateHtml=true", STUB_DEV_PROPS_PREFIX + ".enableClientMethodTiming=true")
+                .withSystemProperties(
+                        STUB_DEV_PROPS_PREFIX + ".validateHtml=true",
+                        STUB_DEV_PROPS_PREFIX + ".enableClientMethodTiming=true",
+                        STUB_DEV_PROPS_PREFIX + ".logThymeLeafTemplates=true"
+                )
                 .withConfiguration(
                         AutoConfigurations.of(LocalDevToolsAutoConfiguration.class, IfsStubDevAutoConfiguration.class)
                 ).withBean(TimerAspect.class).run((context) -> {
