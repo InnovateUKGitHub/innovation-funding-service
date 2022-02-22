@@ -12,6 +12,7 @@ include("common:api:audit-api")
 include("common:starter:ifs-starter-logging")
 include("common:starter:ifs-starter-audit")
 include("common:starter:ifs-starter-stubdev")
+include("common:starter:ifs-starter-swagger-ui")
 
 // Commons - can be split and deprecated
 include("common:ifs-commons")

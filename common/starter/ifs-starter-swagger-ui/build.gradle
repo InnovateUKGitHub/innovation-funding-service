@@ -1,0 +1,20 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+
+test {
+    useJUnitPlatform {
+    }
+}
+
+dependencies {
+
+    api platform(project(":common:bom"))
+
+    implementation 'io.springfox:springfox-swagger2:3.0.0'
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
+}
+
+repositories {
+    mavenCentral()
+}
