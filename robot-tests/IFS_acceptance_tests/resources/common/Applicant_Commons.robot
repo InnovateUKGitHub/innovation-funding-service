@@ -1011,7 +1011,6 @@ the partner applicant marks Your project finances information as complete
     the user selects the radio button              organisationSize  ${org_size}
     the user enters text to a text field           financialYearEndMonthValue    ${month}
     the user enters text to a text field           financialYearEndYearValue    ${Year}
-    the user fills financial overview section
     the user enters text to a text field           css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
     the user clicks the button/link                jQuery = button:contains("Mark as complete")
     the user clicks the button/link                link = Back to application overview
