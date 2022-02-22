@@ -12,6 +12,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.management.competition.setup.application.form.LandingPageForm;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -88,6 +89,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
         return questionResources.stream()
                 .filter(question -> projectDetailsAndApplicationSections.contains(question.getSection()))
                 .filter(QuestionResource::requiresSetup)
+                .filter(questionResource ->!QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION.equals(questionResource.getQuestionSetupType()))
                 .map(QuestionResource::getId)
                 .collect(Collectors.toList());
     }
