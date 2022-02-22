@@ -323,4 +323,4 @@ The user is able to complete horizon grant agreement section
     the user uploads the file                 id = grantAgreement  ${valid_pdf}
     the user clicks the button/link           id = mark-as-complete
     the user clicks the button/link           link = Return to application overview
-    the user should see the element           jQuery = li:contains("Horizon 2020 grant agreement") > .task-status-complete
+    the user should see the element           jQuery = li:contains("Horizon Europe Guarantee grant agreement") > .task-status-complete
