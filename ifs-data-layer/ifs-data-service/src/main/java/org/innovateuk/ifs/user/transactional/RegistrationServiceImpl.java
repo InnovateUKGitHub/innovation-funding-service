@@ -326,13 +326,13 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             applicationInviteService.updateInviteHistory(applicationInviteResource);
 
         }
-        if(isEdiUpdateEnabled) {
-            return getUser(userId)
-                    .andOnSuccessReturnVoid(this::activateUser);
-        }
         return getUser(userId)
                 .andOnSuccess(this::activateUser)
-                .andOnSuccessReturnVoid(this::sendApplicantDiversitySurvey);
+                .andOnSuccessReturnVoid(user -> {
+                    if (!isEdiUpdateEnabled) {
+                        sendApplicantDiversitySurvey(user);
+                    }
+                });
     }
 
     @Override
