@@ -65,7 +65,7 @@
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header width-small">Survey status</th>
                         <td class="govuk-table__cell">
-                            <span class="yes" th:if="${model.ediCompleted}">Complete</span>
+                            <span class="yes accepted" th:if="${model.ediCompleted}">Complete</span>
                             <span class="edit" th:unless="${model.ediCompleted}">Incomplete</span>
                         </td>
                     </tr>
