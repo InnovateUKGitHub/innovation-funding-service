@@ -74,6 +74,8 @@ public class ApplicationUrlHelper {
                     return Optional.of(String.format("/application/%d/form/academic-costs/organisation/%d/section/%d", applicationId, organisationId, sectionId));
                 } else if (competition.isH2020()) {
                     return Optional.of(String.format("/application/%d/form/horizon-2020-costs/organisation/%d/section/%d", applicationId, organisationId, sectionId));
+                } else if (competition.isHorizonEuropeGuarantee()) {
+                    return Optional.of(String.format("/application/%d/form/hecp-costs/organisation/%d/section/%d", applicationId, organisationId, sectionId));
                 } else {
                     return Optional.of(String.format("/application/%d/form/your-project-costs/organisation/%d/section/%d", applicationId, organisationId, sectionId));
                 }

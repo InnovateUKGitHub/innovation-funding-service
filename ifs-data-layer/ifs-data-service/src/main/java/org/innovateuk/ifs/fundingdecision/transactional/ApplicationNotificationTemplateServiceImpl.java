@@ -80,7 +80,7 @@ public class ApplicationNotificationTemplateServiceImpl extends BaseTransactiona
 
         if (competition.isKtp()) {
             unsuccessfulTemplate = "unsuccessful_funding_decision_ktp.html";
-        } else if (competition.isHesta()) {
+        } else if (competition.isHorizonEuropeGuarantee()) {
             unsuccessfulTemplate = "unsuccessful_funding_decision_hesta.html";
         } else {
             unsuccessfulTemplate = "unsuccessful_funding_decision.html";

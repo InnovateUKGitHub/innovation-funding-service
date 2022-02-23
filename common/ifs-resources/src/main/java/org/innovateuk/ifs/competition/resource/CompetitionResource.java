@@ -147,8 +147,8 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     @JsonIgnore
-    public boolean isHesta() {
-        return competitionTypeEnum == CompetitionTypeEnum.HESTA;
+    public boolean isHorizonEuropeGuarantee() {
+        return competitionTypeEnum == CompetitionTypeEnum.HORIZON_EUROPE_GUARANTEE;
     }
 
     @JsonIgnore
