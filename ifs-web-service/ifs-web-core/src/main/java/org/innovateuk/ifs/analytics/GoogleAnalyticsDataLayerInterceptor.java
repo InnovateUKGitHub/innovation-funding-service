@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.analytics;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
 import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
@@ -67,7 +68,7 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
     }
 
     private void setCompetitionName(GoogleAnalyticsDataLayer dataLayer, HttpServletRequest request, ModelAndView modelAndView) {
-        final Map<String,String> pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+        Map<String,String> pathVariables = getUriTemplateVariables(request);
 
         if (modelAndView.getModel().get("model") instanceof BaseAnalyticsViewModel) {
             String competitionName = ((BaseAnalyticsViewModel) modelAndView.getModel().get("model")).getCompetitionName();
@@ -119,8 +120,7 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
             dataLayer.setUserRoles(userRoles);
         }
 
-        final Map<String,String> pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
-
+        Map<String,String> pathVariables = getUriTemplateVariables(request);
         if (pathVariables.containsKey(APPLICATION_ID)) {
             setApplicationOrProjectSpecificRolesFromRestService(dataLayer,
                                                                 googleAnalyticsDataLayerRestService::getRolesByApplicationId,
@@ -144,8 +144,7 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
             }
         }
 
-        final Map<String,String> pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
-
+        Map<String,String> pathVariables = getUriTemplateVariables(request);
         if (pathVariables.containsKey(APPLICATION_ID)) {
             final long applicationId = getIdFromPathVariable(pathVariables, APPLICATION_ID);
             dataLayer.setApplicationId(applicationId);
@@ -189,6 +188,21 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
 
     private static long getIdFromPathVariable(final Map<String,String> pathVariables, final String pathVariable) {
         return parseLong(pathVariables.get(pathVariable));
+    }
+
+    /**
+     * Wrap the null getAttribute() response as outside thymeleaf (e.g. swagger-ui) the variable map is not present.
+     *
+     * See javadoc on URI_TEMPLATE_VARIABLES_ATTRIBUTE
+     *
+     * @param request servlet request
+     * @return UriTemplateVariables or an empty map.
+     */
+    private Map<String, String> getUriTemplateVariables(HttpServletRequest request) {
+        if (!request.getParameterMap().containsKey(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE)) {
+            return ImmutableMap.of();
+        }
+        return (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
     }
 
 }
