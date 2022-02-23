@@ -14,6 +14,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -199,10 +200,11 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
      * @return UriTemplateVariables or an empty map.
      */
     private Map<String, String> getUriTemplateVariables(HttpServletRequest request) {
-        if (!request.getParameterMap().containsKey(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE)) {
-            return ImmutableMap.of();
+        Map<String, String> uriTemplateVars = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+        if (uriTemplateVars == null) {
+            return new HashMap<>();
         }
-        return (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+        return uriTemplateVars;
     }
 
 }
