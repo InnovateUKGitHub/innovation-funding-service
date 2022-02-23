@@ -137,8 +137,10 @@
                                 <td class="govuk-table__cell ifs-table__email"
                                     th:text="${row.email}"
                                     th:classappend="${row.invite ? 'hint' : ''}"></td>
-                                <td class="govuk-table__cell "
-                                    th:text="${row.ediStatus}"></td>
+                                <td class="govuk-table__cell ">
+                                    <span class="edit" th:if="${row.isEdiStatusInComplete()}">Incomplete</span>
+                                    <span class="yes" th:if="${row.isEdiStatusComplete()}">Complete</span>
+                                </td>
                                 <td class="govuk-table__cell alignright"
                                     th:classappend="${row.invite ? 'hint' : ''}">
                                     <th:block th:if="${organisation.editable and !model.readOnly and !row.lead}">

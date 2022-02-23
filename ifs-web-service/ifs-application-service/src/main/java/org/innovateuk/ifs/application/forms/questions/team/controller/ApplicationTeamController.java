@@ -132,6 +132,9 @@ public class ApplicationTeamController {
             if ("validation.kta.pending.invite".equals(e.getErrorKey()) || "validation.kta.missing.invite".equals(e.getErrorKey())) {
                 return Optional.of(newFieldError(e, "ktaEmail", e.getFieldRejectedValue()));
             }
+            if ("validation.applicationteam.edi.status".equals(e.getErrorKey())) {
+                return Optional.of(newFieldError(e, "organisation." + e.getArguments().get(0), e.getFieldRejectedValue()));
+            }
             return Optional.empty();
         };
     }

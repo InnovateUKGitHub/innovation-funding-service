@@ -218,6 +218,13 @@ span {
     @extend %icon-cross;
     padding-left: 28px;
   }
+  &.edit {
+    @extend %action-required;
+    @include govuk-font(16);
+    font-weight: normal;
+    padding-left: 20px;
+    text-align: left;
+  }
 }
 
 [data-selector-highlighter] {

@@ -8,6 +8,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
 import org.innovateuk.ifs.invite.transactional.ApplicationKtaInviteService;
+import org.innovateuk.ifs.user.resource.EDIStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -45,6 +46,11 @@ public class ApplicationTeamMarkAsCompleteValidator implements Validator {
         log.debug("do ApplicationTeamMarkAsComplete Validation");
 
         Application application = (Application) target;
+        if (application.getLeadApplicant().getEdiStatus() == null) {
+            reject(errors, "validation.applicationteam.edi.status", application.getLeadOrganisationId());
+        } else if (application.getLeadApplicant().getEdiStatus().equals(EDIStatus.INCOMPLETE)) {
+            reject(errors, "validation.applicationteam.edi.status", application.getLeadOrganisationId());
+        }
 
         List<InviteOrganisationResource> invites = applicationInviteService.getInvitesByApplication(application.getId()).getSuccess();
         for (InviteOrganisationResource organisation : invites) {
