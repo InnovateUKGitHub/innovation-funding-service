@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.starters.stubdev.cfg.StubDevConstants.STUB_DEV_PROPS_PREFIX;
+import static org.innovateuk.ifs.starters.stubdev.cfg.StubDevConfigurationProperties.STUB_DEV_PROPS_PREFIX;
 
 @Getter
 @Setter
@@ -16,6 +16,8 @@ import static org.innovateuk.ifs.starters.stubdev.cfg.StubDevConstants.STUB_DEV_
 @Configuration
 @ConfigurationProperties(prefix = STUB_DEV_PROPS_PREFIX)
 public class StubDevConfigurationProperties {
+
+    public static final String STUB_DEV_PROPS_PREFIX = "ifs.starters.stubdev";
 
     /**
      * Time and log method calls through the stack via AOP

@@ -26,7 +26,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.Filter;
 import java.nio.charset.StandardCharsets;
 
-import static org.innovateuk.ifs.starters.stubdev.cfg.StubDevConstants.STUB_DEV_PROPS_PREFIX;
+import static org.innovateuk.ifs.starters.stubdev.cfg.StubDevConfigurationProperties.STUB_DEV_PROPS_PREFIX;
 
 
 /**
