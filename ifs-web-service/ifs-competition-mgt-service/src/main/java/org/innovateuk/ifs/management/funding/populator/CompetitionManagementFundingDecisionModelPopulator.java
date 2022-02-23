@@ -73,6 +73,9 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
         if (alwaysOpenCompetitionEnabled) {
             CompetitionResource competition = getCompetitionIfExist(competitionId);
             if (competition.isAlwaysOpen()) {
+                if (competition.isHesta()) {
+                    return getSubmittedApplications(competitionId, paginationForm, fundingDecisionFilterForm);
+                }
                 return applicationSummaryRestService.getAssessedApplications(
                         competitionId,
                         "id",
@@ -83,13 +86,17 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
                         .getSuccess();
             }
         }
+        return getSubmittedApplications(competitionId, paginationForm, fundingDecisionFilterForm);
+    }
+
+    private ApplicationSummaryPageResource getSubmittedApplications(long competitionId, FundingDecisionPaginationForm paginationForm, FundingDecisionFilterForm fundingDecisionFilterForm) {
         return applicationSummaryRestService.getSubmittedApplications(
-                competitionId,
-                "id",
-                paginationForm.getPage(),
-                PAGE_SIZE,
-                fundingDecisionFilterForm.getStringFilter(),
-                fundingDecisionFilterForm.getFundingFilter())
+                        competitionId,
+                        "id",
+                        paginationForm.getPage(),
+                        PAGE_SIZE,
+                        fundingDecisionFilterForm.getStringFilter(),
+                        fundingDecisionFilterForm.getFundingFilter())
                 .getSuccess();
     }
 
@@ -109,6 +116,10 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
         if(alwaysOpenCompetitionEnabled) {
             CompetitionResource competition = getCompetitionIfExist(competitionId);
             if (competition.isAlwaysOpen()) {
+                if (competition.isHesta()) {
+                    return applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
+                }
+
                 return applicationSummaryRestService.getAllAssessedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
             }
         }
