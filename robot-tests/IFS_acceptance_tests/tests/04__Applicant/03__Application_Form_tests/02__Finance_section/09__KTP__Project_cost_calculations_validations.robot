@@ -588,9 +588,9 @@ the user should see the correct employee data
 the user should see the read only view of organization details
     the user should see the element         jQuery = h1:contains("Your organisation")
     the user should see the element         jQuery = th:contains("Latest period") ~ th:contains("Last audited year") ~ th:contains("Prior audited year")
-    the user should see the element         jQuery = td:contains("100000") ~ td:contains("98000") ~ td:contains("96000")
-    the user should see the element         jQuery = td:contains("98000") ~ td:contains("96000") ~ td:contains("94000")
-    the user should see the element         jQuery = td:contains("100000") ~ td:contains("100000") ~ td:contains("100000")
-    the user should see the element         jQuery = td:contains("20000") ~ td:contains("15000") ~ td:contains("10000")
-    the user should see the element         jQuery = td:contains("35000") ~ td:contains("40000") ~ td:contains("45000")
+    the user should see the element         jQuery = td:contains("100,000") , td:contains("98,000") , td:contains("96,000")
+    the user should see the element         jQuery = td:contains("98,000") , td:contains("96,000") , td:contains("94,000")
+    the user should see the element         jQuery = td:contains("100,000") , td:contains("100,000") , td:contains("100,000")
+    the user should see the element         jQuery = td:contains("20,000") , td:contains("15,000") , td:contains("10,000")
+    the user should see the element         jQuery = td:contains("35,000") , td:contains("40,000") , td:contains("45,000")
     the user clicks the button/link         link = Return to finances
