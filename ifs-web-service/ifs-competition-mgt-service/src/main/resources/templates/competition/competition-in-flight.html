@@ -242,12 +242,15 @@
                                    th:text="${milestone.dateTime} ? ${#temporals.format(milestone.dateTime, 'd MMMM yyyy')} : 'Open-ended'">
                                     10 October 2017</p>
                             </li>
+                            <th:block th:unless="${model.isAlwaysOpenHesta()}">
+                                <li>
+                                    <h3 class="govuk-heading-s">Assessment</h3>
+                                    <p class="govuk-body">Batch assessments</p>
+                                </li>
+                            </th:block>
                             <li>
-                                <h3 class="govuk-heading-s">Assessment</h3>
-                                <p class="govuk-body">Batch assessments</p>
-                            </li>
-                            <li>
-                                <h3 class="govuk-heading-s">Funding decision and assessment feedback</h3>
+                                <h3 class="govuk-heading-s"
+                                    th:text="${model.isAlwaysOpenHesta()} ? 'Funding decision' : 'Funding decision and assessment feedback'"></h3>
                             </li>
 
                             <th:block th:unless="${model.hasAClosedAssessmentPeriod()}">

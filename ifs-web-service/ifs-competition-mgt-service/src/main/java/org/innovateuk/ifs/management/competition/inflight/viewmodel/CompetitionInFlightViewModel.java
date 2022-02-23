@@ -201,7 +201,7 @@ public class CompetitionInFlightViewModel {
 
     public boolean isManageAssessmentLinkEnabled() {
         return competitionStatus != READY_TO_OPEN
-                && (competitionStatus != OPEN || alwaysOpen);
+                && (competitionStatus != OPEN || alwaysOpen && competitionHasAssessmentStage);
     }
 
     @JsonIgnore
