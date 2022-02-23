@@ -21,12 +21,14 @@ Applicant can view EDI section in profile page
 Applicant can view the EDI incomplete status
     [Documentation]  IFS-11252
     When the user changed EDI survey status         INPROGRESS  2022-01-22 01:02:03
-    Then the user should see EDI section details    Incomplete  01 January 2022  Continue
+    And the user clicks the button/link             link = Edit your details
+    And the user clicks the button/link             jQuery = button:contains("Save changes")
+    Then the user should see EDI section details    Incomplete  22 January 2022  Continue
 
 Applicant can view the EDI compelete status
     [Documentation]  IFS-11252
     When the user changed EDI survey status         COMPLETE  2023-03-25 01:02:03
-    Then the user should see EDI section details    Complete  25 March 2024  Review EDI summary
+    Then the user should see EDI section details    Complete  25 March 2023  Review EDI summary
 
 *** Keywords ***
 Custom Suite Setup
@@ -49,3 +51,4 @@ the user changed EDI survey status
     [Arguments]  ${ediStatus}  ${ediReviewDate}
     execute sql string   UPDATE `${database_name}`.`user` SET `edi_status` = '${ediStatus}', `edi_review_date` = '${ediReviewDate}' WHERE (`email` = 'steve.smith@empire.com');
     reload page
+
