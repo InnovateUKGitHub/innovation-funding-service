@@ -10,10 +10,12 @@ import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.finance.resource.KtpYearResource;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesKtpYearsResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.pendingpartner.populator.YourOrganisationViewModelPopulator;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -45,6 +47,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ProjectYourOrganisationKtpFinancialYearsControllerTest extends BaseControllerMockMVCTest<ProjectYourOrganisationKtpFinancialYearsController> {
@@ -73,6 +77,11 @@ public class ProjectYourOrganisationKtpFinancialYearsControllerTest extends Base
     @Captor
     ArgumentCaptor<OrganisationFinancesKtpYearsResource> argCaptor;
 
+    @Mock
+    private OrganisationRestService organisationRestService;
+
+    private OrganisationResource organisationResource;
+
     private static final long projectId = 3L;
     private static final long organisationId = 5L;
     private OrganisationFinancesKtpYearsResource organisationFinancesResource;
@@ -99,6 +108,12 @@ public class ProjectYourOrganisationKtpFinancialYearsControllerTest extends Base
                     .withEmployees(7L)
                     .build(3))
                 .build();
+
+        organisationResource = newOrganisationResource()
+                .withId(organisationId)
+                .withName("SmithZone Ltd")
+                .withOrganisationType(BUSINESS.getId())
+                .build();
     }
 
     @Test
@@ -106,6 +121,7 @@ public class ProjectYourOrganisationKtpFinancialYearsControllerTest extends Base
         setupResource();
         setupAsyncExpectations(asyncFuturesGenerator);
         YourOrganisationKtpFinancialYearsForm form = new YourOrganisationKtpFinancialYearsForm();
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));
         when(viewModelPopulator.populate(projectId, organisationId, getLoggedInUser())).thenReturn(yourOrganisationViewModel);
         when(yourOrganisationRestService.getOrganisationKtpYears(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesResource));
         when(formPopulator.populate(organisationFinancesResource)).thenReturn(form);
@@ -150,6 +166,8 @@ public class ProjectYourOrganisationKtpFinancialYearsControllerTest extends Base
 
     @Test
     public void markAsCompleteWithGrowthTable_failure() throws Exception {
+        setupResource();
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));
         when(viewModelPopulator.populate(projectId, organisationId, getLoggedInUser())).thenReturn(yourOrganisationViewModel);
 
         MvcResult result = mockMvc.perform(post(viewPageUrl())

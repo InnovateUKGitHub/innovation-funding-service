@@ -2,18 +2,24 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.controlle
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.populator.ApplicationYourOrganisationViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.ApplicationYourOrganisationViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationDetailsReadOnlyViewModel;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationAddressRestService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,6 +43,11 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
     private SectionService sectionService;
     @Autowired
     private ProcessRoleRestService processRoleRestService;
+    @Autowired
+    private OrganisationRestService organisationRestService;
+    @Autowired
+    private OrganisationAddressRestService organisationAddressRestService;
+
 
     protected abstract String redirectToViewPage(long applicationId, long competitionId, long organisationId, long sectionId);
     protected abstract F populateForm(long applicationId, long organisationId);
@@ -153,7 +164,10 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
     }
 
     private ApplicationYourOrganisationViewModel getViewModel(long applicationId, long competitionId, long organisationId) {
-        return viewModelPopulator.populate(applicationId, competitionId, organisationId);
+        ApplicationYourOrganisationViewModel applicationYourOrganisationViewModel = viewModelPopulator.populate(applicationId, competitionId, organisationId);
+        applicationYourOrganisationViewModel.setOrgDetailsViewModel(populateOrganisationDetails(organisationId));
+        applicationYourOrganisationViewModel.setPartnerOrgDisplay(false);
+        return applicationYourOrganisationViewModel;
     }
 
     private CommonYourProjectFinancesViewModel getCommonFinancesViewModel(long applicationId, long sectionId, long organisationId, UserResource user) {
@@ -163,5 +177,34 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
     private String redirectToYourFinances(long applicationId) {
         // IFS-4848 - we're constructing this URL in a few places - maybe a NavigationUtil?
         return "redirect:" + String.format("%s%d/form/FINANCE", APPLICATION_BASE_URL, applicationId);
+    }
+
+    private YourOrganisationDetailsReadOnlyViewModel populateOrganisationDetails(long organisationId) {
+        YourOrganisationDetailsReadOnlyViewModel yourOrganisationDetailsReadOnlyViewModel = new YourOrganisationDetailsReadOnlyViewModel();
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+
+        yourOrganisationDetailsReadOnlyViewModel.setOrganisationName(organisation.getName());
+        yourOrganisationDetailsReadOnlyViewModel.setOrganisationType(organisation.getOrganisationTypeName());
+        if (organisation.getCompanyRegistrationNumber() == null || organisation.getCompanyRegistrationNumber().isEmpty()) {
+            yourOrganisationDetailsReadOnlyViewModel.setOrgDetailedDisplayRequired(false);
+            yourOrganisationDetailsReadOnlyViewModel.setRegistrationNumber("");
+            yourOrganisationDetailsReadOnlyViewModel.setAddressResource(null);
+            yourOrganisationDetailsReadOnlyViewModel.setSicCodes(null);
+        } else {
+            yourOrganisationDetailsReadOnlyViewModel.setOrgDetailedDisplayRequired(true);
+            yourOrganisationDetailsReadOnlyViewModel.setRegistrationNumber(organisation.getCompanyRegistrationNumber());
+            AddressResource addressResource =  organisationAddressRestService.getOrganisationRegisterdAddressById(organisation.getId())
+                    .andOnSuccessReturn(addresses -> addresses.stream()
+                            .findFirst()
+                            .map(OrganisationAddressResource::getAddress)
+                           .orElse(new AddressResource()))
+                    .getSuccess();
+
+            yourOrganisationDetailsReadOnlyViewModel.setAddressResource(addressResource);
+            if (organisation.getSicCodes() != null && !organisation.getSicCodes().isEmpty()) {
+                yourOrganisationDetailsReadOnlyViewModel.setSicCodes(organisation.getSicCodes());
+            }
+        }
+        return yourOrganisationDetailsReadOnlyViewModel;
     }
 }

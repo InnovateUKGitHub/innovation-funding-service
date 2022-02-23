@@ -51,6 +51,11 @@ public class OrganisationPermissionRules {
         return isInternal(user);
     }
 
+    @PermissionRule(value = "READ", description = "Applicant who creates the organisation can see all organisations")
+    public boolean applicantCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
+        return user.hasAuthority(Authority.APPLICANT);
+    }
+
     @PermissionRule(value = "READ", description = "Stakeholders/auditors can see all Organisations")
     public boolean stakeholdersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
         return user.hasAuthority(Authority.STAKEHOLDER);

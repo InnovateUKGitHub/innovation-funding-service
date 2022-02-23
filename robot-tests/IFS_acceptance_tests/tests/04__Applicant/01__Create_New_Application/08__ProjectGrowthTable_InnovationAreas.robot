@@ -449,7 +449,7 @@ the user populates the project growth table
     the user enters value to field    Research and development spend    15000
 
 the user should view the project growth table
-    the user should see the text in the element    css = table.govuk-table tr:nth-of-type(1) th:nth-of-type(1)    Section
+    the user should see the text in the element    css = table.govuk-table thead tr:nth-of-type(1) th:nth-of-type(1)    Section
     the user should see the text in the element    css = table.govuk-table tr:nth-of-type(1) th:nth-of-type(2)    Last financial year (£)
     the user should see the text in the element    css = tr:nth-child(1) td:nth-child(1)    Annual turnover
     the user should see the element                jQuery = td:contains("65,000")
