@@ -287,7 +287,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         // Don't update EDI status if already in COMPLETE state
         if (existingUser.getEdiStatus()!=null &&
                 existingUser.getEdiStatus().equals(COMPLETE)) {
-            log.info("Ignore EDI status update:%s ",updatedUserResource.getEdiStatus());
+            log.info("Ignore EDI status update:{} for userId:{}",updatedUserResource.getEdiStatus(),updatedUserResource.getId());
         } else {
             existingUser.setEdiStatus(updatedUserResource.getEdiStatus());
         }
