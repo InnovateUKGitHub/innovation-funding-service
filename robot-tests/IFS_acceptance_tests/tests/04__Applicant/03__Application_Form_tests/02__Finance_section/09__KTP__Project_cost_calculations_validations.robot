@@ -512,11 +512,6 @@ the user fills financial overview section
              \    the user enters text to a text field     id = years[${k}].currentAssets  ${ELEMENT}
              \    ${k} =   Evaluate   ${k} + 1
 
-#    ${l} =  Set Variable   0
-#        :FOR   ${ELEMENT}   IN    @{liabilities}
-#             \    the user enters text to a text field     id = years[${l}].liabilities  ${ELEMENT}
-#             \    ${l} =   Evaluate   ${l} + 1
-
     ${m} =  Set Variable   0
         :FOR   ${ELEMENT}   IN    @{shareHolderFunds}
              \    the user enters text to a text field     id = years[${m}].shareholderValue  ${ELEMENT}
@@ -591,4 +586,9 @@ the user should see the correct employee data
 the user should see the read only view of organization details
     the user should see the element         jQuery = h1:contains("Your organisation")
     the user should see the element         jQuery = th:contains("Latest period") ~ th:contains("Last audited year") ~ th:contains("Prior audited year")
+    the user should see the element         jQuery = td:contains("100000") ~ td:contains("98000") ~ td:contains("96000")
+    the user should see the element         jQuery = td:contains("98000") ~ td:contains("96000") ~ td:contains("94000")
+    the user should see the element         jQuery = td:contains("100000") ~ td:contains("100000") ~ td:contains("100000")
+    the user should see the element         jQuery = td:contains("20000") ~ td:contains("15000") ~ td:contains("10000")
+    the user should see the element         jQuery = td:contains("35000") ~ td:contains("40000") ~ td:contains("45000")
     the user clicks the button/link         link = Return to finances
