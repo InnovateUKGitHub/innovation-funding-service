@@ -22,6 +22,7 @@ Applicant can view EDI section in profile page
 
 Applicant can view the EDI incomplete status
     [Documentation]  IFS-11252
+    [setup]     run the shell script
     When the user changed EDI survey status         INPROGRESS  2022-01-22 01:02:03
     And the user clicks the button/link             link = Edit your details
     And the user clicks the button/link             jQuery = button:contains("Save changes")
