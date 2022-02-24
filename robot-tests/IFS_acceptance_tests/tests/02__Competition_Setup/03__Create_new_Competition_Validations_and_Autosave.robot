@@ -82,9 +82,9 @@ Initial details: client-side validations
     And the user enters text to a text field                    id = openingDateMonth    12
     And the user enters text to a text field                    id = openingDateYear  ${nextYear}
     Then the user should not see the error any more             ${enter_a_valid_date}
-    When the user selects option from type ahead                innovationLeadUserId  i  Ian Cooper
+    When the user selects option from type ahead                innovationLeadUserId  Ian Cooper  Ian Cooper
     Then the user should not see the error any more             Please select an Innovation Lead.
-    When the user selects option from type ahead                executiveUserId  j  John Doe
+    When the user selects option from type ahead                executiveUserId  John Doe  John Doe
     Then The user should not see the element                    jQuery = .govuk-error-message:contains("Please select a Portfolio manager.")
 
 Initial details: should not allow dates in the past
@@ -393,8 +393,8 @@ The user enters valid data in the initial details
     the user enters text to a text field                    id = openingDateDay    01
     the user enters text to a text field                    id = openingDateMonth    12
     the user enters text to a text field                    id = openingDateYear  ${nextYear}
-    the user selects option from type ahead                 innovationLeadUserId  i  Ian Cooper
-    the user selects option from type ahead                 executiveUserId  j  John Doe
+    the user selects option from type ahead                 innovationLeadUserId  Ian Cooper  Ian Cooper
+    the user selects option from type ahead                 executiveUserId  John Doe  John Doe
 
 The user navigates to the Validation competition
     The user navigates to the page     ${CA_UpcomingComp}

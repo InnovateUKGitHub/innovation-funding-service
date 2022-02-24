@@ -207,8 +207,8 @@ User creates a new competition for Application tests
     the user enters text to a text field                    id = openingDateDay    01
     the user enters text to a text field                    id = openingDateMonth    12
     the user enters text to a text field                    id = openingDateYear  ${nextYear}
-    the user selects option from type ahead                 innovationLeadUserId  i  Ian Cooper
-    the user selects option from type ahead                 executiveUserId  j  John Doe
+    the user selects option from type ahead                 innovationLeadUserId  Ian Cooper  Ian Cooper
+    the user selects option from type ahead                 executiveUserId  John Doe  John Doe
     the user clicks the button/link                         jQuery = button:contains("Done")
     the user clicks the button/link                         link = Back to competition details
 

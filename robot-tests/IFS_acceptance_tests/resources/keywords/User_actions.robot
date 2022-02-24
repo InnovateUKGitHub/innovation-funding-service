@@ -198,14 +198,15 @@ reload and check if element appears
 
 the user selects option from type ahead
     [Arguments]   ${inputId}  ${searchTerm}  ${optionSelector}
-    #mouse over                                            id = ${inputId}
+    mouse over                                            id = ${inputId}
     Page Should Contain Element                           xpath=//*[@id="${inputId}"]    5s
     wait until element is enabled without screenshots     id = ${inputId}
     wait until keyword succeeds without screenshots  10s  1s     click element      id = ${inputId}
     Mouse down                                            jQuery = ul li:contains("${searchTerm}")
-    wait until keyword succeeds without screenshots  10s  1s     click element      jQuery = ul li:contains("${optionSelector}")
+    Press Keys                                            ENTER
+    #wait until keyword succeeds without screenshots  10s  1s     click element      jQuery = ul li:contains("${optionSelector}")
     #the user should see option in type ahead field        id = ${inputId}  ${optionSelector}
-    wait for autosave
+    #wait for autosave
 
 the user should see option in type ahead field
     [Arguments]  ${locator}  ${searchWord}

@@ -264,8 +264,8 @@ The user is able to complete Initial details section
     the user enters text to a text field                              id = openingDateDay    10
     the user enters text to a text field                              id = openingDateMonth    1
     the user enters text to a text field                              id = openingDateYear     ${nextyear}
-    the user selects option from type ahead                           innovationLeadUserId  i  Ian Cooper
-    the user selects option from type ahead                           executiveUserId  j  John Doe
+    the user selects option from type ahead                           innovationLeadUserId  Ian Cooper  Ian Cooper
+    the user selects option from type ahead                           executiveUserId  John Doe  John Doe
     the user clicks the button/link                                   jQuery = button:contains("Done")
     the user should see the read-only view of the initial details
 
