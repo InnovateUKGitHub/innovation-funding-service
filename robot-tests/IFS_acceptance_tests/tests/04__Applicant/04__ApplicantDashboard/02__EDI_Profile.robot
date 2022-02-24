@@ -1,4 +1,5 @@
 *** Settings ***
+Library           Process
 Documentation     IFS-11252 EDI Section to Applicant Profile
 ...
 ...
@@ -6,6 +7,7 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
+Resource          ../../../../curl.sh
 
 *** Variables ***
 
@@ -46,6 +48,10 @@ the user should see EDI section details
     the user should see the element  jQuery = th:contains("Last reviewed")+td:contains("${ediReviewDate}")
     the user should see the element  jQuery = a:contains("${ediButton}")
     the user should see the element  css=[href="https://loans-innovateuk.cs80.force.com/EDI/s"]
+
+run the shell script
+    ${response}=    Run Process     ../../../../curl.sh  shell=yes   --option  e2925e98-760c-4eaa-947c-f51e98fa82c2   In Progress   2020-01-31T01:02:03Z
+    log   ${response}
 
 the user changed EDI survey status
     [Arguments]  ${ediStatus}  ${ediReviewDate}
