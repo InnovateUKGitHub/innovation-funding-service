@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.starters.stubdev.security;
 
+import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.starters.stubdev.cfg.StubDevConfigurationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +18,7 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
  * Also sets up the default user on construction.
  */
 @RestController
+@Profile(IfsProfileConstants.STUBDEV)
 public class StubUserSwitchController {
 
     public static final String PATH_PREFIX = "/stubUser/";

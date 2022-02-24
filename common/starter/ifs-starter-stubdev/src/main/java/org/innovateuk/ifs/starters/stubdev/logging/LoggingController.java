@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.starters.stubdev.logging;
 
+import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.starters.stubdev.cfg.StubDevConfigurationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.logging.LoggersEndpoint;
 import org.springframework.boot.logging.LogLevel;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +20,7 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
  * Technically they should be PUT, but its more convenient this way.
  */
 @RestController
+@Profile(IfsProfileConstants.STUBDEV)
 public class LoggingController {
 
     public static final String THYMELEAF_LOG_KEY = "org.thymeleaf.engine";
