@@ -29,7 +29,6 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/questionnaire-configure")
 @PreAuthorize("permitAll")
-@Profile(IfsProfileConstants.QUESTIONNAIRE_CONFIGURE)
 public class QuestionnaireConfigWebController {
 
     @Autowired
