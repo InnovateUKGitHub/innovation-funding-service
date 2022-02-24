@@ -39,16 +39,16 @@
                 <table class="govuk-table">
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header width-small">Organisation name</th>
-                            <th class="govuk-table__header">Organisation type</th>
-                            <th class="govuk-table__header">Registration number</th>
+                            <th class="govuk-table__header govuk-!-width-one-third">Organisation name</th>
+                            <th class="govuk-table__header govuk-!-width-one-third">Organisation type</th>
+                            <th class="govuk-table__header govuk-!-width-one-third">Registration number</th>
                         </tr>
                     </thead>
                     <tbody class="govuk-table__body">
                         <tr class="govuk-table__row" th:each="organisation : ${model.organisations}">
-                            <td class="govuk-table__cell" th:text="${organisation.name}"></td>
-                            <td class="govuk-table__cell" th:text="${organisation.type}"></td>
-                            <td class="govuk-table__cell" th:text="${organisation.registrationNumber}"></td>
+                            <td class="govuk-table__cell govuk-!-width-one-third" th:text="${organisation.name}"></td>
+                            <td class="govuk-table__cell govuk-!-width-one-third" th:text="${organisation.type}"></td>
+                            <td class="govuk-table__cell govuk-!-width-one-third" th:text="${organisation.registrationNumber}"></td>
                         </tr>
                     </tbody>
                 </table>
