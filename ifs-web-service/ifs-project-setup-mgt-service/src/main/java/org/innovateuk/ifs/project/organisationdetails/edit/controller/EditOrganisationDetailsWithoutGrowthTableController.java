@@ -45,7 +45,7 @@ public class EditOrganisationDetailsWithoutGrowthTableController extends Abstrac
     }
 
     @Override
-    protected ServiceResult<Void> update(long projectId, long organisationId, YourOrganisationWithoutGrowthTableForm form) {
-        return saver.save(projectId, organisationId, form, projectYourOrganisationRestService);
+    protected ServiceResult<Void> update(long projectId, long organisationId, long userId, YourOrganisationWithoutGrowthTableForm form) {
+        return saver.save(projectId, organisationId, userId, form, projectYourOrganisationRestService);
     }
 }

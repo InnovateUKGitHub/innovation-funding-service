@@ -186,7 +186,10 @@
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-1">
                 <h2 class="govuk-fieldset__heading">Financial overview</h2>
             </legend>
-            <span th:unless="${readOnly}" class="govuk-hint">Enter your organisation's audited figures for the last 3 financial years.</span><br>
+            <span th:unless="${readOnly}" class="govuk-hint">
+                <th:block th:if="${form.ktpPhase2Enabled}">Enter your organisation's most recent accounts. Management accounts are acceptable for the latest account period. Audited accounts should be provided for previous periods.</th:block>
+                <th:block th:unless="${form.ktpPhase2Enabled}">Enter your organisation's audited figures for the last 3 financial years.</th:block>
+            </span><br>
             <input type="hidden"
                    th:each="year, iter : ${form.years}"
                    th:field="*{years[__${iter.index}__].year}" />
@@ -206,10 +209,16 @@
                                             ktp-year(form=${form}, field='turnover', rowName='Turnover (£)', readOnly=${readOnly})" />
                     <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
                                             ktp-year(form=${form}, field='preTaxProfit', rowName='Net pre-tax profits (£)', readOnly=${readOnly})" />
-                    <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                            ktp-year(form=${form}, field='currentAssets', rowName='Net current assets (£)', readOnly=${readOnly})" />
-                    <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                            ktp-year(form=${form}, field='liabilities', rowName='Liabilities (£)', readOnly=${readOnly})" />
+                    <th:block th:if="${form.ktpPhase2Enabled}">
+                        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                                ktp-year(form=${form}, field='currentAssets', rowName='Liabilities (£) / Net current assets (£)', readOnly=${readOnly})" />
+                    </th:block>
+                    <th:block th:unless="${form.ktpPhase2Enabled}">
+                        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                                ktp-year(form=${form}, field='currentAssets', rowName='Net current assets (£)', readOnly=${readOnly})" />
+                        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                                ktp-year(form=${form}, field='liabilities', rowName='Liabilities (£)', readOnly=${readOnly})" />
+                    </th:block>
                     <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
                                             ktp-year(form=${form}, field='shareholderValue', rowName='Value of shareholder funds (£)', readOnly=${readOnly})" />
                     <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
@@ -218,6 +227,62 @@
                     </tbody>
                 </table>
             </div>
+
+            <th:block th:if="${form.ktpPhase2Enabled}">
+                <input type="hidden"
+                       th:field="*{hasAdditionalInfoSection}" />
+
+                <th:block th:if="${readOnly && form.hasAdditionalInfoSection}">
+                    <div class="govuk-form-group govuk-!-margin-bottom-6">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-1">
+                            <h2 class="govuk-fieldset__heading ">Additional information</h2>
+                        </legend>
+                        <p class="govuk-body govuk-!-margin-bottom-6">
+                            <th:block th:text="${form.additionalInfo}"></th:block>
+                        </p>
+
+                    </div>
+                </th:block>
+
+                <th:block th:if="${!readOnly && form.hasAdditionalInfoSection}">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('additionalInfo')} ? 'govuk-form-group--error'">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-1">
+                            <h2 class="govuk-fieldset__heading">Additional information</h2>
+                            <div class="govuk-hint">
+                                If the accounts show any of the following:
+                                <ul class="govuk-list--bullet">
+                                    <li>declining turnover</li>
+                                    <li>low net profit pre-tax</li>
+                                    <li>negative liquidity</li>
+                                    <li>high debt/equity</li>
+                                    <li>growth in long term loans</li>
+                                </ul>
+                                Provide details as to how the Company will be able to afford the project. You can provide separate attachments if necessary.
+                            </div>
+                        </legend>
+
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('additionalInfo')}"
+                              th:text="${err}"/>
+                        <div class="textarea-wrapped word-count" th:with="wordCount=400">
+                            <label class="govuk-visually-hidden"></label>
+                            <textarea class="govuk-textarea"
+                                      data-editor="md"
+                                      maxlength="5000"
+                                      th:field="*{additionalInfo}"
+                                      th:attr="data-max_words=${wordCount},
+                                  data-maxwordslength=5000,
+                                  data-maxwordslength-errormessage=${'Maximum word count exceeded. Please reduce your word count to ' + wordCount + '.'},
+                                  data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
+                                      id="comments"></textarea>
+                            <div class="textarea-footer" th:with="content=*{additionalInfo}" aria-live="polite" aria-atomic="true" role="status">
+                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${400}, currentWordsLeft=${#ifsUtil.wordsRemaining(400, content)})" />
+                            </div>
+                        </div>
+                    </div>
+
+                </th:block>
+
+            </th:block>
 
             <h2 class="govuk-fieldset__legend--m govuk-!-margin-bottom-2">Employee data</h2>
             <div class="table-overflow">

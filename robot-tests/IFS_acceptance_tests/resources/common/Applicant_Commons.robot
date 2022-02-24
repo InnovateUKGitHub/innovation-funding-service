@@ -1011,8 +1011,50 @@ the partner applicant marks Your project finances information as complete
     the user selects the radio button              organisationSize  ${org_size}
     the user enters text to a text field           financialYearEndMonthValue    ${month}
     the user enters text to a text field           financialYearEndYearValue    ${Year}
+    the user enters text to a text field           css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
     the user clicks the button/link                jQuery = button:contains("Mark as complete")
     the user clicks the button/link                link = Back to application overview
+
+the user fills financial overview section
+    ${i} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{turnover}
+             \    the user enters text to a text field     id = years[${i}].turnover  ${ELEMENT}
+             \    ${i} =   Evaluate   ${i} + 1
+
+    ${j} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{preTaxProfit}
+             \    the user enters text to a text field     id = years[${j}].preTaxProfit  ${ELEMENT}
+             \    ${j} =   Evaluate   ${j} + 1
+
+    ${k} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{netCurrentAssets}
+             \    the user enters text to a text field     id = years[${k}].currentAssets  ${ELEMENT}
+             \    ${k} =   Evaluate   ${k} + 1
+
+#    ${l} =  Set Variable   0
+#        :FOR   ${ELEMENT}   IN    @{liabilities}
+#             \    the user enters text to a text field     id = years[${l}].liabilities  ${ELEMENT}
+#             \    ${l} =   Evaluate   ${l} + 1
+
+    ${m} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{shareHolderFunds}
+             \    the user enters text to a text field     id = years[${m}].shareholderValue  ${ELEMENT}
+             \    ${m} =   Evaluate   ${m} + 1
+
+    ${n} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{loans}
+             \    the user enters text to a text field     id = years[${n}].loans  ${ELEMENT}
+             \    ${n} =   Evaluate   ${n} + 1
+
+    ${a} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{employees}
+             \    the user enters text to a text field     id = years[${a}].employees  ${ELEMENT}
+             \    ${a} =   Evaluate   ${a} + 1
+
+    ${a} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{employeesCorporate}
+             \    the user enters text to a text field     id = years[${a}].corporateGroupEmployees  ${ELEMENT}
+             \    ${a} =   Evaluate   ${a} + 1
 
 The user completes the research category
     [Arguments]  ${res_category}

@@ -94,6 +94,7 @@ public class ProjectYourOrganisationKtpFinancialYearsControllerTest extends Base
 
     public void setupResource() {
         organisationFinancesResource = newOrganisationFinancesKtpYearsResource()
+                .withUserId(1L)
                 .withOrganisationSize(OrganisationSize.SMALL)
                 .withFinancialYearEnd(YearMonth.now().minusMonths(1))
                 .withGroupEmployees(2L)
@@ -204,6 +205,7 @@ public class ProjectYourOrganisationKtpFinancialYearsControllerTest extends Base
     private RequestBuilder postAllFormParameters(Pair<String, String> param) {
         setupResource();
         MockHttpServletRequestBuilder builder = post(viewPageUrl())
+            .param("userId", organisationFinancesResource.getUserId().toString())
             .param("organisationSize", organisationFinancesResource.getOrganisationSize().toString())
             .param("financialYearEnd", "financialYearEnd")
             .param("financialYearEndMonthValue",

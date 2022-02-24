@@ -47,7 +47,7 @@ public abstract class AbstractProjectYourOrganisationFormController<F> extends A
     protected abstract String redirectToViewPage(long projectId, long organisationId);
     protected abstract F populateForm(long projectId, long organisationId);
     protected abstract String formFragment();
-    protected abstract void update(long projectId, long organisationId, F form);
+    protected abstract void update(long projectId, long organisationId, long userId, F form);
 
 
     @GetMapping
@@ -79,9 +79,10 @@ public abstract class AbstractProjectYourOrganisationFormController<F> extends A
     public String updateWithGrowthTable(
             @PathVariable long projectId,
             @PathVariable long organisationId,
+            UserResource loggedInUser,
             @ModelAttribute F form) {
 
-        update(projectId, organisationId, form);
+        update(projectId, organisationId, loggedInUser.getId(), form);
         return redirectToLandingPage(projectId, organisationId);
     }
 
@@ -106,7 +107,7 @@ public abstract class AbstractProjectYourOrganisationFormController<F> extends A
         };
 
         Supplier<String> successHandler = () -> {
-            update(projectId, organisationId, form);
+            update(projectId, organisationId, loggedInUser.getId(), form);
             validationHandler.addAnyErrors(pendingPartnerProgressRestService.markYourOrganisationComplete(projectId, organisationId));
             return validationHandler.failNowOrSucceedWith(failureHandler, () -> redirectToLandingPage(projectId, organisationId));
         };
