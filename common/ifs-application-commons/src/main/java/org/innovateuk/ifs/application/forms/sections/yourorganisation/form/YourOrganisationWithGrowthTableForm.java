@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.validation.constraints.LastFinancialYearEnd;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.YearMonth;
+import java.time.format.TextStyle;
+import java.util.Locale;
 
 /**
  * Form used to capture "Your organisation" information when a growth table is required.
@@ -109,5 +112,15 @@ public class YourOrganisationWithGrowthTableForm {
 
     public void setResearchAndDevelopmentSpendAtLastFinancialYear(BigDecimal researchAndDevelopmentSpendAtLastFinancialYear) {
         this.researchAndDevelopmentSpendAtLastFinancialYear = researchAndDevelopmentSpendAtLastFinancialYear;
+    }
+
+    @JsonIgnore
+    public String getFinancialYearAndMonthString() {
+        String financialYearAndMonthString = "";
+        if (financialYearEnd != null) {
+            financialYearAndMonthString =  financialYearEnd.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " " +
+                    financialYearEnd.getYear();
+        }
+        return financialYearAndMonthString;
     }
 }

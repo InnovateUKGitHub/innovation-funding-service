@@ -33,6 +33,8 @@ Documentation     IFS-7790 KTP: Your finances - Edit
 ...
 ...               IFS-11136 Business Finances: Employee Data
 ...
+...               IFS-11135 Business Finances: Financial Overview
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../../resources/defaultResources.robot
@@ -490,7 +492,10 @@ the user fills in the KTP organisation information
     the user enters text to a text field                                           name = financialYearEndMonthValue  04
     the user enters text to a text field                                           name = financialYearEndYearValue   2020
     the user fills financial overview section
+    the user enters text to a text field                                           css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
     the user clicks the button/link                                                jQuery = button:contains("Mark as complete")
+    the user clicks the button/link                                                link = Your organisation
+    the user should see the read only view of organization details
     the user should see the element                                                jQuery = li:contains("Your organisation") span:contains("Complete")
 
 the user fills financial overview section
@@ -508,11 +513,6 @@ the user fills financial overview section
         :FOR   ${ELEMENT}   IN    @{netCurrentAssets}
              \    the user enters text to a text field     id = years[${k}].currentAssets  ${ELEMENT}
              \    ${k} =   Evaluate   ${k} + 1
-
-    ${l} =  Set Variable   0
-        :FOR   ${ELEMENT}   IN    @{liabilities}
-             \    the user enters text to a text field     id = years[${l}].liabilities  ${ELEMENT}
-             \    ${l} =   Evaluate   ${l} + 1
 
     ${m} =  Set Variable   0
         :FOR   ${ELEMENT}   IN    @{shareHolderFunds}
@@ -584,3 +584,13 @@ get assessment deadline date using competition id
 the user should see the correct employee data
     the user should see the element   jQuery = td:contains("Number of full time employees in your company")+td:contains("2,000")+td:contains("1,500")+td:contains("1,200")
     the user should see the element   jQuery = td:contains("Number of full time employees in your corporate group (if applicable)")+td:contains("4,000")+td:contains("2,500")+td:contains("3,200")
+
+the user should see the read only view of organization details
+    the user should see the element         jQuery = h1:contains("Your organisation")
+    the user should see the element         jQuery = th:contains("Latest period") ~ th:contains("Last audited year") ~ th:contains("Prior audited year")
+    the user should see the element         jQuery = td:contains("100,000") , td:contains("98,000") , td:contains("96,000")
+    the user should see the element         jQuery = td:contains("98,000") , td:contains("96,000") , td:contains("94,000")
+    the user should see the element         jQuery = td:contains("100,000") , td:contains("100,000") , td:contains("100,000")
+    the user should see the element         jQuery = td:contains("20,000") , td:contains("15,000") , td:contains("10,000")
+    the user should see the element         jQuery = td:contains("35,000") , td:contains("40,000") , td:contains("45,000")
+    the user clicks the button/link         link = Return to finances

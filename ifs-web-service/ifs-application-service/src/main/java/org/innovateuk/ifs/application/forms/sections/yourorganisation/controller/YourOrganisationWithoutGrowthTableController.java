@@ -38,8 +38,8 @@ public class YourOrganisationWithoutGrowthTableController extends AbstractYourOr
     }
 
     @Override
-    protected void update(long applicationId, long organisationId, YourOrganisationWithoutGrowthTableForm form) {
-        saver.save(applicationId, organisationId, form, yourOrganisationRestService);
+    protected void update(long applicationId, long organisationId, long userId, YourOrganisationWithoutGrowthTableForm form) {
+        saver.save(applicationId, organisationId, userId, form, yourOrganisationRestService);
     }
 
     @Override

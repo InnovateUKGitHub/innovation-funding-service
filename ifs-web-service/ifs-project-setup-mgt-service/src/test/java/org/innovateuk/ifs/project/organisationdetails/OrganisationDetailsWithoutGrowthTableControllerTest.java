@@ -11,6 +11,7 @@ import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTabl
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.service.CompaniesHouseRestService;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
@@ -24,6 +25,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
+import org.innovateuk.ifs.user.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +38,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
@@ -77,6 +80,9 @@ public class OrganisationDetailsWithoutGrowthTableControllerTest extends BaseCon
     @Mock
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
+    @Mock
+    private OrganisationAddressRestService organisationAddressRestService;
+
     @Override
     protected OrganisationDetailsWithoutGrowthTableController supplyControllerUnderTest() {
         return new OrganisationDetailsWithoutGrowthTableController();
@@ -111,6 +117,7 @@ public class OrganisationDetailsWithoutGrowthTableControllerTest extends BaseCon
 
         when(projectRestService.getProjectById(projectId)).thenReturn(new RestResult(restSuccess(project)));
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(new RestResult(restSuccess(organisation)));
+        when(organisationAddressRestService.getOrganisationRegisterdAddressById(organisationId)).thenReturn(restSuccess(organisation.getAddresses()));
         when(projectYourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(finances));
         when(withoutGrowthTableFormPopulator.populate(finances)).thenReturn(form);
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(new RestResult(restSuccess(Arrays.asList(new PartnerOrganisationResource()))));
@@ -193,6 +200,9 @@ public class OrganisationDetailsWithoutGrowthTableControllerTest extends BaseCon
         organisation.setOrganisationTypeName("orgType");
         organisation.setCompaniesHouseNumber("1234");
         AddressResource address = new AddressResource("A", "B", "C", "D", "E", "F");
+        OrganisationAddressResource organisationAddressResource = new OrganisationAddressResource();
+        organisationAddressResource.setAddress(address);
+        organisation.setAddresses(singletonList(organisationAddressResource));
         when(companiesHouseRestService.getOrganisationById("1234")).thenReturn(restSuccess(newOrganisationSearchResult().withAddressResource(address).build()));
         return organisation;
     }

@@ -411,13 +411,13 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
     }
 
     @Test
-    public void testNotifyAllApplicantsOfFundingDecisions_hesta() {
+    public void notifyAllApplicantsOfFundingDecisions_HorizonEuropeGuarantee() {
         CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
         Competition competition = newCompetition()
                 .withCompetitionAssessmentConfig(competitionAssessmentConfig)
                 .withFundingType(FundingType.GRANT)
                 .withCompetitionType(newCompetitionType()
-                        .withName("Hesta")
+                        .withName("Horizon Europe Guarantee")
                         .build())
                 .build();
 
