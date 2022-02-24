@@ -51,7 +51,7 @@ the user should see EDI section details
     the user should see the element  css=[href="https://loans-innovateuk.cs80.force.com/EDI/s"]
 
 run the shell script
-    ${response}=    Run Process     ../../../../curl.sh  shell=yes   --option  e2925e98-760c-4eaa-947c-f51e98fa82c2   In Progress   2020-01-31T01:02:03Z
+    ${response}=    Run Process     ../../../../curl.sh   e2925e98-760c-4eaa-947c-f51e98fa82c2   In Progress   2020-01-31T01:02:03Z   shell=True
     log   ${response}
 
 the user changed EDI survey status
