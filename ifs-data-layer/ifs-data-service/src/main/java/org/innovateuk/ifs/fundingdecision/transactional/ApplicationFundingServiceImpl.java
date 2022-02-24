@@ -280,7 +280,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
 
         if(isH2020Competition(applications)){
             notificationType = HORIZON_2020_FUNDING;
-        } else if (competition.isHesta()){
+        } else if (competition.isHorizonEuropeGuarantee()){
             notificationType = HESTA_FUNDING;
         } else {
             notificationType = APPLICATION_FUNDING;

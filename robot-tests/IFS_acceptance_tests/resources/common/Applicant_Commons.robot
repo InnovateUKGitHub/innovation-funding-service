@@ -1064,6 +1064,17 @@ The user completes the research category
     the user clicks the button/link      link = Back to application overview
     the user should see the element      jQuery=li:contains("Research category") > .task-status-complete
 
+the user checks for companies house details
+    [Arguments]  ${organisationName}  ${registredNumber}  ${addressLine}  ${addressCity}  ${addressTown}  ${addressPostcode}  ${sicCode}  ${organisationSize}
+    the user should see the element   jQuery = th:contains("Organisation name")+td:contains("${organisationName}")
+    the user should see the element   jQuery = th:contains("Registration number")+td:contains("${registredNumber}")
+    the user should see the element   jQuery = td div:contains("${addressLine}")
+    the user should see the element   jQuery = td div:contains("${addressCity}")
+    the user should see the element   jQuery = td div:contains("${addressTown}")
+    the user should see the element   jQuery = td div:contains("${addressPostcode}")
+    the user should see the element   jQuery = th:contains("SIC code")+td:contains("${sicCode}")
+    the user should see the element   jQuery = th:contains("Organisation size")+td:contains("${organisationSize}")
+
 the user accepts invitation to join application under same organisation
     [Arguments]  ${email}  ${password}  ${emailSubject}  ${emailBody}
     Logout as user
@@ -1071,3 +1082,4 @@ the user accepts invitation to join application under same organisation
     the user clicks the button/link                  jQuery = a:contains("Continue")
     login to application                             ${email}  ${password}
     the user clicks the button/link                  jQuery = a:contains("Confirm and accept invitation")
+

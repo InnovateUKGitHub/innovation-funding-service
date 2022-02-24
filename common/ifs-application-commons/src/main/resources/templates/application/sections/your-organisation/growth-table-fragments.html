@@ -9,6 +9,9 @@
         <th:block th:insert="this::organisation-size-alert(${model})"/>
 
         <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                    organisation-details(form=${form}, model=${model}, readOnly=${readOnly})" />
+
+        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
                                     organisation-size(form=${form}, model=${model}, readOnly=${readOnly})" />
 
         <th:block th:insert="fragments/form-elements/textfield ::
@@ -41,13 +44,15 @@
         <th:block th:insert="this::organisation-size-alert(${model})"/>
 
         <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                    organisation-details(form=${form}, model=${model}, readOnly=${readOnly})" />
+
+        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
                                     organisation-size(form=${form}, model=${model}, readOnly=${readOnly})" />
 
-
+        <th:block th:unless="${readOnly}">
         <th:block th:insert="fragments/form-elements/date ::
                 month-and-year(
                     legend='End of last financial year',
-                    hint='Enter the date of your last financial year.',
                     id='financialYearEnd',
                     monthValue=${form.financialYearEnd != null ? form.financialYearEnd.monthValue : ''},
                     yearValue=${form.financialYearEnd != null ? form.financialYearEnd.year : ''},
@@ -56,6 +61,7 @@
                     readOnly=${readOnly},
                     pastDate=true,
                 )" />
+        </th:block>
 
         <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-0">
@@ -153,12 +159,15 @@
         <th:block th:insert="this::organisation-size-alert(${model})"/>
 
         <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                        organisation-details(form=${form}, model=${model}, readOnly=${readOnly})" />
+
+        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
                                         organisation-size(form=${form}, model=${model}, readOnly=${readOnly})" />
 
-        <th:block th:insert="fragments/form-elements/date ::
+        <th:block th:unless="${readOnly}">
+          <th:block th:insert="fragments/form-elements/date ::
                 month-and-year(
                     legend='End of last financial year',
-                    hint='Enter the date of your last financial year.',
                     id='financialYearEnd',
                     monthValue=${form.financialYearEnd != null ? form.financialYearEnd.monthValue : ''},
                     yearValue=${form.financialYearEnd != null ? form.financialYearEnd.year : ''},
@@ -167,6 +176,7 @@
                     readOnly=${readOnly},
                     pastDate=true,
                 )" />
+        </th:block>
 
 
 
@@ -336,6 +346,7 @@
 
 
     <th:block th:fragment="organisation-size(form, model, readOnly)">
+        <th:block th:unless="${readOnly}">
             <th:block th:insert="fragments/form-elements/radiofield ::
                             radiofield(
                                 legend='Organisation size',
@@ -347,7 +358,8 @@
                                 requiredMessage=#{APPLICATION_ORGANISATION_SIZE_REQUIRED},
                                 readOnly=${readOnly},
                                 valueDescription=${form.organisationSize != null ? form.organisationSize.description : null},
-                            )" />
+                           )" />
+        </th:block>
     </th:block>
 
     <th:block th:fragment="state-aid-warning(readOnly, model)">
@@ -355,8 +367,8 @@
             <th:block th:if="${model.showEligibilityMessage}">
                 <div class="govuk-!-margin-bottom-6">
                     <p class="govuk-body">
-                        If we decide to award you funding you must meet our <a th:href="@{~/competition/{competitionId}/overview#eligibility(competitionId=${model.competitionId})}">eligibility criteria</a> at the point
-                        of the award. If you are found to be ineligible, we will withdraw our offer.
+                        If we decide to award you funding, you must meet the <a th:href="@{~/competition/{competitionId}/overview#eligibility(competitionId=${model.competitionId})}">eligibility criteria</a> at the time
+                        the award is offered. If you are found to be ineligible, we will withdraw our offer.
                     </p>
                 </div>
             </th:block>
@@ -369,5 +381,59 @@
             <p class="govuk-body">The organisation size is used to calculate your funding level. Changing this selection will reset your funding level.</p>
         </div>
     </th:block>
+
+<th:block th:fragment="organisation-details(form, model, readOnly)">
+   <th:block th:if="${model.orgDetailsViewModel != null}">
+    <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+         <table class="govuk-table govuk-!-margin-bottom-6">
+             <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Organisation name</th>
+                    <td class="govuk-table__cell"th:text="${model.orgDetailsViewModel.organisationName}"></td>
+                </tr>
+                <th:block th:if="${model.isPartnerOrgDisplay()}">
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Organisation type</th>
+                    <td class="govuk-table__cell"th:text="${model.orgDetailsViewModel.organisationType}"></td>
+                </tr>
+                </th:block>
+              <th:block th:if="${model.orgDetailsViewModel.isOrgDetailedDisplayRequired}">
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Registration number</th>
+                    <td class="govuk-table__cell"th:text="${model.orgDetailsViewModel.registrationNumber}"></td>
+                </tr>
+                <tr class="govuk-table__row form-group-row">
+                    <th scope="row" class="govuk-table__header vertical-align-top">Registered address</th>
+                      <td class="govuk-table__cell form-group-cell fix-left">
+                        <div th:each="addressLine : ${model.orgDetailsViewModel.getRegisteredAddressString()}" th:text="${addressLine}" />
+                      </td>
+                </tr>
+                  <tr class="govuk-table__row form-group-row">
+                    <th scope="row" class="govuk-table__header vertical-align-top">SIC code</th>
+                    <td class="govuk-table__cell form-group-cell fix-left">
+                       <div th:each="sicCode : ${model.orgDetailsViewModel.getSicCodesString()}" th:text="${sicCode}" />
+                    </td>
+                </tr>
+                </th:block>
+                <th:block th:if="${model.isPartnerOrgDisplay() or readOnly}">
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Organisation size</th>
+                    <td class="govuk-table__cell" th:text="${form.organisationSize !=null ?
+                              form.organisationSize.description : ''}"></td>
+                </tr>
+                <th:block th:unless="${form.getFinancialYearAndMonthString() == null}">
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">End of last financial year</th>
+                    <td class="govuk-table__cell" th:text="${form.getFinancialYearAndMonthString()}"></td>
+                </tr>
+                </th:block>
+                </th:block>
+             </tbody>
+           </table>
+     </div>
+    </div>
+    </th:block>
+</th:block>
 
 </html>

@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.format.TextStyle;
+import java.util.Locale;
 
 /**
  * Form used to capture "Your organisation" information when a growth table is required.
@@ -57,5 +60,10 @@ public class YourOrganisationWithoutGrowthTableForm {
 
     public void setHeadCount(Long headCount) {
         this.headCount = headCount;
+    }
+
+    @JsonIgnore
+    public String getFinancialYearAndMonthString() {
+        return null;
     }
 }
