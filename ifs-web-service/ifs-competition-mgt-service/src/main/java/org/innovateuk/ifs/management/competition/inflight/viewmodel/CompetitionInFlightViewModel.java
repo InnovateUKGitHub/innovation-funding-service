@@ -40,7 +40,6 @@ public class CompetitionInFlightViewModel {
     private boolean supporterEnabled;
     private boolean alwaysOpen;
     private boolean isSuperAdminUser;
-    private boolean isHesta;
 
     public CompetitionInFlightViewModel(CompetitionResource competitionResource,
                                         CompetitionAssessmentConfigResource competitionAssessmentConfigResource,
@@ -72,7 +71,6 @@ public class CompetitionInFlightViewModel {
         this.competitionHasAssessmentStage = competitionResource.isHasAssessmentStage();
         this.supporterEnabled = competitionResource.isKtp();
         this.alwaysOpen = competitionResource.isAlwaysOpen();
-        this.isHesta = competitionResource.isHesta();
     }
 
     public Long getCompetitionId() {
@@ -195,8 +193,8 @@ public class CompetitionInFlightViewModel {
                 .anyMatch(m -> m.getMilestoneType() == MilestoneType.ASSESSMENT_CLOSED && m.isPassed());
     }
 
-    public boolean isAlwaysOpenHesta() {
-        return isAlwaysOpen() && isHesta;
+    public boolean isCompetitionHasAssessmentStage() {
+        return competitionHasAssessmentStage;
     }
 
     public boolean isManageAssessmentLinkEnabled() {

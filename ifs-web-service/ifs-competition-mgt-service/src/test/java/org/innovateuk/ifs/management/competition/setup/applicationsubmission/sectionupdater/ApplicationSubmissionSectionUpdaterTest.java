@@ -55,7 +55,7 @@ public class ApplicationSubmissionSectionUpdaterTest {
                 .build();
         ApplicationSubmissionForm form = new ApplicationSubmissionForm(true);
 
-        String nextSection = updater.getNextSection(form, competition, CompetitionSetupSection.APPLICATION_SUBMISSION);
+        String nextSection = updater.getNextSection(form, competition, CompetitionSetupSection.MILESTONES);
 
         assertThat(nextSection).isEqualTo("redirect:/competition/setup/1/section/milestones");
     }

@@ -1011,7 +1011,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public boolean isHasAssessmentStage() {
-        return hasAssessmentStage && !isH2020() && !isHesta() && (ofNullable(completionStage)
+        return hasAssessmentStage && (ofNullable(completionStage)
                 .map(stage -> !stage.equals(CompetitionCompletionStage.COMPETITION_CLOSE))
                 .orElse(true)) ;
     }

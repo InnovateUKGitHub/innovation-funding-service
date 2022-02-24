@@ -242,7 +242,7 @@
                                    th:text="${milestone.dateTime} ? ${#temporals.format(milestone.dateTime, 'd MMMM yyyy')} : 'Open-ended'">
                                     10 October 2017</p>
                             </li>
-                            <th:block th:unless="${model.isAlwaysOpenHesta()}">
+                            <th:block th:if="${model.competitionHasAssessmentStage}">
                                 <li>
                                     <h3 class="govuk-heading-s">Assessment</h3>
                                     <p class="govuk-body">Batch assessments</p>
@@ -250,16 +250,16 @@
                             </th:block>
                             <li>
                                 <h3 class="govuk-heading-s"
-                                    th:text="${model.isAlwaysOpenHesta()} ? 'Funding decision' : 'Funding decision and assessment feedback'"></h3>
+                                    th:text="${model.competitionHasAssessmentStage} ? 'Funding decision and assessment feedback' : 'Funding decision'"></h3>
                             </li>
 
                             <th:block th:unless="${model.hasAClosedAssessmentPeriod()}">
                                 <a class="govuk-button govuk-!-margin-top-2"
-                                   th:if="${model.isAlwaysOpenHesta()}"
+                                   th:unless="${model.competitionHasAssessmentStage}"
                                    th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}">
                                     Send notification and release feedback
                                 </a>
-                                <th:block th:unless="${model.isAlwaysOpenHesta()}">
+                                <th:block th:if="${model.competitionHasAssessmentStage}">
                                     <a disabled="disabled" class="govuk-button govuk-!-margin-top-2">
                                         Send notification and release feedback</a>
                                 </th:block>
