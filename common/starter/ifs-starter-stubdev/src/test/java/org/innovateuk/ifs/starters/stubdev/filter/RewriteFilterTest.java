@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.starters.stubdev.filter;
 
+import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.starters.stubdev.cfg.RewriteRule;
 import org.innovateuk.ifs.starters.stubdev.cfg.StubDevConfigurationProperties;
 import org.innovateuk.ifs.starters.stubdev.security.StubUidSupplier;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.MimeTypeUtils;
 
@@ -26,6 +28,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 @ExtendWith(SpringExtension.class)
+@ActiveProfiles(IfsProfileConstants.STUBDEV)
 @SpringBootTest(classes = {RewriteFilter.class, StubUidSupplier.class, StubUserSwitchController.class})
 @EnableConfigurationProperties(StubDevConfigurationProperties.class)
 class RewriteFilterTest {
