@@ -1,2 +1,7 @@
+# AutoConfigurations
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 org.innovateuk.ifs.starters.stubdev.IfsStubDevAutoConfiguration
+
+# Environment Post Processors
+org.springframework.boot.env.EnvironmentPostProcessor=\
+org.innovateuk.ifs.starters.stubdev.cfg.StubDevPropertiesPostProcessor
