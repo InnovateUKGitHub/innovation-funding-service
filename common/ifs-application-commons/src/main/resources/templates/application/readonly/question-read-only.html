@@ -279,7 +279,7 @@
                 <td class="govuk-table__cell"
                     th:if="${model.ediUpdateEnabled}"
                     th:text="${row.ediStatus}"
-                    th:classappend="${row.ediCompleted ? 'complete-status' : 'incomplete-status'}"></td>
+                    th:classappend="${row.ediCompleted ? 'complete-edi-status' : 'incomplete-edi-status'}"></td>
             </tr>
             </tbody>
         </table>
