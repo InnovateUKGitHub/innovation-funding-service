@@ -10,91 +10,104 @@ build:
         type: gradle
         project: ifs-data-layer:ifs-data-service
         args:
-          - "-DskipTests"
+          - -DskipTests
+          - --no-daemon
     - image: sil-stub
       context: .
       jib:
         type: gradle
         project: ifs-sil-stub
         args:
-          - "-DskipTests"
+          - -DskipTests
+          - --no-daemon
     - image: registration-service
       context: .
       jib:
         type: gradle
         project: ifs-registration-service
         args:
-          - "-DskipTests"
+          - -DskipTests
+          - --no-daemon
     - image: finance-data-service
       context: .
       jib:
         type: gradle
         project: ifs-data-layer:ifs-finance-data-service
         args:
-          - "-DskipTests"
+          - -DskipTests
+          - --no-daemon
     - image: survey-data-service
       context: .
       jib:
         type: gradle
         project: ifs-data-layer:ifs-survey-data-service
         args:
-          - "-DskipTests"
+          - -DskipTests
+          - --no-daemon
     - image: data-service-alerts
       context: .
       jib:
         type: gradle
         project: ifs-data-layer:data-service-alerts
         args:
-          - "-DskipTests"
+          - -DskipTests
+          - --no-daemon
     - image: survey-service
       context: .
       jib:
         type: gradle
         project: ifs-web-service:ifs-survey-service
         args:
-          - "-DskipTests"
+          - -DskipTests
+          - --no-daemon
     - image: project-setup-service
       context: .
       jib:
         type: gradle
         project: ifs-web-service:ifs-project-setup-service
         args:
-          - "-DskipTests"
+          - -DskipTests
+          - --no-daemon
     - image: project-setup-mgt-service
       context: .
       jib:
         type: gradle
         project: ifs-web-service:ifs-project-setup-mgt-service
         args:
-          - "-DskipTests"
+          - -DskipTests
+          - --no-daemon
     - image: front-door-service
       context: .
       jib:
         type: gradle
         project: ifs-web-service:ifs-front-door-service
         args:
-          - "-DskipTests"
+          - -DskipTests
+          - --no-daemon
     - image: competition-mgt-service
       context: .
       jib:
         type: gradle
         project: ifs-web-service:ifs-competition-mgt-service
         args:
-          - "-DskipTests"
+          - -DskipTests
+          - --no-daemon
     - image: assessment-service
       context: .
       jib:
         type: gradle
         project: ifs-web-service:ifs-assessment-service
         args:
-          - "-DskipTests"
+          - -DskipTests
+          - --no-daemon
     - image: application-service
       context: .
       jib:
         type: gradle
         project: ifs-web-service:ifs-application-service
         args:
-          - "-DskipTests"
+          - -DskipTests
+          - --no-daemon
   local:
     # Experiment with build concurrency
     # 2/3 seems to be the sweet spot and build takes 2 mins
