@@ -90,7 +90,7 @@ public class ApplicationTeamRowViewModel {
 
     private static String getEdiStatusDisplayName(UserResource user) {
         if(user.getEdiStatus() == null) {
-            return "Incomplete";
+            return EDIStatus.INCOMPLETE.getDisplayName();
         }
         return user.getEdiStatus().getDisplayName();
     }
