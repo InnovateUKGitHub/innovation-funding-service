@@ -43,27 +43,19 @@
                     these people accept or are removed.</p>
             </div>
 
+           <th:block>
+            <p class="govuk-body">These are the organisations that will work together on the project. You can invite
+                people from these organisations to help you with the application. </p>
+
             <th:block th:if="${model.isEDIUpdateEnabled}">
-                <p class="govuk-body">These are the organisations that will work together on the project. You can invite
-                    people from these organisations to help you with the application. </p>
-                <p class="govuk-body">Your team members can complete the equality, diversity and inclusion survey in the profile
+               <p class="govuk-body">Your team members can complete the equality, diversity and inclusion survey in the profile
                     section <a href="/profile/view" class="govuk-link"> here. </a></p>
-                <p class="govuk-body" th:unless="${model.collaborationLevelSingle}">You must read the <a
-                        href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service"
-                        class="govuk-link" target="_blank">general guidance</a> (opens in a new window) before you start.</p>
             </th:block>
-
-            <th:block th:unless="${model.isEDIUpdateEnabled}">
-                <p class="govuk-body">These are the organisations that will work together on the project. You can invite
-                    people
-                    from these organisations to help you with the application. They can also invite other people from their own
-                    organisation.</p>
-
-                <p class="govuk-body" th:unless="${model.collaborationLevelSingle}">You must read the <a
+            <p class="govuk-body" th:unless="${model.collaborationLevelSingle}">You must read the <a
                     href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service"
                     class="govuk-link" target="_blank">general guidance</a> (opens in a new window) before you start.</p>
             </th:block>
-        </th:block>
+          </th:block>
 
             <th:block th:each="organisation, iterator: ${model.organisations}">
 
@@ -71,6 +63,10 @@
                      th:id="|organisation.${organisation.inviteId}|"
                      th:with="organisationErrorKey=${'${form.organisation.' + organisation.inviteId + '*}'}"
                      th:classappend="${#fields.hasErrors(organisationErrorKey)} ? 'govuk-form-group--error'">
+                <div class="govuk-form-group"
+                    th:id="|organisation.${organisation.id}|"
+                    th:with="orgEDIErrorKey=${'${form.organisation.' + organisation.id + '*}'}"
+                    th:classappend="${#fields.hasErrors(orgEDIErrorKey)} ? 'govuk-form-group--error'">
 
                     <h2 class="govuk-heading-m govuk-!-margin-bottom-0 word-wrap">
                         <th:block th:text="${organisation.name}"></th:block>
@@ -114,6 +110,11 @@
 
                     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
                           method="post">
+                        <th:block th:if="${#fields.hasErrors(orgEDIErrorKey)}">
+                                    <span class="govuk-error-message"
+                                          th:each="err : ${#fields.errors(orgEDIErrorKey)}"
+                                          th:text="${err}"></span>
+                        </th:block>
                         <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Team members</h3>
                         <table class="govuk-table"
                                th:classappend="${organisation.editable and !model.readOnly ? 'govuk-!-margin-bottom-2' : ''}">
@@ -273,6 +274,7 @@
                             </button>
                         </p>
                     </th:block>
+                </div>
                 </div>
             </th:block>
 
