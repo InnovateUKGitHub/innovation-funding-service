@@ -8,10 +8,6 @@ dependencies {
     // Enforced platform is composite of IFS libraries, spring boot and spring cloud
     implementation enforcedPlatform (project(':common:bom'))
 
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
-    developmentOnly project(":common:starter:ifs-starter-stubdev")
-    developmentOnly project(":common:starter:ifs-starter-swagger-ui")
-
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation project(":common:starter:ifs-starter-logging")
