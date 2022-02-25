@@ -14,9 +14,11 @@ dependencies {
     implementation project(":common:ifs-application-commons")
     implementation project(":common:ifs-rest-api-service")
 
-    developmentOnly "org.springframework.boot:spring-boot-devtools"
-    developmentOnly project(":common:starter:ifs-starter-stubdev")
-    developmentOnly project(":common:starter:ifs-starter-swagger-ui")
+    if (isStubDevMode()) {
+        developmentOnly "org.springframework.boot:spring-boot-devtools"
+        developmentOnly project(":common:starter:ifs-starter-stubdev")
+        developmentOnly project(":common:starter:ifs-starter-swagger-ui")
+    }
 
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation 'org.apache.commons:commons-lang3'

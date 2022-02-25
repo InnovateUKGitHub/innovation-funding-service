@@ -3,6 +3,16 @@ apply from: rootProject.file("gradle-support/java.gradle")
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.springframework.boot'
 
+ext.isStubDevMode = { ->
+    if (System.getenv("SPRING_PROFILES_ACTIVE").equals("STUBDEV")) {
+        println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+        println("XXXXXXXXX Compiling Dev Mode XXXXXXXXXX")
+        println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+        return true
+    }
+    return false
+}
+
 dependencies {
 
     // Enforced platform is composite of IFS libraries, spring boot and spring cloud

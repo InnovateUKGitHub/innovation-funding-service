@@ -3,6 +3,8 @@ package org.innovateuk.ifs.starters.stubdev.cfg;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.innovateuk.ifs.IfsProfileConstants;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,6 +16,7 @@ import static org.innovateuk.ifs.starters.stubdev.cfg.StubDevConfigurationProper
 @Setter
 @ToString
 @Configuration
+@ConditionalOnProperty(IfsProfileConstants.STUBDEV)
 @ConfigurationProperties(prefix = STUB_DEV_PROPS_PREFIX)
 public class StubDevConfigurationProperties {
 
