@@ -197,7 +197,7 @@ public class ApplicationNotificationServiceImplTest {
     }
 
     @Test
-    public void sendNotificationApplicationSubmitted_hesta() {
+    public void sendNotificationApplicationSubmitted_horizonEuropeGuarantee() {
         User leadUser = newUser()
                 .withEmailAddress("leadapplicant@example.com")
                 .build();
@@ -209,7 +209,7 @@ public class ApplicationNotificationServiceImplTest {
 
         Competition competition = newCompetition()
                 .withCompetitionType(newCompetitionType()
-                        .withName("Hesta")
+                        .withName("Horizon Europe Guarantee")
                         .build())
                 .build();
 
@@ -228,7 +228,7 @@ public class ApplicationNotificationServiceImplTest {
             assertEquals(1, notification.getTo().size());
             assertEquals(leadUser.getEmail(), notification.getTo().get(0).getTo().getEmailAddress());
             assertEquals(leadUser.getName(), notification.getTo().get(0).getTo().getName());
-            assertEquals(HESTA_APPLICATION_SUBMITTED, notification.getMessageKey());
+            assertEquals(HORIZON_EUROPE_GUARANTEE_APPLICATION_SUBMITTED, notification.getMessageKey());
         }), eq(EMAIL));
         assertTrue(result.isSuccess());
     }

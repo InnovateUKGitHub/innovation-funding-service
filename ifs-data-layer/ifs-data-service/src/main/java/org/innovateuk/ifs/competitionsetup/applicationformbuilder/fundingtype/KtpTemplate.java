@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder.aFormInput;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.GuidanceRowBuilder.aGuidanceRow;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
@@ -35,6 +36,9 @@ import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 public class KtpTemplate implements FundingTypeTemplate {
 
     private static final Integer MAXIMUM_ASSESSOR_SCORE = 10;
+
+    @Value("${ifs.ktp.phase2.enabled}")
+    private Boolean ktpPhase2Enabled;
 
     @Value("${ifs.ktp.fec.finance.model.enabled}")
     private boolean fecFinanceModel;
@@ -71,7 +75,7 @@ public class KtpTemplate implements FundingTypeTemplate {
    }
 
     public List<SectionBuilder> fecChildSections() {
-        return
+        List<SectionBuilder> list =
         newArrayList(
                 aSubSection()
                         .withName("Your fEC model")
@@ -95,7 +99,21 @@ public class KtpTemplate implements FundingTypeTemplate {
                         .withType(SectionType.PROJECT_LOCATION)
                         .withQuestions(newArrayList(
                                 aQuestionWithMultipleStatuses()
-                        )),
+                        )));
+
+        list.add(ktpPhase2Enabled ?
+                aSubSection()
+                        .withName("Your organisation")
+                        .withType(SectionType.ORGANISATION_FINANCES)
+                        .withQuestions(newArrayList(
+                                aQuestionWithMultipleStatuses()
+                                        .withFormInputs(asList(aFormInput()
+                                                .withDescription("Additional Information")
+                                                .withType(FormInputType.TEXTAREA)
+                                                .withScope(FormInputScope.APPLICATION)
+                                                .withActive(true)
+                                                .withWordCount(400)))
+                        )) :
                 aSubSection()
                         .withName("Your organisation")
                         .withType(SectionType.ORGANISATION_FINANCES)
@@ -103,7 +121,7 @@ public class KtpTemplate implements FundingTypeTemplate {
                                 aQuestionWithMultipleStatuses()
                         )))
                 ;
-
+        return list;
     }
 
     @Override

@@ -810,10 +810,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @Override
-    public boolean isHesta() {
+    public boolean isHorizonEuropeGuarantee() {
         return ofNullable(competitionType)
                 .map(CompetitionType::getName)
-                .map(name -> name.equals(CompetitionTypeEnum.HESTA.getText()))
+                .map(name -> name.equals(CompetitionTypeEnum.HORIZON_EUROPE_GUARANTEE.getText()))
                 .orElse(false);
     }
 

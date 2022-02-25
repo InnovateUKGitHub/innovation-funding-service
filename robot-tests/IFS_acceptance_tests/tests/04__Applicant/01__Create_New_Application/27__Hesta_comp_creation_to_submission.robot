@@ -7,6 +7,8 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-10697 Hesta - Application Submission confirmation page
 ...
+...               IFS-11269 HECP Phase 2 - Changes to cost categories
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -48,11 +50,11 @@ Comp admin creates Hesta competition
     [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
 
 Lead applicant can submit application
-    [Documentation]  IFS-8751
+    [Documentation]  IFS-8751  IFS-11269
     Given the user logs out if they are logged in
     When the user successfully completes application          tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
     And the user clicks the button/link                       link = Your project finances
-    Then the user marks the finances as complete              ${hestaApplicationName}  labour costs  54,000  no
+    Then the user completes hecp project finances             ${hestaApplicationName}  no
     Then the user can submit the application
 
 Lead applicant should get a confirmation email after application submission
@@ -82,7 +84,7 @@ Lead applicant receives email notifiction when internal user marks application u
     And Requesting IDs of this competition                                          ${hestaCompetitionName}
     And the user successfully completes application                                 barry   barrington   ${newLeadApplicantEmail}   ${newHestaApplicationName}
     And the user clicks the button/link                                             link = Your project finances
-    And the user marks the finances as complete                                     ${newHestaApplicationName}  labour costs  54,000  no
+    And the user completes hecp project finances                                    ${hestaApplicationName}  no
     And the user can submit the application
     And Log in as a different user                                                  &{Comp_admin1_credentials}
     And The user clicks the button/link                                             link = ${hestaCompetitionName}
@@ -151,6 +153,9 @@ the user successfully completes application
     the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team
     the user completes the application research category            Feasibility studies
+    the applicant marks EDI question as complete
+    The user is able to complete hecp public description section
+    The user is able to complete horizon grant agreement section
     the lead applicant fills all the questions and marks as complete(Hesta)
     the user accept the competition terms and conditions            Back to application overview
 
@@ -196,6 +201,8 @@ the user marks the Hesta application question as done
     [Arguments]  ${growthTable}  ${comp_type}  ${competition}
     the user clicks the button/link                                     link = Application
     the user marks each question as complete                            Application details
+    the user marks each question as complete                            Public description
+    the user marks each question as complete                            Equality, diversity and inclusion
     the user fills in the CS Application section with custom questions  ${growthTable}  ${comp_type}
 
 the user completes milestones section
@@ -272,3 +279,47 @@ the assessor accepts an invite to an application
 Custom Suite Teardown
     the user closes the browser
     Disconnect from database
+
+the user completes hecp project finances
+    [Arguments]  ${Application}   ${Project_growth_table}
+    The user is able to complete hecp project costs
+    the user enters the project location
+    Run Keyword if  '${Project_growth_table}' == 'no'    the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
+    Run Keyword if  '${Project_growth_table}' == 'yes'  the user fills the organisation details with Project growth table  ${Application}  ${SMALL_ORGANISATION_SIZE}
+    the user checks Your Funding section        ${Application}
+    the user should see all finance subsections complete
+    the user clicks the button/link  link = Back to application overview
+    the user should see the element  jQuery = li:contains("Your project finances") > .task-status-complete
+
+The user is able to complete hecp project costs
+    the user clicks the button/link           link = Your project costs
+    the user should see the element           jQuery = h1:contains("Your project costs")
+    the user should see the element           jQuery = span:contains("Personnel costs")
+    the user should see the element           jQuery = span:contains("Equipment")
+    the user should see the element           jQuery = span:contains("Indirect costs")
+    the user should see the element           jQuery = span:contains("Other goods, works and services")
+    the user enters text to a text field      id = labour  50000
+    the user enters text to a text field      id = overhead  40000
+    the user enters text to a text field      id = material  30000
+    the user enters text to a text field      id = capital  20000
+    the user enters text to a text field      id = subcontracting  15000
+    the user enters text to a text field      id = travel  10000
+    the user enters text to a text field      id = other  0
+    the user clicks the button/link           jQuery = button:contains("Mark")
+    the user should see the element           jQuery = li:contains("Your project costs") > .task-status-complete
+
+The user is able to complete hecp public description section
+    the user clicks the button/link           jQuery = a:contains("Public description")
+    the user should see the element           jQuery = h1:contains("Public description")
+    the user enters text to a text field      css=.textarea-wrapped .editor    This is some random text
+    the user clicks the button/link           id = application-question-complete
+    the user clicks the button/link           jQuery = a:contains("Return to application overview")
+    the user should see the element           jQuery = li:contains("Public description") > .task-status-complete
+
+The user is able to complete horizon grant agreement section
+    the user clicks the button/link           jQuery = a:contains("Horizon Europe Guarantee grant agreement")
+    the user should see the element           jQuery = h1:contains("grant agreement")
+    the user uploads the file                 id = grantAgreement  ${valid_pdf}
+    the user clicks the button/link           id = mark-as-complete
+    the user clicks the button/link           link = Return to application overview
+    the user should see the element           jQuery = li:contains("Horizon Europe Guarantee grant agreement") > .task-status-complete

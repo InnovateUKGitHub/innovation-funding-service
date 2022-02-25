@@ -18,13 +18,14 @@ import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
-import org.innovateuk.ifs.user.transactional.RegistrationService;
+import org.innovateuk.ifs.user.transactional.RegistrationServiceImpl;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.innovateuk.ifs.util.TimeMachine;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.LinkedMultiValueMap;
 
 import java.math.BigDecimal;
@@ -67,7 +68,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     @Mock
     private UserAuthenticationService userAuthenticationService;
     @Mock
-    private RegistrationService registrationServiceMock;
+    private RegistrationServiceImpl registrationServiceMock;
 
     @Mock
     private BaseUserService baseUserServiceMock;
@@ -491,6 +492,36 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isBadRequest()).andReturn().getResponse().getContentAsString();
         assertTrue(StringUtils.contains(errorMsg, "EDI Status is required"));
 
+    }
+
+    @Test
+    public void verifyActivateApplicantWithoutDiversityEmailSuccess() throws Exception {
+        ReflectionTestUtils.setField(registrationServiceMock, "isEdiUpdateEnabled", true);
+        final String hash = "8eda60ad3441ee883cc95417e2abaa036c308dd9eb19468fcc8597fb4cb167c32a7e5daf5e237385";
+        final Long userId = 1L;
+        final Long appId = 1L;
+        final Long compId = 1L;
+
+        ObjectNode node = JsonNodeFactory.instance.objectNode();
+        node.put("inviteId", 111L);
+        final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(), node);
+        when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
+
+        ApplicationResource applicationResource = new ApplicationResource();
+        applicationResource.setCompetition(compId);
+        applicationResource.setId(appId);
+
+
+        when(tokenServiceMock.handleExtraAttributes(any())).thenReturn(serviceSuccess((applicationResource)));
+        when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(anyLong(), anyLong())).thenReturn(serviceSuccess());
+
+
+        mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+
+        verify(crmService).syncCrmContact(userId, appId, compId);
     }
 
 }

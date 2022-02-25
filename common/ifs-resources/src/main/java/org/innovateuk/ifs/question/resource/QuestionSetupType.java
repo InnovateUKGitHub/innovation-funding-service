@@ -18,7 +18,8 @@ public enum QuestionSetupType {
     NORTHERN_IRELAND_DECLARATION("Northern Ireland declaration", FORM_INPUTS),
     /* h2020 */
     GRANT_TRANSFER_DETAILS("Application details"),
-    GRANT_AGREEMENT("Horizon 2020 grant agreement"),
+    /* h2020 / Horizon Europe Guarantee */
+    GRANT_AGREEMENT("Grant agreement"),
     /* KTP */
     KTP_ASSESSMENT("Ktp Assessment", FORM_INPUTS),
     /* Loan */

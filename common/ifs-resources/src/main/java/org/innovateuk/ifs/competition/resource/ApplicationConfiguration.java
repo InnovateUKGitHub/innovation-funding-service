@@ -21,7 +21,7 @@ public interface ApplicationConfiguration {
 
     boolean isKtp();
 
-    boolean isHesta();
+    boolean isHorizonEuropeGuarantee();
 
     boolean isExpressionOfInterest();
 
