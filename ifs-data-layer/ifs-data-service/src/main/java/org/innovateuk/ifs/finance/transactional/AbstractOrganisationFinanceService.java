@@ -1,5 +1,9 @@
 package org.innovateuk.ifs.finance.transactional;
 
+import lombok.extern.slf4j.Slf4j;
+import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
@@ -7,22 +11,32 @@ import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.resource.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.form.resource.*;
+import org.innovateuk.ifs.form.transactional.FormInputService;
+import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
+@Slf4j
 public abstract class AbstractOrganisationFinanceService<Finance extends BaseFinanceResource> extends BaseTransactionalService implements OrganisationFinanceService {
+
+    @Value("${ifs.ktp.phase2.enabled}")
+    private Boolean ktpPhase2Enabled;
 
     @Autowired
     private CompetitionService competitionService;
@@ -32,6 +46,14 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
     private AuthenticationHelper authenticationHelper;
     @Autowired
     private GrantClaimMaximumService grantClaimMaximumService;
+    @Autowired
+    private SectionService sectionService;
+    @Autowired
+    private QuestionService questionService;
+    @Autowired
+    private FormInputService formInputService;
+    @Autowired
+    private FormInputResponseService formInputResponseService;
 
     protected abstract ServiceResult<Finance> getFinance(long targetId, long organisationId);
     protected abstract ServiceResult<Finance> updateFinance(Finance finance);
@@ -100,13 +122,28 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
                 .filter(KtpYearsResource.class::isInstance)
                 .map(KtpYearsResource.class::cast);
 
+        Optional<FormInputResource> formInputResource = getKtpYearsAdditionalInfomationFormInput(targetId);
+        Optional<FormInputResponseResource> additionalInfo = ktpPhase2Enabled ? (
+                formInputResource.isPresent() ? formInputResponseService.findResponsesByFormInputIdAndApplicationId(formInputResource.get().getId(), targetId).getSuccess().stream().findFirst() : Optional.ofNullable(null)
+                ) : Optional.ofNullable(null);
+
         return serviceSuccess(new OrganisationFinancesKtpYearsResource(
+                additionalInfo.isPresent() ? additionalInfo.get().getUpdatedByUser() : null,
                 organisationSize,
                 ktpYears.map(KtpYearsResource::getYears).orElse(Collections.emptyList()),
+                formInputResource.isPresent(),
+                additionalInfo.isPresent() ? additionalInfo.get().getValue() : null,
                 ktpYears.map(KtpYearsResource::getGroupEmployees).orElse(null),
                 ktpYears.map(KtpYearsResource::getFinancialYearEnd)
                         .map(YearMonth::from)
                         .orElse(null)));
+    }
+
+    private Optional<FormInputResource> getKtpYearsAdditionalInfomationFormInput(long targetId) {
+        CompetitionResource competitionResource = competitionService.getCompetitionByApplicationId(targetId).getSuccess();
+        Optional<SectionResource> sectionResource = sectionService.getSectionsByCompetitionIdAndType(competitionResource.getId(), SectionType.ORGANISATION_FINANCES).getSuccess().stream().findFirst();
+        Optional<QuestionResource> questionResource = questionService.getQuestionsBySectionIdAndType(sectionResource.get().getId(), QuestionType.GENERAL).getSuccess().stream().findFirst();
+        return formInputService.findByQuestionId(questionResource.get().getId()).getSuccess().stream().findFirst();
     }
 
     @Override
@@ -162,7 +199,18 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
 
         updateFinance(finance).getSuccess();
 
+        if(ktpPhase2Enabled) {
+            getKtpYearsAdditionalInfomationFormInput(targetId).ifPresent(formInputResource ->
+            {
+                updateKtpYearsAdditionalInfo(targetId, formInputResource, finances).getSuccess();
+            });
+        }
+
         return serviceSuccess();
+    }
+
+    private ServiceResult<FormInputResponseResource> updateKtpYearsAdditionalInfo(long targetId, FormInputResource formInputResource, OrganisationFinancesKtpYearsResource finances) {
+        return formInputResponseService.saveQuestionResponse(new FormInputResponseCommand(formInputResource.getId(), targetId, finances.getUserId(), finances.getAdditionalInfo(), null));
     }
 
     private ServiceResult<Boolean> getAidEligibilityForCompetition(long targetId) {

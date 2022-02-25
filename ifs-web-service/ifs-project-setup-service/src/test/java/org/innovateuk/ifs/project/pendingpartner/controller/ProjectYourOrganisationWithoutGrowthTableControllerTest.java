@@ -9,10 +9,12 @@ import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.pendingpartner.populator.YourOrganisationViewModelPopulator;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -31,6 +33,8 @@ import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectatio
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.builder.OrganisationFinancesWithoutGrowthTableResourceBuilder.newOrganisationFinancesWithoutGrowthTableResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -66,6 +70,11 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
     @Spy
     private YourOrganisationWithoutGrowthTableFormSaver saver;
 
+    @Mock
+    private OrganisationRestService organisationRestService;
+
+    private OrganisationResource organisationResource;
+
     @Captor
     ArgumentCaptor<OrganisationFinancesWithoutGrowthTableResource> argCaptor;
 
@@ -86,6 +95,11 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
             .withHeadCount(1L)
             .withTurnover(BigDecimal.valueOf(2))
             .build();
+        organisationResource = newOrganisationResource()
+                .withId(organisationId)
+                .withName("SmithZone Ltd")
+                .withOrganisationType(BUSINESS.getId())
+                .build();
     }
 
     @Test
@@ -93,6 +107,7 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
         setupResource();
         setupAsyncExpectations(asyncFuturesGenerator);
         YourOrganisationWithoutGrowthTableForm yourOrganisationWithoutGrowthTableForm = new YourOrganisationWithoutGrowthTableForm();
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));
         when(viewModelPopulator.populate(projectId, organisationId, getLoggedInUser())).thenReturn(yourOrganisationViewModel);
         when(yourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesWithoutGrowthTableResource));
         when(withoutGrowthTableFormPopulator.populate(organisationFinancesWithoutGrowthTableResource)).thenReturn(yourOrganisationWithoutGrowthTableForm);
@@ -137,6 +152,8 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
 
     @Test
     public void markAsCompleteWithoutGrowthTable_failure() throws Exception {
+        setupResource();
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));
         when(viewModelPopulator.populate(projectId, organisationId, getLoggedInUser())).thenReturn(yourOrganisationViewModel);
 
         MvcResult result = mockMvc.perform(post(viewPageUrl())

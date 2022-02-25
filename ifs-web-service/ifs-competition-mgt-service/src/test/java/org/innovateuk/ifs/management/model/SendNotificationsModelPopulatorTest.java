@@ -98,7 +98,7 @@ public class SendNotificationsModelPopulatorTest {
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withName(COMPETITION_NAME)
-                .withCompetitionTypeEnum(CompetitionTypeEnum.HESTA)
+                .withCompetitionTypeEnum(CompetitionTypeEnum.HORIZON_EUROPE_GUARANTEE)
                 .build();
 
         ApplicationNotificationTemplateResource notificationTemplateResource = new ApplicationNotificationTemplateResource("hesta_unsuccessful_template.html");

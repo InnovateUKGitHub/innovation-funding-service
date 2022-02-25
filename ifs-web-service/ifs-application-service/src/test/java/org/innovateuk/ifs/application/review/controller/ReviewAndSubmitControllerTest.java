@@ -11,7 +11,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +26,7 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
-import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.HESTA;
+import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.HORIZON_EUROPE_GUARANTEE;
 import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.HORIZON_2020;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -148,7 +147,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     @Test
     public void hestaApplicationTrackReopen() throws Exception {
         CompetitionResource competition = newCompetitionResource()
-                .withCompetitionTypeEnum(HESTA)
+                .withCompetitionTypeEnum(HORIZON_EUROPE_GUARANTEE)
                 .withAlwaysOpen(true)
                 .build();
 

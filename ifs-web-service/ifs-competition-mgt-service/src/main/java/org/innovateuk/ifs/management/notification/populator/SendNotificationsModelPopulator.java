@@ -51,7 +51,7 @@ public class SendNotificationsModelPopulator {
                                               onHoldCount,
                                               competitionResource,
                                               Boolean.TRUE.equals(competitionAssessmentConfigResource.getIncludeAverageAssessorScoreInNotifications()),
-                                              competitionResource.isHesta());
+                                              competitionResource.isHorizonEuropeGuarantee());
     }
 
     private long getApplicationCountByFundingDecision(List<FundingDecisionToSendApplicationResource> filteredApplications, FundingDecision fundingDecision) {

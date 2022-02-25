@@ -89,6 +89,8 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
                 .supporterCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
         verify(rules, times(times))
                 .supportersCanViewOrganisationsOnTheirOwnApplications(isA(OrganisationResource.class), eq(getLoggedInUser()));
+        verify(rules, times(times))
+                .applicantCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractions(rules);
     }
 

@@ -3,38 +3,35 @@ package org.innovateuk.ifs.competitionsetup.applicationformbuilder.template;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
-import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
+import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.innovateuk.ifs.competition.resource.CompetitionCompletionStage.PROJECT_SETUP;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.*;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 
 @Component
-public class HestaTemplate implements CompetitionTemplate {
+public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
+
 
     @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
 
     @Override
     public CompetitionTypeEnum type() {
-        return CompetitionTypeEnum.HESTA;
+        return CompetitionTypeEnum.HORIZON_EUROPE_GUARANTEE;
     }
 
     @Override
     public Competition copyTemplatePropertiesToCompetition(Competition competition) {
-        if (FundingRules.SUBSIDY_CONTROL == competition.getFundingRules()) {
-            competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Innovate UK - Subsidy control"));
-            competition.setOtherFundingRulesTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Innovate UK"));
-        } else {
-            competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Innovate UK"));
-        }
+        competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Horizon Europe Guarantee"));
         competition.setAcademicGrantPercentage(100);
         competition.setMinProjectDuration(1);
         competition.setMaxProjectDuration(84);
@@ -46,23 +43,37 @@ public class HestaTemplate implements CompetitionTemplate {
         return newArrayList(
                 projectDetails()
                         .withQuestions(newArrayList(
+                                applicationDetails(),
                                 applicationTeam(),
-                                applicationDetails()
+                                aQuestion()
+                                        .withShortName("Horizon Europe Guarantee grant agreement")
+                                        .withName("Horizon Europe Guarantee grant agreement")
+                                        .withAssignEnabled(false)
+                                        .withMultipleStatuses(false)
+                                        .withMarkAsCompletedEnabled(true)
+                                        .withType(QuestionType.LEAD_ONLY)
+                                        .withQuestionSetupType(QuestionSetupType.GRANT_AGREEMENT),
+                                publicDescription(),
+                                equalityDiversityAndInclusion()
                         )),
                 applicationQuestions()
                         .withQuestions(newArrayList(
-                                hestaDefaultQuestions()
+                                horizonEuropeGuaranteeDefaultQuestions()
                         )),
                 finances(),
                 termsAndConditions()
         );
     }
 
-    public static QuestionBuilder hestaDefaultQuestions() {
-        QuestionBuilder hestaQuestion = genericQuestion();
-        hestaQuestion.getFormInputs().stream()
+    public static QuestionBuilder horizonEuropeGuaranteeDefaultQuestions() {
+        QuestionBuilder horizonEuropeGuaranteeQuestion =
+                genericQuestion()
+                        .withName("Placeholder question");
+
+        horizonEuropeGuaranteeQuestion.getFormInputs().stream()
                 .filter(fi -> fi.getScope().equals(ASSESSMENT))
                 .forEach(fi -> fi.withActive(false));
-        return hestaQuestion;
+        return horizonEuropeGuaranteeQuestion;
     }
+
 }
