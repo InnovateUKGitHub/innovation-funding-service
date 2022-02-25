@@ -4,7 +4,6 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +20,6 @@ public final class SectionBuilder {
     private boolean displayInAssessmentApplicationSummary = false;
     private SectionType type = SectionType.GENERAL;
 
-    @Value("${ifs.edi.update.enabled:false}")
-    private boolean ediUpdateToggle;
 
     private SectionBuilder() {
     }
@@ -112,19 +109,27 @@ public final class SectionBuilder {
         section.setAssessorGuidanceDescription(assessorGuidanceDescription);
         section.setQuestionGroup(questionGroup);
         section.setQuestions(questions.stream().map(QuestionBuilder::build)
-                .filter(question -> {
-                    if (ediUpdateToggle) {
-                        return !isEDIQuestion(question);
-                    }
-                    return true;
-                })
-
                 .collect(Collectors.toList()));
         section.setChildSections(childSections.stream().map(SectionBuilder::build).collect(Collectors.toList()));
         section.setDisplayInAssessmentApplicationSummary(displayInAssessmentApplicationSummary);
         section.setType(type);
         return section;
     }
+
+    public Section buildWithoutEDI() {
+        Section section = new Section();
+        section.setName(name);
+        section.setAssessorGuidanceDescription(assessorGuidanceDescription);
+        section.setQuestionGroup(questionGroup);
+        section.setQuestions(questions.stream().map(QuestionBuilder::build)
+                .filter(question -> !isEDIQuestion(question))
+                .collect(Collectors.toList()));
+        section.setChildSections(childSections.stream().map(SectionBuilder::buildWithoutEDI).collect(Collectors.toList()));
+        section.setDisplayInAssessmentApplicationSummary(displayInAssessmentApplicationSummary);
+        section.setType(type);
+        return section;
+    }
+
 
     private boolean isEDIQuestion(Question question) {
         return (QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION.equals(question.getQuestionSetupType()))
