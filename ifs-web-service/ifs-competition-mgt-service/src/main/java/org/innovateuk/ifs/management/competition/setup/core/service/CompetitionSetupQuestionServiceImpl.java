@@ -15,6 +15,7 @@ import org.innovateuk.ifs.management.competition.setup.application.form.LandingP
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
@@ -41,6 +42,8 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
 
     @Autowired
     private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
+    @Value("${ifs.edi.update.enabled:false}")
+    private boolean ediUpdateToggle;
 
     @Override
     public ServiceResult<Void> validateApplicationQuestions(CompetitionResource competitionResource, LandingPageForm form, BindingResult bindingResult) {
@@ -89,7 +92,12 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
         return questionResources.stream()
                 .filter(question -> projectDetailsAndApplicationSections.contains(question.getSection()))
                 .filter(QuestionResource::requiresSetup)
-                .filter(questionResource ->!QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION.equals(questionResource.getQuestionSetupType()))
+                .filter(questionResource -> {
+                    if (ediUpdateToggle) {
+                        return !QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION.equals(questionResource.getQuestionSetupType());
+                    }
+                    return true;
+                })
                 .map(QuestionResource::getId)
                 .collect(Collectors.toList());
     }
