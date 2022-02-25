@@ -284,16 +284,30 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         existingUser.setFirstName(updatedUserResource.getFirstName());
         existingUser.setAllowMarketingEmails(updatedUserResource.isAllowMarketingEmails());
 
-        // Don't update EDI status if already in COMPLETE state
-        if (existingUser.getEdiStatus()!=null &&
-                existingUser.getEdiStatus().equals(COMPLETE)) {
-            log.info("Ignore EDI status update:{} for userId:{}",updatedUserResource.getEdiStatus(),updatedUserResource.getId());
+        if (ignoreIncomingEDIMessage(existingUser, updatedUserResource)
+        ) {
+            log.info("Ignore EDI status update:{} for userId:{}", updatedUserResource.getEdiStatus(), updatedUserResource.getId());
         } else {
             existingUser.setEdiStatus(updatedUserResource.getEdiStatus());
+            existingUser.setEdiReviewDate(updatedUserResource.getEdiReviewDate());
         }
 
-        existingUser.setEdiReviewDate(updatedUserResource.getEdiReviewDate());
+
         return serviceSuccess(userRepository.save(existingUser));
+    }
+
+    private boolean ignoreIncomingEDIMessage(User existingUser, UserResource updatedUserResource) {
+
+        boolean outOfSync = existingUser.getEdiReviewDate()!=null &&
+                updatedUserResource.getEdiReviewDate().isBefore(existingUser.getEdiReviewDate());
+        boolean alreadyCompleted = existingUser.getEdiStatus() != null &&
+                existingUser.getEdiStatus().equals(COMPLETE)
+                && !updatedUserResource.getEdiStatus().equals(COMPLETE);
+
+
+        return outOfSync || alreadyCompleted;
+
+
     }
 
     private boolean userNotYetVerified(UserResource user) {

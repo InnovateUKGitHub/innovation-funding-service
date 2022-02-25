@@ -898,6 +898,27 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
+    public void updateUserWithEDIStatusCompleteOutOfSync() {
+        User user = basicUser();
+        UserResource userResource = basicUserResource();
+        userResource.setEdiStatus(COMPLETE);
+        ZonedDateTime initialCompleteDate = userResource.getEdiReviewDate();
+        ZonedDateTime outOfSyncOldDate = ZonedDateTime.parse("2020-10-12T09:38:12.850Z");
+
+        when(userRepositoryMock.findByEmail(emailToFind)).thenReturn(Optional.ofNullable(user));
+        when(userRepositoryMock.save(user)).thenReturn(user);
+        service.updateDetails(userResource);
+
+
+        userResource.setEdiReviewDate(outOfSyncOldDate);
+        ServiceResult<UserResource> result = service.updateDetails(userResource);
+
+        assertTrue(result.isSuccess());
+        assertEquals(COMPLETE, user.getEdiStatus());
+        assertEquals(user.getEdiReviewDate(), initialCompleteDate);
+    }
+
+    @Test
     public void updateUserWithEDIStatusInProgressAfterComplete() {
 
         User user = basicUser();
@@ -920,6 +941,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
 
     }
+
 
     @Test
     public void updateEmailFailsApplicationInvite() {
