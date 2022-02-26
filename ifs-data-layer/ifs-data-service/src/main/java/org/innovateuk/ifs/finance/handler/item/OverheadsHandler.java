@@ -53,6 +53,7 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
                 super.validate(overhead, bindingResult);
                 break;
             case HORIZON_2020_TOTAL:
+            case HORIZON_EUROPE_GUARANTEE_TOTAL:
                 super.validate(overhead, bindingResult, Overhead.TotalCost.class);
                 break;
         }

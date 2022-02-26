@@ -32,7 +32,7 @@ import static java.util.Optional.ofNullable;
 @Controller
 @RequestMapping("/profile")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ProfileController.class)
-@PreAuthorize("hasAnyAuthority('applicant, monitoring_officer')")
+@PreAuthorize("hasAnyAuthority('applicant', 'monitoring_officer')")
 public class ProfileController {
 
     private UserService userService;

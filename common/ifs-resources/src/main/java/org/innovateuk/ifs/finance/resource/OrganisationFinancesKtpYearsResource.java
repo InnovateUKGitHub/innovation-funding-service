@@ -1,50 +1,39 @@
 package org.innovateuk.ifs.finance.resource;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.YearMonth;
 import java.util.List;
 
+@Getter
+@Setter
 public class OrganisationFinancesKtpYearsResource extends AbstractOrganisationFinanceResource {
+
+    private Long userId;
 
     private List<KtpYearResource> years;
 
     private Long groupEmployees;
+
+    private Boolean hasAdditionalInfoSection;
+
+    private String additionalInfo;
 
     private YearMonth financialYearEnd;
 
     public OrganisationFinancesKtpYearsResource() {
     }
 
-    public OrganisationFinancesKtpYearsResource(OrganisationSize organisationSize, List<KtpYearResource> years, Long groupEmployees, YearMonth financialYearEnd) {
+    public OrganisationFinancesKtpYearsResource(Long userId, OrganisationSize organisationSize, List<KtpYearResource> years, Boolean hasAdditionalInfoSection, String additionalInfo, Long groupEmployees, YearMonth financialYearEnd) {
         super(organisationSize);
+        this.userId = userId;
         this.years = years;
         this.groupEmployees = groupEmployees;
-        this.financialYearEnd = financialYearEnd;
-    }
-
-    public List<KtpYearResource> getYears() {
-        return years;
-    }
-
-    public void setYears(List<KtpYearResource> years) {
-        this.years = years;
-    }
-
-    public Long getGroupEmployees() {
-        return groupEmployees;
-    }
-
-    public void setGroupEmployees(Long groupEmployees) {
-        this.groupEmployees = groupEmployees;
-    }
-
-    public YearMonth getFinancialYearEnd() {
-        return financialYearEnd;
-    }
-
-    public void setFinancialYearEnd(YearMonth financialYearEnd) {
+        this.hasAdditionalInfoSection = hasAdditionalInfoSection;
+        this.additionalInfo = additionalInfo;
         this.financialYearEnd = financialYearEnd;
     }
 
@@ -57,8 +46,10 @@ public class OrganisationFinancesKtpYearsResource extends AbstractOrganisationFi
         OrganisationFinancesKtpYearsResource that = (OrganisationFinancesKtpYearsResource) o;
 
         return new EqualsBuilder()
+                .append(userId, that.userId)
                 .append(years, that.years)
                 .append(groupEmployees, that.groupEmployees)
+                .append(additionalInfo, that.additionalInfo)
                 .append(financialYearEnd, that.financialYearEnd)
                 .isEquals();
     }
@@ -66,8 +57,10 @@ public class OrganisationFinancesKtpYearsResource extends AbstractOrganisationFi
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(userId)
                 .append(years)
                 .append(groupEmployees)
+                .append(additionalInfo)
                 .append(financialYearEnd)
                 .toHashCode();
     }

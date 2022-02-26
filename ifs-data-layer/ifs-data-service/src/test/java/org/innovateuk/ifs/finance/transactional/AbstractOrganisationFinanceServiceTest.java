@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.finance.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
@@ -8,6 +11,10 @@ import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.resource.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.form.resource.*;
+import org.innovateuk.ifs.form.transactional.FormInputService;
+import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
@@ -16,10 +23,13 @@ import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
 import java.time.YearMonth;
 
+import static org.mockito.ArgumentMatchers.any;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -30,6 +40,10 @@ import static org.innovateuk.ifs.finance.builder.OrganisationFinancesKtpYearsRes
 import static org.innovateuk.ifs.finance.builder.OrganisationFinancesWithGrowthTableResourceBuilder.newOrganisationFinancesWithGrowthTableResource;
 import static org.innovateuk.ifs.finance.builder.OrganisationFinancesWithoutGrowthTableResourceBuilder.newOrganisationFinancesWithoutGrowthTableResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -46,6 +60,14 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
     @Mock
     private GrantClaimMaximumService grantClaimMaximumService;
     @Mock
+    private SectionService sectionService;
+    @Mock
+    private QuestionService questionService;
+    @Mock
+    private FormInputService formInputService;
+    @Mock
+    private FormInputResponseService formInputResponseService;
+    @Mock
     private AuthenticationHelper authenticationHelper;
     @Mock
     private GrantClaim grantClaim;
@@ -60,6 +82,10 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
     private OrganisationFinancesWithGrowthTableResource organisationFinancesWithGrowthTableResource;
     private EmployeesAndTurnoverResource employeesAndTurnoverResource;
     private GrowthTableResource growthTableResource;
+
+    private SectionResource sectionResource;
+    private QuestionResource questionResource;
+    private FormInputResource formInputResource;
 
     @Before
     public void setup() {
@@ -97,11 +123,19 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
         when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competition));
         when(organisationService.findById(organisationId)).thenReturn(serviceSuccess(organisation));
         when(authenticationHelper.getCurrentlyLoggedInUser()).thenReturn(serviceSuccess(user));
+
+        sectionResource = newSectionResource().build();
+        questionResource = newQuestionResource().build();
+        formInputResource = newFormInputResource().build();
+        when(competitionService.getCompetitionByApplicationId(targetId)).thenReturn(serviceSuccess(competition));
+        when(sectionService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.ORGANISATION_FINANCES)).thenReturn(serviceSuccess(singletonList(sectionResource)));
+        when(questionService.getQuestionsBySectionIdAndType(sectionResource.getId(), QuestionType.GENERAL)).thenReturn(serviceSuccess(singletonList(questionResource)));
+        when(formInputService.findByQuestionId(questionResource.getId())).thenReturn(serviceSuccess(singletonList(formInputResource)));
     }
 
     @Override
     protected AbstractOrganisationFinanceService supplyServiceUnderTest() {
-        return new AbstractOrganisationFinanceService() {
+        AbstractOrganisationFinanceService service = new AbstractOrganisationFinanceService() {
             @Override
             protected ServiceResult getFinance(long targetId, long organisationId) {
                 return serviceSuccess(finance);
@@ -127,6 +161,8 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
                                                    long userId) {
             }
         };
+        ReflectionTestUtils.setField(service, "ktpPhase2Enabled", Boolean.TRUE);
+        return service;
     }
 
     @Test
@@ -167,7 +203,11 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
 
     @Test
     public void updateOrganisationKtpFinancialYears() {
+        User user = newUser()
+                .withId(11L)
+                .build();
         OrganisationFinancesKtpYearsResource organisationFinancesKtpYearsResource =  newOrganisationFinancesKtpYearsResource()
+                .withUserId(user.getId())
                 .withOrganisationSize(OrganisationSize.SMALL)
                 .withFinancialYearEnd(YearMonth.now().minusMonths(1))
                 .withGroupEmployees(2L)
@@ -186,6 +226,9 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
         when(finance.getFinancialYearAccounts()).thenReturn(yearsResource);
         when(grantClaimMaximumService.isMaximumFundingLevelConstant(competitionId)).thenReturn(serviceSuccess(false));
         when(finance.getGrantClaim()).thenReturn(grantClaim);
+
+        FormInputResponseResource formInputResponseResource = newFormInputResponseResource().build();
+        when(formInputResponseService.saveQuestionResponse(any())).thenReturn(serviceSuccess(formInputResponseResource));
 
         assertEquals(serviceSuccess(), service.updateOrganisationKtpYears(targetId, organisationId,
                 organisationFinancesKtpYearsResource));

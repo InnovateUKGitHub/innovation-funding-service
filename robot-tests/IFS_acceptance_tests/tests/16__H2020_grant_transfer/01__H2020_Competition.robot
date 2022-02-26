@@ -40,10 +40,10 @@ User can select H2020 Competition Template and complete Initial details
 
 User can populate the Completion Stage, Milestones and Public content
     [Documentation]  IFS-5158
-     Given the user fills in the CS Milestones                                      PROJECT_SETUP  1  ${nextyear}   No
-     When the user clicks the button/link                                           link = Public content
-     Then The user completes Public content for H2020 registration and publishes
-     [Teardown]  the user clicks the button/link                                    link = Return to setup overview
+    Given the user fills in the CS Milestones                                      PROJECT_SETUP  1  ${nextyear}   No
+    When the user clicks the button/link                                           link = Public content
+    Then The user completes Public content for H2020 registration and publishes
+    [Teardown]  the user clicks the button/link                                    link = Return to setup overview
 
 User can populate Terms and Conditions
     [Documentation]  IFS-5158  IFS-9124
@@ -390,7 +390,6 @@ The user fills in the Competition Setup Project eligibility section
     the user clicks the button twice                     css = label[for="lead-applicant-type-${organisationType}"]
     the user selects the option from the drop-down menu  None     researchParticipation
     the user clicks the button twice                     css = label[for="comp-resubmissions-no"]
-    #the user clicks the button/link                      css = label[for="comp-resubmissions-no"]
     the user clicks the button/link                      jQuery = button:contains("Done")
     the user clicks the button/link                      link = Back to competition details
     the user should see the element                      jQuery = div:contains("Project eligibility") ~ .task-status-complete
@@ -416,8 +415,6 @@ The user is able to complete Application details section
     the user enters text to a text field                 id = endDateYear  ${nextyear}
     the user enters text to a text field                 id = grantAgreementNumber            123456
     the user enters text to a text field                 id = participantId                   123456789
-#    Wait Until Keyword Succeeds Without Screenshots      20s    200ms   input text    id = actionType    (CSA) Coordination and Support Actions
-#    the user clicks the button/link                      jQuery = ul li:contains("(CSA) Coordination and Support Actions")
     enter the type of action in the autocomplete field
     the user enters text to a text field                 id = fundingContribution             123456
     the user clicks the button/link                      jQuery = label:contains("No")
@@ -436,7 +433,7 @@ The user is able to complete Public description section
 
 The user is able to complete Horizon 2020 grant agreement section
     the user clicks the button/link           jQuery = a:contains("Horizon 2020 grant agreement")
-    the user should see the element           jQuery = h1:contains("Horizon 2020 grant agreement")
+    the user should see the element           jQuery = h1:contains("grant agreement")
     the user uploads the file                 id = grantAgreement  ${valid_pdf}
     the user clicks the button/link           id = mark-as-complete
     the user clicks the button/link           link = Return to application overview
