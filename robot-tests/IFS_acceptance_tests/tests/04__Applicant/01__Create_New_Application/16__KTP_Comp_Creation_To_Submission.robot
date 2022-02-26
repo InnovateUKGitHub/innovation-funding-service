@@ -250,7 +250,7 @@ Existing lead applicant can not apply to KTP compettition if organisation type i
 Existing lead applicant can apply to KTP competition with knowledge base organisation
     [Documentation]  IFS-7841  IFS-8035
     Given the user navigates to the page                    ${server}/organisation/select
-    And the user apply with knowledge base organisation     Reading   ${secondKTPOrgName}
+    And the user apply with knowledge base organisation     The University of Reading   ${secondKTPOrgName}
     When the user clicks the button/link                    link = Application team
     Then the user should see the element                    jQuery = h2:contains("${secondKTPOrgName}")
 
