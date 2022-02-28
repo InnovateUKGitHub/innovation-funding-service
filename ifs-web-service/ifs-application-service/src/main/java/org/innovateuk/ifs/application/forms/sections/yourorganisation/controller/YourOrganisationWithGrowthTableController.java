@@ -39,8 +39,8 @@ public class YourOrganisationWithGrowthTableController extends AbstractYourOrgan
     }
 
     @Override
-    protected void update(long applicationId, long organisationId, YourOrganisationWithGrowthTableForm form) {
-        saver.save(applicationId, organisationId, form, yourOrganisationRestService);
+    protected void update(long applicationId, long organisationId, long userId, YourOrganisationWithGrowthTableForm form) {
+        saver.save(applicationId, organisationId, userId, form, yourOrganisationRestService);
     }
 
     @Override

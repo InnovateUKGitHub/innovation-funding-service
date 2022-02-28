@@ -43,7 +43,7 @@ public class ProjectYourOrganisationWithGrowthTableController extends AbstractPr
     }
 
     @Override
-    protected void update(long projectId, long organisationId, YourOrganisationWithGrowthTableForm form) {
-        saver.save(projectId, organisationId, form, yourOrganisationRestService);
+    protected void update(long projectId, long organisationId, long userId, YourOrganisationWithGrowthTableForm form) {
+        saver.save(projectId, organisationId, userId, form, yourOrganisationRestService);
     }
 }

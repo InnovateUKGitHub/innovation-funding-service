@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.review.viewmodel.ReviewAndSubmitViewModel;
 import org.innovateuk.ifs.application.review.viewmodel.TrackViewModel;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
-import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -276,7 +275,7 @@ public class ReviewAndSubmitController {
     private String getTrackingPage(CompetitionResource competition) {
         if (CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType())) {
             return "covid-additional-funding-application-track";
-        } else if (competition.isHesta()) {
+        } else if (competition.isHorizonEuropeGuarantee()) {
             return "hesta-application-track";
         } else if (competition.isAlwaysOpen()) {
             return "always-open-track";

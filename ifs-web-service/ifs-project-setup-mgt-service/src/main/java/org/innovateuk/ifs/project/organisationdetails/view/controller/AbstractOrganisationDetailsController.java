@@ -1,11 +1,13 @@
 package org.innovateuk.ifs.project.organisationdetails.view.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationDetailsReadOnlyViewModel;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.service.CompaniesHouseRestService;
@@ -15,6 +17,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -43,6 +46,9 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
     @Autowired
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
+    @Autowired
+    private OrganisationAddressRestService organisationAddressRestService;
+
     @GetMapping
     public String viewOrganisationDetails(@PathVariable long competitionId,
                                           @PathVariable long projectId,
@@ -55,19 +61,21 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
 
         boolean includeYourOrganisationSection = isIncludeYourOrganisationSection(competitionId, organisation);
         boolean ktpCompetition = competition.isKtp();
-
-        model.addAttribute("organisationDetails", new OrganisationDetailsViewModel(project,
+        OrganisationDetailsViewModel organisationDetailsViewModel = new OrganisationDetailsViewModel(project,
                 competitionId,
                 organisation,
                 getAddress(organisation),
                 project.isCollaborativeProject(),
-                ktpCompetition));
+                ktpCompetition);
+        organisationDetailsViewModel.setOrgDetailsViewModel(populateOrganisationDetails((organisationId)));
+        organisationDetailsViewModel.setPartnerOrgDisplay(true);
+        model.addAttribute("organisationDetails", organisationDetailsViewModel);
 
         if (includeYourOrganisationSection) {
             boolean isMaximumFundingLevelConstant = competition.isMaximumFundingLevelConstant(
                     organisation::getOrganisationTypeEnum,
                     () -> grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess());
-            model.addAttribute("yourOrganisation", new ProjectYourOrganisationViewModel(
+            ProjectYourOrganisationViewModel projectYourOrganisationViewModel = new ProjectYourOrganisationViewModel(
                     project.getApplication(),
                     competition,
                     organisation,
@@ -77,7 +85,10 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
                     project.getName(),
                     true,
                     loggedInUser,
-                    isAllEligibilityAndViabilityInReview(projectId)));
+                    isAllEligibilityAndViabilityInReview(projectId));
+            projectYourOrganisationViewModel.setOrgDetailsViewModel(populateOrganisationDetails((organisationId)));
+            projectYourOrganisationViewModel.setPartnerOrgDisplay(true);
+            model.addAttribute("yourOrganisation", projectYourOrganisationViewModel);
 
             model.addAttribute("form", getForm(projectId, organisationId));
             model.addAttribute("formFragment", formFragment());
@@ -116,4 +127,34 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
         }
         return false;
     }
+
+    private YourOrganisationDetailsReadOnlyViewModel populateOrganisationDetails(long organisationId) {
+        YourOrganisationDetailsReadOnlyViewModel yourOrganisationDetailsReadOnlyViewModel = new YourOrganisationDetailsReadOnlyViewModel();
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+
+        yourOrganisationDetailsReadOnlyViewModel.setOrganisationName(organisation.getName());
+        yourOrganisationDetailsReadOnlyViewModel.setOrganisationType(organisation.getOrganisationTypeName());
+        if (organisation.getCompanyRegistrationNumber() == null || organisation.getCompanyRegistrationNumber().isEmpty()) {
+        yourOrganisationDetailsReadOnlyViewModel.setOrgDetailedDisplayRequired(false);
+        yourOrganisationDetailsReadOnlyViewModel.setRegistrationNumber("");
+        yourOrganisationDetailsReadOnlyViewModel.setAddressResource(null);
+        yourOrganisationDetailsReadOnlyViewModel.setSicCodes(null);
+    } else {
+        yourOrganisationDetailsReadOnlyViewModel.setOrgDetailedDisplayRequired(true);
+        yourOrganisationDetailsReadOnlyViewModel.setRegistrationNumber(organisation.getCompanyRegistrationNumber());
+        AddressResource addressResource =  organisationAddressRestService.getOrganisationRegisterdAddressById(organisation.getId())
+                .andOnSuccessReturn(addresses -> addresses.stream()
+                        .findFirst()
+                        .map(OrganisationAddressResource::getAddress)
+                        .orElse(new AddressResource()))
+                .getSuccess();
+
+        yourOrganisationDetailsReadOnlyViewModel.setAddressResource(addressResource);
+        if (organisation.getSicCodes() != null && !organisation.getSicCodes().isEmpty()) {
+            yourOrganisationDetailsReadOnlyViewModel.setSicCodes(organisation.getSicCodes());
+        }
+    }
+        return yourOrganisationDetailsReadOnlyViewModel;
+}
+
 }

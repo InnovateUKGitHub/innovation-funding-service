@@ -282,18 +282,18 @@ public class CompetitionTest {
     }
 
     @Test
-    public void isHesta_forNonHestaCompetitionType() {
-        assertFalse(competition.isHesta());
+    public void isHorizonEuropeGuarantee_forNonHorizonEuropeGuaranteeCompetitionType() {
+        assertFalse(competition.isHorizonEuropeGuarantee());
     }
 
     @Test
-    public void isHesta_forHestaCompetitionType() {
+    public void isHorizonEuropeGuarantee_forHestaCompetitionType() {
         CompetitionType competitionType = newCompetitionType()
-                .withName("Hesta")
+                .withName("Horizon Europe Guarantee")
                 .build();
 
         competition.setCompetitionType(competitionType);
 
-        assertTrue(competition.isHesta());
+        assertTrue(competition.isHorizonEuropeGuarantee());
     }
 }

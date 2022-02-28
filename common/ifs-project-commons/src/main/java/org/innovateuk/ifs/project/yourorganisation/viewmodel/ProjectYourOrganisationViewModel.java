@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.yourorganisation.viewmodel;
 
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.ApplicationYourOrganisationViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationDetailsReadOnlyViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Authority;
@@ -13,6 +14,8 @@ public class ProjectYourOrganisationViewModel extends ApplicationYourOrganisatio
     private final boolean readOnly;
     private final UserResource loggedInUser;
     private final boolean isAllEligibilityAndViabilityInReview;
+    private YourOrganisationDetailsReadOnlyViewModel orgDetailsViewModel;
+    private boolean partnerOrgDisplay;
 
     public ProjectYourOrganisationViewModel(long applicationId,
                                             CompetitionResource competition,
@@ -55,5 +58,22 @@ public class ProjectYourOrganisationViewModel extends ApplicationYourOrganisatio
 
     public boolean isAllowedToEditOrganisationSize() {
         return getLoggedInUser().hasAuthority(Authority.PROJECT_FINANCE) && isAllEligibilityAndViabilityInReview;
+    }
+
+
+    public YourOrganisationDetailsReadOnlyViewModel getOrgDetailsViewModel() {
+        return orgDetailsViewModel;
+    }
+
+    public void setOrgDetailsViewModel(YourOrganisationDetailsReadOnlyViewModel orgDetailsViewModel) {
+        this.orgDetailsViewModel = orgDetailsViewModel;
+    }
+
+    public boolean isPartnerOrgDisplay() {
+        return partnerOrgDisplay;
+    }
+
+    public void setPartnerOrgDisplay(boolean partnerOrgDisplay) {
+        this.partnerOrgDisplay = partnerOrgDisplay;
     }
 }
