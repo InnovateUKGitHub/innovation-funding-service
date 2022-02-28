@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.user.transactional;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
@@ -62,6 +63,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.user.resource.EDIStatus.COMPLETE;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
@@ -73,6 +75,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  * A Service that covers basic operations concerning Users
  */
 @SuppressWarnings("unchecked")
+@Slf4j
 @Service
 public class UserServiceImpl extends UserTransactionalService implements UserService {
 
@@ -280,9 +283,31 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         existingUser.setLastName(updatedUserResource.getLastName());
         existingUser.setFirstName(updatedUserResource.getFirstName());
         existingUser.setAllowMarketingEmails(updatedUserResource.isAllowMarketingEmails());
-        existingUser.setEdiStatus(updatedUserResource.getEdiStatus());
-        existingUser.setEdiReviewDate(updatedUserResource.getEdiReviewDate());
+
+        if (ignoreIncomingEDIMessage(existingUser, updatedUserResource)
+        ) {
+            log.info("Ignore EDI status update:{} for userId:{}", updatedUserResource.getEdiStatus(), updatedUserResource.getId());
+        } else {
+            existingUser.setEdiStatus(updatedUserResource.getEdiStatus());
+            existingUser.setEdiReviewDate(updatedUserResource.getEdiReviewDate());
+        }
+
+
         return serviceSuccess(userRepository.save(existingUser));
+    }
+
+    private boolean ignoreIncomingEDIMessage(User existingUser, UserResource updatedUserResource) {
+
+        boolean outOfSync = existingUser.getEdiReviewDate()!=null &&
+                updatedUserResource.getEdiReviewDate().isBefore(existingUser.getEdiReviewDate());
+        boolean alreadyCompleted = existingUser.getEdiStatus() != null &&
+                existingUser.getEdiStatus().equals(COMPLETE)
+                && !updatedUserResource.getEdiStatus().equals(COMPLETE);
+
+
+        return outOfSync || alreadyCompleted;
+
+
     }
 
     private boolean userNotYetVerified(UserResource user) {
