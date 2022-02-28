@@ -98,7 +98,7 @@ build:
   local:
     # Experiment with build concurrency
     # 2/3 seems to be the sweet spot and build takes 2 mins
-    concurrency: 2
+    concurrency: 1
     useDockerCLI: true
     useBuildkit: false
     tryImportMissing: true
