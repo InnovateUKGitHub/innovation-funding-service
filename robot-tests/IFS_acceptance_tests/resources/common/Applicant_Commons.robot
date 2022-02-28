@@ -1081,6 +1081,7 @@ the user accepts invitation to join application under same organisation
     the user clicks the button/link                  jQuery = a:contains("Confirm and accept invitation")
 
 the user should see the read only view of application team
+    [Arguments]   ${firstName}  ${lastName}
     the user should see the element  jQuery = h3:contains("Team members")
     the user should see the element  jQuery = th:contains("EDI status")
     the user should see the element  jQuery = td:contains("${first_name} ${last_name}")~td:contains("Incomplete")
