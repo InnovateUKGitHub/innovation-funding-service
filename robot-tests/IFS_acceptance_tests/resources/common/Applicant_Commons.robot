@@ -754,7 +754,7 @@ the user can submit the application
     the user clicks the button/link         id = application-overview-submit-cta
     the user should not see the element     jQuery = .message-alert:contains("You will not be able to make changes")
     the user clicks the button/link         jQuery = button:contains("Application team")
-    the user should see the read only view of application team  ${firstName}  ${lastName}
+    the user should see the read only view of application team  tim   timmy
     the user clicks the button/link         id = submit-application-button
 
 the lead invites already registered user
