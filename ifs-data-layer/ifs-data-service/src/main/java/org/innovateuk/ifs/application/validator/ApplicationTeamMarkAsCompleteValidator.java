@@ -75,12 +75,12 @@ public class ApplicationTeamMarkAsCompleteValidator implements Validator {
             }
         }
         if (isEDIUpdateEnabled) {
-            validateLeadEDIStatus(errors, application, invites);
+            validateLeadEDIStatus(errors, application);
         }
 
     }
 
-    private void validateLeadEDIStatus(Errors errors, Application application, List<InviteOrganisationResource> inviteOrganisationResources) {
+    private void validateLeadEDIStatus(Errors errors, Application application) {
         EDIStatus ediStatus = application.getLeadApplicant().getEdiStatus();
         if (ediStatus == null || (ediStatus != null && ediStatus.equals(EDIStatus.INCOMPLETE))) {
             reject(errors, "validation.applicationteam.edi.status", application.getLeadApplicant().getName(), application.getLeadOrganisationId());

@@ -24,6 +24,7 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -75,6 +76,9 @@ public class ApplicationTeamPopulator {
 
     @Value("${ifs.edi.update.enabled}")
     private boolean isEDIUpdateEnabled;
+
+    @Autowired
+    private UserRestService userRestService;
 
     public ApplicationTeamViewModel populate(long applicationId, long questionId, UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
@@ -145,8 +149,10 @@ public class ApplicationTeamPopulator {
 
     private ApplicationTeamOrganisationViewModel toOrganisationTeamViewModel(long applicationId, OrganisationResource organisation, Collection<ProcessRoleResource> processRoles, InviteOrganisationResource organisationInvite, boolean leadApplicant, UserResource user) {
         List<ApplicationTeamRowViewModel> userRows = processRoles.stream()
-                .map(pr -> ApplicationTeamRowViewModel.fromProcessRole(pr, findInviteIdFromProcessRole(pr, organisationInvite), user))
-                .collect(toList());
+                .map(pr -> {
+                    UserResource updatedUser = userRestService.retrieveUserById(pr.getUser()).getSuccess();
+                    return ApplicationTeamRowViewModel.fromProcessRole(pr, findInviteIdFromProcessRole(pr, organisationInvite), updatedUser.getEdiStatus());
+                }).collect(toList());
 
         Optional<InviteOrganisationResource> maybeOrganisationInvite = ofNullable(organisationInvite);
         if (maybeOrganisationInvite.isPresent()) {

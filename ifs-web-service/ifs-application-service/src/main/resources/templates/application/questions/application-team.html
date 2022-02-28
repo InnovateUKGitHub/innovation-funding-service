@@ -49,7 +49,7 @@
 
             <th:block th:if="${model.isEDIUpdateEnabled}">
                <p class="govuk-body">Your team members can complete the equality, diversity and inclusion survey in the profile
-                    section <a href="/profile/view" class="govuk-link"> here. </a></p>
+                    section <a href="/profile/view" class="govuk-link"> here </a></p>
             </th:block>
             <p class="govuk-body" th:unless="${model.collaborationLevelSingle}">You must read the <a
                     href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service"
@@ -61,12 +61,10 @@
 
                 <div class="govuk-form-group"
                      th:id="|organisation.${organisation.inviteId}|"
-                     th:with="organisationErrorKey=${'${form.organisation.' + organisation.inviteId + '*}'}"
-                     th:classappend="${#fields.hasErrors(organisationErrorKey)} ? 'govuk-form-group--error'">
-                <div class="govuk-form-group"
-                    th:id="|organisation.${organisation.id}|"
-                    th:with="orgEDIErrorKey=${'${form.organisation.' + organisation.id + '*}'}"
-                    th:classappend="${#fields.hasErrors(orgEDIErrorKey)} ? 'govuk-form-group--error'">
+                     th:with="organisationErrorKey=${'${form.organisation.' + organisation.inviteId + '*}'},
+                              orgEDIErrorKey=${organisation.lead ? '${form.organisation.' + organisation.id + '*}' : null }"
+                     th:classappend="${#fields.hasErrors(organisationErrorKey) or (orgEDIErrorKey!= null and #fields.hasErrors(orgEDIErrorKey))}
+                       ? 'govuk-form-group--error'">
 
                     <h2 class="govuk-heading-m govuk-!-margin-bottom-0 word-wrap">
                         <th:block th:text="${organisation.name}"></th:block>
@@ -102,20 +100,20 @@
                         </table>
                     </th:block>
 
-                    <th:block th:if="${#fields.hasErrors(organisationErrorKey)}">
+                    <th:block th:if="${organisationErrorKey != null and #fields.hasErrors(organisationErrorKey)}">
                                     <span class="govuk-error-message"
                                           th:each="err : ${#fields.errors(organisationErrorKey)}"
+                                          th:text="${err}"></span>
+                    </th:block>
+                    <th:block th:if="${orgEDIErrorKey != null and #fields.hasErrors(orgEDIErrorKey)}">
+                                    <span class="govuk-error-message"
+                                          th:each="err : ${#fields.errors(orgEDIErrorKey)}"
                                           th:text="${err}"></span>
                     </th:block>
 
                     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
                           method="post">
-                        <th:block th:if="${#fields.hasErrors(orgEDIErrorKey)}">
-                                    <span class="govuk-error-message"
-                                          th:each="err : ${#fields.errors(orgEDIErrorKey)}"
-                                          th:text="${err}"></span>
-                        </th:block>
-                        <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Team members</h3>
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Team members</h3>
                         <table class="govuk-table"
                                th:classappend="${organisation.editable and !model.readOnly ? 'govuk-!-margin-bottom-2' : ''}">
                             <thead class="govuk-table__head">
@@ -125,7 +123,7 @@
                                 <th:block th:if="${model.isEDIUpdateEnabled}">
                                 <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">EDI status</th>
                                 </th:block>
-                                <th scope="col" class="govuk-table__header govuk-!-width-one-third"><span
+                                <th scope="col" class="govuk-table__header govuk-!-width-one-quarter"><span
                                     class="govuk-visually-hidden">Remove</span></th>
                             </tr>
                             </thead>
@@ -138,9 +136,10 @@
                                 <td class="govuk-table__cell ifs-table__email"
                                     th:text="${row.email}"
                                     th:classappend="${row.invite ? 'hint' : ''}"></td>
-                                <td class="govuk-table__cell ">
-                                    <span class="edit" th:if="${row.isEdiStatusInComplete()}">Incomplete</span>
-                                    <span class="yes" th:if="${row.isEdiStatusComplete()}">Complete</span>
+
+                                <td class="govuk-table__cell " th:if="${model.isEDIUpdateEnabled}">
+                                    <span class="edit" th:unless="${row.isEdiStatusComplete()}" th:text="${row.getEdiStatusDisplayName()}"></span>
+                                    <span class="yes" th:if="${row.isEdiStatusComplete()}" th:text="${row.getEdiStatusDisplayName()}"></span>
                                 </td>
                                 <td class="govuk-table__cell alignright"
                                     th:classappend="${row.invite ? 'hint' : ''}">
@@ -274,7 +273,6 @@
                             </button>
                         </p>
                     </th:block>
-                </div>
                 </div>
             </th:block>
 

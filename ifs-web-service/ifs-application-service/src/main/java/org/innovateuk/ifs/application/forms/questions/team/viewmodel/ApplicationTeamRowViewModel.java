@@ -18,18 +18,18 @@ public class ApplicationTeamRowViewModel {
     private final boolean invite;
     private final ZonedDateTime pendingSince;
     private final Long inviteId;
-    private String ediStatusDisplayName;
+    private EDIStatus ediStatus;
 
-    public static ApplicationTeamRowViewModel fromProcessRole(ProcessRoleResource processRole, Long inviteId, UserResource user) {
+    public static ApplicationTeamRowViewModel fromProcessRole(ProcessRoleResource processRole, Long inviteId, EDIStatus ediStatus) {
         return new ApplicationTeamRowViewModel(processRole.getUser(), processRole.getUserName(), processRole.getUserEmail(),
-                processRole.getRole().isLeadApplicant(), inviteId, getEdiStatusDisplayName(user));
+                processRole.getRole().isLeadApplicant(), inviteId, ediStatus);
     }
 
     public static ApplicationTeamRowViewModel fromInvite(ApplicationInviteResource invite) {
         return new ApplicationTeamRowViewModel(invite.getId(), invite.getName(), invite.getEmail(), invite.getSentOn());
     }
 
-    private ApplicationTeamRowViewModel(Long id, String name, String email, boolean lead, Long inviteId, String ediStatusDisplayName) {
+    private ApplicationTeamRowViewModel(Long id, String name, String email, boolean lead, Long inviteId, EDIStatus ediStatus) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -37,7 +37,7 @@ public class ApplicationTeamRowViewModel {
         this.invite = false;
         this.pendingSince = null;
         this.inviteId = inviteId;
-        this.ediStatusDisplayName = ediStatusDisplayName;
+        this.ediStatus = ediStatus;
     }
 
     private ApplicationTeamRowViewModel(Long id, String name, String email, ZonedDateTime pendingSince) {
@@ -81,22 +81,23 @@ public class ApplicationTeamRowViewModel {
     }
 
     public String getEdiStatusDisplayName() {
-        return ediStatusDisplayName;
-    }
-
-    public void setEdiStatusDisplayName(String ediStatusDisplayName) {
-        this.ediStatusDisplayName = ediStatusDisplayName;
-    }
-
-    private static String getEdiStatusDisplayName(UserResource user) {
-        if(user.getEdiStatus() == null) {
+        if (ediStatus == null) {
             return EDIStatus.INCOMPLETE.getDisplayName();
         }
-        return user.getEdiStatus().getDisplayName();
+        return ediStatus.getDisplayName();
     }
-    @JsonIgnore
-    public boolean isEdiStatusComplete() { return EDIStatus.COMPLETE.getDisplayName() == ediStatusDisplayName; }
+
+
+    public EDIStatus getEdiStatus() {
+        return ediStatus;
+    }
+
+    public void setEdiStatus(EDIStatus ediStatus) {
+       ediStatus = ediStatus;
+    }
 
     @JsonIgnore
-    public boolean isEdiStatusInComplete() { return EDIStatus.INCOMPLETE.getDisplayName() == ediStatusDisplayName; }
+    public boolean isEdiStatusComplete() {
+        return ediStatus != null ? EDIStatus.COMPLETE == ediStatus : false; }
+
 }
