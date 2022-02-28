@@ -49,7 +49,7 @@
 
             <th:block th:if="${model.isEDIUpdateEnabled}">
                <p class="govuk-body">Your team members can complete the equality, diversity and inclusion survey in the profile
-                    section <a href="/profile/view" class="govuk-link"> here </a></p>
+                    section <a href="/profile/view" class="govuk-link"> here</a>.</p>
             </th:block>
             <p class="govuk-body" th:unless="${model.collaborationLevelSingle}">You must read the <a
                     href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service"
@@ -61,10 +61,13 @@
 
                 <div class="govuk-form-group"
                      th:id="|organisation.${organisation.inviteId}|"
-                     th:with="organisationErrorKey=${'${form.organisation.' + organisation.inviteId + '*}'},
-                              orgEDIErrorKey=${organisation.lead ? '${form.organisation.' + organisation.id + '*}' : null }"
-                     th:classappend="${#fields.hasErrors(organisationErrorKey) or (orgEDIErrorKey!= null and #fields.hasErrors(orgEDIErrorKey))}
-                       ? 'govuk-form-group--error'">
+                     th:with="organisationErrorKey=${'${form.organisation.' + organisation.inviteId + '*}'}"
+                     th:classappend="${#fields.hasErrors(organisationErrorKey)} ? 'govuk-form-group--error'">
+
+                    <div class="govuk-form-group"
+                         th:id="|organisation.${organisation.id}|"
+                         th:with="orgEDIErrorKey=${organisation.lead ? '${form.organisation.' + organisation.id + '*}' : null }"
+                         th:classappend="${orgEDIErrorKey != null and #fields.hasErrors(orgEDIErrorKey)} ? 'govuk-form-group--error'">
 
                     <h2 class="govuk-heading-m govuk-!-margin-bottom-0 word-wrap">
                         <th:block th:text="${organisation.name}"></th:block>
@@ -138,8 +141,8 @@
                                     th:classappend="${row.invite ? 'hint' : ''}"></td>
 
                                 <td class="govuk-table__cell " th:if="${model.isEDIUpdateEnabled}">
-                                    <span class="edit" th:unless="${row.isEdiStatusComplete()}" th:text="${row.getEdiStatusDisplayName()}"></span>
-                                    <span class="yes" th:if="${row.isEdiStatusComplete()}" th:text="${row.getEdiStatusDisplayName()}"></span>
+                                    <span class="edit" th:unless="${row.isEdiStatusComplete()}">Incomplete</span>
+                                    <span class="yes" th:if="${row.isEdiStatusComplete()}">Complete</span>
                                 </td>
                                 <td class="govuk-table__cell alignright"
                                     th:classappend="${row.invite ? 'hint' : ''}">
@@ -273,6 +276,7 @@
                             </button>
                         </p>
                     </th:block>
+                </div>
                 </div>
             </th:block>
 

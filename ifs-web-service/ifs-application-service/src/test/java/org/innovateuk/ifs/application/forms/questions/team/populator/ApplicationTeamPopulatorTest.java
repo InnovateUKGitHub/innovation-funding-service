@@ -22,12 +22,14 @@ import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
 
@@ -44,6 +46,7 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationTeamPopulatorTest {
@@ -71,6 +74,9 @@ public class ApplicationTeamPopulatorTest {
 
     @Mock
     private CompetitionRestService competitionRestService;
+
+    @Mock
+    private UserRestService userRestService;
 
     @Test
     public void populate() {
@@ -139,6 +145,7 @@ public class ApplicationTeamPopulatorTest {
         when(applicationKtaInviteRestService.getKtaInviteByApplication(application.getId())).thenReturn(restSuccess(null, HttpStatus.OK));
         when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(asList(collboratorOrganisation, leadOrganisation)));
         when(questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(questionId, application.getId())).thenReturn(restSuccess(singletonList(status)));
+        when(userRestService.retrieveUserById(anyLong())).thenReturn(restSuccess(newUserResource().withEdiStatus(null).build()));
 
         ApplicationTeamViewModel viewModel = populator.populate(application.getId(), questionId, user);
 

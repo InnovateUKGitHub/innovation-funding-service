@@ -80,14 +80,6 @@ public class ApplicationTeamRowViewModel {
         return ChronoUnit.DAYS.between(pendingSince, ZonedDateTime.now());
     }
 
-    public String getEdiStatusDisplayName() {
-        if (ediStatus == null) {
-            return EDIStatus.INCOMPLETE.getDisplayName();
-        }
-        return ediStatus.getDisplayName();
-    }
-
-
     public EDIStatus getEdiStatus() {
         return ediStatus;
     }
