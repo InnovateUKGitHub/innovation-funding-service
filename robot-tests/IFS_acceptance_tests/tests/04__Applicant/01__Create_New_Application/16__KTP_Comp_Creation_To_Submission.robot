@@ -705,7 +705,7 @@ New lead applicant submits the application
     [Documentation]  IFS-7812  IFS-7814  IFS-8619
     Given Log in as a different user                      &{ktpLeadApplicantCredentials}
     When the user clicks the button/link                  link = ${ktpApplicationTitle}
-    And the applicant completes Application Team
+    And the applicant completes Application Team          COMPLETE    ${lead_ktp_email}
     Then the applicant submits the application
     And the user should not see the element               jQuery = li:contains("your KT adviser will be in touch to provide feedback and to answer any queries.")
     And the user should see the element                   jQuery = li:contains("your knowledge transfer adviser (KTA) will be in touch to provide feedback and to answer any queries")
@@ -1193,11 +1193,6 @@ the user fills financial overview section
         :FOR   ${ELEMENT}   IN    @{netCurrentAssets}
              \    the user enters text to a text field     id = years[${k}].currentAssets  ${ELEMENT}
              \    ${k} =   Evaluate   ${k} + 1
-
-#    ${l} =  Set Variable   0
-#        :FOR   ${ELEMENT}   IN    @{liabilities}
-#             \    the user enters text to a text field     id = years[${l}].liabilities  ${ELEMENT}
-#             \    ${l} =   Evaluate   ${l} + 1
 
     ${m} =  Set Variable   0
         :FOR   ${ELEMENT}   IN    @{shareHolderFunds}

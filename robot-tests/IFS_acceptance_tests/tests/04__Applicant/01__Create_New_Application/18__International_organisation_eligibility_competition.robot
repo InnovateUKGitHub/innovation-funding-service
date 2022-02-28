@@ -818,7 +818,7 @@ the user gets an error message on not filling mandatory fields
     the user should see the element     link = You must select the country where your organisation is based.
 
 The user completes the application
-    the applicant completes Application Team
+    the applicant completes Application Team                                       COMPLETE  ${lead_international_email}
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                                       ${internationalApplicationTitle}
