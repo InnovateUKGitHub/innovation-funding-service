@@ -218,6 +218,11 @@ span {
     @extend %icon-cross;
     padding-left: 28px;
   }
+  
+  &.edit{
+    @extend %action-required;
+    padding-left: 28px;
+  }
 }
 
 [data-selector-highlighter] {
