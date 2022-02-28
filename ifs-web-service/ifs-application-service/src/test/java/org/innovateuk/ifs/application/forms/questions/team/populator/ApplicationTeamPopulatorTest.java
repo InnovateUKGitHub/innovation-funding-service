@@ -17,6 +17,7 @@ import org.innovateuk.ifs.invite.service.ApplicationKtaInviteRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.EDIStatus;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -202,5 +203,108 @@ public class ApplicationTeamPopulatorTest {
         assertTrue(inviteViewModel.isInvite());
         assertEquals(newUserInvite.getId(), inviteViewModel.getInviteId());
         assertEquals("New user (pending for 10 days)", inviteViewModel.getName());
+    }
+
+    @Test
+    public void populateWhenEDIStatusIsComplete() {
+        ReflectionTestUtils.setField(populator, "isEDIUpdateEnabled", true);
+
+        long questionId = 3L;
+        UserResource user = newUserResource().build();
+        UserResource collaborator = newUserResource().build();
+        OrganisationResource leadOrganisation = newOrganisationResource()
+                .withName("Lead")
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
+                .build();
+        OrganisationResource collboratorOrganisation = newOrganisationResource()
+                .withName("Collaborator")
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
+                .build();
+
+        ProcessRoleResource leadRole = newProcessRoleResource()
+                .withRole(ProcessRoleType.LEADAPPLICANT)
+                .withOrganisation(leadOrganisation.getId())
+                .withUser(user)
+                .build();
+
+        ProcessRoleResource collaboratorRole = newProcessRoleResource()
+                .withRole(ProcessRoleType.COLLABORATOR)
+                .withOrganisation(collboratorOrganisation.getId())
+                .withUser(collaborator)
+                .build();
+
+        ApplicationInviteResource collaboratorInvite = newApplicationInviteResource()
+                .withName("Collaborator Invite")
+                .withStatus(InviteStatus.OPENED)
+                .withUsers(collaborator.getId())
+                .build();
+
+        ApplicationInviteResource newUserInvite = newApplicationInviteResource()
+                .withName("New user")
+                .withStatus(InviteStatus.SENT)
+                .withSentOn(ZonedDateTime.now().minusDays(10).minusHours(1))
+                .build();
+
+        InviteOrganisationResource collaboratorOrganisationInvite = newInviteOrganisationResource()
+                .withOrganisationNameConfirmed(collboratorOrganisation.getName())
+                .withOrganisation(collboratorOrganisation.getId())
+                .withInviteResources(singletonList(collaboratorInvite))
+                .build();
+
+        InviteOrganisationResource invitedOrganisation = newInviteOrganisationResource()
+                .withOrganisationName("New organisation")
+                .withInviteResources(singletonList(newUserInvite))
+                .build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withCollaborationLevel(CollaborationLevel.SINGLE)
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competition.getId())
+                .build();
+        QuestionStatusResource status = newQuestionStatusResource()
+                .withQuestion(questionId)
+                .withMarkedAsComplete(true)
+                .build();
+
+        when(applicationService.getById(application.getId())).thenReturn(application);
+        when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
+        when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(asList(leadRole, collaboratorRole)));
+        when(inviteRestService.getInvitesByApplication(application.getId())).thenReturn(restSuccess(asList(collaboratorOrganisationInvite, invitedOrganisation)));
+        when(applicationKtaInviteRestService.getKtaInviteByApplication(application.getId())).thenReturn(restSuccess(null, HttpStatus.OK));
+        when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(asList(collboratorOrganisation, leadOrganisation)));
+        when(questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(questionId, application.getId())).thenReturn(restSuccess(singletonList(status)));
+        when(userRestService.retrieveUserById(anyLong())).thenReturn(restSuccess(newUserResource().withEdiStatus(EDIStatus.COMPLETE).build()));
+
+        ApplicationTeamViewModel viewModel = populator.populate(application.getId(), questionId, user);
+
+        assertEquals(application.getId(), viewModel.getApplicationId());
+        assertEquals(application.getName(), viewModel.getApplicationName());
+        assertEquals((long) user.getId(), viewModel.getLoggedInUserId());
+        assertEquals(questionId, viewModel.getQuestionId());
+        assertTrue(viewModel.isAnyPendingInvites());
+        assertTrue(viewModel.isReadOnly());
+        assertTrue(viewModel.isCollaborationLevelSingle());
+        assertTrue(viewModel.isComplete());
+        assertTrue(viewModel.isLeadApplicant());
+        assertTrue(viewModel.isEDIUpdateEnabled());
+
+        assertEquals(3, viewModel.getOrganisations().size());
+
+        ApplicationTeamOrganisationViewModel leadOrganisationViewModel = viewModel.getOrganisations().get(0);
+        assertEquals("Lead", leadOrganisationViewModel.getName());
+        assertEquals((long) leadOrganisation.getId(), leadOrganisationViewModel.getId());
+        assertEquals(1, leadOrganisationViewModel.getRows().size());
+        assertTrue(leadOrganisationViewModel.isLead());
+        assertTrue(leadOrganisationViewModel.isEditable());
+        assertTrue(leadOrganisationViewModel.isExisting());
+
+        ApplicationTeamRowViewModel leadUserViewModel = leadOrganisationViewModel.getRows().get(0);
+        assertEquals(user.getId(), leadUserViewModel.getId());
+        assertTrue(leadUserViewModel.isLead());
+        assertFalse(leadUserViewModel.isInvite());
+        assertNull(leadUserViewModel.getInviteId());
+        assertEquals("Complete", leadUserViewModel.getEdiStatus().getDisplayName());
+
     }
 }

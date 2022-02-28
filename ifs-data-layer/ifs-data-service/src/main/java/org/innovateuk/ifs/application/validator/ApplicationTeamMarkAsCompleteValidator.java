@@ -82,7 +82,7 @@ public class ApplicationTeamMarkAsCompleteValidator implements Validator {
 
     private void validateLeadEDIStatus(Errors errors, Application application) {
         EDIStatus ediStatus = application.getLeadApplicant().getEdiStatus();
-        if (ediStatus == null || (ediStatus != null && ediStatus.equals(EDIStatus.INCOMPLETE))) {
+        if (ediStatus == null || (ediStatus != null && !ediStatus.equals(EDIStatus.COMPLETE))) {
             reject(errors, "validation.applicationteam.edi.status", application.getLeadApplicant().getName(), application.getLeadOrganisationId());
         }
     }
