@@ -14,9 +14,7 @@ import org.innovateuk.ifs.management.competition.setup.application.viewmodel.Lan
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupSectionModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -51,26 +49,10 @@ public class LandingModelPopulator implements CompetitionSetupSectionModelPopula
         return CompetitionSetupSection.APPLICATION_FORM;
     }
 
-    @Value("${ifs.edi.update.enabled:false}")
-    private boolean ediUpdateToggle;
-
-
     @Override
     public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
         List<SectionResource> sections = sectionService.getAllByCompetitionId(competitionResource.getId());
-        List<QuestionResource> questionResources = questionRestService
-                .findByCompetition(competitionResource.getId())
-                .getSuccess()
-                .stream()
-                .filter(questionResource -> {
-                    if (ediUpdateToggle) {
-                        return !QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION.equals(questionResource.getQuestionSetupType());
-                    }
-                    return true;
-
-                })
-                .collect(toList());
-
+        List<QuestionResource> questionResources = questionRestService.findByCompetition(competitionResource.getId()).getSuccess();
         List<SectionResource> parentSections = sections.stream()
                 .filter(sectionResource -> sectionResource.getParentSection() == null)
                 .collect(Collectors.toList());
@@ -107,7 +89,7 @@ public class LandingModelPopulator implements CompetitionSetupSectionModelPopula
                     .collect(Collectors.toList());
         }
 
-        return Collections.emptyList();
+         return Collections.emptyList();
     }
 
     private Map<CompetitionSetupSubsection, Boolean> convertWithDefaultsIfNotPresent(Map<CompetitionSetupSubsection, Optional<Boolean>> subSectionsStatuses) {
@@ -138,12 +120,6 @@ public class LandingModelPopulator implements CompetitionSetupSectionModelPopula
 
     private boolean hasIncompleteQuestions(Map<Long, Boolean> questionStatuses, List<QuestionResource> questions) {
         return questions.stream()
-                .filter(questionResource -> {
-                    if (ediUpdateToggle) {
-                        return !QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION.equals(questionResource.getQuestionSetupType());
-                    }
-                    return true;
-                })
                 .map(questionResource -> questionStatuses.getOrDefault(questionResource.getId(), Boolean.FALSE))
                 .anyMatch(aBoolean -> aBoolean.equals(Boolean.FALSE));
     }
