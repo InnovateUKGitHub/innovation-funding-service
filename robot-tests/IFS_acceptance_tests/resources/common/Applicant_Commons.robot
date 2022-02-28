@@ -753,6 +753,7 @@ the user can mark the question as complete
 the user can submit the application
     the user clicks the button/link         id = application-overview-submit-cta
     the user should not see the element     jQuery = .message-alert:contains("You will not be able to make changes")
+    the user should see the read only view of application team
     the user clicks the button/link         id = submit-application-button
 
 the lead invites already registered user
@@ -1029,3 +1030,8 @@ the user accepts invitation to join application under same organisation
     the user clicks the button/link                  jQuery = a:contains("Continue")
     login to application                             ${email}  ${password}
     the user clicks the button/link                  jQuery = a:contains("Confirm and accept invitation")
+
+the user should see the read only view of application team
+    the user should see the element  jQuery = h3:contains("Team members")
+    the user should see the element  jQuery = th:contains("EDI status")
+    
