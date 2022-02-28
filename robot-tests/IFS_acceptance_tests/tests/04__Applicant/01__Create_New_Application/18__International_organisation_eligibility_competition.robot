@@ -1178,6 +1178,7 @@ uk lead applicant completes application form
     the user clicks the button/link                                 link = Application details
     the user fills in the Application details                       ${ukLeadInternationalApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user clicks the button/link                                 link = Application team
+    applicant completes edi profile                                 COMPLETE  ${lead_applicant}
     the user clicks the button/link                                 id = remove-organisation-${firstGroupLtdOrganisationName}
     the user clicks the button/link                                 name = remove-team-member
     the user clicks the button/link                                 id = application-question-complete

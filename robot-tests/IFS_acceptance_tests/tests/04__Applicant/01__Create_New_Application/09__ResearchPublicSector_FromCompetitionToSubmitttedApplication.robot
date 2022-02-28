@@ -68,7 +68,7 @@ The Applicant completing the application details
     When the user marks the finances as complete                ${researchLeadApp}   Calculate  52,214  yes
     Then user is not able to submit his application as he exceeds research participation
     And the user clicks the button/link                         link = Application overview
-    And collaborating is required to submit the application if Research participation is not 100pc   ${compResearch}  ${researchLeadApp}  ${collaborator2_credentials["email"]}  yes
+    And collaborating is required to submit the application if Research participation is not 100pc   ${compResearch}  ${researchLeadApp}  ${collaborator2_credentials["email"]}  yes  COMPLETE  pete.tom@egg.com
 
 Applicant Applies to Public content leading Competition
     [Documentation]  IFS-1012  IFS-4046  IFS-8044

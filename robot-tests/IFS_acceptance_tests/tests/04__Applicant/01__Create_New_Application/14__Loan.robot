@@ -91,7 +91,7 @@ The user can navigate back to application overview in the same window from part 
     And the user clicks the button/link              link = Business and financial information
     And the user clicks the button/link              jQuery = a:contains("Continue")
     And the user logs in if username field present
-    Then title should be                             Home
+    Then title should be                             Single Sign-On Error | loansCommunity
     And Url should contain competition id            ${loan_comp_appl_id}
 
 The member applicant can not continue button see B&FI question when the question is not assigned to member
@@ -118,7 +118,7 @@ Member can access salesforce form through B&FI question
     And the user clicks the button/link              link = Business and financial information
     And the user clicks the button/link              jQuery = a:contains("Continue")
     And the user logs in if username field present
-    Then title should be                             Home
+    Then title should be                             Single Sign-On Error | loansCommunity
 
 Member can mark the B&FI question as complete
     [Documentation]    IFS-11271
@@ -150,7 +150,7 @@ The user can open the sales force new tab on clicking conitnue button in incompl
     Given the sales force submits/unsubmits b&fi survey     0  ${loanApplicationID}
     When the user clicks the button/link                    jQuery = a:contains("Continue")
     And the user logs in if username field present
-    Then title should be                                    Home
+    Then title should be                                    Single Sign-On Error | loansCommunity
 
 The user will not be able to mark the application as complete without completing business and financial information
     [Documentation]    IFS-9484  IFS-10705  IFS-10757  IFS-11137
