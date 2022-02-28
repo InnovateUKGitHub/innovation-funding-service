@@ -159,11 +159,13 @@ public class ApplicationNotificationTemplateServiceImplTest extends BaseServiceU
     }
 
     @Test
-    public void getUnsuccessfulHestaNotificationTemplate() {
+    public void getUnsuccessfulHorizonEuropeGuaranteeNotificationTemplate() {
         ZonedDateTime feedbackDate = ZonedDateTime.now();
         Competition competition = newCompetition()
                 .withName("Competition")
-                .withCompetitionType(newCompetitionType().withName("Hesta").build())
+                .withCompetitionType(newCompetitionType()
+                        .withName("Horizon Europe Guarantee")
+                        .build())
                 .withAlwaysOpen(true)
                 .build();
 

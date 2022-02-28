@@ -1,16 +1,21 @@
 package org.innovateuk.ifs.project.organisationdetails.edit.controller;
 
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationDetailsReadOnlyViewModel;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.organisationdetails.edit.viewmodel.ProjectOrganisationSizeViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,6 +46,9 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
     @Autowired
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
+    @Autowired
+    private OrganisationAddressRestService organisationAddressRestService;
+
     @GetMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
     @SecuredBySpring(value = "READ", description = "Ifs Admin and Project finance users can view edit organisation size page")
@@ -62,6 +70,7 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
     public String save(
             @PathVariable long projectId,
             @PathVariable long organisationId,
+            UserResource loggedInUser,
             @Valid @ModelAttribute("form") F form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
@@ -75,7 +84,7 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
         Supplier<String> successHandler = () -> redirectToOrganisationDetails(projectId, organisationId);
 
         return validationHandler.failNowOrSucceedWith(failureHandler,() -> {
-             validationHandler.addAnyErrors(update(projectId, organisationId, form));
+             validationHandler.addAnyErrors(update(projectId, organisationId, loggedInUser.getId(), form));
              return validationHandler.failNowOrSucceedWith(failureHandler, successHandler);
         });
     }
@@ -88,12 +97,15 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
         boolean isMaximumFundingLevelConstant = competition.isMaximumFundingLevelConstant(
                 organisation::getOrganisationTypeEnum,
                 () -> grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess());
-        return new ProjectOrganisationSizeViewModel(project,
+        ProjectOrganisationSizeViewModel projectOrganisationSizeViewModel =  new ProjectOrganisationSizeViewModel(project,
                 competition,
                 organisation,
                 isMaximumFundingLevelConstant,
                 false,
                 false);
+        projectOrganisationSizeViewModel.setOrgDetailsViewModel(populateOrganisationDetails(organisationId));
+        projectOrganisationSizeViewModel.setPartnerOrgDisplay(true);
+        return projectOrganisationSizeViewModel;
     }
 
     protected abstract String redirectToOrganisationDetails(long projectId, long organisationId);
@@ -104,5 +116,35 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
 
     protected abstract ServiceResult<Void> update(long projectId,
                                                   long organisationId,
+                                                  long userId,
                                                   F form);
+
+    private YourOrganisationDetailsReadOnlyViewModel populateOrganisationDetails(long organisationId) {
+        YourOrganisationDetailsReadOnlyViewModel yourOrganisationDetailsReadOnlyViewModel = new YourOrganisationDetailsReadOnlyViewModel();
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+
+        yourOrganisationDetailsReadOnlyViewModel.setOrganisationName(organisation.getName());
+        yourOrganisationDetailsReadOnlyViewModel.setOrganisationType(organisation.getOrganisationTypeName());
+        if (organisation.getCompanyRegistrationNumber() == null || organisation.getCompanyRegistrationNumber().isEmpty()) {
+            yourOrganisationDetailsReadOnlyViewModel.setOrgDetailedDisplayRequired(false);
+            yourOrganisationDetailsReadOnlyViewModel.setRegistrationNumber("");
+            yourOrganisationDetailsReadOnlyViewModel.setAddressResource(null);
+            yourOrganisationDetailsReadOnlyViewModel.setSicCodes(null);
+        } else {
+            yourOrganisationDetailsReadOnlyViewModel.setOrgDetailedDisplayRequired(true);
+            yourOrganisationDetailsReadOnlyViewModel.setRegistrationNumber(organisation.getCompanyRegistrationNumber());
+            AddressResource addressResource =  organisationAddressRestService.getOrganisationRegisterdAddressById(organisation.getId())
+                    .andOnSuccessReturn(addresses -> addresses.stream()
+                            .findFirst()
+                            .map(OrganisationAddressResource::getAddress)
+                            .orElse(new AddressResource()))
+                    .getSuccess();
+
+            yourOrganisationDetailsReadOnlyViewModel.setAddressResource(addressResource);
+            if (organisation.getSicCodes() != null && !organisation.getSicCodes().isEmpty()) {
+                yourOrganisationDetailsReadOnlyViewModel.setSicCodes(organisation.getSicCodes());
+            }
+        }
+        return yourOrganisationDetailsReadOnlyViewModel;
+    }
 }

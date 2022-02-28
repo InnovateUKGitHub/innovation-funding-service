@@ -355,7 +355,9 @@ KTA receives a notification email that assessor and supporter feedback is availa
 KTA can view written feedback from assessors and supporters on release feedback
     [Documentation]  IFS-8550
     Given log in as a different user                        ${monitoringOfficerEmail}   ${short_password}
-    When the user navigates to application overview         ${KTPapplication}
+    When the user navigates to the page                     ${server}/project-setup/project/${ktpProjectID}
+    And the user clicks the button/link                     link = view application overview
+    #When the user navigates to application overview         ${KTPapplication}
     Then KTA should see assessors and supporters feedback
 
 Project lead should not see assessor or supporter feedback

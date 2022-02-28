@@ -38,7 +38,6 @@ HECP terms and conditions are correct
     [Documentation]  IFS-10926
     Given the user clicks the button/link                link = Terms and conditions
     When the user clicks the button/link                 link = ${hecpKicsTermsAndConditionsLink}
-    #And select window                                    title = ${hecpKicsTermsAndConditionsTitle}
     And select window                                    NEW
     Then the user should see the element                 jQuery = h1:contains("Terms and conditions for Horizon Europe Guarantee – EIT KICs 2021 grant")
     [Teardown]   the user closes the last opened tab
@@ -49,7 +48,7 @@ HECP terms and conditions not pre selected for any funding or competition type
     And the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
     And the user fills in the CS Initial details     ${hecpKICsCompetitionName}  ${month}  ${nextyear}  ${compType_HESTA}  STATE_AID  GRANT
     When the user clicks the button/link             link = Terms and conditions
-    Then the user should see the element             css = [id="termsAndConditionsId9"]:not(:checked) ~ label
+    Then the user should see the element             css = [id="termsAndConditionsId9"]:checked ~ label
 
 Comp admin marks HECP terms and conditions section as complete
     [Documentation]  IFS-10926

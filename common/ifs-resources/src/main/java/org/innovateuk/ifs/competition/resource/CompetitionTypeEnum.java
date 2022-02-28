@@ -13,7 +13,7 @@ public enum CompetitionTypeEnum {
     THE_PRINCES_TRUST("The Prince's Trust"),
     HORIZON_2020("Horizon 2020"),
     ASSESSMENT_ONLY("Assessment only"),
-    HESTA("Hesta");
+    HORIZON_EUROPE_GUARANTEE("Horizon Europe Guarantee");
 
 
     CompetitionTypeEnum(String text) {

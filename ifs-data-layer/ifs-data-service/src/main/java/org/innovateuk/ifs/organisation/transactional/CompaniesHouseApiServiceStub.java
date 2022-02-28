@@ -5,6 +5,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,8 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
@@ -26,8 +30,9 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 @Service
 @ConditionalOnProperty(name = "ifs.data.companies.house.lookup.enabled", havingValue = "false")
 public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
+    private static final Logger LOG = LoggerFactory.getLogger(CompaniesHouseApiServiceStub.class);
     protected static final int  INDEX_POSITION = 0;
-    private static final String TOTAL_SEARCH_RESULTS = "14";
+    private static final String TOTAL_SEARCH_RESULTS = "15";
 
     @Value("${ifs.new.organisation.search.enabled}")
     private boolean isImprovedSearchEnabled = false;
@@ -57,18 +62,23 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
 
     private List<OrganisationSearchResult> getFirstPageSearchResults() {
         return asList(getAmadeus(true), getASOS(true), getAVIVA(true), getBBC(true), getCineWorld(true), getFirstGroupPlc(true),
-                getITV(true), getRoyalMail(true), getSAGA(true), getTescoAqua(true));
+                getHampshireCounty(true), getITV(true), getRoyalMail(true), getSAGA(true));
     }
 
     private List<OrganisationSearchResult> getSecondPageSearchResults() {
-        return asList( getTesco(true), getUniace(true), getVirginMoney(true), getWorth(true));
+        return asList( getTescoAqua(true), getTesco(true), getUniace(true), getVirginMoney(true), getWorth(true));
 
     }
 
     @Override
     public ServiceResult<OrganisationSearchResult> getOrganisationById(String id) {
         if (isImprovedSearchEnabled) {
-            return serviceSuccess(getImprovedResultById(id));
+            OrganisationSearchResult result = getImprovedResultById(id);
+            if (result == null) {
+                LOG.info("Organisation ID is not matched with the existing organisation stub data" + id);
+                return serviceFailure(GENERAL_NOT_FOUND);
+            }
+            return serviceSuccess(result);
         } else {
             return serviceSuccess(getDummyResultById(id));
         }
@@ -92,15 +102,16 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
             case "07520089" : return getBBC(false);
             case "04081830" : return getCineWorld(false);
             case "SC157176" : return getFirstGroupPlc(false);
+            case "11600829" : return getHampshireCounty(false);
             case "04967001" : return getITV(false);
             case "08680755" : return getRoyalMail(false);
             case "08804263" : return getSAGA(false);
             case "05888959" : return getTescoAqua(false);
             case "00445790" : return getTesco(false);
-            case "09400267" : return  getUniace(false);
+            case "09400267" : return getUniace(false);
             case "09595911" : return getVirginMoney(false);
-            case "05337108" : return  getWorth(false);
-            default : return getRoyalMail(false);
+            case "05337108" : return getWorth(false);
+            default : return null;
         }
     }
 
@@ -291,6 +302,25 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                  asList("GREEN, Anthony Charles","GREGORY, Matthew","GUNNING, Stephen William Lawrence","MANGOLD, Ryan Dirk",
                         "MARTIN, David Robert","ROBBIE, David Andrew"));
        }
+    private OrganisationSearchResult getHampshireCounty(boolean isSearch) {
+        return buildDummyOrganisationSearchResult(isSearch,
+                "The Ageas Bowl Botley Road, West End, Southampton, United Kingdom, SO30 3XH",
+                "The Ageas Bowl Botley Road, West End",
+                "",
+                "",
+                "Southampton",
+                "",
+                "SO30 3XH",
+                "11600829",
+                "HAMPSHIRE CRICKET COMPANY LIMITED",
+                "ltd",
+                "active",
+                "2018-10-02",
+                "11600829 - Incorporated on on 2 October 2018",
+                asList("93199"),
+                asList("BRANSGROVE, Roderick Granville", "EDWARDS, Charlotte Marie", "JANMOHAMED, Feroze Issa Ismail",
+                        "MANN, David", "PIKE, Nicholas Simon", "WHITE, Giles William", "LASHMAR, Michael William"));
+    }
 
     private OrganisationSearchResult getITV(boolean isSearch) {
         return buildDummyOrganisationSearchResult(isSearch,

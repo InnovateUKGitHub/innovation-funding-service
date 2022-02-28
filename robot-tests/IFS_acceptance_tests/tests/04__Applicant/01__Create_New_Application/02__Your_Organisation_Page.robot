@@ -88,12 +88,12 @@ Companies House: Search for a dissolved company and the result should be disable
 Companies House: Search for a liquidated company and the result should be disabled
     [Documentation]    IFS-9103
     When the user searches for organisation       TESCO AQUA
+    And the user clicks the button/link           link = Next
     Then the user should not see the element      link = TESCO AQUA (FINCO1) LIMITED
     And the user should see the element           jQuery = span p:contains("TESCO AQUA (FINCO1) LIMITED")
 
 Companies House: No content message should be displayed when the search results are less than 400
     [Documentation]    IFS-9103
-    When the user clicks the button/link         jQuery = a:contains("Next")
     Then the user should not see the element     jQuery = p:contains("This is the last page of search results and we have shown you the closest 400 matches.")
 
 Not in Companies House: Enter details manually link

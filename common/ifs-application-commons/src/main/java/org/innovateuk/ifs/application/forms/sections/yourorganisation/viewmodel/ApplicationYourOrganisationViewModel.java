@@ -24,6 +24,8 @@ public class ApplicationYourOrganisationViewModel implements BaseAnalyticsViewMo
     private boolean showOrganisationSizeAlert;
     private boolean maximumFundingLevelConstant;
     private boolean internal;
+    private YourOrganisationDetailsReadOnlyViewModel orgDetailsViewModel;
+    private boolean partnerOrgDisplay;
 
 
     public ApplicationYourOrganisationViewModel(long applicationId, CompetitionResource competition,
@@ -81,17 +83,33 @@ public class ApplicationYourOrganisationViewModel implements BaseAnalyticsViewMo
 
     public String getHint() {
         String organisation = internal ? "the organisation" : "your organisation";
+        String orgSize = internal ? "the organisation's size" : "your organisation size";
         String you = internal ? "the organisation" : "you";
         String url = fundingRules == FundingRules.STATE_AID ? STATE_AID_URL : NON_STATE_AID_URL;
 
-        String fundingLevelDependsOnOrganisationSizeMessage = String.format("<p class=\"govuk-body\">You must tell us the size of %s to determine the level of funding %s are eligible for.</p>", organisation, you);
-        String sizeDefinition = String.format("<p class=\"govuk-body\">Please use <a href=\"%s\">our guidance (opens in a new window)</a> to determine %s.</p>", url, organisation);
+        String fundingLevelDependsOnOrganisationSizeMessage = String.format("<p class=\"govuk-body\">The size of %s determines the level of funding %s are eligible for.</p>", organisation, you);
+        String sizeDefinition = String.format("<p class=\"govuk-body\">Please use our <a href=\"%s\"> guidance </a> (opens in a new window) to determine %s.</p>", url, orgSize);
 
         if (maximumFundingLevelConstant) {
             return sizeDefinition;
         } else {
             return fundingLevelDependsOnOrganisationSizeMessage + sizeDefinition;
         }
+    }
 
+    public boolean isPartnerOrgDisplay() {
+        return partnerOrgDisplay;
+    }
+
+    public void setPartnerOrgDisplay(boolean partnerOrgDisplay) {
+        this.partnerOrgDisplay = partnerOrgDisplay;
+    }
+
+    public YourOrganisationDetailsReadOnlyViewModel getOrgDetailsViewModel() {
+        return orgDetailsViewModel;
+    }
+
+    public void setOrgDetailsViewModel(YourOrganisationDetailsReadOnlyViewModel orgDetailsViewModel) {
+        this.orgDetailsViewModel = orgDetailsViewModel;
     }
 }

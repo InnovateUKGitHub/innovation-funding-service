@@ -11,6 +11,7 @@ import org.innovateuk.ifs.finance.resource.OrganisationFinancesKtpYearsResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.service.CompaniesHouseRestService;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
@@ -24,6 +25,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
+import org.innovateuk.ifs.user.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,9 +36,11 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.YearMonth;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
@@ -78,6 +82,9 @@ public class OrganisationDetailsKtpFinancialYearsControllerTest extends BaseCont
     @Mock
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
+    @Mock
+    private OrganisationAddressRestService organisationAddressRestService;
+
     @Override
     protected OrganisationDetailsKtpFinancialYearsController supplyControllerUnderTest() {
         return new OrganisationDetailsKtpFinancialYearsController();
@@ -112,6 +119,7 @@ public class OrganisationDetailsKtpFinancialYearsControllerTest extends BaseCont
 
         when(projectRestService.getProjectById(projectId)).thenReturn(new RestResult(restSuccess(project)));
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(new RestResult(restSuccess(organisation)));
+        when(organisationAddressRestService.getOrganisationRegisterdAddressById(organisationId)).thenReturn(restSuccess(organisation.getAddresses()));
         when(projectYourOrganisationRestService.getOrganisationKtpYears(projectId, organisationId)).thenReturn(serviceSuccess(finances));
         when(populator.populate(finances)).thenReturn(form);
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(new RestResult(restSuccess(Arrays.asList(new PartnerOrganisationResource()))));
@@ -178,7 +186,7 @@ public class OrganisationDetailsKtpFinancialYearsControllerTest extends BaseCont
     }
 
     private OrganisationFinancesKtpYearsResource getFinances() {
-        return new OrganisationFinancesKtpYearsResource(OrganisationSize.SMALL, emptyList(), 6L, YearMonth.now());
+        return new OrganisationFinancesKtpYearsResource(1L, OrganisationSize.SMALL, emptyList(), false, "", 6L, YearMonth.now());
     }
 
     private ProjectResource getProject() {
@@ -194,6 +202,9 @@ public class OrganisationDetailsKtpFinancialYearsControllerTest extends BaseCont
         organisation.setOrganisationTypeName("orgType");
         organisation.setCompaniesHouseNumber("1234");
         AddressResource address = new AddressResource("A", "B", "C", "D", "E", "F");
+        OrganisationAddressResource organisationAddressResource = new OrganisationAddressResource();
+        organisationAddressResource.setAddress(address);
+        organisation.setAddresses(singletonList(organisationAddressResource));
         when(companiesHouseRestService.getOrganisationById("1234")).thenReturn(restSuccess(newOrganisationSearchResult().withAddressResource(address).build()));
         return organisation;
     }

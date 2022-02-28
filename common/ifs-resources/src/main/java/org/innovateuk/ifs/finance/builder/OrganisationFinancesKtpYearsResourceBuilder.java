@@ -36,6 +36,10 @@ public class OrganisationFinancesKtpYearsResourceBuilder extends BaseBuilder<Org
         return createDefault(OrganisationFinancesKtpYearsResource.class);
     }
 
+    public OrganisationFinancesKtpYearsResourceBuilder withUserId(Long... userIds) {
+        return withArray((userId, resource) -> resource.setUserId(userId), userIds);
+    }
+
     public OrganisationFinancesKtpYearsResourceBuilder withOrganisationSize(OrganisationSize... organisationSizes) {
         return withArray((size, resource) -> resource.setOrganisationSize(size), organisationSizes);
     }

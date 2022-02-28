@@ -46,7 +46,7 @@ public class EditOrganisationDetailsWithGrowthTableController extends AbstractEd
     }
 
     @Override
-    protected ServiceResult<Void> update(long projectId, long organisationId, YourOrganisationWithGrowthTableForm form) {
-        return saver.save(projectId, organisationId, form, projectYourOrganisationRestService);
+    protected ServiceResult<Void> update(long projectId, long organisationId, long userId, YourOrganisationWithGrowthTableForm form) {
+        return saver.save(projectId, organisationId, userId, form, projectYourOrganisationRestService);
     }
 }
