@@ -174,7 +174,7 @@ Lead can review the question and submit the application
     And the user clicks the button/link                         link = ${ATIapplicationTitle}
     When the user clicks the button/link                        link = ${technicalApproach_question}
     Then the user can mark the question as complete
-    And the user can submit the application                     steve  smith
+    And the user can submit the application
 
 Lead does not see reopen when the comp is closed
     [Documentation]  IFS-7547
