@@ -1,0 +1,31 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+
+test {
+    useJUnitPlatform {
+    }
+}
+
+dependencies {
+
+    api platform(project(":common:bom"))
+
+    // Ideally this wouldn't require an IFS dep
+    api project(":common:ifs-security")
+
+    implementation "org.springframework.boot:spring-boot-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "javax.servlet:javax.servlet-api"
+    implementation "io.projectreactor:reactor-core"
+    implementation "org.springframework.boot:spring-boot-starter-aop"
+
+    testImplementation("org.springframework.boot:spring-boot-starter-web")
+    testImplementation("org.springframework.boot:spring-boot-devtools")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation('org.mockito:mockito-junit-jupiter')
+    testImplementation('org.mockito:mockito-inline')
+
+}

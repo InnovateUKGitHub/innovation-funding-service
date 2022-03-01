@@ -621,7 +621,9 @@ the user selects his organisation in Companies House
     the user clicks the button/link       jQuery = button:contains("Save and continue")
 
 the applicant completes Application Team
+    [Arguments]  ${ediStatus}  ${userEmail}
     the user clicks the button/link  link = Application team
+    applicant completes edi profile  ${ediStatus}  ${userEmail}
     the user clicks the button/link  id = application-question-complete
     the user clicks the button/link  link = Application overview
     the user should see the element  jQuery = li:contains("Application team") > .task-status-complete
@@ -772,10 +774,10 @@ partner applicant completes the project finances
     the user completes partner project finances      ${application_title}  ${is_KTP}
 
 lead applicant completes the application team
-    [Arguments]   ${email}   ${password}   ${application_title}
+    [Arguments]   ${email}   ${password}   ${application_title}  ${ediStatus}  ${userEmail}
     Log in as a different user                   ${email}   ${password}
     the user clicks the button/link              link = ${application_title}
-    the applicant completes Application Team
+    the applicant completes Application Team     ${ediStatus}  ${userEmail}
 
 the lead invites a non-registered user
     [Arguments]   ${partner_email}  ${competition_title}   ${application_title}  ${is_KTP}  ${fName}  ${lName}
@@ -942,8 +944,9 @@ the user completes funding level in application
     the user clicks the button/link          link = Your funding
 
 the lead user completes project details, application questions and finances sections
+    [Arguments]  ${ediStatus}  ${userEmail}
     the user completes the application details section                              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  25
-    the applicant completes Application Team
+    the applicant completes Application Team                                        ${ediStatus}  ${userEmail}
     the applicant marks EDI question as complete
     the user completes the research category                                        Feasibility studies
     the lead applicant fills all the questions and marks as complete(programme)
@@ -1086,4 +1089,3 @@ the user should see the read only view of application team
     the user should see the element  jQuery = h3:contains("Team members")
     the user should see the element  jQuery = th:contains("EDI status")
     the user should see the element  jQuery = td:contains("${fName} ${lName}")~td:contains("Incomplete")
-
