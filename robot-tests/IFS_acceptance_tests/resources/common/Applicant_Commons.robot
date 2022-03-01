@@ -751,10 +751,11 @@ the user can mark the question as complete
     the user clicks the button/link     link = Back to application overview
 
 the user can submit the application
+    [Arguments]  ${fName}  ${lName}
     the user clicks the button/link         id = application-overview-submit-cta
     the user should not see the element     jQuery = .message-alert:contains("You will not be able to make changes")
     the user clicks the button/link         jQuery = button:contains("Application team")
-    the user should see the read only view of application team  tim   timmy
+    the user should see the read only view of application team  ${fName}  ${lName}
     the user clicks the button/link         id = submit-application-button
 
 the lead invites already registered user
@@ -1081,8 +1082,8 @@ the user accepts invitation to join application under same organisation
     the user clicks the button/link                  jQuery = a:contains("Confirm and accept invitation")
 
 the user should see the read only view of application team
-    [Arguments]   ${firstName}  ${lastName}
+    [Arguments]   ${fName}  ${lName}
     the user should see the element  jQuery = h3:contains("Team members")
     the user should see the element  jQuery = th:contains("EDI status")
-    the user should see the element  jQuery = td:contains("${first_name} ${last_name}")~td:contains("Incomplete")
+    the user should see the element  jQuery = td:contains("${fName} ${lName}")~td:contains("Incomplete")
 
