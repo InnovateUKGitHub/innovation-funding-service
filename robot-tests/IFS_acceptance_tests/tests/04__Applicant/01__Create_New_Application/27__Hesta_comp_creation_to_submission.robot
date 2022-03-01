@@ -55,7 +55,7 @@ Lead applicant can submit application
     When the user successfully completes application          tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
     And the user clicks the button/link                       link = Your project finances
     Then the user completes hecp project finances             ${hestaApplicationName}  no
-    Then the user can submit the application                  ${fName}  ${lName}
+    Then the user can submit the application                  tim   timmy
 
 Lead applicant should get a confirmation email after application submission
     [Documentation]    IFS-10694
@@ -85,7 +85,7 @@ Lead applicant receives email notifiction when internal user marks application u
     And the user successfully completes application                                 barry   barrington   ${newLeadApplicantEmail}   ${newHestaApplicationName}
     And the user clicks the button/link                                             link = Your project finances
     And the user completes hecp project finances                                    ${hestaApplicationName}  no
-    And the user can submit the application                                         ${fName}  ${lName}
+    And the user can submit the application                                         barry   barrington
     And Log in as a different user                                                  &{Comp_admin1_credentials}
     And The user clicks the button/link                                             link = ${hestaCompetitionName}
     And assign the application to assessor                                          ${newHestaApplicationName}
