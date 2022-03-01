@@ -1,4 +1,5 @@
--- IFS-11299 - HECP GOL template
+-- IFS-11299 - HECP funding type and GOL template
+ALTER TABLE competition MODIFY COLUMN funding_type enum('GRANT','LOAN','PROCUREMENT','KTP','INVESTOR_PARTNERSHIPS','HECP');
 
 SET @system_maintenance_user_id = (
     SELECT id
