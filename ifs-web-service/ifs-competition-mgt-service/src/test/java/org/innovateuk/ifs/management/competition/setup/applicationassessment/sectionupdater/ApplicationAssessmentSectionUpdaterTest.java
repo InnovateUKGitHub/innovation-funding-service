@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.management.competition.setup.applicationsubmission.sectionupdater;
+package org.innovateuk.ifs.management.competition.setup.applicationassessment.sectionupdater;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
-import org.innovateuk.ifs.management.competition.setup.applicationsubmission.form.ApplicationSubmissionForm;
+import org.innovateuk.ifs.management.competition.setup.applicationassessment.form.ApplicationAssessmentForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -20,10 +20,10 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class ApplicationSubmissionSectionUpdaterTest {
+public class ApplicationAssessmentSectionUpdaterTest {
 
     @InjectMocks
-    private ApplicationSubmissionSectionUpdater updater;
+    private ApplicationAssessmentSectionUpdater updater;
 
     @Mock
     private CompetitionSetupRestService competitionSetupRestService;
@@ -34,7 +34,7 @@ public class ApplicationSubmissionSectionUpdaterTest {
         CompetitionResource competition = newCompetitionResource()
                 .withAlwaysOpen(true)
                 .build();
-        ApplicationSubmissionForm form = new ApplicationSubmissionForm(true);
+        ApplicationAssessmentForm form = new ApplicationAssessmentForm(true);
 
         UserResource loggedInUser = newUserResource().build();
 
@@ -53,16 +53,16 @@ public class ApplicationSubmissionSectionUpdaterTest {
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
                 .build();
-        ApplicationSubmissionForm form = new ApplicationSubmissionForm(true);
+        ApplicationAssessmentForm form = new ApplicationAssessmentForm(true);
 
-        String nextSection = updater.getNextSection(form, competition, CompetitionSetupSection.APPLICATION_ASSESSMENT);
+        String nextSection = updater.getNextSection(form, competition, CompetitionSetupSection.MILESTONES);
 
-        assertThat(nextSection).isEqualTo("redirect:/competition/setup/1/section/application-assessment");
+        assertThat(nextSection).isEqualTo("redirect:/competition/setup/1/section/milestones");
     }
 
     @Test
     public void supportsFrom() {
-        assertThat(updater.supportsForm(ApplicationSubmissionForm.class)).isTrue();
+        assertThat(updater.supportsForm(ApplicationAssessmentForm.class)).isTrue();
         assertThat(updater.supportsForm(CompetitionSetupForm.class)).isFalse();
     }
 }
