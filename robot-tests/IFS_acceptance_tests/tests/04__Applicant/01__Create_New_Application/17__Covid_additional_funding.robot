@@ -65,7 +65,7 @@ Applicant is asked for funding sought
 
 Submit application
     [Documentation]  IFS-7440
-    Given the user can submit the application
+    Given the user can submit the application     steve  smith
     Then the user should see the element          link = Reopen application
 
 Non lead cannot reopen competition
