@@ -149,10 +149,7 @@ public class ApplicationTeamPopulator {
 
     private ApplicationTeamOrganisationViewModel toOrganisationTeamViewModel(long applicationId, OrganisationResource organisation, Collection<ProcessRoleResource> processRoles, InviteOrganisationResource organisationInvite, boolean leadApplicant, UserResource user) {
         List<ApplicationTeamRowViewModel> userRows = processRoles.stream()
-                .map(pr -> {
-                    UserResource updatedUser = userRestService.retrieveUserById(pr.getUser()).getSuccess();
-                    return ApplicationTeamRowViewModel.fromProcessRole(pr, findInviteIdFromProcessRole(pr, organisationInvite), updatedUser.getEdiStatus());
-                }).collect(toList());
+                .map(pr -> getApplicationTeamRowViewModel(organisationInvite, pr)).collect(toList());
 
         Optional<InviteOrganisationResource> maybeOrganisationInvite = ofNullable(organisationInvite);
         if (maybeOrganisationInvite.isPresent()) {
@@ -179,6 +176,11 @@ public class ApplicationTeamPopulator {
                 true,
                 applicantBelongsToOrg(userRows, user),
                 address);
+    }
+
+    private ApplicationTeamRowViewModel getApplicationTeamRowViewModel(InviteOrganisationResource organisationInvite, ProcessRoleResource pr) {
+        UserResource updatedUser = userRestService.retrieveUserById(pr.getUser()).getSuccess();
+        return ApplicationTeamRowViewModel.fromProcessRole(pr, findInviteIdFromProcessRole(pr, organisationInvite), updatedUser.getEdiStatus());
     }
 
     private boolean applicantCanEditRow(List<ApplicationTeamRowViewModel> userRows, UserResource user, boolean leadApplicant) {
