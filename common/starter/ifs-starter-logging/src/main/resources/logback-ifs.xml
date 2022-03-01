@@ -6,13 +6,13 @@
 
     <springProperty scope="context" name="application" source="spring.application.name"/>
 
-    <springProfile name="dev">
+    <springProfile name="dev | STUBDEV">
         <include resource="org/springframework/boot/logging/logback/base.xml"/>
         <logger name="org.innovateuk" level="DEBUG"/>
         <logger name="ROOT" level="INFO"/>
     </springProfile>
 
-    <springProfile name="!dev">
+    <springProfile name="!dev &amp; !STUBDEV">
         <logger name="org.innovateuk" level="INFO"/>
         <logger name="ROOT" level="INFO"/>
 

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.profile.schedule;
 
+import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.profile.transactional.DoiExpiryService;
 import org.innovateuk.ifs.schedule.transactional.ScheduleStatusWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
  * Processor that checks for expired DOIs.
  */
 @Component
-@Profile("!integration-test")
+@Profile(IfsProfileConstants.NOT_INTEGRATION_TEST)
 public class DoiExpiryNotificationProcessor {
     @Autowired
     private DoiExpiryService service;

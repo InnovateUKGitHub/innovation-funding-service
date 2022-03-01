@@ -72,7 +72,7 @@ Get competitions id and set it as suite variable
 
 the lead applicant fills all the questions and marks as complete(APC)
     the user marks the project details as complete
-    the applicant completes application team
+    the applicant completes application team                      COMPLETE    steve.smith@empire.com
     :FOR  ${ELEMENT}    IN    @{APC_questions}
      \     the lead applicant marks every question as complete     ${ELEMENT}
 

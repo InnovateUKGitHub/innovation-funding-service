@@ -19,6 +19,12 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-validation"
     implementation "org.springframework.boot:spring-boot-starter-security"
 
+    if (isStubDevMode()) {
+        developmentOnly "org.springframework.boot:spring-boot-devtools"
+        developmentOnly project(":common:starter:ifs-starter-stubdev")
+        developmentOnly project(":common:starter:ifs-starter-swagger-ui")
+    }
+
     implementation project(":common:ifs-commons")
     implementation project(":common:ifs-error-util")
     implementation project(":common:ifs-rest-util")

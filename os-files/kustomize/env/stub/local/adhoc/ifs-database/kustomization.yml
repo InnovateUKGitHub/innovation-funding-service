@@ -1,0 +1,9 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: local-dev
+
+components:
+  - ../../../../../components/ifs-database
+
+patchesStrategicMerge:
+  - ifs-database.yml
