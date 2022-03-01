@@ -24,6 +24,7 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -72,6 +73,12 @@ public class ApplicationTeamPopulator {
 
     @Autowired
     private ApplicationOrganisationAddressRestService applicationOrganisationAddressRestService;
+
+    @Value("${ifs.edi.update.enabled}")
+    private boolean isEDIUpdateEnabled;
+
+    @Autowired
+    private UserRestService userRestService;
 
     public ApplicationTeamViewModel populate(long applicationId, long questionId, UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
@@ -122,7 +129,7 @@ public class ApplicationTeamPopulator {
                 application.isOpen() && competition.isOpen(),
                 questionStatuses.stream().anyMatch(QuestionStatusResource::getMarkedAsComplete),
                 competition.isKtp(), ktpPhase2Enabled,
-                ktaInvite, ktaProcessRole);
+                ktaInvite, ktaProcessRole, isEDIUpdateEnabled);
     }
 
     private ApplicationTeamOrganisationViewModel toInviteOrganisationTeamViewModel(InviteOrganisationResource organisationInvite, boolean leadApplicant) {
@@ -142,8 +149,7 @@ public class ApplicationTeamPopulator {
 
     private ApplicationTeamOrganisationViewModel toOrganisationTeamViewModel(long applicationId, OrganisationResource organisation, Collection<ProcessRoleResource> processRoles, InviteOrganisationResource organisationInvite, boolean leadApplicant, UserResource user) {
         List<ApplicationTeamRowViewModel> userRows = processRoles.stream()
-                .map(pr -> ApplicationTeamRowViewModel.fromProcessRole(pr, findInviteIdFromProcessRole(pr, organisationInvite)))
-                .collect(toList());
+                .map(pr -> getApplicationTeamRowViewModel(organisationInvite, pr)).collect(toList());
 
         Optional<InviteOrganisationResource> maybeOrganisationInvite = ofNullable(organisationInvite);
         if (maybeOrganisationInvite.isPresent()) {
@@ -170,6 +176,11 @@ public class ApplicationTeamPopulator {
                 true,
                 applicantBelongsToOrg(userRows, user),
                 address);
+    }
+
+    private ApplicationTeamRowViewModel getApplicationTeamRowViewModel(InviteOrganisationResource organisationInvite, ProcessRoleResource pr) {
+        UserResource updatedUser = userRestService.retrieveUserById(pr.getUser()).getSuccess();
+        return ApplicationTeamRowViewModel.fromProcessRole(pr, findInviteIdFromProcessRole(pr, organisationInvite), updatedUser.getEdiStatus());
     }
 
     private boolean applicantCanEditRow(List<ApplicationTeamRowViewModel> userRows, UserResource user, boolean leadApplicant) {

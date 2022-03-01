@@ -73,7 +73,7 @@ Applicant completes Application questions
     [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097  IFS-7311  IFS-7703  IFS-7718
     Given the user clicks the button/link                                                        link=Application details
     When the user fills in procurement Application details                                       ${appl_name}  ${tomorrowday}  ${month}  ${nextyear}
-    And the applicant completes Application Team
+    And the applicant completes Application Team                                                 COMPLETE  dave.adams@gmail.com
     And the applicant marks EDI question as complete
     Then the lead applicant fills all the questions and marks as complete(procurement)
     And the lead completes the questions with multiple answer choice and multiple appendices
