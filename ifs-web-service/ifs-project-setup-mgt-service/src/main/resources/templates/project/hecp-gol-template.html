@@ -129,30 +129,25 @@
             </th:block>
         </p>
         <p>
-            <strong>File reference:</strong> [file_reference]<br>
-            <strong>Application number:</strong> <th:block th:text="${model.applicationId}" /><br>
-            <strong>Date:</strong> <th:block th:text="${#temporals.format(model.getNow(), 'd MMMM yyyy')}" /><br>
-        </p>
-        <p>
-            <strong>Competition:</strong> <th:block th:text="${model.competitionName}" />
-            <br>
-            <strong>Project title:</strong> <th:block th:text="${model.projectName}" />
-            <br>
-            <strong>Programme:</strong> Horizon Europe Contingency Programme
+            <strong>UKRI Reference reference:</strong> [file_reference]<br>
+            <strong>Project Title:</strong> <th:block th:text="${model.projectName}" /><br>
+            <strong>Programme:</strong> Horizon Europe Contingency Programme<br>
         </p>
         <p>
             Dear <th:block th:text="${model.projectManagerFirstName}" />,
         </p>
         <p>
             Following your application to UKRI under the UK Government’s Horizon Europe Guarantee,
-            we are pleased to inform you that your organisation has been deemed eligible to receive grant funding from UKRI,
-            subject to the terms of this Grant Offer Letter.
+            we are pleased to inform you that your organisation has been deemed eligible to receive grant
+            funding from UKRI, subject to the terms of this Grant Offer Letter.
         </p>
         <p>This Grant Offer Letter sets out the terms of the funding award between:</p>
         <br>
         <p>(1) United Kingdom Research and Innovation (“UKRI”), a statutory corporation whose registered office is at Polaris House, North Star Avenue, Swindon, England, SN2 1FL; and</p>
         <br>
-        <p>TBA</p>
+        <p>(2) <th:block th:text="${model.projectManagerFirstName}" />, <th:block th:each="addressLine : ${model.projectAddress}">
+            <th:block th:text="${addressLine}" /><br th:unless="${addressLine == ''}" />
+        </th:block> (the "Recipient").</p>
         <br>
         <p>Unless the context otherwise requires, capitalised expressions used in this Grant Offer Letter have the same meanings as set out in Annex 2 (Terms and Conditions of Grant).</p>
         <p>To confirm you wish to accept the grant funding on the terms set out in Annex 2, please complete and sign Annex 1 attached to this letter, then return it through the Innovation Funding Service.</p>
@@ -180,14 +175,7 @@
         </table>
 
         <p>Yours sincerely</p>
-        <p>Barry Shaw<br>
-            Head of Operational Delivery<br>
-            <strong>
-                Innovate UK<br>
-                part of UK Research and Innovation
-            </strong>
-
-        </p>
+        <p>UKRI signatory</p>
 
         <h2 class="heading-medium">Annex 1: acceptance of award</h2>
         <p>
