@@ -86,13 +86,12 @@ ${spend_profile}                           ${server}/project-setup-management/pr
 The user can navigate back to application overview in the same window from part b questions form
     [Documentation]     IFS-10761  IFS-11303
     When the user creates a new application
-    And the user clicks the button/link              link = Application details
-    And the user fills in the Application details    loans b&fi application  ${tomorrowday}  ${month}  ${nextyear}
-    And the user clicks the button/link              link = Business and financial information
-    And the user clicks the button/link              jQuery = a:contains("Continue")
-    And the user logs in if username field present
-    Then title should be                             Single Sign-On Error | loansCommunity
-    And Url should contain competition id            ${loan_comp_appl_id}
+    And the user clicks the button/link                 link = Application details
+    And the user fills in the Application details       loans b&fi application  ${tomorrowday}  ${month}  ${nextyear}
+    And the user clicks the button/link                 link = Business and financial information
+    And Requesting application ID of loan competiton
+    Then the user should see the element                jQuery = a:contains("Continue")
+    And the user should see the element                 css = [href="https://loans-innovateuk.cs80.force.com/loansCommunity/s?CompanyNumber=60674010&IFSApplicationNumber=${newLoansApplicationID}&CompanyName=${EMPIRE_LTD_NAME}&CompetitionId=${loan_comp_appl_id}"]
 
 The member applicant can not continue button see B&FI question when the question is not assigned to member
     [Documentation]    IFS-11271
@@ -116,13 +115,11 @@ Member can access salesforce form through B&FI question
     And the user navigates to the page               ${server}/applicant/dashboard
     When The user clicks the button/link             link = loans b&fi application
     And the user clicks the button/link              link = Business and financial information
-    And the user clicks the button/link              jQuery = a:contains("Continue")
-    And the user logs in if username field present
-    Then title should be                             Single Sign-On Error | loansCommunity
+    Then the user should see the element             jQuery = a:contains("Continue")
+    And the user should see the element              css = [href="https://loans-innovateuk.cs80.force.com/loansCommunity/s?CompanyNumber=60674010&IFSApplicationNumber=${newLoansApplicationID}&CompanyName=${EMPIRE_LTD_NAME}&CompetitionId=${loan_comp_appl_id}"]
 
 Member can mark the B&FI question as complete
     [Documentation]    IFS-11271
-    [Setup]  Requesting application ID of loan competiton
     Given the sales force submits/unsubmits b&fi survey     1  ${newLoansApplicationID}
     When the user navigates to the page                     ${server}/applicant/dashboard
     And the user clicks the button/link                     link = loans b&fi application
@@ -147,10 +144,9 @@ The user can see b&fi application question as complete and shows edit online sur
 
 The user can open the sales force new tab on clicking conitnue button in incomplete status of b&fi question
     [Documentation]   IFS-10703
-    Given the sales force submits/unsubmits b&fi survey     0  ${loanApplicationID}
-    When the user clicks the button/link                    jQuery = a:contains("Continue")
-    And the user logs in if username field present
-    Then title should be                                    Single Sign-On Error | loansCommunity
+    When the sales force submits/unsubmits b&fi survey     0  ${loanApplicationID}
+    Then the user should see the element                   jQuery = a:contains("Continue")
+    And the user should see the element                    css = [href="https://loans-innovateuk.cs80.force.com/loansCommunity/s?CompanyNumber=60674010&IFSApplicationNumber=${loanApplicationID}&CompanyName=${EMPIRE_LTD_NAME}&CompetitionId=${loan_comp_appl_id}"]
 
 The user will not be able to mark the application as complete without completing business and financial information
     [Documentation]    IFS-9484  IFS-10705  IFS-10757  IFS-11137
