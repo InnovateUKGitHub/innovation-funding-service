@@ -73,7 +73,7 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
         if (alwaysOpenCompetitionEnabled) {
             CompetitionResource competition = getCompetitionIfExist(competitionId);
             if (competition.isAlwaysOpen()) {
-                if (competition.isHesta()) {
+                if (competition.isHorizonEuropeGuarantee()) {
                     return getSubmittedApplications(competitionId, paginationForm, fundingDecisionFilterForm);
                 }
                 return applicationSummaryRestService.getAssessedApplications(
@@ -116,7 +116,7 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
         if(alwaysOpenCompetitionEnabled) {
             CompetitionResource competition = getCompetitionIfExist(competitionId);
             if (competition.isAlwaysOpen()) {
-                if (competition.isHesta()) {
+                if (competition.isHorizonEuropeGuarantee()) {
                     return applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
                 }
 
