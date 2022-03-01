@@ -79,6 +79,4 @@ include("robot-tests")
 
 // Tools...
 include("ifs-tools:sba")
-include 'common:api:shared'
-findProject(':common:api:shared')?.name = 'shared'
 
