@@ -16,13 +16,9 @@ import org.springframework.context.annotation.Import;
 @AutoConfigureAfter(RabbitAutoConfiguration.class)
 public class AuditAutoConfiguration {
 
-    public static final String AMQP_PROFILE = "AMQP";
-    public static final String NOT_AMQP_PROFILE = "!" + AMQP_PROFILE;
-
     @Bean
     public AuditAdapter auditAdapter() {
         return new AuditAdapter();
     }
-
 
 }

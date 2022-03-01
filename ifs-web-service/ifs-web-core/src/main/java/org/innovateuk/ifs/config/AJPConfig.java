@@ -2,17 +2,19 @@ package org.innovateuk.ifs.config;
 
 import org.apache.catalina.connector.Connector;
 import org.apache.coyote.ajp.AbstractAjpProtocol;
+import org.innovateuk.ifs.IfsProfileConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 /**
  * this class is for configuring the AJP connector on the webservices
  */
-
 @Configuration
+@Profile(IfsProfileConstants.NOT_STUBDEV)
 public class AJPConfig {
     @Value("${tomcat.ajp.port}")
     int ajpPort;
