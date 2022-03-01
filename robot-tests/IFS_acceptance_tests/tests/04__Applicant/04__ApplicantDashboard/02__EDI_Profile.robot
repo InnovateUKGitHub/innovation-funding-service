@@ -65,6 +65,9 @@ Lead applicant can mark the application team as complete when edi status is comp
     [Documentation]  IFS-11253
     Given the user navigates to the page            ${server}/application/${applicationIdEDI}
     When the user clicks the button/link            link = Application team
+    the user should see the element                 jQuery = h3:contains("Team members")
+    the user should see the element                 jQuery = th:contains("EDI status")
+    the user should see the element                 jQuery = td:contains("Steve Smith") ~ td:contains("Complete") ~ td:contains("Lead applicant")
     And the user clicks the button/link             id = application-question-complete
     And the user clicks the button/link             link = Application overview
     Then the user should see the element            jQuery = li:contains("Application team") > .task-status-complete
