@@ -12,7 +12,7 @@ public enum FundingType {
     KTP("Knowledge Transfer Partnership (KTP)", "Knowledge Transfer Partnership (KTP)", "KTP GOL Template"),
     LOAN("Loan", "Loans"),
     PROCUREMENT("Procurement", "Procurement", "Procurement GOL Template"),
-    OFGEM("Ofgem", "Ofgem", "Ofgem GOL Template");
+    THIRDPARTY("Thirdparty", "Thirdparty", "Thirdparty GOL Template");
 
     private final String displayName;
     private final String defaultTermsName;
