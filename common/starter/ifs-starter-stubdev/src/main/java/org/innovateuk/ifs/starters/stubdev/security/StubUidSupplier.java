@@ -20,8 +20,8 @@ import static java.security.AccessController.doPrivileged;
  * Light touch for overriding the default security implementation.
  *
  * This overrides the default UidSupplier in stub mode and returns the default or user specified uuid.
- *
- * The uuid is shared via a temp file among all services (jvms) and is not thread safe.
+ * This will get bound the SecurityContext by the existing security setup and needs to match a DB entry.
+ * The uuid is shared via a temp file among all services (jvms) and is NOT thread safe.
  */
 public class StubUidSupplier implements UidSupplier {
 
