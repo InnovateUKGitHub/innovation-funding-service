@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.sil.email.controller;
 
+import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.sil.email.resource.SilEmailMessage;
 import org.springframework.context.annotation.Profile;
@@ -16,7 +17,7 @@ import static org.springframework.http.HttpStatus.ACCEPTED;
  */
 @RestController
 @RequestMapping("/silstub/sendmail")
-@Profile({"integration-test"})
+@Profile(IfsProfileConstants.INTEGRATION_TEST)
 public class SimpleEmailEndpointController {
 
     @PostMapping

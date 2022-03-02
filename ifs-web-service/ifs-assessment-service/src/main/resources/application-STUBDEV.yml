@@ -1,0 +1,7 @@
+server:
+  port: 8081
+spring:
+  thymeleaf:
+    prefix: "${ifs.starters.stubdev.projectRootDirectory}/ifs-web-service/ifs-assessment-service/src/main/resources/templates/"
+  resources:
+    static-locations: "${ifs.starters.stubdev.projectRootDirectory}/ifs-web-service/ifs-assessment-service/src/main/resources/static/"

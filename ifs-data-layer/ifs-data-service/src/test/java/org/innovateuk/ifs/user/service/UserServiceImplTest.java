@@ -46,6 +46,7 @@ import org.innovateuk.ifs.user.transactional.UserServiceImpl;
 import org.innovateuk.ifs.userorganisation.domain.UserOrganisation;
 import org.innovateuk.ifs.userorganisation.mapper.UserOrganisationMapper;
 import org.innovateuk.ifs.userorganisation.repository.UserOrganisationRepository;
+import org.innovateuk.ifs.util.TimeMachine;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -57,6 +58,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -82,6 +84,8 @@ import static org.innovateuk.ifs.user.builder.RoleProfileStatusResourceBuilder.n
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.EDIStatus.COMPLETE;
+import static org.innovateuk.ifs.user.resource.EDIStatus.INPROGRESS;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.userorganisation.builder.UserOrganisationBuilder.newUserOrganisation;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -164,6 +168,11 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Mock
     private RoleProfileStatusRepository roleProfileStatusRepositoryMock;
+
+
+    private static final ZonedDateTime fixedClock = ZonedDateTime.parse("2021-10-12T09:38:12.850Z");
+    private static final String emailToFind = "master@gmail.com";
+
 
     @Override
     protected UserService supplyServiceUnderTest() {
@@ -291,7 +300,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         verify(tokenRepositoryMock).findByTypeAndClassNameAndClassPk(any(), any(), any());
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(),UserStatus.ACTIVE)));
+        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(), UserStatus.ACTIVE)));
     }
 
     @Test
@@ -327,7 +336,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         ServiceResult<Void> result = service.sendPasswordResetNotification(user);
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(),UserStatus.ACTIVE)));
+        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(), UserStatus.ACTIVE)));
     }
 
     @Test
@@ -344,7 +353,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         ServiceResult<Void> result = service.sendPasswordResetNotification(user);
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(),UserStatus.ACTIVE)));
+        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(), UserStatus.ACTIVE)));
     }
 
     @Test
@@ -361,7 +370,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         ServiceResult<Void> result = service.sendPasswordResetNotification(user);
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(),UserStatus.ACTIVE)));
+        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(), UserStatus.ACTIVE)));
     }
 
     @Test
@@ -378,7 +387,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         ServiceResult<Void> result = service.sendPasswordResetNotification(user);
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(),UserStatus.ACTIVE)));
+        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(), UserStatus.ACTIVE)));
     }
 
     @Test
@@ -395,7 +404,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         ServiceResult<Void> result = service.sendPasswordResetNotification(user);
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(),UserStatus.ACTIVE)));
+        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(), UserStatus.ACTIVE)));
     }
 
     @Test
@@ -414,7 +423,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         verify(tokenRepositoryMock).findByTypeAndClassNameAndClassPk(any(), any(), any());
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(),UserStatus.ACTIVE)));
+        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(), UserStatus.ACTIVE)));
     }
 
     @Test
@@ -433,7 +442,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         verify(tokenRepositoryMock).findByTypeAndClassNameAndClassPk(any(), any(), any());
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(),UserStatus.ACTIVE)));
+        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(), UserStatus.ACTIVE)));
     }
 
     @Test
@@ -452,7 +461,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         verify(tokenRepositoryMock).findByTypeAndClassNameAndClassPk(any(), any(), any());
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(),UserStatus.ACTIVE)));
+        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(), UserStatus.ACTIVE)));
     }
 
     @Test
@@ -472,7 +481,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         verify(tokenRepositoryMock).findByTypeAndClassNameAndClassPk(any(), any(), any());
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(),UserStatus.ACTIVE)));
+        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(), UserStatus.ACTIVE)));
     }
 
     @Test
@@ -492,11 +501,11 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         verify(tokenRepositoryMock).findByTypeAndClassNameAndClassPk(any(), any(), any());
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(),UserStatus.ACTIVE)));
+        assertTrue(result.getFailure().is(notFoundError(UserResource.class, user.getEmail(), UserStatus.ACTIVE)));
     }
 
     @Test
-    public void testFindActive(){
+    public void testFindActive() {
         Set<Role> internalRoles = singleton(Role.PROJECT_FINANCE);
         Pageable pageable = PageRequest.of(0, 5);
         User createdByUser = newUser().withFirstName("first").withLastName("last").build();
@@ -521,7 +530,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void testFindInactive(){
+    public void testFindInactive() {
         Set<Role> internalRoles = singleton(Role.COMP_ADMIN);
         Pageable pageable = PageRequest.of(0, 5);
         User createdByUser = newUser().withFirstName("first").withLastName("last").build();
@@ -546,7 +555,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void findByProcessRolesAndSearchCriteriaWhenSearchStringIsNull(){
+    public void findByProcessRolesAndSearchCriteriaWhenSearchStringIsNull() {
 
         String searchString = null;
         SearchCategory searchCategory = SearchCategory.NAME;
@@ -563,7 +572,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void findByProcessRolesAndSearchCriteriaWhenSearchStringIsEmpty(){
+    public void findByProcessRolesAndSearchCriteriaWhenSearchStringIsEmpty() {
 
         String searchString = "";
         SearchCategory searchCategory = SearchCategory.NAME;
@@ -580,7 +589,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void findByProcessRolesAndSearchCriteriaWhenSearchStringLengthLessThan5(){
+    public void findByProcessRolesAndSearchCriteriaWhenSearchStringLengthLessThan5() {
 
         String searchString = "a";
         SearchCategory searchCategory = SearchCategory.NAME;
@@ -597,7 +606,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void findByProcessRolesAndSearchCriteriaWhenSearchStringIsAllSpaces(){
+    public void findByProcessRolesAndSearchCriteriaWhenSearchStringIsAllSpaces() {
 
         String searchString = "          ";
         SearchCategory searchCategory = SearchCategory.NAME;
@@ -614,7 +623,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void findByProcessRolesAndSearchCriteriaWhenSearchCategoryIsName(){
+    public void findByProcessRolesAndSearchCriteriaWhenSearchCategoryIsName() {
 
         String searchString = "%well%";
         SearchCategory searchCategory = SearchCategory.NAME;
@@ -667,7 +676,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void findByProcessRolesAndSearchCriteriaWhenSearchCategoryIsOrganisationName(){
+    public void findByProcessRolesAndSearchCriteriaWhenSearchCategoryIsOrganisationName() {
 
         String searchString = "%Ltd%";
         SearchCategory searchCategory = SearchCategory.ORGANISATION_NAME;
@@ -689,7 +698,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void findByProcessRolesAndSearchCriteriaWhenSearchCategoryIsEmail(){
+    public void findByProcessRolesAndSearchCriteriaWhenSearchCategoryIsEmail() {
 
         String searchString = "%com%";
         SearchCategory searchCategory = SearchCategory.EMAIL;
@@ -827,7 +836,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         String updateEmail = "new@gmail.com";
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
-        when(idpServiceMock.updateUserEmail(user.getUid(),user.getEmail())).thenReturn(ServiceResult.serviceFailure(USERS_DUPLICATE_EMAIL_ADDRESS));
+        when(idpServiceMock.updateUserEmail(user.getUid(), user.getEmail())).thenReturn(ServiceResult.serviceFailure(USERS_DUPLICATE_EMAIL_ADDRESS));
         when(processRoleRepository.findByUser(user)).thenReturn(emptyList());
         when(applicationInviteRepository.findByEmail(oldEmail)).thenReturn(emptyList());
         when(projectUserRepository.findByUserId(user.getId())).thenReturn(emptyList());
@@ -854,6 +863,85 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertTrue(result.isFailure());
         assertEquals("master@gmail.co.uk", user.getEmail());
     }
+
+
+    @Test
+    public void updateUserWithEDIStatusInProgress() {
+        User user = basicUser();
+        UserResource userResource = basicUserResource();
+        userResource.setEdiStatus(INPROGRESS);
+
+        when(userRepositoryMock.findByEmail(emailToFind)).thenReturn(Optional.ofNullable(user));
+        when(userRepositoryMock.save(user)).thenReturn(user);
+
+        ServiceResult<UserResource> result = service.updateDetails(userResource);
+
+        assertTrue(result.isSuccess());
+        assertEquals(INPROGRESS, user.getEdiStatus());
+        assertEquals(userResource.getEdiReviewDate(), user.getEdiReviewDate());
+    }
+
+    @Test
+    public void updateUserWithEDIStatusComplete() {
+        User user = basicUser();
+        UserResource userResource = basicUserResource();
+        userResource.setEdiStatus(COMPLETE);
+
+        when(userRepositoryMock.findByEmail(emailToFind)).thenReturn(Optional.ofNullable(user));
+        when(userRepositoryMock.save(user)).thenReturn(user);
+
+        ServiceResult<UserResource> result = service.updateDetails(userResource);
+
+        assertTrue(result.isSuccess());
+        assertEquals(COMPLETE, user.getEdiStatus());
+        assertEquals(userResource.getEdiReviewDate(), user.getEdiReviewDate());
+    }
+
+    @Test
+    public void updateUserWithEDIStatusCompleteOutOfSync() {
+        User user = basicUser();
+        UserResource userResource = basicUserResource();
+        userResource.setEdiStatus(COMPLETE);
+        ZonedDateTime initialCompleteDate = userResource.getEdiReviewDate();
+        ZonedDateTime outOfSyncOldDate = ZonedDateTime.parse("2020-10-12T09:38:12.850Z");
+
+        when(userRepositoryMock.findByEmail(emailToFind)).thenReturn(Optional.ofNullable(user));
+        when(userRepositoryMock.save(user)).thenReturn(user);
+        service.updateDetails(userResource);
+
+
+        userResource.setEdiReviewDate(outOfSyncOldDate);
+        ServiceResult<UserResource> result = service.updateDetails(userResource);
+
+        assertTrue(result.isSuccess());
+        assertEquals(COMPLETE, user.getEdiStatus());
+        assertEquals(user.getEdiReviewDate(), initialCompleteDate);
+    }
+
+    @Test
+    public void updateUserWithEDIStatusInProgressAfterComplete() {
+
+        User user = basicUser();
+        UserResource userResource = basicUserResource();
+        userResource.setEdiStatus(COMPLETE);
+
+        when(userRepositoryMock.findByEmail(emailToFind)).thenReturn(Optional.ofNullable(user));
+        when(userRepositoryMock.save(user)).thenReturn(user);
+
+        ServiceResult<UserResource> result = service.updateDetails(userResource);
+        assertTrue(result.isSuccess());
+        assertEquals(COMPLETE, user.getEdiStatus());
+
+
+        userResource.setEdiStatus(INPROGRESS);
+        ServiceResult<UserResource> result2 = service.updateDetails(userResource);
+        assertTrue(result2.isSuccess());
+        assertEquals(COMPLETE, user.getEdiStatus());
+        assertEquals(userResource.getEdiReviewDate(), user.getEdiReviewDate());
+
+
+    }
+
 
     @Test
     public void updateEmailFailsApplicationInvite() {
@@ -917,5 +1005,25 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
             assertEquals(termsAndConditionsIds, user.getTermsAndConditionsIds());
             return true;
         });
+    }
+
+
+    private static UserResource basicUserResource() {
+
+        TimeMachine.useFixedClockAt(fixedClock);
+        return newUserResource()
+                .withFirstName("Steve")
+                .withLastName("Smith")
+                .withEmail(emailToFind)
+                .withEdiStatusReviewDate(fixedClock)
+                .build();
+    }
+
+    private static User basicUser() {
+
+        return newUser().withUid("uid")
+                .withFirstName("Bob")
+                .withLastName("Man")
+                .withEmailAddress(emailToFind).build();
     }
 }
