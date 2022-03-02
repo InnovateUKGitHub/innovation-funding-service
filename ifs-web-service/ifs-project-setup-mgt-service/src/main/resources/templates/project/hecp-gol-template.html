@@ -136,7 +136,7 @@
             </th:block>
         </p>
         <p>
-            <strong>UKRI Reference reference:</strong> <th:block th:text="${model.applicationId}" /><br>
+            <strong>UKRI Reference number:</strong> <th:block th:text="${model.applicationId}" /><br>
             <strong>Project Title:</strong> <th:block th:text="${model.projectName}" /><br>
             <strong>Programme:</strong> Horizon Europe Guarantee<br>
         </p>
@@ -196,7 +196,7 @@
 
         <h2 class="heading-medium">Annex 1: acceptance of award</h2>
         <p>
-            <strong>UKRI Reference reference:</strong> <th:block th:text="${model.applicationId}" /><br>
+            <strong>UKRI Reference number:</strong> <th:block th:text="${model.applicationId}" /><br>
             <strong>Date:</strong> <th:block th:text="${#temporals.format(model.getNow(), 'd MMMM yyyy')}" /><br>
             <strong>Competition:</strong> <th:block th:text="${model.competitionName}" /><br>
             <strong>Project title:</strong> <th:block th:text="${model.projectName}" />
