@@ -191,7 +191,7 @@ Lead applicant completes state aid subsidy basis application
     [Documentation]  IFS-9116
     Given log in as a different user                                                    &{scLeadApplicantCredentials}
     And the user clicks the button/link                                                 link = ${leadStateAidApplication}
-    When the applicant completes Application Team
+    When the applicant completes Application Team                                       COMPLETE  janet.howard@example.com
     #And the applicant marks EDI question as complete
     And the lead applicant fills all the questions and marks as complete(programme)
     And the user navigates to Your-finances page                                        ${leadStateAidApplication}
@@ -262,7 +262,7 @@ Lead applicant completes subsidy control subsidy basis application
     [Documentation]  IFS-9116
     Given log in as a different user                                                    &{scLeadApplicantCredentials}
     And the user clicks the button/link                                                 link = ${leadSubsidyControlApplication}
-    When the applicant completes Application Team
+    When the applicant completes Application Team                                       COMPLETE  janet.howard@example.com
     #And the applicant marks EDI question as complete
     And the lead applicant fills all the questions and marks as complete(programme)
     And the user completes the application research category                            Feasibility studies

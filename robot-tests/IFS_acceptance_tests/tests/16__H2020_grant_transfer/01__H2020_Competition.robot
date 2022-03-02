@@ -395,13 +395,13 @@ The user fills in the Competition Setup Project eligibility section
     the user should see the element                      jQuery = div:contains("Project eligibility") ~ .task-status-complete
 
 The user is able to complete Horizon 2020 Grant transfer application
-    the user is able to complete Application details section  Project name  ${month}  ${nextyear}  ${lastYear}
-    the applicant completes Application Team
+    the user is able to complete Application details section            Project name  ${month}  ${nextyear}  ${lastYear}
+    the applicant completes Application Team                            COMPLETE   jessica.doe@ludlow.co.uk
     #the applicant marks EDI question as complete
     the user is able to complete Public description section
     the user is able to complete Horizon 2020 grant agreement section
     the user is able to complete finance details section
-    the user accept the competition terms and conditions      Return to application overview
+    the user accept the competition terms and conditions                Return to application overview
     the user is able to submit the application
 
 The user is able to complete Application details section

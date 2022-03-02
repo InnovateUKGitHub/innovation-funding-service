@@ -80,7 +80,7 @@ lead completes the application team and assigns an application question to partn
      [Documentation]  IFS-7703
      [Setup]  Log in as a different user                      ${lead_applicant}  ${short_password}
      Given the user clicks the button/link                    link = ${ATIapplicationTitle}
-     When the applicant completes Application Team
+     When the applicant completes Application Team            COMPLETE  ${lead_applicant}
      Then lead assigns a question to partner organisation     ${project_team_question}
 
 The partner answers the question and assigns the question back to lead for review
@@ -324,7 +324,7 @@ the user can complete the assigned question
 the user completes the application
     the user clicks the button/link                                                         link=Application details
     the user fills in the Application details                                               ${ATIapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
-    the applicant completes Application Team
+    the applicant completes Application Team                                                COMPLETE   steve.smith@empire.com
     #the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme ATI)
     the lead completes the questions with multiple answer choice and multiple appendices

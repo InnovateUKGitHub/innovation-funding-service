@@ -44,9 +44,9 @@ Custom Suite Setup
 
 the lead applicant fills all the questions and marks as complete(Prince's Trust comp type)
     the applicant completes application team
-    then the user selects research category  Feasibility studies
+    the user selects research category                              Feasibility studies
     :FOR  ${ELEMENT}    IN    @{EOI_questions}
-     \     the lead applicant marks every question as complete     ${ELEMENT}
+     \     the lead applicant marks every question as complete      ${ELEMENT}
 
 the user marks the Application as done(Prince's Trust comp)
     the user clicks the button/link                          link=Application
@@ -78,7 +78,7 @@ the user selects PT Research category
     the user should see the element            jQuery=li:contains("Research category") > .task-status-complete
 
 the user completes all other sections of an application
-    the applicant completes application team
+    the applicant completes application team                    COMPLETE  dave.adams@gmail.com
     #the applicant marks EDI question as complete
     the lead applicant answers the four sections as complete
     the user accept the competition terms and conditions         Return to application overview

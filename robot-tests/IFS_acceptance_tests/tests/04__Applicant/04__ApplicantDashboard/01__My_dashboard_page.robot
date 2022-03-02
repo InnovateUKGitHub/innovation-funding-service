@@ -94,7 +94,7 @@ the lead applicant sends an invite to the application team
     the user enters text to a text field                       css = [name=name]  Test Testing
     the user enters text to a text field                       css = [name=email]  ${inviteEmail}
     the user clicks the button/link                            jQuery = button:contains("Invite to application")
-    the user should see the element                            jQuery = td:contains("${inviteEmail}") + td:contains("Resend invitation")
+    the user should see the element                            jQuery = td:contains("${inviteEmail}") ~ td:contains("Resend invitation")
 
 get application Id
     [Arguments]  ${appName}

@@ -68,7 +68,7 @@ User applies to third party competition
     Given log in as a different user                                                            &{lead_applicant_credentials}
     And logged in user applies to competition                                                   ${thirdPartyProcurementCompetitionName}  3
     When the user fills in third-party Application details                                      ${thirdPartyProcurementApplicationName}  ${tomorrowday}  ${month}  ${nextyear}
-    And the applicant completes Application Team
+    And the applicant completes Application Team                                                COMPLETE  steve.smith@empire.com
     #And the applicant marks EDI question as complete
     And the lead applicant fills all the questions and marks as complete(procurement)
     Then the lead completes the questions with multiple answer choice and multiple appendices

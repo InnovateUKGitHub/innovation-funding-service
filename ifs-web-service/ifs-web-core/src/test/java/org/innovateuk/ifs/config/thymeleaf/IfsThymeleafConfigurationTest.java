@@ -26,7 +26,6 @@ import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({"notdebug"})
 public class IfsThymeleafConfigurationTest {
 
     @Autowired

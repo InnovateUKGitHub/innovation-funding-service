@@ -333,3 +333,8 @@ get assessment period using competition id
     ${result} =  get from list  ${result}  0
     ${id} =      get from list  ${result}  0
     [Return]  ${id}
+
+applicant completes edi profile
+    [Arguments]  ${ediStatus}  ${userEmail}
+    execute sql string   UPDATE `${database_name}`.`user` SET `edi_status` = '${ediStatus}', `edi_review_date` = '2100-12-20 10:10:10' WHERE (`email` = '${userEmail}');
+    reload page

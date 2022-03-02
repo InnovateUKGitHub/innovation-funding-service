@@ -151,7 +151,7 @@ the user successfully completes application
     Logging in and Error Checking                                   ${email}  ${short_password}
     the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
-    the applicant completes Application Team
+    the applicant completes Application Team                        COMPLETE  ${email}
     the user completes the application research category            Feasibility studies
     #the applicant marks EDI question as complete
     The user is able to complete hecp public description section
