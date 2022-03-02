@@ -45,22 +45,22 @@ Competition in Assessment: Application progress page Sort by: Submitted
 Competition in Assessment: Assessor progress page Sort by: Assessors
     [Documentation]  IFS-7106
     [Setup]  the user navigates to the page          ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}/assessors/${assessor_alexis_id}
-      Given the user sorts by                        Assessors
-      When The table should be sorted by column      4
+    Given The assessor sorts applications by       ASSESSORS               #Assessors
+    When The table should be sorted by column      4
 
 Competition in Assessment: Assessor progress page Sort by: Accepted
     [Documentation]  IFS-7106
-    Given the user sorts by                    Accepted
+    Given the assessor sorts applications by   ACCEPTED                #Accepted
     Then The table should be sorted by column  5
 
 Competition in Assessment: Assessor progress page Sort by: Submitted
     [Documentation]  IFS-7106
-    Given the user sorts by                    Submitted
+    Given The assessor sorts applications by   SUBMITTED                 #Submitted
     Then The table should be sorted by column  6
 
 Competition in Assessment: Assessor progress page Sort by: Application number
     [Documentation]  IFS-7106
-    Given the user sorts by                    Submitted
+    Given The assessor sorts applications by   APPLICATION_NUMBER              #Submitted
     Then The table should be sorted by column  1
 
 Competition is Closed: Assign to application page Sort by: Total applications
@@ -116,10 +116,18 @@ Custom suite teardown
 The user sorts by
     [Arguments]  ${sortOption}
     reload and check if element appears                  id = sort-by
-    the user clicks the button/link                      id = sort-by
+    #the user clicks the button/link                      id = sort-by
     the user selects the option from the drop-down menu  ${sortOption}  id = sort-by
     wait until keyword succeeds without screenshots      30 s   1 s    click element    jQuery = button:contains("Sort")
     wait until keyword succeeds without screenshots      30 s   1 s    page should contain element    id = sort-by
+
+The assessor sorts applications by
+    [Arguments]  ${sortOption}
+    reload and check if element appears                  id = sort-by
+    the user selects the value from the drop-down menu   ${sortOption}  id = sort-by
+    wait until keyword succeeds without screenshots      30 s   1 s    click element    jQuery = button:contains("Sort")
+    wait until keyword succeeds without screenshots      30 s   1 s    page should contain element    id = sort-by
+
 
 get assessment period id and set as suite variable
     [Arguments]  ${competitionID}
