@@ -59,7 +59,7 @@ The Applicant completing the application details
     When the user clicks the button/link                        link = Application details
     Then the user fills in the Application details              ${researchLeadApp}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team                COMPLETE  pete.tom@egg.com
-    And the applicant marks EDI question as complete
+    #And the applicant marks EDI question as complete
     And the user selects Research category                      Feasibility studies
     And the lead applicant marks every question as complete     Scope
     And the lead applicant marks every question as complete     1. ${customQuestion}
@@ -130,7 +130,7 @@ the user removes some of the Project details questions
     the user clicks the button/link              jQuery = li:contains("Project summary") button:contains("Remove")
     the user should not see the element          jQuery = li:contains("Project summary")
     the user marks each question as complete     Public description
-    the user marks each question as complete     Equality, diversity and inclusion
+    #the user marks each question as complete     Equality, diversity and inclusion
     the user marks each question as complete     Scope
     the user clicks the button/link              link = Public description
     the user clicks the button/link              css = button[name = "deleteQuestion"]

@@ -56,7 +56,7 @@ the applicant completes the application details
     the user moves Application details in Edit mode
     ${applicationId} =  get application id by name     ${applicationTitle}
     the user navigates to the page                     ${server}/application/${applicationId}
-    the applicant marks EDI question as complete
+    #the applicant marks EDI question as complete
     the user clicks the button/link                    link = Application details
     the user fills in the Application details          ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
 
@@ -708,13 +708,13 @@ partner organisation accepts the invite to collaborate
     The user clicks the button/link               jQuery = .progress-list a:contains("Untitled application (start here)")
     The user should not see an error in the page
 
-the applicant marks EDI question as complete
-    the user clicks the button/link     link = Equality, diversity and inclusion
-    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = button[name=edit]
-    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css = button[name=edit]  # the Edit link
-    the user clicks the button/link     jQuery = label:contains("Yes")
-    the user can mark the question as complete
-    the user should see the element     jQuery = li:contains("Equality, diversity and inclusion") > .task-status-complete
+#the applicant marks EDI question as complete
+#    the user clicks the button/link     link = Equality, diversity and inclusion
+#    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = button[name=edit]
+#    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css = button[name=edit]  # the Edit link
+#    the user clicks the button/link     jQuery = label:contains("Yes")
+#    the user can mark the question as complete
+#    the user should see the element     jQuery = li:contains("Equality, diversity and inclusion") > .task-status-complete
 
 the applicant fills in the Subsidy Basis question
     the user clicks the button/link                link = Subsidy basis
@@ -943,8 +943,13 @@ the user completes funding level in application
 the lead user completes project details, application questions and finances sections
     [Arguments]  ${ediStatus}  ${userEmail}
     the user completes the application details section                              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  25
+<<<<<<< HEAD
+    the applicant completes Application Team
+    #the applicant marks EDI question as complete
+=======
     the applicant completes Application Team                                        ${ediStatus}  ${userEmail}
     the applicant marks EDI question as complete
+>>>>>>> 0b358647d18ad848272e4e5f21a66667552e1374
     the user completes the research category                                        Feasibility studies
     the lead applicant fills all the questions and marks as complete(programme)
     the user clicks the button/link                                                 link = Your project finances

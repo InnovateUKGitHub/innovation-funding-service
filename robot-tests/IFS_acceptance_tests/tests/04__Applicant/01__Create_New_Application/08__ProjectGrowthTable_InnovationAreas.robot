@@ -327,14 +327,14 @@ Application details read only view shows correct details with innovation area
     And The user should see the element          jQuery = dt:contains("Innovation area") + dd:contains("Biosciences")
     [Teardown]  the user clicks the button/link  link = Back to application overview
 
-EDI question read only view shows correct details
-    [Documentation]  IFS-7718
-    [Tags]
-    Given the user clicks the button/link             link = Equality, diversity and inclusion
-    When the user clicks the button/link              jQuery = label:contains("Yes")
-    And the user clicks the button/link               id = application-question-complete
-    Then the user should see EDI question details
-    [Teardown]  the user clicks the button/link       link = Back to application overview
+#EDI question read only view shows correct details
+#    [Documentation]  IFS-7718
+#    [Tags]
+#    Given the user clicks the button/link             link = Equality, diversity and inclusion
+#    When the user clicks the button/link              jQuery = label:contains("Yes")
+#    And the user clicks the button/link               id = application-question-complete
+#    Then the user should see EDI question details
+#    [Teardown]  the user clicks the button/link       link = Back to application overview
 
 Newly created collaborator can view and edit project Growth table
     [Documentation]    INFUND-8426
@@ -581,11 +581,11 @@ the user accept the temporary framework terms and conditions
     the user should see the element     jQuery = .form-footer:contains("Terms and conditions accepted")
     the user clicks the button/link     link = Return to application overview
 
-the user should see EDI question details
-    the user should see the element    jQuery = h1:contains("Equality, diversity and inclusion")
-    the user should see the element    jQuery = p:contains("This question is marked as complete.")
-    the user should see the element    jQuery = h3:contains("Have you completed the EDI survey?")
-    the user should see the element    jQuery = p:contains("Yes")
-    the user should see the element    jQuery = button:contains("Edit")
+#the user should see EDI question details
+#    the user should see the element    jQuery = h1:contains("Equality, diversity and inclusion")
+#    the user should see the element    jQuery = p:contains("This question is marked as complete.")
+#    the user should see the element    jQuery = h3:contains("Have you completed the EDI survey?")
+#    the user should see the element    jQuery = p:contains("Yes")
+#    the user should see the element    jQuery = button:contains("Edit")
 
 

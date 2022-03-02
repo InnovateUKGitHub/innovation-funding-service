@@ -51,7 +51,7 @@ the lead applicant fills all the questions and marks as complete(Prince's Trust 
 the user marks the Application as done(Prince's Trust comp)
     the user clicks the button/link                          link=Application
     the user marks each question as complete                 Application details
-    the user marks each question as complete                 Equality, diversity and inclusion
+    #the user marks each question as complete                 Equality, diversity and inclusion
     the assessed questions are marked complete(EOI type)
     the user opts no finances for EOI comp
     the user clicks the button/link                          jQuery=button:contains("Done")
@@ -79,7 +79,7 @@ the user selects PT Research category
 
 the user completes all other sections of an application
     the applicant completes application team                    COMPLETE  dave.adams@gmail.com
-    the applicant marks EDI question as complete
+    #the applicant marks EDI question as complete
     the lead applicant answers the four sections as complete
     the user accept the competition terms and conditions         Return to application overview
     the user should not see the element                          jQuery = h2:contains("Finances")

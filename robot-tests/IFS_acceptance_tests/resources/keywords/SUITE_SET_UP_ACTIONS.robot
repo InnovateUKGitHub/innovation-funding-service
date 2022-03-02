@@ -22,8 +22,13 @@ the user marks every section but one as complete
     [Arguments]  ${application_name}  ${rescat}  ${ediStatus}  ${userEmail}
     the user navigates to the page                                                 ${server}
     the user clicks the button/link                                                link=${application_name}
+<<<<<<< HEAD
+    the applicant completes Application Team
+    #the applicant marks EDI question as complete
+=======
     the applicant completes Application Team                                       ${ediStatus}  ${userEmail}
     the applicant marks EDI question as complete
+>>>>>>> 0b358647d18ad848272e4e5f21a66667552e1374
     the user selects Research category                                             ${rescat}
     the lead applicant fills all the questions and marks as complete(programme)
 
