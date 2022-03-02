@@ -129,9 +129,9 @@
             </th:block>
         </p>
         <p>
-            <strong>UKRI Reference reference:</strong> [file_reference]<br>
+            <strong>UKRI Reference reference:</strong> <th:block th:text="${model.applicationId}" /><br>
             <strong>Project Title:</strong> <th:block th:text="${model.projectName}" /><br>
-            <strong>Programme:</strong> Horizon Europe Contingency Programme<br>
+            <strong>Programme:</strong> Horizon Europe Guarantee<br>
         </p>
         <p>
             Dear <th:block th:text="${model.projectManagerFirstName}" />,
@@ -145,9 +145,13 @@
         <br>
         <p>(1) United Kingdom Research and Innovation (“UKRI”), a statutory corporation whose registered office is at Polaris House, North Star Avenue, Swindon, England, SN2 1FL; and</p>
         <br>
-        <p>(2) <th:block th:text="${model.projectManagerFirstName}" />, <th:block th:each="addressLine : ${model.projectAddress}">
-            <th:block th:text="${addressLine}" /><br th:unless="${addressLine == ''}" />
-        </th:block> (the "Recipient").</p>
+        <p>(2) <th:block th:text="${model.projectManagerFirstName}" /> <th:block th:text="${model.projectManagerLastName}" />,
+            <th:block th:each="addressLine : ${model.projectAddress}">
+                <th:block th:text="${addressLine}" /><br th:unless="${addressLine == ''}" />
+            </th:block>,
+            <th:block th:if="${model.leadOrganisationNumber != null}" th:text="${model.leadOrganisationNumber}" />
+            (the "Recipient").
+        </p>
         <br>
         <p>Unless the context otherwise requires, capitalised expressions used in this Grant Offer Letter have the same meanings as set out in Annex 2 (Terms and Conditions of Grant).</p>
         <p>To confirm you wish to accept the grant funding on the terms set out in Annex 2, please complete and sign Annex 1 attached to this letter, then return it through the Innovation Funding Service.</p>
@@ -175,12 +179,17 @@
         </table>
 
         <p>Yours sincerely</p>
-        <p>UKRI signatory</p>
+        <p>Barry Shaw<br>
+            Deputy Director – Operations Delivery<br>
+            <strong>
+                Innovate UK, part of UK Research and Innovation
+            </strong>
+        </p>
+        <div class="letter-page-break"></div>
 
         <h2 class="heading-medium">Annex 1: acceptance of award</h2>
         <p>
-            <strong>File reference:</strong> [file_reference]<br>
-            <strong>Application number:</strong> <th:block th:text="${model.applicationId}" /><br>
+            <strong>UKRI Reference reference:</strong> <th:block th:text="${model.applicationId}" /><br>
             <strong>Date:</strong> <th:block th:text="${#temporals.format(model.getNow(), 'd MMMM yyyy')}" /><br>
             <strong>Competition:</strong> <th:block th:text="${model.competitionName}" /><br>
             <strong>Project title:</strong> <th:block th:text="${model.projectName}" />
