@@ -79,7 +79,8 @@ the user selects PT Research category
 
 the user completes all other sections of an application
     the applicant completes application team                    COMPLETE  dave.adams@gmail.com
-    #the applicant marks EDI question as complete
+    # below steps to me removed once the webtest data is not showing edi question   -- to be handled in  ifs-11496
+    the applicant marks EDI question as complete
     the lead applicant answers the four sections as complete
     the user accept the competition terms and conditions         Return to application overview
     the user should not see the element                          jQuery = h2:contains("Finances")

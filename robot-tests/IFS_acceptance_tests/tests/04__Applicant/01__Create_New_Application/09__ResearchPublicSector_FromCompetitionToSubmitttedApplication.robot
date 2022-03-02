@@ -78,7 +78,7 @@ Applicant Applies to Public content leading Competition
     Given logged in user applies to competition public                   ${openCompetitionPublicSector_name}  4
     When the user clicks the button/link                                 link = Application details
     Then the user fills in the Application details with no submit        ${publicLeadApp}  ${tomorrowday}  ${month}  ${nextyear}
-    And the user marks every section but one as complete                 ${publicLeadApp}  Experimental development   COMPLETE   becky.mason@gmail.com
+    And the user marks every section but one as complete - research      ${publicLeadApp}  Experimental development   COMPLETE   becky.mason@gmail.com
     When the user navigates to Your-finances page                        ${publicLeadApp}
     Then the user marks the finances as complete                         ${publicLeadApp}  Calculate  52,214  no
     And the user accept the competition terms and conditions             Return to application overview

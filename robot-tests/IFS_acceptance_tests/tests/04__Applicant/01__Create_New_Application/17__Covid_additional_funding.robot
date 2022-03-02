@@ -327,7 +327,8 @@ the user completes covid application
     the user clicks the button/link                          jQuery = button:contains("Save and continue")
     the user clicks the button/link                          link = Application details
     the user fills in the Application details                ${COVIDapplicationTitle1}  ${tomorrowday}  ${month}  ${nextyear}
-    #the applicant marks EDI question as complete
+    # below steps to me removed once the webtest data is not showing edi question   -- to be handled in  ifs-11496
+    the applicant marks EDI question as complete
     the applicant adds contributor to Application Team
     the user selects research category                       Feasibility studies
     the lead applicant fills all the questions and marks as complete(programme)
