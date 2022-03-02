@@ -594,6 +594,8 @@ the user enters organisation details manually on companies house link
     the user clicks the button/link          jQuery = button:contains("Continue")
 
 the applicant submits the application
+    the user clicks the button/link                    link = Application team
+    the user should see the element                    jQuery = td:contains("Steve Smith") ~ td:contains("Incomplete") ~ td:contains("Lead applicant")
     the user clicks the button/link                    link = Review and submit
     the user should not see the element                jQuery = .task-status-incomplete
     the user clicks the button/link                    jQuery = .govuk-button:contains("Submit application")

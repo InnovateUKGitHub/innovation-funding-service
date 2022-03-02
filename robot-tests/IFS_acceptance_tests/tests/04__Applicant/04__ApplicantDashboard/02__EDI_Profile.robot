@@ -25,6 +25,10 @@ Applicant checks the status of EDI as Incomplete When user not started the edi s
     And the user fills in the EDI application details   ${applicationNameEDI}  ${tomorrowday}  ${month}  ${nextyear}
     When the user clicks the button/link                link = Application team
     Then the user should see the element                jQuery = td:contains("Steve Smith") ~ td:contains("Incomplete") ~ td:contains("Lead applicant")
+    And the user clicks the button/link                 link = Application overview
+    And the user clicks the button/link                 id = application-overview-submit-cta
+    And the user clicks the button/link                 id = accordion-questions-heading-1-1
+    And the user should see the read only view of EDI status as incomplete
 
 Lead applicant can not mark the application team as complete when the edi survey is not started
     [Documentation]  IFS-11253
@@ -65,10 +69,11 @@ Lead applicant can mark the application team as complete when edi status is comp
     [Documentation]  IFS-11253  IFS-11341
     Given the user navigates to the page            ${server}/application/${applicationIdEDI}
     When the user clicks the button/link            link = Application team
-    the user should see the element                 jQuery = h3:contains("Team members")
-    the user should see the element                 jQuery = th:contains("EDI status")
-    the user should see the element                 jQuery = td:contains("Steve Smith") ~ td:contains("Complete") ~ td:contains("Lead applicant")
+    And the user should see the element             jQuery = td:contains("Steve Smith") ~ td:contains("Complete") ~ td:contains("Lead applicant")
     And the user clicks the button/link             id = application-question-complete
+    And the user clicks the button/link             link = Application overview
+    And the user clicks the button/link             id = application-overview-submit-cta
+    And the user should see the read only view of EDI status as complete
     And the user clicks the button/link             link = Application overview
     Then the user should see the element            jQuery = li:contains("Application team") > .task-status-complete
 
@@ -119,3 +124,13 @@ the user fills in the EDI application details
     the user enters text to a text field  css = [id="durationInMonths"]  24
     the user can mark the question as complete
     the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
+
+the user should see the read only view of EDI status as incomplete
+    And the user should see the element                 jQuery = h3:contains("Team members")
+    And the user should see the element                 jQuery = th:contains("EDI status")
+    And the user should see the element                 jQuery = td:contains("Steve Smith") ~ td:contains("Incomplete")
+
+the user should see the read only view of EDI status as complete
+    And the user should see the element             jQuery = h3:contains("Team members")
+    And the user should see the element             jQuery = th:contains("EDI status")
+    And the user should see the element             jQuery = td:contains("Steve Smith") ~ td:contains("Complete")
