@@ -174,8 +174,12 @@ Finance reviewer is added to the project
 
 The user selects finance reviewer
     [Arguments]   ${FlName}
-    wait until keyword succeeds without screenshots   10s    200ms   input text    id = userId    ${FlName}
-    wait until keyword succeeds without screenshots   10s    200ms   click element     jQuery = ul li:contains("${FlName}")
+    wait until keyword succeeds without screenshots         10s    200ms   input text    id = userId    ${FlName}
+    wait until page contains element without screenshots    css=[id="userId"][class="autocomplete__input autocomplete__input--focused autocomplete__input--show-all-values"]  5s
+    wait until keyword succeeds without screenshots         10s    200ms   click element     jQuery = ul li:contains("${FlName}")
+    mouse out                                               id = userId
+    Set Focus To Element                                    link=GOV.UK
+    wait until page contains element without screenshots    css=[id="userId"][class="autocomplete__input autocomplete__input--show-all-values"]    5s
     #wait until keyword succeeds without screenshots   10s    200ms   the user clicks the button/link     jQuery = ul li:contains("${FlName}")
 
 The user adds a new team member
