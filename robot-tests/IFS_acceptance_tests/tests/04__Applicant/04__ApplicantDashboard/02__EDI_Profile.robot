@@ -62,7 +62,7 @@ Applicant can view the EDI status as complete in profile
     Then the user should see EDI section details    Complete  25 March 2089  Review EDI summary
 
 Lead applicant can mark the application team as complete when edi status is complete for lead applicant
-    [Documentation]  IFS-11253
+    [Documentation]  IFS-11253  IFS-11341
     Given the user navigates to the page            ${server}/application/${applicationIdEDI}
     When the user clicks the button/link            link = Application team
     the user should see the element                 jQuery = h3:contains("Team members")
