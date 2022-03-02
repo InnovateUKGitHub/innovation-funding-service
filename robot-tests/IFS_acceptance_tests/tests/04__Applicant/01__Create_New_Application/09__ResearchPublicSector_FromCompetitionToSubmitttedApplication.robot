@@ -130,7 +130,7 @@ the user removes some of the Project details questions
     the user clicks the button/link              jQuery = li:contains("Project summary") button:contains("Remove")
     the user should not see the element          jQuery = li:contains("Project summary")
     the user marks each question as complete     Public description
-    the user marks each question as complete     Equality, diversity and inclusion
+    #the user marks each question as complete     Equality, diversity and inclusion
     the user marks each question as complete     Scope
     the user clicks the button/link              link = Public description
     the user clicks the button/link              css = button[name = "deleteQuestion"]

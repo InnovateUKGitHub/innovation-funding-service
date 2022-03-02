@@ -282,7 +282,7 @@ the user navigate to previous pages
     the user clicks previous and goes to the page   Scope
     the user clicks previous and goes to the page   Public description
     the user clicks previous and goes to the page   Project summary
-    the user clicks previous and goes to the page   Equality, diversity and inclusion
+    #the user clicks previous and goes to the page   Equality, diversity and inclusion
     the user clicks previous and goes to the page   Application details
     the user should not see the element             jQuery = span:contains("Previous")
 

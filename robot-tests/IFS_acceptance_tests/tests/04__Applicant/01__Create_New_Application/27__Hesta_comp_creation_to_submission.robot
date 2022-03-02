@@ -202,7 +202,7 @@ the user marks the Hesta application question as done
     the user clicks the button/link                                     link = Application
     the user marks each question as complete                            Application details
     the user marks each question as complete                            Public description
-    the user marks each question as complete                            Equality, diversity and inclusion
+    #the user marks each question as complete                            Equality, diversity and inclusion
     the user fills in the CS Application section with custom questions  ${growthTable}  ${comp_type}
 
 the user completes milestones section

@@ -359,7 +359,7 @@ The user fills in public content supporting information section
 The user completes the application proccess details
     the user clicks the button/link              link = Application details
     the user clicks the button/link              jQuery = button:contains("Done")
-    the user marks each question as complete     Equality, diversity and inclusion
+    #the user marks each question as complete     Equality, diversity and inclusion
     the user clicks the button/link              link = Public description
     the user clicks the button/link              jQuery = button:contains("Done")
     the user clicks the button/link              link = Finances

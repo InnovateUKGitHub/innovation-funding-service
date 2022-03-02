@@ -51,7 +51,7 @@ the lead applicant fills all the questions and marks as complete(Prince's Trust 
 the user marks the Application as done(Prince's Trust comp)
     the user clicks the button/link                          link=Application
     the user marks each question as complete                 Application details
-    the user marks each question as complete                 Equality, diversity and inclusion
+    #the user marks each question as complete                 Equality, diversity and inclusion
     the assessed questions are marked complete(EOI type)
     the user opts no finances for EOI comp
     the user clicks the button/link                          jQuery=button:contains("Done")
