@@ -79,7 +79,7 @@ the user selects PT Research category
 
 the user completes all other sections of an application
     the applicant completes application team
-    the applicant marks EDI question as complete
+    #the applicant marks EDI question as complete
     the lead applicant answers the four sections as complete
     the user accept the competition terms and conditions         Return to application overview
     the user should not see the element                          jQuery = h2:contains("Finances")

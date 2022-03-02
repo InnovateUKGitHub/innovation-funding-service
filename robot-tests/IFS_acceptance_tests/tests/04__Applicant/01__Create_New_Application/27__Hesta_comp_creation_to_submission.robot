@@ -153,7 +153,7 @@ the user successfully completes application
     the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team
     the user completes the application research category            Feasibility studies
-    the applicant marks EDI question as complete
+    #the applicant marks EDI question as complete
     The user is able to complete hecp public description section
     The user is able to complete horizon grant agreement section
     the lead applicant fills all the questions and marks as complete(Hesta)

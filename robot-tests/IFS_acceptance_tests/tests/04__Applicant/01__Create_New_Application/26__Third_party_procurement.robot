@@ -69,7 +69,7 @@ User applies to third party competition
     And logged in user applies to competition                                                   ${thirdPartyProcurementCompetitionName}  3
     When the user fills in third-party Application details                                      ${thirdPartyProcurementApplicationName}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team
-    And the applicant marks EDI question as complete
+    #And the applicant marks EDI question as complete
     And the lead applicant fills all the questions and marks as complete(procurement)
     Then the lead completes the questions with multiple answer choice and multiple appendices
     And the third party applicant can view the strategic innovation terms and conditions        Strategic Innovation Fund governance document

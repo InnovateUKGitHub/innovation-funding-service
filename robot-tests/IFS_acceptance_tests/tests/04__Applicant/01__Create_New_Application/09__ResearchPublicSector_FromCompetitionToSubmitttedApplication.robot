@@ -59,7 +59,7 @@ The Applicant completing the application details
     When the user clicks the button/link                        link = Application details
     Then the user fills in the Application details              ${researchLeadApp}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team
-    And the applicant marks EDI question as complete
+    #And the applicant marks EDI question as complete
     And the user selects Research category                      Feasibility studies
     And the lead applicant marks every question as complete     Scope
     And the lead applicant marks every question as complete     1. ${customQuestion}

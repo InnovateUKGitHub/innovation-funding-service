@@ -397,7 +397,7 @@ The user fills in the Competition Setup Project eligibility section
 The user is able to complete Horizon 2020 Grant transfer application
     the user is able to complete Application details section  Project name  ${month}  ${nextyear}  ${lastYear}
     the applicant completes Application Team
-    the applicant marks EDI question as complete
+    #the applicant marks EDI question as complete
     the user is able to complete Public description section
     the user is able to complete Horizon 2020 grant agreement section
     the user is able to complete finance details section

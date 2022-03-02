@@ -192,7 +192,7 @@ Lead applicant completes state aid subsidy basis application
     Given log in as a different user                                                    &{scLeadApplicantCredentials}
     And the user clicks the button/link                                                 link = ${leadStateAidApplication}
     When the applicant completes Application Team
-    And the applicant marks EDI question as complete
+    #And the applicant marks EDI question as complete
     And the lead applicant fills all the questions and marks as complete(programme)
     And the user navigates to Your-finances page                                        ${leadStateAidApplication}
     Then the user marks the finances as complete                                        ${leadStateAidApplication}  labour costs  54,000  yes
@@ -263,7 +263,7 @@ Lead applicant completes subsidy control subsidy basis application
     Given log in as a different user                                                    &{scLeadApplicantCredentials}
     And the user clicks the button/link                                                 link = ${leadSubsidyControlApplication}
     When the applicant completes Application Team
-    And the applicant marks EDI question as complete
+    #And the applicant marks EDI question as complete
     And the lead applicant fills all the questions and marks as complete(programme)
     And the user completes the application research category                            Feasibility studies
     And the user navigates to Your-finances page                                        ${leadSubsidyControlApplication}

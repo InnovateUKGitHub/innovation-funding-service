@@ -23,7 +23,7 @@ the user marks every section but one as complete
     the user navigates to the page                                                 ${server}
     the user clicks the button/link                                                link=${application_name}
     the applicant completes Application Team
-    the applicant marks EDI question as complete
+    #the applicant marks EDI question as complete
     the user selects Research category                                             ${rescat}
     the lead applicant fills all the questions and marks as complete(programme)
 
