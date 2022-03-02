@@ -943,13 +943,8 @@ the user completes funding level in application
 the lead user completes project details, application questions and finances sections
     [Arguments]  ${ediStatus}  ${userEmail}
     the user completes the application details section                              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  25
-<<<<<<< HEAD
-    the applicant completes Application Team
-    #the applicant marks EDI question as complete
-=======
     the applicant completes Application Team                                        ${ediStatus}  ${userEmail}
-    the applicant marks EDI question as complete
->>>>>>> 0b358647d18ad848272e4e5f21a66667552e1374
+    #the applicant marks EDI question as complete
     the user completes the research category                                        Feasibility studies
     the lead applicant fills all the questions and marks as complete(programme)
     the user clicks the button/link                                                 link = Your project finances
