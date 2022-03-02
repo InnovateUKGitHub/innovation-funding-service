@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.YOUR_FINANCE;
 
 @Component
-public class OfgemTemplate implements FundingTypeTemplate {
+public class ThirdPartyTemplate implements FundingTypeTemplate {
 
     @Autowired
     private CommonBuilders commonBuilders;
