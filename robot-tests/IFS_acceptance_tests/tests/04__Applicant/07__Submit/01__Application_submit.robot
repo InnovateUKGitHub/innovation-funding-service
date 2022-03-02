@@ -190,14 +190,14 @@ create new application for submitting
     the user clicks the button/link                   link=Application details
     the user enters text to a text field              css=[id="name"]    ${application_name}
     the user clicks the button/link                   jQuery=button:contains("Save and return")
-    the user marks every section but one as complete  ${application_name}  Experimental development
+    the user marks every section but one as complete  ${application_name}  Experimental development   COMPLETE   dave.adams@gmail.com
 
 the user marks every section but one as complete
-    [Arguments]  ${application_name}  ${rescat}
+    [Arguments]  ${application_name}  ${rescat}  ${ediStatus}  ${userEmail}
     the user navigates to the page                        ${server}
     the user clicks the application tile if displayed
     the user clicks the button/link                       link=${application_name}
-    the applicant completes Application Team
+    the applicant completes Application Team              ${ediStatus}  ${userEmail}
     the user selects Research category                    ${rescat}
     the lead applicant fills all the questions and marks as complete(programme)
 

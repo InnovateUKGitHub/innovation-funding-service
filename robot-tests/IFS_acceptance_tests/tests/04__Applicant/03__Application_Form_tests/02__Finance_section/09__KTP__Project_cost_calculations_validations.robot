@@ -265,9 +265,10 @@ KTA assessor assigned to application can view the read-only view for 'No' select
 
 The supporter can view assessment deadline in the application review email
     [Documentation]  IFS-11138
-    [Setup]  get assessment deadline date using competition id            ${KTPcompetitonId}
-    Given ifs admin invites a supporter to the ktp application
-    Then the user reads his email    ${supporter_credentials["email"]}    You have been invited to review an application    The deadline to review this application is midday ${assessmentDeadLineWeekDay} ${dayInDate}th ${monthInDate} ${yearInDate}.
+#    [Setup]  get assessment deadline date using competition id            ${KTPcompetitonId}
+    Given log in as a different user                                      &{ifs_admin_user_credentials}
+    When ifs admin invites a supporter to the ktp application
+    Then the user reads his email    ${supporter_credentials["email"]}    You have been invited to review an application    The deadline to review this application is midday
 
 Supporter can view the read-only view for 'No' selected fEC declaration
     [Documentation]  IFS-9246
@@ -566,20 +567,20 @@ ifs admin invites a supporter to the ktp application
     the user selects the checkbox            select-all-check
     the user clicks the button/link          jQuery = button:contains("Add selected to application")
 
-get assessment deadline date using competition id
-    [Arguments]  ${competition_id}
-    log in as a different user        &{ifs_admin_user_credentials}
-    the user navigates to the page   ${server}/management/competition/setup/${competition_id}/section/milestones
-    ${assessmentDeadLineWeekDay} =  get text   css = tr:nth-of-type(7) td:nth-of-type(3)
-    ${assessmentDeadLineDate} =  get text   css = tr:nth-of-type(7) td:nth-of-type(4)
-    @{list_string}=     split string    ${assessmentDeadLineDate}      ${SPACE}
-    ${dayInDate}=       evaluate       '${list_string}[0]'.replace(',','')
-    ${monthInDate}=     evaluate       '${list_string}[1]'.replace(',','')
-    ${yearInDate}=      evaluate       '${list_string}[2]'.replace(',','')
-    Set suite variable   ${assessmentDeadLineWeekDay}
-    Set suite variable   ${dayInDate}
-    Set suite variable   ${monthInDate}
-    Set suite variable   ${yearInDate}
+#get assessment deadline date using competition id
+#    [Arguments]  ${competition_id}
+#    log in as a different user        &{ifs_admin_user_credentials}
+#    the user navigates to the page   ${server}/management/competition/setup/${competition_id}/section/milestones
+#    ${assessmentDeadLineWeekDay} =  get text   css = tr:nth-of-type(7) td:nth-of-type(3)
+#    ${assessmentDeadLineDate} =  get text   css = tr:nth-of-type(7) td:nth-of-type(4)
+#    @{list_string}=     split string    ${assessmentDeadLineDate}      ${SPACE}
+#    ${dayInDate}=       evaluate       '${list_string}[0]'.replace(',','')
+#    ${monthInDate}=     evaluate       '${list_string}[1]'.replace(',','')
+#    ${yearInDate}=      evaluate       '${list_string}[2]'.replace(',','')
+#    Set suite variable   ${assessmentDeadLineWeekDay}
+#    Set suite variable   ${dayInDate}
+#    Set suite variable   ${monthInDate}
+#    Set suite variable   ${yearInDate}
 
 the user should see the correct employee data
     the user should see the element   jQuery = td:contains("Number of full time employees in your company")+td:contains("2,000")+td:contains("1,500")+td:contains("1,200")

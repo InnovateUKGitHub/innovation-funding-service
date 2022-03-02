@@ -11,8 +11,8 @@ profiles:
         tryImportMissing: false
         push: true
       tagPolicy:
-        gitCommit:
-          ignoreChanges: true
+        envTemplate:
+          template: "{{.TAG_ID}}"
       artifacts:
         - image: robot-framework
           context: robot-tests
@@ -25,8 +25,8 @@ profiles:
         tryImportMissing: true
         push: true
       tagPolicy:
-        gitCommit:
-          ignoreChanges: true
+        envTemplate:
+          template: "{{.TAG_ID}}"
       artifacts: []
     deploy:
       kubeContext: at
