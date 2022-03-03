@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.config.thymeleaf.postprocessor;
+package org.innovateuk.ifs.starters.stubdev.thymeleaf;
 
 import org.thymeleaf.engine.ITemplateHandler;
 import org.thymeleaf.postprocessor.IPostProcessor;

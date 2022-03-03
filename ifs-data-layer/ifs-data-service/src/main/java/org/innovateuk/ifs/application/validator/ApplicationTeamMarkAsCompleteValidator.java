@@ -8,7 +8,9 @@ import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
 import org.innovateuk.ifs.invite.transactional.ApplicationKtaInviteService;
+import org.innovateuk.ifs.user.resource.EDIStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -32,6 +34,9 @@ public class ApplicationTeamMarkAsCompleteValidator implements Validator {
 
     @Autowired
     private ApplicationKtaInviteService applicationKtaInviteService;
+
+    @Value("${ifs.edi.update.enabled}")
+    private boolean isEDIUpdateEnabled;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -69,8 +74,16 @@ public class ApplicationTeamMarkAsCompleteValidator implements Validator {
                 }
             }
         }
-
+        if (isEDIUpdateEnabled) {
+            validateLeadEDIStatus(errors, application);
+        }
 
     }
 
+    private void validateLeadEDIStatus(Errors errors, Application application) {
+        EDIStatus ediStatus = application.getLeadApplicant().getEdiStatus();
+        if (ediStatus == null || (ediStatus != null && !ediStatus.equals(EDIStatus.COMPLETE))) {
+            reject(errors, "validation.applicationteam.edi.status", application.getLeadApplicant().getName(), application.getLeadOrganisationId());
+        }
+    }
 }

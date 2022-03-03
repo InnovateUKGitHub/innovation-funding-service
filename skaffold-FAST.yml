@@ -11,8 +11,8 @@ profiles:
         tryImportMissing: false
         push: true
       tagPolicy:
-        gitCommit:
-          ignoreChanges: true
+        envTemplate:
+          template: "{{.TAG_ID}}"
       artifacts:
         - image: data-service
           context: .
@@ -100,8 +100,8 @@ profiles:
         tryImportMissing: true
         push: true
       tagPolicy:
-        gitCommit:
-          ignoreChanges: true
+        envTemplate:
+          template: "{{.TAG_ID}}"
       artifacts: []
     deploy:
       kubeContext: custom
@@ -117,8 +117,8 @@ profiles:
         tryImportMissing: true
         push: true
       tagPolicy:
-        gitCommit:
-          ignoreChanges: true
+        envTemplate:
+          template: "{{.TAG_ID}}"
       artifacts: []
     deploy:
       kubeContext: sysint
@@ -134,8 +134,8 @@ profiles:
         tryImportMissing: true
         push: true
       tagPolicy:
-        gitCommit:
-          ignoreChanges: true
+        envTemplate:
+          template: "{{.TAG_ID}}"
       artifacts: []
     deploy:
       kubeContext: uat
@@ -151,8 +151,8 @@ profiles:
         tryImportMissing: true
         push: true
       tagPolicy:
-        gitCommit:
-          ignoreChanges: true
+        envTemplate:
+          template: "{{.TAG_ID}}"
       artifacts: []
     deploy:
       kubeContext: demo
@@ -168,8 +168,8 @@ profiles:
         tryImportMissing: true
         push: true
       tagPolicy:
-        gitCommit:
-          ignoreChanges: true
+        envTemplate:
+          template: "{{.TAG_ID}}"
       artifacts: []
     deploy:
       kubeContext: perf
@@ -185,8 +185,8 @@ profiles:
         tryImportMissing: true
         push: true
       tagPolicy:
-        gitCommit:
-          ignoreChanges: true
+        envTemplate:
+          template: "{{.TAG_ID}}"
       artifacts: []
     deploy:
       kubeContext: prod
@@ -201,8 +201,8 @@ profiles:
         tryImportMissing: true
         push: true
       tagPolicy:
-        gitCommit:
-          ignoreChanges: true
+        envTemplate:
+          template: "{{.TAG_ID}}"
       artifacts: []
     deploy:
       kustomize:
@@ -217,8 +217,8 @@ profiles:
         tryImportMissing: true
         push: true
       tagPolicy:
-        gitCommit:
-          ignoreChanges: true
+        envTemplate:
+          template: "{{.TAG_ID}}"
       artifacts: []
     deploy:
       kubeContext: local
@@ -234,8 +234,8 @@ profiles:
         tryImportMissing: true
         push: true
       tagPolicy:
-        gitCommit:
-          ignoreChanges: true
+        envTemplate:
+          template: "{{.TAG_ID}}"
       artifacts: []
     deploy:
       kustomize:

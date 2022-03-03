@@ -2,6 +2,7 @@ package org.innovateuk.ifs.starters.audit.cfg.rabbit;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.starters.audit.AuditChannel;
 import org.innovateuk.ifs.starters.audit.cfg.AuditAutoConfiguration;
 import org.innovateuk.ifs.starters.audit.cfg.AuditConfigurationProperties;
@@ -17,7 +18,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 
 @EnableRabbit
-@Profile(AuditAutoConfiguration.AMQP_PROFILE)
+@Profile(IfsProfileConstants.AMQP_PROFILE)
 @EnableConfigurationProperties(AuditConfigurationProperties.class)
 public class RabbitAuditConfiguration {
 
