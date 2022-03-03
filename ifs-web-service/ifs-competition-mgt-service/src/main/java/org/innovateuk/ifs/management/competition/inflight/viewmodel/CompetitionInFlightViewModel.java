@@ -34,7 +34,7 @@ public class CompetitionInFlightViewModel {
     private boolean readOnly;
     private boolean assessmentPanelEnabled;
     private boolean interviewPanelEnabled;
-    private boolean competitionHasAssessmentStage;
+    private boolean isHasAssessmentStage;
     private AssessorFinanceView assessorFinanceView;
     private CompetitionCompletionStage competitionCompletionStage;
     private boolean supporterEnabled;
@@ -68,7 +68,7 @@ public class CompetitionInFlightViewModel {
         this.assessmentPanelEnabled = competitionAssessmentConfigResource.getHasAssessmentPanel() != null ? competitionAssessmentConfigResource.getHasAssessmentPanel() : false;
         this.interviewPanelEnabled = competitionAssessmentConfigResource.getHasInterviewStage() != null ? competitionAssessmentConfigResource.getHasInterviewStage() : false;
         this.assessorFinanceView = competitionAssessmentConfigResource.getAssessorFinanceView();
-        this.competitionHasAssessmentStage = competitionResource.isHasAssessmentStage();
+        this.isHasAssessmentStage = competitionResource.isHasAssessmentStage();
         this.supporterEnabled = competitionResource.isKtp();
         this.alwaysOpen = competitionResource.isAlwaysOpen();
     }
@@ -167,7 +167,7 @@ public class CompetitionInFlightViewModel {
     }
 
     public boolean isInviteAssessorsLinkEnabled() {
-        return competitionHasAssessmentStage &&
+        return isHasAssessmentStage &&
                 !asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competitionStatus);
     }
 
@@ -193,13 +193,13 @@ public class CompetitionInFlightViewModel {
                 .anyMatch(m -> m.getMilestoneType() == MilestoneType.ASSESSMENT_CLOSED && m.isPassed());
     }
 
-    public boolean isCompetitionHasAssessmentStage() {
-        return competitionHasAssessmentStage;
+    public boolean isHasAssessmentStage() {
+        return isHasAssessmentStage;
     }
 
     public boolean isManageAssessmentLinkEnabled() {
         return competitionStatus != READY_TO_OPEN
-                && (competitionStatus != OPEN || alwaysOpen && competitionHasAssessmentStage);
+                && (competitionStatus != OPEN || alwaysOpen && isHasAssessmentStage);
     }
 
     @JsonIgnore

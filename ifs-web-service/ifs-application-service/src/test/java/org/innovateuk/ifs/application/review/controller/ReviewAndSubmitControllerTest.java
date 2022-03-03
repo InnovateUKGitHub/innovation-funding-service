@@ -26,10 +26,9 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
-import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.HORIZON_EUROPE_GUARANTEE;
 import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.HORIZON_2020;
+import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.HORIZON_EUROPE_GUARANTEE;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -145,7 +144,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     }
 
     @Test
-    public void hestaApplicationTrackReopen() throws Exception {
+    public void hecpApplicationTrackReopen() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionTypeEnum(HORIZON_EUROPE_GUARANTEE)
                 .withAlwaysOpen(true)
@@ -162,7 +161,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
         when(userService.isLeadApplicant(loggedInUser.getId(), application)).thenReturn(true);
 
         MvcResult mvcResult = mockMvc.perform(get("/application/" + application.getId() + "/track"))
-                .andExpect(view().name("hesta-application-track"))
+                .andExpect(view().name("hecp-application-track"))
                 .andReturn();
         TrackViewModel model = (TrackViewModel) mvcResult.getModelAndView().getModel().get("model");
         assertFalse(model.isReopenLinkVisible());

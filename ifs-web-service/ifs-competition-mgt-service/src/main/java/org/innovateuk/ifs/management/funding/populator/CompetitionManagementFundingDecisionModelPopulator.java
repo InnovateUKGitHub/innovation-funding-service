@@ -73,7 +73,7 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
         if (alwaysOpenCompetitionEnabled) {
             CompetitionResource competition = getCompetitionIfExist(competitionId);
             if (competition.isAlwaysOpen()) {
-                if (competition.isHorizonEuropeGuarantee()) {
+                if (!competition.isHasAssessmentStage()) {
                     return getSubmittedApplications(competitionId, paginationForm, fundingDecisionFilterForm);
                 }
                 return applicationSummaryRestService.getAssessedApplications(
