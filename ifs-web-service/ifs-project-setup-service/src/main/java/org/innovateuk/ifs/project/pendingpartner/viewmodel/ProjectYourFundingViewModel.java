@@ -21,6 +21,7 @@ public class ProjectYourFundingViewModel {
     private final boolean organisationRequiredAndNotCompleted;
     private final boolean subsidyBasisRequiredAndNotCompleted;
     private final Optional<Long> subsidyBasisQuestionId;
+    private final boolean ofgemCompetition;
 
     public ProjectYourFundingViewModel(ProjectResource project,
                                        long organisationId,
@@ -33,7 +34,8 @@ public class ProjectYourFundingViewModel {
                                        boolean leadOrganisation,
                                        boolean subsidyBasisRequiredAndNotCompleted,
                                        boolean organisationRequiredAndNotCompleted,
-                                       Optional<Long> subsidyBasisQuestionId) {
+                                       Optional<Long> subsidyBasisQuestionId,
+                                       boolean ofgemCompetition) {
         this.projectName = project.getName();
         this.projectId = project.getId();
         this.organisationId = organisationId;
@@ -47,6 +49,7 @@ public class ProjectYourFundingViewModel {
         this.subsidyBasisRequiredAndNotCompleted = subsidyBasisRequiredAndNotCompleted;
         this.organisationRequiredAndNotCompleted = organisationRequiredAndNotCompleted;
         this.subsidyBasisQuestionId = subsidyBasisQuestionId;
+        this.ofgemCompetition = ofgemCompetition;
     }
 
     public String getProjectName() {
@@ -121,4 +124,6 @@ public class ProjectYourFundingViewModel {
     public Long getSubsidyBasisQuestionId() {
         return subsidyBasisQuestionId.orElse(null);
     }
+
+    public boolean isOfgemCompetition() { return ofgemCompetition; }
 }

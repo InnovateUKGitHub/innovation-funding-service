@@ -49,6 +49,7 @@ public class FinanceChecksEligibilityViewModel {
     private final Boolean fecModelEnabled;
     private final boolean canEditProjectCosts;
     private final boolean isReadOnly;
+    private final boolean ofgemCompetition;
 
     public FinanceChecksEligibilityViewModel(ProjectResource project,
                                              CompetitionResource competition,
@@ -102,6 +103,7 @@ public class FinanceChecksEligibilityViewModel {
         this.fecModelEnabled = hasFecModelEnabled(projectFinances, organisationId);
         this.canEditProjectCosts = canEditProjectCosts;
         this.isReadOnly = isReadOnly;
+        this.ofgemCompetition = competition.isOfGemCompetition();
     }
 
     public boolean isApproved() {
@@ -298,4 +300,6 @@ public class FinanceChecksEligibilityViewModel {
     public boolean isReadOnly() {
         return isReadOnly;
     }
+
+    public boolean isOfgemCompetition() { return ofgemCompetition; }
 }

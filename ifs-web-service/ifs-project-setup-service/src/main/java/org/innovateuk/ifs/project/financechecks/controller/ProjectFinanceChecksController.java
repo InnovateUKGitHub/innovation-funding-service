@@ -429,7 +429,8 @@ public class ProjectFinanceChecksController {
                 competition.isKtp(),
                 leadOrganisation,
                 competition.isProcurementMilestones(),
-                showChangesLink);
+                showChangesLink,
+                competition.isOfGemCompetition());
     }
 
     private boolean isApproved(final ProjectOrganisationCompositeId compositeId) {

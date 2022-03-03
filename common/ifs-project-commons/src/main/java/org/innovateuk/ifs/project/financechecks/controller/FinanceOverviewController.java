@@ -105,7 +105,8 @@ public class FinanceOverviewController {
                 competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE),
                 applicationFundingBreakdownViewModel,
                 getExternalUser(loggedInUser),
-                getExternalUserLinkUrl(loggedInUser, projectId));
+                getExternalUserLinkUrl(loggedInUser, projectId),
+                competition.isOfGemCompetition());
     }
 
     private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(long projectId) {

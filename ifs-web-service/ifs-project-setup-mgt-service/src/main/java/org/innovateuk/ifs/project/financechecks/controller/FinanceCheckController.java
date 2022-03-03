@@ -123,7 +123,8 @@ public class FinanceCheckController {
                 userResource.hasRole(EXTERNAL_FINANCE),
                 hasSpendProfileStage,
                 competitionResource.isSubsidyControl(),
-                userResource.hasAuthority(Authority.AUDITOR)));
+                userResource.hasAuthority(Authority.AUDITOR),
+                competitionResource.isOfGemCompetition()));
         return "project/financecheck/summary";
     }
 

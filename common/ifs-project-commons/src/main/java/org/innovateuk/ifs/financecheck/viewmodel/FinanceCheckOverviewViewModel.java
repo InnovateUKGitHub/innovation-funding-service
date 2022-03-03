@@ -14,6 +14,7 @@ public class FinanceCheckOverviewViewModel {
     private final boolean loanCompetition;
     private final boolean ktpCompetition;
     private final boolean hasGrantClaimPercentage;
+    private final boolean ofgemCompetition;
 
     private final long applicationId;
     private final boolean canChangeFundingSought;
@@ -26,16 +27,16 @@ public class FinanceCheckOverviewViewModel {
     private final String externalUserLinkUrl;
 
     public FinanceCheckOverviewViewModel(ProjectFinanceOverviewViewModel overview, FinanceCheckSummariesViewModel summaries, ProjectFinanceCostBreakdownViewModel breakdown, long applicationId,
-                                         boolean canChangeFundingSought, boolean loanCompetition, boolean ktpCompetition, boolean canChangeFundingLevelPercentages, boolean hasGrantClaimPercentage, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel) {
+                                         boolean canChangeFundingSought, boolean loanCompetition, boolean ktpCompetition, boolean canChangeFundingLevelPercentages, boolean hasGrantClaimPercentage, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel, boolean ofgemCompetition) {
         this(overview, summaries, breakdown, applicationId, canChangeFundingSought, loanCompetition, ktpCompetition, canChangeFundingLevelPercentages,
-                hasGrantClaimPercentage, applicationFundingBreakdownViewModel, false, null);
+                hasGrantClaimPercentage, applicationFundingBreakdownViewModel, false, null, ofgemCompetition);
     }
 
     public FinanceCheckOverviewViewModel(ProjectFinanceOverviewViewModel overview, FinanceCheckSummariesViewModel summaries,
                                          ProjectFinanceCostBreakdownViewModel breakdown, long applicationId, boolean canChangeFundingSought,
                                          boolean loanCompetition, boolean ktpCompetition, boolean canChangeFundingLevelPercentages,
                                          boolean hasGrantClaimPercentage, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
-                                         boolean externalUser, String externalUserLinkUrl) {
+                                         boolean externalUser, String externalUserLinkUrl, boolean ofgemCompetition) {
         this.overview = overview;
         this.summaries = summaries;
         this.breakdown = breakdown;
@@ -48,6 +49,7 @@ public class FinanceCheckOverviewViewModel {
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
         this.externalUser = externalUser;
         this.externalUserLinkUrl = externalUserLinkUrl;
+        this.ofgemCompetition = ofgemCompetition;
     }
 
     public ProjectFinanceOverviewViewModel getOverview() {
@@ -102,4 +104,6 @@ public class FinanceCheckOverviewViewModel {
     public boolean isProcurement() {
         return summaries.getFundingType() == FundingType.PROCUREMENT;
     }
+
+    public boolean isOfgemCompetition() { return ofgemCompetition; }
 }

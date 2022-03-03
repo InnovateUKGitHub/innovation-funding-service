@@ -25,6 +25,7 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
     private final BigDecimal competitionMaximumFundingSought;
     private final boolean ktp;
     private final boolean includeOrganisationNames;
+    private final boolean ofgemCompetition;
 
     public FinanceSummaryTableViewModel(long applicationId,
                                         CompetitionResource competition,
@@ -42,6 +43,7 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
         this.competitionMaximumFundingSought = competitionMaximumFundingSought;
         this.ktp = competition.isKtp();
         this.includeOrganisationNames = includeOrganisationNames;
+        this.ofgemCompetition = competition.isOfGemCompetition();
     }
 
 
@@ -86,6 +88,8 @@ public class FinanceSummaryTableViewModel implements BaseAnalyticsViewModel {
     public boolean isIncludeOrganisationNames() {
         return includeOrganisationNames;
     }
+
+    public boolean isOfgemCompetition() { return ofgemCompetition; }
 
     public boolean isAllFinancesComplete() {
         return rows.stream()
