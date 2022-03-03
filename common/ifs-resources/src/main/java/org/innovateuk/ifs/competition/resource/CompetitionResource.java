@@ -872,9 +872,10 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     @JsonIgnore
     public boolean isOfGemCompetition() {
-        return isProcurement()
+        return (competitionTypeEnum == CompetitionTypeEnum.OFGEM) ||
+            (isProcurement()
                 && isOfGemFunder()
-                && isProcurementThirdPartyTermsAndConditions();
+                && isProcurementThirdPartyTermsAndConditions());
     }
 
     private boolean isOfGemFunder() {

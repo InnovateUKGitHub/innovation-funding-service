@@ -25,6 +25,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
     private final boolean ktpPhase2Enabled;
     private final ApplicationKtaInviteResource ktaInvite;
     private final ProcessRoleResource ktaProcessRole;
+    private final boolean ofgemCompetition;
 
     public ApplicationTeamViewModel(long applicationId,
                                     String applicationName,
@@ -39,7 +40,8 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
                                     boolean ktpCompetition,
                                     boolean ktpPhase2Enabled,
                                     ApplicationKtaInviteResource ktaInvite,
-                                    ProcessRoleResource ktaProcessRole
+                                    ProcessRoleResource ktaProcessRole,
+                                    boolean ofgemCompetition
                                     ) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
@@ -55,6 +57,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         this.ktpPhase2Enabled = ktpPhase2Enabled;
         this.ktaInvite = ktaInvite;
         this.ktaProcessRole = ktaProcessRole;
+        this.ofgemCompetition = ofgemCompetition;
     }
 
     @Override
@@ -125,9 +128,9 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         return ktpCompetition;
     }
 
-    public boolean isKtpPhase2Enabled() {
-        return ktpPhase2Enabled;
-    }
+    public boolean isKtpPhase2Enabled() { return ktpPhase2Enabled; }
+
+    public boolean isOfgemCompetition() { return ofgemCompetition; }
 
     public Long getKtaInvitePendingDays() {
         if (ktaInvite == null || InviteStatus.SENT != ktaInvite.getStatus()) {
