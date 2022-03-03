@@ -88,6 +88,10 @@ public class UserPermissionRules {
 
     private static Predicate<ProjectUser> projectUserFilter = projectUser -> PROJECT_ROLES.contains(projectUser.getRole().getName());
 
+    private static List<ProcessRoleType> APPLICATION_PARTICIPANT_ROLES = asList(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER);
+
+    private static Predicate<ProcessRole> applicationParticipantProcessRoleFilter = role -> APPLICATION_PARTICIPANT_ROLES.contains(role.getRole());
+
     @PermissionRule(value = "CREATE", description = "A System Registration User can create new Users on behalf of non-logged in users")
     public boolean systemRegistrationUserCanCreateUsers(UserCreationResource userToCreate, UserResource user) {
         return isSystemRegistrationUser(user);
@@ -173,6 +177,13 @@ public class UserPermissionRules {
     public boolean ktpSupporterCanViewApplicationTeamMembers(UserResource userToView, UserResource user) {
         List<Application> applicationsWhereThisUserIsInKtpSupporter = getApplicationsRelatedToUserBySupporterAssignment(user.getId());
         List<User> allConsortiumUsers = getAllConsortiumUsers(applicationsWhereThisUserIsInKtpSupporter);
+        return simpleMap(allConsortiumUsers, User::getId).contains(userToView.getId());
+    }
+
+    @PermissionRule(value = "READ", description = "Application participants can view consortium members (Lead Applicants and Collaborators) on their Applications")
+    public boolean applicationParticipantsCanViewApplicationTeamMembers(UserResource userToView, UserResource user) {
+        List<Application> applicationsWhereThisUserIsParticipant = getApplicationsRelatedToUserByProcessRoles(user.getId(), applicationParticipantProcessRoleFilter);
+        List<User> allConsortiumUsers = getAllConsortiumUsers(applicationsWhereThisUserIsParticipant);
         return simpleMap(allConsortiumUsers, User::getId).contains(userToView.getId());
     }
 

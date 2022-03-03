@@ -435,6 +435,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         User supporterUser = newUser().build();
         UserResource supporterUserResource = newUserResource()
                 .withId(supporterUser.getId())
+                .withRoleGlobal(Role.SUPPORTER)
                 .build();
 
         Application application1 = newApplication().build();
@@ -533,6 +534,70 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         // assert that supporter of the application 3 can see all other consortium members as the assignment is in REJECTED state
         application3ConsortiumResources.forEach(consortiumMembers ->
                 assertTrue(rules.ktpSupporterCanViewApplicationTeamMembers(consortiumMembers, supporterUserResource)));
+    }
+
+    @Test
+    public void ktaCanViewOtherConsortiumMembers() {
+
+        User ktaUser = newUser().build();
+        UserResource ktaUserResource = newUserResource()
+                .withId(ktaUser.getId())
+                .withRoleGlobal(Role.KNOWLEDGE_TRANSFER_ADVISER)
+                .build();
+
+        Application application1 = newApplication().build();
+        when(applicationRepository.findById(application1.getId())).thenReturn(Optional.of(application1));
+
+        User application1Lead1 = newUser().build();
+        User application1Collaborator1 = newUser().build();
+
+        List<ProcessRole> application1ConsortiumRoles = newProcessRole().withApplication(application1).
+                withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.LEADAPPLICANT).
+                withUser(application1Lead1, application1Collaborator1).
+                build(2);
+
+        List<User> application1Consortium = simpleMap(application1ConsortiumRoles, ProcessRole::getUser);
+        List<UserResource> application1ConsortiumResources = simpleMap(application1Consortium, userResourceForUser());
+
+        when(processRoleRepository.findByUserId(application1Lead1.getId())).
+                thenReturn(singletonList(application1ConsortiumRoles.get(0)));
+        when(processRoleRepository.findByUserId(application1Collaborator1.getId())).
+                thenReturn(singletonList(application1ConsortiumRoles.get(1)));
+
+        List<ProcessRole> application1KtaRoles = newProcessRole().withApplication(application1).
+                withRole(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER).
+                withUser(ktaUser).
+                build(1);
+
+        when(processRoleRepository.findByUserId(ktaUser.getId())).
+                thenReturn(singletonList(application1KtaRoles.get(0)));
+
+        Application application2 = newApplication().build();
+        when(applicationRepository.findById(application2.getId())).thenReturn(Optional.of(application2));
+
+        User application2Lead = newUser().build();
+        User application2Collaborator1 = newUser().build();
+
+        List<ProcessRole> application2ConsortiumRoles = newProcessRole().withApplication(application2).
+                withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.LEADAPPLICANT).
+                withUser(application2Lead, application2Collaborator1).
+                build(2);
+
+        List<User> application2Consortium = simpleMap(application2ConsortiumRoles, ProcessRole::getUser);
+        List<UserResource> application2ConsortiumResources = simpleMap(application2Consortium, userResourceForUser());
+
+        when(processRoleRepository.findByUserId(application2Lead.getId())).
+                thenReturn(singletonList(application2ConsortiumRoles.get(0)));
+        when(processRoleRepository.findByUserId(application2Collaborator1.getId())).
+                thenReturn(singletonList(application2ConsortiumRoles.get(1)));
+
+        // assert that kta of the application 1 can see all other consortium members
+        application1ConsortiumResources.forEach(consortiumMembers ->
+                assertTrue(rules.applicationParticipantsCanViewApplicationTeamMembers(consortiumMembers, ktaUserResource)));
+
+        // assert that kta not part of the application 2 can not see all other consortium members
+        application2ConsortiumResources.forEach(consortiumMembers ->
+                assertFalse(rules.applicationParticipantsCanViewApplicationTeamMembers(consortiumMembers, ktaUserResource)));
     }
 
     @Test
