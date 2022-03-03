@@ -69,8 +69,8 @@ public class ApplicationTeamUserReadOnlyViewModel {
     }
 
     public String getEdiStatus() {
-        return ediStatus == null
-                ? EDIStatus.INCOMPLETE.getDisplayName()
-                : ediStatus.getDisplayName();
+        return isEdiCompleted()
+                ? EDIStatus.COMPLETE.getDisplayName()
+                : EDIStatus.INCOMPLETE.getDisplayName();
     }
 }
