@@ -27,6 +27,8 @@ Documentation     IFS-7195  Organisational eligibility category in Competition s
 ...
 ...               IFS-11131 Company registration number in Application Team
 ...
+...               IFS-11140 Business Finance - Companies House Details Addition
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin Applicant
@@ -438,7 +440,7 @@ Internal user is able to add a new international partner organisation
     Then organisation is able to accept project invite     FName  Surname  ${international_invite_email}  ${ApplicationID}  ${internationalApplicationTitle}
 
 Partner organisation provide organisation detail and create an account
-    [Documentation]  IFS-7197  IFS-9289
+    [Documentation]  IFS-7197  IFS-9289  IFS-11140
     [Tags]  HappyPath
     When partner user provide organisation detail and create account     ${international_invite_email}
     And the user clicks the button/link                                  link = ${internationalApplicationTitle}
@@ -546,7 +548,7 @@ non-uk based partner applicant can see the read only view of the corresponding a
     Then the user should see read only view of completed correspondence address details
 
 External dashboard - lead applicant - view status of partners - bank details not required message should display for international lead applicant organisation
-    [Documentation]    IFS - 7163  IFS-9289
+    [Documentation]    IFS - 7163  IFS-9289  IFS-11140
     [Tags]
     Given lead applicant invites new partner and accepts invitation
     And partner organisation sets funding level to zero
@@ -816,7 +818,7 @@ the user gets an error message on not filling mandatory fields
     the user should see the element     link = You must select the country where your organisation is based.
 
 The user completes the application
-    the applicant completes Application Team
+    the applicant completes Application Team                                       COMPLETE  ${lead_international_email}
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                                       ${internationalApplicationTitle}
@@ -960,7 +962,7 @@ lead applicant invites new partner and accepts invitation
     a new organisation is able to accept project invite in project setup    json  smith   ${zero_funding_partner_email}  CINEWORLD   ${zeroFundingPartnerOrgnaisationName}    ${ApplicationID}    ${internationalApplicationTitle}   isNotInternational
 
 partner organisation sets funding level to zero
-    The new partner can complete Your organisation
+    The new partner completes your organisation details      CINEWORLD LIMITED
     the user clicks the button/link                          link = Your funding
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element   link = Subsidy basis
     Run Keyword If  '${status}' == 'PASS'  run keywords      the user completes subsidy basis as subsidy control
@@ -973,7 +975,7 @@ partner organisation sets funding level to zero
 
 partner completes all sections to join the project
     the user completes subsidy basis as subsidy control
-    The new partner can complete Your organisation
+    The new partner completes your organisation details      Test Empire
     the user clicks the button/link                          link = Your funding
     the user selects the radio button                        requestingFunding   true
     the user enters text to a text field                     css = [name^="grantClaimPercentage"]  35
@@ -1176,6 +1178,7 @@ uk lead applicant completes application form
     the user clicks the button/link                                 link = Application details
     the user fills in the Application details                       ${ukLeadInternationalApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user clicks the button/link                                 link = Application team
+    applicant completes edi profile                                 COMPLETE  ${lead_applicant}
     the user clicks the button/link                                 id = remove-organisation-${firstGroupLtdOrganisationName}
     the user clicks the button/link                                 name = remove-team-member
     the user clicks the button/link                                 id = application-question-complete
@@ -1283,3 +1286,10 @@ the user should see only uk based organisations
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots    page should contain element  jQuery = label:contains("Empire Ltd")
     Run Keyword If  '${status}' == 'PASS'  the user should see the element     jQuery = label:contains("Empire Ltd")
     ...                             ELSE   the user should see the element     jQuery = dt:contains("Empire Ltd")
+
+The new partner completes your organisation details
+    [Arguments]  ${organisationName}
+    the user clicks the button/link         link = Your organisation
+    the user should see the element         jQuery = th:contains("Organisation name")+td:contains("${organisationName}")
+    the user completes your organisation
+    the user should see the element         jQuery = li div:contains("Your organisation") ~ .task-status-complete

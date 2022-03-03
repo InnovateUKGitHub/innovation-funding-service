@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class YourOrganisationWithoutGrowthTableFormSaver {
 
-    public ServiceResult<Void> save(long targetId, long organisationId, YourOrganisationWithoutGrowthTableForm form, YourOrganisationRestService service) {
+    public ServiceResult<Void> save(long targetId, long organisationId, long userId, YourOrganisationWithoutGrowthTableForm form, YourOrganisationRestService service) {
         OrganisationFinancesWithoutGrowthTableResource finances = new OrganisationFinancesWithoutGrowthTableResource(
                 form.getOrganisationSize(),
                 form.getTurnover(),

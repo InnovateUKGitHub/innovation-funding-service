@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.user.domain.Affiliation;
 import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.EDIStatus;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserStatus;
@@ -117,6 +118,13 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
 
     public UserBuilder withModifiedBy(User... modifiedBys) {
         return withArray((modifiedBy, user) -> setField("modifiedBy", modifiedBy, user), modifiedBys);
+    }
+    public UserBuilder withEdiStatus(EDIStatus... ediStatuses) {
+        return withArray((ediStatus, user) -> user.setEdiStatus(ediStatus), ediStatuses);
+    }
+
+    public UserBuilder withEdiStatusReviewDate(ZonedDateTime... ediStatusReviewDates) {
+        return withArray((ediStatusReviewDate, user) -> setField("ediReviewDate", ediStatusReviewDate, user), ediStatusReviewDates);
     }
 
     @Override

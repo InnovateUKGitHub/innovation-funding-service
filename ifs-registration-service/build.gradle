@@ -14,6 +14,7 @@ dependencies {
     implementation("org.springframework.security:spring-security-ldap")
     implementation("org.springframework.data:spring-data-ldap")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     testImplementation("org.springframework.ldap:spring-ldap-test") {
         exclude group: "commons-logging", module: "commons-logging"

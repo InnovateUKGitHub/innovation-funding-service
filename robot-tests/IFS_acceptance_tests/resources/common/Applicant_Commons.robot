@@ -621,7 +621,9 @@ the user selects his organisation in Companies House
     the user clicks the button/link       jQuery = button:contains("Save and continue")
 
 the applicant completes Application Team
+    [Arguments]  ${ediStatus}  ${userEmail}
     the user clicks the button/link  link = Application team
+    applicant completes edi profile  ${ediStatus}  ${userEmail}
     the user clicks the button/link  id = application-question-complete
     the user clicks the button/link  link = Application overview
     the user should see the element  jQuery = li:contains("Application team") > .task-status-complete
@@ -769,10 +771,10 @@ partner applicant completes the project finances
     the user completes partner project finances      ${application_title}  ${is_KTP}
 
 lead applicant completes the application team
-    [Arguments]   ${email}   ${password}   ${application_title}
+    [Arguments]   ${email}   ${password}   ${application_title}  ${ediStatus}  ${userEmail}
     Log in as a different user                   ${email}   ${password}
     the user clicks the button/link              link = ${application_title}
-    the applicant completes Application Team
+    the applicant completes Application Team     ${ediStatus}  ${userEmail}
 
 the lead invites a non-registered user
     [Arguments]   ${partner_email}  ${competition_title}   ${application_title}  ${is_KTP}  ${fName}  ${lName}
@@ -939,8 +941,9 @@ the user completes funding level in application
     the user clicks the button/link          link = Your funding
 
 the lead user completes project details, application questions and finances sections
+    [Arguments]  ${ediStatus}  ${userEmail}
     the user completes the application details section                              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  25
-    the applicant completes Application Team
+    the applicant completes Application Team                                        ${ediStatus}  ${userEmail}
     the applicant marks EDI question as complete
     the user completes the research category                                        Feasibility studies
     the lead applicant fills all the questions and marks as complete(programme)
@@ -1011,8 +1014,50 @@ the partner applicant marks Your project finances information as complete
     the user selects the radio button              organisationSize  ${org_size}
     the user enters text to a text field           financialYearEndMonthValue    ${month}
     the user enters text to a text field           financialYearEndYearValue    ${Year}
+    the user enters text to a text field           css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
     the user clicks the button/link                jQuery = button:contains("Mark as complete")
     the user clicks the button/link                link = Back to application overview
+
+the user fills financial overview section
+    ${i} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{turnover}
+             \    the user enters text to a text field     id = years[${i}].turnover  ${ELEMENT}
+             \    ${i} =   Evaluate   ${i} + 1
+
+    ${j} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{preTaxProfit}
+             \    the user enters text to a text field     id = years[${j}].preTaxProfit  ${ELEMENT}
+             \    ${j} =   Evaluate   ${j} + 1
+
+    ${k} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{netCurrentAssets}
+             \    the user enters text to a text field     id = years[${k}].currentAssets  ${ELEMENT}
+             \    ${k} =   Evaluate   ${k} + 1
+
+#    ${l} =  Set Variable   0
+#        :FOR   ${ELEMENT}   IN    @{liabilities}
+#             \    the user enters text to a text field     id = years[${l}].liabilities  ${ELEMENT}
+#             \    ${l} =   Evaluate   ${l} + 1
+
+    ${m} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{shareHolderFunds}
+             \    the user enters text to a text field     id = years[${m}].shareholderValue  ${ELEMENT}
+             \    ${m} =   Evaluate   ${m} + 1
+
+    ${n} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{loans}
+             \    the user enters text to a text field     id = years[${n}].loans  ${ELEMENT}
+             \    ${n} =   Evaluate   ${n} + 1
+
+    ${a} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{employees}
+             \    the user enters text to a text field     id = years[${a}].employees  ${ELEMENT}
+             \    ${a} =   Evaluate   ${a} + 1
+
+    ${a} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{employeesCorporate}
+             \    the user enters text to a text field     id = years[${a}].corporateGroupEmployees  ${ELEMENT}
+             \    ${a} =   Evaluate   ${a} + 1
 
 The user completes the research category
     [Arguments]  ${res_category}
@@ -1021,6 +1066,17 @@ The user completes the research category
     the user clicks the button/link      id=application-question-complete
     the user clicks the button/link      link = Back to application overview
     the user should see the element      jQuery=li:contains("Research category") > .task-status-complete
+
+the user checks for companies house details
+    [Arguments]  ${organisationName}  ${registredNumber}  ${addressLine}  ${addressCity}  ${addressTown}  ${addressPostcode}  ${sicCode}  ${organisationSize}
+    the user should see the element   jQuery = th:contains("Organisation name")+td:contains("${organisationName}")
+    the user should see the element   jQuery = th:contains("Registration number")+td:contains("${registredNumber}")
+    the user should see the element   jQuery = td div:contains("${addressLine}")
+    the user should see the element   jQuery = td div:contains("${addressCity}")
+    the user should see the element   jQuery = td div:contains("${addressTown}")
+    the user should see the element   jQuery = td div:contains("${addressPostcode}")
+    the user should see the element   jQuery = th:contains("SIC code")+td:contains("${sicCode}")
+    the user should see the element   jQuery = th:contains("Organisation size")+td:contains("${organisationSize}")
 
 the user accepts invitation to join application under same organisation
     [Arguments]  ${email}  ${password}  ${emailSubject}  ${emailBody}

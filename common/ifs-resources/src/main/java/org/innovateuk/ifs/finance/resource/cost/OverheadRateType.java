@@ -4,7 +4,8 @@ public enum OverheadRateType{
     NONE(0, null, "None"),
     DEFAULT_PERCENTAGE(20, "defaultPercentage", "Default %"),
     TOTAL(null, "total", "Custom Amount"),
-    HORIZON_2020_TOTAL(null, "horizon-2020-total", "Total");
+    HORIZON_2020_TOTAL(null, "horizon-2020-total", "Total"),
+    HORIZON_EUROPE_GUARANTEE_TOTAL(null, "horizon-europe-guarantee-total", "Total");
 
     private final Integer rate;
     private final String name;

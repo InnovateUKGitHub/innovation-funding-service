@@ -152,6 +152,11 @@ spec:
               configMapKeyRef:
                 name: feature-toggle-config
                 key: IFS_EDI_UPDATE_ENABLED
+          - name: IFS_EDI_SALESFORCE_PAGE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: web-config
+                key: IFS_EDI_SALESFORCE_PAGE_URL
           - name: JAVA_TOOL_OPTIONS
             value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME

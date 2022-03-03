@@ -153,8 +153,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public RestResult<UserResource> updateDetails(long id, String email, String firstName, String lastName, String title,
                                                   String phoneNumber, boolean allowMarketingEmails) {
-        UserResource user = new UserResource();
-        user.setId(id);
+        UserResource user = retrieveUserById(id).getSuccess();
         user.setEmail(email);
         user.setFirstName(firstName);
         user.setLastName(lastName);

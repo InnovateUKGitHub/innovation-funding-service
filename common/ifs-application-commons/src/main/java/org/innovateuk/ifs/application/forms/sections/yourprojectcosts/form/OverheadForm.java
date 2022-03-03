@@ -101,6 +101,7 @@ public class OverheadForm {
                 return labourTotal.multiply(new BigDecimal(rateType.getRate()));
             case TOTAL:
             case HORIZON_2020_TOTAL:
+            case HORIZON_EUROPE_GUARANTEE_TOTAL:
                 return ofNullable(getTotalSpreadsheet()).map(BigDecimal::new).orElse(BigDecimal.ZERO);
         }
         return BigDecimal.ZERO;
