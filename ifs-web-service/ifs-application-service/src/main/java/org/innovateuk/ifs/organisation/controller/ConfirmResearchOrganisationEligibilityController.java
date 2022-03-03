@@ -3,8 +3,8 @@ package org.innovateuk.ifs.organisation.controller;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.form.ConfirmResearchOrganisationEligibilityForm;
+import org.innovateuk.ifs.organisation.viewmodel.ConfirmResearchOrganisationEligibilityViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.organisation.controller.AbstractOrganisationCreationController.BASE_URL;
-import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.isValidCollaborator;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.isValidKtpCollaborator;
 
 @Controller
@@ -26,15 +25,13 @@ import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.isVa
 public class ConfirmResearchOrganisationEligibilityController extends AbstractOrganisationCreationController {
 
     private static final String FORM_NAME = "form";
-    protected static final String TEMPLATE_PATH = "registration/organisation";
-    protected static final String NOT_ELIGIBLE = "research-not-eligible";
-
-    @Autowired
-    private UserService userService;
+    private static final String RESEARCH_ELIGIBILITY_TEMPLATE = "confirm-research-organisation-eligibility";
+    private static final String TEMPLATE_PATH = "registration/organisation";
+    private static final String RESEARCH_NOT_ELIGIBLE = "research-not-eligible";
+    private static final String NOT_ELIGIBLE = "not-eligible";
 
     @Autowired
     private CompetitionRestService competitionRestService;
-
 
     @GetMapping
     public String view(
@@ -43,11 +40,11 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
             Model model,
             UserResource user) {
 
-        String organisationName = organisationRestService.getOrganisationById(organisationId).getSuccess().getOrganisationTypeName();
-        model.addAttribute("organisationName", organisationName);
+        String organisationName = organisationRestService.getOrganisationById(organisationId).getSuccess().getName();
+        model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, organisationId, organisationName));
         model.addAttribute(FORM_NAME, new ConfirmResearchOrganisationEligibilityForm());
 
-        return TEMPLATE_PATH + "/confirm-research-organisation-eligibility";
+        return TEMPLATE_PATH + "/" + RESEARCH_ELIGIBILITY_TEMPLATE;
     }
 
     @PostMapping()
@@ -60,30 +57,28 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
             HttpServletRequest request,
             HttpServletResponse response,
             UserResource user) {
-        Supplier<String> failureView = () ->  TEMPLATE_PATH + "/confirm-research-organisation-eligibility";
+        Supplier<String> failureView = () ->  TEMPLATE_PATH + "/" + RESEARCH_ELIGIBILITY_TEMPLATE;
         Supplier<String> successView = () -> {
             if (form.getConfirmEligibility()) {
-                return redirectToResearchNotEligiblePage(competitionId, organisationId, user, request, response);
+                return "redirect:" + BASE_URL + "/" + competitionId + "/confirm-eligibility/" + organisationId + "/" + RESEARCH_NOT_ELIGIBLE;
             }
-            // redirect to dashboard
-            return "redirect:/";
+            return validateAndCompleteProcess(competitionId, organisationId, user, request, response);
         };
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
-//
-//    @GetMapping("/research-not-eligible")
-//    public String showNotEligible(Model model, HttpServletRequest request) {
-//        model.addAttribute("collaborator", registrationCookieService.isCollaboratorJourney(request));
-//        return "registration/organisation/research-not-eligible";
-//    }
 
-    private String redirectToResearchNotEligiblePage(long competitionId, long organisationId, UserResource user, HttpServletRequest request, HttpServletResponse response) {
+    @GetMapping("/research-not-eligible")
+    public String showNotEligible(Model model, HttpServletRequest request) {
+        model.addAttribute("collaborator", registrationCookieService.isCollaboratorJourney(request));
+        return "registration/organisation/research-not-eligible";
+    }
+
+    private String validateAndCompleteProcess(long competitionId, long organisationId, UserResource user, HttpServletRequest request, HttpServletResponse response) {
         if (registrationCookieService.isLeadJourney(request)) {
             if (!validateLeadApplicant(competitionId, organisationId)) {
                 return redirectToNotEligiblePage();
             }
         }
-
         if (registrationCookieService.isCollaboratorJourney(request)) {
             if (!validateCollaborator(competitionId, organisationId)) {
                 return redirectToNotEligiblePage();
@@ -94,7 +89,7 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
     }
 
     private String redirectToNotEligiblePage() {
-        return TEMPLATE_PATH + "/" + NOT_ELIGIBLE;
+        return "redirect:" + BASE_URL + "/" + ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
     }
 
     private boolean validateLeadApplicant(long competitionId, long organisationId) {
@@ -111,10 +106,7 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
         if (ktpCompetition) {
             return isValidKtpCollaborator(organisationTypeId);
         } else {
-            return isValidCollaborator(organisationTypeId);
+            return competitionRestService.getCompetitionById(competitionId).getSuccess().getMaxResearchRatio() != 0;
         }
-
     }
-
-
 }

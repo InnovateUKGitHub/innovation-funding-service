@@ -22,7 +22,7 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm your eligibility',size='govuk-heading-l'"/>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm your eligibility', subTitle=|${model.organisationName} (Research)|,size='govuk-heading-l'"/>
 
         <p class="govuk-body govuk-!-margin-top-6">Organisations whose main activity is commercial or economic must make sure that
             the outcomes of the project such as intellectual property do not help gain a selective advantage in
@@ -34,13 +34,13 @@
                 <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('confirmEligibility')} ? 'govuk-form-group-error'">
                         <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="confirmEligibility">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="confirmEligibility">
                                 <span class="govuk-fieldset__heading govuk-!-margin-bottom-9">Do you plan to exploit the outputs from your project commercially or economically to gain a selective advantage in the market?</span>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('confirmEligibility')}">
                                 <span class="govuk-error-message"  th:each="err : ${#fields.errors('confirmEligibility')}" th:text="${err}"></span>
                             </th:block>
-                            <div class="govuk-radios">
+                            <div class="govuk-radios govuk-!-margin-top-2">
                                 <div class="govuk-radios__item" th:each="value : ${ {true, false} }">
                                     <input type="radio"
                                            class="govuk-radios__input"
@@ -55,7 +55,7 @@
                             </div>
                         </fieldset>
                     </div>
-                    <button type="submit" name="research-eligibility-submit" class="govuk-button govuk-!-margin-top-6">
+                    <button type="submit" name="research-eligibility-submit" class="govuk-button">
                         Confirm and continue
                     </button>
                 </form>

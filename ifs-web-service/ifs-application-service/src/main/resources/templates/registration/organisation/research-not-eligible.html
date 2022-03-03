@@ -11,7 +11,8 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to confirm your eligibility',linkClass='link-back',linkUrl='/organisation/select'" />
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to confirm your eligibility',linkClass='link-back',linkUrl='/', dynamicBackLink=${true}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:unless="${collaborator}" th:insert="fragments/layout :: page-title" th:with="pageTitle='You are not eligible to start an application',size='govuk-heading-l'" />

@@ -4,12 +4,12 @@ public class ConfirmResearchOrganisationEligibilityViewModel {
 
     private long competitionId;
     private long organisationId;
-    private boolean isLeadJourney;
+    private String organisationName;
 
-    public ConfirmResearchOrganisationEligibilityViewModel(long competitionId, long organisationId, boolean isLeadJourney) {
+    public ConfirmResearchOrganisationEligibilityViewModel(long competitionId, long organisationId, String organisationName) {
         this.competitionId = competitionId;
         this.organisationId = organisationId;
-        this.isLeadJourney = isLeadJourney;
+        this.organisationName = organisationName;
     }
 
     public long getCompetitionId() {
@@ -28,11 +28,11 @@ public class ConfirmResearchOrganisationEligibilityViewModel {
         this.organisationId = organisationId;
     }
 
-    public boolean isLeadJourney() {
-        return isLeadJourney;
+    public String getOrganisationName() {
+        return organisationName;
     }
 
-    public void setLeadJourney(boolean leadJourney) {
-        isLeadJourney = leadJourney;
+    public void setOrganisationName(String organisationName) {
+        this.organisationName = organisationName;
     }
 }
