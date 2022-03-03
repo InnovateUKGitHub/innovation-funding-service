@@ -474,14 +474,14 @@ Project details: Business and financial information
     And The user clicks the button/link             jQuery = button:contains('Done')
     Then the user should see the element            jQuery = li:contains("Business and financial information") .task-status-complete
 
-External user edits the EDI question
-    [Documentation]  IFS-7700  IFS-8522
-    Given the user marks each question as complete     Equality, diversity and inclusion
-    And the user clicks the button/link                link = Equality, diversity and inclusion
-    And the user should see the element                css=a[href*='https://bit.ly/EDIForm']
-    When the user clicks the button/link               jQuery = a:contains("Edit this question")
-    And the user clicks the button/link                jQuery = button:contains("Done")
-    Then the user should see the element               jQuery = li:contains("Equality, diversity and inclusion") .task-status-complete
+#External user edits the EDI question
+#    [Documentation]  IFS-7700  IFS-8522
+#    Given the user marks each question as complete     Equality, diversity and inclusion
+#    And the user clicks the button/link                link = Equality, diversity and inclusion
+#    And the user should see the element                css=a[href*='https://bit.ly/EDIForm']
+#    When the user clicks the button/link               jQuery = a:contains("Edit this question")
+#    And the user clicks the button/link                jQuery = button:contains("Done")
+#    Then the user should see the element               jQuery = li:contains("Equality, diversity and inclusion") .task-status-complete
 
 Application: Scope
     [Documentation]  INFUND-5634 INFUND-5635
