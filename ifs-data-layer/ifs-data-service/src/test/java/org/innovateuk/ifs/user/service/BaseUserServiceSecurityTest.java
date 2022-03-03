@@ -90,6 +90,8 @@ public class BaseUserServiceSecurityTest extends BaseServiceSecurityTest<BaseUse
                 .auditorUsersCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
         verify(userRules, times(numberOfUsers))
                 .ktpSupporterCanViewApplicationTeamMembers(isA(UserResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .applicationParticipantsCanViewApplicationTeamMembers(isA(UserResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractionsWithRules();
     }
 
