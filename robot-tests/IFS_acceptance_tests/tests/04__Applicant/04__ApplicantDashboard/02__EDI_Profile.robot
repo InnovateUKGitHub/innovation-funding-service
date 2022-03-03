@@ -1,6 +1,7 @@
 *** Settings ***
-Documentation     IFS-11252 EDI Section to Applicant Profile
+Documentation    IFS-11252 EDI Section to Applicant Profile
 ...
+...              IFS-11490 EDI: open in second tab
 ...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -14,7 +15,7 @@ ${applicationNameEDI}   EDI Application
 
 *** Test Cases ***
 Applicant can view EDI section in profile page
-    [Documentation]  IFS-11252
+    [Documentation]  IFS-11252  IFS-11490
     Given the user logs-in in new browser  	        &{lead_applicant_credentials}
     When the user clicks the button/link            link = Profile
     Then the user should see EDI section details    Incomplete  Not Applicable  Start now
@@ -32,7 +33,7 @@ Lead applicant can not mark the application team as complete when the edi survey
     Then the user should see a field and summary error     Complete our equality,diversity and inclusion survey.
 
 Applicant can view the EDI incomplete status
-    [Documentation]  IFS-11252
+    [Documentation]  IFS-11252  IFS-11490
     Given the user clicks the button/link           jQuery = a:contains("here")
     When the user changed EDI survey status         INPROGRESS  2076-01-22 01:02:03
     Then the user should see EDI section details    Incomplete  22 January 2076  Continue
@@ -55,7 +56,7 @@ Lead applicant adds a partner organisation and check the status of edi as incomp
     Then the user should see the element               jQuery = td:contains("Jessica Doe") ~ td:contains("Incomplete")
 
 Applicant can view the EDI status as complete in profile
-    [Documentation]  IFS-11252
+    [Documentation]  IFS-11252  IFS-11490
     Given log in as a different user                &{lead_applicant_credentials}
     When the user clicks the button/link            link = Profile
     And the user changed EDI survey status          COMPLETE  2089-03-25 01:02:03
@@ -85,7 +86,7 @@ the user should see EDI section details
     the user should see the element  jQuery = th:contains("Survey status")+td:contains("${ediStatus}")
     the user should see the element  jQuery = th:contains("Last reviewed")+td:contains("${ediReviewDate}")
     the user should see the element  jQuery = a:contains("${ediButton}")
-    the user should see the element  css=[href="https://loans-innovateuk.cs80.force.com/EDI/s"]
+    the user should see the element  css=[href="https://loans-innovateuk.cs80.force.com/EDI/s"][target="_blank"]
 
 the user changed EDI survey status
     [Arguments]  ${ediStatus}  ${ediReviewDate}
