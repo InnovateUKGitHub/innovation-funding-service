@@ -20,13 +20,47 @@ spec:
         app: cache-provider
     spec:
       containers:
-        - image: docker-ifs.devops.innovateuk.org/releases/cache-provider:5.0.5
+        - image: redis:5
           name: cache-container
           imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+          command:
+            - redis-server
+            - "/redis-master/redis.conf"
+          env:
+            - name: MASTER
+              value: "true"
           ports:
             - containerPort: 6379
+          volumeMounts:
+            - mountPath: /redis-data
+              name: data
+            - mountPath: /redis-master
+              name: config
           resources:
             requests:
               memory: 50M
             limits:
               memory: 100M
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: config
+          configMap:
+            name: cache-provider-config
+            items:
+              - key: redis-config
+                path: redis.conf
