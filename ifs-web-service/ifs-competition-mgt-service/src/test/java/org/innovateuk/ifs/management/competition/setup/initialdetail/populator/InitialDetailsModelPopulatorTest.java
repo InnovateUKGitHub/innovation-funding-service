@@ -18,6 +18,7 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 
@@ -63,6 +64,9 @@ public class InitialDetailsModelPopulatorTest {
 
     @Test
     public void populateModel() {
+
+        ReflectionTestUtils.setField(populator, "hecpTcpEnabled", true);
+
         long competitionId = 8L;
 
         CompetitionResource competition = newCompetitionResource()
