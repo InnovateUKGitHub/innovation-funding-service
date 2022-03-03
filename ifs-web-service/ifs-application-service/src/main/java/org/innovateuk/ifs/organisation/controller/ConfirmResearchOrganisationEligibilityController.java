@@ -60,7 +60,7 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
             HttpServletRequest request,
             HttpServletResponse response,
             UserResource user) {
-        Supplier<String> failureView = () -> BASE_URL +  "/" + organisationId + "/confirm-eligibility";
+        Supplier<String> failureView = () ->  TEMPLATE_PATH + "/confirm-research-organisation-eligibility";
         Supplier<String> successView = () -> {
             if (form.getConfirmEligibility()) {
                 return redirectToResearchNotEligiblePage(competitionId, organisationId, user, request, response);
