@@ -1,0 +1,18 @@
+server:
+  port: 8090
+spring:
+  datasoure:
+    url: jdbc:mysql://localhost:3306/ifs
+    username: root
+    password: password
+  flyway:
+    table: "schema_version"
+    locations: "db/migration,db/reference,db/setup,db/webtest"
+    placeholders:
+      ifs:
+        system:
+          user:
+            uuid: "c0d02979-e66e-11e7-ac43-0242ac120002"
+
+  cache:
+    type: NONE

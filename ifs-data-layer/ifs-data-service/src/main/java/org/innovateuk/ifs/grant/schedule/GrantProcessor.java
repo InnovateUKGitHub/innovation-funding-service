@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.grant.schedule;
 
+import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.grant.service.GrantService;
 import org.innovateuk.ifs.schedule.transactional.ScheduleStatusWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
  * Processor that sends projects data to grant service.
  */
 @Component
-@Profile("!integration-test")
+@Profile(IfsProfileConstants.NOT_INTEGRATION_TEST)
 public class GrantProcessor {
     @Autowired
     private GrantService service;
