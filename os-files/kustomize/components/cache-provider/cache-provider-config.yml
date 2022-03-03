@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cache-provider-config
+data:
+  redis-config: |
+    protected-mode no
+    dir /redis-data
