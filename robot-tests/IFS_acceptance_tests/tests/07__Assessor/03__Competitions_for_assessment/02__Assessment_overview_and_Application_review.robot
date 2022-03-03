@@ -275,7 +275,6 @@ the uesr should see assessment overview details
     the user should see the element      jQuery = h2:contains("Finances")
     the user should see the element      jQuery = h2:contains("Terms and conditions")
 
-
 the user navigate to previous pages
     the user clicks previous and goes to the page   Project exploitation
     the user clicks previous and goes to the page   Potential market
@@ -283,7 +282,7 @@ the user navigate to previous pages
     the user clicks previous and goes to the page   Scope
     the user clicks previous and goes to the page   Public description
     the user clicks previous and goes to the page   Project summary
-    # below steps to me removed once the webtest data is not showing edi question   -- to be handled in  ifs-11496
+    # below step to me removed once the webtest data is not showing edi question   -- to be handled in  ifs-11496
     the user clicks previous and goes to the page   Equality, diversity and inclusion
     the user clicks previous and goes to the page   Application details
     the user should not see the element             jQuery = span:contains("Previous")
