@@ -64,7 +64,9 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<In
 
     private List<FundingType> fundingTypes() {
         if (!hecpTcpEnabled) {
-            return Arrays.stream(FundingType.values()).filter(a -> !a.equals(FundingType.HECP)).collect(Collectors.toList());
+            return Arrays.stream(FundingType.values())
+                    .filter(fundingType -> !fundingType.equals(FundingType.HECP))
+                    .collect(Collectors.toList());
         }
 
         return asList(FundingType.values());

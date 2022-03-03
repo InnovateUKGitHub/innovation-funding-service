@@ -11,7 +11,6 @@ import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.YOUR_FINANCE;
 
 @Component
 public class HecpTemplate implements FundingTypeTemplate {
