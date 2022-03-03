@@ -1,18 +1,18 @@
 Email,First name,Last name,Status,Organisation name,Phone number,Competition name,Hash,Invite Status,Rejection reason,Rejection comment,Skill areas,Business Type,Innovation Areas,Principal employer,Role,Professional affiliations,Appointments,Financial interests,Family affiliations,Family financial interests,Agreement signed,Role profile status
-worth.email.test+jeremy.alufson@gmail.com,Jeremy,Alufson,ACTIVE,,32317431918,Home and industrial efficiency programme,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,FALSE,ACTIVE
-paul.plum@gmail.com,Paul,Plum,ACTIVE,,54106122665,Sustainable living models for the future,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban living
+worth.email.test+jeremy.alufson@gmail.com,Jeremy,Alufson,ACTIVE,,032317431918,Home and industrial efficiency programme,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,FALSE,ACTIVE
+paul.plum@gmail.com,Paul,Plum,ACTIVE,,054106122665,Sustainable living models for the future,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban living
 Smart infrastructure",University of Sheffield,Professor,,Organisation: Plum Planning | Position: CEO,,Relation: Wife | Organisation: Robotics International | Position: CTO,,TRUE,ACTIVE
-felix.wilson@gmail.com,Felix,Wilson,ACTIVE,,94073497201,Sustainable living models for the future,,OPENED,,,Industrial modernisation consultation,ACADEMIC,"Forming technologies
+felix.wilson@gmail.com,Felix,Wilson,ACTIVE,,094073497201,Sustainable living models for the future,,OPENED,,,Industrial modernisation consultation,ACADEMIC,"Forming technologies
 Assembly / disassembly / joining",,,,,,,,TRUE,ACTIVE
 jo.peters@ntag.example.com,Josephine,Peters,ACTIVE,,,Sustainable living models for the future,,OPENED,Not available,I do not have the time sorry,Automation process streamlining,ACADEMIC,Assembly / disassembly / joining,University of Northumbria,Doctor,,,,,,TRUE,ACTIVE
-will.smith@gmail.com,Will,Smith,ACTIVE,,28572565937,Photonics for health,,OPENED,,,Solar energy research,BUSINESS,"Energy systems
+will.smith@gmail.com,Will,Smith,ACTIVE,,028572565937,Photonics for health,,OPENED,,,Solar energy research,BUSINESS,"Energy systems
 Nanotechnology / nanomaterials
 Precision medicine",Smith Systems,CTO,,,,,,TRUE,ACTIVE
-laura.weaver@gmail.com,Laura,Weaver,ACTIVE,,47682659263,Photonics for health,,OPENED,,,Renewable energy analysis,BUSINESS,Offshore wind,Solar Wind Engineering,CEO,,,,,,FALSE,ACTIVE
-sarah.chung@gmail.com,Sarah,Chung,ACTIVE,,47682659263,Photonics for health,,OPENED,,,Materials Science in cutting edge technologies,ACADEMIC,"Nanotechnology / nanomaterials
+laura.weaver@gmail.com,Laura,Weaver,ACTIVE,,047682659263,Photonics for health,,OPENED,,,Renewable energy analysis,BUSINESS,Offshore wind,Solar Wind Engineering,CEO,,,,,,FALSE,ACTIVE
+sarah.chung@gmail.com,Sarah,Chung,ACTIVE,,047682659263,Photonics for health,,OPENED,,,Materials Science in cutting edge technologies,ACADEMIC,"Nanotechnology / nanomaterials
 Emerging technology",University of Leeds,Professor,,,I have shares in multiple companies such as Advanced Thermoblastics Ltd and Future Polymers Ltd,,,TRUE,ACTIVE
-matt.roberts@gmail.com,Matt,Roberts,ACTIVE,,47682659263,Photonics for health,,OPENED,,,B skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
-jimmy.benson@gmail.com,Jimmy,Benson,ACTIVE,,63898252575,Photonics for health,,OPENED,,,C skill,BUSINESS,Assembly / disassembly / joining,,,,,,,,TRUE,ACTIVE
+matt.roberts@gmail.com,Matt,Roberts,ACTIVE,,047682659263,Photonics for health,,OPENED,,,B skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
+jimmy.benson@gmail.com,Jimmy,Benson,ACTIVE,,063898252575,Photonics for health,,OPENED,,,C skill,BUSINESS,Assembly / disassembly / joining,,,,,,,,TRUE,ACTIVE
 evan.griffiths@gmail.com,Evan,Griffiths,ACTIVE,,,Photonics for health,,OPENED,,,D skill,BUSINESS,Digital manufacturing,,,,,,,,TRUE,ACTIVE
 brandon.harper@gmail.com,Brandon,Harper,ACTIVE,,,Photonics for health,,OPENED,,,E skill,BUSINESS,Urban living,,,,,,,,TRUE,ACTIVE
 callum.austin@gmail.com,Callum,Austin,ACTIVE,,,Photonics for health,,OPENED,,,F skill,BUSINESS,Urban living,,,,,,,,TRUE,ACTIVE
@@ -54,8 +54,8 @@ addison.shannon@gmail.com,Addison,Shannon,ACTIVE,,,Photonics for health,,OPENED,
 bret.alvarez@gmail.com,Bret,Alvarez,ACTIVE,,,Photonics for health,,OPENED,,,AQ skill,BUSINESS,Creative industries,,,,,,,,TRUE,ACTIVE
 angel.witt@gmail.com,Angel,Witt,ACTIVE,,,Photonics for health,,OPENED,,,AR skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
 elliot.gordon@gmail.com,Elliot,Gordon,ACTIVE,,,Photonics for health,,OPENED,,,AR skill,BUSINESS,Assembly / disassembly / joining,,,,,,,,TRUE,ACTIVE
-sammy.klein@gmail.com,Sammy,Klein,ACTIVE,,47682659263,Sustainable living models for the future,,OPENED,,,AS skill,BUSINESS,Nuclear fission,,,,,,,,TRUE,ACTIVE
-myra.cole@gmail.com,Myra,Cole,ACTIVE,,63898252575,Sustainable living models for the future,,OPENED,,,AT skill,BUSINESS,Creative industries,,,,,,,,TRUE,ACTIVE
+sammy.klein@gmail.com,Sammy,Klein,ACTIVE,,047682659263,Sustainable living models for the future,,OPENED,,,AS skill,BUSINESS,Nuclear fission,,,,,,,,TRUE,ACTIVE
+myra.cole@gmail.com,Myra,Cole,ACTIVE,,063898252575,Sustainable living models for the future,,OPENED,,,AT skill,BUSINESS,Creative industries,,,,,,,,TRUE,ACTIVE
 jenna.diaz@gmail.com,Jenna,Diaz,ACTIVE,,,Sustainable living models for the future,,OPENED,,,AU skill,BUSINESS,Digital manufacturing,,,,,,,,TRUE,ACTIVE
 dominic.watkins@gmail.com,Dominic,Watkins,ACTIVE,,,Sustainable living models for the future,,OPENED,,,AV skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
 shaun.bradley@gmail.com,Shaun,Bradley,ACTIVE,,,Sustainable living models for the future,,OPENED,,,AX skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
@@ -102,14 +102,14 @@ joel.george@gmail.com,Joel,George,ACTIVE,,,Machine learning for transport infras
 benjamin.nixon@gmail.com,Benjamin,Nixon,ACTIVE,,,Machine learning for transport infrastructure,,OPENED,,,Z skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
 paige.godfrey@gmail.com,Paige,Godfrey,ACTIVE,,,Machine learning for transport infrastructure,,OPENED,,,Z skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
 riley.butler@gmail.com,Riley,Butler,ACTIVE,,,Machine learning for transport infrastructure,,OPENED,,,Z skill,BUSINESS,Nuclear fission,,,,,,,,TRUE,ACTIVE
-load-assessor1@load.test,Jerrilyn,Stevens,ACTIVE,,47682659263,Assessments of load capabilities,,OPENED,,,Z skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
-load-assessor2@load.test,Jeannine,Foster,ACTIVE,,47682659263,Assessments of load capabilities,,OPENED,,,Z skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
-load-assessor3@load.test,Penny,Havard,ACTIVE,,47682659263,Assessments of load capabilities,,OPENED,,,Z skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
-load-assessor4@load.test,Kevin,Hester,ACTIVE,,47682659263,Assessments of load capabilities,,OPENED,,,Z skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
-load-assessor5@load.test,Tom,Mapstone,ACTIVE,,47682659263,Assessments of load capabilities,,OPENED,,,Z skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
-paul.plum@gmail.com,Paul,Plum,ACTIVE,,54106122665,Machine learning for transport infrastructure,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban living
+load-assessor1@load.test,Jerrilyn,Stevens,ACTIVE,,047682659263,Assessments of load capabilities,,OPENED,,,Z skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
+load-assessor2@load.test,Jeannine,Foster,ACTIVE,,047682659263,Assessments of load capabilities,,OPENED,,,Z skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
+load-assessor3@load.test,Penny,Havard,ACTIVE,,047682659263,Assessments of load capabilities,,OPENED,,,Z skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
+load-assessor4@load.test,Kevin,Hester,ACTIVE,,047682659263,Assessments of load capabilities,,OPENED,,,Z skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
+load-assessor5@load.test,Tom,Mapstone,ACTIVE,,047682659263,Assessments of load capabilities,,OPENED,,,Z skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
+paul.plum@gmail.com,Paul,Plum,ACTIVE,,054106122665,Machine learning for transport infrastructure,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban living
 Smart infrastructure",University of Sheffield,Professor,,Organisation: Plum Planning | Position: CEO,,Relation: Wife | Organisation: Robotics International | Position: CTO,,TRUE,ACTIVE
-felix.wilson@gmail.com,Felix,Wilson,ACTIVE,,94073497201,Machine learning for transport infrastructure,,OPENED,,,Industrial modernisation consultation,ACADEMIC,"Forming technologies
+felix.wilson@gmail.com,Felix,Wilson,ACTIVE,,094073497201,Machine learning for transport infrastructure,,OPENED,,,Industrial modernisation consultation,ACADEMIC,"Forming technologies
 Assembly / disassembly / joining",,,,,,,,TRUE,ACTIVE
 sally.zimmerman@gmail.com,Sally,Zimmerman,ACTIVE,,,Machine learning for transport infrastructure,,OPENED,,,Z skill,BUSINESS,Creative industries,,,,,,,,TRUE,ACTIVE
 mabel.robinson@gmail.com,Mabel,Robinson,ACTIVE,,,Machine learning for transport infrastructure,,OPENED,,,Z skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
@@ -129,7 +129,7 @@ apc-assessor-user2@example.com,Ethan,Taylor,ACTIVE,,47682659263,Smart monitoring
 Smart infrastructure",University of Bristol,Professor,,,,,,,ACTIVE
 ryan.burton@gmail.com,Ryan,Burton,ACTIVE,,,Smart monitoring in high-pressure engineering systems,,OPENED,,,Z skill,BUSINESS,Digital manufacturing,,,,,,,,TRUE,ACTIVE
 sam.gilbert@gmail.com,Sam,Gilbert,ACTIVE,,,Smart monitoring in high-pressure engineering systems,,OPENED,,,Z skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
-sammy.klein@gmail.com,Sammy,Klein,ACTIVE,,47682659263,Smart monitoring in high-pressure engineering systems,,OPENED,,,Z skill,BUSINESS,Nuclear fission,,,,,,,,TRUE,ACTIVE
+sammy.klein@gmail.com,Sammy,Klein,ACTIVE,,047682659263,Smart monitoring in high-pressure engineering systems,,OPENED,,,Z skill,BUSINESS,Nuclear fission,,,,,,,,TRUE,ACTIVE
 sammy.ward@gmail.com,Sammy,Ward,ACTIVE,,,Smart monitoring in high-pressure engineering systems,,OPENED,,,Z skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
 camille.shelton@gmail.com,Camille,Shelton,ACTIVE,,,Smart monitoring in high-pressure engineering systems,,OPENED,,,Z skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
 grady.garza@gmail.com,Grady,Garza,ACTIVE,,,Personalised Smart HUDs for space helmets,,OPENED,,,Z skill,BUSINESS,Nuclear fission,,,,,,,,TRUE,ACTIVE
@@ -142,16 +142,16 @@ apc-assessor-user2@example.com,Ethan,Taylor,ACTIVE,,47682659263,Assessment is aw
 Smart infrastructure",University of Bristol,Professor,,,,,,,ACTIVE
 ryan.burton@gmail.com,Ryan,Burton,ACTIVE,,,Assessment is awesome,,OPENED,,,,,Digital manufacturing,,,,,,,,TRUE,ACTIVE
 sam.gilbert@gmail.com,Sam,Gilbert,ACTIVE,,,Assessment is awesome,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
-sammy.klein@gmail.com,Sammy,Klein,ACTIVE,,47682659263,Assessment is awesome,,OPENED,,,,,Nuclear fission,,,,,,,,TRUE,ACTIVE
+sammy.klein@gmail.com,Sammy,Klein,ACTIVE,,047682659263,Assessment is awesome,,OPENED,,,,,Nuclear fission,,,,,,,,TRUE,ACTIVE
 sammy.ward@gmail.com,Sammy,Ward,ACTIVE,,,Assessment is awesome,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
 camille.shelton@gmail.com,Camille,Shelton,ACTIVE,,,Assessment is awesome,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
-paul.plum@gmail.com,Paul,Plum,ACTIVE,,54106122665,Living models for the future,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban living
+paul.plum@gmail.com,Paul,Plum,ACTIVE,,054106122665,Living models for the future,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban living
 Smart infrastructure",University of Sheffield,Professor,,Organisation: Plum Planning | Position: CEO,,Relation: Wife | Organisation: Robotics International | Position: CTO,,TRUE,ACTIVE
-felix.wilson@gmail.com,Felix,Wilson,ACTIVE,,94073497201,Living models for the future,,OPENED,,,Industrial modernisation consultation,ACADEMIC,"Forming technologies
+felix.wilson@gmail.com,Felix,Wilson,ACTIVE,,094073497201,Living models for the future,,OPENED,,,Industrial modernisation consultation,ACADEMIC,"Forming technologies
 Assembly / disassembly / joining",,,,,,,,TRUE,ACTIVE
 jo.peters@ntag.example.com,Josephine,Peters,ACTIVE,,,Living models for the future,,OPENED,Not available,I do not have the time sorry,Automation process streamlining,ACADEMIC,Assembly / disassembly / joining,University of Northumbria,Doctor,,,,,,TRUE,ACTIVE
-sammy.klein@gmail.com,Sammy,Klein,ACTIVE,,47682659263,Living models for the future,,OPENED,,,Z skill,BUSINESS,Nuclear fission,,,,,,,,TRUE,ACTIVE
-myra.cole@gmail.com,Myra,Cole,ACTIVE,,63898252575,Living models for the future,,OPENED,,,Z skill,BUSINESS,Creative industries,,,,,,,,TRUE,ACTIVE
+sammy.klein@gmail.com,Sammy,Klein,ACTIVE,,047682659263,Living models for the future,,OPENED,,,Z skill,BUSINESS,Nuclear fission,,,,,,,,TRUE,ACTIVE
+myra.cole@gmail.com,Myra,Cole,ACTIVE,,063898252575,Living models for the future,,OPENED,,,Z skill,BUSINESS,Creative industries,,,,,,,,TRUE,ACTIVE
 jenna.diaz@gmail.com,Jenna,Diaz,ACTIVE,,,Living models for the future,,OPENED,,,Z skill,BUSINESS,Digital manufacturing,,,,,,,,TRUE,ACTIVE
 dominic.watkins@gmail.com,Dominic,Watkins,ACTIVE,,,Living models for the future,,OPENED,,,Z skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
 shaun.bradley@gmail.com,Shaun,Bradley,ACTIVE,,,Living models for the future,,OPENED,,,Z skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
@@ -168,17 +168,17 @@ apc-assessor-user2@example.com,Ethan,Taylor,ACTIVE,,47682659263,Assessment is aw
 Smart infrastructure",University of Bristol,Professor,,,,,,,ACTIVE
 ryan.burton@gmail.com,Ryan,Burton,ACTIVE,,,Assessment is awesome 2,,OPENED,,,,,Digital manufacturing,,,,,,,,TRUE,ACTIVE
 sam.gilbert@gmail.com,Sam,Gilbert,ACTIVE,,,Assessment is awesome 2,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
-sammy.klein@gmail.com,Sammy,Klein,ACTIVE,,47682659263,Assessment is awesome 2,,OPENED,,,,,Nuclear fission,,,,,,,,TRUE,ACTIVE
+sammy.klein@gmail.com,Sammy,Klein,ACTIVE,,047682659263,Assessment is awesome 2,,OPENED,,,,,Nuclear fission,,,,,,,,TRUE,ACTIVE
 sammy.ward@gmail.com,Sammy,Ward,ACTIVE,,,Assessment is awesome 2,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
 camille.shelton@gmail.com,Camille,Shelton,ACTIVE,,,Assessment is awesome 2,,OPENED,,,,,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
 a.person@gmail.com,A,Person,ACTIVE,,,Multiple choice assessed,,OPENED,,,Z skill,BUSINESS,Digital manufacturing,,,,,,,,TRUE,DISABLED
 alyssa.smith@ktn-uk.test,Alyssa,Smith,ACTIVE,,,Living models for the future,,OPENED,,,Z skill,BUSINESS,Digital manufacturing,,,,,,,,TRUE,ACTIVE
 simon.smith@ktn-uk.test,Simon,Smith,ACTIVE,,,Living models for the future,,OPENED,,,Z skill,BUSINESS,Digital manufacturing,,,,,,,,TRUE,ACTIVE
-load-assessor1@load.test,Jerrilyn,Stevens,ACTIVE,,47682659263,Non KTP competition all finance overview,,OPENED,,,Z skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
+load-assessor1@load.test,Jerrilyn,Stevens,ACTIVE,,047682659263,Non KTP competition all finance overview,,OPENED,,,Z skill,BUSINESS,"Materials, process and manufacturing design technologies",,,,,,,,TRUE,ACTIVE
 another.person@gmail.com,Another,Person,ACTIVE,,,Always open competition,,OPENED,,,Z skill,BUSINESS,Digital manufacturing,,,,,,,,TRUE,ACTIVE
-paul.plum@gmail.com,Paul,Plum,ACTIVE,,54106122665,Living models for the future world,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban living
+paul.plum@gmail.com,Paul,Plum,ACTIVE,,054106122665,Living models for the future world,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban living
 Smart infrastructure",University of Sheffield,Professor,,Organisation: Plum Planning | Position: CEO,,Relation: Wife | Organisation: Robotics International | Position: CTO,,TRUE,ACTIVE
-paul.plum@gmail.com,Paul,Plum,ACTIVE,,54106122665,Subsidy control comp in assessment,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban living
+paul.plum@gmail.com,Paul,Plum,ACTIVE,,054106122665,Subsidy control comp in assessment,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban living
 Smart infrastructure",University of Sheffield,Professor,,Organisation: Plum Planning | Position: CEO,,Relation: Wife | Organisation: Robotics International | Position: CTO,,TRUE,ACTIVE
 Aaron.Jennings@ukri.org,Aaron,Jennings,ACTIVE,,54106122665,Subsidy control comp in assessment,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban living
 Smart infrastructure",University of Sheffield,Professor,,Organisation: Plum Planning | Position: CEO,,Relation: Wife | Organisation: Robotics International | Position: CTO,,TRUE,ACTIVE
