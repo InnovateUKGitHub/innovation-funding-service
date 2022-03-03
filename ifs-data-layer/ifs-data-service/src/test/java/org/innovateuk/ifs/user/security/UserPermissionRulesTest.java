@@ -11,7 +11,6 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.supporter.domain.SupporterAssignment;
-import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
 import org.innovateuk.ifs.supporter.resource.SupporterState;
 import org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
@@ -485,7 +484,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
         SupporterAssignment supporterAssignment2 = newSupporterAssignment()
                 .withParticipant(supporterUser)
-                .withProcessState(SupporterState.ACCEPTED)
+                .withProcessState(SupporterState.CREATED)
                 .withApplication(application2)
                 .build();
 
@@ -527,13 +526,13 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         application1ConsortiumResources.forEach(consortiumMembers ->
                 assertTrue(rules.ktpSupporterCanViewApplicationTeamMembers(consortiumMembers, supporterUserResource)));
 
-        // assert that supporter of the application 2 can see all other consortium members as the assignment is in ACCEPTED state
+        // assert that supporter of the application 2 can see all other consortium members as the assignment is in CREATED state
         application2ConsortiumResources.forEach(consortiumMembers ->
                 assertTrue(rules.ktpSupporterCanViewApplicationTeamMembers(consortiumMembers, supporterUserResource)));
 
-        // assert that supporter of the application 3 can not see all other consortium members as the assignment is in REJECTED state
+        // assert that supporter of the application 3 can see all other consortium members as the assignment is in REJECTED state
         application3ConsortiumResources.forEach(consortiumMembers ->
-                assertFalse(rules.ktpSupporterCanViewApplicationTeamMembers(consortiumMembers, supporterUserResource)));
+                assertTrue(rules.ktpSupporterCanViewApplicationTeamMembers(consortiumMembers, supporterUserResource)));
     }
 
     @Test
