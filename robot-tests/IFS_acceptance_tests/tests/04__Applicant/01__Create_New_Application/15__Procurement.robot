@@ -74,7 +74,7 @@ Applicant completes Application questions
     Given the user clicks the button/link                                                        link=Application details
     When the user fills in procurement Application details                                       ${appl_name}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team                                                 COMPLETE  dave.adams@gmail.com
-    And the applicant marks EDI question as complete
+    #And the applicant marks EDI question as complete
     Then the lead applicant fills all the questions and marks as complete(procurement)
     And the lead completes the questions with multiple answer choice and multiple appendices
 
