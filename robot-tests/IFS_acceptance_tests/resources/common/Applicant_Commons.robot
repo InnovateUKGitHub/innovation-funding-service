@@ -598,6 +598,8 @@ the applicant submits the application
     the user should see the element                    jQuery = td:contains("Steve Smith") ~ td:contains("Incomplete") ~ td:contains("Lead applicant")
     the user clicks the button/link                    link = Review and submit
     the user should not see the element                jQuery = .task-status-incomplete
+    And the user clicks the button/link                id = accordion-questions-heading-1-1
+    the user should see the read only view of EDI status as incomplete
     the user clicks the button/link                    jQuery = .govuk-button:contains("Submit application")
     the user should be redirected to the correct page  track
 
@@ -1083,3 +1085,7 @@ the user accepts invitation to join application under same organisation
     login to application                             ${email}  ${password}
     the user clicks the button/link                  jQuery = a:contains("Confirm and accept invitation")
 
+the user should see the read only view of EDI status as incomplete
+    And the user should see the element                 jQuery = h3:contains("Team members")
+    And the user should see the element                 jQuery = th:contains("EDI status")
+    And the user should see the element                 jQuery = td:contains("Steve Smith") ~ td:contains("Incomplete")

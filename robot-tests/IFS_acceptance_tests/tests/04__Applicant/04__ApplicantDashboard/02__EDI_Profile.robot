@@ -20,7 +20,7 @@ Applicant can view EDI section in profile page
     Then the user should see EDI section details    Incomplete  Not Applicable  Start now
 
 Applicant checks the status of EDI as Incomplete When user not started the edi survey
-    [Documentation]  IFS-11253
+    [Documentation]  IFS-11253  IFS-11341
     Given the user creates a new application
     And the user fills in the EDI application details   ${applicationNameEDI}  ${tomorrowday}  ${month}  ${nextyear}
     When the user clicks the button/link                link = Application team
@@ -32,6 +32,8 @@ Applicant checks the status of EDI as Incomplete When user not started the edi s
 
 Lead applicant can not mark the application team as complete when the edi survey is not started
     [Documentation]  IFS-11253
+    Given the user clicks the button/link                  link = Application overview
+    And the user clicks the button/link                    link = Application team
     When the user clicks the button/link                   id = application-question-complete
     Then the user should see a field and summary error     Complete our equality,diversity and inclusion survey.
 
