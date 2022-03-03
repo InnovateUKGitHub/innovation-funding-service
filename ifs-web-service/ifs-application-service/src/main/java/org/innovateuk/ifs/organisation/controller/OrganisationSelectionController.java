@@ -84,7 +84,6 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
                                      Model model) {
         Supplier<String> failureView = () -> viewPreviousOrganisations(request, form, bindingResult, user, model);
         return validationHandler.failNowOrSucceedWith(failureView, validateEligibility(request, response, user, form));
-
     }
 
     private boolean cannotSelectOrganisation(UserResource user, HttpServletRequest request) {
@@ -98,6 +97,13 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
 
     private Supplier<String> validateEligibility(HttpServletRequest request, HttpServletResponse response, UserResource user, OrganisationSelectionForm form) {
         return () -> {
+
+            if (isResearchOrganisation(form)) {
+                long competitionId = getCompetitionIdFromInviteOrCookie(request);
+                    long organisationId = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess().getId();
+                    return "redirect:" + BASE_URL + "/" + competitionId  + "/confirm-eligibility/" +  organisationId;
+            }
+
             if (registrationCookieService.isLeadJourney(request)) {
                 if (!validateLeadApplicant(request, form))
                     return "redirect:" + BASE_URL + "/" + ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
@@ -145,5 +151,10 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
         OrganisationResource organisation = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess();
 
         return competition.getLeadApplicantTypes().contains(organisation.getOrganisationType());
+    }
+
+    private boolean isResearchOrganisation(OrganisationSelectionForm form) {
+        OrganisationResource organisation = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess();
+        return organisation.getOrganisationTypeName().equals("Research");
     }
 }

@@ -29,13 +29,13 @@
             the market. This includes organisations that typically act non-economically but for the purpose of
             this project will be undertaking commercial or economic activity.</p>
 
-        <div class="govuk-grid-row">
+        <div class="govuk-grid-row govuk-!-margin-top-6">
             <div class="govuk-grid-column-full">
                 <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('confirmEligibility')} ? 'govuk-form-group-error'">
                         <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-visually-hidden" id="confirmEligibility">
-                                <span class="govuk-fieldset__heading">Do you plan to exploit the outputs from your project commercially or economically to gain a selective advantage in the market?</span>
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="confirmEligibility">
+                                <span class="govuk-fieldset__heading govuk-!-margin-bottom-6">Do you plan to exploit the outputs from your project commercially or economically to gain a selective advantage in the market?</span>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('confirmEligibility')}">
                                 <span class="govuk-error-message"  th:each="err : ${#fields.errors('confirmEligibility')}" th:text="${err}"></span>
