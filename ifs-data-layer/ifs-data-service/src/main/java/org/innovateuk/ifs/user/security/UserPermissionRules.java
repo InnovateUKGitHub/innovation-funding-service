@@ -437,7 +437,6 @@ public class UserPermissionRules {
 
     private List<Application> getApplicationsRelatedToUserBySupporterAssignment(long userId) {
         return supporterAssignmentRepository.findByParticipantId(userId).stream()
-                .filter(supporterAssignment -> supporterAssignment.getProcessState() == SupporterState.ACCEPTED)
                 .map(SupporterAssignment::getTarget)
                 .collect(Collectors.toList());
     }
