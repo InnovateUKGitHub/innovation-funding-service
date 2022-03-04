@@ -37,6 +37,9 @@ class RewriteFilterTest {
     private StubDevConfigurationProperties stubDevConfigurationProperties;
 
     @Autowired
+    private StubUidSupplier stubUidSupplier;
+
+    @Autowired
     private RewriteFilter rewriteFilter;
 
     @Autowired
@@ -45,6 +48,8 @@ class RewriteFilterTest {
     @Test
     void testRewriteFilter() throws ServletException, IOException {
         String uuid = UUID.randomUUID().toString();
+        stubDevConfigurationProperties.setDefaultUuid(uuid);
+        stubUidSupplier.init();
         stubUserSwitchController.setUser(uuid);
         ServletResponse servletResponse = new MockHttpServletResponse();
         CharResponseWrapper wrapper = new CharResponseWrapper((HttpServletResponse) servletResponse);
