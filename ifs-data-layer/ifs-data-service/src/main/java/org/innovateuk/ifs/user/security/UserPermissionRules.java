@@ -294,6 +294,11 @@ public class UserPermissionRules {
         return userIsInProjectAssignedToMonitoringOfficer(userToView, user);
     }
 
+    @PermissionRule(value = "READ", description = "Project users can view other project users in projects they are assigned to")
+    public boolean projectUsersCanViewOtherProjectUsersInProjectsTheyAreAssignedTo(UserResource userToView, UserResource user) {
+        return projectUsersCanViewOtherProjectUsers(userToView, user);
+    }
+
     @PermissionRule(value = "READ", description = "Assessors can view the process roles of members of individual Consortiums on the various Applications that they are assessing")
     public boolean assessorsCanViewTheProcessRolesOfConsortiumUsersOnApplicationsTheyAreAssessing(ProcessRoleResource processRole, UserResource user) {
         List<Application> applicationsThatThisUserIsAssessing = getApplicationsRelatedToUserByProcessRoles(user.getId(), assessorProcessRoleFilter);
@@ -428,6 +433,16 @@ public class UserPermissionRules {
         List<Project> monitoringOfficerProjects = simpleMap(projectMonitoringOfficers, MonitoringOfficer::getProject);
 
         return !disjoint(monitoringOfficerProjects, projectsThisUserIsAMemberOf);
+    }
+
+    private boolean projectUsersCanViewOtherProjectUsers(UserResource userToView, UserResource user) {
+        List<Project> projectsUserToViewIsAMemberOf =
+                simpleMap(getFilteredProjectUsers(userToView.getId(), projectUserFilter), ProjectUser::getProject);
+
+        List<Project> projectsIncomingUserIsAMemberOf =
+                simpleMap(getFilteredProjectUsers(user.getId(), projectUserFilter), ProjectUser::getProject);
+
+        return !disjoint(projectsIncomingUserIsAMemberOf, projectsUserToViewIsAMemberOf);
     }
 
     private List<Competition> getUserCompetitions(List<Application> userApplications, List<Project> userProjects) {
