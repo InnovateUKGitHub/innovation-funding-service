@@ -169,6 +169,30 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
+    public void projectUsersCanViewOtherProjectUsersInProjectsTheyAreAssignedTo() {
+        Project project = newProject().build();
+
+        UserResource userResourceApplicant1 = newUserResource().withRoleGlobal(Role.APPLICANT).build();
+        UserResource userResourceApplicant2 = newUserResource().withRoleGlobal(Role.APPLICANT).build();
+        UserResource userResourceApplicant3 = newUserResource().withRoleGlobal(Role.APPLICANT).build();
+
+        List<ProjectUser> projectUsers = newProjectUser()
+                .withProject(project)
+                .withRole(ProjectParticipantRole.PROJECT_PARTNER)
+                .build(1);
+        List<ProjectUser> projectManager = newProjectUser()
+                .withProject(project)
+                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
+                .build(1);
+
+        when(projectUserRepository.findByUserId(userResourceApplicant1.getId())).thenReturn(projectUsers);
+        when(projectUserRepository.findByUserId(userResourceApplicant2.getId())).thenReturn(projectManager);
+
+        assertTrue(rules.projectUsersCanViewOtherProjectUsersInProjectsTheyAreAssignedTo(userResourceApplicant1, userResourceApplicant2));
+        assertFalse(rules.projectUsersCanViewOtherProjectUsersInProjectsTheyAreAssignedTo(userResourceApplicant3, userResourceApplicant2));
+    }
+
+    @Test
     public void internalUsersCanViewEveryoneUserPageResource() {
 
         ManageUserPageResource manageUserPageResource = new ManageUserPageResource();
