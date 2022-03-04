@@ -476,7 +476,16 @@ public class CompetitionWebTestData {
                         .withName("Horizon Europe Guarantee competition")
                         .withCompetitionType(HORIZON_EUROPE_GUARANTEE)
                         .withAlwaysOpen(true)
-                        .withResubmission(false)
+                        .withResubmission(false),
+                thirdPartyOfgemCompetition()
+                        .withName("Third Party Ofgem Competition")
+                        .withResubmission(true)
+                        .withIncludeYourOrganisation(false)
+                        .withIncludeProjectGrowth(false)
+                        .withResearchRatio(100)
+                        .withAssessorCount(1)
+                        .withLeadApplicantTypes(asSet(BUSINESS, RTO))
+                        .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID, INDUSTRIAL_RESEARCH_ID, EXPERIMENTAL_DEVELOPMENT_ID))
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.OPEN))
@@ -549,7 +558,7 @@ public class CompetitionWebTestData {
     }
 
     private static CompetitionLineBuilder ofGemCompetition() {
-        return thirdPartyCompetition()
+        return thirdPartyProcurementCompetition()
                 .withCompetitionCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK)
                 .withTermsAndConditionsLabel("Strategic Innovation Fund Governance Document")
                 .withTermsAndConditionsGuidance("<h2 class=\"govuk-heading-m\">Summary of Strategic Innovation Fund governance document.</h2>\n" +
@@ -584,7 +593,7 @@ public class CompetitionWebTestData {
                 .withTermsAndConditionsTemplate("third-party-terms-and-conditions");
     }
 
-    private static CompetitionLineBuilder thirdPartyCompetition() {
+    private static CompetitionLineBuilder thirdPartyProcurementCompetition() {
         return anIfsCompetition()
                 .withFundingType(FundingType.PROCUREMENT)
                 .withFundingRules(FundingRules.NOT_AID)
@@ -592,6 +601,12 @@ public class CompetitionWebTestData {
                 .withInnovationAreas(asSet(NONE))
                 .withIncludeYourOrganisation(false)
                 .withResearchRatio(100);
+    }
+
+    private static CompetitionLineBuilder thirdPartyOfgemCompetition() {
+        return anIfsCompetition()
+                .withFundingType(FundingType.THIRDPARTY)
+                .withCompetitionType(OFGEM);
     }
 
     private static CompetitionLineBuilder investorPartnershipCompetition() {

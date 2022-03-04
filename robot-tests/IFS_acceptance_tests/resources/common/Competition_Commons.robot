@@ -127,7 +127,7 @@ the user fills in the CS Funding Information
     the user clicks the button/link                   link = Back to competition details
     the user should see the element                   jQuery = div:contains("Funding information") ~ .task-status-complete
 
-the user fills in funding information for the third party procurement comp
+the user fills in funding information for the third party comp
     the user clicks the button/link                   link = Funding information
     the user clicks the button/link                   jQuery = button:contains("Generate code")
     the user enters text to an autocomplete field     funders[0].funder  Office of Gas and Electricity Markets (Ofgem)
@@ -275,7 +275,7 @@ the user marks the Application as done
     [Arguments]  ${growthTable}  ${comp_type}  ${competition}
     the user clicks the button/link                               link = Application
     the user marks the Application details section as complete    ${comp_type}
-    Run Keyword If  '${comp_type}' == 'Generic' or '${comp_type}' == '${compType_APC}'  the user fills in the CS Application section with custom questions  ${growthTable}  ${comp_type}
+    Run Keyword If  '${comp_type}' == 'Generic' or '${comp_type}' == '${compType_APC}' or '${comp_type}' == 'Ofgem'  the user fills in the CS Application section with custom questions  ${growthTable}  ${comp_type}
     ...    ELSE  the user marks the Assessed questions as complete             ${growthTable}  ${comp_type}  ${competition}
 
 the user marks the KTP application details as done

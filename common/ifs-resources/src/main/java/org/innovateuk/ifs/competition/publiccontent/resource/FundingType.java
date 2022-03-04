@@ -11,7 +11,8 @@ public enum FundingType {
     INVESTOR_PARTNERSHIPS("Investor Partnerships", "Investor Partnerships"),
     KTP("Knowledge Transfer Partnership (KTP)", "Knowledge Transfer Partnership (KTP)", "KTP GOL Template"),
     LOAN("Loan", "Loans"),
-    PROCUREMENT("Procurement", "Procurement", "Procurement GOL Template");
+    PROCUREMENT("Procurement", "Procurement", "Procurement GOL Template"),
+    THIRDPARTY("Thirdparty", "Thirdparty", "Thirdparty GOL Template");
 
     private final String displayName;
     private final String defaultTermsName;
