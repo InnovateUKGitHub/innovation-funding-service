@@ -649,6 +649,7 @@ Search for MO
     [Arguments]  ${MO_name}  ${MO_fullname}
     the element should be disabled                      jQuery = button:contains("View Monitoring Officer")
     wait until keyword succeeds without screenshots     10s    200ms   input text   id = userId   ${MO_name}
+    mouse down                                          jQuery = ul li:contains("${MO_fullname}")
     wait until keyword succeeds without screenshots     10s    200ms   click element   jQuery = ul li:contains("${MO_fullname}")
     #the user clicks the button/link                     jQuery = ul li:contains("${MO_fullname}")
     the user clicks the button/link                     jQuery = button:contains("View Monitoring Officer")
@@ -658,6 +659,7 @@ The internal user assign project to MO
     the element should be disabled                    jQuery = button:contains("Assign")
     wait until keyword succeeds without screenshots   10s    200ms   input text         id = projectId   ${search_ID}
     #the user should see project in dropdown           id = projectId   ${search_ID}  ${project_name}
+    mouse down                                        jQuery = ul li:contains("${search_ID} - ${project_name}")
     wait until keyword succeeds without screenshots   10s    200ms   click element  jQuery = ul li:contains("${search_ID} - ${project_name}")
     #the user clicks the button/link                   jQuery = ul li:contains("${search_ID} - ${project_name}")
     the user clicks the button/link                   jQuery = button:contains("Assign")
