@@ -75,6 +75,7 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
+    @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
     @GetMapping("/research-not-eligible")
     public String showNotEligible(Model model, HttpServletRequest request) {
         model.addAttribute("collaborator", registrationCookieService.isCollaboratorJourney(request));
