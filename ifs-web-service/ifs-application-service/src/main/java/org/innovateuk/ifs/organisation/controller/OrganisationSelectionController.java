@@ -154,6 +154,6 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
 
     private boolean isResearchOrganisation(OrganisationSelectionForm form) {
         OrganisationResource organisation = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess();
-        return organisation.getOrganisationTypeName().equals(RESEARCH.name());
+        return organisation.getOrganisationTypeName().equals("Research");
     }
 }

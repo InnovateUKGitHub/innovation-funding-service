@@ -14,15 +14,10 @@ import org.mockito.Mock;
 
 import javax.servlet.http.HttpServletRequest;
 
-import java.util.Collections;
-
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.organisation.controller.AbstractOrganisationCreationController.BASE_URL;
-import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -35,11 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ConfirmResearchOrganisationEligibilityControllerTest extends BaseControllerMockMVCTest<ConfirmResearchOrganisationEligibilityController> {
 
     private static final String BASE_URL = "/organisation/create";
-    private static final String FORM_NAME = "form";
     private static final String RESEARCH_ELIGIBILITY_TEMPLATE = "confirm-research-organisation-eligibility";
     private static final String TEMPLATE_PATH = "registration/organisation";
-    private static final String RESEARCH_NOT_ELIGIBLE = "research-not-eligible";
-    private static final String NOT_ELIGIBLE = "not-eligible";
     private static final String VIEW = "application-process-view";
 
     private CompetitionResource competition;
