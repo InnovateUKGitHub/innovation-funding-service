@@ -35,9 +35,9 @@ spec:
               memory: 1000M
           env:
             - name: NODE_MAX_SESSION
-              value: "50"
+              value: "20"
             - name: NODE_MAX_INSTANCES
-              value: "50"
+              value: "20"
             - name: NODE_REGISTER_CYCLE
               value: "600"
             - name: DBUS_SESSION_BUS_ADDRESS
