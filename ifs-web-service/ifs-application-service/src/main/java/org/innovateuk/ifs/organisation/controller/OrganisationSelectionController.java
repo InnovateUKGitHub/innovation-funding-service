@@ -27,8 +27,7 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.organisation.controller.OrganisationCreationTypeController.NOT_ELIGIBLE;
-import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.isValidCollaborator;
-import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.isValidKtpCollaborator;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.*;
 
 @RequestMapping("/organisation/select")
 @Controller
@@ -155,6 +154,6 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
 
     private boolean isResearchOrganisation(OrganisationSelectionForm form) {
         OrganisationResource organisation = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess();
-        return organisation.getOrganisationTypeName().equals("Research");
+        return organisation.getOrganisationTypeName().equals(RESEARCH.name());
     }
 }

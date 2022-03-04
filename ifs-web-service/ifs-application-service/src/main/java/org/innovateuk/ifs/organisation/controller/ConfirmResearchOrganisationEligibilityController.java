@@ -6,6 +6,7 @@ import org.innovateuk.ifs.organisation.form.ConfirmResearchOrganisationEligibili
 import org.innovateuk.ifs.organisation.viewmodel.ConfirmResearchOrganisationEligibilityViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,6 +34,7 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
     @Autowired
     private CompetitionRestService competitionRestService;
 
+    @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
     @GetMapping
     public String view(
             @PathVariable("competitionId") long competitionId,
@@ -47,6 +49,7 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
         return TEMPLATE_PATH + "/" + RESEARCH_ELIGIBILITY_TEMPLATE;
     }
 
+    @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
     @PostMapping()
     public String post(
             @PathVariable("competitionId") long competitionId,
@@ -75,7 +78,7 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
     @GetMapping("/research-not-eligible")
     public String showNotEligible(Model model, HttpServletRequest request) {
         model.addAttribute("collaborator", registrationCookieService.isCollaboratorJourney(request));
-        return "registration/organisation/research-not-eligible";
+        return TEMPLATE_PATH + "/" + RESEARCH_NOT_ELIGIBLE;
     }
 
     private String validateAndCompleteProcess(long competitionId, long organisationId, UserResource user, HttpServletRequest request, HttpServletResponse response) {
