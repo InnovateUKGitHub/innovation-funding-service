@@ -17,3 +17,4 @@ update user set uid = 'd1a425ab-7df4-4ba4-a429-3624c385c0c4' where email = 'Alek
 update user set uid = '26a1c1a7-bfd6-4819-bf0d-dd226d81b05a' where email = 'Matt.Graham@ukri.org';
 update user set uid = 'd2dc7de1-aaa4-4186-b65c-e8815f2825d6' where email = 'Aaron.Jennings@ukri.org';
 update user set uid = '2984e14f-9bfd-44dd-bfa6-707458b8381e' where email = 'Owen.LloydJones@ukri.org';
+update user set uid = '4e7e74f9-eb66-4e9e-afff-60b8923c6674' where email = 'belle.smith@gmail.com';
