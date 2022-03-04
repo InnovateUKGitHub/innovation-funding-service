@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.competition.setup.core.service;
 
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
@@ -91,7 +92,7 @@ public class CompetitionSetupServiceImplTest {
         when(matchingPopulator.sectionToPopulateModel()).thenReturn(INITIAL_DETAILS);
         when(matchingPopulator.populateModel(nullable(GeneralSetupViewModel.class), nullable(CompetitionResource.class)))
                 .thenReturn(new InitialDetailsViewModel(getBasicGeneralSetupView(INITIAL_DETAILS, competition),
-                        emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), false));
+                        emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), false, asList(FundingType.values())));
         service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
 
         CompetitionSetupSection section = INITIAL_DETAILS;
