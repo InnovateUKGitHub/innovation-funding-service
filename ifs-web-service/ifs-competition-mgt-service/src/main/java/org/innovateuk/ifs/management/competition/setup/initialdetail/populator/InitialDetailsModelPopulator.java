@@ -42,7 +42,7 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<In
     private CategoryRestService categoryRestService;
 
     @Value("${ifs.thirdparty.ofgem.enabled}")
-    private Boolean thirdPartyOfgemEnabled;
+    private boolean thirdPartyOfgemEnabled;
 
     @Override
     public CompetitionSetupSection sectionToPopulateModel() {
