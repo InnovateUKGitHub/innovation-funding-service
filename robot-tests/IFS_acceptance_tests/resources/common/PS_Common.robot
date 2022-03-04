@@ -176,6 +176,7 @@ The user selects finance reviewer
     [Arguments]   ${FlName}
     wait until keyword succeeds without screenshots         10s    200ms   input text    id = userId    ${FlName}
     wait until page contains element without screenshots    css=[id="userId"][class="autocomplete__input autocomplete__input--focused autocomplete__input--show-all-values"]  5s
+    mouse down                                              jQuery = ul li:contains("${FlName}")
     wait until keyword succeeds without screenshots         10s    200ms   click element     jQuery = ul li:contains("${FlName}")
     mouse out                                               id = userId
     Set Focus To Element                                    link=GOV.UK

@@ -123,6 +123,8 @@ The user sorts by
 
 The assessor sorts applications by
     [Arguments]  ${sortOption}
+    #leaving a small time to see if the page completely loaded
+    sleep  1s
     reload and check if element appears                  id = sort-by
     the user selects the value from the drop-down menu   ${sortOption}  id = sort-by
     wait until keyword succeeds without screenshots      30 s   1 s    click element    jQuery = button:contains("Sort")

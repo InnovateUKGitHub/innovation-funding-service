@@ -186,7 +186,7 @@ the user refreshes until element appears on page
 reload and check if element appears
     [Arguments]  ${selector}
     the user reloads the page
-    Wait Until Page Contains Element Without Screenshots    ${selector}     1s
+    Wait Until Page Contains Element Without Screenshots    ${selector}     5s
 
 #the user selects option from type ahead
 #    [Arguments]   ${inputId}  ${searchTerm}  ${optionSelector}
