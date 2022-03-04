@@ -32,7 +32,7 @@
         <div class="govuk-grid-row govuk-!-margin-top-6">
             <div class="govuk-grid-column-full">
                 <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
-                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('confirmEligibility')} ? 'govuk-form-group-error'">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('confirmEligibility')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="confirmEligibility">
                                 <span class="govuk-fieldset__heading govuk-!-margin-bottom-9">Do you plan to exploit the outputs from your project commercially or economically to gain a selective advantage in the market?</span>

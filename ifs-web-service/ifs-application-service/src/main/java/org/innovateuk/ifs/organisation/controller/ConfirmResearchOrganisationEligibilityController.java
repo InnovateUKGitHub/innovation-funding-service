@@ -56,8 +56,13 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
             ValidationHandler validationHandler,
             HttpServletRequest request,
             HttpServletResponse response,
+            Model model,
             UserResource user) {
-        Supplier<String> failureView = () ->  TEMPLATE_PATH + "/" + RESEARCH_ELIGIBILITY_TEMPLATE;
+        Supplier<String> failureView = () ->  {
+            String organisationName = organisationRestService.getOrganisationById(organisationId).getSuccess().getName();
+            model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, organisationId, organisationName));
+            return TEMPLATE_PATH + "/" + RESEARCH_ELIGIBILITY_TEMPLATE;
+        };
         Supplier<String> successView = () -> {
             if (form.getConfirmEligibility()) {
                 return "redirect:" + BASE_URL + "/" + competitionId + "/confirm-eligibility/" + organisationId + "/" + RESEARCH_NOT_ELIGIBLE;
