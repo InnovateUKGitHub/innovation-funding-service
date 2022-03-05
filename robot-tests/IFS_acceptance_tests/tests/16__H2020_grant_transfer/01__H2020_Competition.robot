@@ -239,7 +239,7 @@ The internal user is able to progress an application to project set up
     the user clicks the button/link                             css = button[data-js-modal="send-to-all-applicants-modal"]
     the user clicks the button/link                             jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
     #The sleep is necessary as the email is not delivering even after specified time
-    #sleep  300s
+    sleep  120s
     the user refreshes until h2020 element appears on page      jQuery = td:contains("Project name") ~ td:contains("Sent")
     the user clicks the button/link                             link = Competition
     the user clicks the button/link                             link = Manage funding notifications

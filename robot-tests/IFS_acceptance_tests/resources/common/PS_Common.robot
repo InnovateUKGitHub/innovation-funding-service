@@ -661,10 +661,11 @@ The internal user assign project to MO
     #the user should see project in dropdown           id = projectId   ${search_ID}  ${project_name}
     mouse down                                        jQuery = ul li:contains("${search_ID} - ${project_name}")
     wait until keyword succeeds without screenshots   10s    200ms   click element  jQuery = ul li:contains("${search_ID} - ${project_name}")
+    the user selects project in dropdown              ${search_ID}  ${project_name}
     #the user clicks the button/link                   jQuery = ul li:contains("${search_ID} - ${project_name}")
     #the user clicks the button/link                   jQuery = button:contains("Assign")
 
-the user should see project in dropdown
+the user selects project in dropdown
     [Arguments]  ${search_ID}   ${project_name}
     :FOR    ${i}    IN RANGE  10
     \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots  the element should be disabled   jQuery = button:contains("Assign")
