@@ -458,6 +458,7 @@ Lead organisation can see international organisation address details in project 
     [Documentation]  IFS-7200
     [Tags]  HappyPath
     Given log in as a different user                                                          ${lead_international_email}  ${short_password}
+    And the user clicks the application tile if displayed
     And the user clicks the button/link                                                       link = ${internationalApplicationTitle}
     When the user clicks the button/link                                                      link = Project team
     Then the user completes project team and can see international organisation addresses

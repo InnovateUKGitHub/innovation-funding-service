@@ -657,33 +657,36 @@ Search for MO
 The internal user assign project to MO
     [Arguments]  ${search_ID}  ${project_name}
     the element should be disabled                    jQuery = button:contains("Assign")
-    wait until keyword succeeds without screenshots   10s    200ms   input text         id = projectId   ${search_ID}
+    wait until keyword succeeds without screenshots   10s    200ms   input text         id = projectId   ${search_ID} - ${project_name}
     #the user should see project in dropdown           id = projectId   ${search_ID}  ${project_name}
     mouse down                                        jQuery = ul li:contains("${search_ID} - ${project_name}")
     wait until keyword succeeds without screenshots   10s    200ms   click element  jQuery = ul li:contains("${search_ID} - ${project_name}")
     #the user clicks the button/link                   jQuery = ul li:contains("${search_ID} - ${project_name}")
-    the user clicks the button/link                   jQuery = button:contains("Assign")
+    #the user clicks the button/link                   jQuery = button:contains("Assign")
 
 the user should see project in dropdown
-    [Arguments]  ${locator}  ${labelOrId}  ${actualName}
+    [Arguments]  ${search_ID}   ${project_name}
     :FOR    ${i}    IN RANGE  10
-    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots  element should be visible  jQuery = ul li:contains("${labelOrId} - ${actualName}")
-    \  Exit For Loop If  '${status}'=='PASS'
-    \  run keyword if  '${status}'=='FAIL'   retry entering the project     ${locator}   ${labelOrId}
+    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots  the element should be disabled   jQuery = button:contains("Assign")
+    \  Exit For Loop If  '${status}'=='FAIL'
+    \  run keyword if  '${status}'=='PASS'   retry entering the project     ${search_ID}   ${project_name}
     \  ${i} =  Set Variable  ${i + 1}
+    the user clicks the button/link                   jQuery = button:contains("Assign")
 
-the user should see country in dropdown
-    [Arguments]  ${locator}  ${searchWord}
-    :FOR    ${i}    IN RANGE  10
-    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots  element should be visible  jQuery = ul li:contains("${searchWord}")
-    \  Exit For Loop If  '${status}'=='PASS'
-    \  run keyword if  '${status}'=='FAIL'   retry entering the project     ${locator}   ${searchWord}
-    \  ${i} =  Set Variable  ${i + 1}
+#the user should see country in dropdown
+#    [Arguments]  ${locator}  ${searchWord}
+#    :FOR    ${i}    IN RANGE  10
+#    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots  element should be visible  jQuery = ul li:contains("${searchWord}")
+#    \  Exit For Loop If  '${status}'=='PASS'
+#    \  run keyword if  '${status}'=='FAIL'   retry entering the project     ${locator}   ${searchWord}
+#    \  ${i} =  Set Variable  ${i + 1}
 
 retry entering the project
-    [Arguments]  ${locator}  ${searchWord}
-    clear element text      ${locator}
-    wait until keyword succeeds without screenshots   10s    200ms   input text     ${locator}   ${searchWord}
+    [Arguments]  ${search_ID}   ${project_name}
+    clear element text      id = projectId
+    wait until keyword succeeds without screenshots   10s    200ms   input text         id = projectId   ${search_ID} - ${project_name}
+    mouse down                                        jQuery = ul li:contains("${search_ID} - ${project_name}")
+    wait until keyword succeeds without screenshots   10s    200ms   click element  jQuery = ul li:contains("${search_ID} - ${project_name}")
 
 the user completes the project team details
     the user clicks the button/link     link = Project team

@@ -499,8 +499,9 @@ Support user should see completed project in previous tab
 
 Project is automatically sent to ACC if set up for the competition
     [Documentation]  IFS-6786
-    Given log in as a different user         ${Elbow_Grease_Lead_PM_Email}   ${short_password}
-    Then the user should see the element     id = dashboard-link-LIVE_PROJECTS_USER
+    Given log in as a different user                        ${Elbow_Grease_Lead_PM_Email}   ${short_password}
+    When the user refreshes until element appears on page   id = dashboard-link-LIVE_PROJECTS_USER
+    Then the user should see the element                    id = dashboard-link-LIVE_PROJECTS_USER
 
 IFS Expert user can reset GOL in project setup
     [Documentation]  IFS-9611
