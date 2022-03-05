@@ -334,6 +334,25 @@ the user checks the read-only page
     the user closes the last opened tab
 
 the user selects knowledge base organisation
-    wait until keyword succeeds without screenshots   10s   1s  input text      id = knowledgeBase        ${supporterOrg}
-    mouse down                                        jQuery = ul li:contains("${supporterOrg}")
-    the user clicks the button/link                   jQuery = ul li:contains("${supporterOrg}")
+    wait until keyword succeeds without screenshots         10s   1s  input text      id = knowledgeBase        ${supporterOrg}
+    wait until page contains element without screenshots    css=[id="knowledgeBase__listbox"][class="autocomplete__menu autocomplete__menu--overlay autocomplete__menu--visible"]  5s
+    mouse down                                              jQuery = ul li:contains("${supporterOrg}")
+    retry clicking on kb organisation                       ${supporterOrg}
+    mouse out                                               id = knowledgeBase
+    Set Focus To Element                                    link=GOV.UK
+    the user should see selected value in text field        ${supporterOrg}  ${supporterOrg}
+
+retry clicking on kb organisation
+    [Arguments]  ${selector}
+    :FOR    ${i}    IN RANGE  10
+    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery = ul li:contains("${supporterOrg}")
+    \  Exit For Loop If  '${status}'=='PASS'
+    \  run keyword if  '${status}'=='FAIL'  run keywords    wait until keyword succeeds without screenshots   10s   1s  input text      id = knowledgeBase        ${supporterOrg}
+    \  ...         mouse down                               jQuery = ul li:contains("${supporterOrg}")
+    \  ${i} =  Set Variable  ${i + 1}
+    the user clicks the button/link                         jQuery = ul li:contains("${supporterOrg}")
+
+the user should see selected value in text field
+    [Arguments]  ${searchText}    ${textBoxValue}
+    ${textBoxValue}=       Get Value    id = knowledgeBase
+    Should Be Equal    ${searchText}    ${textBoxValue}
