@@ -148,6 +148,7 @@ Custom suite setup
     Connect to database  @{database}
     the user logs-in in new browser                         orville.gibbs@gmail.com  ${short_password}
     the user clicks the project setup tile if displayed
+    wait until page contains element without screenshots    id = keywordSearch   5s
 
 Custom suite teardown
     Disconnect from database
