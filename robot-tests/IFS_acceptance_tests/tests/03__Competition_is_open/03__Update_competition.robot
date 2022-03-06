@@ -129,7 +129,7 @@ Funding Information is editable (Open)
     When the user clicks the button/link        link = Funding information
     And the user should see the element         jquery = h1:contains("Funding information")
     And the user clicks the button/link         jQuery = .govuk-button:contains("Edit")
-    And the user edits autocomplete field       id = funders[0].funder    Aerospace Technology Institute (ATI)
+    And the user edits autocomplete field       id = funders[0].funder    BEIS: Aerospace Technology Institute (ATI) Programme
     And the user should see the element         id = funders[0].funderBudget
     And the user should see the element         id = pafNumber
     And the user should see the element         id = budgetCode

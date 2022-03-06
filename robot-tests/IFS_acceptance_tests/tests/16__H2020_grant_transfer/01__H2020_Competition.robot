@@ -281,7 +281,7 @@ The user should see the read-only view of the initial details
 
 The user completes funding information
     the user clicks the button/link         id = generate-code
-    the user enters text to an autocomplete field  id = funders[0].funder   Aerospace Technology Institute (ATI)
+    the user enters text to an autocomplete field  id = funders[0].funder   BEIS: Aerospace Technology Institute (ATI) Programme
     the user enters text to a text field    id = funders[0].funderBudget    20000
     the user enters text to a text field    id = pafNumber    2016
     the user enters text to a text field    id = budgetCode    2004
