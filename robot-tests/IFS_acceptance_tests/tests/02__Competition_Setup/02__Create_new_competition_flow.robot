@@ -253,7 +253,7 @@ Funding information: calculations
     And the user enters text to a text field    id = pafNumber    2016
     And the user enters text to a text field    id = budgetCode    2004
     And the user enters text to a text field    id = activityCode    4242
-    And the user enters text to an autocomplete field  id = funders[0].funder    Advanced Propulsion Centre (APC)
+    And the user enters text to an autocomplete field  id = funders[0].funder    BEIS: Advanced Propulsion Centre (APC) Programme
     When the user clicks the button/link        jQuery = Button:contains("+Add co-funder")
     And the user should see the element         jQuery = Button:contains("+Add co-funder")
     And the user should see the element         jQuery = Button:contains("Remove")
