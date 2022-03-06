@@ -175,19 +175,20 @@ Finance reviewer is added to the project
 The user selects finance reviewer
     [Arguments]   ${FlName}
     wait until keyword succeeds without screenshots         10s    200ms   input text    id = userId    ${FlName}
-    wait until page contains element without screenshots    css=[id="userId"][class="autocomplete__input autocomplete__input--focused autocomplete__input--show-all-values"]  5s
-    mouse down                                              jQuery = ul li:contains("${FlName}")
-    wait until keyword succeeds without screenshots         10s    200ms   click element     jQuery = ul li:contains("${FlName}")
-    mouse out                                               id = userId
-    Set Focus To Element                                    link=GOV.UK
-    wait until page contains element without screenshots    css=[id="userId"][class="autocomplete__input autocomplete__input--show-all-values"]    5s
+    Execute Javascript    document.evaluate("//li[text()='${FlName}']",document.body,null,9,null).singleNodeValue.click();
+#    wait until page contains element without screenshots    css=[id="userId"][class="autocomplete__input autocomplete__input--focused autocomplete__input--show-all-values"]  5s
+#    mouse down                                              jQuery = ul li:contains("${FlName}")
+#    wait until keyword succeeds without screenshots         10s    200ms   click element     jQuery = ul li:contains("${FlName}")
+#    mouse out                                               id = userId
+#    Set Focus To Element                                    link=GOV.UK
+#    wait until page contains element without screenshots    css=[id="userId"][class="autocomplete__input autocomplete__input--show-all-values"]    5s
     #wait until keyword succeeds without screenshots   10s    200ms   the user clicks the button/link     jQuery = ul li:contains("${FlName}")
 
 The user adds a new team member
-  [Arguments]  ${firstName}  ${email}
-  the user enters text to a text field   css = input[name=name]   ${firstName}
-  the user enters text to a text field   css = input[name=email]  ${email}
-  the user clicks the button/link        jQuery = button:contains("Invite to")
+   [Arguments]  ${firstName}  ${email}
+   the user enters text to a text field   css = input[name=name]   ${firstName}
+   the user enters text to a text field   css = input[name=email]  ${email}
+   the user clicks the button/link        jQuery = button:contains("Invite to")
 
 internal user generates the GOL
     [Arguments]  ${projectID}
@@ -650,7 +651,8 @@ Search for MO
     the element should be disabled                      jQuery = button:contains("View Monitoring Officer")
     wait until keyword succeeds without screenshots     10s    200ms   input text   id = userId   ${MO_name}
     mouse down                                          jQuery = ul li:contains("${MO_fullname}")
-    wait until keyword succeeds without screenshots     10s    200ms   click element   jQuery = ul li:contains("${MO_fullname}")
+    Execute Javascript                                  document.evaluate("//li[text()='${MO_fullname}']",document.body,null,9,null).singleNodeValue.click();
+    #wait until keyword succeeds without screenshots     10s    200ms   click element   jQuery = ul li:contains("${MO_fullname}")
     #the user clicks the button/link                     jQuery = ul li:contains("${MO_fullname}")
     the user clicks the button/link                     jQuery = button:contains("View Monitoring Officer")
 
@@ -660,19 +662,19 @@ The internal user assign project to MO
     wait until keyword succeeds without screenshots   10s    200ms   input text         id = projectId   ${search_ID} - ${project_name}
     #the user should see project in dropdown           id = projectId   ${search_ID}  ${project_name}
     mouse down                                        jQuery = ul li:contains("${search_ID} - ${project_name}")
-    wait until keyword succeeds without screenshots   10s    200ms   click element  jQuery = ul li:contains("${search_ID} - ${project_name}")
-    the user selects project in dropdown              ${search_ID}  ${project_name}
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    click element  jQuery = ul li:contains("${search_ID} - ${project_name}")
+    run keyword if  '${status}'=='FAIL'               the user selects project in dropdown         ${search_ID}  ${project_name}
+    the user clicks the button/link                   jQuery = button:contains("Assign")
     #the user clicks the button/link                   jQuery = ul li:contains("${search_ID} - ${project_name}")
     #the user clicks the button/link                   jQuery = button:contains("Assign")
 
 the user selects project in dropdown
     [Arguments]  ${search_ID}   ${project_name}
-    :FOR    ${i}    IN RANGE  10
-    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots  the element should be disabled   jQuery = button:contains("Assign")
-    \  Exit For Loop If  '${status}'=='FAIL'
-    \  run keyword if  '${status}'=='PASS'   retry entering the project     ${search_ID}   ${project_name}
+    :FOR    ${i}    IN RANGE  2
+    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots   the user should see the element   jQuery = td:contains("${search_ID}") + td:contains("${project_name}")
+    \  Exit For Loop If  '${status}'=='PASS'
+    \  run keyword if  '${status}'=='FAIL'   retry entering the project     ${search_ID}   ${project_name}
     \  ${i} =  Set Variable  ${i + 1}
-    the user clicks the button/link                   jQuery = button:contains("Assign")
 
 #the user should see country in dropdown
 #    [Arguments]  ${locator}  ${searchWord}
@@ -687,7 +689,8 @@ retry entering the project
     clear element text      id = projectId
     wait until keyword succeeds without screenshots   10s    200ms   input text         id = projectId   ${search_ID} - ${project_name}
     mouse down                                        jQuery = ul li:contains("${search_ID} - ${project_name}")
-    wait until keyword succeeds without screenshots   10s    200ms   click element  jQuery = ul li:contains("${search_ID} - ${project_name}")
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    click element  jQuery = ul li:contains("${search_ID} - ${project_name}")
+    run keyword if  '${status}'=='FAIL'               the user selects project in dropdown         ${search_ID}  ${project_name}
 
 the user completes the project team details
     the user clicks the button/link     link = Project team
