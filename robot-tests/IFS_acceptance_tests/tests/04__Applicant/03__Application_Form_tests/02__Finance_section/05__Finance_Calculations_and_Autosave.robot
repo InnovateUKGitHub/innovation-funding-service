@@ -92,11 +92,11 @@ Travel and subsistence
     [Documentation]    INFUND-736, INFUND-6390
     [Tags]  HappyPath
     When the Applicant fills the Travel fields
-    Then Totals should be correct                jQuery = h4:contains("Total travel and subsistence costs") [data-mirror^="#section-total"]  £2,000  jQuery = [data-mirror^="#section-total-travel"]  £2,000
-    And the user clicks the button/link          css = #travel-costs-table [data-repeatable-row]:nth-child(1) button
-    And the user reloads page with autosave
-    Then Totals should be correct                jQuery = h4:contains("Total travel and subsistence costs") [data-mirror^="#section-total"]  £1,000  jQuery = [data-mirror^="#section-total-travel"]  £1,000
-    [Teardown]  the user clicks the button/link  jQuery = button:contains("Travel and subsistence")
+    Then Totals should be correct                               jQuery = h4:contains("Total travel and subsistence costs") [data-mirror^="#section-total"]  £2,000  jQuery = [data-mirror^="#section-total-travel"]  £2,000
+    #And the user clicks the button/link                        css = #travel-costs-table [data-repeatable-row]:nth-child(1) button
+    And the user removes one row of costs and checks for total  jQuery = h4:contains("Total travel and subsistence costs") span:contains("£1,000")
+    Then Totals should be correct                               jQuery = h4:contains("Total travel and subsistence costs") [data-mirror^="#section-total"]  £1,000  jQuery = [data-mirror^="#section-total-travel"]  £1,000
+    [Teardown]  the user clicks the button/link                 jQuery = button:contains("Travel and subsistence")
 
 Other costs
     [Documentation]    INFUND-736, INFUND-6390
@@ -246,3 +246,13 @@ The row should be removed
 Custom suite teardown
     The user closes the browser
     Disconnect from database
+
+the user removes one row of costs and checks for total
+    [Arguments]  ${selector}
+    Wait Until Keyword Succeeds Without Screenshots     120s   5s   reload and check total appears    ${selector}
+
+reload and check total appears
+    [Arguments]  ${selector}
+    the user clicks the button/link                         css = #travel-costs-table [data-repeatable-row]:nth-child(1) button
+    the user reloads page with autosave
+    Wait Until Page Contains Element Without Screenshots    ${selector}     5s

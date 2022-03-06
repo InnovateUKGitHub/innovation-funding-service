@@ -254,5 +254,5 @@ the user reloads page until project tile appears on page
 
 reload and check project tile appears
     [Arguments]  ${selector}
-    the user navigates to the page                          ${server}/dashboard-selection
+    the user clicks the button/link                         id = dashboard-navigation-link
     Wait Until Page Contains Element Without Screenshots    ${selector}     5s
