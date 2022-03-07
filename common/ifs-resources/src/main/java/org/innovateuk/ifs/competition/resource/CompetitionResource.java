@@ -193,10 +193,10 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return LOAN.equals(fundingType);
     }
 
-    @JsonIgnore
-    public boolean isOfgem() {
-        return competitionTypeEnum == CompetitionTypeEnum.OFGEM;
-    }
+//    @JsonIgnore
+//    public boolean isOfgem() {
+//        return competitionTypeEnum == CompetitionTypeEnum.OFGEM;
+//    }
 
     @JsonIgnore
     public boolean onlyOneOrgAllowedPerApplication() {
@@ -872,7 +872,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     @JsonIgnore
     public boolean isOfGemCompetition() {
-        return isOfgem()
+        return (competitionTypeEnum == CompetitionTypeEnum.OFGEM)
             || (isProcurement()
                 && isOfGemFunder()
                 && isProcurementThirdPartyTermsAndConditions());
