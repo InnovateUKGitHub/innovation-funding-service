@@ -253,25 +253,23 @@
                                     th:text="${model.isHasAssessmentStage} ? 'Funding decision and assessment feedback' : 'Funding decision'"></h3>
                             </li>
 
-                            <th:block th:unless="${model.hasAClosedAssessmentPeriod()}">
-                                <a class="govuk-button govuk-!-margin-top-2"
-                                   th:unless="${model.isHasAssessmentStage}"
+                            <th:block th:if="${model.hasAssessmentStage}">
+                                <a disabled="disabled" class="govuk-button govuk-!-margin-top-2" th:unless="${model.hasAClosedAssessmentPeriod()}">
+                                    Send notification and release feedback</a>
+
+                                <a class="govuk-button govuk-!-margin-top-2" th:if="${model.hasAClosedAssessmentPeriod()}"
                                    th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}">
-                                    Send notification
-                                </a>
-                                <th:block th:if="${model.hasAssessmentStage}">
-                                    <a disabled="disabled" class="govuk-button govuk-!-margin-top-2">
-                                        Send notification and release feedback</a>
-                                </th:block>
+                                    Send notification and release feedback</a>
                             </th:block>
 
-                            <a class="govuk-button govuk-!-margin-top-2" th:if="${model.hasAClosedAssessmentPeriod()}"
-                               th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}">
-                                Send notification and release feedback</a>
+                            <th:block th:unless="${model.hasAssessmentStage}">
+                                <a disabled="disabled" class="govuk-button govuk-!-margin-top-2" th:unless="${model.competitionIsOpen()}">
+                                    Send notification</a>
 
-                            <a class="govuk-button govuk-!-margin-top-2" th:if="${model.hasAClosedAssessmentPeriod()}"
-                               th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}">
-                                Send notification and release feedback</a>
+                                <a class="govuk-button govuk-!-margin-top-2" th:if="${model.competitionIsOpen()}"
+                                   th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}">
+                                    Send notification</a>
+                            </th:block>
                         </th:block>
                     </ul>
                 </div>

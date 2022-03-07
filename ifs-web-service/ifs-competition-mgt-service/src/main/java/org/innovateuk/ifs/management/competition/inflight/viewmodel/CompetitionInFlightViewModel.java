@@ -197,6 +197,10 @@ public class CompetitionInFlightViewModel {
         return isHasAssessmentStage;
     }
 
+    public boolean competitionIsOpen() {
+        return competitionStatus == OPEN;
+    }
+
     public boolean isManageAssessmentLinkEnabled() {
         return competitionStatus != READY_TO_OPEN
                 && (competitionStatus != OPEN || alwaysOpen && isHasAssessmentStage);

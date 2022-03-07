@@ -15,13 +15,12 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.*;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder.aFormInput;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.GuidanceRowBuilder.aGuidanceRow;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.MultipleChoiceOptionBuilder.aMultipleChoiceOption;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
-import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
-import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
 
 @Component
 public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
@@ -39,8 +38,15 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
     public Competition copyTemplatePropertiesToCompetition(Competition competition) {
         competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Horizon Europe Guarantee"));
         competition.setAcademicGrantPercentage(100);
+        competition.setResubmission(false);
         competition.setMinProjectDuration(1);
         competition.setMaxProjectDuration(84);
+        competition.setHasAssessmentStage(false);
+        competition.setAlwaysOpen(true);
+        competition.setApplicationFinanceType(STANDARD);
+        competition.setIncludeProjectGrowthTable(false);
+        competition.setIncludeJesForm(false);
+        competition.setIncludeYourOrganisationSection(false);
         return competition;
     }
 
@@ -51,169 +57,149 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                         .withQuestions(newArrayList(
                                 applicationDetails(),
                                 applicationTeam(),
-                                aQuestion()
-                                        .withShortName("Horizon Europe Guarantee grant agreement")
-                                        .withName("Horizon Europe Guarantee grant agreement")
-                                        .withAssignEnabled(false)
-                                        .withMultipleStatuses(false)
-                                        .withMarkAsCompletedEnabled(true)
-                                        .withType(QuestionType.LEAD_ONLY)
-                                        .withQuestionSetupType(QuestionSetupType.GRANT_AGREEMENT),
+                                grantAgreement(),
                                 equalityDiversityAndInclusion()
                         )),
                 applicationQuestions()
-                        .withQuestions(horizonEuropeGuaranteeDefaultQuestions()),
+                        .withQuestions(horizonEuropeDefaultQuestions()),
                 finances(),
                 termsAndConditions()
         );
     }
 
-    public static List<QuestionBuilder> horizonEuropeGuaranteeDefaultQuestions() {
+    public static List<QuestionBuilder> horizonEuropeDefaultQuestions() {
         return newArrayList(
-                organisationBased(),
-                participatingOrganisationProjectRegion(),
-                eicCall()
-//                applicationReferenceNumber(),
-//                ukFundingContribution(),
-//                tasksAssigned(),
+                organisation(),
+                eic()
         );
     }
 
-    private static QuestionBuilder organisationBased() {
-        QuestionBuilder organisationBasedQuestion =
-                genericQuestion()
-                        .withShortName("Tell us where your organisation is based")
-                        .withName("Tell us where your organisation is based")
-                        .withAssignEnabled(true)
-                        .withMarkAsCompletedEnabled(true)
-                        .withMultipleStatuses(true)
-                        .withFormInputs(asList(
-                                aFormInput()
-                                        .withType(FormInputType.MULTIPLE_CHOICE)
-                                        .withScope(FormInputScope.APPLICATION)
-                                        .withActive(true)
-                                        .withMultipleChoiceOptions(newArrayList(
-                                                aMultipleChoiceOption()
-                                                        .withText("My organisation is based in the UK or a British Overseas Territory"),
-                                                aMultipleChoiceOption()
-                                                        .withText("My organisation is NOT based in the UK or a British Overseas Territory")
-                                        )),
-                                aFormInput()
-                                        .withType(FormInputType.FILEUPLOAD)
-                                        .withScope(FormInputScope.APPLICATION)
-                                        .withActive(false),
-                                aFormInput()
-                                        .withType(FormInputType.TEMPLATE_DOCUMENT)
-                                        .withScope(FormInputScope.APPLICATION)
-                                        .withActive(false)
-                        ));
-
-        organisationBasedQuestion.getFormInputs().stream()
-                .filter(fi -> fi.getScope().equals(ASSESSMENT))
-                .forEach(fi -> fi.withActive(false));
-        return organisationBasedQuestion;
+    public static QuestionBuilder grantAgreement() {
+        return aQuestion()
+                .withShortName("Horizon 2020 grant agreement")
+                .withName("Horizon 2020 grant agreement")
+                .withAssignEnabled(false)
+                .withMultipleStatuses(false)
+                .withMarkAsCompletedEnabled(true)
+                .withType(QuestionType.LEAD_ONLY)
+                .withQuestionSetupType(QuestionSetupType.GRANT_AGREEMENT);
     }
 
-    private static QuestionBuilder participatingOrganisationProjectRegion() {
-//        QuestionBuilder participatingOrganisationProjectRegion =
-        return genericQuestion()
-                        .withShortName("Participating Organisation project region")
-                        .withName("Participating Organisation project region")
-                        .withAssignEnabled(true)
-                        .withMarkAsCompletedEnabled(true)
-                        .withMultipleStatuses(true)
-                        .withFormInputs(asList(
-                                aFormInput()
-                                        .withType(FormInputType.MULTIPLE_CHOICE)
-                                        .withScope(FormInputScope.APPLICATION)
-                                        .withActive(true)
-                                        .withMultipleChoiceOptions(newArrayList(
-                                                aMultipleChoiceOption()
-                                                        .withText("East Midlands"),
-                                                aMultipleChoiceOption()
-                                                        .withText("East of England"),
-                                                aMultipleChoiceOption()
-                                                        .withText("London"),
-                                                aMultipleChoiceOption()
-                                                        .withText("North East & Cumbria"),
-                                                aMultipleChoiceOption()
-                                                        .withText("North West"),
-                                                aMultipleChoiceOption()
-                                                        .withText("Northern Ireland"),
-                                                aMultipleChoiceOption()
-                                                        .withText("Scotland"),
-                                                aMultipleChoiceOption()
-                                                        .withText("South East"),
-                                                aMultipleChoiceOption()
-                                                        .withText("South West"),
-                                                aMultipleChoiceOption()
-                                                        .withText("Wales"),
-                                                aMultipleChoiceOption()
-                                                        .withText("West Midlands"),
-                                                aMultipleChoiceOption()
-                                                        .withText("Yorkshire & the Humber"),
-                                                aMultipleChoiceOption()
-                                                        .withText("Overseas British Territory")
-                                        )),
-                                aFormInput()
-                                        .withType(FormInputType.FILEUPLOAD)
-                                        .withScope(FormInputScope.APPLICATION)
-                                        .withActive(false),
-                                aFormInput()
-                                        .withType(FormInputType.TEMPLATE_DOCUMENT)
-                                        .withScope(FormInputScope.APPLICATION)
-                                        .withActive(false),
-                                aFormInput()
-                                        .withType(ASSESSOR_SCORE)
-                                        .withScope(ASSESSMENT)
-                                        .withActive(false),
-                                aFormInput()
-                                        .withType(ASSESSOR_SCORE)
-                                        .withScope(ASSESSMENT)
-                                        .withActive(false)
-                        ));
-
-//        participatingOrganisationProjectRegion.getFormInputs().stream()
-//                .filter(fi -> fi.getScope().equals(ASSESSMENT))
-//                .forEach(fi -> fi.withActive(false));
-//        return participatingOrganisationProjectRegion;
+    public static QuestionBuilder organisation() {
+        return aQuestion()
+                .withShortName("Tell us where your organisation is based")
+                .withName("Tell us where your organisation is based")
+                .withAssignEnabled(true)
+                .withMarkAsCompletedEnabled(true)
+                .withMultipleStatuses(false)
+                .withType(QuestionType.GENERAL)
+                .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
+                .withAssessorMaximumScore(10)
+                .withFormInputs(newArrayList(
+                        aFormInput()
+                                .withType(FormInputType.MULTIPLE_CHOICE)
+                                .withActive(true)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withMultipleChoiceOptions(newArrayList(
+                                        aMultipleChoiceOption()
+                                                .withText("My organisation is based in the UK or a British Overseas Territory"),
+                                        aMultipleChoiceOption()
+                                                .withText("My organisation is NOT based in the UK or a British Overseas Territory")
+                                )),
+                        aFormInput()
+                                .withType(FormInputType.TEXTAREA)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withActive(false)
+                                .withWordCount(400),
+                        aFormInput()
+                                .withType(FormInputType.TEMPLATE_DOCUMENT)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withActive(false),
+                        aFormInput()
+                                .withType(FormInputType.ASSESSOR_SCORE)
+                                .withScope(FormInputScope.ASSESSMENT)
+                                .withActive(false),
+                        aFormInput()
+                                .withType(FormInputType.FILEUPLOAD)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withActive(false),
+                        aFormInput()
+                                .withType(FormInputType.TEXTAREA)
+                                .withScope(FormInputScope.ASSESSMENT)
+                                .withActive(false)
+                                .withWordCount(100)
+                                .withGuidanceRows(newArrayList(
+                                        aGuidanceRow()
+                                                .withSubject("9,10"),
+                                        aGuidanceRow()
+                                                .withSubject("7,8"),
+                                        aGuidanceRow()
+                                                .withSubject("5,6"),
+                                        aGuidanceRow()
+                                                .withSubject("3,4"),
+                                        aGuidanceRow()
+                                                .withSubject("1,2")
+                                ))
+                ));
     }
 
-    private static QuestionBuilder eicCall() {
-        QuestionBuilder eicCall =
-                genericQuestion()
-                        .withShortName("What EIC call have you been successfully evaluated for?")
-                        .withName("What EIC call have you been successfully evaluated for?")
-                        .withAssignEnabled(true)
-                        .withMarkAsCompletedEnabled(true)
-                        .withMultipleStatuses(true)
-                        .withFormInputs(asList(
-                                aFormInput()
-                                        .withType(FormInputType.MULTIPLE_CHOICE)
-                                        .withScope(FormInputScope.APPLICATION)
-                                        .withActive(true)
-                                        .withMultipleChoiceOptions(newArrayList(
-                                                aMultipleChoiceOption()
-                                                        .withText("EIC Transition"),
-                                                aMultipleChoiceOption()
-                                                        .withText("EIC Pathfinder"),
-                                                aMultipleChoiceOption()
-                                                        .withText("EIC Accelerator")
-                                        )),
-                                aFormInput()
-                                        .withType(FormInputType.FILEUPLOAD)
-                                        .withScope(FormInputScope.APPLICATION)
-                                        .withActive(false),
-                                aFormInput()
-                                        .withType(FormInputType.TEMPLATE_DOCUMENT)
-                                        .withScope(FormInputScope.APPLICATION)
-                                        .withActive(false)
-                        ));
-
-        eicCall.getFormInputs().stream()
-                .filter(fi -> fi.getScope().equals(ASSESSMENT))
-                .forEach(fi -> fi.withActive(false));
-        return eicCall;
+    public static QuestionBuilder eic() {
+        return aQuestion()
+                .withShortName("What EIC call have you been successfully evaluated for?")
+                .withName("What EIC call have you been successfully evaluated for?")
+                .withAssignEnabled(true)
+                .withMarkAsCompletedEnabled(true)
+                .withMultipleStatuses(false)
+                .withType(QuestionType.GENERAL)
+                .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
+                .withAssessorMaximumScore(10)
+                .withFormInputs(newArrayList(
+                        aFormInput()
+                                .withType(FormInputType.MULTIPLE_CHOICE)
+                                .withActive(true)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withMultipleChoiceOptions(newArrayList(
+                                        aMultipleChoiceOption()
+                                                .withText("EIC Transition"),
+                                        aMultipleChoiceOption()
+                                                .withText("EIC Pathfinder"),
+                                        aMultipleChoiceOption()
+                                                .withText("EIC Accelerator")
+                                )),
+                        aFormInput()
+                                .withType(FormInputType.TEXTAREA)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withActive(false)
+                                .withWordCount(400),
+                        aFormInput()
+                                .withType(FormInputType.FILEUPLOAD)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withActive(false),
+                        aFormInput()
+                                .withType(FormInputType.TEMPLATE_DOCUMENT)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withActive(false),
+                        aFormInput()
+                                .withType(FormInputType.ASSESSOR_SCORE)
+                                .withScope(FormInputScope.ASSESSMENT)
+                                .withActive(false),
+                        aFormInput()
+                                .withType(FormInputType.TEXTAREA)
+                                .withScope(FormInputScope.ASSESSMENT)
+                                .withActive(false)
+                                .withWordCount(100)
+                                .withGuidanceRows(newArrayList(
+                                        aGuidanceRow()
+                                                .withSubject("9,10"),
+                                        aGuidanceRow()
+                                                .withSubject("7,8"),
+                                        aGuidanceRow()
+                                                .withSubject("5,6"),
+                                        aGuidanceRow()
+                                                .withSubject("3,4"),
+                                        aGuidanceRow()
+                                                .withSubject("1,2")
+                                ))
+                ));
     }
-
 }

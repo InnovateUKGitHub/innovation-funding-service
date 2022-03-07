@@ -75,7 +75,7 @@
             </li>
         </ul>
 
-        <h3 class="govuk-heading-s" th:text="${model.general.competition.hasAssessmentStage} ? 'Questions' : 'Assessed questions'"></h3>
+        <h3 class="govuk-heading-s" th:text="${model.general.competition.hasAssessmentStage} ? 'Assessed questions' : 'Questions'"></h3>
         <ul class="task-list" th:classappend="${model.general.state.preventEdit} ? '' : 'govuk-!-margin-bottom-0'">
             <li th:each="question : ${model.questions}">
                 <th:block th:if="${model.questionStatuses.get(question.id)}">

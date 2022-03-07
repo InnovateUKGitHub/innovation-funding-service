@@ -21,17 +21,23 @@
 
         <div class="govuk-body govuk-!-margin-top-9">
             <p>You can close this competition and move it to the 'Previous' section
-                of your dashboard, if all 3 of these requirements have been met:</p>
+                of your dashboard, if all <th:block th:text="${model.isHasAssessmentStage ? '3' : '2'}"/> of these requirements have been met:</p>
             <ol>
                 <li>A submission date as been set and is now in the past.</li>
-                <li>All eligible applications have been assessed and their funding decisions entered.</li>
-                <li>All funding decision notifications have been sent and application feedback released.</li>
+                <li>All eligible applications have <th:block th:if="${model.isHasAssessmentStage}">been assessed and</th:block> their funding decisions entered.</li>
+                <li>All funding decision notifications have been sent<th:block th:if="${model.isHasAssessmentStage}"> and application feedback released</th:block>.</li>
             </ol>
         </div>
 
         <div class="govuk-body govuk-!-margin-top-6">
-            <p>Once this competition is closed you will no longer be able to assess
-                applications, add funding decisions or release feedback.</p>
+            <th:block th:if="${model.isHasAssessmentStage}">
+                <p>Once this competition is closed you will no longer be able to assess
+                    applications, add funding decisions or release feedback.</p>
+            </th:block>
+            <th:block th:unless="${model.isHasAssessmentStage}">
+                <p>Once this competition is closed you will no longer be able to add funding decisions.</p>
+            </th:block>
+
         </div>
 
         <div class="govuk-form-group govuk-!-margin-top-6">
