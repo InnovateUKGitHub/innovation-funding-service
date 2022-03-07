@@ -7,10 +7,12 @@ include("common")
 include("common:api")
 include("common:api:static")
 include("common:api:audit-api")
+include("common:api:cache-api")
 
 // Starters - should only depend on external libs (mostly spring)
 include("common:starter:ifs-starter-logging")
 include("common:starter:ifs-starter-audit")
+include("common:starter:ifs-starter-cache")
 include("common:starter:ifs-starter-stubdev")
 include("common:starter:ifs-starter-swagger-ui")
 

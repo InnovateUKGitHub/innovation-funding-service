@@ -1,0 +1,16 @@
+apply from: rootProject.file("common/gradle-support/java.gradle")
+
+dependencies {
+
+    api platform(project(":common:bom"))
+
+    testImplementation 'org.hamcrest:hamcrest'
+    testImplementation('nl.jqno.equalsverifier:equalsverifier:3.8')
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+}
+
+test {
+    useJUnitPlatform {
+    }
+}

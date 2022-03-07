@@ -7,7 +7,6 @@ bases:
 
 components:
   - ../../../../components/auth
-  - ../../../../components/cache-provider
   - ../../../../components/ifs-database
   - ../../../../components/mail
   - ../../../../patches/new-relic-env-vars-patch

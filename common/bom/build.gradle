@@ -37,10 +37,12 @@ dependencies {
 
         // Api - keep it light, jackson and maybe some annotation libs at most
         api project(":common:api:audit-api")
+        api project(":common:api:cache-api")
 
         // Starters - keep it light, only targeted spring libs
-        api project(":common:starter:ifs-starter-logging")
         api project(":common:starter:ifs-starter-audit")
+        api project(":common:starter:ifs-starter-cache")
+        api project(":common:starter:ifs-starter-logging")
         api project(":common:starter:ifs-starter-stubdev")
         api project(":common:starter:ifs-starter-swagger-ui")
 
