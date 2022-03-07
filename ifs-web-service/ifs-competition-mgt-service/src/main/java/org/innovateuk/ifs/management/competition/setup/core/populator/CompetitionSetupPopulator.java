@@ -6,10 +6,10 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionStateSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
-import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -28,6 +28,9 @@ public class CompetitionSetupPopulator {
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
 
+    @Value("${ifs.hecp.tcp.enabled}")
+    private boolean isHecpTcpEnabled;
+
     public GeneralSetupViewModel populateGeneralModelAttributes(CompetitionResource competitionResource, UserResource userResource, CompetitionSetupSection section) {
 
         Map<CompetitionSetupSection, Optional<Boolean>> statuses = competitionSetupRestService.getSectionStatuses(competitionResource.getId())
@@ -42,7 +45,7 @@ public class CompetitionSetupPopulator {
         boolean isIfsAdmin = SecurityRuleUtil.hasIFSAdminAuthority(userResource);
 
         GeneralSetupViewModel viewModel = new GeneralSetupViewModel(editable, firstTimeInForm, competitionResource, section, CompetitionSetupSection.values(),
-                isInitialComplete, isIfsAdmin);
+                isInitialComplete, isIfsAdmin, isHecpTcpEnabled);
 
         if (section.hasDisplayableSetupFragment()) {
             viewModel.setCurrentSectionFragment("section-" + section.getPath());

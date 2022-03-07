@@ -1,3 +1,4 @@
+
 <!-- ================= Section: Application assessment (16) =========================== -->
 <th:block th:fragment="section-content"  xmlns:th="http://www.w3.org/1999/html">
     <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
@@ -60,9 +61,9 @@
     <ul class="govuk-list pagination">
         <li class="prev">
             <a rel="prev" title="Navigate to previous part"
-               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='application-assessment')}">
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='application-submission')}">
                 <span class="pagination-label">Previous</span>
-                <span class="pagination-part-title">Completion stage</span>
+                <span class="pagination-part-title">Application submission</span>
             </a>
         </li>
         <li class="next" th:if="${!model.general.editable}">

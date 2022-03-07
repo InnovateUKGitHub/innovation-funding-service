@@ -12,7 +12,10 @@
 
     <div class="govuk-body panel">
         <th:block th:unless="${model.general.competition.alwaysOpen}">Define the competition milestones. Make sure that dates are in order of milestones, for example the briefing date cannot come after the submission date.</th:block>
-        <th:block th:if="${model.general.competition.alwaysOpen}">Assessment dates are set after the competition has opened.<br />Do not complete the 'Submission date' milestone when creating open-ended competitions.</th:block>
+        <th:block th:if="${model.general.competition.alwaysOpen}">
+            <th:block th:if="${model.general.competition.hasAssessmentStage}">Do not complete the 'Submission date' milestone when creating open-ended competitions.</th:block>
+            <th:block th:unless="${model.general.competition.hasAssessmentStage}">Assessment dates are set after the competition has opened.<br />Do not complete the 'Submission date' milestone when creating open-ended competitions.</th:block>
+        </th:block>
     </div>
 
     <form th:action="@{(${model.general.editable} ? '' : 'milestones/edit')}"
