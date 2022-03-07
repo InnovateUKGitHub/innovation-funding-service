@@ -26,14 +26,6 @@ public class StubUserSwitchController {
     @Autowired
     private StubUidSupplier stubUidSupplier;
 
-    @Autowired
-    private StubDevConfigurationProperties stubDevConfigurationProperties;
-
-    @PostConstruct
-    public void init() {
-        stubUidSupplier.setUuid(stubDevConfigurationProperties.getDefaultUuid());
-    }
-
     /**
      * Sets the active stub user.
      *
