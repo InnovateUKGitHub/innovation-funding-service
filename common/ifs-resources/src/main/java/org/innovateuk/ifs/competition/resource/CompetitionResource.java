@@ -194,7 +194,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     @JsonIgnore
-    public boolean isOfgem() {
+    public boolean isNewThirdPartyOfgemCompetition() {
         return competitionTypeEnum == CompetitionTypeEnum.OFGEM;
     }
 
@@ -872,7 +872,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     @JsonIgnore
     public boolean isOfGemCompetition() {
-        return (competitionTypeEnum == CompetitionTypeEnum.OFGEM) ||
+        return isNewThirdPartyOfgemCompetition() ||
             (isProcurement()
                 && isOfGemFunder()
                 && isProcurementThirdPartyTermsAndConditions());
