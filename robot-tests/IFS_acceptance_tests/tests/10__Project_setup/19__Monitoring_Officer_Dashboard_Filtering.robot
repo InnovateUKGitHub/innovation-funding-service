@@ -20,8 +20,11 @@ Resource          ../../resources/common/PS_Common.robot
 *** Test Cases ***
 Monitoring officer can filter in-setup projects only
     [Documentation]  IFS-9576
-    Given the user selects the checkbox                         projectInSetup
-    When the user clicks the button/link                        id = update-documents-results-button
+    #Given the user selects the checkbox                         projectInSetup
+    #When the user clicks the button/link                        id = update-documents-results-button
+    Given the user logs-in in new browser                       orville.gibbs@gmail.com  ${short_password}
+    When the user clicks the project setup tile if displayed
+    And wait until page contains element without screenshots    id = keywordSearch   5s
     Then check correct number of in-setup projects filtered     In setup
 
 Monitoring officer can filter previous projects only
@@ -29,6 +32,7 @@ Monitoring officer can filter previous projects only
     Given the user unselects the checkbox                       projectInSetup
     When the user selects the checkbox                          previousProject
     And the user clicks the button/link                         id = update-documents-results-button
+    And wait until page contains element without screenshots    id = keywordSearch   5s
     Then check correct number of previous projects filtered     Previous
 
 #  revisit this when working on IFS-10409
@@ -146,9 +150,9 @@ Monitoring officer can filter based on both keywords and spendprofile status
 *** Keywords ***
 Custom suite setup
     Connect to database  @{database}
-    the user logs-in in new browser                         orville.gibbs@gmail.com  ${short_password}
-    the user clicks the project setup tile if displayed
-    wait until page contains element without screenshots    id = keywordSearch   5s
+#    the user logs-in in new browser                         orville.gibbs@gmail.com  ${short_password}
+#    the user clicks the project setup tile if displayed
+#    wait until page contains element without screenshots    id = keywordSearch   5s
 
 Custom suite teardown
     Disconnect from database
@@ -156,17 +160,21 @@ Custom suite teardown
 
 Check correct number of in-setup projects filtered
     [Arguments]  ${filterName}
+    #checking if the page is loading slow
+    sleep  5s
     ${elementCountOnPage} =    Get Element Count    jQuery = .status:contains("Monitor project")
     page should contain element     jQuery = .govuk-checkboxes__label:contains("${filterName} (${elementCountOnPage})")
     page should contain element     jQuery = h2:contains("${elementCountOnPage} project")
 
 Check correct number of previous projects filtered
     [Arguments]  ${filterName}
+    sleep  5s
     ${elementCountOnPage} =    Get Element Count    jQuery = .status:contains("Live project")
     page should contain element     jQuery = .govuk-checkboxes__label:contains("${filterName} (${elementCountOnPage})")
     page should contain element     jQuery = h2:contains("${elementCountOnPage} project")
 
 Check correct total number of projects displaying
+    sleep  5s
     ${totalCountOnPage} =    Get Element Count    jQuery = li .task h3
     page should contain element     jQuery = h2:contains("${totalCountOnPage} project")
 
