@@ -11,6 +11,7 @@ import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.grantofferletter.template.resource.GolTemplateResource;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -115,6 +116,9 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean subsidyControl;
     private boolean hasBusinessAndFinancialInformationQuestion;
     private CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource;
+
+    @Value("${ifs.thirdparty.ofgem.enabled}")
+    private boolean thirdPartyOfgemEnabled;
 
     public CompetitionResource() {
     }
@@ -872,7 +876,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     @JsonIgnore
     public boolean isOfGemCompetition() {
-        return isNewThirdPartyOfgemCompetition() ||
+        return thirdPartyOfgemEnabled ? isNewThirdPartyOfgemCompetition() :
             (isProcurement()
                 && isOfGemFunder()
                 && isProcurementThirdPartyTermsAndConditions());
