@@ -26,6 +26,7 @@ import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -94,6 +95,9 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
                 .collect(toMap(FundingRulesTemplate::type, Function.identity()));
     }
 
+    @Value("${ifs.edi.update.enabled:false}")
+    private boolean ediUpdateToggle;
+
     @Override
     public ServiceResult<Competition> initializeCompetitionByCompetitionTemplate(Long competitionId, Long competitionTypeId) {
         Optional<CompetitionType> competitionType = competitionTypeRepository.findById(competitionTypeId);
@@ -131,7 +135,10 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             sectionBuilders = fundingRulesTemplate.get().sections(competition, sectionBuilders);
         }
 
-        questionPriorityOrderService.persistAndPrioritiseSections(competition, sectionBuilders.stream().map(SectionBuilder::build).collect(Collectors.toList()), null);
+        questionPriorityOrderService.persistAndPrioritiseSections(competition, sectionBuilders
+                .stream()
+                .map(ediUpdateToggle? SectionBuilder::buildWithoutEDI:SectionBuilder::build)
+                .collect(Collectors.toList()), null);
         return serviceSuccess(competitionRepository.save(competition));
     }
 
