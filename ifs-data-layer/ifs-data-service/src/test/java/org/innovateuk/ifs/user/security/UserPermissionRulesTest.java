@@ -22,6 +22,7 @@ import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -166,6 +167,43 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 assertFalse(rules.monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, user));
             }
         });
+    }
+
+    @Test
+    public void monitoringOfficersCanViewUsersInApplicationsBelongsToProjectsTheyAreAssignedTo() {
+        Application application = newApplication().build();
+        when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
+
+        Project project = newProject().withApplication(application).build();
+        UserResource userResource = newUserResource().withRoleGlobal(Role.APPLICANT).build();
+
+        User user = newUser().withId(userResource.getId()).build();
+        List<ProcessRole> processRoles = newProcessRole()
+                .withRole(ProcessRoleType.LEADAPPLICANT)
+                .withUser(user)
+                .withApplication(application)
+                .build(1);
+
+        List<MonitoringOfficer> projectMonitoringOfficers = newMonitoringOfficer()
+                .withProject(project)
+                .build(1);
+
+        when(projectUserRepository.findByUserId(userResource.getId())).thenReturn(Collections.emptyList());
+        when(processRoleRepository.findByUserId(userResource.getId())).thenReturn(processRoles);
+        when(projectMonitoringOfficerRepository.findByUserId(monitoringOfficerUser().getId())).thenReturn(projectMonitoringOfficers);
+
+        UserResource anotherUserResource = newUserResource().withRoleGlobal(Role.APPLICANT).build();
+
+        allGlobalRoleUsers.forEach(incomingUser -> {
+            if (isMonitoringOfficer(incomingUser)) {
+                assertTrue(rules.monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, monitoringOfficerUser()));
+            } else {
+                assertFalse(rules.monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, incomingUser));
+            }
+        });
+
+        // No application attached to this user
+        assertFalse(rules.monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(anotherUserResource, monitoringOfficerUser()));
     }
 
     @Test

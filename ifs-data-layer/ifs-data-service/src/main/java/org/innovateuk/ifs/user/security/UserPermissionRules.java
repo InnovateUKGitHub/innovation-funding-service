@@ -291,7 +291,8 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "READ", description = "Monitoring officers can view users in projects they are assigned to")
     public boolean monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(UserResource userToView, UserResource user) {
-        return userIsInProjectAssignedToMonitoringOfficer(userToView, user);
+        return userIsInProjectAssignedToMonitoringOfficer(userToView, user)
+                || userIsInApplicationBelongsToProjectAssignedToMonitoringOfficer(userToView, user);
     }
 
     @PermissionRule(value = "READ", description = "Project users can view other project users in projects they are assigned to")
@@ -433,6 +434,20 @@ public class UserPermissionRules {
         List<Project> monitoringOfficerProjects = simpleMap(projectMonitoringOfficers, MonitoringOfficer::getProject);
 
         return !disjoint(monitoringOfficerProjects, projectsThisUserIsAMemberOf);
+    }
+
+    private boolean userIsInApplicationBelongsToProjectAssignedToMonitoringOfficer(UserResource userToView, UserResource monitoringOfficer) {
+        List<Application> applicationsWhereThisUserIsInConsortium = getApplicationsRelatedToUserByProcessRoles(userToView.getId(), consortiumProcessRoleFilter);
+
+        List<MonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(monitoringOfficer.getId());
+        List<Project> monitoringOfficerProjects = simpleMap(projectMonitoringOfficers, MonitoringOfficer::getProject);
+
+        List<Project> monitoringOfficerProjectsWhereThisUserIsInConsortiumAtApplication = monitoringOfficerProjects.stream()
+                .filter(moProject -> applicationsWhereThisUserIsInConsortium.stream()
+                        .anyMatch(application -> moProject.getApplication().getId() == application.getId()))
+                .collect(Collectors.toList());
+
+        return !disjoint(monitoringOfficerProjects, monitoringOfficerProjectsWhereThisUserIsInConsortiumAtApplication);
     }
 
     private boolean projectUsersCanViewOtherProjectUsers(UserResource userToView, UserResource user) {
