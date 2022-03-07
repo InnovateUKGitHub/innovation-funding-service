@@ -96,7 +96,7 @@
                 <span class="govuk-error-message" th:each="err : ${#fields.errors('otherFunding')}"
                       th:text="${err}"></span>
                 <th:block th:unless="${ktpFundingType}">
-                    <span class="govuk-hint" th:if="${ofgemCompetition}">Have you received any aligned funding for this project from a third party?</span>
+                    <span class="govuk-hint" th:if="${ofgemCompetition}">Have you received any aligned or third party funding for this project?</span>
                     <span class="govuk-hint" th:unless="${ofgemCompetition}">Have you received any other public sector funding for this project?
                         This is important as other public sector support counts as part of the funding you can receive.
                     </span>

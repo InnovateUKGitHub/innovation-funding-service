@@ -101,11 +101,8 @@
                     <th:block th:unless="${summaryModel.usingJesFinances}">
                         <th:block th:unless="${summaryModel.loanCompetition}">
                             <th class="govuk-table__header govuk-table__header--numeric" scope="col">
-                                <th:block th:if="${summaryModel.ktp}">Other funding (£)</th:block>
-                                <th:block th:unless="${summaryModel.ktp}">
-                                    <th:block th:if="${summaryModel.ofgemCompetition}">Aligned funding (£)</th:block>
-                                    <th:block th:unless="${summaryModel.ofgemCompetition}">Other public sector funding (£)</th:block>
-                                </th:block>
+                                <th:block th:if="${summaryModel.ktp or summaryModel.ofgemCompetition}">Other funding (£)</th:block>
+                                <th:block th:unless="${summaryModel.ktp or summaryModel.ofgemCompetition}">Other public sector funding (£)</th:block>
                             </th>
                             <th th:if="${summaryModel.ktp}"
                                 class="govuk-table__header govuk-table__header--numeric width-100">Company contribution (%)

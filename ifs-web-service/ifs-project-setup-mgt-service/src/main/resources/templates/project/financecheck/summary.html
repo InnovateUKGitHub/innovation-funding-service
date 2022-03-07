@@ -61,7 +61,7 @@
                         </dd>
 
                         <dt th:unless="${model.financeCheckSummaryResource.loan OR model.financeCheckSummaryResource.procurement}">
-                            <th:block th:if="${model.ofgemCompetition}">Aligned funding:</th:block>
+                            <th:block th:if="${model.ofgemCompetition}">Other funding:</th:block>
                             <th:block th:unless="${model.ofgemCompetition}">Other public sector funding:</th:block>
                         </dt>
                         <dt th:if="${model.financeCheckSummaryResource.loan}">Other funding:</dt>

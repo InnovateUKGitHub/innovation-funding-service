@@ -58,11 +58,8 @@
                     th:classappend="${table.fundingSoughtFirst} ? 'width-80' : 'width-100'"
                     th:text="${table.fundingSoughtFirst} ? 'Funding level (%)' : 'Funding sought (£)'">Funding sought (&pound;)</th>
                 <th scope="col" class="govuk-table__header govuk-table__header--numeric width-150">
-                    <th:block th:if="${table.ktp}">Other funding (&pound;)</th:block>
-                    <th:block th:unless="${table.ktp}">
-                        <th:block th:if="${table.ofgemCompetition}">Aligned funding (&pound;)</th:block>
-                        <th:block th:unless="${table.ofgemCompetition}">Other public sector funding (&pound;)</th:block>
-                    </th:block>
+                    <th:block th:if="${table.ktp or table.ofgemCompetition}">Other funding (&pound;)</th:block>
+                    <th:block th:unless="${table.ktp or table.ofgemCompetition}">Other public sector funding (&pound;)</th:block>
                 </th>
                 <th th:if="${table.ktp}" scope="col" class="govuk-table__header govuk-table__header--numeric width-100">Company contribution (%)</th>
                 <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100"
