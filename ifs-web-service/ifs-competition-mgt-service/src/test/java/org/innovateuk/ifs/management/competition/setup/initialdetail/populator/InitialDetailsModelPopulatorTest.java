@@ -12,12 +12,15 @@ import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSet
 import org.innovateuk.ifs.management.competition.setup.initialdetail.viewmodel.InitialDetailsViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 
@@ -53,6 +56,11 @@ public class InitialDetailsModelPopulatorTest {
 
     @Mock
     private CompetitionSetupService competitionSetupService;
+
+    @Before
+    public void setup() {
+        ReflectionTestUtils.setField(populator, "thirdPartyOfgemEnabled", false);
+    }
 
     @Test
     public void sectionToPopulateModel() {
