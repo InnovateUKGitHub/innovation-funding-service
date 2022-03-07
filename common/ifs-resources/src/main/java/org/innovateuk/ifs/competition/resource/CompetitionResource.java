@@ -193,11 +193,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return LOAN.equals(fundingType);
     }
 
-//    @JsonIgnore
-//    public boolean isOfgem() {
-//        return competitionTypeEnum == CompetitionTypeEnum.OFGEM;
-//    }
-
     @JsonIgnore
     public boolean onlyOneOrgAllowedPerApplication() {
         return isH2020() || isProcurement();
@@ -871,8 +866,13 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     @JsonIgnore
+    public boolean isNewThirdPartyOfgemCompetition() {
+        return competitionTypeEnum == CompetitionTypeEnum.OFGEM;
+    }
+
+    @JsonIgnore
     public boolean isOfGemCompetition() {
-        return (competitionTypeEnum == CompetitionTypeEnum.OFGEM)
+        return isNewThirdPartyOfgemCompetition()
             || (isProcurement()
                 && isOfGemFunder()
                 && isProcurementThirdPartyTermsAndConditions());

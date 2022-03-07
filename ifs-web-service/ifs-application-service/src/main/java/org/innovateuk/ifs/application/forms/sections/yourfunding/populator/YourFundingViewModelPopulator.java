@@ -137,7 +137,7 @@ public class YourFundingViewModelPopulator {
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         return new ManagementYourFundingViewModel(applicationId, application.getCompetitionName(), sectionId, organisationId, application.getCompetition(), application.getName(),
-                format("/application/%d/form/FINANCE/%d", applicationId, organisationId), competition.getFundingType(), organisation.getOrganisationTypeEnum(), competition.isOfGemCompetition());
+                format("/application/%d/form/FINANCE/%d", applicationId, organisationId), competition.getFundingType(), organisation.getOrganisationTypeEnum(), competition.isNewThirdPartyOfgemCompetition());
     }
 
     private Long getSubsidyBasisQuestionId(ApplicantSectionResource section) {
