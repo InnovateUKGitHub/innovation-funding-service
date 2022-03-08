@@ -99,12 +99,12 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
     private ApplicationDataBuilder markQuestionComplete(boolean markAsComplete, QuestionSetupType type) {
         return asLeadApplicant(data -> {
-            if (markAsComplete) {
+            if (markAsComplete && EQUALITY_DIVERSITY_INCLUSION != type) {
                 QuestionResource questionResource = simpleFindFirst(questionService.findByCompetition(data
-                                .getCompetition()
-                                .getId())
-                                .getSuccess(),
-                        x -> type.equals(x.getQuestionSetupType())).get();
+                                            .getCompetition()
+                                            .getId())
+                                    .getSuccess(),
+                            x -> type.equals(x.getQuestionSetupType())).get();
 
                 questionStatusService.markAsCompleteNoValidate(new QuestionApplicationCompositeId(questionResource.getId(), data
                                 .getApplication()
