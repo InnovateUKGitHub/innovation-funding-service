@@ -9,11 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.function.Function;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.*;
-import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.GuidanceRowBuilder.aGuidanceRow;
 
 @Component
 public class GenericTemplate implements CompetitionTemplate {
@@ -56,25 +54,6 @@ public class GenericTemplate implements CompetitionTemplate {
                 applicationQuestions()
                         .withQuestions(newArrayList(
                                 genericQuestion()
-                                        .withFormInputs(
-
-
-                                                defaultAssessedQuestionFormInputs(Function.identity(),
-                                                        assessorInputBuilder ->
-                                                                assessorInputBuilder.withGuidanceRows(newArrayList(
-                                                                        aGuidanceRow()
-                                                                                .withSubject("9,10"),
-                                                                        aGuidanceRow()
-                                                                                .withSubject("7,8"),
-                                                                        aGuidanceRow()
-                                                                                .withSubject("5,6"),
-                                                                        aGuidanceRow()
-                                                                                .withSubject("3,4"),
-                                                                        aGuidanceRow()
-                                                                                .withSubject("1,2")
-                                                                ))
-                                                )
-                                        )
                         )),
                 finances(),
                 termsAndConditions()
