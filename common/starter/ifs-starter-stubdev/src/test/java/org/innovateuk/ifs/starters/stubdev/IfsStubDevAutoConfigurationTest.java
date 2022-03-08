@@ -51,7 +51,8 @@ public class IfsStubDevAutoConfigurationTest {
                 .withSystemProperties(
                         STUB_DEV_PROPS_PREFIX + ".validateHtml=true",
                         STUB_DEV_PROPS_PREFIX + ".enableClientMethodTiming=true",
-                        STUB_DEV_PROPS_PREFIX + ".logThymeLeafTemplates=true"
+                        STUB_DEV_PROPS_PREFIX + ".logThymeLeafTemplates=true",
+                        STUB_DEV_PROPS_PREFIX + ".defaultUuid=123-456-789"
                 )
                 .withConfiguration(
                         AutoConfigurations.of(LocalDevToolsAutoConfiguration.class, IfsStubDevAutoConfiguration.class)
@@ -76,7 +77,10 @@ public class IfsStubDevAutoConfigurationTest {
     @Test
     public void testConfigWithDevtoolsAndProfile() {
         new ApplicationContextRunner()
-                .withSystemProperties(PROFILE_PROP)
+                .withSystemProperties(
+                    PROFILE_PROP,
+                    STUB_DEV_PROPS_PREFIX + ".defaultUuid=123-456-789"
+                )
                 .withConfiguration(
                         AutoConfigurations.of(LocalDevToolsAutoConfiguration.class, IfsStubDevAutoConfiguration.class)
                 ).run((context) -> {
