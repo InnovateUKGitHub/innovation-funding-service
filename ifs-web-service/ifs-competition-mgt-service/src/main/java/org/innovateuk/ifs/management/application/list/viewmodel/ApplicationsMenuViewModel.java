@@ -25,7 +25,7 @@ public class ApplicationsMenuViewModel {
                                      boolean innovationLeadView) {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
-        this.displayAssessorStats = !CompetitionCompletionStage.COMPETITION_CLOSE.equals(competitionResource.getCompletionStage());
+        this.displayAssessorStats = !CompetitionCompletionStage.COMPETITION_CLOSE.equals(competitionResource.getCompletionStage()) && competitionResource.isHasAssessmentStage();
         this.assessorsInvited = assessorsInvited;
         this.applicationsInProgress = applicationsInProgress;
         this.applicationsSubmitted = applicationsSubmitted;

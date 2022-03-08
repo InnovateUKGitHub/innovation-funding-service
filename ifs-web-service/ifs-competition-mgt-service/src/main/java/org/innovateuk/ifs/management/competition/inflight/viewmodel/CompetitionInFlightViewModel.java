@@ -156,7 +156,7 @@ public class CompetitionInFlightViewModel {
     }
 
     public boolean isFundingDecisionEnabled() {
-        return fundingDecisionAllowedBeforeAssessment
+        return fundingDecisionAllowedBeforeAssessment && !asList(READY_TO_OPEN).contains(competitionStatus)
                 || !asList(READY_TO_OPEN, OPEN, CLOSED, IN_ASSESSMENT).contains(competitionStatus)
                 || (alwaysOpen && hasAClosedAssessmentPeriod());
     }
@@ -195,10 +195,6 @@ public class CompetitionInFlightViewModel {
 
     public boolean isHasAssessmentStage() {
         return isHasAssessmentStage;
-    }
-
-    public boolean competitionIsOpen() {
-        return competitionStatus == OPEN;
     }
 
     public boolean isManageAssessmentLinkEnabled() {

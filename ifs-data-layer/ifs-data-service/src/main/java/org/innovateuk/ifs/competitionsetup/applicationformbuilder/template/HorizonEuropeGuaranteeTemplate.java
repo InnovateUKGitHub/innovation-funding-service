@@ -76,8 +76,8 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
 
     public static QuestionBuilder grantAgreement() {
         return aQuestion()
-                .withShortName("Horizon 2020 grant agreement")
-                .withName("Horizon 2020 grant agreement")
+                .withShortName("Horizon Europe Guarantee grant agreement")
+                .withName("Horizon Europe Guarantee grant agreement")
                 .withAssignEnabled(false)
                 .withMultipleStatuses(false)
                 .withMarkAsCompletedEnabled(true)
