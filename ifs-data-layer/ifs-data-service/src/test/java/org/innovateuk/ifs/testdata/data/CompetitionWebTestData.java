@@ -468,15 +468,15 @@ public class CompetitionWebTestData {
                         .withName("FEC KTP project competition"),
                 ktpCompetition()
                         .withName("FEC KTP competition duplicate"),
-                loanCompetition()
-                        .withName("Loans SF Part-B Competition")
-                        .withInnovationSector("Infrastructure systems")
-                        .withAssessorCount(5),
                 thirdPartyOfgemCompetition()
                         .withName("Third Party Ofgem Competition")
                         .withCompetitionType(OFGEM)
                         .withAlwaysOpen(false)
                         .withResubmission(false),
+                loanCompetition()
+                        .withName("Loans SF Part-B Competition")
+                        .withInnovationSector("Infrastructure systems")
+                        .withAssessorCount(5),
                 grantCompetition()
                         .withName("Horizon Europe Guarantee competition")
                         .withCompetitionType(HORIZON_EUROPE_GUARANTEE)
@@ -603,7 +603,7 @@ public class CompetitionWebTestData {
         return anIfsCompetition()
                 .withFundingType(FundingType.THIRDPARTY)
                 .withCompetitionType(OFGEM)
-                .withCompetitionCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK)
+                .withCompetitionCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .withTermsAndConditionsLabel("Strategic Innovation Fund Governance Document")
                 .withTermsAndConditionsGuidance("<h2 class=\"govuk-heading-m\">Summary of Strategic Innovation Fund governance document.</h2>\n" +
                         "            <p class=\"govuk-body\">\n" +
