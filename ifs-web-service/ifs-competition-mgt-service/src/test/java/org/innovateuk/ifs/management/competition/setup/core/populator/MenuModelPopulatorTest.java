@@ -98,6 +98,7 @@ public class MenuModelPopulatorTest {
 	}
 
 	private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionResource competition) {
-	    return new GeneralSetupViewModel(Boolean.FALSE, false, competition, CompetitionSetupSection.HOME, CompetitionSetupSection.values(), Boolean.TRUE, Boolean.FALSE);
+	    return new GeneralSetupViewModel(Boolean.FALSE, false, competition, CompetitionSetupSection.HOME, CompetitionSetupSection.values(), Boolean.TRUE, Boolean.FALSE, true);
+);
     }
 }
