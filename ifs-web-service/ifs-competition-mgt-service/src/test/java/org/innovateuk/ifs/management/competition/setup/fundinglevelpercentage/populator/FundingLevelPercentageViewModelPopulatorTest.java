@@ -67,7 +67,7 @@ public class FundingLevelPercentageViewModelPopulatorTest {
         // given
         ReflectionTestUtils.setField(populator, "northernIrelandSubsidyControlToggle", true);
 
-        GeneralSetupViewModel generalSetupViewModel = new GeneralSetupViewModel(false, false, null, null, null, false, false);
+        GeneralSetupViewModel generalSetupViewModel = new GeneralSetupViewModel(false, false, null, null, null, false, false, true);
         CompetitionResource competition = newCompetitionResource()
                 .withFundingRules(FundingRules.SUBSIDY_CONTROL)
                 .withResearchCategories(Collections.emptySet())
@@ -95,7 +95,7 @@ public class FundingLevelPercentageViewModelPopulatorTest {
         // given
         ReflectionTestUtils.setField(populator, "northernIrelandSubsidyControlToggle", true);
 
-        GeneralSetupViewModel generalSetupViewModel = new GeneralSetupViewModel(false, false, null, null, null, false, false);
+        GeneralSetupViewModel generalSetupViewModel = new GeneralSetupViewModel(false, false, null, null, null, false, false, true);
         CompetitionResource competition = newCompetitionResource()
                 .withFundingRules(FundingRules.SUBSIDY_CONTROL)
                 .withResearchCategories(Collections.emptySet())
@@ -122,7 +122,7 @@ public class FundingLevelPercentageViewModelPopulatorTest {
         // given
         ReflectionTestUtils.setField(populator, "northernIrelandSubsidyControlToggle", true);
 
-        GeneralSetupViewModel generalSetupViewModel = new GeneralSetupViewModel(false, false, null, null, null, false, false);
+        GeneralSetupViewModel generalSetupViewModel = new GeneralSetupViewModel(false, false, null, null, null, false, false, true);
         CompetitionResource competition = newCompetitionResource()
                 .withFundingRules(FundingRules.SUBSIDY_CONTROL)
                 .withResearchCategories(Collections.emptySet())
