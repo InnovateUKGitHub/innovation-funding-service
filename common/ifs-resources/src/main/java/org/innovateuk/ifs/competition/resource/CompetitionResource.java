@@ -194,7 +194,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     @JsonIgnore
-    public boolean isOfgem() {
+    public boolean isThirdPartyOfgem() {
         return competitionTypeEnum == CompetitionTypeEnum.OFGEM;
     }
 
