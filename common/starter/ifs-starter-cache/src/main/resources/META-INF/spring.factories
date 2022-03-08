@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=org.innovateuk.ifs.starters.cache.cfg.IfsCacheAutoConfiguration
+org.springframework.boot.autoconfigure.AutoConfigurationImportFilter=org.innovateuk.ifs.starters.cache.cfg.RedisAutoConfigurationExclusionFilter

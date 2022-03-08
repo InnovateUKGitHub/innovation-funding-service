@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.starter.cache.cfg;
 
 import org.innovateuk.ifs.IfsProfileConstants;
+import org.innovateuk.ifs.starters.cache.cfg.IfsCacheAutoConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.AutoConfigurations;

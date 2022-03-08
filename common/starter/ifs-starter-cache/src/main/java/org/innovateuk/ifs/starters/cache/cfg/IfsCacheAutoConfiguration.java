@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.starter.cache.cfg;
+package org.innovateuk.ifs.starters.cache.cfg;
 
 import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.IfsProfileConstants;
@@ -42,9 +42,7 @@ public class IfsCacheAutoConfiguration {
 //    }
 
     @Bean
-    @Profile({IfsProfileConstants.NOT_STUBDEV + "&" + IfsProfileConstants.NOT_DEV})
     public CacheErrorHandler errorHandler() {
-        log.info("Configuring Redis Cache");
         return new SimpleCacheErrorHandler() {
             @Override
             public void handleCacheGetError(RuntimeException exception, Cache cache, Object key) {

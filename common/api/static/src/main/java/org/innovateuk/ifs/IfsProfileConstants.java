@@ -16,7 +16,7 @@ public class IfsProfileConstants {
     /**
      * Used for local k8s builds via skaffold
      */
-    public static final String DEV = "DEV";
+    public static final String DEV = "dev";
     public static final String NOT_DEV = "!" + DEV;
 
     /**
