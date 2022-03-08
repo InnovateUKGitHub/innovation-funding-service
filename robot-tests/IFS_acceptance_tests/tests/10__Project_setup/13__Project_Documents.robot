@@ -197,9 +197,9 @@ Non-lead partner cannot view either document once removed
 Assign a MO to the project and they check the documents are incomplete
     [Documentation]  IFS-9577  IFS-9701
     [Tags]
-    Given the user logs-in in new browser     &{monitoring_officer_one_credentials}
-    When the user navigates to the page       ${server}/project-setup/project/${Grade_Crossing_Project_Id}
-    Then the user should see the element      jQuery = ul li:contains("Documents") span:contains("Incomplete")
+    Given log in as a different user        &{monitoring_officer_one_credentials}
+    When the MO navigates to page
+    Then the user should see the element    jQuery = ul li:contains("Documents") span:contains("Incomplete")
 
 PM can upload both documents after they have been removed
     [Documentation]    INFUND-3011
@@ -226,7 +226,7 @@ Mandatory document submission
 MO can see the Documents are awaiting review
     [Documentation]    IFS-9701
     [Tags]
-    Given the user logs-in in new browser     &{monitoring_officer_one_credentials}
+    Given log in as a different user     &{monitoring_officer_one_credentials}
     When the user navigates to the page       ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     Then the user should see the element      jQuery = ul li:contains("Documents") span:contains("Awaiting review")
 
@@ -297,16 +297,6 @@ Non-lead partner can view documents, but not remove after submission by PM
     And the user navigates to the page          ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user clicks the button/link         link = View the status of partners
     And the user should see the element         css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
-
-#Non-lead partner can still view both documents after submitting
-#    [Documentation]    INFUND-3012 , INFUND-4428, INFUND-6139
-#    [Tags]
-#    Given open pdf link                         jQuery = a:contains("${valid_pdf} (opens in a new window)")
-#    When the user goes to documents page        Return to documents  Collaboration agreement
-#    Then open pdf link                          jQuery = a:contains("${valid_pdf} (opens in a new window)")
-#    And the user navigates to the page          ${server}/project-setup/project/${Grade_Crossing_Project_Id}
-#    And the user clicks the button/link         link = View the status of partners
-#    And the user should see the element         css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
 
 CompAdmin can see uploaded files
     [Documentation]    INFUND-4621, IFS-1881
@@ -666,3 +656,16 @@ the user sees Innovate Uk approved document banner
     the user clicks the button/link    jQuery = a:contains("Return to documents")
     the user clicks the button/link    link = Exploitation plan
     the user should see the element    jQuery = p:contains("Innovate UK approved this document on ${today}.")
+
+the MO navigates to page
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+    Run Keyword if  '${status}' == 'FAIL'   Assign a MO to the project and login as MO
+    the user navigates to the page          ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+
+Assign a MO to the project and login as MO
+    log in as a different user               &{Comp_admin1_credentials}
+    the user navigates to the page           ${server}/project-setup-management/monitoring-officer/view-all?ktp=false
+    search for MO                            Orvill  Orville Gibbs
+    the user should see the element          jQuery = span:contains("Assign projects to Monitoring Officer")
+    the internal user assign project to MO   ${Grade_Crossing_Applicaiton_No}   ${Grade_Crossing_Application_Title}
+    log in as a different user               &{monitoring_officer_one_credentials}
