@@ -35,6 +35,8 @@ dependencies {
     implementation project(":common:ifs-security")
     implementation project(":common:ifs-rest-util")
 
+    implementation project(":common:starter:ifs-starter-cache")
+
     if (isStubDevMode()) {
         developmentOnly "org.springframework.boot:spring-boot-devtools"
         developmentOnly project(":common:starter:ifs-starter-stubdev")

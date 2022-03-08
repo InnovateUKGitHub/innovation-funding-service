@@ -1,18 +1,25 @@
 package org.innovateuk.ifs.starter.cache;
 
 
-//import io.lettuce.core.ClientOptions;
-//import io.lettuce.core.ClientOptions.DisconnectedBehavior;
-//import io.lettuce.core.cluster.ClusterClientOptions;
-//import org.springframework.boot.autoconfigure.data.redis.LettuceClientConfigurationBuilderCustomizer;
-//import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
-//import org.springframework.cache.Cache;
-//import org.springframework.cache.annotation.CachingConfigurerSupport;
-//import org.springframework.cache.interceptor.CacheErrorHandler;
-//import org.springframework.cache.interceptor.SimpleCacheErrorHandler;
-//import org.springframework.context.annotation.Bean;
+import io.lettuce.core.ClientOptions;
+import io.lettuce.core.ClientOptions.DisconnectedBehavior;
+import io.lettuce.core.cluster.ClusterClientOptions;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.redis.LettuceClientConfigurationBuilderCustomizer;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
+import org.springframework.cache.Cache;
+import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.interceptor.CacheErrorHandler;
+import org.springframework.cache.interceptor.SimpleCacheErrorHandler;
+import org.springframework.context.annotation.Bean;
 
+import javax.annotation.PostConstruct;
+
+@Slf4j
 public class RedisConfiguration {//extends CachingConfigurerSupport {
+//
+//    @Autowired
 //    private RedisProperties redisProperties;
 
     /*
@@ -22,13 +29,13 @@ public class RedisConfiguration {//extends CachingConfigurerSupport {
 
         Here we are setting the cluster configuration to be null if the nodes property is empty.
      */
-//    public RedisConfiguration(RedisProperties properties) {
-//        if (properties.getCluster() != null && properties.getCluster().getNodes().isEmpty()) {
-//            properties.setCluster(null);
+//    @PostConstruct
+//    public void redisConfiguration() {
+//        if (redisProperties.getCluster() != null && redisProperties.getCluster().getNodes().isEmpty()) {
+//            redisProperties.setCluster(null);
 //        }
-//        this.redisProperties = properties;
 //    }
-//
+
 //    @Bean
 //    public LettuceClientConfigurationBuilderCustomizer lettuceClientConfigurationBuilderCustomizer() {
 //        final ClientOptions.Builder options;
@@ -41,25 +48,5 @@ public class RedisConfiguration {//extends CachingConfigurerSupport {
 //        return builder -> builder.clientOptions(options
 //                .disconnectedBehavior(DisconnectedBehavior.REJECT_COMMANDS).build());
 //    }
-//
-//    @Override
-//    public CacheErrorHandler errorHandler() {
-//        return new SimpleCacheErrorHandler() {
-//            @Override
-//            public void handleCacheGetError(RuntimeException exception, Cache cache, Object key) {
-//                log.debug("Failed to get cache item with key " + key.toString(), exception);
-//            }
-//
-//            @Override
-//            public void handleCachePutError(RuntimeException exception, Cache cache, Object key, Object value) {
-//                log.error("Failed to put cache item with key " + key.toString(), exception);
-//            }
-//
-//            @Override
-//            public void handleCacheEvictError(RuntimeException exception, Cache cache, Object key) {
-//                log.error("Failed to evict cache item with key " + key.toString(), exception);
-//
-//            }
-//        };
-//    }
+
 }

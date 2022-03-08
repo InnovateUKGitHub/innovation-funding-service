@@ -14,6 +14,12 @@ public class IfsProfileConstants {
     public static final String NOT_STUBDEV = "!" + STUBDEV;
 
     /**
+     * Used for local k8s builds via skaffold
+     */
+    public static final String DEV = "DEV";
+    public static final String NOT_DEV = "!" + DEV;
+
+    /**
      * Use in test scope to denote integration tests
      */
     public static final String INTEGRATION_TEST = "integration-test";
