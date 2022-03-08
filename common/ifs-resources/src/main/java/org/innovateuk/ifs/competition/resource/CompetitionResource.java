@@ -876,7 +876,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     @JsonIgnore
     public boolean isOfGemCompetition() {
-        return thirdPartyOfgemEnabled ? isNewThirdPartyOfgemCompetition() :
+        return isNewThirdPartyOfgemCompetition() ||
                 (isProcurement()
                 && isOfGemFunder()
                 && isProcurementThirdPartyTermsAndConditions());
