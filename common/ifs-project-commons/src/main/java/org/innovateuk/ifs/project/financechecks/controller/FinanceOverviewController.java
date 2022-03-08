@@ -25,6 +25,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,6 +64,8 @@ public class FinanceOverviewController {
     @Autowired
     private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
 
+    @Value("${ifs.thirdparty.ofgem.enabled}")
+    private boolean thirdPartyOfgemEnabled;
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping
@@ -106,7 +109,8 @@ public class FinanceOverviewController {
                 applicationFundingBreakdownViewModel,
                 getExternalUser(loggedInUser),
                 getExternalUserLinkUrl(loggedInUser, projectId),
-                competition.isOfGemCompetition());
+                competition.isOfGemCompetition(),
+                thirdPartyOfgemEnabled);
     }
 
     private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(long projectId) {

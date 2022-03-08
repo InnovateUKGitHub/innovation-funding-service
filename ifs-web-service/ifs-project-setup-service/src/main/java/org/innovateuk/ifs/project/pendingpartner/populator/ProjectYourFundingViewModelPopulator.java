@@ -16,6 +16,7 @@ import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -51,6 +52,9 @@ public class ProjectYourFundingViewModelPopulator {
     @Autowired
     private QuestionRestService questionRestService;
 
+    @Value("${ifs.thirdparty.ofgem.enabled}")
+    private boolean thirdPartyOfgemEnabled;
+
     public ProjectYourFundingViewModel populate(long projectId, long organisationId) {
         PendingPartnerProgressResource progress = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
         ProjectFinanceResource projectFinance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
@@ -78,7 +82,8 @@ public class ProjectYourFundingViewModelPopulator {
                 subsidyBasisRequired && !progress.isSubsidyBasisComplete(),
                 organisationRequiredAndNotCompleted,
                 subsidyQuestionId,
-                competition.isOfGemCompetition());
+                competition.isOfGemCompetition(),
+                thirdPartyOfgemEnabled);
     }
 
 

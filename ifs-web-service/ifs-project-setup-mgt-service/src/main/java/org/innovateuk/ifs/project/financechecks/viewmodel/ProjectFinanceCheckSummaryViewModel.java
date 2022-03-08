@@ -18,6 +18,7 @@ public class ProjectFinanceCheckSummaryViewModel {
     private final boolean subsidyControlCompetition;
     private final boolean isReadOnly;
     private final boolean ofgemCompetition;
+    private final boolean thirdPartyOfgemEnabled;
 
     public ProjectFinanceCheckSummaryViewModel(FinanceCheckSummaryResource financeCheckSummaryResource,
                                                boolean projectIsActive,
@@ -27,7 +28,8 @@ public class ProjectFinanceCheckSummaryViewModel {
                                                boolean hasSpendProfileStage,
                                                boolean subsidyControlCompetition,
                                                boolean isReadOnly,
-                                               boolean ofgemCompetition) {
+                                               boolean ofgemCompetition,
+                                               boolean thirdPartyOfgemEnabled) {
         this.financeCheckSummaryResource = financeCheckSummaryResource;
         this.projectIsActive = projectIsActive;
         this.collaborativeProject = collaborativeProject;
@@ -37,6 +39,7 @@ public class ProjectFinanceCheckSummaryViewModel {
         this.subsidyControlCompetition = subsidyControlCompetition;
         this.isReadOnly = isReadOnly;
         this.ofgemCompetition = ofgemCompetition;
+        this.thirdPartyOfgemEnabled = thirdPartyOfgemEnabled;
     }
 
     private boolean isGenerateSpendProfileReady() {
@@ -112,4 +115,8 @@ public class ProjectFinanceCheckSummaryViewModel {
     }
 
     public boolean isOfgemCompetition() { return ofgemCompetition; }
+
+    public boolean isThirdPartyOfgemEnabled() {
+        return thirdPartyOfgemEnabled;
+    }
 }

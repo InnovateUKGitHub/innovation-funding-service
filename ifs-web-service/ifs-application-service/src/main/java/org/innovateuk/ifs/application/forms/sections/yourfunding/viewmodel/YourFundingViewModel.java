@@ -51,6 +51,8 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
 
     private final boolean ofgemCompetition;
 
+    private final boolean thirdPartyOfgemEnabled;
+
     public YourFundingViewModel(long applicationId,
                                 String competitionName,
                                 long sectionId,
@@ -73,7 +75,8 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
                                 boolean overridingFundingRules,
                                 FundingType fundingType,
                                 OrganisationTypeEnum organisationType,
-                                boolean ofgemCompetition) {
+                                boolean ofgemCompetition,
+                                boolean thirdPartyOfgemEnabled) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.sectionId = sectionId;
@@ -97,6 +100,7 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
         this.fundingType = fundingType;
         this.organisationType = organisationType;
         this.ofgemCompetition = ofgemCompetition;
+        this.thirdPartyOfgemEnabled = thirdPartyOfgemEnabled;
     }
 
     @Override
@@ -194,6 +198,10 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
     }
 
     public boolean isOfgemCompetition() { return ofgemCompetition; }
+
+    public boolean isThirdPartyOfgemEnabled() {
+        return thirdPartyOfgemEnabled;
+    }
 
     /* view logic */
     public boolean isReadOnly() {

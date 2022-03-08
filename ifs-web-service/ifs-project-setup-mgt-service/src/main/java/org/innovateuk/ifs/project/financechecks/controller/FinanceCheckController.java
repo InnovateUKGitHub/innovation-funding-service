@@ -22,6 +22,7 @@ import org.innovateuk.ifs.spendprofile.SpendProfileService;
 import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,6 +63,9 @@ public class FinanceCheckController {
 
     @Autowired
     private CompetitionRestService competitionRestService;
+
+    @Value("${ifs.thirdparty.ofgem.enabled}")
+    private boolean thirdPartyOfgemEnabled;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
@@ -124,7 +128,8 @@ public class FinanceCheckController {
                 hasSpendProfileStage,
                 competitionResource.isSubsidyControl(),
                 userResource.hasAuthority(Authority.AUDITOR),
-                competitionResource.isOfGemCompetition()));
+                competitionResource.isOfGemCompetition(),
+                thirdPartyOfgemEnabled));
         return "project/financecheck/summary";
     }
 

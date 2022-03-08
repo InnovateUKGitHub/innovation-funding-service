@@ -15,14 +15,16 @@ public class AssessmentDetailedFinancesViewModel {
     private final String applicationName;
     private final boolean academic;
     private final boolean ofgemCompetition;
+    private final boolean thirdPartyOfgemEnabled;
 
-    public AssessmentDetailedFinancesViewModel(Long assessmentId, long applicationId, ApplicationResource application, String applicationName, boolean academic, boolean ofgemCompetition) {
+    public AssessmentDetailedFinancesViewModel(Long assessmentId, long applicationId, ApplicationResource application, String applicationName, boolean academic, boolean ofgemCompetition, boolean thirdPartyOfgemEnabled) {
         this.assessmentId = assessmentId;
         this.applicationId = applicationId;
         this.application = application;
         this.applicationName = applicationName;
         this.academic = academic;
         this.ofgemCompetition = ofgemCompetition;
+        this.thirdPartyOfgemEnabled = thirdPartyOfgemEnabled;
     }
 
     public Long getAssessmentId() {
@@ -47,6 +49,10 @@ public class AssessmentDetailedFinancesViewModel {
 
     public boolean isOfgemCompetition() { return ofgemCompetition; }
 
+    public boolean isThirdPartyOfgemEnabled() {
+        return thirdPartyOfgemEnabled;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -61,6 +67,7 @@ public class AssessmentDetailedFinancesViewModel {
                 .append(applicationName, that.applicationName)
                 .append(academic, that.academic)
                 .append(ofgemCompetition, that.ofgemCompetition)
+                .append(thirdPartyOfgemEnabled, that.thirdPartyOfgemEnabled)
                 .isEquals();
     }
 
@@ -72,6 +79,7 @@ public class AssessmentDetailedFinancesViewModel {
                 .append(applicationName)
                 .append(academic)
                 .append(ofgemCompetition)
+                .append(thirdPartyOfgemEnabled)
                 .toHashCode();
     }
 }

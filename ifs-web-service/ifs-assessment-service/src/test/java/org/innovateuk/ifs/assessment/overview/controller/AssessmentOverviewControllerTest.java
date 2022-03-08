@@ -652,7 +652,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                 .build();
 
         AssessmentDetailedFinancesViewModel expectedViewModel = new AssessmentDetailedFinancesViewModel(
-                assessmentResource.getId(), applicationResource.getId(), applicationResource, "Application name", false, false);
+                assessmentResource.getId(), applicationResource.getId(), applicationResource, "Application name", false, false, false);
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(assessmentRestService.getByUserAndApplication(getLoggedInUser().getId(), applicationResource.getId())).thenReturn(restSuccess(singletonList(assessmentResource)));

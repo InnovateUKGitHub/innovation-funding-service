@@ -14,7 +14,8 @@ public class ManagementYourFundingViewModel extends YourFundingViewModel {
                                           String url,
                                           FundingType fundingType,
                                           OrganisationTypeEnum organisationType,
-                                          boolean ofgemCompetition) {
+                                          boolean ofgemCompetition,
+                                          boolean ManagementYourFundingViewModel) {
         super(
                 applicationId,
                 competitionName,
@@ -38,7 +39,8 @@ public class ManagementYourFundingViewModel extends YourFundingViewModel {
                 false,
                 fundingType,
                 organisationType,
-                ofgemCompetition
+                ofgemCompetition,
+                ManagementYourFundingViewModel
         );
     }
 }

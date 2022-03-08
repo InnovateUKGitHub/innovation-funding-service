@@ -16,6 +16,7 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -49,6 +50,9 @@ public class YourProjectFinancesModelPopulator {
     @Autowired
     private FinanceSummaryTableViewModelPopulator financeSummaryTableViewModelPopulator;
 
+    @Value("${ifs.thirdparty.ofgem.enabled}")
+    private boolean thirdPartyOfgemEnabled;
+
     public YourProjectFinancesViewModel populate(long applicationId, long sectionId, long organisationId) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
@@ -64,7 +68,7 @@ public class YourProjectFinancesModelPopulator {
                 ).collect(toList());
         return new YourProjectFinancesViewModel(applicationId, application.getName(), competition,
                 financeSummaryTableViewModelPopulator.populateSingleOrganisation(application, competition, organisation),
-                rows);
+                rows, thirdPartyOfgemEnabled);
     }
 
     private String sectionName(CompetitionResource competition, ApplicationResource application, OrganisationResource organisation, SectionResource subSection) {

@@ -26,6 +26,7 @@ import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -73,6 +74,9 @@ public class FinanceChecksViabilityController {
 
     @Autowired
     private GrantOfferLetterService grantOfferLetterService;
+
+    @Value("${ifs.thirdparty.ofgem.enabled}")
+    private boolean thirdPartyOfgemEnabled;
 
     @GetMapping
     public String viewViability(@PathVariable("projectId") Long projectId,
@@ -247,7 +251,8 @@ public class FinanceChecksViabilityController {
                 organisationSizeDescription,
                 projectFinances,
                 resetableGolState,
-                user.hasAuthority(Authority.AUDITOR));
+                user.hasAuthority(Authority.AUDITOR),
+                thirdPartyOfgemEnabled);
     }
 
     private String name(String firstName, String lastName) {

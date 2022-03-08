@@ -51,6 +51,7 @@ public class FinanceChecksViabilityViewModel {
     private final boolean resetableGolState;
     private final boolean auditor;
     private final boolean ofgemCompetition;
+    private final boolean thirdPartyOfgemEnabled;
 
     public FinanceChecksViabilityViewModel(ProjectResource project,
                                            CompetitionResource competition,
@@ -75,7 +76,8 @@ public class FinanceChecksViabilityViewModel {
                                            String organisationSizeDescription,
                                            List<ProjectFinanceResource> projectFinances,
                                            boolean resetableGolState,
-                                           boolean auditor) {
+                                           boolean auditor,
+                                           boolean thirdPartyOfgemEnabled) {
 
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
@@ -108,6 +110,7 @@ public class FinanceChecksViabilityViewModel {
         this.ktpCompetition = competition.isKtp();
         this.resetableGolState = resetableGolState;
         this.auditor = auditor;
+        this.thirdPartyOfgemEnabled = thirdPartyOfgemEnabled;
     }
 
     public String getOrganisationName() {
@@ -256,6 +259,10 @@ public class FinanceChecksViabilityViewModel {
 
     public boolean isAuditor() {
         return auditor;
+    }
+
+    public boolean isThirdPartyOfgemEnabled() {
+        return thirdPartyOfgemEnabled;
     }
 
     private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {

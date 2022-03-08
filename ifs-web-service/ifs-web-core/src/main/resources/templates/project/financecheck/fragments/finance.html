@@ -86,8 +86,8 @@
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100">Funding sought (&pound;)</th>
                         <div th:unless="${model.loanCompetition}">
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric width-150">
-                            <th:block th:if="${model.ktpCompetition or model.ofgemCompetition}">Other funding (&pound;)</th:block>
-                            <th:block th:unless="${model.ktpCompetition or model.ofgemCompetition}">Other public sector funding (&pound;)</th:block>
+                            <th:block th:if="${model.ktpCompetition or (model.ofgemCompetition and model.thirdPartyOfgemEnabled)}">Other funding (&pound;)</th:block>
+                            <th:block th:unless="${model.ktpCompetition or (model.ofgemCompetition and model.thirdPartyOfgemEnabled)}">Other public sector funding (&pound;)</th:block>
                         </th>
                         </div>
                         <div th:if="${model.loanCompetition}">

@@ -54,8 +54,8 @@
                 </th:block>
                 <th:block th:unless="${model.loanCompetition || model.ktpCompetition}">
                     <th class="govuk-table__header govuk-table__header--numeric" scope="col">
-                        <th:block th:if="${model.ofgemCompetition}">Other funding (&pound;)</th:block>
-                        <th:block th:unless="${model.ofgemCompetition}">Other public sector funding (&pound;)</th:block>
+                        <th:block th:if="${model.ofgemCompetition and model.thirdPartyOfgemEnabled}">Other funding (&pound;)</th:block>
+                        <th:block th:unless="${model.ofgemCompetition and model.thirdPartyOfgemEnabled}">Other public sector funding (&pound;)</th:block>
                     </th>
                 </th:block>
                 <th:block th:if="${model.loanCompetition || model.ktpCompetition}">

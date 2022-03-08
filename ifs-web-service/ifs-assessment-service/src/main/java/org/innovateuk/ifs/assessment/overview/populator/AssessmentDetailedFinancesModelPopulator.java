@@ -31,6 +31,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
@@ -71,6 +72,9 @@ public class AssessmentDetailedFinancesModelPopulator {
     @Autowired
     private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
 
+    @Value("${ifs.thirdparty.ofgem.enabled}")
+    private boolean thirdPartyOfgemEnabled;
+
     public AssessmentDetailedFinancesViewModel populateModel(long applicationId, long organisationId, Model model, UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         List<AssessmentResource> assessments = assessmentRestService.getByUserAndApplication(user.getId(), applicationId).getSuccess();
@@ -93,7 +97,7 @@ public class AssessmentDetailedFinancesModelPopulator {
         addFinanceDetails(model, applicationId);
 
         return new AssessmentDetailedFinancesViewModel(assessmentId, applicationId, application,
-                application.getName(), academic, competition.isOfGemCompetition());
+                application.getName(), academic, competition.isOfGemCompetition(), thirdPartyOfgemEnabled);
     }
 
     private void addAcademicFinance(Model model, long applicationId, long sectionId, long organisationId, UserResource user) {
