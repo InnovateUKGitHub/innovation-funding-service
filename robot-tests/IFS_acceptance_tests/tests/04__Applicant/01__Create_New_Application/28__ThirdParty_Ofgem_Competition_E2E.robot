@@ -14,8 +14,8 @@ Resource          ../../../resources/common/Applicant_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${thirdPartyOfgemCompetitionName}    Thirdparty Ofgem Competition
-${thirdPartyOfgemApplicationName}    Thirdparty Ofgem Application
+${thirdPartyOfgemCompetitionName}    Thirdparty Competition - Ofgem
+${thirdPartyOfgemApplicationName}    Thirdparty Application - Ofgem
 
 *** Test Cases ***
 Comp admin can select the funding type as Thirdparty and Competition type as Ofgem
@@ -54,7 +54,6 @@ User applies to third party ofgem competition
     And the user clicks the button/link                                                 link = Application details
     When the user fills in the Application details                                      ${thirdPartyOfgemApplicationName}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team                                        COMPLETE  steve.smith@empire.com
-    And the applicant marks EDI question as complete
     Then the lead applicant fills all the questions and marks as complete(thirdparty)
 
 Applicant should not view overhead and capital usage costs in project costs

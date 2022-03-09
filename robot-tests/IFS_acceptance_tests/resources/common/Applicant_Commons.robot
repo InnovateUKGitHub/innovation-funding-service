@@ -61,14 +61,14 @@ the applicant completes the application details
     the user fills in the Application details          ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
 
 # below keyword to me removed once the webtest data is not showing edi question   -- to be handled in  ifs-11496
-the applicant completes the application details - webtest data
-    [Arguments]  ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
-    the user moves Application details in Edit mode
-    ${applicationId} =  get application id by name     ${applicationTitle}
-    the user navigates to the page                     ${server}/application/${applicationId}
-    the applicant marks EDI question as complete
-    the user clicks the button/link                    link = Application details
-    the user fills in the Application details          ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+#the applicant completes the application details - webtest data
+#    [Arguments]  ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+#    the user moves Application details in Edit mode
+#    ${applicationId} =  get application id by name     ${applicationTitle}
+#    the user navigates to the page                     ${server}/application/${applicationId}
+#    the applicant marks EDI question as complete
+#    the user clicks the button/link                    link = Application details
+#    the user fills in the Application details          ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
 
 the user moves Application details in Edit mode
      ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = button[name=edit]

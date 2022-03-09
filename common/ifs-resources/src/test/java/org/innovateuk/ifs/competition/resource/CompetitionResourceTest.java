@@ -127,4 +127,17 @@ public class CompetitionResourceTest {
 
         assertTrue(competition.isOfGemCompetition());
     }
+
+    @Test
+    public void isThirdPartyOfgem() {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.THIRDPARTY)
+                .build();
+
+        assertFalse(competition.isThirdPartyOfgem());
+
+        competition.setCompetitionTypeEnum(CompetitionTypeEnum.OFGEM);
+
+        assertTrue(competition.isThirdPartyOfgem());
+    }
 }
