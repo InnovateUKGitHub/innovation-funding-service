@@ -80,9 +80,6 @@ public class ApplicationTeamPopulator {
     @Autowired
     private UserRestService userRestService;
 
-    @Value("${ifs.thirdparty.ofgem.enabled}")
-    private boolean thirdPartyOfgemEnabled;
-
     public ApplicationTeamViewModel populate(long applicationId, long questionId, UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
@@ -132,7 +129,7 @@ public class ApplicationTeamPopulator {
                 application.isOpen() && competition.isOpen(),
                 questionStatuses.stream().anyMatch(QuestionStatusResource::getMarkedAsComplete),
                 competition.isKtp(), ktpPhase2Enabled,
-                ktaInvite, ktaProcessRole, isEDIUpdateEnabled, competition.isOfGemCompetition(), thirdPartyOfgemEnabled);
+                ktaInvite, ktaProcessRole, isEDIUpdateEnabled, competition.isOfGemCompetition(), competition.isThirdPartyOfgem());
     }
 
     private ApplicationTeamOrganisationViewModel toInviteOrganisationTeamViewModel(InviteOrganisationResource organisationInvite, boolean leadApplicant) {

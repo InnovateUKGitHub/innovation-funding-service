@@ -52,11 +52,9 @@
                     section <a href="/profile/view" class="govuk-link"> here</a>.</p>
             </th:block>
 
-            <th:block th:unless="${model.ofgemCompetition and model.thirdPartyOfgemEnabled}">
-                <p class="govuk-body" th:unless="${model.collaborationLevelSingle}">You must read the <a
-                        href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service"
-                        class="govuk-link" target="_blank">general guidance</a> (opens in a new window) before you start.</p>
-            </th:block>
+            <p class="govuk-body" th:unless="${model.collaborationLevelSingle or model.isThirdPartyOfgem}">You must read the <a
+                    href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service"
+                    class="govuk-link" target="_blank">general guidance</a> (opens in a new window) before you start.</p>
 
         </th:block>
 

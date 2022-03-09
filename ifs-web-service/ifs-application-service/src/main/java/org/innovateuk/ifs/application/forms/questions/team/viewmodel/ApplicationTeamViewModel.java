@@ -27,7 +27,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
     private final ProcessRoleResource ktaProcessRole;
     private final boolean isEDIUpdateEnabled;
     private final boolean ofgemCompetition;
-    private final boolean thirdPartyOfgemEnabled;
+    private final boolean isThirdPartyOfgem;
 
     public ApplicationTeamViewModel(long applicationId,
                                     String applicationName,
@@ -45,7 +45,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
                                     ProcessRoleResource ktaProcessRole,
                                     boolean isEDIUpdateEnabled,
                                     boolean ofgemCompetition,
-                                    boolean thirdPartyOfgemEnabled
+                                    boolean isThirdPartyOfgem
                                     ) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
@@ -63,7 +63,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         this.ktaProcessRole = ktaProcessRole;
         this.isEDIUpdateEnabled = isEDIUpdateEnabled;
         this.ofgemCompetition = ofgemCompetition;
-        this.thirdPartyOfgemEnabled = thirdPartyOfgemEnabled;
+        this.isThirdPartyOfgem = isThirdPartyOfgem;
     }
 
     @Override
@@ -182,7 +182,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         return isEDIUpdateEnabled;
     }
 
-    public boolean isThirdPartyOfgemEnabled() {
-        return thirdPartyOfgemEnabled;
+    public boolean isThirdPartyOfgem() {
+        return isThirdPartyOfgem;
     }
 }
