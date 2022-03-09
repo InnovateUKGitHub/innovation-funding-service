@@ -66,7 +66,7 @@ Project details sections should not be scorable
     Given the user clicks the button/link       link = Back to your assessment overview
     When Application detail section should not be scorable
     # below step to me removed once the webtest data is not showing edi question   -- to be handled in  ifs-11496
-    And EDI question section should not be scorable
+    #And EDI question section should not be scorable
     Then Project summary section should not be scorable
     And Public description section should not be scorable
     And Scope section should not be scorable
@@ -283,7 +283,7 @@ the user navigate to previous pages
     the user clicks previous and goes to the page   Public description
     the user clicks previous and goes to the page   Project summary
     # below step to me removed once the webtest data is not showing edi question   -- to be handled in  ifs-11496
-    the user clicks previous and goes to the page   Equality, diversity and inclusion
+    #the user clicks previous and goes to the page   Equality, diversity and inclusion
     the user clicks previous and goes to the page   Application details
     the user should not see the element             jQuery = span:contains("Previous")
 
