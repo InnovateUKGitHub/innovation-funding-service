@@ -15,7 +15,7 @@ public class ManagementYourFundingViewModel extends YourFundingViewModel {
                                           FundingType fundingType,
                                           OrganisationTypeEnum organisationType,
                                           boolean ofgemCompetition,
-                                          boolean ManagementYourFundingViewModel) {
+                                          boolean isThirdPartyOfgem) {
         super(
                 applicationId,
                 competitionName,
@@ -40,7 +40,7 @@ public class ManagementYourFundingViewModel extends YourFundingViewModel {
                 fundingType,
                 organisationType,
                 ofgemCompetition,
-                ManagementYourFundingViewModel
+                isThirdPartyOfgem
         );
     }
 }

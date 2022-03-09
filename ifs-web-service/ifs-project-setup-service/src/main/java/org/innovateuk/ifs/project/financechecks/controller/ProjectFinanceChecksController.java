@@ -143,9 +143,6 @@ public class ProjectFinanceChecksController {
     @Autowired
     private ProjectFinanceChecksReadOnlyPopulator projectFinanceChecksReadOnlyPopulator;
 
-    @Value("${ifs.thirdparty.ofgem.enabled}")
-    private boolean thirdPartyOfgemEnabled;
-
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
     public String viewFinanceChecks(Model model, @PathVariable final long projectId,
@@ -434,7 +431,7 @@ public class ProjectFinanceChecksController {
                 competition.isProcurementMilestones(),
                 showChangesLink,
                 competition.isOfGemCompetition(),
-                thirdPartyOfgemEnabled);
+                competition.isThirdPartyOfgem());
     }
 
     private boolean isApproved(final ProjectOrganisationCompositeId compositeId) {
@@ -541,7 +538,7 @@ public class ProjectFinanceChecksController {
                 showChangesLink,
                 false,
                 false,
-                thirdPartyOfgemEnabled));
+                competition.isThirdPartyOfgem()));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
 

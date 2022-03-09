@@ -22,7 +22,7 @@ public class ProjectYourFundingViewModel {
     private final boolean subsidyBasisRequiredAndNotCompleted;
     private final Optional<Long> subsidyBasisQuestionId;
     private final boolean ofgemCompetition;
-    private final boolean thirdPartyOfgemEnabled;
+    private final boolean isThirdPartyOfgem;
 
     public ProjectYourFundingViewModel(ProjectResource project,
                                        long organisationId,
@@ -37,7 +37,7 @@ public class ProjectYourFundingViewModel {
                                        boolean organisationRequiredAndNotCompleted,
                                        Optional<Long> subsidyBasisQuestionId,
                                        boolean ofgemCompetition,
-                                       boolean thirdPartyOfgemEnabled) {
+                                       boolean isThirdPartyOfgem) {
         this.projectName = project.getName();
         this.projectId = project.getId();
         this.organisationId = organisationId;
@@ -52,7 +52,7 @@ public class ProjectYourFundingViewModel {
         this.organisationRequiredAndNotCompleted = organisationRequiredAndNotCompleted;
         this.subsidyBasisQuestionId = subsidyBasisQuestionId;
         this.ofgemCompetition = ofgemCompetition;
-        this.thirdPartyOfgemEnabled = thirdPartyOfgemEnabled;
+        this.isThirdPartyOfgem = isThirdPartyOfgem;
     }
 
     public String getProjectName() {
@@ -130,7 +130,7 @@ public class ProjectYourFundingViewModel {
 
     public boolean isOfgemCompetition() { return ofgemCompetition; }
 
-    public boolean isThirdPartyOfgemEnabled() {
-        return thirdPartyOfgemEnabled;
+    public boolean isThirdPartyOfgem() {
+        return isThirdPartyOfgem;
     }
 }

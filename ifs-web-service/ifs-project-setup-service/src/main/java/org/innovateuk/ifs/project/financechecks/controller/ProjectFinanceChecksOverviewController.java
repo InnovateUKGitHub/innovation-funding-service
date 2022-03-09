@@ -18,7 +18,6 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
@@ -52,9 +51,6 @@ public class ProjectFinanceChecksOverviewController {
 
     private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
 
-    @Value("${ifs.thirdparty.ofgem.enabled}")
-    private boolean thirdPartyOfgemEnabled;
-
     ProjectFinanceChecksOverviewController() {}
 
     @Autowired
@@ -86,7 +82,7 @@ public class ProjectFinanceChecksOverviewController {
         ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populateFromProject(project, loggedInUser);
 
         return new FinanceCheckOverviewViewModel(null, getProjectFinanceSummaries(project, partnerOrgs, competition),
-                getProjectFinanceCostBreakdown(project.getId(), partnerOrgs, competition), project.getApplication(), false, competition.isLoan(), competition.isKtp(), false, competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE), applicationFundingBreakdownViewModel, competition.isOfGemCompetition(), thirdPartyOfgemEnabled);
+                getProjectFinanceCostBreakdown(project.getId(), partnerOrgs, competition), project.getApplication(), false, competition.isLoan(), competition.isKtp(), false, competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE), applicationFundingBreakdownViewModel, competition.isOfGemCompetition(), competition.isThirdPartyOfgem());
     }
 
     private FinanceCheckSummariesViewModel getProjectFinanceSummaries(ProjectResource project, List<PartnerOrganisationResource> partnerOrgs, CompetitionResource competition) {

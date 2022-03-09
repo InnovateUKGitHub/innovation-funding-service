@@ -23,7 +23,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -73,9 +72,6 @@ public class FinanceSummaryTableViewModelPopulator {
     @Autowired
     private FinanceLinksUtil financeLinksUtil;
 
-    @Value("${ifs.thirdparty.ofgem.enabled}")
-    private boolean thirdPartyOfgemEnabled;
-
     public FinanceSummaryTableViewModel populateSingleOrganisation(ApplicationResource application, CompetitionResource competition, OrganisationResource organisation) {
         List<OrganisationResource> organisations;
         boolean includeOrganisationNames;
@@ -106,7 +102,7 @@ public class FinanceSummaryTableViewModelPopulator {
                 application.isCollaborativeProject(),
                 null,
                 includeOrganisationNames,
-                thirdPartyOfgemEnabled);
+                competition.isThirdPartyOfgem());
     }
 
     public FinanceSummaryTableViewModel populateAllOrganisations(ApplicationResource application, CompetitionResource competition, List<ProcessRoleResource> processRoles, UserResource user) {
@@ -154,7 +150,7 @@ public class FinanceSummaryTableViewModelPopulator {
                 application.isCollaborativeProject(),
                 maximumFundingSought,
                 true,
-                thirdPartyOfgemEnabled);
+                competition.isThirdPartyOfgem());
     }
 
     private Optional<ProcessRoleResource> getCurrentUsersRole(List<ProcessRoleResource> processRoles, UserResource user) {

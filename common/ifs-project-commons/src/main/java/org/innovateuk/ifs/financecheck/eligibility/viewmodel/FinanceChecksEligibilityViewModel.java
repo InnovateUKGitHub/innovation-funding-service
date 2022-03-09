@@ -50,7 +50,7 @@ public class FinanceChecksEligibilityViewModel {
     private final boolean canEditProjectCosts;
     private final boolean isReadOnly;
     private final boolean ofgemCompetition;
-    private final boolean thirdPartyOfgemEnabled;
+    private final boolean isThirdPartyOfgem;
 
     public FinanceChecksEligibilityViewModel(ProjectResource project,
                                              CompetitionResource competition,
@@ -74,7 +74,7 @@ public class FinanceChecksEligibilityViewModel {
                                              boolean showChangesLink,
                                              boolean canEditProjectCosts,
                                              boolean isReadOnly,
-                                             boolean thirdPartyOfgemEnabled) {
+                                             boolean isThirdPartyOfgem) {
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
         this.projectId = project.getId();
@@ -106,7 +106,7 @@ public class FinanceChecksEligibilityViewModel {
         this.canEditProjectCosts = canEditProjectCosts;
         this.isReadOnly = isReadOnly;
         this.ofgemCompetition = competition.isOfGemCompetition();
-        this.thirdPartyOfgemEnabled = thirdPartyOfgemEnabled;
+        this.isThirdPartyOfgem = isThirdPartyOfgem;
     }
 
     public boolean isApproved() {
@@ -271,8 +271,8 @@ public class FinanceChecksEligibilityViewModel {
         return ktp;
     }
 
-    public boolean isThirdPartyOfgemEnabled() {
-        return thirdPartyOfgemEnabled;
+    public boolean isThirdPartyOfgem() {
+        return isThirdPartyOfgem;
     }
 
     private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {

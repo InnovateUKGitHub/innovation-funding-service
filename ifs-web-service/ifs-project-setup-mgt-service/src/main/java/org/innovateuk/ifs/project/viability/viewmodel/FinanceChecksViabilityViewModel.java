@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.viability.viewmodel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -51,7 +50,7 @@ public class FinanceChecksViabilityViewModel {
     private final boolean resetableGolState;
     private final boolean auditor;
     private final boolean ofgemCompetition;
-    private final boolean thirdPartyOfgemEnabled;
+    private final boolean isThirdPartyOfgem;
 
     public FinanceChecksViabilityViewModel(ProjectResource project,
                                            CompetitionResource competition,
@@ -77,7 +76,7 @@ public class FinanceChecksViabilityViewModel {
                                            List<ProjectFinanceResource> projectFinances,
                                            boolean resetableGolState,
                                            boolean auditor,
-                                           boolean thirdPartyOfgemEnabled) {
+                                           boolean isThirdPartyOfgem) {
 
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
@@ -110,7 +109,7 @@ public class FinanceChecksViabilityViewModel {
         this.ktpCompetition = competition.isKtp();
         this.resetableGolState = resetableGolState;
         this.auditor = auditor;
-        this.thirdPartyOfgemEnabled = thirdPartyOfgemEnabled;
+        this.isThirdPartyOfgem = isThirdPartyOfgem;
     }
 
     public String getOrganisationName() {
@@ -261,8 +260,8 @@ public class FinanceChecksViabilityViewModel {
         return auditor;
     }
 
-    public boolean isThirdPartyOfgemEnabled() {
-        return thirdPartyOfgemEnabled;
+    public boolean isThirdPartyOfgem() {
+        return isThirdPartyOfgem;
     }
 
     private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {

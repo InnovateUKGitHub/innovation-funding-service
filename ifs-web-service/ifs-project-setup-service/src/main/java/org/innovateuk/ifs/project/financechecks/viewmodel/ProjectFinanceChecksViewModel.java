@@ -33,7 +33,7 @@ public class ProjectFinanceChecksViewModel {
     private final boolean paymentMilestonesLink;
     private final boolean showChangesLink;
     private final boolean ofgemCompetition;
-    private final boolean thirdPartyOfgemEnabled;
+    private final boolean isThirdPartyOfgem;
 
     public ProjectFinanceChecksViewModel(ProjectResource project, OrganisationResource organisation,
                                          List<ThreadViewModel> pendingQueries,
@@ -53,7 +53,7 @@ public class ProjectFinanceChecksViewModel {
                                          boolean paymentMilestonesLink,
                                          boolean showChangesLink,
                                          boolean ofgemCompetition,
-                                         boolean thirdPartyOfgemEnabled) {
+                                         boolean isThirdPartyOfgem) {
         this.projectId = project.getId();
         this.organisationId = organisation.getId();
         this.projectName = project.getName();
@@ -74,7 +74,7 @@ public class ProjectFinanceChecksViewModel {
         this.paymentMilestonesLink = paymentMilestonesLink;
         this.showChangesLink = showChangesLink;
         this.ofgemCompetition = ofgemCompetition;
-        this.thirdPartyOfgemEnabled = thirdPartyOfgemEnabled;
+        this.isThirdPartyOfgem = isThirdPartyOfgem;
     }
 
     public Long getProjectId() {
@@ -232,7 +232,7 @@ public class ProjectFinanceChecksViewModel {
         return showChangesLink;
     }
 
-    public boolean isThirdPartyOfgemEnabled() {
-        return thirdPartyOfgemEnabled;
+    public boolean isThirdPartyOfgem() {
+        return isThirdPartyOfgem;
     }
 }

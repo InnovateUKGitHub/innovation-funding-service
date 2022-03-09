@@ -118,9 +118,6 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     @Autowired
     private GrantOfferLetterService grantOfferLetterService;
 
-    @Value("${ifs.thirdparty.ofgem.enabled}")
-    private boolean thirdPartyOfgemEnabled;
-
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
     @AsyncMethod
@@ -218,7 +215,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                     showChangesLink,
                     canEditProjectCosts,
                     user.hasAuthority(Authority.AUDITOR),
-                    thirdPartyOfgemEnabled
+                    competition.get().isThirdPartyOfgem()
             ));
 
             model.addAttribute("eligibilityForm", eligibilityForm);

@@ -11,7 +11,6 @@ import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.grantofferletter.template.resource.GolTemplateResource;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -117,9 +116,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean hasBusinessAndFinancialInformationQuestion;
     private CompetitionThirdPartyConfigResource competitionThirdPartyConfigResource;
 
-    @Value("${ifs.thirdparty.ofgem.enabled}")
-    private boolean thirdPartyOfgemEnabled;
-
     public CompetitionResource() {
     }
 
@@ -195,6 +191,11 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     @JsonIgnore
     public boolean isLoan() {
         return LOAN.equals(fundingType);
+    }
+
+    @JsonIgnore
+    public boolean isThirdPartyOfgem() {
+        return competitionTypeEnum == CompetitionTypeEnum.OFGEM;
     }
 
     @JsonIgnore
@@ -870,16 +871,10 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     @JsonIgnore
-    public boolean isNewThirdPartyOfgemCompetition() {
-        return competitionTypeEnum == CompetitionTypeEnum.OFGEM;
-    }
-
-    @JsonIgnore
     public boolean isOfGemCompetition() {
-        return isNewThirdPartyOfgemCompetition() ||
-                (isProcurement()
+        return isProcurement()
                 && isOfGemFunder()
-                && isProcurementThirdPartyTermsAndConditions());
+                && isProcurementThirdPartyTermsAndConditions();
     }
 
     private boolean isOfGemFunder() {

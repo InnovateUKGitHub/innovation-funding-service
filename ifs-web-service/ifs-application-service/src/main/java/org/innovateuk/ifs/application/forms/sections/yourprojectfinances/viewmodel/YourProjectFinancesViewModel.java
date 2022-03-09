@@ -16,13 +16,13 @@ public class YourProjectFinancesViewModel implements BaseAnalyticsViewModel {
     private final boolean fullyFunded;
     private final boolean ktp;
     private final boolean ofgemCompetition;
-    private final boolean thirdPartyOfgemEnabled;
+    private final boolean isThirdPartyOfgem;
 
     private FinanceSummaryTableViewModel financeSummaryTableViewModel;
 
     private final List<YourFinancesRowViewModel> rows;
 
-    public YourProjectFinancesViewModel(long applicationId, String applicationName, CompetitionResource competition, FinanceSummaryTableViewModel financeSummaryTableViewModel, List<YourFinancesRowViewModel> rows, boolean thirdPartyOfgemEnabled) {
+    public YourProjectFinancesViewModel(long applicationId, String applicationName, CompetitionResource competition, FinanceSummaryTableViewModel financeSummaryTableViewModel, List<YourFinancesRowViewModel> rows, boolean isThirdPartyOfgem) {
         this.applicationId = applicationId;
         this.competitionName = competition.getName();
         this.applicationName = applicationName;
@@ -33,7 +33,7 @@ public class YourProjectFinancesViewModel implements BaseAnalyticsViewModel {
         this.ofgemCompetition = competition.isOfGemCompetition();
         this.financeSummaryTableViewModel = financeSummaryTableViewModel;
         this.rows = rows;
-        this.thirdPartyOfgemEnabled = thirdPartyOfgemEnabled;
+        this.isThirdPartyOfgem = isThirdPartyOfgem;
     }
 
     @Override
@@ -76,7 +76,7 @@ public class YourProjectFinancesViewModel implements BaseAnalyticsViewModel {
 
     public boolean isOfgemCompetition() { return ofgemCompetition; }
 
-    public boolean isThirdPartyOfgemEnabled() {
-        return thirdPartyOfgemEnabled;
+    public boolean isThirdPartyOfgem() {
+        return isThirdPartyOfgem;
     }
 }

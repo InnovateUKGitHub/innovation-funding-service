@@ -64,9 +64,6 @@ public class FinanceOverviewController {
     @Autowired
     private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
 
-    @Value("${ifs.thirdparty.ofgem.enabled}")
-    private boolean thirdPartyOfgemEnabled;
-
     @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping
     @PreAuthorize("hasAnyAuthority('comp_admin', 'external_finance', 'auditor', 'monitoring_officer')")
@@ -110,7 +107,7 @@ public class FinanceOverviewController {
                 getExternalUser(loggedInUser),
                 getExternalUserLinkUrl(loggedInUser, projectId),
                 competition.isOfGemCompetition(),
-                thirdPartyOfgemEnabled);
+                competition.isThirdPartyOfgem());
     }
 
     private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(long projectId) {
