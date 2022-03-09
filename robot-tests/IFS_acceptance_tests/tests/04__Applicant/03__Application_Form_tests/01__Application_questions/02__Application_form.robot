@@ -181,7 +181,8 @@ the text box should turn to green
 
 the question should be marked as complete on the application overview page
     The user clicks the button/link    link = Back to application overview
-    The user should see the element    jQuery = li:nth-child(5) span:contains("Complete")
+    The user should see the element    jQuery = li:contains("Project summary") span:contains("Complete")
+    #The user should see the element    jQuery = li:nth-child(4) span:contains("Complete")
 
 the text box should be editable
     Wait Until Element Is Enabled Without Screenshots    css = textarea
