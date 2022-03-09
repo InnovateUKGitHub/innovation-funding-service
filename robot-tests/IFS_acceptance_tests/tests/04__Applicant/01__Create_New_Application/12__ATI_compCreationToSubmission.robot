@@ -325,7 +325,6 @@ the user completes the application
     the user clicks the button/link                                                         link=Application details
     the user fills in the Application details                                               ${ATIapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant completes Application Team                                                COMPLETE   steve.smith@empire.com
-    #the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme ATI)
     the lead completes the questions with multiple answer choice and multiple appendices
     the user navigates to Your-finances page                                                ${ATIapplicationTitle}
