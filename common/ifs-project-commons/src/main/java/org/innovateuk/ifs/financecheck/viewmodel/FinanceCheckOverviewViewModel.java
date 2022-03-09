@@ -128,7 +128,7 @@ public class FinanceCheckOverviewViewModel {
 
     public boolean isOfgemCompetition() { return ofgemCompetition; }
 
-    public boolean isisThirdPartyOfgem() {
+    public boolean isThirdPartyOfgem() {
         return isThirdPartyOfgem;
     }
 }
