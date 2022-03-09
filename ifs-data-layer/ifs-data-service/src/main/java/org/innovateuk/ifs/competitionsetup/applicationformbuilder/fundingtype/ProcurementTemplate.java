@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
@@ -22,6 +23,9 @@ import static org.innovateuk.ifs.project.internal.ProjectSetupStage.GRANT_OFFER_
 
 @Component
 public class ProcurementTemplate implements FundingTypeTemplate {
+
+    @Value("${ifs.thirdparty.ofgem.enabled}")
+    private boolean thirdPartyOfgemEnabled;
 
     @Value("${ifs.procurement.milestones.enabled}")
     private boolean procurementMilestones;
@@ -76,7 +80,17 @@ public class ProcurementTemplate implements FundingTypeTemplate {
 
     @Override
     public Competition initialiseFinanceTypes(Competition competition) {
-        List<FinanceRowType> types = newArrayList(LABOUR, PROCUREMENT_OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING_COSTS, TRAVEL, OTHER_COSTS, FINANCE, OTHER_FUNDING, VAT);
+        List<FinanceRowType> types = newArrayList(
+                LABOUR,
+                PROCUREMENT_OVERHEADS,
+                MATERIALS,
+                CAPITAL_USAGE,
+                SUBCONTRACTING_COSTS,
+                TRAVEL,
+                OTHER_COSTS,
+                OTHER_FUNDING,
+                VAT);
+        types.add((thirdPartyOfgemEnabled && competition.getCompetitionType().getCompetitionTypeEnum() == CompetitionTypeEnum.OFGEM) ? GRANT_CLAIM_AMOUNT : FINANCE);
         return commonBuilders.saveFinanceRows(competition, types);
     }
 
