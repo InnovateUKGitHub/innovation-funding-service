@@ -70,6 +70,8 @@ the user submits the third party ofgem application
     And the user clicks the button/link                         link = Back to application overview
     And the user accept the thirdpary terms and conditions      Back to application overview
     When the user clicks the button/link                        id = application-overview-submit-cta
+    And the user clicks the button/link                         id = accordion-questions-heading-3-1
+    And the user should see the element                         jQuery = th:contains("Other funding (£)")
     And the user clicks the button/link                         id = submit-application-button
     Then the user should see the element                        jQuery = h2:contains("Application submitted")
     [Teardown]  update milestone to yesterday                   ${competitionId}  SUBMISSION_DATE
