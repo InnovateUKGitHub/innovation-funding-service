@@ -24,7 +24,7 @@ the user marks every section but one as complete - research
     the user clicks the button/link                                                link=${application_name}
     the applicant completes Application Team                                       ${ediStatus}  ${userEmail}
     # below step to me removed once the webtest data is not showing edi question   -- to be handled in  ifs-11496
-    the applicant marks EDI question as complete
+    #the applicant marks EDI question as complete
     the user selects Research category                                             ${rescat}
     the lead applicant fills all the questions and marks as complete(programme)
 
