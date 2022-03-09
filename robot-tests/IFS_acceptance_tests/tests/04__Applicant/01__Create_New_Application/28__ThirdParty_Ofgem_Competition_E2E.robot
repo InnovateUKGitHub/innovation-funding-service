@@ -14,8 +14,8 @@ Resource          ../../../resources/common/Applicant_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${thirdPartyOfgemCompetitionName}    Thirdparty Ofgem Competition
-${thirdPartyOfgemApplicationName}    Thirdparty Ofgem Application
+${thirdPartyOfgemCompetitionName}    Thirdparty Competition - Ofgem
+${thirdPartyOfgemApplicationName}    Thirdparty Application - Ofgem
 
 *** Test Cases ***
 Comp admin can select the funding type as Thirdparty and Competition type as Ofgem
