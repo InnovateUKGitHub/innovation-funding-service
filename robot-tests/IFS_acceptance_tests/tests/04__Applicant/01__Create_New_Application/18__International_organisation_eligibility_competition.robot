@@ -522,7 +522,7 @@ United kingdom should display in country list of correspondence address for non-
 non-uk based lead applicant can complete the correspondence address
     [Documentation]     IFS - 7241
     [Tags]
-    When the user fills correspondence address data                                         Calle 11   No 1111    San Sebastian   Argentina      X5187XAB
+    When the user fills correspondence address data                                         Calle   No 1111    San Sebastian   Argentina      X5187XAB
     And the user clicks the button/link                                                     id = save-project-address-button
     Then the user should see read only view of completed correspondence address details
 
@@ -588,7 +588,7 @@ Non-uk based organisations project location details updated in ifs admin project
 comp admin can see the correspondence address entered by non uk based lead applicant in project setup dashboard
     [Documentation]     IFS - 7241
     When the user navigates to the page      ${server}/project-setup-management/competition/${internationalCompetitionId}/project/${ProjectID}/details
-    Then the user should see the element     jQuery = td:contains("Calle 11, San Sebastian,")
+    Then the user should see the element     jQuery = td:contains("Calle, San Sebastian,")
     And the user should see the element      jQuery = td:contains("Argentina, X5187XAB")
 
 Monitoring officer assign link should be displayed on completing correspondence address and project location
@@ -1044,7 +1044,7 @@ the user fills correspondence address data
     the user enters text to a text field            id = zipCode            ${zipCode}
 
 the user should see read only view of completed correspondence address details
-    the user should see the element     jQuery = td:contains("Calle 11, San Sebastian,")
+    the user should see the element     jQuery = td:contains("Calle, San Sebastian,")
     the user should see the element     jQuery = td:contains("Argentina, X5187XAB")
     the user should see the element     id = project-address-status
 
