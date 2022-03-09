@@ -47,7 +47,7 @@ Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
-${assessor_to_add}    Alexis Kinney
+${assessor_to_add}    Aaron Jennings
 ${invitedAssessor}    will.smith@gmail.com
 
 *** Test Cases ***
