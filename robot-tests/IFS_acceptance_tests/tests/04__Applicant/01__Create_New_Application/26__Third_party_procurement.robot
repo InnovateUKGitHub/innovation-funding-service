@@ -58,7 +58,7 @@ Comp admin can edit the third party procurement terms and conditions
 Comp admin selects third party funder in funding information
     [Documentation]   IFS-10080
     Given comp admin creates procurement competition
-    When the user fills in funding information for the third party procurement comp
+    When the user fills in funding information for the third party comp
     Then the user navigates to the page                                                ${CA_UpcomingComp}
     And the user should see the element                                                jQuery = h3 a:contains("Third party procurement competition")
 

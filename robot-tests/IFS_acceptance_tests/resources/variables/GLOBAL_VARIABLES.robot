@@ -310,6 +310,7 @@ ${compType_HESTA}      Horizon Europe Guarantee
 @{APC_questions}                          How innovative is your project?   Your approach regarding innovation.   Your technical approach.
 @{project_details}                        Project summary  Public description  Scope
 @{Hesta_questions}                        How innovative is your project?  Your approach regarding innovation.  Your technical approach.
+@{Thirdparty_questions}                   How innovative is your project?  Your approach regarding innovation.  Your technical approach.
 
 #SBRI Type 1 competition milestones
 @{sbriType1Milestones}     Open date  Briefing event  Submission date
