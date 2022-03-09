@@ -25,7 +25,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -69,9 +68,6 @@ public class YourFundingViewModelPopulator {
 
     @Autowired
     private ProcessRoleRestService processRoleRestService;
-
-    @Value("${ifs.thirdparty.ofgem.enabled}")
-    private boolean thirdPartyOfgemEnabled;
 
     public YourFundingViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
         boolean userCanEdit = user.hasRole(Role.APPLICANT) && processRoleRestService.findProcessRole(user.getId(), applicationId).getOptionalSuccessObject()
@@ -132,7 +128,7 @@ public class YourFundingViewModelPopulator {
                 section.getCompetition().getFundingType(),
                 section.getCurrentApplicant().getOrganisation().getOrganisationTypeEnum(),
                 competition.isOfGemCompetition(),
-                thirdPartyOfgemEnabled);
+                competition.isThirdPartyOfgem());
     }
 
 
@@ -142,7 +138,7 @@ public class YourFundingViewModelPopulator {
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         return new ManagementYourFundingViewModel(applicationId, application.getCompetitionName(), sectionId, organisationId, application.getCompetition(), application.getName(),
-                format("/application/%d/form/FINANCE/%d", applicationId, organisationId), competition.getFundingType(), organisation.getOrganisationTypeEnum(), competition.isNewThirdPartyOfgemCompetition(), thirdPartyOfgemEnabled);
+                format("/application/%d/form/FINANCE/%d", applicationId, organisationId), competition.getFundingType(), organisation.getOrganisationTypeEnum(), competition.isThirdPartyOfgem(), competition.isThirdPartyOfgem());
     }
 
     private Long getSubsidyBasisQuestionId(ApplicantSectionResource section) {

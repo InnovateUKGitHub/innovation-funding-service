@@ -15,16 +15,16 @@ public class AssessmentDetailedFinancesViewModel {
     private final String applicationName;
     private final boolean academic;
     private final boolean ofgemCompetition;
-    private final boolean thirdPartyOfgemEnabled;
+    private final boolean isThirdPartyOfgem;
 
-    public AssessmentDetailedFinancesViewModel(Long assessmentId, long applicationId, ApplicationResource application, String applicationName, boolean academic, boolean ofgemCompetition, boolean thirdPartyOfgemEnabled) {
+    public AssessmentDetailedFinancesViewModel(Long assessmentId, long applicationId, ApplicationResource application, String applicationName, boolean academic, boolean ofgemCompetition, boolean isThirdPartyOfgem) {
         this.assessmentId = assessmentId;
         this.applicationId = applicationId;
         this.application = application;
         this.applicationName = applicationName;
         this.academic = academic;
         this.ofgemCompetition = ofgemCompetition;
-        this.thirdPartyOfgemEnabled = thirdPartyOfgemEnabled;
+        this.isThirdPartyOfgem = isThirdPartyOfgem;
     }
 
     public Long getAssessmentId() {
@@ -49,8 +49,8 @@ public class AssessmentDetailedFinancesViewModel {
 
     public boolean isOfgemCompetition() { return ofgemCompetition; }
 
-    public boolean isThirdPartyOfgemEnabled() {
-        return thirdPartyOfgemEnabled;
+    public boolean isThirdPartyOfgem() {
+        return isThirdPartyOfgem;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class AssessmentDetailedFinancesViewModel {
                 .append(applicationName, that.applicationName)
                 .append(academic, that.academic)
                 .append(ofgemCompetition, that.ofgemCompetition)
-                .append(thirdPartyOfgemEnabled, that.thirdPartyOfgemEnabled)
+                .append(isThirdPartyOfgem, that.isThirdPartyOfgem)
                 .isEquals();
     }
 
@@ -79,7 +79,7 @@ public class AssessmentDetailedFinancesViewModel {
                 .append(applicationName)
                 .append(academic)
                 .append(ofgemCompetition)
-                .append(thirdPartyOfgemEnabled)
+                .append(isThirdPartyOfgem)
                 .toHashCode();
     }
 }

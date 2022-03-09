@@ -61,8 +61,8 @@
                         </dd>
 
                         <dt th:unless="${model.financeCheckSummaryResource.loan OR model.financeCheckSummaryResource.procurement}">
-                            <th:block th:if="${model.ofgemCompetition and model.thirdPartyOfgemEnabled}">Other funding:</th:block>
-                            <th:block th:unless="${model.ofgemCompetition and model.thirdPartyOfgemEnabled}">Other public sector funding:</th:block>
+                            <th:block th:if="${model.isThirdPartyOfgem}">Other funding:</th:block>
+                            <th:block th:unless="${model.isThirdPartyOfgem}">Other public sector funding:</th:block>
                         </dt>
                         <dt th:if="${model.financeCheckSummaryResource.loan}">Other funding:</dt>
                         <dd th:unless="${model.financeCheckSummaryResource.procurement}">&pound;<th:block
