@@ -58,7 +58,7 @@ Comp admin can edit the third party procurement terms and conditions
 Comp admin selects third party funder in funding information
     [Documentation]   IFS-10080
     Given comp admin creates procurement competition
-    When the user fills in funding information for the third party procurement comp
+    When the user fills in funding information for the third party comp
     Then the user navigates to the page                                                ${CA_UpcomingComp}
     And the user should see the element                                                jQuery = h3 a:contains("Third party procurement competition")
 
@@ -69,7 +69,6 @@ User applies to third party competition
     And logged in user applies to competition                                                   ${thirdPartyProcurementCompetitionName}  3
     When the user fills in third-party Application details                                      ${thirdPartyProcurementApplicationName}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team                                                COMPLETE  steve.smith@empire.com
-    #And the applicant marks EDI question as complete
     And the lead applicant fills all the questions and marks as complete(procurement)
     Then the lead completes the questions with multiple answer choice and multiple appendices
     And the third party applicant can view the strategic innovation terms and conditions        Strategic Innovation Fund governance document
