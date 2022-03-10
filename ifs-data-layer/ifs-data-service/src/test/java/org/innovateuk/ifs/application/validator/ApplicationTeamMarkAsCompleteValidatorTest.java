@@ -52,8 +52,8 @@ public class ApplicationTeamMarkAsCompleteValidatorTest {
 
     @Mock
     private ApplicationKtaInviteService applicationKtaInviteService;
-    @Mock
-    private CompetitionService competitionServiceMock;
+        @Mock
+        private CompetitionService competitionServiceMock;
     @Test
 
     @Before
