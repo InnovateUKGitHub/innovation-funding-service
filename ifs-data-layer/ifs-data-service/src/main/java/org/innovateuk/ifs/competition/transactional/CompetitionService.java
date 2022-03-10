@@ -90,6 +90,8 @@ public interface CompetitionService {
 
     @NotSecured(value = "Anyone can download competition terms", mustBeSecuredByOtherServices = false)
     ServiceResult<FileAndContents> downloadTerms(long competitionId);
+
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<Boolean> hasEDIQuestion(long competitionId);
 
 
