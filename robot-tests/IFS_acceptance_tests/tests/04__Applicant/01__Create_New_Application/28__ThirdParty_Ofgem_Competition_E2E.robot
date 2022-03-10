@@ -14,15 +14,15 @@ Resource          ../../../resources/common/Applicant_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${thirdPartyOfgemCompetitionName}    Thirdparty Ofgem Competition
-${thirdPartyOfgemApplicationName}    Thirdparty Ofgem Application
+${thirdPartyOfgemCompetitionName}    Thirdparty Competition - Ofgem
+${thirdPartyOfgemApplicationName}    Thirdparty Application - Ofgem
 
 *** Test Cases ***
 Comp admin can select the funding type as Thirdparty and Competition type as Ofgem
     [Documentation]  IFS-11442
     Given the user navigates to the page            ${CA_UpcomingComp}
     When the user clicks the button/link            jQuery = .govuk-button:contains("Create competition")
-    And the user fills in the CS Initial details    ${thirdPartyOfgemCompetitionName}  ${month}  ${nextyear}  Ofgem  NOT_AID  THIRDPARTY
+    And the user fills in the CS Initial details    ${thirdPartyOfgemCompetitionName}  ${month}  ${nextyear}  Ofgem  STATE_AID  THIRDPARTY
     And the user clicks the button/link             link = Initial details
     Then the user should see the element            jQuery = dt:contains("Funding type")+dd:contains("Thirdparty")
     And the user should see the element             jQuery = dt:contains("Competition type")+dd:contains("Ofgem")
@@ -47,99 +47,47 @@ Comp admin selects third party funder in funding information and completes the c
     And the user should see the element                                     jQuery = h3 a:contains("${thirdPartyOfgemCompetitionName}")
 
 User applies to third party ofgem competition
-    [Documentation]  IFS-10083  IFS-10157
-    [Setup]  get competition id and set open date to yesterday                                  ${thirdPartyOfgemCompetitionName}
-    Given log in as a different user                                                            &{lead_applicant_credentials}
-    And logged in user applies to competition                                                   ${thirdPartyOfgemCompetitionName}  3
-    When the user fills in third-party Application details                                      ${thirdPartyOfgemApplicationName}  ${tomorrowday}  ${month}  ${nextyear}
-    And the applicant completes Application Team                                                COMPLETE  steve.smith@empire.com
-    And the applicant marks EDI question as complete
-    And the lead applicant fills all the questions and marks as complete(procurement)
-    Then the lead completes the questions with multiple answer choice and multiple appendices
+    [Documentation]  IFS-11575  IFS-11476
+    [Setup]  get competition id and set open date to yesterday                          ${thirdPartyOfgemCompetitionName}
+    Given log in as a different user                                                    &{lead_applicant_credentials}
+    And logged in user applies to competition                                           ${thirdPartyOfgemCompetitionName}  3
+    And the user clicks the button/link                                                 link = Application details
+    When the user fills in the Application details                                      ${thirdPartyOfgemApplicationName}  ${tomorrowday}  ${month}  ${nextyear}
+    And the applicant completes Application Team                                        COMPLETE  steve.smith@empire.com
+    Then the lead applicant fills all the questions and marks as complete(thirdparty)
 
-Applicant fills in project finances without any VAT validations
-    [Documentation]   IFS-10134   IFS-10273
-    Given the user navigates to Your-finances page                   ${thirdPartyOfgemApplicationName}
-    And the user fills the third party project costs
-    When the user clicks the button/link                             css = label[for="stateAidAgreed"]
-    And the user clicks the button/link                              jQuery = button:contains("Mark as complete")
-    Then the user enters the project location
-    And the user fills in the organisation information               ${thirdPartyOfgemApplicationName}  ${SMALL_ORGANISATION_SIZE}
-    And the user fills in the funding information                    ${thirdPartyOfgemApplicationName}   no
+Applicant should not view overhead and capital usage costs in project costs
+    [Documentation]   IFS-11475  IFS-11476
+    Given the user navigates to Your-finances page   ${thirdPartyOfgemApplicationName}
+    When the user clicks the button/link             link = Your project costs
+    Then the user should not see the element         jQuery = button:contains("Overhead costs")
+    And the user should not see the element          jQuery = button:contains("Capital usage")
 
 the user submits the third party ofgem application
-    [Documentation]   IFS-10083
+    [Documentation]   IFS-11475  IFS-11476
     [Setup]  Get competitions id and set it as suite variable   ${thirdPartyOfgemCompetitionName}
+    Given the user completes thirdparty ofgem project finances
+    And the user clicks the button/link                         link = Back to application overview
+    And the user accept the thirdpary terms and conditions      Back to application overview
     When the user clicks the button/link                        id = application-overview-submit-cta
     And the user clicks the button/link                         id = submit-application-button
     Then the user should see the element                        jQuery = h2:contains("Application submitted")
     [Teardown]  update milestone to yesterday                   ${competitionId}  SUBMISSION_DATE
-#
-#Invite a registered assessor
-#    [Documentation]  IFS-10084
-#    Given log in as a different user             &{Comp_admin1_credentials}
-#    When the user clicks the button/link         link = ${thirdPartyOfgemCompetitionName}
-#    And the user clicks the button/link          link = Invite assessors to assess the competition
-#    And the user enters text to a text field     id = assessorNameFilter   Paul Plum
-#    And the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
-#    Then the user clicks the button/link         jQuery = tr:contains("Paul Plum") label[for^="assessor-row"]
-#    And the user clicks the button/link          jQuery = .govuk-button:contains("Add selected to invite list")
-#    And the user clicks the button/link          link = Invite
-#    And the user clicks the button/link          link = Review and send invites
-#    And the user enters text to a text field     id = message    This is custom text
-#    And the user clicks the button/link          jQuery = .govuk-button:contains("Send invitation")
-#
-#Allocated assessor accepts invite to assess the competition
-#    [Documentation]  IFS-10084
-#    Given Log in as a different user                           &{assessor_credentials}
-#    When The user clicks the button/link                       Link = ${thirdPartyOfgemCompetitionName}
-#    And the user selects the radio button                      acceptInvitation  true
-#    And The user clicks the button/link                        jQuery = button:contains("Confirm")
-#    Then the user should be redirected to the correct page     ${server}/assessment/assessor/dashboard
-#
-#Comp Admin allocates assessor to application
-#    [Documentation]  IFS-10084
-#    Given log in as a different user                 &{Comp_admin1_credentials}
-#    When The user clicks the button/link             link = Dashboard
-#    And The user clicks the button/link              link = ${thirdPartyOfgemCompetitionName}
-#    And The user clicks the button/link              jQuery = a:contains("Manage assessments")
-#    And the user clicks the button/link              jQuery = a:contains("Allocate applications")
-#    Then the user clicks the button/link             jQuery = tr:contains("${thirdPartyOfgemApplicationName}") a:contains("Assign")
-#    And the user adds an assessor to application     jQuery = tr:contains("Paul Plum") :checkbox
-#    And the user navigates to the page               ${server}/management/competition/${competitionId}
-#    And the user clicks the button/link              jQuery = button:contains("Notify assessors")
-#
-#Allocated assessor assess the application
-#    [Documentation]  IFS-10084
-#    Given Log in as a different user                                        &{assessor_credentials}
-#    And the user clicks the button/link                                     link = ${thirdPartyOfgemCompetitionName}
-#    And the user clicks the button/link                                     jQuery = li:contains("${thirdPartyOfgemApplicationName}") a:contains("Accept or reject")
-#    And the user selects the radio button                                   assessmentAccept  true
-#    And the user clicks the button/link                                     jQuery = .govuk-button:contains("Confirm")
-#    And the user should be redirected to the correct page                   ${server}/assessment/assessor/dashboard/competition/${competitionId}
-#    When the user clicks the button/link                                    link = ${thirdPartyOfgemApplicationName}
-#    Then the assessor submits the thirdparty assessment
-#
-#Comp admin closes the assessment and releases feedback
-#    [Documentation]  IFS-10084
-#    Given log in as a different user                        &{Comp_admin1_credentials}
-#    When making the application a successful project        ${competitionId}    ${thirdPartyOfgemApplicationName}
-#    And the user navigates to the page                      ${server}/management/competition/${competitionId}
-#    And the user clicks the button/link                     css = button[type="submit"][formaction$="release-feedback"]
-#    And log in as a different user                          &{lead_applicant_credentials}
-#    And the user clicks the application tile if displayed
-#    Then the user should see the element                    jQuery = li:contains("${thirdPartyOfgemApplicationName}") .status-msg:contains("Successful")
-#
-#Internal user can view third-party terms and conditions
-#    [Documentation]  IFS-10083  IFS-10084
-#    Given Requesting competition ID of this Project
-#    And requesting application ID of this application
-#    And Log in as a different user                          &{ifs_admin_user_credentials}
-#    And The user navigates to the page                      ${server}/management/competition/${ThirdPartyCompId}/application/${ThirdPartyApplicationId}
-#    When The user should see the element                    jQuery = button:contains("Strategic Innovation Fund governance document")
-#    And the user clicks the button twice                    jQuery = button:contains("Strategic Innovation Fund governance document")
-#    Then the user should see the element                    jQuery = th:contains("Partner") + th:contains("Strategic Innovation Fund governance document")
-#    And The user should see the element                     jQuery = td:contains("Empire Ltd") ~ td:contains("Procurement Third Party")
+
+the applicant should not view overhead and capital usage costs in application summary
+     [Documentation]   IFS-11475  IFS-11476
+     Given the user clicks the button/link  link = View application
+     When the user clicks the button/link   jQuery = button:contains("Finances summary")
+     Then the user should not see the element   jQuery = th:contains("Overheads (£)")
+     And the user should not see the element   jQuery = th:contains("Capital usage (£)")
+
+Internal user should not view overhead and capital usage costs in application summary
+    [Documentation]  IFS-11475  IFS-11476
+    [Setup]  Requesting competition and application ID of this Project
+    Given log in as a different user            &{Comp_admin1_credentials}
+    When the user navigates to the page         ${server}/management/competition/${ThirdPartyCompId}/application/${ThirdPartyApplicationId}
+    Then the user should not see the element    jQuery = th:contains("Overheads (£)")
+    And the user should not see the element     jQuery = th:contains("Capital usage (£)")
 
 *** Keywords ***
 Custom suite setup
@@ -151,23 +99,21 @@ Custom suite teardown
     Close browser and delete emails
     Disconnect from database
 
-Requesting competition ID of this Project
+Requesting competition and application ID of this Project
     ${ThirdPartyCompId} =  get comp id from comp title    ${thirdPartyOfgemCompetitionName}
     Set suite variable   ${ThirdPartyCompId}
-
-requesting application ID of this application
     ${ThirdPartyApplicationId} =  get application id by name   ${thirdPartyOfgemApplicationName}
     Set suite variable    ${ThirdPartyApplicationId}
 
 comp admin creates ofgem competition
-    the user fills in the CS Project eligibility                            ${BUSINESS_TYPE_ID}    2   false   single-or-collaborative
-    the user fills in the CS funding eligibility                            false   Ofgem   NOT_AID
-    the user selects the organisational eligibility to no                   false
-    the user fills in the CS Milestones                                     PROJECT_SETUP   ${month}   ${nextyear}  No
-    the user marks the Application as done                                  no   Ofgem   ${thirdPartyOfgemCompetitionName}
-    the user clicks the button/link                                         link = Public content
-    the user fills in the Public content and publishes                      Thirdparty Ofgem
-    the user clicks the button/link                                         link = Return to setup overview
+    the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}    2   false   single-or-collaborative
+    the user fills in the CS funding eligibility            false   Ofgem   STATE_AID
+    the user selects the organisational eligibility to no   false
+    the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}  No
+    the user marks the Application as done                  no   Ofgem   ${thirdPartyOfgemCompetitionName}
+    the user clicks the button/link                         link = Public content
+    the user fills in the Public content and publishes      Thirdparty Ofgem
+    the user clicks the button/link                         link = Return to setup overview
 
 the user completes required fields in third party competition
     [Arguments]  ${title}  ${summary}  ${url}
@@ -187,7 +133,6 @@ the user verifies valid terms and conditions text is displaying
     [Teardown]   the user closes the last opened tab
 
 the user fills the third party project costs
-    the user clicks the button/link             link = Your project costs
     the user fills in Labour
     the user fills in Material
     the user fills in Subcontracting costs
@@ -207,3 +152,31 @@ the assessor submits the thirdparty assessment
     the user clicks the button/link                             jQuery = .govuk-button:contains("Submit assessments")
     the user clicks the button/link                             jQuery = button:contains("Yes I want to submit the assessments")
     the user should see the element                             jQuery = li:contains("${thirdPartyProcurementApplicationName}") strong:contains("Recommended")
+
+the user completes thirdparty ofgem project finances
+    the user fills the third party project costs
+    the user clicks the button/link                    css = label[for="stateAidAgreed"]
+    the user clicks the button/link                    jQuery = button:contains("Mark as complete")
+    the user enters the project location
+    the user fills in the organisation information     ${thirdPartyOfgemApplicationName}  ${SMALL_ORGANISATION_SIZE}
+    the user fills thirdparty funding information      ${thirdPartyOfgemApplicationName}
+
+the user fills thirdparty funding information
+    [Arguments]  ${Application}
+    the user navigates to Your-finances page                ${Application}
+    the user selects funding section in project finances
+    the user selects the radio button                       requestingFunding   true
+    the user enters text to a text field                    css = [name^="grantClaimPercentage"]  10
+    the user selects the radio button                       otherFunding   true
+    the user enters text to a text field                    css = [name*=source]  Lottery funding
+    the user enters text to a text field                    css = [name*=date]  12-${nextyear}
+    the user enters text to a text field                    css = [name*=fundingAmount]  20000
+    the user clicks the button/link                         jQuery = button:contains("Mark as complete")
+
+the user accept the thirdpary terms and conditions
+    [Arguments]  ${returnLink}
+    the user clicks the button/link    link = Innovation Fund governance document
+    the user selects the checkbox      agreed
+    the user clicks the button/link    jQuery = button:contains("Agree and continue")
+    the user should see the element    jQuery = .form-footer:contains("Innovation Fund governance document accepted")
+    the user clicks the button/link    link = ${returnLink}

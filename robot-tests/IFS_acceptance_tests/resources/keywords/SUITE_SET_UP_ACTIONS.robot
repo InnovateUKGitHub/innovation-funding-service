@@ -23,8 +23,6 @@ the user marks every section but one as complete - research
     the user navigates to the page                                                 ${server}
     the user clicks the button/link                                                link=${application_name}
     the applicant completes Application Team                                       ${ediStatus}  ${userEmail}
-    # below step to me removed once the webtest data is not showing edi question   -- to be handled in  ifs-11496
-    the applicant marks EDI question as complete
     the user selects Research category                                             ${rescat}
     the lead applicant fills all the questions and marks as complete(programme)
 
@@ -55,6 +53,11 @@ the lead applicant fills all the questions and marks as complete(procurement)
     the user marks the project details as complete
     :FOR  ${ELEMENT}    IN    @{programme_questions_procurement_ati}
      \     the lead applicant marks every question as complete procurement    ${ELEMENT}
+
+the lead applicant fills all the questions and marks as complete(thirdparty)
+    the user marks the project details as complete
+    :FOR  ${ELEMENT}    IN    @{Thirdparty_questions}
+     \     the lead applicant marks every question as complete    ${ELEMENT}
 
 the lead applicant fills all the questions and marks as complete(Hesta)
     :FOR  ${ELEMENT}    IN    @{Hesta_questions}
