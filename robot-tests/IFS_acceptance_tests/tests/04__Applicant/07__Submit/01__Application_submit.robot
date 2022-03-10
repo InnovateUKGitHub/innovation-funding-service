@@ -72,9 +72,9 @@ RTO lead has read only view after submission
 Application overview complete status
     [Documentation]  IFS-4265
     [Tags]
-    Given the user navigates to the page                  ${APPLICANT_DASHBOARD_URL}
-    When the applicant completes the application details  ${application_rto_name}  ${tomorrowday}  ${month}  ${nextyear}
-    Then the user should see the text in the element      css = .message-alert  Now your application is complete, you need to review and submit at the bottom of this page
+    Given the user navigates to the page                   ${APPLICANT_DASHBOARD_URL}
+    When the applicant completes the application details   ${application_rto_name}  ${tomorrowday}  ${month}  ${nextyear}
+    Then the user should see the text in the element       css = .message-alert  Now your application is complete, you need to review and submit at the bottom of this page
 
 Applicant dashboard shows correct status
     [Documentation]  IFS-4265
