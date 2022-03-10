@@ -557,7 +557,7 @@ the application is assigned to a assessor
 
 the sales force submits/unsubmits b&fi survey
     [Arguments]  ${completeStatus}  ${applicationID}
-    execute sql string  UPDATE `${database_name}`.`question_status` SET `marked_as_complete`=${completeStatus} WHERE `application_id`='${applicationID}' and `question_id`='739';
+    execute sql string  UPDATE `${database_name}`.`question_status` SET `marked_as_complete`=${completeStatus} WHERE `application_id`='${applicationID}' and `question_id`='719';
     reload page
 
 the user creates a new application
