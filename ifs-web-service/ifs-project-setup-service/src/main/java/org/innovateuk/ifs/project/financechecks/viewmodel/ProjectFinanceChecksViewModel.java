@@ -32,7 +32,6 @@ public class ProjectFinanceChecksViewModel {
     private final boolean leadOrganisation;
     private final boolean paymentMilestonesLink;
     private final boolean showChangesLink;
-    private final boolean ofgemCompetition;
     private final boolean isThirdPartyOfgem;
 
     public ProjectFinanceChecksViewModel(ProjectResource project, OrganisationResource organisation,
@@ -52,7 +51,6 @@ public class ProjectFinanceChecksViewModel {
                                          boolean leadOrganisation,
                                          boolean paymentMilestonesLink,
                                          boolean showChangesLink,
-                                         boolean ofgemCompetition,
                                          boolean isThirdPartyOfgem) {
         this.projectId = project.getId();
         this.organisationId = organisation.getId();
@@ -73,7 +71,6 @@ public class ProjectFinanceChecksViewModel {
         this.leadOrganisation = leadOrganisation;
         this.paymentMilestonesLink = paymentMilestonesLink;
         this.showChangesLink = showChangesLink;
-        this.ofgemCompetition = ofgemCompetition;
         this.isThirdPartyOfgem = isThirdPartyOfgem;
     }
 
@@ -217,8 +214,6 @@ public class ProjectFinanceChecksViewModel {
     public boolean isKtpCompetition() {
         return ktpCompetition;
     }
-
-    public boolean isOfgemCompetition() { return ofgemCompetition; }
 
     public boolean isLeadOrganisation() {
         return leadOrganisation;

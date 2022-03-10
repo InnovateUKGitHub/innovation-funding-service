@@ -124,7 +124,6 @@ public class FinanceCheckController {
                 hasSpendProfileStage,
                 competitionResource.isSubsidyControl(),
                 userResource.hasAuthority(Authority.AUDITOR),
-                competitionResource.isOfGemCompetition(),
                 competitionResource.isThirdPartyOfgem()));
         return "project/financecheck/summary";
     }

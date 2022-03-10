@@ -106,7 +106,6 @@ public class FinanceOverviewController {
                 applicationFundingBreakdownViewModel,
                 getExternalUser(loggedInUser),
                 getExternalUserLinkUrl(loggedInUser, projectId),
-                competition.isOfGemCompetition(),
                 competition.isThirdPartyOfgem());
     }
 

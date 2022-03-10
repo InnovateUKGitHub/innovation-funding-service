@@ -93,7 +93,7 @@ public class AssessmentDetailedFinancesModelPopulator {
         addFinanceDetails(model, applicationId);
 
         return new AssessmentDetailedFinancesViewModel(assessmentId, applicationId, application,
-                application.getName(), academic, competition.isOfGemCompetition(), competition.isThirdPartyOfgem());
+                application.getName(), academic, competition.isThirdPartyOfgem());
     }
 
     private void addAcademicFinance(Model model, long applicationId, long sectionId, long organisationId, UserResource user) {

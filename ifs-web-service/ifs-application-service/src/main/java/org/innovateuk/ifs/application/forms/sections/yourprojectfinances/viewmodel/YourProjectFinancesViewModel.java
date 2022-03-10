@@ -15,7 +15,6 @@ public class YourProjectFinancesViewModel implements BaseAnalyticsViewModel {
     private final boolean collaborativeProject;
     private final boolean fullyFunded;
     private final boolean ktp;
-    private final boolean ofgemCompetition;
     private final boolean isThirdPartyOfgem;
 
     private FinanceSummaryTableViewModel financeSummaryTableViewModel;
@@ -30,7 +29,6 @@ public class YourProjectFinancesViewModel implements BaseAnalyticsViewModel {
         this.collaborativeProject = !CollaborationLevel.SINGLE.equals(competition.getCollaborationLevel());
         this.fullyFunded = competition.isFullyFunded();
         this.ktp = competition.isKtp();
-        this.ofgemCompetition = competition.isOfGemCompetition();
         this.financeSummaryTableViewModel = financeSummaryTableViewModel;
         this.rows = rows;
         this.isThirdPartyOfgem = isThirdPartyOfgem;
@@ -73,8 +71,6 @@ public class YourProjectFinancesViewModel implements BaseAnalyticsViewModel {
     public boolean isKtp() {
         return ktp;
     }
-
-    public boolean isOfgemCompetition() { return ofgemCompetition; }
 
     public boolean isThirdPartyOfgem() {
         return isThirdPartyOfgem;

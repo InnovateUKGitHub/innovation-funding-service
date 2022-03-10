@@ -49,7 +49,6 @@ public class FinanceChecksViabilityViewModel {
     private final boolean ktpCompetition;
     private final boolean resetableGolState;
     private final boolean auditor;
-    private final boolean ofgemCompetition;
     private final boolean isThirdPartyOfgem;
 
     public FinanceChecksViabilityViewModel(ProjectResource project,
@@ -103,7 +102,6 @@ public class FinanceChecksViabilityViewModel {
         this.collaborativeProject = project.isCollaborativeProject();
         this.loanCompetition = competition.isLoan();
         this.procurementCompetition  = competition.isProcurement();
-        this.ofgemCompetition = competition.isOfGemCompetition();
         this.viabilityReadyToConfirm = hasAllFundingLevelsWithinMaximum(projectFinances);
         this.hasGrantClaimPercentage = competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE);
         this.ktpCompetition = competition.isKtp();
@@ -242,10 +240,6 @@ public class FinanceChecksViabilityViewModel {
 
     public boolean isProcurementCompetition() {
         return procurementCompetition;
-    }
-
-    public boolean isOfgemCompetition() {
-        return ofgemCompetition;
     }
 
     public boolean isViabilityReadyToConfirm() {

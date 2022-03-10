@@ -430,7 +430,6 @@ public class ProjectFinanceChecksController {
                 leadOrganisation,
                 competition.isProcurementMilestones(),
                 showChangesLink,
-                competition.isOfGemCompetition(),
                 competition.isThirdPartyOfgem());
     }
 
