@@ -11,21 +11,28 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.*;
 
 public class LabourRowForm extends AbstractCostRowForm<LabourCost> {
 
+    public static final String THIRDPARTY_OFGEM_NAME_KEY = "third-party-ofgem";
+
     @Size(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     @NotBlank(message = NOT_BLANK_MESSAGE)
     private String role;
 
-    @NotNull(message = NOT_BLANK_MESSAGE)
+    //@NotNull(message = NOT_BLANK_MESSAGE) add validation
     @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
-    private BigDecimal gross;
+    private BigDecimal gross = BigDecimal.ZERO;;
 
     @NotNull(message = NOT_BLANK_MESSAGE)
     @Min(value=1, message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
     private Integer days;
 
+    //@NotNull(message = NOT_BLANK_MESSAGE) add validation
+    @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
     private BigDecimal rate = BigDecimal.ZERO;
+
+    private boolean thirdPartyOfgem;
 
     public LabourRowForm() {
         super();
@@ -71,9 +78,19 @@ public class LabourRowForm extends AbstractCostRowForm<LabourCost> {
         this.rate = rate;
     }
 
+    public boolean getThirdPartyOfgem() {
+        return thirdPartyOfgem;
+    }
+
+    public void setThirdPartyOfgem(boolean thirdPartyOfgem) {
+        this.thirdPartyOfgem = thirdPartyOfgem;
+    }
+
     @Override
     public boolean isBlank() {
-        return isNullOrEmpty(role) && gross == null && days == null;
+        return isNullOrEmpty(role)
+                && (thirdPartyOfgem ? rate == null : gross == null)
+                && days == null;
     }
 
     @Override
@@ -83,6 +100,6 @@ public class LabourRowForm extends AbstractCostRowForm<LabourCost> {
 
     @Override
     public LabourCost toCost(Long financeId) {
-        return new LabourCost(getCostId(), null, role, gross, days, null, financeId);
+        return new LabourCost(getCostId(), thirdPartyOfgem ? THIRDPARTY_OFGEM_NAME_KEY : null, role, gross, days, null, financeId, rate, thirdPartyOfgem);
     }
 }

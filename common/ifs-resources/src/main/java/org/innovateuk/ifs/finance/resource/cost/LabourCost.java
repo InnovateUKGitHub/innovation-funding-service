@@ -25,7 +25,7 @@ public class LabourCost extends AbstractFinanceRowItem {
     @NotBlank(groups = Default.class, message = NOT_BLANK_MESSAGE)
     private String role;
 
-    @NotNull(groups = Default.class, message = NOT_BLANK_MESSAGE)
+    //@NotNull(groups = Default.class, message = NOT_BLANK_MESSAGE) add validation
     @DecimalMin(value = "1", groups = Default.class, message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS, fraction = 0, groups = Default.class, message = NO_DECIMAL_VALUES)
     private BigDecimal grossEmployeeCost;
@@ -39,9 +39,13 @@ public class LabourCost extends AbstractFinanceRowItem {
     @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
     private Integer labourDays;
 
-    private BigDecimal rate; // calculated field, no validation
+    //@NotNull(groups = Default.class, message = NOT_BLANK_MESSAGE) add validation
+    @DecimalMin(value = "1", groups = Default.class, message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Digits(integer = MAX_DIGITS, fraction = 0, groups = Default.class, message = NO_DECIMAL_VALUES)
+    private BigDecimal rate;
     private String description;
     private BigDecimal total; // calculated field, no validation
+    private boolean thirdPartyOfgem;
 
     private LabourCost() {
         this(null);
@@ -51,7 +55,8 @@ public class LabourCost extends AbstractFinanceRowItem {
         super(targetId);
     }
 
-    public LabourCost(Long id, String name, String role, BigDecimal grossEmployeeCost, Integer labourDays, String description, Long targetId) {
+    public LabourCost(Long id, String name, String role, BigDecimal grossEmployeeCost, Integer labourDays, String description,
+                      Long targetId, BigDecimal rate, boolean thirdPartyOfgem) {
         super(targetId);
         this.id = id;
         this.name = name;
@@ -65,6 +70,8 @@ public class LabourCost extends AbstractFinanceRowItem {
         this.grossEmployeeCost = grossEmployeeCost;
         this.labourDays = labourDays;
         this.description = description;
+        this.rate = rate;
+        this.thirdPartyOfgem = thirdPartyOfgem;
     }
 
     @Override
@@ -91,7 +98,9 @@ public class LabourCost extends AbstractFinanceRowItem {
     }
 
     public BigDecimal getRate(Integer workingDaysPerYear) {
-        rate = getRatePerDay(workingDaysPerYear);
+        if (!thirdPartyOfgem) {
+            rate = getRatePerDay(workingDaysPerYear);
+        }
         return rate;
     }
 
@@ -161,6 +170,14 @@ public class LabourCost extends AbstractFinanceRowItem {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isThirdPartyOfgem() {
+        return thirdPartyOfgem;
+    }
+
+    public void setThirdPartyOfgem(boolean thirdPartyOfgem) {
+        this.thirdPartyOfgem = thirdPartyOfgem;
     }
 
     public BigDecimal totalDiff(Integer workingDaysPerYear, LabourCost otherOverhead) {

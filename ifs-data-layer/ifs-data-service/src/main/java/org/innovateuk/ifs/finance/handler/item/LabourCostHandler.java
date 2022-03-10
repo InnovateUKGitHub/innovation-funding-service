@@ -11,6 +11,7 @@ import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,7 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
 public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
     public static final String COST_KEY = "labour";
     public static final Integer DEFAULT_WORKING_DAYS = 232;
+    public static final String THIRDPARTY_OFGEM_NAME_KEY = "third-party-ofgem";
 
     @Override
     public void validate(LabourCost labourCost, BindingResult bindingResult) {
@@ -39,11 +41,11 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
     public ApplicationFinanceRow toApplicationDomain(LabourCost labourCostItem) {
         return labourCostItem != null ? new ApplicationFinanceRow(
                                             labourCostItem.getId(),
-                                            labourCostItem.getName(),
+                                            labourCostItem.isThirdPartyOfgem() ? THIRDPARTY_OFGEM_NAME_KEY :labourCostItem.getName(),
                                             labourCostItem.getRole(),
                                             labourCostItem.getDescription(),
                                             labourCostItem.getLabourDays(),
-                                            labourCostItem.getGrossEmployeeCost(),
+                                            labourCostItem.isThirdPartyOfgem() ? labourCostItem.getRate() : labourCostItem.getGrossEmployeeCost(),
                                             null, labourCostItem.getCostType()) : null;
     }
 
@@ -55,13 +57,23 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
                     costItem.getRole(),
                     costItem.getDescription(),
                     costItem.getLabourDays(),
-                    costItem.getGrossEmployeeCost(),
+                    costItem.isThirdPartyOfgem() ? costItem.getRate() : costItem.getGrossEmployeeCost(),
                     null, costItem.getCostType());
     }
 
     @Override
     public LabourCost toResource(FinanceRow cost) {
-        return new LabourCost(cost.getId(), cost.getName(), cost.getItem(), cost.getCost(), cost.getQuantity(), cost.getDescription(), cost.getTarget().getId());
+        LabourCost labourCost;
+
+        if (cost.getName() == THIRDPARTY_OFGEM_NAME_KEY) {
+            labourCost = new LabourCost(cost.getId(), cost.getName(), cost.getItem(), BigDecimal.ZERO, cost.getQuantity(),
+                    cost.getDescription(), cost.getTarget().getId(), cost.getCost(), true);
+        } else {
+            labourCost = new LabourCost(cost.getId(), cost.getName(), cost.getItem(), cost.getCost(), cost.getQuantity(),
+                    cost.getDescription(), cost.getTarget().getId(), BigDecimal.ZERO, false);
+        }
+
+        return labourCost;
     }
 
     @Override
@@ -73,7 +85,8 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
     protected List<LabourCost> initialiseCosts(Finance finance) {
         String description = LabourCostCategory.WORKING_DAYS_PER_YEAR;
         Integer labourDays = DEFAULT_WORKING_DAYS;
-        return newArrayList(new LabourCost(null, LabourCostCategory.WORKING_DAYS_KEY, null, null, labourDays, description, finance.getId()));
+        return newArrayList(new LabourCost(null, LabourCostCategory.WORKING_DAYS_KEY, null, null, labourDays, description,
+                finance.getId(), null, true)); // after merge from ifs-11442 change it to isThirdPartyOfgem
     }
 
 }
