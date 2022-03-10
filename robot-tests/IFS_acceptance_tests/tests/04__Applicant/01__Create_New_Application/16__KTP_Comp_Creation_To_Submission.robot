@@ -1248,7 +1248,6 @@ Internal user is able to approve documents
 the user completes the KTP application except application team and your project finances
     the user clicks the button/link                                                 link = Application details
     the user fills in the KTP Application details                                   ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
-    #the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                                        ${ktpApplicationTitle}
     the lead applicant marks the KTP project location as complete

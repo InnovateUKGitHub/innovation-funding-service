@@ -153,7 +153,6 @@ the user successfully completes application
     the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team                        COMPLETE  ${email}
     the user completes the application research category            Feasibility studies
-    #the applicant marks EDI question as complete
     The user is able to complete hecp public description section
     The user is able to complete horizon grant agreement section
     the lead applicant fills all the questions and marks as complete(Hesta)
@@ -202,7 +201,6 @@ the user marks the Hesta application question as done
     the user clicks the button/link                                     link = Application
     the user marks each question as complete                            Application details
     the user marks each question as complete                            Public description
-    #the user marks each question as complete                            Equality, diversity and inclusion
     the user fills in the CS Application section with custom questions  ${growthTable}  ${comp_type}
 
 the user completes milestones section
