@@ -127,7 +127,6 @@ public class YourFundingViewModelPopulator {
                 overridingFundingRules,
                 section.getCompetition().getFundingType(),
                 section.getCurrentApplicant().getOrganisation().getOrganisationTypeEnum(),
-                competition.isOfGemCompetition(),
                 competition.isThirdPartyOfgem());
     }
 
