@@ -663,9 +663,12 @@ the MO navigates to page
     the user navigates to the page          ${server}/project-setup/project/${Grade_Crossing_Project_Id}
 
 Assign a MO to the project and login as MO
-    log in as a different user               &{Comp_admin1_credentials}
-    the user navigates to the page           ${server}/project-setup-management/monitoring-officer/view-all?ktp=false
-    search for MO                            Orvill  Orville Gibbs
-    the user should see the element          jQuery = span:contains("Assign projects to Monitoring Officer")
-    the internal user assign project to MO   ${Grade_Crossing_Applicaiton_No}   ${Grade_Crossing_Application_Title}
-    log in as a different user               &{monitoring_officer_one_credentials}
+    log in as a different user                        &{Comp_admin1_credentials}
+    the user navigates to the page                    ${server}/project-setup-management/monitoring-officer/view-all?ktp=false
+    search for MO                                     Orvill  Orville Gibbs
+    the user should see the element                   jQuery = span:contains("Assign projects to Monitoring Officer")
+    the element should be disabled                    jQuery = button:contains("Assign")
+    wait until keyword succeeds without screenshots   10s    200ms   input text         id = projectId   ${Grade_Crossing_Applicaiton_No} - ${Grade_Crossing_Application_Title}
+    Execute Javascript                                document.evaluate("//li[text()='${Grade_Crossing_Applicaiton_No} - ${Grade_Crossing_Application_Title}']",document.body,null,9,null).singleNodeValue.click();
+    the user clicks the button/link                   jQuery = button:contains("Assign")
+    log in as a different user                        &{monitoring_officer_one_credentials}

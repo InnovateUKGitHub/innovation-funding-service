@@ -20,12 +20,10 @@ the user can remove the uploaded file
 the user can remove file with multiple uploads
     [Arguments]  ${file_name}
     the user clicks the button/link                         css = .file-list li:nth-child(1) button
-    #the user clicks the button/link                        name=${name}
     Wait Until Page Does Not Contain Without Screenshots    Removing   60s
     Wait Until Page Does Not Contain Without Screenshots    Remove     60s
     Wait Until Page Does Not Contain Without Screenshots    ${file_name} (opens in a new window)   60s
     Page Should Contain                                     Upload
-    #Page Should Not Contain                                ${file_name}
 
 #Download
 The user downloads the file

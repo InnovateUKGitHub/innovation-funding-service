@@ -174,15 +174,8 @@ Finance reviewer is added to the project
 
 The user selects finance reviewer
     [Arguments]   ${FlName}
-    wait until keyword succeeds without screenshots         10s    200ms   input text    id = userId    ${FlName}
-    Execute Javascript    document.evaluate("//li[text()='${FlName}']",document.body,null,9,null).singleNodeValue.click();
-#    wait until page contains element without screenshots    css=[id="userId"][class="autocomplete__input autocomplete__input--focused autocomplete__input--show-all-values"]  5s
-#    mouse down                                              jQuery = ul li:contains("${FlName}")
-#    wait until keyword succeeds without screenshots         10s    200ms   click element     jQuery = ul li:contains("${FlName}")
-#    mouse out                                               id = userId
-#    Set Focus To Element                                    link=GOV.UK
-#    wait until page contains element without screenshots    css=[id="userId"][class="autocomplete__input autocomplete__input--show-all-values"]    5s
-    #wait until keyword succeeds without screenshots   10s    200ms   the user clicks the button/link     jQuery = ul li:contains("${FlName}")
+    wait until keyword succeeds without screenshots   10s    200ms   input text    id = userId    ${FlName}
+    Execute Javascript                                document.evaluate("//li[text()='${FlName}']",document.body,null,9,null).singleNodeValue.click();
 
 The user adds a new team member
    [Arguments]  ${firstName}  ${email}
@@ -652,46 +645,15 @@ Search for MO
     wait until keyword succeeds without screenshots     10s    200ms   input text   id = userId   ${MO_name}
     mouse down                                          jQuery = ul li:contains("${MO_fullname}")
     Execute Javascript                                  document.evaluate("//li[text()='${MO_fullname}']",document.body,null,9,null).singleNodeValue.click();
-    #wait until keyword succeeds without screenshots     10s    200ms   click element   jQuery = ul li:contains("${MO_fullname}")
-    #the user clicks the button/link                     jQuery = ul li:contains("${MO_fullname}")
     the user clicks the button/link                     jQuery = button:contains("View Monitoring Officer")
 
 The internal user assign project to MO
     [Arguments]  ${search_ID}  ${project_name}
     the element should be disabled                    jQuery = button:contains("Assign")
     wait until keyword succeeds without screenshots   10s    200ms   input text         id = projectId   ${search_ID} - ${project_name}
-    #the user should see project in dropdown           id = projectId   ${search_ID}  ${project_name}
     mouse down                                        jQuery = ul li:contains("${search_ID} - ${project_name}")
-    Execute Javascript    document.evaluate("//li[text()='${search_ID} - ${project_name}']",document.body,null,9,null).singleNodeValue.click();
-#    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    click element  jQuery = ul li:contains("${search_ID} - ${project_name}")
-#    run keyword if  '${status}'=='FAIL'               the user selects project in dropdown         ${search_ID}  ${project_name}
+    Execute Javascript                                document.evaluate("//li[text()='${search_ID} - ${project_name}']",document.body,null,9,null).singleNodeValue.click();
     the user clicks the button/link                   jQuery = button:contains("Assign")
-    #the user clicks the button/link                   jQuery = ul li:contains("${search_ID} - ${project_name}")
-    #the user clicks the button/link                   jQuery = button:contains("Assign")
-
-#the user selects project in dropdown
-#    [Arguments]  ${search_ID}   ${project_name}
-#    :FOR    ${i}    IN RANGE  2
-#    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots   the user should see the element   jQuery = td:contains("${search_ID}") + td:contains("${project_name}")
-#    \  Exit For Loop If  '${status}'=='PASS'
-#    \  run keyword if  '${status}'=='FAIL'   retry entering the project     ${search_ID}   ${project_name}
-#    \  ${i} =  Set Variable  ${i + 1}
-
-#the user should see country in dropdown
-#    [Arguments]  ${locator}  ${searchWord}
-#    :FOR    ${i}    IN RANGE  10
-#    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots  element should be visible  jQuery = ul li:contains("${searchWord}")
-#    \  Exit For Loop If  '${status}'=='PASS'
-#    \  run keyword if  '${status}'=='FAIL'   retry entering the project     ${locator}   ${searchWord}
-#    \  ${i} =  Set Variable  ${i + 1}
-
-#retry entering the project
-#    [Arguments]  ${search_ID}   ${project_name}
-#    clear element text      id = projectId
-#    wait until keyword succeeds without screenshots   10s    200ms   input text         id = projectId   ${search_ID} - ${project_name}
-#    mouse down                                        jQuery = ul li:contains("${search_ID} - ${project_name}")
-#    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    click element  jQuery = ul li:contains("${search_ID} - ${project_name}")
-#    run keyword if  '${status}'=='FAIL'               the user selects project in dropdown         ${search_ID}  ${project_name}
 
 the user completes the project team details
     the user clicks the button/link     link = Project team
@@ -832,9 +794,7 @@ the user fills correspondence address for non-uk based organisations
 enter the country in the autocomplete field
     [Arguments]         ${country}  ${completeCountryName}
     wait until keyword succeeds without screenshots   10s    200ms  input text    id = country        ${country}
-    #wait for autosave
     wait until keyword succeeds without screenshots    60s   5s    click element     jQuery = ul li:contains("${completeCountryName}")
-    #wait until keyword succeeds without screenshots    60s   5s    the user clicks the button/link     jQuery = ul li:contains("${completeCountryName}")
 
 the user should see project is live with review its progress link
     the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
