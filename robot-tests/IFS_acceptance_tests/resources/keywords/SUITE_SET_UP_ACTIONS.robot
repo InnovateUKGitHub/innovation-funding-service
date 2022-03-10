@@ -127,7 +127,6 @@ Create new application with the same user
     the user search for organisation name on Companies house    ITV  ITV PLC
     the user clicks the button/link                             link=Application details
     wait until keyword succeeds without screenshots             10 s  200 ms  Input Text  css=[id="name"]  ${Application_title}
-    #the user enters text to a text field     css=[id="name"]  ${Application_title}
     the user clicks the button/link                             jQuery=button:contains("Save and return")
 
 check if there is an existing application in progress for this competition
