@@ -16,15 +16,17 @@ public class ApplicationTeamReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     private final boolean internal;
     private final boolean ktpCompetition;
     private final String ktaPhoneNumber;
+    private final boolean ediUpdateEnabled;
 
     public ApplicationTeamReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question, List<ApplicationTeamOrganisationReadOnlyViewModel> organisations,
-                                            Optional<ProcessRoleResource> ktaProcessRole, String ktaPhoneNumber, boolean internal) {
+                                            Optional<ProcessRoleResource> ktaProcessRole, String ktaPhoneNumber, boolean internal, boolean ediUpdateEnabled) {
         super(data, question);
         this.organisations = organisations;
         this.ktpCompetition = data.getCompetition().isKtp();
         this.ktaProcessRole = ktaProcessRole;
         this.ktaPhoneNumber = ktaPhoneNumber;
         this.internal = internal;
+        this.ediUpdateEnabled = ediUpdateEnabled;
     }
 
     public List<ApplicationTeamOrganisationReadOnlyViewModel> getOrganisations() {
@@ -53,4 +55,9 @@ public class ApplicationTeamReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     public String getFragment() {
         return "application-team";
     }
+
+    public boolean isEdiUpdateEnabled() {
+        return ediUpdateEnabled;
+    }
+
 }

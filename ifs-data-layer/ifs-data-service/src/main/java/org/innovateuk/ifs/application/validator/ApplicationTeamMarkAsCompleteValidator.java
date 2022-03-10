@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.validator;
 
 import lombok.extern.slf4j.Slf4j;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
@@ -23,7 +24,6 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 
 /**
  * Validates the inputs in the application team page, if valid on the markAsComplete action
- *
  */
 @Slf4j
 @Component
@@ -34,6 +34,9 @@ public class ApplicationTeamMarkAsCompleteValidator implements Validator {
 
     @Autowired
     private ApplicationKtaInviteService applicationKtaInviteService;
+
+    @Autowired
+    private CompetitionService competitionService;
 
     @Value("${ifs.edi.update.enabled}")
     private boolean isEDIUpdateEnabled;
@@ -57,13 +60,11 @@ public class ApplicationTeamMarkAsCompleteValidator implements Validator {
                     .stream()
                     .filter(invite -> invite.getStatus() != OPENED)
                     .findFirst();
-            if (maybeInvite.isPresent()) {
-                reject(errors, "validation.applicationteam.pending.invites", maybeInvite.get().getName(), organisation.getId());
-            }
+            maybeInvite.ifPresent(applicationInviteResource -> reject(errors, "validation.applicationteam.pending.invites", applicationInviteResource.getName(), organisation.getId()));
         }
 
         if (application.getCompetition().isKtp() &&
-            application.getProcessRoles().stream().noneMatch(pr -> pr.getRole().isKta())) {
+                application.getProcessRoles().stream().noneMatch(pr -> pr.getRole().isKta())) {
 
             ApplicationKtaInviteResource ktaInvite = applicationKtaInviteService.getKtaInviteByApplication(application.getId()).getSuccess();
             if (ktaInvite == null) {
@@ -74,6 +75,9 @@ public class ApplicationTeamMarkAsCompleteValidator implements Validator {
                 }
             }
         }
+
+        boolean hasEDIQuestions = competitionService.hasEDIQuestion(application.getCompetition().getId()).getSuccess();
+        isEDIUpdateEnabled = isEDIUpdateEnabled && !hasEDIQuestions;
         if (isEDIUpdateEnabled) {
             validateLeadEDIStatus(errors, application);
         }
@@ -82,7 +86,7 @@ public class ApplicationTeamMarkAsCompleteValidator implements Validator {
 
     private void validateLeadEDIStatus(Errors errors, Application application) {
         EDIStatus ediStatus = application.getLeadApplicant().getEdiStatus();
-        if (ediStatus == null || (ediStatus != null && !ediStatus.equals(EDIStatus.COMPLETE))) {
+        if (ediStatus == null || !ediStatus.equals(EDIStatus.COMPLETE)) {
             reject(errors, "validation.applicationteam.edi.status", application.getLeadApplicant().getName(), application.getLeadOrganisationId());
         }
     }

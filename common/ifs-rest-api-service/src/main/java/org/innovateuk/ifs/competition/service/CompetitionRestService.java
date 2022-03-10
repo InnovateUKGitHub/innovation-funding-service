@@ -32,4 +32,5 @@ public interface CompetitionRestService {
     RestResult<Void> updateOtherFundingRulesTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId);
 
     RestResult<ByteArrayResource> downloadTerms(long competitionId);
+    RestResult<Boolean> hasEDIQuestion(Long competitionId);
 }
