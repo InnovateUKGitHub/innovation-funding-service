@@ -126,7 +126,10 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
 
     private ApplicationTeamOrganisationReadOnlyViewModel toOrganisationTeamViewModel(ApplicationResource application, OrganisationResource organisation, Collection<ProcessRoleResource> processRoles, InviteOrganisationResource organisationInvite, boolean internalUser) {
         List<ApplicationTeamUserReadOnlyViewModel> userRows = processRoles.stream()
-                .map(pr -> ApplicationTeamUserReadOnlyViewModel.fromProcessRole(pr, internalUser ? getPhoneNumber(pr.getUserEmail()) : null))
+                .map(pr -> {
+                        UserResource user = userRestService.retrieveUserById(pr.getUser()).getSuccess();
+                        return ApplicationTeamUserReadOnlyViewModel.fromProcessRole(pr, internalUser ? user.getPhoneNumber() : null, user.getEdiStatus());
+                       })
                 .collect(toList());
 
         Optional<InviteOrganisationResource> maybeOrganisationInvite = ofNullable(organisationInvite);
