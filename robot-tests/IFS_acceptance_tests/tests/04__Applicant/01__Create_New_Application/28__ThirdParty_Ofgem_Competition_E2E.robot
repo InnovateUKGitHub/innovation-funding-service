@@ -64,12 +64,14 @@ Applicant should not view overhead and capital usage costs in project costs
     And the user should not see the element          jQuery = button:contains("Capital usage")
 
 the user submits the third party ofgem application
-    [Documentation]   IFS-11475  IFS-11476
+    [Documentation]   IFS-11475  IFS-11476  IFS-11480
     [Setup]  Get competitions id and set it as suite variable   ${thirdPartyOfgemCompetitionName}
     Given the user completes thirdparty ofgem project finances
     And the user clicks the button/link                         link = Back to application overview
     And the user accept the thirdpary terms and conditions      Back to application overview
     When the user clicks the button/link                        id = application-overview-submit-cta
+    And the user clicks the button/link                         id = accordion-questions-heading-3-1
+    And the user should see the element                         jQuery = th:contains("Other funding (£)")
     And the user clicks the button/link                         id = submit-application-button
     Then the user should see the element                        jQuery = h2:contains("Application submitted")
     [Teardown]  update milestone to yesterday                   ${competitionId}  SUBMISSION_DATE
@@ -165,6 +167,7 @@ the user fills thirdparty funding information
     [Arguments]  ${Application}
     the user navigates to Your-finances page                ${Application}
     the user selects funding section in project finances
+    the user should see the element                         jQuery = span:contains("Have you received any aligned or third party funding for this project?")
     the user selects the radio button                       requestingFunding   true
     the user enters text to a text field                    css = [name^="grantClaimPercentage"]  10
     the user selects the radio button                       otherFunding   true
