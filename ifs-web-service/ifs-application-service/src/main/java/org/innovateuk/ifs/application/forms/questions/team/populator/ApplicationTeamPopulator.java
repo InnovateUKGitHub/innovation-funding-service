@@ -129,7 +129,7 @@ public class ApplicationTeamPopulator {
                 application.isOpen() && competition.isOpen(),
                 questionStatuses.stream().anyMatch(QuestionStatusResource::getMarkedAsComplete),
                 competition.isKtp(), ktpPhase2Enabled,
-                ktaInvite, ktaProcessRole, isEDIUpdateEnabled, competition.isOfGemCompetition(), competition.isThirdPartyOfgem());
+                ktaInvite, ktaProcessRole, isEDIUpdateEnabled, competition.isThirdPartyOfgem());
     }
 
     private ApplicationTeamOrganisationViewModel toInviteOrganisationTeamViewModel(InviteOrganisationResource organisationInvite, boolean leadApplicant) {
