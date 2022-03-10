@@ -522,7 +522,7 @@ United kingdom should display in country list of correspondence address for non-
 non-uk based lead applicant can complete the correspondence address
     [Documentation]     IFS - 7241
     [Tags]
-    When the user fills correspondence address data                                         Calle  11   No 1111    San Sebastian   Argentina      X5187XAB
+    When the user fills correspondence address data                                         Calle 11   No 1111    San Sebastian   Argentina      X5187XAB
     And the user clicks the button/link                                                     id = save-project-address-button
     Then the user should see read only view of completed correspondence address details
 
