@@ -104,7 +104,7 @@
                             <th class="govuk-table__header" id="labour-role" scope="col">Role within
                                 project
                             </th>
-                            <th:block th:unless="${model.isThirdPartyOfGem()}">
+                            <th:block th:unless="${model.isThirdPartyOfgem()}">
                                 <th id="labour-salary" scope="col"
                                     class="govuk-table__header govuk-table__header--numeric width-100">Gross
                                     employee cost
@@ -188,7 +188,7 @@
                    required="required"
                    maxlength="255">
         </td>
-        <th:block th:unless="${model.isThirdPartyOfGem()}">
+        <th:block th:unless="${model.isThirdPartyOfgem()}">
             <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
                 <label th:for="__${path}__.gross">
                     <span class="govuk-visually-hidden">Gross employee cost</span>
@@ -213,9 +213,9 @@
                 th:text="'£' + ${#numbers.formatInteger(row.rate == null ? 0 : row.rate, 0, 'DEFAULT')}">
             </td>
         </th:block>
-        <th:block th:if="${model.isThirdPartyOfGem()}">
+        <th:block th:if="${model.isThirdPartyOfgem()}">
             <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
-                <label th:for="__${path}__.gross">
+                <label th:for="__${path}__.rate">
                     <span class="govuk-visually-hidden">Rate (£/day)</span>
                 </label>
                 <th:block
@@ -249,7 +249,7 @@
                    max="999999999"
                    data-max-errormessage="You must enter a value less than 10 digits.">
         </td>
-        <th:block th:unless="${model.isThirdPartyOfGem()}">
+        <th:block th:unless="${model.isThirdPartyOfgem()}">
             <td class="govuk-table__cell govuk-table__cell--numeric labour-totals"
                 th:id="__${path}__.labourTotalCost"
                 data-calculation-operations="/,*"
@@ -260,7 +260,7 @@
             </th:block>
             </td>
         </th:block>
-        <th:block th:if="${model.isThirdPartyOfGem()}">
+        <th:block th:if="${model.isThirdPartyOfgem()}">
             <td class="govuk-table__cell govuk-table__cell--numeric labour-totals"
             th:id="__${path}__.labourTotalCost"
             data-calculation-operations="*"
@@ -292,7 +292,7 @@
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
                 <th class="govuk-table__header" scope="col">Role within project</th>
-                <th:block th:unless="${model.isThirdPartyOfGem()}">
+                <th:block th:unless="${model.isThirdPartyOfgem()}">
                     <th class="govuk-table__header govuk-table__header--numeric" scope="col">Gross employee cost (&pound;)
                     </th>
                 </th:block>
@@ -307,7 +307,7 @@
             <th:block th:each="entry : *{labour.rows}" th:with="cost=${entry.value}">
                 <tr class="govuk-table__row" th:unless="${cost.blank}">
                     <td class="govuk-table__cell" th:text="${cost.role}"></td>
-                    <th:block th:unless="${model.isThirdPartyOfGem()}">
+                    <th:block th:unless="${model.isThirdPartyOfgem()}">
                         <td class="govuk-table__cell govuk-table__cell--numeric"
                             th:text="${cost.gross != null ? #numbers.formatInteger(cost.gross,0,'DEFAULT') : '0'}"></td>
                     </th:block>

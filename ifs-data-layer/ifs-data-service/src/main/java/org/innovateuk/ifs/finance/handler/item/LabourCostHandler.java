@@ -85,8 +85,9 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
     protected List<LabourCost> initialiseCosts(Finance finance) {
         String description = LabourCostCategory.WORKING_DAYS_PER_YEAR;
         Integer labourDays = DEFAULT_WORKING_DAYS;
-        return newArrayList(new LabourCost(null, LabourCostCategory.WORKING_DAYS_KEY, null, null, labourDays, description,
-                finance.getId(), null, true)); // after merge from ifs-11442 change it to isThirdPartyOfgem
+        boolean thirdPartyOfgem = finance.getCompetition().isThirdPartyOfgem();
+        return newArrayList(new LabourCost(null, thirdPartyOfgem ? THIRDPARTY_OFGEM_NAME_KEY : LabourCostCategory.WORKING_DAYS_KEY,
+                null, null, labourDays, description, finance.getId(), null, thirdPartyOfgem));
     }
 
 }
