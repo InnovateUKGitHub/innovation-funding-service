@@ -93,10 +93,10 @@ spec:
                 name: feature-toggle-config
                 key: IFS_EDI_UPDATE_ENABLED
           - name: IFS_HECP_TCP_ENABLED
-              valueFrom:
-                configMapKeyRef:
-                  name: feature-toggle-config
-                  key: IFS_HECP_TCP_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: feature-toggle-config
+                key: IFS_HECP_TCP_ENABLED
           - name: IFS_WEB_BASEURL
             valueFrom:
               configMapKeyRef:
