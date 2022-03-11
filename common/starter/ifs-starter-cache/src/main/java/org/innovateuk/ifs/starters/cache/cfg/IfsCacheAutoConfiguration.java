@@ -1,19 +1,16 @@
 package org.innovateuk.ifs.starters.cache.cfg;
 
 import lombok.extern.slf4j.Slf4j;
-import org.innovateuk.ifs.IfsProfileConstants;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.cache.interceptor.SimpleCacheErrorHandler;
-import org.springframework.cache.support.NoOpCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 /**
  * Light touch on top of the spring AutoConfiguration
@@ -23,23 +20,16 @@ import org.springframework.context.annotation.Profile;
  * This includes redis cache that is also on the classpath.
  */
 @Configuration
-@EnableCaching
 @Slf4j
+@EnableCaching
 @AutoConfigureBefore({CacheAutoConfiguration.class, RedisAutoConfiguration.class})
 public class IfsCacheAutoConfiguration {
 
     @Bean
-    @Profile({IfsProfileConstants.STUBDEV + "|" + IfsProfileConstants.DEV})
-    public CacheManager cacheManager() {
-        log.info("Configuring NoOpCacheManager");
-        return new NoOpCacheManager();
+    @ConditionalOnProperty(name = "spring.cache.type", havingValue = "redis", matchIfMissing = true)
+    public RedisConfiguration redisConfiguration() {
+        return new RedisConfiguration();
     }
-
-//    @Bean
-//    @Profile({IfsProfileConstants.NOT_STUBDEV + "&" + IfsProfileConstants.NOT_DEV})
-//    public RedisConfiguration redisConfiguration() {
-//        return new RedisConfiguration();
-//    }
 
     @Bean
     public CacheErrorHandler errorHandler() {

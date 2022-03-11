@@ -4,15 +4,7 @@ apply from: rootProject.file("common/gradle-support/java.gradle")
 // Only really used or sharing system wide constants at present
 // although anything shared over all modules with no dependencies can go in here.
 dependencies {
-
     // This needs to have zero non-test dependencies to fulfil its purpose
-    testImplementation 'org.hamcrest:hamcrest:2.2'
-    testImplementation 'uk.org.webcompere:system-stubs-jupiter:2.0.1'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
 
-test {
-    useJUnitPlatform()
-}
 

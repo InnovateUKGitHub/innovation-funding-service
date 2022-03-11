@@ -9,9 +9,6 @@ dependencies {
 
     api platform(project(":common:bom"))
 
-    // exported
-    api project(":common:api:cache-api")
-
     implementation "org.springframework:spring-context"
     implementation "org.springframework.boot:spring-boot-autoconfigure"
     implementation "org.springframework.boot:spring-boot-starter"

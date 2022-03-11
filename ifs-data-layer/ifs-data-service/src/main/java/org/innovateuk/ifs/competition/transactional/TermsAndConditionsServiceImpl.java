@@ -15,10 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.IfsCacheConstants.DEFAULT_KEY;
+import static org.innovateuk.ifs.IfsCacheConstants.RESULT_FAILURE;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.cache.CacheConstants.DEFAULT_KEY;
-import static org.innovateuk.ifs.user.cache.CacheConstants.RESULT_FAILURE;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**

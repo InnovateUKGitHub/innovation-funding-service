@@ -14,6 +14,8 @@ dependencies {
     api("com.google.guava:guava")
     api("org.slf4j:slf4j-api")
     api("org.projectlombok:lombok")
+
+    // These are just constants
     api project(":common:api:static")
 
     // These are suggested versions
@@ -36,8 +38,8 @@ dependencies {
         api("javax.validation:validation-api:2.0.1.Final")
 
         // Api - keep it light, jackson and maybe some annotation libs at most
+        api project(":common:api:static")
         api project(":common:api:audit-api")
-        api project(":common:api:cache-api")
 
         // Starters - keep it light, only targeted spring libs
         api project(":common:starter:ifs-starter-audit")
