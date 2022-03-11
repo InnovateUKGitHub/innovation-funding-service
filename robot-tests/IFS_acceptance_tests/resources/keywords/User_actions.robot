@@ -203,8 +203,9 @@ the user selects option from type ahead
     wait until element is enabled without screenshots       id = ${inputId}
     wait until keyword succeeds without screenshots         10s  1s     click element      id = ${inputId}
     wait until page contains element without screenshots    css=[id="${inputId}"][class="autocomplete__input autocomplete__input--focused autocomplete__input--show-all-values"]  5s
-    #Mouse down                                              jQuery = ul li:contains("${searchTerm}")
-    wait until keyword succeeds without screenshots         10s  1s     click element      jQuery = ul li:contains("${optionSelector}")
+    Mouse down                                              jQuery = ul li:contains("${searchTerm}")
+    Execute Javascript                                      document.evaluate("//li[text()='${searchTerm}']",document.body,null,9,null).singleNodeValue.click();
+    #wait until keyword succeeds without screenshots         10s  1s     click element      jQuery = ul li:contains("${optionSelector}")
     #the user should see option in type ahead field         id = ${inputId}  ${optionSelector}
     #wait for autosave
     mouse out                                               id = ${inputId}
