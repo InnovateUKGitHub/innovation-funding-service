@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.starters.cache.cfg;
 
-import org.innovateuk.ifs.IfsProfileConstants;
+import com.google.common.collect.ImmutableList;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.boot.env.OriginTrackedMapPropertySource;
@@ -11,21 +11,33 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.List;
+
+import static org.innovateuk.ifs.IfsProfileConstants.*;
 
 public class SimpleCachePropertiesPostProcessor implements EnvironmentPostProcessor {
 
     public static final String CACHE_YML = "autoconfig-cache.yml";
 
+    private static final List PROFILES = ImmutableList.of(STUBDEV, DEV);
+
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-        if (Arrays.stream(environment.getActiveProfiles()).anyMatch(s -> s.equals(IfsProfileConstants.INTEGRATION_TEST))) {
-//            if (ProfileUtils.isProfileActive(STUBDEV, DEV, INTEGRATION_TEST)) {
+        if (matchProfile(environment)) {
             Resource resource = new ClassPathResource(CACHE_YML);
             if (resource.exists()) {
                 registerPropertySource(environment, resource);
             }
         }
+    }
+
+    private boolean matchProfile(ConfigurableEnvironment environment) {
+        for (String profile : environment.getActiveProfiles()) {
+            if (PROFILES.contains(profile)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected void registerPropertySource(ConfigurableEnvironment environment, Resource resource) {
