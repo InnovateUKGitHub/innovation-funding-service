@@ -41,7 +41,7 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
     public ApplicationFinanceRow toApplicationDomain(LabourCost labourCostItem) {
         return labourCostItem != null ? new ApplicationFinanceRow(
                                             labourCostItem.getId(),
-                                            labourCostItem.isThirdPartyOfgem() ? THIRDPARTY_OFGEM_NAME_KEY :labourCostItem.getName(),
+                                            labourCostItem.getName(),
                                             labourCostItem.getRole(),
                                             labourCostItem.getDescription(),
                                             labourCostItem.getLabourDays(),
@@ -65,12 +65,13 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
     public LabourCost toResource(FinanceRow cost) {
         LabourCost labourCost;
 
+        boolean thirdPartyOfgem = cost.getTarget().getCompetition().isThirdPartyOfgem();
         if (cost.getName() == THIRDPARTY_OFGEM_NAME_KEY) {
             labourCost = new LabourCost(cost.getId(), cost.getName(), cost.getItem(), BigDecimal.ZERO, cost.getQuantity(),
-                    cost.getDescription(), cost.getTarget().getId(), cost.getCost(), true);
+                    cost.getDescription(), cost.getTarget().getId(), cost.getCost(), thirdPartyOfgem);
         } else {
             labourCost = new LabourCost(cost.getId(), cost.getName(), cost.getItem(), cost.getCost(), cost.getQuantity(),
-                    cost.getDescription(), cost.getTarget().getId(), BigDecimal.ZERO, false);
+                    cost.getDescription(), cost.getTarget().getId(), BigDecimal.ZERO, thirdPartyOfgem);
         }
 
         return labourCost;
@@ -86,8 +87,7 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
         String description = LabourCostCategory.WORKING_DAYS_PER_YEAR;
         Integer labourDays = DEFAULT_WORKING_DAYS;
         boolean thirdPartyOfgem = finance.getCompetition().isThirdPartyOfgem();
-        return newArrayList(new LabourCost(null, thirdPartyOfgem ? THIRDPARTY_OFGEM_NAME_KEY : LabourCostCategory.WORKING_DAYS_KEY,
-                null, null, labourDays, description, finance.getId(), null, thirdPartyOfgem));
+        return newArrayList(new LabourCost(null, LabourCostCategory.WORKING_DAYS_KEY, null,
+                null, labourDays, description, finance.getId(), null, thirdPartyOfgem));
     }
-
 }

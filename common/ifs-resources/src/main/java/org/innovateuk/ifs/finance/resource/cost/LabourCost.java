@@ -14,6 +14,8 @@ import java.math.RoundingMode;
  */
 public class LabourCost extends AbstractFinanceRowItem {
 
+    public static final String THIRDPARTY_OFGEM_NAME_KEY = "third-party-ofgem";
+
     public interface YearlyWorkingDays {
     }
 
@@ -59,7 +61,7 @@ public class LabourCost extends AbstractFinanceRowItem {
                       Long targetId, BigDecimal rate, boolean thirdPartyOfgem) {
         super(targetId);
         this.id = id;
-        this.name = name;
+        this.name = addtThirdPartyOfgemKeyIfRequired(name, thirdPartyOfgem);
         this.role = role;
         if (StringUtils.isNotEmpty(this.name)
                 && this.name.equals(LabourCostCategory.WORKING_DAYS_KEY)
@@ -73,6 +75,16 @@ public class LabourCost extends AbstractFinanceRowItem {
         this.rate = rate;
         this.thirdPartyOfgem = thirdPartyOfgem;
     }
+
+    private String addtThirdPartyOfgemKeyIfRequired(String incomingName, boolean thirdPartyOfgem) {
+        String name = incomingName;
+
+        if (StringUtils.isEmpty(name) && thirdPartyOfgem) {
+            name = THIRDPARTY_OFGEM_NAME_KEY;
+        }
+
+        return name;
+   }
 
     @Override
     public Long getId() {

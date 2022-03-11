@@ -56,7 +56,8 @@ public class YourProjectCostsAutosaver {
                 workingDaysCost.setLabourDays(Integer.parseInt(value));
                 financeRowRestService.update(workingDaysCost).getSuccess();
             } else if (field.startsWith("labour.rows")) {
-                return autosaveLabourCost(field, value, finance);
+                //return autosaveLabourCost(field, value, finance);
+                return Optional.empty();
             } else if (field.startsWith("overhead")) {
                 return autosaveOverheadCost(field, value, finance, applicationId, organisation.getId());
             } else if (field.startsWith("materialRows")) {

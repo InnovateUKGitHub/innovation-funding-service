@@ -11,8 +11,6 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.*;
 
 public class LabourRowForm extends AbstractCostRowForm<LabourCost> {
 
-    public static final String THIRDPARTY_OFGEM_NAME_KEY = "third-party-ofgem";
-
     @Size(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     @NotBlank(message = NOT_BLANK_MESSAGE)
     private String role;
@@ -44,6 +42,7 @@ public class LabourRowForm extends AbstractCostRowForm<LabourCost> {
         this.days = cost.getLabourDays();
         this.gross = cost.getGrossEmployeeCost();
         this.rate = cost.getRate();
+        this.thirdPartyOfgem = cost.isThirdPartyOfgem();
     }
 
     public String getRole() {
@@ -100,6 +99,6 @@ public class LabourRowForm extends AbstractCostRowForm<LabourCost> {
 
     @Override
     public LabourCost toCost(Long financeId) {
-        return new LabourCost(getCostId(), thirdPartyOfgem ? THIRDPARTY_OFGEM_NAME_KEY : null, role, gross, days, null, financeId, rate, thirdPartyOfgem);
+        return new LabourCost(getCostId(), null, role, gross, days, null, financeId, rate, thirdPartyOfgem);
     }
 }
