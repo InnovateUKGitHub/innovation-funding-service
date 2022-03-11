@@ -476,12 +476,7 @@ public class CompetitionWebTestData {
                 loanCompetition()
                         .withName("Loans SF Part-B Competition")
                         .withInnovationSector("Infrastructure systems")
-                        .withAssessorCount(5),
-                grantCompetition()
-                        .withName("Horizon Europe Guarantee competition")
-                        .withCompetitionType(HORIZON_EUROPE_GUARANTEE)
-                        .withAlwaysOpen(true)
-                        .withResubmission(false)
+                        .withAssessorCount(5)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.OPEN))
