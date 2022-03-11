@@ -446,13 +446,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected QuestionResource retrieveQuestionByCompetitionAndName(String questionName, Long competitionId) {
-        System.out.println("retrieveQuestionByCompetitionAndName --->" + questionName);
-        QuestionResource questionResource =  simpleFindFirst(retrieveQuestionsByCompetitionId(competitionId), q -> questionName.equals(q.getName())).get();
-        return  questionResource;
+        return simpleFindFirst(retrieveQuestionsByCompetitionId(competitionId), q -> questionName.equals(q.getName())).get();
     }
 
     protected List<QuestionResource> retrieveQuestionsByCompetitionId(Long competitionId) {
-        System.out.println("retrieveQuestionsByCompetitionId in Base Data builder " + competitionId);
         return fromCache(competitionId, questionsByCompetitionId, () -> doAs(compAdmin(), () ->
                 questionService.findByCompetition(competitionId).getSuccess()));
     }
@@ -528,7 +525,6 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         try {
             return cache.get(key, loadingFunction);
         } catch (ExecutionException e) {
-            System.out.println("From Cache exception--------> " + e.getMessage());
             throw new RuntimeException("Exception encountered whilst reading from Cache", e);
         }
     }

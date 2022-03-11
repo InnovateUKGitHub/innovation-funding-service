@@ -142,13 +142,10 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
 
     public QuestionResponseDataBuilder withAssignee(String assignee) {
         return with(data -> {
-            System.out.println("withAssignee ==>" + data);
+
             QuestionResource question = retrieveQuestionByCompetitionAndName(data.getQuestionName(), data.getApplication().getCompetition());
-            System.out.println("QuestionResource ==>" + question);
             ProcessRoleResource assigneeUser = retrieveApplicantByEmail(assignee, data.getApplication().getId());
-            System.out.println("assigneeUser ==>" + assigneeUser);
             ProcessRoleResource assignedByUser = retrieveLeadApplicant(data.getApplication().getId());
-            System.out.println("QuestionResource ==>" + assignedByUser);
             UserResource assigningUser = retrieveUserById(assignedByUser.getUser());
 
             doAs(assigningUser, () ->
