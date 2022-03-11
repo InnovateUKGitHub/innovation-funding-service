@@ -22,6 +22,8 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.user.cache.CacheConstants.DEFAULT_KEY;
+import static org.innovateuk.ifs.user.cache.CacheConstants.RESULT_FAILURE;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
@@ -46,21 +48,21 @@ public class CategoryServiceImpl extends BaseTransactionalService implements Cat
     private ResearchCategoryMapper researchCategoryMapper;
 
     @Override
-    @Cacheable(cacheNames="getInnovationAreas", key = "#root.methodName", unless = "#result.isFailure()")
+    @Cacheable(cacheNames="getInnovationAreas", key = DEFAULT_KEY, unless = RESULT_FAILURE)
     public ServiceResult<List<InnovationAreaResource>> getInnovationAreas() {
         return find(innovationAreaRepository.findAllByOrderByNameAsc(), notFoundError(InnovationArea.class))
                 .andOnSuccessReturn(innovationAreaMapper::mapToResource);
     }
 
     @Override
-    @Cacheable(cacheNames="getInnovationSectors", key = "#root.methodName", unless = "#result.isFailure()")
+    @Cacheable(cacheNames="getInnovationSectors", key = DEFAULT_KEY, unless = RESULT_FAILURE)
     public ServiceResult<List<InnovationSectorResource>> getInnovationSectors() {
         return find(innovationSectorRepository.findAllByOrderByPriorityAsc(), notFoundError(InnovationSector.class))
                 .andOnSuccessReturn(innovationSectorMapper::mapToResource);
     }
 
     @Override
-    @Cacheable(cacheNames="getResearchCategories", key = "#root.methodName", unless = "#result.isFailure()")
+    @Cacheable(cacheNames="getResearchCategories", key = DEFAULT_KEY, unless = RESULT_FAILURE)
     public ServiceResult<List<ResearchCategoryResource>> getResearchCategories() {
         return find(researchCategoryRepository.findAllByOrderByPriorityAsc(), notFoundError(ResearchCategory.class))
                 .andOnSuccessReturn(researchCategoryMapper::mapToResource);
