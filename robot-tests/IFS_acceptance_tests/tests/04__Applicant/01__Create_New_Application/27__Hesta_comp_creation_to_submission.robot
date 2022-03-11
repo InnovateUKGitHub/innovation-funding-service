@@ -79,7 +79,7 @@ The Application Summary page must not include the Reopen Application link when t
     And the user is presented with the Application Summary page
 
 Lead applicant receives email notifiction when internal user marks application unsuccessful
-    [Documentation]  IFS-10695
+    [Documentation]  IFS-10695  IFS-11341
     Given the user logs out if they are logged in
     And Requesting IDs of this competition                                          ${hestaCompetitionName}
     And the user successfully completes application                                 barry   barrington   ${newLeadApplicantEmail}   ${newHestaApplicationName}
