@@ -1,0 +1,42 @@
+ifs:
+  web:
+    baseURL: "https://localhost:8080"
+  data:
+    service:
+      rest:
+        baseURL: "http://localhost:8090"
+  starters:
+    stubdev:
+      projectRootDirectory: ${PROJECT_ROOT_DIRECTORY}
+      enableClientMethodTiming: false
+      validateHtml: false
+      webCoreTemplates: "/ifs-web-service/ifs-web-core/src/main/resources/templates/"
+      logThymeLeafTemplates: false
+      defaultUuid: "79320212-3272-4f86-bf60-cb406c27c0f8"
+      rewriteRules:
+        - existing: "https://localhost:8080/assessment/"
+          rewrite: "http://localhost:8081/assessment/"
+        - existing: "https://localhost:8080/management/"
+          rewrite: "http://localhost:8082/management/"
+        - existing: "https://localhost:8080/competition/"
+          rewrite: "http://localhost:8083/competition/"
+        - existing: "https://localhost:8080/project-setup-management/"
+          rewrite: "http://localhost:8084/project-setup-management/"
+        - existing: "https://localhost:8080/project-setup/"
+          rewrite: "http://localhost:8085/project-setup/"
+        - existing: "https://localhost:8080/survey/"
+          rewrite: "http://localhost:8086/survey/"
+        - existing: "https://localhost:8080/"
+          rewrite: "http://localhost:8080/"
+tomcat:
+  ajp:
+    enable: false
+spring:
+  thymeleaf:
+    cache: false
+    mode: HTML
+    encoding: UTF-8
+    checkTemplate: true
+  resources:
+    cache:
+      period: 0

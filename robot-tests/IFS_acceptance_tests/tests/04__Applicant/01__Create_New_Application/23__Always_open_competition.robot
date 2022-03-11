@@ -128,7 +128,7 @@ Lead applicant creates an application and checks the dashboard content when the 
     [Documentation]  IFS-8850
     Given the user logs out if they are logged in
     And the lead user creates an always open application                                         Test   User   test.user1@gmail.com   ${applicationName}
-    When the lead user completes project details, application questions and finances sections
+    When the lead user completes project details, application questions and finances sections    COMPLETE   test.user1@gmail.com
     Then the user checks the status of the application before completion
 
 Lead applicant completes the application and checks the dashboard content before the application is submitted
@@ -136,7 +136,7 @@ Lead applicant completes the application and checks the dashboard content before
     Given the user adds a partner organisation and application details
     And log in as a different user                                         test.user1@gmail.com     ${short_password}
     When the user clicks the button/link                                   link = ${applicationName}
-    And the applicant completes Application Team
+    And the applicant completes Application Team                           COMPLETE  test.user1@gmail.com
     And the user accept the competition terms and conditions               Back to application overview
     Then the user checks the status of the application after completion
 

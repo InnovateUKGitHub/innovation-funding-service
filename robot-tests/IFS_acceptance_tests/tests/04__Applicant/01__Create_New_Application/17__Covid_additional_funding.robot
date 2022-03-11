@@ -263,7 +263,7 @@ the applicant adds contributor to Application Team
     Logging in and Error Checking                          &{lead_applicant_credentials}
     the user clicks the application tile if displayed
     the user clicks the button/link                        link = ${COVIDapplicationTitle1}
-    the applicant completes Application Team
+    the applicant completes Application Team               COMPLETE  steve.smith@empire.com
 
 the user fills in bank details
     the user clicks the button/link                      link = Set up your project

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.core.schedule;
 
+import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.project.core.transactional.ProjectToBeCreatedService;
 import org.innovateuk.ifs.schedule.transactional.ScheduleStatusWrapper;
 import org.innovateuk.ifs.util.AuthenticationHelper;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-@Profile("!integration-test")
+@Profile(IfsProfileConstants.NOT_INTEGRATION_TEST)
 public class ProjectToBeCreatedSchedule {
     @Autowired
     private ScheduleStatusWrapper wrapper;
