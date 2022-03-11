@@ -25,6 +25,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,7 +63,6 @@ public class FinanceOverviewController {
 
     @Autowired
     private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
-
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping
@@ -105,7 +105,8 @@ public class FinanceOverviewController {
                 competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE),
                 applicationFundingBreakdownViewModel,
                 getExternalUser(loggedInUser),
-                getExternalUserLinkUrl(loggedInUser, projectId));
+                getExternalUserLinkUrl(loggedInUser, projectId),
+                competition.isThirdPartyOfgem());
     }
 
     private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(long projectId) {

@@ -13,7 +13,8 @@ public class ManagementYourFundingViewModel extends YourFundingViewModel {
                                           String applicationName,
                                           String url,
                                           FundingType fundingType,
-                                          OrganisationTypeEnum organisationType) {
+                                          OrganisationTypeEnum organisationType,
+                                          boolean isThirdPartyOfgem) {
         super(
                 applicationId,
                 competitionName,
@@ -36,7 +37,8 @@ public class ManagementYourFundingViewModel extends YourFundingViewModel {
                 url,
                 false,
                 fundingType,
-                organisationType
+                organisationType,
+                isThirdPartyOfgem
         );
     }
 }
