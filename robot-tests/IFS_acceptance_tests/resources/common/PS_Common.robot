@@ -240,7 +240,9 @@ Applicant uploads the GOL using Docusign
     the user clicks the button/link                                          css = div.signature-tab-content
     the user adopts signature details if exist
     the user clicks the button/link                                          css = div.documents-finish-button-decoration
-    the user refreshes until element appears on page                         jQuery = h1:contains("Grant offer letter")
+    #adding a small sleep to wait for docusign to close and redirect to ifs
+    sleep  2s
+    the user should see the element                                         jQuery = h1:contains("Grant offer letter")
 
 the GOL has already been approved
     [Arguments]  ${projectID}
