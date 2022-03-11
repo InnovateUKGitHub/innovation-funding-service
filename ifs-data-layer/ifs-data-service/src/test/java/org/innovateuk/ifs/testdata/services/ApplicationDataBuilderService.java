@@ -114,7 +114,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
         // if we have specific answers for questions in the application-questions.csv file, fill them in here now
         if (!responsesForApplication.isEmpty()) {
-
+            System.out.println("Aplication Data builder serice .... " + responsesForApplication.toString());
             List<QuestionResponseDataBuilder> responseBuilders = questionResponsesFromCsv(
                     baseBuilder,
                     applicationLine.leadApplicant,
@@ -139,6 +139,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 String answerValue = "This is the applicant response for " + question.getName().toLowerCase() + ".";
                 String leadApplicantEmail = applicationData.getLeadApplicant().getEmail();
 
+                System.out.println("Aplication Data builder serice .... " + answerValue);
                 QuestionResponseDataBuilder responseBuilder = baseBuilder.
                         forQuestion(question.getName()).
                         withAssignee(leadApplicantEmail);

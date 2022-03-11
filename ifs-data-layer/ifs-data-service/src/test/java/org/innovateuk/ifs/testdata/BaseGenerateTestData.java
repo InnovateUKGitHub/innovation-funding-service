@@ -214,8 +214,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     @Value("${ifs.generate.test.data.competition.filter.name:Subsidy control comp in assessment}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
-       BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
+    //   BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
+        BaseGenerateTestData.competitionNameForFilter = "Third Party Ofgem Competition";
     }
+
 
     @Before
     public void setup() throws Exception {
