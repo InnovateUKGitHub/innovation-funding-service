@@ -32,12 +32,16 @@ class IfsCacheAutoConfigurationTest {
     public void testConfigWithStubProfile() {
         new ApplicationContextRunner()
             .withSystemProperties(
-                    PROFILE_PROP
+                PROFILE_PROP,
+                "spring.cache.type=simple",
+                "spring.redis.client-type=jedis",//just set this to disable lettuce
+                "spring.data.repositories.enabled=false",
+                "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration"
             )
             .withConfiguration(
-                    AutoConfigurations.of(IfsCacheAutoConfiguration.class)
+                    AutoConfigurations.of(IfsCacheAutoConfiguration.class, CacheAutoConfiguration.class, RedisAutoConfiguration.class)
             ).run((context) -> {
-                assertFound(context, ImmutableList.of(CacheErrorHandler.class, NoOpCacheManager.class));
+                assertFound(context, ImmutableList.of(CacheErrorHandler.class));
                 assertNotFound(context, Collections.singletonList(RedisTemplate.class));
             });
     }
