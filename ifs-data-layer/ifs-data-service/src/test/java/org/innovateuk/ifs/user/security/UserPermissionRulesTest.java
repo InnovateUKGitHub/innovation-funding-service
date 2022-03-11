@@ -10,6 +10,8 @@ import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
+import org.innovateuk.ifs.supporter.domain.SupporterAssignment;
+import org.innovateuk.ifs.supporter.resource.SupporterState;
 import org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
@@ -20,6 +22,7 @@ import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -34,6 +37,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
+import static org.innovateuk.ifs.supporter.domain.builder.SupporterAssignmentBuilder.newSupporterAssignment;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -163,6 +167,67 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 assertFalse(rules.monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, user));
             }
         });
+    }
+
+    @Test
+    public void monitoringOfficersCanViewUsersInApplicationsBelongsToProjectsTheyAreAssignedTo() {
+        Application application = newApplication().build();
+        when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
+
+        Project project = newProject().withApplication(application).build();
+        UserResource userResource = newUserResource().withRoleGlobal(Role.APPLICANT).build();
+
+        User user = newUser().withId(userResource.getId()).build();
+        List<ProcessRole> processRoles = newProcessRole()
+                .withRole(ProcessRoleType.LEADAPPLICANT)
+                .withUser(user)
+                .withApplication(application)
+                .build(1);
+
+        List<MonitoringOfficer> projectMonitoringOfficers = newMonitoringOfficer()
+                .withProject(project)
+                .build(1);
+
+        when(projectUserRepository.findByUserId(userResource.getId())).thenReturn(Collections.emptyList());
+        when(processRoleRepository.findByUserId(userResource.getId())).thenReturn(processRoles);
+        when(projectMonitoringOfficerRepository.findByUserId(monitoringOfficerUser().getId())).thenReturn(projectMonitoringOfficers);
+
+        UserResource anotherUserResource = newUserResource().withRoleGlobal(Role.APPLICANT).build();
+
+        allGlobalRoleUsers.forEach(incomingUser -> {
+            if (isMonitoringOfficer(incomingUser)) {
+                assertTrue(rules.monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, monitoringOfficerUser()));
+            } else {
+                assertFalse(rules.monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, incomingUser));
+            }
+        });
+
+        // No application attached to this user
+        assertFalse(rules.monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(anotherUserResource, monitoringOfficerUser()));
+    }
+
+    @Test
+    public void projectUsersCanViewOtherProjectUsersInProjectsTheyAreAssignedTo() {
+        Project project = newProject().build();
+
+        UserResource userResourceApplicant1 = newUserResource().withRoleGlobal(Role.APPLICANT).build();
+        UserResource userResourceApplicant2 = newUserResource().withRoleGlobal(Role.APPLICANT).build();
+        UserResource userResourceApplicant3 = newUserResource().withRoleGlobal(Role.APPLICANT).build();
+
+        List<ProjectUser> projectUsers = newProjectUser()
+                .withProject(project)
+                .withRole(ProjectParticipantRole.PROJECT_PARTNER)
+                .build(1);
+        List<ProjectUser> projectManager = newProjectUser()
+                .withProject(project)
+                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
+                .build(1);
+
+        when(projectUserRepository.findByUserId(userResourceApplicant1.getId())).thenReturn(projectUsers);
+        when(projectUserRepository.findByUserId(userResourceApplicant2.getId())).thenReturn(projectManager);
+
+        assertTrue(rules.projectUsersCanViewOtherProjectUsersInProjectsTheyAreAssignedTo(userResourceApplicant1, userResourceApplicant2));
+        assertFalse(rules.projectUsersCanViewOtherProjectUsersInProjectsTheyAreAssignedTo(userResourceApplicant3, userResourceApplicant2));
     }
 
     @Test
@@ -424,6 +489,177 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
         // assert that they can't see users from application 3 because they are not assessing it
         assertFalse(rules.assessorsCanViewConsortiumUsersOnApplicationsTheyAreAssessing(application3LeadResource, assessorForApplications1And2Resource));
+    }
+
+    @Test
+    public void ktpSupporterCanViewOtherConsortiumMembers() {
+
+        User supporterUser = newUser().build();
+        UserResource supporterUserResource = newUserResource()
+                .withId(supporterUser.getId())
+                .withRoleGlobal(Role.SUPPORTER)
+                .build();
+
+        Application application1 = newApplication().build();
+        when(applicationRepository.findById(application1.getId())).thenReturn(Optional.of(application1));
+
+        User application1Lead1 = newUser().build();
+        User application1Lead2 = newUser().build();
+        User application1Collaborator1 = newUser().build();
+        User application1Collaborator2 = newUser().build();
+
+        List<ProcessRole> application1ConsortiumRoles = newProcessRole().withApplication(application1).
+                withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.LEADAPPLICANT, ProcessRoleType.LEADAPPLICANT, ProcessRoleType.LEADAPPLICANT, ProcessRoleType.LEADAPPLICANT).
+                withUser(application1Lead1, application1Lead2, application1Collaborator1, application1Collaborator2).
+                build(4);
+
+        List<User> application1Consortium = simpleMap(application1ConsortiumRoles, ProcessRole::getUser);
+        List<UserResource> application1ConsortiumResources = simpleMap(application1Consortium, userResourceForUser());
+
+        SupporterAssignment supporterAssignment1 = newSupporterAssignment()
+                .withParticipant(supporterUser)
+                .withProcessState(SupporterState.ACCEPTED)
+                .withApplication(application1)
+                .build();
+
+        when(processRoleRepository.findByUserId(application1Lead1.getId())).
+                thenReturn(singletonList(application1ConsortiumRoles.get(0)));
+        when(processRoleRepository.findByUserId(application1Lead2.getId())).
+                thenReturn(singletonList(application1ConsortiumRoles.get(1)));
+        when(processRoleRepository.findByUserId(application1Collaborator1.getId())).
+                thenReturn(singletonList(application1ConsortiumRoles.get(2)));
+        when(processRoleRepository.findByUserId(application1Collaborator2.getId())).
+                thenReturn(singletonList(application1ConsortiumRoles.get(3)));
+
+        Application application2 = newApplication().build();
+        when(applicationRepository.findById(application2.getId())).thenReturn(Optional.of(application2));
+
+        User application2Lead = newUser().build();
+        User application2Collaborator1 = newUser().build();
+
+        List<ProcessRole> application2ConsortiumRoles = newProcessRole().withApplication(application2).
+                withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.LEADAPPLICANT).
+                withUser(application2Lead, application2Collaborator1).
+                build(2);
+
+        List<User> application2Consortium = simpleMap(application2ConsortiumRoles, ProcessRole::getUser);
+        List<UserResource> application2ConsortiumResources = simpleMap(application2Consortium, userResourceForUser());
+
+        SupporterAssignment supporterAssignment2 = newSupporterAssignment()
+                .withParticipant(supporterUser)
+                .withProcessState(SupporterState.CREATED)
+                .withApplication(application2)
+                .build();
+
+        when(processRoleRepository.findByUserId(application2Lead.getId())).
+                thenReturn(singletonList(application2ConsortiumRoles.get(0)));
+        when(processRoleRepository.findByUserId(application2Collaborator1.getId())).
+                thenReturn(singletonList(application2ConsortiumRoles.get(1)));
+
+        Application application3 = newApplication().build();
+        when(applicationRepository.findById(application3.getId())).thenReturn(Optional.of(application3));
+
+        User application3Lead = newUser().build();
+        User application3Collaborator1 = newUser().build();
+
+        List<ProcessRole> application3ConsortiumRoles = newProcessRole().withApplication(application3).
+                withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.LEADAPPLICANT, ProcessRoleType.LEADAPPLICANT).
+                withUser(application3Lead, application3Collaborator1).
+                build(2);
+
+        List<User> application3Consortium = simpleMap(application3ConsortiumRoles, ProcessRole::getUser);
+        List<UserResource> application3ConsortiumResources = simpleMap(application3Consortium, userResourceForUser());
+
+        SupporterAssignment supporterAssignment3 = newSupporterAssignment()
+                .withParticipant(supporterUser)
+                .withProcessState(SupporterState.REJECTED)
+                .withApplication(application3)
+                .build();
+
+        when(processRoleRepository.findByUserId(application3Lead.getId())).
+                thenReturn(singletonList(application3ConsortiumRoles.get(0)));
+        when(processRoleRepository.findByUserId(application3Collaborator1.getId())).
+                thenReturn(singletonList(application3ConsortiumRoles.get(1)));
+
+        // user common to all applications
+        when(supporterAssignmentRepository.findByParticipantId(supporterUser.getId())).
+                thenReturn(asList(supporterAssignment1, supporterAssignment2, supporterAssignment3));
+
+        // assert that supporter of the application 1 can see all other consortium members as the assignment is in ACCEPTED state
+        application1ConsortiumResources.forEach(consortiumMembers ->
+                assertTrue(rules.ktpSupporterCanViewApplicationTeamMembers(consortiumMembers, supporterUserResource)));
+
+        // assert that supporter of the application 2 can see all other consortium members as the assignment is in CREATED state
+        application2ConsortiumResources.forEach(consortiumMembers ->
+                assertTrue(rules.ktpSupporterCanViewApplicationTeamMembers(consortiumMembers, supporterUserResource)));
+
+        // assert that supporter of the application 3 can see all other consortium members as the assignment is in REJECTED state
+        application3ConsortiumResources.forEach(consortiumMembers ->
+                assertTrue(rules.ktpSupporterCanViewApplicationTeamMembers(consortiumMembers, supporterUserResource)));
+    }
+
+    @Test
+    public void ktaCanViewOtherConsortiumMembers() {
+
+        User ktaUser = newUser().build();
+        UserResource ktaUserResource = newUserResource()
+                .withId(ktaUser.getId())
+                .withRoleGlobal(Role.KNOWLEDGE_TRANSFER_ADVISER)
+                .build();
+
+        Application application1 = newApplication().build();
+        when(applicationRepository.findById(application1.getId())).thenReturn(Optional.of(application1));
+
+        User application1Lead1 = newUser().build();
+        User application1Collaborator1 = newUser().build();
+
+        List<ProcessRole> application1ConsortiumRoles = newProcessRole().withApplication(application1).
+                withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.LEADAPPLICANT).
+                withUser(application1Lead1, application1Collaborator1).
+                build(2);
+
+        List<User> application1Consortium = simpleMap(application1ConsortiumRoles, ProcessRole::getUser);
+        List<UserResource> application1ConsortiumResources = simpleMap(application1Consortium, userResourceForUser());
+
+        when(processRoleRepository.findByUserId(application1Lead1.getId())).
+                thenReturn(singletonList(application1ConsortiumRoles.get(0)));
+        when(processRoleRepository.findByUserId(application1Collaborator1.getId())).
+                thenReturn(singletonList(application1ConsortiumRoles.get(1)));
+
+        List<ProcessRole> application1KtaRoles = newProcessRole().withApplication(application1).
+                withRole(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER).
+                withUser(ktaUser).
+                build(1);
+
+        when(processRoleRepository.findByUserId(ktaUser.getId())).
+                thenReturn(singletonList(application1KtaRoles.get(0)));
+
+        Application application2 = newApplication().build();
+        when(applicationRepository.findById(application2.getId())).thenReturn(Optional.of(application2));
+
+        User application2Lead = newUser().build();
+        User application2Collaborator1 = newUser().build();
+
+        List<ProcessRole> application2ConsortiumRoles = newProcessRole().withApplication(application2).
+                withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.LEADAPPLICANT).
+                withUser(application2Lead, application2Collaborator1).
+                build(2);
+
+        List<User> application2Consortium = simpleMap(application2ConsortiumRoles, ProcessRole::getUser);
+        List<UserResource> application2ConsortiumResources = simpleMap(application2Consortium, userResourceForUser());
+
+        when(processRoleRepository.findByUserId(application2Lead.getId())).
+                thenReturn(singletonList(application2ConsortiumRoles.get(0)));
+        when(processRoleRepository.findByUserId(application2Collaborator1.getId())).
+                thenReturn(singletonList(application2ConsortiumRoles.get(1)));
+
+        // assert that kta of the application 1 can see all other consortium members
+        application1ConsortiumResources.forEach(consortiumMembers ->
+                assertTrue(rules.applicationParticipantsCanViewApplicationTeamMembers(consortiumMembers, ktaUserResource)));
+
+        // assert that kta not part of the application 2 can not see all other consortium members
+        application2ConsortiumResources.forEach(consortiumMembers ->
+                assertFalse(rules.applicationParticipantsCanViewApplicationTeamMembers(consortiumMembers, ktaUserResource)));
     }
 
     @Test
