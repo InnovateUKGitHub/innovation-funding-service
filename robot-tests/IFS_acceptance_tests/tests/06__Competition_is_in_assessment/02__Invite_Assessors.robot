@@ -184,6 +184,7 @@ The key statistics are calculated
 the user invites multiple assessors
     the user clicks the button/link     link = 1 to 20
 <<<<<<< HEAD
+<<<<<<< HEAD
     the user selects the checkbox       assessor-row-1
     the user selects the checkbox       assessor-row-2
     the user selects the checkbox       assessor-row-3
@@ -192,6 +193,11 @@ the user invites multiple assessors
     the user selects the checkbox       jQuery = tr:contains("Aaron Jennings") :checkbox
     the user selects the checkbox       jQuery = tr:contains("Alexis Kinney") :checkbox
 >>>>>>> development
+=======
+    the user selects the checkbox       jQuery = tr:contains("Addison Shannon") :checkbox
+    the user selects the checkbox       jQuery = tr:contains("Aaron Jennings") :checkbox
+    the user selects the checkbox       jQuery = tr:contains("Alexis Kinney") :checkbox
+>>>>>>> feature/IFS-11442-ofgem-create-a-thirdparty-generic-template
     the user clicks the button/link     jQuery = button:contains("Add selected to invite list")
     the user should see the element     jQuery = td:contains("${assessor_to_add}")
 

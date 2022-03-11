@@ -20,10 +20,6 @@ Resource         ../../resources/common/Competition_Commons.robot
 ${questionSubTitleInfo}     We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.
 ${surveyMonkeyUrl}          https://www.surveymonkey.co.uk/r/ifsaccount
 ${ediQuestion}              Have you completed the EDI survey?
-<<<<<<< HEAD
-#${ediQuestionTitle}         Equality, diversity and inclusion
-=======
->>>>>>> development
 *** Test Cases ***
 Business opportunity Server-side validations setup questions
     [Documentation]    INFUND-5629 INFUND-5685
