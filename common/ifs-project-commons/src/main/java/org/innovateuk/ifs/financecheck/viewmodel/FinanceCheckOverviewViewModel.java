@@ -14,6 +14,7 @@ public class FinanceCheckOverviewViewModel {
     private final boolean loanCompetition;
     private final boolean ktpCompetition;
     private final boolean hasGrantClaimPercentage;
+    private final boolean isThirdPartyOfgem;
 
     private final long applicationId;
     private final boolean canChangeFundingSought;
@@ -25,17 +26,34 @@ public class FinanceCheckOverviewViewModel {
 
     private final String externalUserLinkUrl;
 
-    public FinanceCheckOverviewViewModel(ProjectFinanceOverviewViewModel overview, FinanceCheckSummariesViewModel summaries, ProjectFinanceCostBreakdownViewModel breakdown, long applicationId,
-                                         boolean canChangeFundingSought, boolean loanCompetition, boolean ktpCompetition, boolean canChangeFundingLevelPercentages, boolean hasGrantClaimPercentage, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel) {
+    public FinanceCheckOverviewViewModel(ProjectFinanceOverviewViewModel overview,
+                                         FinanceCheckSummariesViewModel summaries,
+                                         ProjectFinanceCostBreakdownViewModel breakdown,
+                                         long applicationId,
+                                         boolean canChangeFundingSought,
+                                         boolean loanCompetition,
+                                         boolean ktpCompetition,
+                                         boolean canChangeFundingLevelPercentages,
+                                         boolean hasGrantClaimPercentage,
+                                         ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
+                                         boolean isThirdPartyOfgem) {
         this(overview, summaries, breakdown, applicationId, canChangeFundingSought, loanCompetition, ktpCompetition, canChangeFundingLevelPercentages,
-                hasGrantClaimPercentage, applicationFundingBreakdownViewModel, false, null);
+                hasGrantClaimPercentage, applicationFundingBreakdownViewModel, false, null, isThirdPartyOfgem);
     }
 
-    public FinanceCheckOverviewViewModel(ProjectFinanceOverviewViewModel overview, FinanceCheckSummariesViewModel summaries,
-                                         ProjectFinanceCostBreakdownViewModel breakdown, long applicationId, boolean canChangeFundingSought,
-                                         boolean loanCompetition, boolean ktpCompetition, boolean canChangeFundingLevelPercentages,
-                                         boolean hasGrantClaimPercentage, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
-                                         boolean externalUser, String externalUserLinkUrl) {
+    public FinanceCheckOverviewViewModel(ProjectFinanceOverviewViewModel overview,
+                                         FinanceCheckSummariesViewModel summaries,
+                                         ProjectFinanceCostBreakdownViewModel breakdown,
+                                         long applicationId,
+                                         boolean canChangeFundingSought,
+                                         boolean loanCompetition,
+                                         boolean ktpCompetition,
+                                         boolean canChangeFundingLevelPercentages,
+                                         boolean hasGrantClaimPercentage,
+                                         ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
+                                         boolean externalUser,
+                                         String externalUserLinkUrl,
+                                         boolean isThirdPartyOfgem) {
         this.overview = overview;
         this.summaries = summaries;
         this.breakdown = breakdown;
@@ -48,6 +66,7 @@ public class FinanceCheckOverviewViewModel {
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
         this.externalUser = externalUser;
         this.externalUserLinkUrl = externalUserLinkUrl;
+        this.isThirdPartyOfgem = isThirdPartyOfgem;
     }
 
     public ProjectFinanceOverviewViewModel getOverview() {
@@ -101,5 +120,9 @@ public class FinanceCheckOverviewViewModel {
     @JsonIgnore
     public boolean isProcurement() {
         return summaries.getFundingType() == FundingType.PROCUREMENT;
+    }
+
+    public boolean isThirdPartyOfgem() {
+        return isThirdPartyOfgem;
     }
 }

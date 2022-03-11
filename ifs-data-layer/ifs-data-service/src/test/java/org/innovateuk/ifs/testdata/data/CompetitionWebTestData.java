@@ -468,15 +468,15 @@ public class CompetitionWebTestData {
                         .withName("FEC KTP project competition"),
                 ktpCompetition()
                         .withName("FEC KTP competition duplicate"),
+                thirdPartyOfgemCompetition()
+                        .withName("Third Party Ofgem Competition")
+                        .withCompetitionType(OFGEM)
+                        .withAlwaysOpen(false)
+                        .withResubmission(false),
                 loanCompetition()
                         .withName("Loans SF Part-B Competition")
                         .withInnovationSector("Infrastructure systems")
-                        .withAssessorCount(5),
-                grantCompetition()
-                        .withName("Horizon Europe Guarantee competition")
-                        .withCompetitionType(HORIZON_EUROPE_GUARANTEE)
-                        .withAlwaysOpen(true)
-                        .withResubmission(false)
+                        .withAssessorCount(5)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.OPEN))
@@ -549,7 +549,7 @@ public class CompetitionWebTestData {
     }
 
     private static CompetitionLineBuilder ofGemCompetition() {
-        return thirdPartyCompetition()
+        return thirdPartyProcurementCompetition()
                 .withCompetitionCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK)
                 .withTermsAndConditionsLabel("Strategic Innovation Fund Governance Document")
                 .withTermsAndConditionsGuidance("<h2 class=\"govuk-heading-m\">Summary of Strategic Innovation Fund governance document.</h2>\n" +
@@ -584,7 +584,7 @@ public class CompetitionWebTestData {
                 .withTermsAndConditionsTemplate("third-party-terms-and-conditions");
     }
 
-    private static CompetitionLineBuilder thirdPartyCompetition() {
+    private static CompetitionLineBuilder thirdPartyProcurementCompetition() {
         return anIfsCompetition()
                 .withFundingType(FundingType.PROCUREMENT)
                 .withFundingRules(FundingRules.NOT_AID)
@@ -592,6 +592,44 @@ public class CompetitionWebTestData {
                 .withInnovationAreas(asSet(NONE))
                 .withIncludeYourOrganisation(false)
                 .withResearchRatio(100);
+    }
+
+    private static CompetitionLineBuilder thirdPartyOfgemCompetition() {
+        return anIfsCompetition()
+                .withFundingType(FundingType.THIRDPARTY)
+                .withCompetitionType(OFGEM)
+                .withCompetitionCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
+                .withTermsAndConditionsLabel("Strategic Innovation Fund Governance Document")
+                .withTermsAndConditionsGuidance("<h2 class=\"govuk-heading-m\">Summary of Strategic Innovation Fund governance document.</h2>\n" +
+                        "            <p class=\"govuk-body\">\n" +
+                        "                <a href=\"https://www.ofgem.gov.uk/sites/default/files/2021-06/draft_sif_governance_document_consultation_copy_020621_0.pdf\">The SIF governance document</a> is specific to the Ofgem Strategic Innovation Fund (SIF). Applicants wishing to collaborate on projects funded through the SIF must comply with this SIF Governance Document.  It is your responsibility to make sure you have read it.\n" +
+                        "            </p>\n" +
+                        "            <p class=\"govuk-body\">\n" +
+                        "                The SIF governance document represents an agreement between the Ofgem and your organisation and include details about your obligations and the administration of your project.\n" +
+                        "            </p>\n" +
+                        "            <p class=\"govuk-body\">\n" +
+                        "                They cover:\n" +
+                        "            </p>\n" +
+                        "            <ul class=\"govuk-list govuk-list--bullet\">\n" +
+                        "                <li>eligibility criteria</li>\n" +
+                        "                <li>application process</li>\n" +
+                        "                <li>assessment of projects</li>\n" +
+                        "                <li>project delivery and monitoring</li>\n" +
+                        "                <li>funding arrangements</li>\n" +
+                        "                <li>project administration, including compliance and audits</li>\n" +
+                        "                <li>intellectual property rights and royalties</li>\n" +
+                        "                <li>learning and collaboration, including external stakeholder relationship development, information sharing and reporting</li>\n" +
+                        "            </ul>\n" +
+                        "            <p class=\"govuk-body\">This list is not exhaustive.</p>\n" +
+                        "            <p class=\"govuk-body\">\n" +
+                        "                If your application is successful, Ofgem will issue a direction to the network licensee leading the project, which confirms the deliverables for which they are accountable.\n" +
+                        "            </p>\n" +
+                        "            <p class=\"govuk-body\">\n" +
+                        "                By ticking the box and submitting an application, you are confirming that you have read and are satisfied that you understand the regulatory framework.\n" +
+                        "            </p>\n" +
+                        "            <p class=\"govuk-body\">If there is any aspect of the SIF you do not understand, please <a href=\"/info/contact\">contact us</a>.</p>\n")
+                .withProjectCostGuidanceUrl("https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/small-business-research-initiative-sbri-project-costs-guidance")
+                .withTermsAndConditionsTemplate("third-party-terms-and-conditions");
     }
 
     private static CompetitionLineBuilder investorPartnershipCompetition() {
