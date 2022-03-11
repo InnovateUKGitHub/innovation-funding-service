@@ -19,12 +19,11 @@ Login new application invite academic
     Run Keyword If  '${status}' == 'FAIL'  Run keywords  Create new application with the same user  Academic robot test application  1
     ...                                            AND   Invite and accept the invitation  ${recipient}  ${subject}  ${pattern}
 
-the user marks every section but one as complete
+the user marks every section but one as complete - research
     [Arguments]  ${application_name}  ${rescat}  ${ediStatus}  ${userEmail}
     the user navigates to the page                                                 ${server}
     the user clicks the button/link                                                link=${application_name}
     the applicant completes Application Team                                       ${ediStatus}  ${userEmail}
-    the applicant marks EDI question as complete
     the user selects Research category                                             ${rescat}
     the lead applicant fills all the questions and marks as complete(programme)
 
@@ -55,6 +54,11 @@ the lead applicant fills all the questions and marks as complete(procurement)
     the user marks the project details as complete
     :FOR  ${ELEMENT}    IN    @{programme_questions_procurement_ati}
      \     the lead applicant marks every question as complete procurement    ${ELEMENT}
+
+the lead applicant fills all the questions and marks as complete(thirdparty)
+    the user marks the project details as complete
+    :FOR  ${ELEMENT}    IN    @{Thirdparty_questions}
+     \     the lead applicant marks every question as complete    ${ELEMENT}
 
 the lead applicant fills all the questions and marks as complete(Hesta)
     :FOR  ${ELEMENT}    IN    @{Hesta_questions}

@@ -247,7 +247,8 @@ public class FinanceChecksViabilityController {
                 organisationSizeDescription,
                 projectFinances,
                 resetableGolState,
-                user.hasAuthority(Authority.AUDITOR));
+                user.hasAuthority(Authority.AUDITOR),
+                competition.isThirdPartyOfgem());
     }
 
     private String name(String firstName, String lastName) {

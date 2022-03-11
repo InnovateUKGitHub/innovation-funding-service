@@ -325,7 +325,6 @@ the user completes the application
     the user clicks the button/link                                                         link=Application details
     the user fills in the Application details                                               ${ATIapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant completes Application Team                                                COMPLETE   steve.smith@empire.com
-    the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme ATI)
     the lead completes the questions with multiple answer choice and multiple appendices
     the user navigates to Your-finances page                                                ${ATIapplicationTitle}
@@ -389,8 +388,8 @@ the user should see the finances overview as complete
 
 the user invites assessors to assess the ATI competition
     the user clicks the button/link     link = 1 to 20
-    the user selects the checkbox       assessor-row-1
-    the user selects the checkbox       assessor-row-2
+    the user selects the checkbox       jQuery = tr:contains("Addison Shannon") :checkbox
+    the user selects the checkbox       jQuery = tr:contains("Alexis Colon") :checkbox
     the user clicks the button/link     jQuery = button:contains("Add selected to invite list")
     the user should see the element     jQuery = td:contains("${assessor1_to_add}")
     the user should see the element     jQuery = td:contains("${assessor2_to_add}")

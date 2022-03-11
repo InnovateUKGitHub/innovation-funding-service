@@ -359,7 +359,6 @@ The user fills in public content supporting information section
 The user completes the application proccess details
     the user clicks the button/link              link = Application details
     the user clicks the button/link              jQuery = button:contains("Done")
-    the user marks each question as complete     Equality, diversity and inclusion
     the user clicks the button/link              link = Public description
     the user clicks the button/link              jQuery = button:contains("Done")
     the user clicks the button/link              link = Finances
@@ -397,7 +396,6 @@ The user fills in the Competition Setup Project eligibility section
 The user is able to complete Horizon 2020 Grant transfer application
     the user is able to complete Application details section            Project name  ${month}  ${nextyear}  ${lastYear}
     the applicant completes Application Team                            COMPLETE   jessica.doe@ludlow.co.uk
-    the applicant marks EDI question as complete
     the user is able to complete Public description section
     the user is able to complete Horizon 2020 grant agreement section
     the user is able to complete finance details section

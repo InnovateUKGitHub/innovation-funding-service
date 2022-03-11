@@ -1,13 +1,16 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder;
 
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public final class SectionBuilder {
+    public static final String EQUALITY_DIVERSITY_AND_INCLUSION = "Equality, diversity and inclusion";
     private String name;
     private String description;
     private String assessorGuidanceDescription;
@@ -16,6 +19,7 @@ public final class SectionBuilder {
     private List<SectionBuilder> childSections = new ArrayList<>();
     private boolean displayInAssessmentApplicationSummary = false;
     private SectionType type = SectionType.GENERAL;
+
 
     private SectionBuilder() {
     }
@@ -104,10 +108,31 @@ public final class SectionBuilder {
         section.setName(name);
         section.setAssessorGuidanceDescription(assessorGuidanceDescription);
         section.setQuestionGroup(questionGroup);
-        section.setQuestions(questions.stream().map(QuestionBuilder::build).collect(Collectors.toList()));
+        section.setQuestions(questions.stream().map(QuestionBuilder::build)
+                .collect(Collectors.toList()));
         section.setChildSections(childSections.stream().map(SectionBuilder::build).collect(Collectors.toList()));
         section.setDisplayInAssessmentApplicationSummary(displayInAssessmentApplicationSummary);
         section.setType(type);
         return section;
+    }
+
+    public Section buildWithoutEDI() {
+        Section section = new Section();
+        section.setName(name);
+        section.setAssessorGuidanceDescription(assessorGuidanceDescription);
+        section.setQuestionGroup(questionGroup);
+        section.setQuestions(questions.stream().map(QuestionBuilder::build)
+                .filter(question -> !isEDIQuestion(question))
+                .collect(Collectors.toList()));
+        section.setChildSections(childSections.stream().map(SectionBuilder::buildWithoutEDI).collect(Collectors.toList()));
+        section.setDisplayInAssessmentApplicationSummary(displayInAssessmentApplicationSummary);
+        section.setType(type);
+        return section;
+    }
+
+
+    private boolean isEDIQuestion(Question question) {
+        return (QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION.equals(question.getQuestionSetupType()))
+                || (question.getShortName() != null && question.getShortName().contains(EQUALITY_DIVERSITY_AND_INCLUSION));
     }
 }
