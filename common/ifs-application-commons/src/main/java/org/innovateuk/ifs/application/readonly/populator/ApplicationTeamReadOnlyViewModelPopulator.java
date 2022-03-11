@@ -22,6 +22,7 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -39,6 +40,9 @@ import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 @Component
 public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOnlyViewModelPopulator<ApplicationTeamReadOnlyViewModel> {
+
+    @Value("${ifs.edi.update.enabled}")
+    private boolean ediUpdateEnabled;
 
     @Autowired
     private UserRestService userRestService;
@@ -96,7 +100,8 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
                 .map(this::toInviteOrganisationTeamViewModel)
                 .collect(toList()));
 
-        return new ApplicationTeamReadOnlyViewModel(data, question, organisationViewModels, ktaProcessRole, ktaPhoneNumber, internalUser);
+        return new ApplicationTeamReadOnlyViewModel(data, question, organisationViewModels, ktaProcessRole, ktaPhoneNumber,
+                internalUser, ediUpdateEnabled);
     }
 
     private boolean showInvites(ApplicationReadOnlyData data) {
@@ -107,7 +112,10 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
 
     private ApplicationTeamOrganisationReadOnlyViewModel toOrganisationTeamViewModel(ApplicationResource application, OrganisationResource organisation, Collection<ProcessRoleResource> processRoles, InviteOrganisationResource organisationInvite, boolean internalUser) {
         List<ApplicationTeamUserReadOnlyViewModel> userRows = processRoles.stream()
-                .map(pr -> ApplicationTeamUserReadOnlyViewModel.fromProcessRole(pr, internalUser ? getPhoneNumber(pr.getUserEmail()) : null))
+                .map(pr -> {
+                        UserResource user = userRestService.retrieveUserById(pr.getUser()).getSuccess();
+                        return ApplicationTeamUserReadOnlyViewModel.fromProcessRole(pr, internalUser ? user.getPhoneNumber() : null, user.getEdiStatus());
+                       })
                 .collect(toList());
 
         Optional<InviteOrganisationResource> maybeOrganisationInvite = ofNullable(organisationInvite);
