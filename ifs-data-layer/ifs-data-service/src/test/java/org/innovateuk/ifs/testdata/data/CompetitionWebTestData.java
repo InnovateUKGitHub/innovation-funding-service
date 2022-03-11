@@ -476,12 +476,7 @@ public class CompetitionWebTestData {
                 loanCompetition()
                         .withName("Loans SF Part-B Competition")
                         .withInnovationSector("Infrastructure systems")
-                        .withAssessorCount(5),
-                grantCompetition()
-                        .withName("Horizon Europe Guarantee competition")
-                        .withCompetitionType(HORIZON_EUROPE_GUARANTEE)
-                        .withAlwaysOpen(true)
-                        .withResubmission(false)
+                        .withAssessorCount(5)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.OPEN))
@@ -554,7 +549,7 @@ public class CompetitionWebTestData {
     }
 
     private static CompetitionLineBuilder ofGemCompetition() {
-        return thirdPartyProcurementCompetition()
+        return thirdPartyCompetition()
                 .withCompetitionCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK)
                 .withTermsAndConditionsLabel("Strategic Innovation Fund Governance Document")
                 .withTermsAndConditionsGuidance("<h2 class=\"govuk-heading-m\">Summary of Strategic Innovation Fund governance document.</h2>\n" +
@@ -589,7 +584,7 @@ public class CompetitionWebTestData {
                 .withTermsAndConditionsTemplate("third-party-terms-and-conditions");
     }
 
-    private static CompetitionLineBuilder thirdPartyProcurementCompetition() {
+    private static CompetitionLineBuilder thirdPartyCompetition() {
         return anIfsCompetition()
                 .withFundingType(FundingType.PROCUREMENT)
                 .withFundingRules(FundingRules.NOT_AID)

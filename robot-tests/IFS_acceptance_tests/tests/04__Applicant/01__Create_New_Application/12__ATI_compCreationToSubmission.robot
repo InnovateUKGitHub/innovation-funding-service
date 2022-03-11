@@ -386,8 +386,13 @@ the user should see the finances overview as complete
 
 the user invites assessors to assess the ATI competition
     the user clicks the button/link     link = 1 to 20
+<<<<<<< HEAD
     the user selects the checkbox       jQuery = tr:contains("Addison Shannon") :checkbox          #assessor-row-1
     the user selects the checkbox       jQuery = tr:contains("Alexis Colon") :checkbox          #assessor-row-2
+=======
+    the user selects the checkbox       jQuery = tr:contains("Addison Shannon") :checkbox
+    the user selects the checkbox       jQuery = tr:contains("Alexis Colon") :checkbox
+>>>>>>> development
     the user clicks the button/link     jQuery = button:contains("Add selected to invite list")
     the user should see the element     jQuery = td:contains("${assessor1_to_add}")
     the user should see the element     jQuery = td:contains("${assessor2_to_add}")
