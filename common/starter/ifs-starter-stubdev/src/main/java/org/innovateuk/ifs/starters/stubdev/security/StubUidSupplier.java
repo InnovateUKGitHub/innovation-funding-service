@@ -5,7 +5,6 @@ import com.google.common.io.Files;
 import org.innovateuk.ifs.commons.security.UidSupplier;
 import org.innovateuk.ifs.starters.stubdev.cfg.StubDevConfigurationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import sun.security.action.GetPropertyAction;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -13,8 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import static java.security.AccessController.doPrivileged;
 
 /**
  * Light touch for overriding the default security implementation.
@@ -32,7 +29,7 @@ public class StubUidSupplier implements UidSupplier {
 
     @PostConstruct
     public void init() throws IOException {
-        Path tmpdir = Paths.get(doPrivileged(new GetPropertyAction("java.io.tmpdir")));
+        Path tmpdir = Paths.get(System.getProperty("java.io.tmpdir"));
         uuidTempFile = tmpdir.resolve("stub-auth-user.tmp").toFile();
         if (uuidTempFile.createNewFile()) {
             setUuid(stubDevConfigurationProperties.getDefaultUuid());
