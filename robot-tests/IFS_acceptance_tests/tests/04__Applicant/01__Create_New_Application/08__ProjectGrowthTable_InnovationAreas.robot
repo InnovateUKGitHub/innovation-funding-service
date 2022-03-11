@@ -571,4 +571,3 @@ the user accept the temporary framework terms and conditions
     the user clicks the button/link     jQuery = button:contains("Agree and continue")
     the user should see the element     jQuery = .form-footer:contains("Terms and conditions accepted")
     the user clicks the button/link     link = Return to application overview
-

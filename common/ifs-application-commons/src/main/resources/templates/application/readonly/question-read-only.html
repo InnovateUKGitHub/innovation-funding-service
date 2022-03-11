@@ -260,6 +260,7 @@
                 <th scope="col" class="govuk-table__header table-header-width-one-third">Full name</th>
                 <th th:if="${model.internal}" scope="col" class="govuk-table__header table-header-width-one-third">Phone number</th>
                 <th scope="col" class="govuk-table__header table-header-width-one-third">Email</th>
+                <th th:if="${model.ediUpdateEnabled}" scope="col" class="govuk-table__header table-header-width-one-third">EDI status</th>
             </tr>
             </thead>
             <tbody class="govuk-table__body">
@@ -275,6 +276,10 @@
                 <td class="govuk-table__cell ifs-table__email"
                     th:text="${row.email}"
                     th:classappend="${row.invite ? 'hint' : ''}"></td>
+                <td class="govuk-table__cell"
+                    th:if="${model.ediUpdateEnabled}"
+                    th:text="${row.ediStatus}"
+                    th:classappend="${row.ediCompleted ? 'complete-edi-status' : 'incomplete-edi-status'}"></td>
             </tr>
             </tbody>
         </table>
