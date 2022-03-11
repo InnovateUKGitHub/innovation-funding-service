@@ -16,10 +16,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.ProcessRoleType;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -28,6 +25,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
 
@@ -47,6 +45,7 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -130,8 +129,8 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
         when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(asList(leadRole, collaboratorRole)));
         when(inviteRestService.getInvitesByApplication(application.getId())).thenReturn(restSuccess(asList(collaboratorOrganisationInvite, invitedOrganisation)));
         when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(asList(leadOrganisation, collaboratorOrganisation)));
-        when(userRestService.findUserByEmail(any())).thenReturn(restSuccess(newUserResource().withPhoneNumber("999").build()));
         when(applicationOrganisationAddressRestService.getAddress(application.getId(), collaboratorOrganisation.getId(), OrganisationAddressType.INTERNATIONAL)).thenReturn(restSuccess(address));
+        when(userRestService.retrieveUserById(anyLong())).thenReturn(restSuccess(newUserResource().withPhoneNumber("999").withEdiStatus(null).build()));
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
                 emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
 
@@ -140,6 +139,7 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
         assertEquals((Long) application.getId(), viewModel.getApplicationId());
         assertEquals((long) question.getId(), viewModel.getQuestionId());
         assertEquals(3, viewModel.getOrganisations().size());
+        assertFalse(viewModel.isEdiUpdateEnabled());
 
         ApplicationTeamOrganisationReadOnlyViewModel leadOrganisationViewModel = viewModel.getOrganisations().get(0);
         assertEquals("Lead", leadOrganisationViewModel.getName());
@@ -152,6 +152,8 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
         assertTrue(leadUserViewModel.isLead());
         assertFalse(leadUserViewModel.isInvite());
         assertEquals("999", leadUserViewModel.getPhone());
+        assertFalse(leadUserViewModel.isEdiCompleted());
+        assertEquals("Incomplete", leadUserViewModel.getEdiStatus());
 
         ApplicationTeamOrganisationReadOnlyViewModel collaboratorOrganisationViewModel = viewModel.getOrganisations().get(1);
         assertEquals("Collaborator", collaboratorOrganisationViewModel.getName());
@@ -164,6 +166,8 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
         assertFalse(collaboratorUserViewModel.isLead());
         assertFalse(collaboratorUserViewModel.isInvite());
         assertEquals("999", collaboratorUserViewModel.getPhone());
+        assertFalse(collaboratorUserViewModel.isEdiCompleted());
+        assertEquals("Incomplete", collaboratorUserViewModel.getEdiStatus());
 
         ApplicationTeamOrganisationReadOnlyViewModel inviteOrganisationViewModel = viewModel.getOrganisations().get(2);
         assertEquals("New organisation", inviteOrganisationViewModel.getName());
@@ -176,5 +180,96 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
         ApplicationTeamUserReadOnlyViewModel inviteViewModel = inviteOrganisationViewModel.getUsers().get(0);
         assertTrue(inviteViewModel.isInvite());
         assertEquals("New user (pending for 10 days)", inviteViewModel.getName());
+        assertFalse(inviteViewModel.isEdiCompleted());
+        assertEquals("Incomplete", inviteViewModel.getEdiStatus());
+    }
+
+    @Test
+    public void populate_when_edi_completed() {
+        ReflectionTestUtils.setField(populator, "ediUpdateEnabled", true);
+
+        UserResource user = newUserResource().withRoleGlobal(Role.SUPPORT).build();
+        UserResource collaborator = newUserResource().build();
+        OrganisationResource leadOrganisation = newOrganisationResource()
+                .withName("Lead")
+                .build();
+        OrganisationResource collaboratorOrganisation = newOrganisationResource()
+                .withName("Collaborator")
+                .withIsInternational(true)
+                .build();
+
+        ProcessRoleResource leadRole = newProcessRoleResource()
+                .withRole(ProcessRoleType.LEADAPPLICANT)
+                .withOrganisation(leadOrganisation.getId())
+                .withUser(user)
+                .build();
+
+        ProcessRoleResource collaboratorRole = newProcessRoleResource()
+                .withRole(ProcessRoleType.COLLABORATOR)
+                .withOrganisation(collaboratorOrganisation.getId())
+                .withUser(collaborator)
+                .build();
+
+        ApplicationInviteResource collaboratorInvite = newApplicationInviteResource()
+                .withName("Collaborator Invite")
+                .withStatus(InviteStatus.OPENED)
+                .withUsers(collaborator.getId())
+                .build();
+
+        ApplicationInviteResource newUserInvite = newApplicationInviteResource()
+                .withName("New user")
+                .withStatus(InviteStatus.SENT)
+                .withSentOn(ZonedDateTime.now().minusDays(10).minusHours(1))
+                .build();
+
+        InviteOrganisationResource collaboratorOrganisationInvite = newInviteOrganisationResource()
+                .withOrganisationNameConfirmed(collaboratorOrganisation.getName())
+                .withOrganisation(collaboratorOrganisation.getId())
+                .withInviteResources(singletonList(collaboratorInvite))
+                .build();
+
+        InviteOrganisationResource invitedOrganisation = newInviteOrganisationResource()
+                .withOrganisationName("New organisation")
+                .withInviteResources(singletonList(newUserInvite))
+                .build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withCollaborationLevel(CollaborationLevel.SINGLE)
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competition.getId())
+                .build();
+        QuestionResource question = newQuestionResource().build();
+
+        AddressResource address = newAddressResource().build();
+
+        when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(asList(leadRole, collaboratorRole)));
+        when(inviteRestService.getInvitesByApplication(application.getId())).thenReturn(restSuccess(asList(collaboratorOrganisationInvite, invitedOrganisation)));
+        when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(asList(leadOrganisation, collaboratorOrganisation)));
+        when(applicationOrganisationAddressRestService.getAddress(application.getId(), collaboratorOrganisation.getId(), OrganisationAddressType.INTERNATIONAL)).thenReturn(restSuccess(address));
+        when(userRestService.retrieveUserById(anyLong())).thenReturn(restSuccess(newUserResource().withPhoneNumber("999").withEdiStatus(EDIStatus.COMPLETE).build()));
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
+                emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
+
+        ApplicationTeamReadOnlyViewModel viewModel = populator.populate(question, data, defaultSettings());
+
+        assertEquals((Long) application.getId(), viewModel.getApplicationId());
+        assertEquals(3, viewModel.getOrganisations().size());
+        assertTrue(viewModel.isEdiUpdateEnabled());
+
+        ApplicationTeamOrganisationReadOnlyViewModel leadOrganisationViewModel = viewModel.getOrganisations().get(0);
+        ApplicationTeamUserReadOnlyViewModel leadUserViewModel = leadOrganisationViewModel.getUsers().get(0);
+        assertTrue(leadUserViewModel.isEdiCompleted());
+        assertEquals("Complete", leadUserViewModel.getEdiStatus());
+
+        ApplicationTeamOrganisationReadOnlyViewModel collaboratorOrganisationViewModel = viewModel.getOrganisations().get(1);
+        ApplicationTeamUserReadOnlyViewModel collaboratorUserViewModel = collaboratorOrganisationViewModel.getUsers().get(0);
+        assertTrue(collaboratorUserViewModel.isEdiCompleted());
+        assertEquals("Complete", collaboratorUserViewModel.getEdiStatus());
+
+        ApplicationTeamOrganisationReadOnlyViewModel inviteOrganisationViewModel = viewModel.getOrganisations().get(2);
+        ApplicationTeamUserReadOnlyViewModel inviteViewModel = inviteOrganisationViewModel.getUsers().get(0);
+        assertFalse(inviteViewModel.isEdiCompleted());
+        assertEquals("Incomplete", inviteViewModel.getEdiStatus());
     }
 }

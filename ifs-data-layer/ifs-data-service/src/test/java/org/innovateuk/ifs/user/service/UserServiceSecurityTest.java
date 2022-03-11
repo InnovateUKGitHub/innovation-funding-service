@@ -119,6 +119,12 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
                 .competitionFinanceUsersCanViewUsersInCompetitionsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
         verify(userRules, times(numberOfUsers))
                 .auditorUsersCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .ktpSupporterCanViewApplicationTeamMembers(isA(UserResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .applicationParticipantsCanViewApplicationTeamMembers(isA(UserResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .projectUsersCanViewOtherProjectUsersInProjectsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractionsWithRules();
     }
 
