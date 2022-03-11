@@ -819,7 +819,6 @@ the user gets an error message on not filling mandatory fields
 
 The user completes the application
     the applicant completes Application Team                                       COMPLETE  ${lead_international_email}
-    the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                                       ${internationalApplicationTitle}
     lead marks the finance as complete                                             ${internationalApplicationTitle}   Calculate  52,214    id = town       Sydney
@@ -1184,7 +1183,6 @@ uk lead applicant completes application form
     the user clicks the button/link                                 id = application-question-complete
     the user clicks the button/link                                 link = Return to application overview
     the user should see the element                                 jQuery = li:contains("Application team") > .task-status-complete
-    the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                        ${ukLeadInternationalApplicationTitle}
     lead marks the finance as complete                              ${ukLeadInternationalApplicationTitle}   Calculate  52,214  id = postcode   BS1 4NT

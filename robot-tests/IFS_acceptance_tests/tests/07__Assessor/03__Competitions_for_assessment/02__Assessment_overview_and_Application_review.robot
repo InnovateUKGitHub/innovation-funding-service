@@ -65,7 +65,6 @@ Project details sections should not be scorable
     [Documentation]    INFUND-3400 INFUND-4264
     Given the user clicks the button/link       link = Back to your assessment overview
     When Application detail section should not be scorable
-    And EDI question section should not be scorable
     Then Project summary section should not be scorable
     And Public description section should not be scorable
     And Scope section should not be scorable
@@ -107,7 +106,7 @@ Scope: Status in the overview is updated
     And The user enters text to a text field                 css = .editor    Testing feedback field when "Yes" is selected.
     And Wait for autosave
     Then the user clicks the button with resubmission        jquery = button:contains("Save and return to assessment overview")
-    And the user should see the element                      jQuery = li:nth-child(5) span:contains("In scope") ~ .task-status-complete
+    And the user should see the element                      jQuery = li:nth-child(4) span:contains("In scope") ~ .task-status-complete
 
 Scope: Autosave
     [Documentation]    INFUND-1483  INFUND-3780
@@ -274,7 +273,6 @@ the uesr should see assessment overview details
     the user should see the element      jQuery = h2:contains("Finances")
     the user should see the element      jQuery = h2:contains("Terms and conditions")
 
-
 the user navigate to previous pages
     the user clicks previous and goes to the page   Project exploitation
     the user clicks previous and goes to the page   Potential market
@@ -282,7 +280,6 @@ the user navigate to previous pages
     the user clicks previous and goes to the page   Scope
     the user clicks previous and goes to the page   Public description
     the user clicks previous and goes to the page   Project summary
-    the user clicks previous and goes to the page   Equality, diversity and inclusion
     the user clicks previous and goes to the page   Application details
     the user should not see the element             jQuery = span:contains("Previous")
 
@@ -294,12 +291,6 @@ Application detail section should not be scorable
 
 Project summary section should not be scorable
     the user should see the element        jQuery = p:contains("This is the applicant response for project summary.")
-    the user should not see the element    jQuery = label:contains("Question score")
-    the user clicks the button/link        jQuery = span:contains("Next")
-
-EDI question section should not be scorable
-    the user should see the element        jQuery = h2:contains("Have you completed the EDI survey?")
-    the user should see the element        jQuery = p:contains("Yes")
     the user should not see the element    jQuery = label:contains("Question score")
     the user clicks the button/link        jQuery = span:contains("Next")
 

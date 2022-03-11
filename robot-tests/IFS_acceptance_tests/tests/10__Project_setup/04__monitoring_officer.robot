@@ -180,6 +180,8 @@ MO sees the application feedback
     [Documentation]  IFS-5298  IFS-8066
     Given the user clicks the button/link       link = view application feedback
     Then the user should see the element        jQuery = h1:contains("Application overview")
+    And the user clicks the button/link         id = accordion-questions-heading-1-1
+    And the user should see the read only view of EDI status as incomplete
 
 Monitoring Officer cannot see projects if they are not assigned to them
     [Documentation]    IFS-3978
@@ -661,3 +663,9 @@ the user should see the project status
     #Local check
     run keyword if  '${status}'=='FAIL'  run keyword  the user should see the element   jQuery = .task:contains("${applicationTitle}") + .status:contains("Monitor project")
 
+the user should see the read only view of EDI status as incomplete
+    And the user should see the element                 jQuery = h3:contains("Team members")
+    And the user should see the element                 jQuery = th:contains("EDI status")
+    And the user should see the element                 jQuery = td:contains("Dave Adams") ~ td:contains("Complete")
+    And the user should see the element                 jQuery = td:contains("Mrytle Barton") ~ td:contains("Incomplete")
+    And the user should see the element                 jQuery = td:contains("Edward Morris") ~ td:contains("Incomplete")

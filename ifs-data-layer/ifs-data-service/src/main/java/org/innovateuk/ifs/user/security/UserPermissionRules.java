@@ -17,6 +17,9 @@ import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
+import org.innovateuk.ifs.supporter.domain.SupporterAssignment;
+import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
+import org.innovateuk.ifs.supporter.resource.SupporterState;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -70,6 +73,9 @@ public class UserPermissionRules {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private SupporterAssignmentRepository supporterAssignmentRepository;
+
     private static List<ProcessRoleType> CONSORTIUM_ROLES = asList(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR);
 
     private static Predicate<ProcessRole> consortiumProcessRoleFilter = role -> CONSORTIUM_ROLES.contains(role.getRole());
@@ -81,6 +87,10 @@ public class UserPermissionRules {
     private static List<String> PROJECT_ROLES = asList(ProjectParticipantRole.PROJECT_MANAGER.getName(), PROJECT_FINANCE_CONTACT.getName(), PROJECT_PARTNER.getName());
 
     private static Predicate<ProjectUser> projectUserFilter = projectUser -> PROJECT_ROLES.contains(projectUser.getRole().getName());
+
+    private static List<ProcessRoleType> APPLICATION_PARTICIPANT_ROLES = asList(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER);
+
+    private static Predicate<ProcessRole> applicationParticipantProcessRoleFilter = role -> APPLICATION_PARTICIPANT_ROLES.contains(role.getRole());
 
     @PermissionRule(value = "CREATE", description = "A System Registration User can create new Users on behalf of non-logged in users")
     public boolean systemRegistrationUserCanCreateUsers(UserCreationResource userToCreate, UserResource user) {
@@ -152,18 +162,28 @@ public class UserPermissionRules {
     @PermissionRule(value = "READ", description = "Consortium members (Lead Applicants and Collaborators) can view the others in their Consortium Teams on their various Applications")
     public boolean consortiumMembersCanViewOtherConsortiumMembers(UserResource userToView, UserResource user) {
         List<Application> applicationsWhereThisUserIsInConsortium = getApplicationsRelatedToUserByProcessRoles(user.getId(), consortiumProcessRoleFilter);
-        List<ProcessRole> otherProcessRolesForThoseApplications = getAllProcessRolesForApplications(applicationsWhereThisUserIsInConsortium);
-        List<ProcessRole> allConsortiumProcessRoles = simpleFilter(otherProcessRolesForThoseApplications, consortiumProcessRoleFilter);
-        List<User> allConsortiumUsers = simpleMap(allConsortiumProcessRoles, ProcessRole::getUser);
+        List<User> allConsortiumUsers = getAllConsortiumUsers(applicationsWhereThisUserIsInConsortium);
         return simpleMap(allConsortiumUsers, User::getId).contains(userToView.getId());
     }
 
     @PermissionRule(value = "READ", description = "Assessors can view the members of individual Consortiums on the various Applications that they are assessing")
     public boolean assessorsCanViewConsortiumUsersOnApplicationsTheyAreAssessing(UserResource userToView, UserResource user) {
         List<Application> applicationsThatThisUserIsAssessing = getApplicationsRelatedToUserByProcessRoles(user.getId(), assessorProcessRoleFilter);
-        List<ProcessRole> processRolesForAllApplications = getAllProcessRolesForApplications(applicationsThatThisUserIsAssessing);
-        List<ProcessRole> allConsortiumProcessRoles = simpleFilter(processRolesForAllApplications, consortiumProcessRoleFilter);
-        List<User> allConsortiumUsers = simpleMap(allConsortiumProcessRoles, ProcessRole::getUser);
+        List<User> allConsortiumUsers = getAllConsortiumUsers(applicationsThatThisUserIsAssessing);
+        return simpleMap(allConsortiumUsers, User::getId).contains(userToView.getId());
+    }
+
+    @PermissionRule(value = "READ", description = "KTP supporter can view consortium members (Lead Applicants and Collaborators) on their Applications")
+    public boolean ktpSupporterCanViewApplicationTeamMembers(UserResource userToView, UserResource user) {
+        List<Application> applicationsWhereThisUserIsInKtpSupporter = getApplicationsRelatedToUserBySupporterAssignment(user.getId());
+        List<User> allConsortiumUsers = getAllConsortiumUsers(applicationsWhereThisUserIsInKtpSupporter);
+        return simpleMap(allConsortiumUsers, User::getId).contains(userToView.getId());
+    }
+
+    @PermissionRule(value = "READ", description = "Application participants can view consortium members (Lead Applicants and Collaborators) on their Applications")
+    public boolean applicationParticipantsCanViewApplicationTeamMembers(UserResource userToView, UserResource user) {
+        List<Application> applicationsWhereThisUserIsParticipant = getApplicationsRelatedToUserByProcessRoles(user.getId(), applicationParticipantProcessRoleFilter);
+        List<User> allConsortiumUsers = getAllConsortiumUsers(applicationsWhereThisUserIsParticipant);
         return simpleMap(allConsortiumUsers, User::getId).contains(userToView.getId());
     }
 
@@ -271,7 +291,13 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "READ", description = "Monitoring officers can view users in projects they are assigned to")
     public boolean monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(UserResource userToView, UserResource user) {
-        return userIsInProjectAssignedToMonitoringOfficer(userToView, user);
+        return userIsInProjectAssignedToMonitoringOfficer(userToView, user)
+                || userIsInApplicationBelongsToProjectAssignedToMonitoringOfficer(userToView, user);
+    }
+
+    @PermissionRule(value = "READ", description = "Project users can view other project users in projects they are assigned to")
+    public boolean projectUsersCanViewOtherProjectUsersInProjectsTheyAreAssignedTo(UserResource userToView, UserResource user) {
+        return projectUsersCanViewOtherProjectUsers(userToView, user);
     }
 
     @PermissionRule(value = "READ", description = "Assessors can view the process roles of members of individual Consortiums on the various Applications that they are assessing")
@@ -356,6 +382,14 @@ public class UserPermissionRules {
         return userToView.getId().equals(user.getId());
     }
 
+    private List<User> getAllConsortiumUsers(List<Application> applicationsWhereThisUserIsInConsortium) {
+        List<ProcessRole> otherProcessRolesForThoseApplications = getAllProcessRolesForApplications(applicationsWhereThisUserIsInConsortium);
+        List<ProcessRole> allConsortiumProcessRoles = simpleFilter(otherProcessRolesForThoseApplications, consortiumProcessRoleFilter);
+        List<User> allConsortiumUsers = simpleMap(allConsortiumProcessRoles, ProcessRole::getUser);
+
+        return allConsortiumUsers;
+    }
+
     private boolean hasPermissionToGrantRole(UserResource user) {
         return user.hasAuthority(Authority.COMP_ADMIN);
     }
@@ -402,6 +436,30 @@ public class UserPermissionRules {
         return !disjoint(monitoringOfficerProjects, projectsThisUserIsAMemberOf);
     }
 
+    private boolean userIsInApplicationBelongsToProjectAssignedToMonitoringOfficer(UserResource userToView, UserResource monitoringOfficer) {
+        List<Application> applicationsWhereThisUserIsInConsortium = getApplicationsRelatedToUserByProcessRoles(userToView.getId(), consortiumProcessRoleFilter);
+
+        List<MonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(monitoringOfficer.getId());
+        List<Project> monitoringOfficerProjects = simpleMap(projectMonitoringOfficers, MonitoringOfficer::getProject);
+
+        List<Project> monitoringOfficerProjectsWhereThisUserIsInConsortiumAtApplication = monitoringOfficerProjects.stream()
+                .filter(moProject -> applicationsWhereThisUserIsInConsortium.stream()
+                        .anyMatch(application -> moProject.getApplication().getId() == application.getId()))
+                .collect(Collectors.toList());
+
+        return !disjoint(monitoringOfficerProjects, monitoringOfficerProjectsWhereThisUserIsInConsortiumAtApplication);
+    }
+
+    private boolean projectUsersCanViewOtherProjectUsers(UserResource userToView, UserResource user) {
+        List<Project> projectsUserToViewIsAMemberOf =
+                simpleMap(getFilteredProjectUsers(userToView.getId(), projectUserFilter), ProjectUser::getProject);
+
+        List<Project> projectsIncomingUserIsAMemberOf =
+                simpleMap(getFilteredProjectUsers(user.getId(), projectUserFilter), ProjectUser::getProject);
+
+        return !disjoint(projectsIncomingUserIsAMemberOf, projectsUserToViewIsAMemberOf);
+    }
+
     private List<Competition> getUserCompetitions(List<Application> userApplications, List<Project> userProjects) {
         List<Competition> competitions = new ArrayList<>();
         competitions.addAll(simpleMap(userApplications, Application::getCompetition));
@@ -416,6 +474,12 @@ public class UserPermissionRules {
     private List<Application> getApplicationsRelatedToUserByProcessRoles(long userToViewId, Predicate<ProcessRole> processRoleFilter) {
         List<ProcessRole> applicableProcessRoles = getFilteredProcessRoles(userToViewId, processRoleFilter);
         return simpleMap(applicableProcessRoles, processRole -> applicationRepository.findById(processRole.getApplicationId()).orElse(null));
+    }
+
+    private List<Application> getApplicationsRelatedToUserBySupporterAssignment(long userId) {
+        return supporterAssignmentRepository.findByParticipantId(userId).stream()
+                .map(SupporterAssignment::getTarget)
+                .collect(Collectors.toList());
     }
 
     private List<ProcessRole> getFilteredProcessRoles(long userToViewId, Predicate<ProcessRole> filter) {

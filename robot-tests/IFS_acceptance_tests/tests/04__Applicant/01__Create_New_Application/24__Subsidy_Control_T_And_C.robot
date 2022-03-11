@@ -192,7 +192,6 @@ Lead applicant completes state aid subsidy basis application
     Given log in as a different user                                                    &{scLeadApplicantCredentials}
     And the user clicks the button/link                                                 link = ${leadStateAidApplication}
     When the applicant completes Application Team                                       COMPLETE  janet.howard@example.com
-    And the applicant marks EDI question as complete
     And the lead applicant fills all the questions and marks as complete(programme)
     And the user navigates to Your-finances page                                        ${leadStateAidApplication}
     Then the user marks the finances as complete                                        ${leadStateAidApplication}  labour costs  54,000  yes
@@ -263,7 +262,6 @@ Lead applicant completes subsidy control subsidy basis application
     Given log in as a different user                                                    &{scLeadApplicantCredentials}
     And the user clicks the button/link                                                 link = ${leadSubsidyControlApplication}
     When the applicant completes Application Team                                       COMPLETE  janet.howard@example.com
-    And the applicant marks EDI question as complete
     And the lead applicant fills all the questions and marks as complete(programme)
     And the user completes the application research category                            Feasibility studies
     And the user navigates to Your-finances page                                        ${leadSubsidyControlApplication}
@@ -532,8 +530,13 @@ Requesting Organisation Id of this application
     Set suite variable      ${subsidyOrgId}
 
 the user invites assessors to assess the subsidy control competition
-    the user selects the checkbox       assessor-row-1
-    the user selects the checkbox       assessor-row-2
+<<<<<<< HEAD
+    the user selects the checkbox       jQuery = tr:contains("Addison Shannon") :checkbox
+    the user selects the checkbox       jQuery = tr:contains("Alexis Colon") :checkbox
+=======
+    the user selects the checkbox       jQuery = tr:contains("Addison Shannon") :checkbox          #assessor-row-1
+    the user selects the checkbox       jQuery = tr:contains("Alexis Colon") :checkbox          #assessor-row-2
+>>>>>>> c74991232ab0d066d1be554433aead532c4a4de9
     the user clicks the button/link     jQuery = button:contains("Add selected to invite list")
     the user should see the element     jQuery = td:contains("${assessor1_to_add}")
     the user should see the element     jQuery = td:contains("${assessor2_to_add}")
