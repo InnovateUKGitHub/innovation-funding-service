@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.starter.cache.cfg;
 
+import com.google.common.collect.ImmutableList;
 import org.innovateuk.ifs.IfsProfileConstants;
 import org.innovateuk.ifs.starters.cache.cfg.IfsCacheAutoConfiguration;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.cache.support.NoOpCacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.AbstractEnvironment;
@@ -35,7 +37,7 @@ class IfsCacheAutoConfigurationTest {
             .withConfiguration(
                     AutoConfigurations.of(IfsCacheAutoConfiguration.class)
             ).run((context) -> {
-                assertFound(context, Collections.singletonList(NoOpCacheManager.class));
+                assertFound(context, ImmutableList.of(CacheErrorHandler.class, NoOpCacheManager.class));
                 assertNotFound(context, Collections.singletonList(RedisTemplate.class));
             });
     }
@@ -49,7 +51,7 @@ class IfsCacheAutoConfigurationTest {
             .withConfiguration(
                     AutoConfigurations.of(IfsCacheAutoConfiguration.class, CacheAutoConfiguration.class, RedisAutoConfiguration.class)
             ).run((context) -> {
-                assertFound(context, Collections.singletonList(StringRedisTemplate.class));
+                assertFound(context, ImmutableList.of(CacheErrorHandler.class, StringRedisTemplate.class));
                 assertNotFound(context, Collections.singletonList(NoOpCacheManager.class));
             });
     }

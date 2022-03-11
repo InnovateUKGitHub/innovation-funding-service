@@ -12,6 +12,11 @@ import java.util.Set;
 
 import static org.innovateuk.ifs.ProfileUtils.isProfileActive;
 
+/**
+ * Cleanest way I can see to disable redis configuration while it is still on the classpath.
+ *
+ * If STUBDEV or DEV profile is active do not allow RedisAutoConfiguration
+ */
 public class RedisAutoConfigurationExclusionFilter implements AutoConfigurationImportFilter {
 
     private static final Set<String> SHOULD_SKIP = new HashSet<>(
@@ -27,7 +32,7 @@ public class RedisAutoConfigurationExclusionFilter implements AutoConfigurationI
     }
 
     private boolean shouldSkip(String className) {
-        if (isProfileActive(IfsProfileConstants.STUBDEV) || isProfileActive(IfsProfileConstants.DEV)) {
+        if (isProfileActive(IfsProfileConstants.STUBDEV, IfsProfileConstants.DEV)) {
             return !SHOULD_SKIP.contains(className);
         }
         return false;

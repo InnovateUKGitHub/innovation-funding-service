@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.starter.cache;
+package org.innovateuk.ifs.starters.cache.cfg;
 
 
 import io.lettuce.core.ClientOptions;

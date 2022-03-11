@@ -46,17 +46,17 @@ public class IfsCacheAutoConfiguration {
         return new SimpleCacheErrorHandler() {
             @Override
             public void handleCacheGetError(RuntimeException exception, Cache cache, Object key) {
-                log.debug("Failed to get cache item with key " + key.toString(), exception);
+                log.debug("Failed to get cache item with key " + key, exception);
             }
 
             @Override
             public void handleCachePutError(RuntimeException exception, Cache cache, Object key, Object value) {
-                log.error("Failed to put cache item with key " + key.toString(), exception);
+                log.error("Failed to put cache item with key " + key, exception);
             }
 
             @Override
             public void handleCacheEvictError(RuntimeException exception, Cache cache, Object key) {
-                log.error("Failed to evict cache item with key " + key.toString(), exception);
+                log.error("Failed to evict cache item with key " + key, exception);
             }
         };
     }
