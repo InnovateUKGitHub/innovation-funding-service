@@ -22,7 +22,13 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm your eligibility', subTitle=|${model.organisationName} (Research)|,size='govuk-heading-l'"/>
+        <th:block
+                th:with="researchSubTitle=${model.organisationName.isPresent()} ? |${model.organisationName.get()} (Research)|: null">
+            <th:block th:insert="fragments/layout :: page-title"
+                      th:with="pageTitle='Confirm your eligibility', subTitle=${researchSubTitle},size='govuk-heading-l'"/>
+        </th:block>
+
+<!--        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm your eligibility', subTitle=|${model.organisationName} (Research)|,size='govuk-heading-l'"/>-->
 
         <p class="govuk-body govuk-!-margin-top-6">Organisations whose main activity is commercial or economic must make sure that
             the outcomes of the project such as intellectual property do not help gain a selective advantage in

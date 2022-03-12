@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.organisation.viewmodel;
 
+import java.util.Optional;
+
 public class ConfirmResearchOrganisationEligibilityViewModel {
 
     private long competitionId;
-    private long organisationId;
+    private Long organisationId;
     private String organisationName;
 
-    public ConfirmResearchOrganisationEligibilityViewModel(long competitionId, long organisationId, String organisationName) {
+    public ConfirmResearchOrganisationEligibilityViewModel(long competitionId, Long organisationId, String organisationName) {
         this.competitionId = competitionId;
         this.organisationId = organisationId;
         this.organisationName = organisationName;
@@ -20,16 +22,16 @@ public class ConfirmResearchOrganisationEligibilityViewModel {
         this.competitionId = competitionId;
     }
 
-    public long getOrganisationId() {
-        return organisationId;
+    public Optional<Long> getOrganisationId() {
+        return Optional.ofNullable(organisationId);
     }
 
-    public void setOrganisationId(long organisationId) {
+    public void setOrganisationId(Long organisationId) {
         this.organisationId = organisationId;
     }
 
-    public String getOrganisationName() {
-        return organisationName;
+    public Optional<String> getOrganisationName() {
+        return Optional.ofNullable(organisationName);
     }
 
     public void setOrganisationName(String organisationName) {

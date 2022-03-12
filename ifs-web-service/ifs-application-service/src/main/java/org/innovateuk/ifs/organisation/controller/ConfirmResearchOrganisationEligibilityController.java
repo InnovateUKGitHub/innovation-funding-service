@@ -19,10 +19,11 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.organisation.controller.AbstractOrganisationCreationController.BASE_URL;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.isValidKtpCollaborator;
 
 @Controller
-@RequestMapping(BASE_URL + "/{competitionId}/confirm-eligibility/{organisationId}")
+@RequestMapping(BASE_URL + "/{competitionId}/confirm-eligibility")
 public class ConfirmResearchOrganisationEligibilityController extends AbstractOrganisationCreationController {
 
     private static final String FORM_NAME = "form";
@@ -34,8 +35,8 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
-    @GetMapping
+
+    @GetMapping("/{organisationId}")
     public String view(
             @PathVariable("competitionId") long competitionId,
             @PathVariable("organisationId") long organisationId,
@@ -50,7 +51,7 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
     }
 
     @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
-    @PostMapping()
+    @PostMapping("/{organisationId}")
     public String post(
             @PathVariable("competitionId") long competitionId,
             @PathVariable("organisationId") long organisationId,
@@ -68,7 +69,7 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
         };
         Supplier<String> successView = () -> {
             if (form.getConfirmEligibility()) {
-                return "redirect:" + BASE_URL + "/" + competitionId + "/confirm-eligibility/" + organisationId + "/" + RESEARCH_NOT_ELIGIBLE;
+                return "redirect:" + BASE_URL + "/" + competitionId + "/confirm-eligibility/" + RESEARCH_NOT_ELIGIBLE;
             }
             return validateAndCompleteProcess(competitionId, organisationId, user, request, response);
         };
@@ -84,12 +85,12 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
 
     private String validateAndCompleteProcess(long competitionId, long organisationId, UserResource user, HttpServletRequest request, HttpServletResponse response) {
         if (registrationCookieService.isLeadJourney(request)) {
-            if (!validateLeadApplicant(competitionId, organisationId)) {
+            if (!validateResearchLeadApplicant(competitionId)) {
                 return redirectToNotEligiblePage();
             }
         }
         if (registrationCookieService.isCollaboratorJourney(request)) {
-            if (!validateCollaborator(competitionId, organisationId)) {
+            if (!validateResearchCollaborator(competitionId)) {
                 return redirectToNotEligiblePage();
             }
         }
@@ -101,19 +102,16 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
         return "redirect:" + BASE_URL + "/" + ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
     }
 
-    private boolean validateLeadApplicant(long competitionId, long organisationId) {
-        List<Long> competitionLeadApplicantTypeIds = competitionRestService.getCompetitionById(competitionId).getSuccess().getLeadApplicantTypes();
-        long organisationTypeId = organisationRestService.getOrganisationById(organisationId).getSuccess().getOrganisationType();
+    private boolean validateResearchLeadApplicant(long competitionId) {
 
-        return competitionLeadApplicantTypeIds.contains(organisationTypeId);
+        return competitionRestService.getCompetitionById(competitionId).getSuccess().getLeadApplicantTypes().contains(RESEARCH.getId());
     }
 
-    private boolean validateCollaborator(long competitionId, long organisationId) {
+    private boolean validateResearchCollaborator(long competitionId) {
         boolean ktpCompetition = competitionRestService.getCompetitionById(competitionId).getSuccess().isKtp();
-        long organisationTypeId = organisationRestService.getOrganisationById(organisationId).getSuccess().getOrganisationType();
 
         if (ktpCompetition) {
-            return isValidKtpCollaborator(organisationTypeId);
+            return isValidKtpCollaborator(RESEARCH.getId());
         } else {
             return competitionRestService.getCompetitionById(competitionId).getSuccess().getMaxResearchRatio() != 0;
         }
