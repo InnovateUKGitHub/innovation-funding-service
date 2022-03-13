@@ -53,7 +53,8 @@ import static org.mockito.Mockito.when;
 public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourFundingViewModelPopulator> {
     private static final Long APPLICATION_ID = 1L;
     private static final long SECTION_ID = 2L;
-
+    long ORGANISATION_ID = 3L;
+    private static final long COMPETITION_ID = 4L;
     @Mock
     private ApplicationRestService applicationRestService;
 
@@ -131,6 +132,14 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         QuestionResource researchCategoryQuestion = newQuestionResource().build();
         QuestionResource subsidyBasisQuestion = newQuestionResource().build();
 
+        when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(newApplicationResource()
+                .withId(APPLICATION_ID)
+                .withName("name")
+                .withCompetition(COMPETITION_ID)
+                .build()));
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(section.getCompetition().getId(), RESEARCH_CATEGORY))
                 .thenReturn(restSuccess(researchCategoryQuestion));
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(section.getCompetition().getId(), SUBSIDY_BASIS))
@@ -164,28 +173,27 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
 
     @Test
     public void populateManagement() {
-        long organisationId = 3L;
-        long competitionId = 4L;
+
         CompetitionResource competition = newCompetitionResource().build();
         OrganisationResource organisation = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(newApplicationResource()
                 .withId(APPLICATION_ID)
                 .withName("name")
-                .withCompetition(competitionId)
+                .withCompetition(COMPETITION_ID)
                 .build()));
 
-        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
 
-        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
+        when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
 
-        YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, organisationId, newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
+        YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
 
         assertEquals(APPLICATION_ID, viewModel.getApplicationId());
-        assertEquals(competitionId, viewModel.getCompetitionId());
+        assertEquals(COMPETITION_ID, viewModel.getCompetitionId());
         assertEquals("name", viewModel.getApplicationName());
         assertEquals(OrganisationTypeEnum.BUSINESS, viewModel.getOrganisationType());
         assertFalse(viewModel.isFundingSectionLocked());
         assertFalse(viewModel.isFundingSectionLocked());
-        assertEquals(format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisationId), viewModel.getFinancesUrl());
+        assertEquals(format("/application/%d/form/FINANCE/%d", APPLICATION_ID, ORGANISATION_ID), viewModel.getFinancesUrl());
     }
 }
