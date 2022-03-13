@@ -66,7 +66,7 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
         LabourCost labourCost;
 
         boolean thirdPartyOfgem = cost.getTarget().getCompetition().isThirdPartyOfgem();
-        if (cost.getName() == THIRDPARTY_OFGEM_NAME_KEY) {
+        if (THIRDPARTY_OFGEM_NAME_KEY.equals(cost.getName())) {
             labourCost = new LabourCost(cost.getId(), cost.getName(), cost.getItem(), BigDecimal.ZERO, cost.getQuantity(),
                     cost.getDescription(), cost.getTarget().getId(), cost.getCost(), thirdPartyOfgem);
         } else {

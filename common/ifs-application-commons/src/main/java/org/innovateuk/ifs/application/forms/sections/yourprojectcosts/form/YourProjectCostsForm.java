@@ -64,6 +64,8 @@ public class YourProjectCostsForm {
 
     private BigDecimal grantClaimPercentage;
 
+    private boolean thirdPartyOfgem;
+
     public VatForm getVatForm() {
         return vatForm;
     }
@@ -230,6 +232,14 @@ public class YourProjectCostsForm {
 
     public void setGrantClaimPercentage(BigDecimal grantClaimPercentage) {
         this.grantClaimPercentage = grantClaimPercentage;
+    }
+
+    public boolean isThirdPartyOfgem() {
+        return thirdPartyOfgem;
+    }
+
+    public void setThirdPartyOfgem(boolean thirdPartyOfgem) {
+        this.thirdPartyOfgem = thirdPartyOfgem;
     }
 
     /* View methods. */

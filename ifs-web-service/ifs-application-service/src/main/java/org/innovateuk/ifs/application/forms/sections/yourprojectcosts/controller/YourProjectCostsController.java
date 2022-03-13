@@ -14,10 +14,14 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.Appl
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.YourProjectCostsAutosaver;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
@@ -74,6 +78,12 @@ public class YourProjectCostsController extends AsyncAdaptor {
     @Autowired
     private OverheadFileRestService overheadFileRestService;
 
+    @Autowired
+    private ApplicationRestService applicationRestService;
+
+    @Autowired
+    private CompetitionRestService competitionRestService;
+
     @GetMapping
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
     @SecuredBySpring(value = "VIEW_PROJECT_COSTS", description = "Applicants, internal users and kta can view the Your project costs page")
@@ -82,7 +92,10 @@ public class YourProjectCostsController extends AsyncAdaptor {
                                        @PathVariable long applicationId,
                                        @PathVariable long organisationId,
                                        @PathVariable long sectionId) {
-        YourProjectCostsForm form = formPopulator.populateForm(applicationId, organisationId);
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+
+        YourProjectCostsForm form = formPopulator.populateForm(applicationId, organisationId, competition.isThirdPartyOfgem());
         model.addAttribute("form", form);
         return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId);
     }
