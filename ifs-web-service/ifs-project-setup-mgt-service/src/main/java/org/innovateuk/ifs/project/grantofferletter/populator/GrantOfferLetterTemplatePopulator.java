@@ -97,7 +97,8 @@ public class GrantOfferLetterTemplatePopulator {
                                                      summaryFinanceTableModel,
                                                      subsidyControlGOLEnabled,
                                                      subsidyControlModel,
-                                                     competition.isProcurement());
+                                                     competition.isProcurement(),
+                                                     competition.isThirdPartyOfgem());
     }
 
     private Map<String, String> termsAndConditions(CompetitionResource competition, List<ProjectFinanceResource> projectFinances) {

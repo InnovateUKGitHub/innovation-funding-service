@@ -92,6 +92,11 @@ spec:
               configMapKeyRef:
                 name: feature-toggle-config
                 key: IFS_EDI_UPDATE_ENABLED
+          - name: IFS_THIRDPARTY_OFGEM_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: feature-toggle-config
+                key: IFS_THIRDPARTY_OFGEM_ENABLED
           - name: IFS_HECP_TCP_ENABLED
             valueFrom:
               configMapKeyRef:

@@ -54,6 +54,11 @@ the lead applicant fills all the questions and marks as complete(procurement)
     :FOR  ${ELEMENT}    IN    @{programme_questions_procurement_ati}
      \     the lead applicant marks every question as complete procurement    ${ELEMENT}
 
+the lead applicant fills all the questions and marks as complete(thirdparty)
+    the user marks the project details as complete
+    :FOR  ${ELEMENT}    IN    @{Thirdparty_questions}
+     \     the lead applicant marks every question as complete    ${ELEMENT}
+
 the lead applicant fills all the questions and marks as complete(Hesta)
     :FOR  ${ELEMENT}    IN    @{Hesta_questions}
      \     the lead applicant marks every question as complete    ${ELEMENT}

@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
@@ -41,6 +40,9 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<In
     private UserRestService userRestService;
     @Autowired
     private CategoryRestService categoryRestService;
+
+    @Value("${ifs.thirdparty.ofgem.enabled}")
+    private boolean thirdPartyOfgemEnabled;
 
     @Value("${ifs.hecp.tcp.enabled}")
     private Boolean hecpTcpEnabled;
@@ -63,13 +65,10 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<In
     }
 
     private List<FundingType> fundingTypes() {
-        if (!hecpTcpEnabled) {
-            return Arrays.stream(FundingType.values())
-                    .filter(fundingType -> !fundingType.equals(FundingType.HECP))
-                    .collect(Collectors.toList());
-        }
-
-        return asList(FundingType.values());
+        return Arrays.stream(FundingType.values())
+                .filter(fundingType -> (FundingType.THIRDPARTY !=  fundingType) || thirdPartyOfgemEnabled)
+                .filter(fundingType -> (FundingType.HECP != fundingType) || hecpTcpEnabled)
+                .collect(Collectors.toList());
     }
 
     private List<InnovationAreaResource> addAllInnovationAreaOption(List<InnovationAreaResource> innovationAreas) {
