@@ -77,7 +77,8 @@ public class ProjectYourFundingViewModelPopulator {
                 partnerOrganisationResource.isLeadOrganisation(),
                 subsidyBasisRequired && !progress.isSubsidyBasisComplete(),
                 organisationRequiredAndNotCompleted,
-                subsidyQuestionId);
+                subsidyQuestionId,
+                competition.isThirdPartyOfgem());
     }
 
 
