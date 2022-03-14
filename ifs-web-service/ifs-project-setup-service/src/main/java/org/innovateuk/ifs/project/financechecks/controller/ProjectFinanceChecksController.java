@@ -429,7 +429,8 @@ public class ProjectFinanceChecksController {
                 competition.isKtp(),
                 leadOrganisation,
                 competition.isProcurementMilestones(),
-                showChangesLink);
+                showChangesLink,
+                competition.isThirdPartyOfgem());
     }
 
     private boolean isApproved(final ProjectOrganisationCompositeId compositeId) {
@@ -536,7 +537,8 @@ public class ProjectFinanceChecksController {
                 projectFinances, false,
                 showChangesLink,
                 false,
-                false));
+                false,
+                competition.isThirdPartyOfgem()));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
 

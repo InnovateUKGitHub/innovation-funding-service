@@ -215,7 +215,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                     resetableGolState,
                     showChangesLink,
                     canEditProjectCosts,
-                    user.hasAuthority(Authority.AUDITOR)
+                    user.hasAuthority(Authority.AUDITOR),
+                    competition.get().isThirdPartyOfgem()
             ));
 
             model.addAttribute("eligibilityForm", eligibilityForm);
