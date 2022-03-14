@@ -141,9 +141,7 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
             }
 
             return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
-        }
-
-        else {
+        } else {
             organisationForm.setTriedToSave(true);
             CompetitionResource competition = competitionRestService.getPublishedCompetitionById(getCompetitionIdFromInviteOrCookie(request)).getSuccess();
             OrganisationCreationSelectTypeViewModel selectOrgTypeViewModel = organisationCreationSelectTypePopulator.populate(request, competition);
