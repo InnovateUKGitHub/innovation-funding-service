@@ -15,11 +15,16 @@ import java.util.List;
 
 import static org.innovateuk.ifs.IfsProfileConstants.*;
 
+/**
+ * Adds startup settings to disable redis caching when in any of the profiles -:
+ *
+ * STUBDEV, DEV, INTEGRATION_TEST
+ */
 public class SimpleCachePropertiesPostProcessor implements EnvironmentPostProcessor {
 
-    public static final String CACHE_YML = "autoconfig-cache.yml";
+    private static final List PROFILES = ImmutableList.of(STUBDEV, DEV, INTEGRATION_TEST);
 
-    private static final List PROFILES = ImmutableList.of(STUBDEV, DEV);
+    public static final String CACHE_YML = "autoconfig-cache.yml";
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {

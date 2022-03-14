@@ -13,11 +13,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Light touch on top of the spring AutoConfiguration
+ * Light touch on top of the spring AutoConfiguration migrated out of data-service into a starter -:
  *
- * In stub and dev mode we create NoOpCacheManager that stops any other cache managers being registered.
+ * Required to override the presence of redis on the classpath.
  *
- * This includes redis cache that is also on the classpath.
+ * Applies the existing RedisConfiguration based on the cache type setting.
+ * Pre-processes some startup configuration based on the profile.
+ * @see SimpleCachePropertiesPostProcessor
+ *
  */
 @Configuration
 @Slf4j
