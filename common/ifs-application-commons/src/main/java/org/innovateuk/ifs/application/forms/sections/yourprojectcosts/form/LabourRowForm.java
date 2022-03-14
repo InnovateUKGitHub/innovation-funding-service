@@ -15,20 +15,20 @@ public class LabourRowForm extends AbstractCostRowForm<LabourCost> {
     @NotBlank(message = NOT_BLANK_MESSAGE)
     private String role;
 
-    //@NotNull(message = NOT_BLANK_MESSAGE) add validation
+    @NotNull(message = NOT_BLANK_MESSAGE)
     @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
-    private BigDecimal gross = BigDecimal.ZERO;;
+    private BigDecimal gross;
 
     @NotNull(message = NOT_BLANK_MESSAGE)
     @Min(value=1, message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
     private Integer days;
 
-    //@NotNull(message = NOT_BLANK_MESSAGE) add validation
+    @NotNull(message = NOT_BLANK_MESSAGE)
     @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
-    private BigDecimal rate = BigDecimal.ZERO;
+    private BigDecimal rate;
 
     private boolean thirdPartyOfgem;
 

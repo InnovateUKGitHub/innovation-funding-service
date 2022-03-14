@@ -215,6 +215,7 @@
             </td>
         </th:block>
         <th:block th:if="${thirdPartyOfgem}">
+            <input type="hidden" th:name="__${path}__.gross" th:value="${#numbers.formatInteger(1,0,'DEFAULT')}"/>
             <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
                 <label th:for="__${path}__.rate">
                     <span class="govuk-visually-hidden">Rate (£/day)</span>
