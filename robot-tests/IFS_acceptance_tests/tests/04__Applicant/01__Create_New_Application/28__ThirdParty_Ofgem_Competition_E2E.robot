@@ -94,7 +94,7 @@ Ofgem application finance overview
     Then the user should see the element   jQuery = td:contains("55,224") ~ td:contains("25,678") ~ td:contains("82.71%") ~ td:contains("20,000") ~ td:contains("9,546")
 
 the user submits the third party ofgem application
-    [Documentation]   IFS-11475  IFS-11476
+    [Documentation]   IFS-11475  IFS-11476  IFS-11480
     [Setup]  Get competitions id and set it as suite variable   ${thirdPartyOfgemCompetitionName}
     Given the user clicks the button/link                       link = Application overview
     And the user accept the thirdpary terms and conditions      Back to application overview
@@ -104,11 +104,12 @@ the user submits the third party ofgem application
     [Teardown]  update milestone to yesterday                   ${competitionId}  SUBMISSION_DATE
 
 the applicant should not view overhead and capital usage costs in application summary
-     [Documentation]   IFS-11475  IFS-11476
-     Given the user clicks the button/link      link = View application
-     When the user clicks the button/link       jQuery = button:contains("Finances summary")
-     Then the user should not see the element   jQuery = th:contains("Overheads (£)")
-     And the user should not see the element    jQuery = th:contains("Capital usage (£)")
+    [Documentation]   IFS-11475  IFS-11476
+    Given the user clicks the button/link      link = View application
+    When the user clicks the button/link       jQuery = button:contains("Finances summary")
+    Then the user should not see the element   jQuery = th:contains("Overheads (£)")
+    And the user should not see the element    jQuery = th:contains("Capital usage (£)")
+    And the user should see the element        jQuery = th:contains("Other funding (£)")
 
 Internal user should not view overhead and capital usage costs in application summary
     [Documentation]  IFS-11475  IFS-11476
@@ -194,6 +195,21 @@ the user fills thirdparty other funding information
     the user enters text to a text field    css = [name*=source]  Lottery funding
     the user enters text to a text field    css = [name*=date]  12-${nextyear}
     the user enters text to a text field    css = [name*=fundingAmount]  20000
+
+#    the user fills thirdparty funding information      ${thirdPartyOfgemApplicationName}
+#
+#the user fills thirdparty funding information
+#    [Arguments]  ${Application}
+#    the user navigates to Your-finances page                ${Application}
+#    the user selects funding section in project finances
+#    the user should see the element                         jQuery = span:contains("Have you received any aligned or third party funding for this project?")
+#    the user selects the radio button                       requestingFunding   true
+#    the user enters text to a text field                    css = [name^="grantClaimPercentage"]  10
+#    the user selects the radio button                       otherFunding   true
+#    the user enters text to a text field                    css = [name*=source]  Lottery funding
+#    the user enters text to a text field                    css = [name*=date]  12-${nextyear}
+#    the user enters text to a text field                    css = [name*=fundingAmount]  20000
+#    the user clicks the button/link                         jQuery = button:contains("Mark as complete")
 
 the user accept the thirdpary terms and conditions
     [Arguments]  ${returnLink}
