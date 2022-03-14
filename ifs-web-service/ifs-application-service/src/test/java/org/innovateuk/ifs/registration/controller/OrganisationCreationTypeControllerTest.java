@@ -36,6 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class OrganisationCreationTypeControllerTest extends BaseControllerMockMVCTest<OrganisationCreationTypeController> {
 
+    private static final String BASE_URL = "/organisation/create";
+
     @Mock
     private RegistrationCookieService registrationCookieService;
     @Mock
@@ -121,5 +123,15 @@ public class OrganisationCreationTypeControllerTest extends BaseControllerMockMV
         mockMvc.perform(get("/organisation/create/organisation-type/manually-enter-organisation-details"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration/organisation/manually-enter-organisation-details"));
+    }
+
+    @Test
+    public void testResearchAsSelectedOrganisationType() throws Exception {
+        when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(1L));
+
+        mockMvc.perform(post("/organisation/create/organisation-type")
+                .param("organisationTypeId", valueOf(OrganisationTypeEnum.RESEARCH.getId())))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:" + BASE_URL + "/1/confirm-eligibility/"));
     }
 }

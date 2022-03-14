@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.organisation.controller.AbstractOrganisationCreationController.BASE_URL;
@@ -37,7 +36,7 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
 
     @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
     @GetMapping()
-    public String newResearchViewPage(
+    public String newResearchOrganisationViewPage(
             @PathVariable("competitionId") long competitionId,
             Model model,
             UserResource user) {
@@ -50,7 +49,7 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
 
     @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
     @PostMapping()
-    public String newResearchConfirmEligibility(
+    public String newResearchOrganisationConfirmEligibility(
             @PathVariable("competitionId") long competitionId,
             @Valid @ModelAttribute(FORM_NAME) ConfirmResearchOrganisationEligibilityForm form,
             BindingResult bindingResult,
@@ -74,7 +73,7 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
 
     @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
     @GetMapping("/{organisationId}")
-    public String existingResearchView(
+    public String existingResearchOrganisationViewPage(
             @PathVariable("competitionId") long competitionId,
             @PathVariable("organisationId") long organisationId,
             Model model,
@@ -89,7 +88,7 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
 
     @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
     @PostMapping("/{organisationId}")
-    public String existingResearchConfirmEligibility(
+    public String existingResearchOrganisationConfirmEligibility(
             @PathVariable("competitionId") long competitionId,
             @PathVariable("organisationId") long organisationId,
             @Valid @ModelAttribute(FORM_NAME) ConfirmResearchOrganisationEligibilityForm form,

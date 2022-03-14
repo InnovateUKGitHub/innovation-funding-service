@@ -14,6 +14,7 @@ import org.mockito.Mock;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -33,6 +34,8 @@ public class ConfirmResearchOrganisationEligibilityControllerTest extends BaseCo
     private static final String RESEARCH_ELIGIBILITY_TEMPLATE = "confirm-research-organisation-eligibility";
     private static final String TEMPLATE_PATH = "registration/organisation";
     private static final String VIEW = "application-process-view";
+    private static final String FIND_ORGANISATION = "find-organisation";
+
 
     private CompetitionResource competition;
     private OrganisationResource organisation;
@@ -55,7 +58,7 @@ public class ConfirmResearchOrganisationEligibilityControllerTest extends BaseCo
     }
 
     @Before
-    public void setuo() {
+    public void setup() {
         competition = newCompetitionResource()
                 .withId(1L)
                 .withLeadApplicantType(singletonList(1L))
@@ -71,10 +74,17 @@ public class ConfirmResearchOrganisationEligibilityControllerTest extends BaseCo
     }
 
     @Test
-    public void viewPage() throws Exception {
+    public void existingResearchOrganisationViewPage() throws Exception {
         when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
 
         mockMvc.perform(get(BASE_URL + "/" + competition.getId() +"/confirm-eligibility/" + organisation.getId()))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name(TEMPLATE_PATH + "/" + RESEARCH_ELIGIBILITY_TEMPLATE));
+    }
+
+    @Test
+    public void newResearchOrganisationViewPage() throws Exception {
+        mockMvc.perform(get(BASE_URL + "/" + competition.getId() +"/confirm-eligibility/"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name(TEMPLATE_PATH + "/" + RESEARCH_ELIGIBILITY_TEMPLATE));
     }
@@ -112,5 +122,16 @@ public class ConfirmResearchOrganisationEligibilityControllerTest extends BaseCo
                 .param("confirmEligibility", "Yes"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(BASE_URL + "/" + competition.getId() +"/confirm-eligibility/research-not-eligible"));
+    }
+
+    @Test
+    public void newResearchUserChooseNo() throws Exception {
+        ConfirmResearchOrganisationEligibilityForm form = new ConfirmResearchOrganisationEligibilityForm();
+        form.setConfirmEligibility(false);
+
+        mockMvc.perform(post(BASE_URL + "/" + competition.getId() +"/confirm-eligibility/")
+                .param("confirmEligibility", "No"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format(BASE_URL + "/" + FIND_ORGANISATION)));
     }
 }
