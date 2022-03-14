@@ -172,7 +172,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                         ktpPhase2Enabled,
                         canEditProjectCosts));
                 if (form == null) {
-                    future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId, organisation.get().getId())));
+                    future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId,
+                            organisation.get().getId(), competition.get().isThirdPartyOfgem())));
                 }
                 else {
                     form.recalculateTotals();
