@@ -12,17 +12,24 @@ public class AssessorProfileSkillsViewModel {
     private Map<String, List<String>> innovationAreas;
     private String skillAreas;
     private boolean compAdminUser;
+    private final boolean isEDIUpdateEnabled;
 
+
+    private String ediUpdateUrl;
     public AssessorProfileSkillsViewModel(CompetitionResource competition,
                                           AssessorProfileDetailsViewModel assessorProfileDetailsViewModel,
                                           Map<String, List<String>> innovationAreas,
                                           String skillAreas,
-                                          boolean compAdminUser) {
+                                          boolean compAdminUser,
+                                          boolean isEDIUpdateEnabled,
+                                          String ediUpdateUrl) {
         this.competition = competition;
         this.assessorProfileDetailsViewModel = assessorProfileDetailsViewModel;
         this.innovationAreas = innovationAreas;
         this.skillAreas = skillAreas;
         this.compAdminUser = compAdminUser;
+        this.isEDIUpdateEnabled = isEDIUpdateEnabled;
+        this.ediUpdateUrl = ediUpdateUrl;
     }
 
     public CompetitionResource getCompetition() {
@@ -44,4 +51,12 @@ public class AssessorProfileSkillsViewModel {
     public boolean isCompAdminUser() {
         return compAdminUser;
     }
+
+    public boolean isEDIUpdateEnabled() {
+        return isEDIUpdateEnabled;
+    }
+    public String getEdiUpdateUrl() {
+        return ediUpdateUrl;
+    }
+
 }

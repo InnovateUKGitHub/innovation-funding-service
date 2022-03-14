@@ -9,6 +9,7 @@ import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.viewmodel.AssessorProfileDeclarationViewModel;
 import org.innovateuk.ifs.viewmodel.AssessorProfileDetailsViewModel;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -21,7 +22,8 @@ public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDec
     private AssessorProfileDetailsModelPopulator assessorProfileDetailsModelPopulator;
     private AffiliationRestService affiliationRestService;
     private CompetitionRestService competitionRestService;
-
+    @Value("${ifs.edi.update.enabled}")
+    private boolean isEdiUpdateEnabled;
     public AssessorProfileDeclarationModelPopulator(AssessorProfileDetailsModelPopulator assessorProfileDetailsModelPopulator,
                                                     AffiliationRestService affiliationRestService,
                                                     CompetitionRestService competitionRestService) {
@@ -52,7 +54,9 @@ public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDec
                 getFinancialInterests(affiliations),
                 getFamilyAffiliations(affiliations),
                 getFamilyFinancialInterests(affiliations),
-                compAdminUser
+                compAdminUser,
+                isEdiUpdateEnabled,
+                user.getEdiStatus()
         );
     }
 }
