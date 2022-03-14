@@ -20,7 +20,7 @@ public class RedisConfiguration extends CachingConfigurerSupport {
     @Bean
     public LettuceClientConfigurationBuilderCustomizer lettuceClientConfigurationBuilderCustomizer() {
         final ClientOptions.Builder options = ClusterClientOptions.builder()
-//                    .validateClusterNodeMembership(false)
+                    .validateClusterNodeMembership(false)
                 .disconnectedBehavior(DisconnectedBehavior.REJECT_COMMANDS);
         return builder -> builder.clientOptions(options.build());
     }
