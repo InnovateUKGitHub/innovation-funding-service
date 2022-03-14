@@ -36,6 +36,11 @@ public class LabourRowForm extends AbstractCostRowForm<LabourCost> {
         super();
     }
 
+    public LabourRowForm(boolean thirdPartyOfgem) {
+        super();
+        this.thirdPartyOfgem = thirdPartyOfgem;
+    }
+
     public LabourRowForm(LabourCost cost) {
         super(cost);
         this.role = cost.getRole();

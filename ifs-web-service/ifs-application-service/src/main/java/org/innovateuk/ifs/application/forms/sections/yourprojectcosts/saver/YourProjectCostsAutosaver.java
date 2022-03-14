@@ -56,8 +56,7 @@ public class YourProjectCostsAutosaver {
                 workingDaysCost.setLabourDays(Integer.parseInt(value));
                 financeRowRestService.update(workingDaysCost).getSuccess();
             } else if (field.startsWith("labour.rows")) {
-                //return autosaveLabourCost(field, value, finance);
-                return Optional.empty();
+                return autosaveLabourCost(field, value, finance);
             } else if (field.startsWith("overhead")) {
                 return autosaveOverheadCost(field, value, finance, applicationId, organisation.getId());
             } else if (field.startsWith("materialRows")) {
@@ -257,6 +256,11 @@ public class YourProjectCostsAutosaver {
             case "days":
                 cost.setLabourDays(Integer.parseInt(value));
                 break;
+            case "rate":
+                cost.setRate(new BigDecimal(value));
+                break;
+            case "thirdPartyOfgem":
+                cost.setThirdPartyOfgem(BooleanUtils.toBoolean(value));
             default:
                 throw new IFSRuntimeException(format("Auto save labour field not handled %s", rowField), emptyList());
         }

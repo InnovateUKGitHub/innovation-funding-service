@@ -130,7 +130,7 @@
                         <tbody class="govuk-table__body">
                         <th:block th:each="entry : *{labour.rows}">
                             <th:block
-                                th:insert="application/your-project-costs-fragments :: labour_row (${entry.key}, ${entry.value})"/>
+                                th:insert="application/your-project-costs-fragments :: labour_row (${entry.key}, ${entry.value}, ${model.isThirdPartyOfgem()})"/>
                         </th:block>
                         </tbody>
                     </table>
@@ -166,14 +166,14 @@
 
 <th:block th:fragment="ajax_labour_row">
     <th:block th:object="${form}">
-        <th:block th:insert="application/your-project-costs-fragments :: labour_row (${id}, ${row})"/>
+        <th:block th:insert="application/your-project-costs-fragments :: labour_row (${id}, ${row}, ${thirdPartyOfgem})"/>
     </th:block>
 </th:block>
 
-<th:block th:fragment="labour_row (id, row)">
+<th:block th:fragment="labour_row (id, row, thirdPartyOfgem)">
     <tr th:with="path=${'labour.rows[__${id}__]'}" th:attr="data-repeatable-row=${path}" th:id="${path}" class="form-group-row-validated"
         th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
-        <input type="hidden" th:field="*{__${path}__.thirdPartyOfgem}"/>
+        <input type="hidden" th:name="__${path}__.thirdPartyOfgem" th:value="${thirdPartyOfgem}"/>
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.role">
@@ -189,7 +189,7 @@
                    required="required"
                    maxlength="255">
         </td>
-        <th:block th:unless="${model.isThirdPartyOfgem()}">
+        <th:block th:unless="${thirdPartyOfgem}">
             <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
                 <label th:for="__${path}__.gross">
                     <span class="govuk-visually-hidden">Gross employee cost</span>
@@ -214,7 +214,7 @@
                 th:text="'£' + ${#numbers.formatInteger(row.rate == null ? 0 : row.rate, 0, 'DEFAULT')}">
             </td>
         </th:block>
-        <th:block th:if="${model.isThirdPartyOfgem()}">
+        <th:block th:if="${thirdPartyOfgem}">
             <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
                 <label th:for="__${path}__.rate">
                     <span class="govuk-visually-hidden">Rate (£/day)</span>
@@ -250,7 +250,7 @@
                    max="999999999"
                    data-max-errormessage="You must enter a value less than 10 digits.">
         </td>
-        <th:block th:unless="${model.isThirdPartyOfgem()}">
+        <th:block th:unless="${thirdPartyOfgem}">
             <td class="govuk-table__cell govuk-table__cell--numeric labour-totals"
                 th:id="__${path}__.labourTotalCost"
                 data-calculation-operations="/,*"
@@ -261,7 +261,7 @@
             </th:block>
             </td>
         </th:block>
-        <th:block th:if="${model.isThirdPartyOfgem()}">
+        <th:block th:if="${thirdPartyOfgem}">
             <td class="govuk-table__cell govuk-table__cell--numeric labour-totals"
             th:id="__${path}__.labourTotalCost"
             data-calculation-operations="*"

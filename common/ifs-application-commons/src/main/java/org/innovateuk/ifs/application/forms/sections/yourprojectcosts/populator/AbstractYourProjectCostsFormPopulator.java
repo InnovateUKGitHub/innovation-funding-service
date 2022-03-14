@@ -145,8 +145,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
                 .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
 
         if (shouldAddEmptyRow()) {
-            LabourRowForm labourRowForm = new LabourRowForm();
-            labourRowForm.setThirdPartyOfgem(thirdPartyOfgem);
+            LabourRowForm labourRowForm = new LabourRowForm(thirdPartyOfgem);
             rows.put(generateUnsavedRowId(), labourRowForm);
         }
 

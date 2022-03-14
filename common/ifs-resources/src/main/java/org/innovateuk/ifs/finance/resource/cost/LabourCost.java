@@ -175,6 +175,10 @@ public class LabourCost extends AbstractFinanceRowItem {
         this.labourDays = labourDays;
     }
 
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
+
     @Override
     public FinanceRowType getCostType() {
         return FinanceRowType.LABOUR;
