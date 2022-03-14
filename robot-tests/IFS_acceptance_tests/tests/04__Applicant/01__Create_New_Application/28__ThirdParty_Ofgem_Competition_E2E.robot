@@ -196,21 +196,6 @@ the user fills thirdparty other funding information
     the user enters text to a text field    css = [name*=date]  12-${nextyear}
     the user enters text to a text field    css = [name*=fundingAmount]  20000
 
-#    the user fills thirdparty funding information      ${thirdPartyOfgemApplicationName}
-#
-#the user fills thirdparty funding information
-#    [Arguments]  ${Application}
-#    the user navigates to Your-finances page                ${Application}
-#    the user selects funding section in project finances
-#    the user should see the element                         jQuery = span:contains("Have you received any aligned or third party funding for this project?")
-#    the user selects the radio button                       requestingFunding   true
-#    the user enters text to a text field                    css = [name^="grantClaimPercentage"]  10
-#    the user selects the radio button                       otherFunding   true
-#    the user enters text to a text field                    css = [name*=source]  Lottery funding
-#    the user enters text to a text field                    css = [name*=date]  12-${nextyear}
-#    the user enters text to a text field                    css = [name*=fundingAmount]  20000
-#    the user clicks the button/link                         jQuery = button:contains("Mark as complete")
-
 the user accept the thirdpary terms and conditions
     [Arguments]  ${returnLink}
     the user clicks the button/link    link = Innovation Fund governance document
