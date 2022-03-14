@@ -111,6 +111,6 @@ public class ConfirmResearchOrganisationEligibilityControllerTest extends BaseCo
         mockMvc.perform(post(BASE_URL + "/" + competition.getId() +"/confirm-eligibility/" + organisation.getId())
                 .param("confirmEligibility", "Yes"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(BASE_URL + "/" + competition.getId() +"/confirm-eligibility/" + organisation.getId() + "/research-not-eligible"));
+                .andExpect(redirectedUrl(BASE_URL + "/" + competition.getId() +"/confirm-eligibility/research-not-eligible"));
     }
 }

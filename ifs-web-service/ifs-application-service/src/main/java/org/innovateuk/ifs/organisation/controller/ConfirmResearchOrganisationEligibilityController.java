@@ -35,9 +35,46 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
     @Autowired
     private CompetitionRestService competitionRestService;
 
+    @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
+    @GetMapping()
+    public String newResearchViewPage(
+            @PathVariable("competitionId") long competitionId,
+            Model model,
+            UserResource user) {
 
+        model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, null, null));
+        model.addAttribute(FORM_NAME, new ConfirmResearchOrganisationEligibilityForm());
+
+        return TEMPLATE_PATH + "/" + RESEARCH_ELIGIBILITY_TEMPLATE;
+    }
+
+    @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
+    @PostMapping()
+    public String newResearchConfirmEligibility(
+            @PathVariable("competitionId") long competitionId,
+            @Valid @ModelAttribute(FORM_NAME) ConfirmResearchOrganisationEligibilityForm form,
+            BindingResult bindingResult,
+            ValidationHandler validationHandler,
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Model model,
+            UserResource user) {
+        Supplier<String> failureView = () ->  {
+            model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, null, null));
+            return TEMPLATE_PATH + "/" + RESEARCH_ELIGIBILITY_TEMPLATE;
+        };
+        Supplier<String> successView = () -> {
+            if (form.getConfirmEligibility()) {
+                return "redirect:" + BASE_URL + "/" + competitionId + "/confirm-eligibility/" + RESEARCH_NOT_ELIGIBLE;
+            }
+            return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
+        };
+        return validationHandler.failNowOrSucceedWith(failureView, successView);
+    }
+
+    @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
     @GetMapping("/{organisationId}")
-    public String view(
+    public String existingResearchView(
             @PathVariable("competitionId") long competitionId,
             @PathVariable("organisationId") long organisationId,
             Model model,
@@ -52,7 +89,7 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
 
     @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
     @PostMapping("/{organisationId}")
-    public String post(
+    public String existingResearchConfirmEligibility(
             @PathVariable("competitionId") long competitionId,
             @PathVariable("organisationId") long organisationId,
             @Valid @ModelAttribute(FORM_NAME) ConfirmResearchOrganisationEligibilityForm form,
