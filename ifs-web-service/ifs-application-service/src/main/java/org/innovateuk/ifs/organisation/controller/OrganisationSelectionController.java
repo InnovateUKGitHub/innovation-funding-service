@@ -100,7 +100,8 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
             if (isResearchOrganisation(form)) {
                 long competitionId = getCompetitionIdFromInviteOrCookie(request);
                     long organisationId = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess().getId();
-                    return "redirect:" + BASE_URL + "/" + competitionId  + "/confirm-eligibility/" +  organisationId;
+                    registrationCookieService.saveToOrganisationIdCookie(organisationId,response);
+                    return "redirect:" + BASE_URL + "/" + competitionId  + "/confirm-eligibility";
             }
 
             if (registrationCookieService.isLeadJourney(request)) {

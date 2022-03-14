@@ -39,9 +39,15 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
     public String newResearchOrganisationViewPage(
             @PathVariable("competitionId") long competitionId,
             Model model,
-            UserResource user) {
+            UserResource user,
+            HttpServletRequest request) {
 
-        model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, null, null));
+        if (registrationCookieService.getOrganisationIdCookieValue(request).isPresent()) {
+            String organisationName = organisationRestService.getOrganisationById(registrationCookieService.getOrganisationIdCookieValue(request).get()).getSuccess().getName();
+            model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, organisationName));
+        } else {
+            model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, null));
+        }
         model.addAttribute(FORM_NAME, new ConfirmResearchOrganisationEligibilityForm());
 
         return TEMPLATE_PATH + "/" + RESEARCH_ELIGIBILITY_TEMPLATE;
@@ -58,8 +64,9 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
             HttpServletResponse response,
             Model model,
             UserResource user) {
-        Supplier<String> failureView = () ->  {
-            model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, null, null));
+
+        Supplier<String> failureView = () -> {
+            model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, null));
             return TEMPLATE_PATH + "/" + RESEARCH_ELIGIBILITY_TEMPLATE;
         };
         Supplier<String> successView = () -> {
@@ -68,54 +75,33 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
             }
             return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
         };
-        return validationHandler.failNowOrSucceedWith(failureView, successView);
-    }
 
-    @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
-    @GetMapping("/{organisationId}")
-    public String existingResearchOrganisationViewPage(
-            @PathVariable("competitionId") long competitionId,
-            @PathVariable("organisationId") long organisationId,
-            Model model,
-            UserResource user) {
+        if (registrationCookieService.getOrganisationIdCookieValue(request).isPresent()) {
+            long organisationId = registrationCookieService.getOrganisationIdCookieValue(request).get();
+            failureView = () -> {
+                String organisationName = organisationRestService.getOrganisationById(organisationId).getSuccess().getName();
+                model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, organisationName));
+                return TEMPLATE_PATH + "/" + RESEARCH_ELIGIBILITY_TEMPLATE;
+            };
+            successView = () -> {
+                if (form.getConfirmEligibility()) {
+                    return "redirect:" + BASE_URL + "/" + competitionId + "/confirm-eligibility/" + RESEARCH_NOT_ELIGIBLE;
+                }
+                return validateAndCompleteProcess(competitionId, organisationId, user, request, response);
+            };
+        }
 
-        String organisationName = organisationRestService.getOrganisationById(organisationId).getSuccess().getName();
-        model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, organisationId, organisationName));
-        model.addAttribute(FORM_NAME, new ConfirmResearchOrganisationEligibilityForm());
-
-        return TEMPLATE_PATH + "/" + RESEARCH_ELIGIBILITY_TEMPLATE;
-    }
-
-    @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
-    @PostMapping("/{organisationId}")
-    public String existingResearchOrganisationConfirmEligibility(
-            @PathVariable("competitionId") long competitionId,
-            @PathVariable("organisationId") long organisationId,
-            @Valid @ModelAttribute(FORM_NAME) ConfirmResearchOrganisationEligibilityForm form,
-            BindingResult bindingResult,
-            ValidationHandler validationHandler,
-            HttpServletRequest request,
-            HttpServletResponse response,
-            Model model,
-            UserResource user) {
-        Supplier<String> failureView = () ->  {
-            String organisationName = organisationRestService.getOrganisationById(organisationId).getSuccess().getName();
-            model.addAttribute("model", new ConfirmResearchOrganisationEligibilityViewModel(competitionId, organisationId, organisationName));
-            return TEMPLATE_PATH + "/" + RESEARCH_ELIGIBILITY_TEMPLATE;
-        };
-        Supplier<String> successView = () -> {
-            if (form.getConfirmEligibility()) {
-                return "redirect:" + BASE_URL + "/" + competitionId + "/confirm-eligibility/" + RESEARCH_NOT_ELIGIBLE;
-            }
-            return validateAndCompleteProcess(competitionId, organisationId, user, request, response);
-        };
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
     @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
     @GetMapping("/research-not-eligible")
-    public String showNotEligible(Model model, UserResource user, HttpServletRequest request) {
+    public String showNotEligible(@PathVariable("competitionId") long competitionId,
+                                  Model model,
+                                  UserResource user,
+                                  HttpServletRequest request) {
         model.addAttribute("collaborator", registrationCookieService.isCollaboratorJourney(request));
+        model.addAttribute("competitionId", competitionId);
         return TEMPLATE_PATH + "/" + RESEARCH_NOT_ELIGIBLE;
     }
 

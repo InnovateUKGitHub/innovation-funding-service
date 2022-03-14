@@ -20,7 +20,7 @@
 
         <p class="govuk-body">The way you intend to exploit the outputs from your project does not match the eligibility criteria for research applicants</p>
         <p class="govuk-body">
-            The eligibility criteria is defined in the <a th:href="@{/competition/search}" class="govuk-link">competition brief</a>.
+            The eligibility criteria is defined in the <a th:href="@{~/competition/{cid}/overview(cid=${competitionId})}" class="govuk-link">competition brief</a>.
         </p>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

@@ -132,6 +132,6 @@ public class OrganisationCreationTypeControllerTest extends BaseControllerMockMV
         mockMvc.perform(post("/organisation/create/organisation-type")
                 .param("organisationTypeId", valueOf(OrganisationTypeEnum.RESEARCH.getId())))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:" + BASE_URL + "/1/confirm-eligibility/"));
+                .andExpect(view().name("redirect:" + BASE_URL + "/1/confirm-eligibility"));
     }
 }
