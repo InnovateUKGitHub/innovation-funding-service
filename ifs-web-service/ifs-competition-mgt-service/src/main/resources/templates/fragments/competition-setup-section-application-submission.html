@@ -69,7 +69,7 @@
         <li class="next" th:if="${!model.general.editable}">
             <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath=${model.general.competition.alwaysOpen && model.general.isHecpTcpEnabled ? 'application-assessment' : 'milestones'})}">
                 <span class="pagination-label">Next</span>
-                <span class="pagination-part-title" th:text="${model.general.competition.alwaysOpen && model.general.isHecpTcpEnabled ? 'Application assessment' : 'Milestones'}">Milestones</span>
+                <span class="pagination-part-title" th:text="${model.general.competition.alwaysOpen && model.general.isAssessmentStageEnabled ? 'Application assessment' : 'Milestones'}">Milestones</span>
             </a>
         </li>
     </ul>
