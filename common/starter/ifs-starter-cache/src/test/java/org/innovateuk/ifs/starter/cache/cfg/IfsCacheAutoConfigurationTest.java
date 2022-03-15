@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @EnableConfigurationProperties(value = RedisProperties.class)
 public class IfsCacheAutoConfigurationTest {
 
-    private static final String PROFILE_PROP = AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME + "=" + IfsProfileConstants.STUBDEV;
+    private static final String PROFILE_PROP = AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME + "=" + IfsProfileConstants.NOCACHE;
 
     @Test
     public void testConfigWithStubProfile() {
