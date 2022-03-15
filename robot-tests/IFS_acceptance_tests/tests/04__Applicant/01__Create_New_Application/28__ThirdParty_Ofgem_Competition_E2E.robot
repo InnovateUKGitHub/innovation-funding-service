@@ -5,6 +5,8 @@ Documentation   IFS-11442 OFGEM: Create a "ThirdParty" generic template
 ...
 ...             IFS-11475 OFGEM: Removal of capital usage option in "Your project cost"
 ...
+...             IFS-11483 OFGEM: Delete Reference to General Guidance
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -64,7 +66,7 @@ Applicant should not view overhead and capital usage costs in project costs
     And the user should not see the element          jQuery = button:contains("Capital usage")
 
 the user submits the third party ofgem application
-    [Documentation]   IFS-11475  IFS-11476
+    [Documentation]   IFS-11475  IFS-11476  IFS-11480
     [Setup]  Get competitions id and set it as suite variable   ${thirdPartyOfgemCompetitionName}
     Given the user completes thirdparty ofgem project finances
     And the user clicks the button/link                         link = Back to application overview
@@ -76,10 +78,18 @@ the user submits the third party ofgem application
 
 the applicant should not view overhead and capital usage costs in application summary
      [Documentation]   IFS-11475  IFS-11476
-     Given the user clicks the button/link  link = View application
-     When the user clicks the button/link   jQuery = button:contains("Finances summary")
+     Given the user clicks the button/link      link = View application
+     When the user clicks the button/link       jQuery = button:contains("Finances summary")
      Then the user should not see the element   jQuery = th:contains("Overheads (£)")
-     And the user should not see the element   jQuery = th:contains("Capital usage (£)")
+     And the user should not see the element    jQuery = th:contains("Capital usage (£)")
+     And the user should see the element        jQuery = th:contains("Other funding (£)")
+
+The lead applicant can not view general guidenece reference
+     [Documentation]  IFS-11483
+     [Setup]  Requesting competition and application ID of this Project
+     Given log in as a different user            &{innovation_lead_one}
+     When the user navigates to the page         ${server}/management/competition/${ThirdPartyCompId}/application/${ThirdPartyApplicationId}
+     Then the user should not see the element    jQuery = p:contains("You must read the General Guidance (opens in a new window) before you start")
 
 Internal user should not view overhead and capital usage costs in application summary
     [Documentation]  IFS-11475  IFS-11476
@@ -165,6 +175,7 @@ the user fills thirdparty funding information
     [Arguments]  ${Application}
     the user navigates to Your-finances page                ${Application}
     the user selects funding section in project finances
+    the user should see the element                         jQuery = span:contains("Have you received any aligned or third party funding for this project?")
     the user selects the radio button                       requestingFunding   true
     the user enters text to a text field                    css = [name^="grantClaimPercentage"]  10
     the user selects the radio button                       otherFunding   true

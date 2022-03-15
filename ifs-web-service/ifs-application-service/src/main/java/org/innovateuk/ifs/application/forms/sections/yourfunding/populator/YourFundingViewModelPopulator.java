@@ -80,6 +80,8 @@ public class YourFundingViewModelPopulator {
     }
 
     private YourFundingViewModel populateApplicant(long applicationId, long sectionId, long organisationId, UserResource user) {
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         ApplicantSectionResource section = applicantRestService.getSection(user.getId(), applicationId, sectionId);
         if (!section.getCurrentApplicant().getOrganisation().getId().equals(organisationId)) {
@@ -124,7 +126,8 @@ public class YourFundingViewModelPopulator {
                 format("/application/%d/form/FINANCE/%d", applicationId, section.getCurrentApplicant().getOrganisation().getId()),
                 overridingFundingRules,
                 section.getCompetition().getFundingType(),
-                section.getCurrentApplicant().getOrganisation().getOrganisationTypeEnum());
+                section.getCurrentApplicant().getOrganisation().getOrganisationTypeEnum(),
+                competition.isThirdPartyOfgem());
     }
 
 
@@ -134,7 +137,7 @@ public class YourFundingViewModelPopulator {
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         return new ManagementYourFundingViewModel(applicationId, application.getCompetitionName(), sectionId, organisationId, application.getCompetition(), application.getName(),
-                format("/application/%d/form/FINANCE/%d", applicationId, organisationId), competition.getFundingType(), organisation.getOrganisationTypeEnum());
+                format("/application/%d/form/FINANCE/%d", applicationId, organisationId), competition.getFundingType(), organisation.getOrganisationTypeEnum(), competition.isThirdPartyOfgem());
     }
 
     private Long getSubsidyBasisQuestionId(ApplicantSectionResource section) {
