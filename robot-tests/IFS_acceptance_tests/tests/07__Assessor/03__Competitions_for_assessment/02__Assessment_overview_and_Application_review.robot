@@ -65,8 +65,6 @@ Project details sections should not be scorable
     [Documentation]    INFUND-3400 INFUND-4264
     Given the user clicks the button/link       link = Back to your assessment overview
     When Application detail section should not be scorable
-    # below step to me removed once the webtest data is not showing edi question   -- to be handled in  ifs-11496
-    #And EDI question section should not be scorable
     Then Project summary section should not be scorable
     And Public description section should not be scorable
     And Scope section should not be scorable
@@ -295,12 +293,6 @@ Project summary section should not be scorable
     the user should see the element        jQuery = p:contains("This is the applicant response for project summary.")
     the user should not see the element    jQuery = label:contains("Question score")
     the user clicks the button/link        jQuery = span:contains("Next")
-
-#EDI question section should not be scorable
-#    the user should see the element        jQuery = h2:contains("Have you completed the EDI survey?")
-#    the user should see the element        jQuery = p:contains("Yes")
-#    the user should not see the element    jQuery = label:contains("Question score")
-#    the user clicks the button/link        jQuery = span:contains("Next")
 
 Public description section should not be scorable
     the user should see the element        jQuery = p:contains("This is the applicant response for public description.")

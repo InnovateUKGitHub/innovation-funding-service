@@ -82,10 +82,9 @@ the applicant should not view overhead and capital usage costs in application su
      When the user clicks the button/link       jQuery = button:contains("Finances summary")
      Then the user should not see the element   jQuery = th:contains("Overheads (£)")
      And the user should not see the element    jQuery = th:contains("Capital usage (£)")
-     And the user clicks the button/link        id = accordion-questions-heading-3-1
      And the user should see the element        jQuery = th:contains("Other funding (£)")
 
-The competition lead can not view general guidenece reference
+The lead applicant can not view general guidenece reference
      [Documentation]  IFS-11483
      [Setup]  Requesting competition and application ID of this Project
      Given log in as a different user            &{innovation_lead_one}
