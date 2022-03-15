@@ -36,7 +36,7 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
 
     @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
     @GetMapping()
-    public String newResearchOrganisationViewPage(
+    public String researchOrganisationConfirmEligibilityViewPage(
             @PathVariable("competitionId") long competitionId,
             Model model,
             UserResource user,
@@ -55,7 +55,7 @@ public class ConfirmResearchOrganisationEligibilityController extends AbstractOr
 
     @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
     @PostMapping()
-    public String newResearchOrganisationConfirmEligibility(
+    public String researchOrganisationConfirmEligibilitySubmit(
             @PathVariable("competitionId") long competitionId,
             @Valid @ModelAttribute(FORM_NAME) ConfirmResearchOrganisationEligibilityForm form,
             BindingResult bindingResult,
