@@ -2,5 +2,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 org.innovateuk.ifs.starters.cache.cfg.IfsCacheAutoConfiguration
 
 # Environment Post Processors
-org.springframework.boot.env.EnvironmentPostProcessor=\
+org.springframework.context.ApplicationContextInitializer=\
 org.innovateuk.ifs.starters.cache.cfg.IfsCacheContextInitializer
