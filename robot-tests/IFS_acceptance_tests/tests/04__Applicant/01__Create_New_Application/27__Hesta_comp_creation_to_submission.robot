@@ -162,19 +162,8 @@ the user is presented with the Application Summary page
     the user should see the element          jQuery = h2:contains("Application submitted")
     the user should see the element          jQuery = .govuk-panel:contains("Application number: ${ApplicationID}")
     the user should see the element          jQuery = h2:contains("What happens next?")
-    the user should see the element          jQuery = p:contains("You have already applied directly to the European Commission for an EU grant.")
     the user should see the element          jQuery = h3:contains("Verification checks")
-    the user should see the element          jQuery = h3:contains("Stage 2")
-    the user should see the element          jQuery = h3:contains("If your application is successful")
-    the user should see the element          jQuery = h3:contains("If your application is successful")
-    the user should see the element          jQuery = p:contains("You will proceed to stage 2 of our process.")
-    the user should see the element          jQuery = h3:contains("If your application is unsuccessful")
-    the user should see the element          jQuery = p:contains("After registering your Horizon Europe UK Application, you may still be unsuccessful.")
     the user should see the element          jQuery = h3:contains("Application feedback")
-    the user should see the element          jQuery = p:contains("Since we do not assess your application for EU grants we do not provide individual feedback.")
-    the user should not see the element      jQuery = h3:contains("Assessment process")
-    the user should not see the element      jQuery = h3:contains("Decision notification")
-    the user should not see the element      jQuery = p:contains("Application feedback will be provided by")
 
 the internal team mark the application as successful / unsuccessful
     [Arguments]   ${applicationName}   ${decision}
