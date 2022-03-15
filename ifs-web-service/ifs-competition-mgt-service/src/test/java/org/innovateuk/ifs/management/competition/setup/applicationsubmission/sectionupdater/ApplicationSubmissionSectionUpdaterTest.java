@@ -51,7 +51,7 @@ public class ApplicationSubmissionSectionUpdaterTest {
     @Test
     public void getNextSection() {
 
-        ReflectionTestUtils.setField(updater, "isHecpTcpEnabled", true);
+        ReflectionTestUtils.setField(updater, "isAssessmentStageEnabled", true);
 
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
@@ -67,7 +67,7 @@ public class ApplicationSubmissionSectionUpdaterTest {
     @Test
     public void getNextSectionAlwaysOpen() {
 
-        ReflectionTestUtils.setField(updater, "isHecpTcpEnabled", true);
+        ReflectionTestUtils.setField(updater, "isAssessmentStageEnabled", true);
 
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
