@@ -63,7 +63,7 @@ Lead applicant should get a confirmation email after application submission
     Then the user reads his email               ${leadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
 
 The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
-    [Documentation]  IFS-10697
+    [Documentation]  IFS-10697  IFS-11406
     Given Log in as a different user                                                &{Comp_admin1_credentials}
     And Requesting IDs of this competition                                          ${hestaCompetitionName}
     And Competition admin creates an assessment period                              ${competitionId}
