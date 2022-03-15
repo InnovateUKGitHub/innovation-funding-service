@@ -46,6 +46,6 @@ public class AlwaysOpenCloseCompetitionViewModelPopulator {
                 competition.getName(),
                 submissionDate,
                 submittedApplications,
-                competition.hasAssessmentStage());
+                competition.isHasAssessmentStage());
     }
 }

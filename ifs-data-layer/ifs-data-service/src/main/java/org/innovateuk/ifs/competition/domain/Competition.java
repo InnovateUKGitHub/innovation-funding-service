@@ -1010,7 +1010,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.useDocusignForGrantOfferLetter = useDocusignForGrantOfferLetter;
     }
 
-    public boolean hasAssessmentStage() {
+    public boolean isHasAssessmentStage() {
         return hasAssessmentStage && (ofNullable(completionStage)
                 .map(stage -> !stage.equals(CompetitionCompletionStage.COMPETITION_CLOSE))
                 .orElse(true)) ;

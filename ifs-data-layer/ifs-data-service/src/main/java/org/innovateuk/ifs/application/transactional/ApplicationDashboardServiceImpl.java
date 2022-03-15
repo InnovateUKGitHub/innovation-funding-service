@@ -3,6 +3,8 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.applicant.resource.dashboard.*;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -179,7 +181,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                 .withLeadApplicant(isLead(role))
                 .withEndDate(application.getCompetition().getEndDate())
                 .withDaysLeft(application.getCompetition().getDaysLeft())
-                .withHasAssessmentStage(application.getCompetition().hasAssessmentStage())
+                .withHasAssessmentStage(application.getCompetition().isHasAssessmentStage())
                 .withApplicationProgress(application.getCompletion().intValue())
                 .withAssignedToInterview(invitedToInterview)
                 .withStartDate(application.getStartDate())

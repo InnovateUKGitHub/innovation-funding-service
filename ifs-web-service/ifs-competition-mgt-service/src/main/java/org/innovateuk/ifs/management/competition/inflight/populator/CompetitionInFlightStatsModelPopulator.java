@@ -41,7 +41,7 @@ public class CompetitionInFlightStatsModelPopulator {
                         status,
                         completionStage);
             case OPEN:
-                if (competitionResource.hasAssessmentStage()) {
+                if (competitionResource.isHasAssessmentStage()) {
                     return new CompetitionInFlightStatsViewModel(
                             competitionKeyApplicationStatisticsRestService.getOpenKeyStatisticsByCompetition(
                                     competitionResource.getId()).getSuccess(),
