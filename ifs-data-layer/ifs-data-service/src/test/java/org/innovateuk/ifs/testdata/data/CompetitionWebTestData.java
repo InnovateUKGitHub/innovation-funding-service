@@ -549,7 +549,7 @@ public class CompetitionWebTestData {
     }
 
     private static CompetitionLineBuilder ofGemCompetition() {
-        return thirdPartyCompetition()
+        return thirdPartyProcurementCompetition()
                 .withCompetitionCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK)
                 .withTermsAndConditionsLabel("Strategic Innovation Fund Governance Document")
                 .withTermsAndConditionsGuidance("<h2 class=\"govuk-heading-m\">Summary of Strategic Innovation Fund governance document.</h2>\n" +
@@ -584,7 +584,7 @@ public class CompetitionWebTestData {
                 .withTermsAndConditionsTemplate("third-party-terms-and-conditions");
     }
 
-    private static CompetitionLineBuilder thirdPartyCompetition() {
+    private static CompetitionLineBuilder thirdPartyProcurementCompetition() {
         return anIfsCompetition()
                 .withFundingType(FundingType.PROCUREMENT)
                 .withFundingRules(FundingRules.NOT_AID)
