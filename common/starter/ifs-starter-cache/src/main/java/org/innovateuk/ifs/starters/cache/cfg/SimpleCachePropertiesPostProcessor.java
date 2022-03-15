@@ -13,12 +13,10 @@ import org.springframework.core.io.Resource;
 import java.io.IOException;
 import java.util.List;
 
-import static org.innovateuk.ifs.IfsProfileConstants.*;
+import static org.innovateuk.ifs.IfsProfileConstants.NOCACHE;
 
 /**
- * Adds startup settings to disable redis caching when in any of the profiles -:
- *
- * STUBDEV, DEV, INTEGRATION_TEST
+ * Adds startup settings to disable redis caching when in NOCACHE profile
  */
 public class SimpleCachePropertiesPostProcessor implements EnvironmentPostProcessor {
 
@@ -30,9 +28,7 @@ public class SimpleCachePropertiesPostProcessor implements EnvironmentPostProces
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
         if (matchProfile(environment)) {
             Resource resource = new ClassPathResource(CACHE_YML);
-            if (resource.exists()) {
-                registerPropertySource(environment, resource);
-            }
+            registerPropertySource(environment, resource);
         }
     }
 

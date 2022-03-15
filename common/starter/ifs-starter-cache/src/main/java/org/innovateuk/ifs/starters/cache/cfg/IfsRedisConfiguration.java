@@ -5,38 +5,30 @@ import io.lettuce.core.ClientOptions;
 import io.lettuce.core.ClientOptions.DisconnectedBehavior;
 import io.lettuce.core.cluster.ClusterClientOptions;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.redis.LettuceClientConfigurationBuilderCustomizer;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 @Slf4j
-@Configuration
 public class IfsRedisConfiguration extends CachingConfigurerSupport {
 
+    @Autowired
     private RedisProperties redisProperties;
 
-    /*
-        Modify the redis properties. We set the redis connection with env variables. We want to use env variables
-        to configure either an standalone or cluster configuration. The default autoconfigurer will assume we're using
-        a cluster configuration if the cluster nodes property is defined (Even if its empty!).
-
-        Here we are setting the cluster configuration to be null if the nodes property is empty.
+    /**
+     * Setting the properties via k8s config maps means we always have an empty string for spring.redis.cluster.nodes.
+     *
+     * Detect this and override the Lettuce configuration to force standalone mode, otherwise go with the defaults.
+     *
+     * @return LettuceClientConfigurationBuilderCustomizer
      */
-    public IfsRedisConfiguration(RedisProperties redisProperties) {
-        if (redisProperties.getCluster() != null && redisProperties.getCluster().getNodes().isEmpty()) {
-            redisProperties.setCluster(null);
-        }
-        this.redisProperties = redisProperties;
-    }
-
     @Bean
     public LettuceClientConfigurationBuilderCustomizer lettuceClientConfigurationBuilderCustomizer() {
         final ClientOptions.Builder options;
-        if (redisProperties.getCluster() != null) {
-            options = ClusterClientOptions.builder()
-                    .validateClusterNodeMembership(false);
+        if (redisProperties.getCluster() != null && redisProperties.getCluster().getNodes().isEmpty()) {
+            options = ClusterClientOptions.builder().validateClusterNodeMembership(false);
         } else {
             options = ClientOptions.builder();
         }

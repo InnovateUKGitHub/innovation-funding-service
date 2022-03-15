@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.starters.cache.cfg;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.CacheErrorHandler;
@@ -24,19 +24,17 @@ import org.springframework.context.annotation.Configuration;
  * @see SimpleCachePropertiesPostProcessor
  *
  */
-@Configuration
 @Slf4j
+@Configuration
 @EnableCaching
+@EnableConfigurationProperties({RedisProperties.class})
 @AutoConfigureBefore({CacheAutoConfiguration.class, RedisAutoConfiguration.class})
 public class IfsCacheAutoConfiguration {
-
-    @Autowired
-    private RedisProperties redisProperties;
 
     @Bean
     @ConditionalOnProperty(name = "spring.cache.type", havingValue = "redis", matchIfMissing = true)
     public IfsRedisConfiguration redisConfiguration() {
-        return new IfsRedisConfiguration(redisProperties);
+        return new IfsRedisConfiguration();
     }
 
     @Bean
