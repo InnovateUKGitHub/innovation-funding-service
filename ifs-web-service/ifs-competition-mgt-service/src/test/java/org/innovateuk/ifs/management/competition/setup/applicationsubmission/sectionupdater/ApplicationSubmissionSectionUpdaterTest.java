@@ -51,7 +51,7 @@ public class ApplicationSubmissionSectionUpdaterTest {
     @Test
     public void getNextSection() {
 
-        ReflectionTestUtils.setField(updater, "assessmentStageCompetitionEnabled", true);
+        ReflectionTestUtils.setField(updater, "isHecpTcpEnabled", true);
 
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
@@ -67,7 +67,7 @@ public class ApplicationSubmissionSectionUpdaterTest {
     @Test
     public void getNextSectionAlwaysOpen() {
 
-        ReflectionTestUtils.setField(updater, "assessmentStageCompetitionEnabled", true);
+        ReflectionTestUtils.setField(updater, "isHecpTcpEnabled", true);
 
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
@@ -78,21 +78,6 @@ public class ApplicationSubmissionSectionUpdaterTest {
         String nextSection = updater.getNextSection(form, competition, CompetitionSetupSection.APPLICATION_ASSESSMENT);
 
         assertThat(nextSection).isEqualTo("redirect:/competition/setup/1/section/application-assessment");
-    }
-
-    @Test
-    public void getNextSectionAlwaysOpenNoAssessmentStage() {
-
-        CompetitionResource competition = newCompetitionResource()
-                .withId(1L)
-                .withAlwaysOpen(true)
-                .withHasAssessmentStage(false)
-                .build();
-        ApplicationSubmissionForm form = new ApplicationSubmissionForm(true);
-
-        String nextSection = updater.getNextSection(form, competition, CompetitionSetupSection.MILESTONES);
-
-        assertThat(nextSection).isEqualTo("redirect:/competition/setup/1/section/milestones");
     }
 
     @Test
