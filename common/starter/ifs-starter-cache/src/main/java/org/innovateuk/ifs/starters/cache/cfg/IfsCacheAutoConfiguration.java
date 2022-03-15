@@ -1,9 +1,13 @@
 package org.innovateuk.ifs.starters.cache.cfg;
 
+import io.lettuce.core.ClientOptions;
+import io.lettuce.core.cluster.ClusterClientOptions;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.data.redis.LettuceClientConfigurationBuilderCustomizer;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -21,7 +25,7 @@ import org.springframework.context.annotation.Configuration;
  *
  * Applies the existing RedisConfiguration based on the cache type setting.
  * Pre-processes some startup configuration based on the profile.
- * @see SimpleCachePropertiesPostProcessor
+ * @see IfsCacheContextInitializer
  *
  */
 @Slf4j
@@ -31,10 +35,29 @@ import org.springframework.context.annotation.Configuration;
 @AutoConfigureBefore({CacheAutoConfiguration.class, RedisAutoConfiguration.class})
 public class IfsCacheAutoConfiguration {
 
+    @Autowired
+    private RedisProperties redisProperties;
+
+    /**
+     * Setting the properties via k8s config maps means we always have an empty string for spring.redis.cluster.nodes.
+     *
+     * Detect this and override the Lettuce configuration to force standalone mode, otherwise go with the defaults.
+     *
+     * @return LettuceClientConfigurationBuilderCustomizer
+     */
     @Bean
-    @ConditionalOnProperty(name = "spring.cache.type", havingValue = "redis", matchIfMissing = true)
-    public IfsRedisConfiguration redisConfiguration() {
-        return new IfsRedisConfiguration();
+    @ConditionalOnProperty(name = "spring.redis.clientType", havingValue = "LETTUCE")
+    public LettuceClientConfigurationBuilderCustomizer lettuceClientConfigurationBuilderCustomizer() {
+        final ClientOptions.Builder options;
+        if (redisProperties.getCluster() == null
+                || redisProperties.getCluster().getNodes() == null
+                || redisProperties.getCluster().getNodes().isEmpty()) {
+            redisProperties.setCluster(null); // RedisConnectionConfiguration:L106!!
+            options = ClusterClientOptions.builder().validateClusterNodeMembership(false);
+        } else {
+            options = ClientOptions.builder();
+        }
+        return builder -> builder.clientOptions(options.disconnectedBehavior(ClientOptions.DisconnectedBehavior.REJECT_COMMANDS).build());
     }
 
     @Bean

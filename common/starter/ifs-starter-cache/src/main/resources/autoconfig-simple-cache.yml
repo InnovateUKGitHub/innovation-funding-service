@@ -1,9 +1,6 @@
 spring:
   cache:
-    type: simple
-  redis:
-    # Set to jedis to disable lettuce
-    client-type: jedis
+    type: SIMPLE
   data:
     redis:
       repositories:

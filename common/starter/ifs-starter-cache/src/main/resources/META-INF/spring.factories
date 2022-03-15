@@ -3,4 +3,4 @@ org.innovateuk.ifs.starters.cache.cfg.IfsCacheAutoConfiguration
 
 # Environment Post Processors
 org.springframework.boot.env.EnvironmentPostProcessor=\
-org.innovateuk.ifs.starters.cache.cfg.SimpleCachePropertiesPostProcessor
+org.innovateuk.ifs.starters.cache.cfg.IfsCacheContextInitializer

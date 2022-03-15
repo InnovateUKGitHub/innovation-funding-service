@@ -1,0 +1,11 @@
+## Redis Config -  defaults not set via env variables (k8s config-map)
+spring:
+  cache:
+    type: REDIS
+  redis:
+    clientType: LETTUCE
+    timeout: 1s
+  data:
+    redis:
+      repositories:
+        enabled: false

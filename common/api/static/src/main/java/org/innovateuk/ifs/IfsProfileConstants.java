@@ -38,7 +38,9 @@ public class IfsProfileConstants {
     /**
      * Used to disable redis caching.
      */
-    public static final String NOCACHE = "NOCACHE";
+    public static final String SIMPLE_CACHE = "SIMPLE_CACHE";
+    public static final String REDIS_STANDALONE_CACHE = "REDIS_STANDALONE_CACHE";
+    public static final String REDIS_CLUSTER_CACHE = "REDIS_CLUSTER_CACHE";
 
 
 

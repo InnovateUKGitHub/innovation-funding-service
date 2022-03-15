@@ -10,8 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.innovateuk.ifs.IfsProfileConstants.INTEGRATION_TEST;
-import static org.innovateuk.ifs.IfsProfileConstants.NOCACHE;
+import static org.innovateuk.ifs.IfsProfileConstants.*;
 
 /**
  * This is the base class for all integration tests against a configured Spring application.  This superclass also
@@ -20,7 +19,7 @@ import static org.innovateuk.ifs.IfsProfileConstants.NOCACHE;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({INTEGRATION_TEST, NOCACHE})
+@ActiveProfiles({INTEGRATION_TEST, SIMPLE_CACHE})
 public abstract class BaseIntegrationTest extends BaseTest {
 
     /**
