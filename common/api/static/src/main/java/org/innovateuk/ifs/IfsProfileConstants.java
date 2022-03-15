@@ -35,4 +35,11 @@ public class IfsProfileConstants {
     public static final String AMQP_PROFILE = "AMQP";
     public static final String NOT_AMQP_PROFILE = "!" + AMQP_PROFILE;
 
+    /**
+     * Used to disable redis caching.
+     */
+    public static final String NOCACHE = "NOCACHE";
+
+
+
 }

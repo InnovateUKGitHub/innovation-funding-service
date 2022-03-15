@@ -11,6 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.innovateuk.ifs.IfsProfileConstants.INTEGRATION_TEST;
+import static org.innovateuk.ifs.IfsProfileConstants.NOCACHE;
 
 /**
  * This is the base class for all integration tests against a configured Spring application.  This superclass also
@@ -19,7 +20,7 @@ import static org.innovateuk.ifs.IfsProfileConstants.INTEGRATION_TEST;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles(INTEGRATION_TEST)
+@ActiveProfiles({INTEGRATION_TEST, NOCACHE})
 public abstract class BaseIntegrationTest extends BaseTest {
 
     /**

@@ -22,7 +22,7 @@ import static org.innovateuk.ifs.IfsProfileConstants.*;
  */
 public class SimpleCachePropertiesPostProcessor implements EnvironmentPostProcessor {
 
-    private static final List PROFILES = ImmutableList.of(STUBDEV, DEV, INTEGRATION_TEST);
+    private static final List PROFILES = ImmutableList.of(NOCACHE);
 
     public static final String CACHE_YML = "autoconfig-cache.yml";
 
