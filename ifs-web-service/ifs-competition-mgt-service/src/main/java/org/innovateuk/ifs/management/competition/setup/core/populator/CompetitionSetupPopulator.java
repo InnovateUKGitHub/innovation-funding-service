@@ -28,8 +28,8 @@ public class CompetitionSetupPopulator {
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
 
-    @Value("${ifs.assessment.stage.competition.enabled}")
-    private boolean isAssessmentStageEnabled;
+    @Value("${ifs.hecp.tcp.enabled}")
+    private boolean isHecpTcpEnabled;
 
     public GeneralSetupViewModel populateGeneralModelAttributes(CompetitionResource competitionResource, UserResource userResource, CompetitionSetupSection section) {
 
@@ -45,7 +45,7 @@ public class CompetitionSetupPopulator {
         boolean isIfsAdmin = SecurityRuleUtil.hasIFSAdminAuthority(userResource);
 
         GeneralSetupViewModel viewModel = new GeneralSetupViewModel(editable, firstTimeInForm, competitionResource, section, CompetitionSetupSection.values(),
-                isInitialComplete, isIfsAdmin, isAssessmentStageEnabled);
+                isInitialComplete, isIfsAdmin, isHecpTcpEnabled);
 
         if (section.hasDisplayableSetupFragment()) {
             viewModel.setCurrentSectionFragment("section-" + section.getPath());

@@ -171,8 +171,8 @@
             <a rel="prev" title="Navigate to previous part"
                th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath=${model.applicationSubmissionEnabled ? 'application-submission' : 'completion-stage'})}">
                 <span class="pagination-label">Previous</span>
-                <span class="pagination-part-title" th:if="${model.general.competition.alwaysOpen && model.general.isAssessmentStageEnabled}" th:text="${model.applicationSubmissionEnabled ? 'Application assessment' : 'Completion stage'}">Completion stage</span>
-                <span class="pagination-part-title" th:unless="${model.general.competition.alwaysOpen && model.general.isAssessmentStageEnabled}" th:text="${model.applicationSubmissionEnabled ? 'Application submission' : 'Completion stage'}">Completion stage</span>
+                <span class="pagination-part-title" th:if="${model.general.competition.alwaysOpen && model.general.isHecpTcpEnabled}" th:text="${model.applicationSubmissionEnabled ? 'Application assessment' : 'Completion stage'}">Completion stage</span>
+                <span class="pagination-part-title" th:unless="${model.general.competition.alwaysOpen && model.general.isHecpTcpEnabled}" th:text="${model.applicationSubmissionEnabled ? 'Application submission' : 'Completion stage'}">Completion stage</span>
             </a>
         </li>
         <li class="next">
