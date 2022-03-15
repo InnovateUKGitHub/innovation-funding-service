@@ -38,7 +38,7 @@ public class GeneralSetupViewModel {
     private boolean isInitialComplete;
     private CompetitionStateSetupViewModel state;
     private boolean ifsAdmin;
-    private boolean isHecpTcpEnabled;
+    private boolean isAssessmentStageEnabled;
 
     public GeneralSetupViewModel(boolean editable,
                                  boolean firstTimeInForm,
@@ -47,7 +47,7 @@ public class GeneralSetupViewModel {
                                  CompetitionSetupSection[] allSections,
                                  boolean isInitialComplete,
                                  boolean ifsAdmin,
-                                 boolean isHecpTcpEnabled) {
+                                 boolean isAssessmentStageEnabled) {
         this.editable = editable;
         this.firstTimeInForm = firstTimeInForm;
         this.competition = competition;
@@ -55,7 +55,7 @@ public class GeneralSetupViewModel {
         this.allSections = allSections;
         this.isInitialComplete = isInitialComplete;
         this.ifsAdmin = ifsAdmin;
-        this.isHecpTcpEnabled = isHecpTcpEnabled;
+        this.isAssessmentStageEnabled = isAssessmentStageEnabled;
     }
 
     public void setCurrentSectionFragment(String currentSectionFragment) {
@@ -106,8 +106,8 @@ public class GeneralSetupViewModel {
         return ifsAdmin;
     }
 
-    public boolean isHecpTcpEnabled() {
-        return isHecpTcpEnabled;
+    public boolean isAssessmentStageEnabled() {
+        return isAssessmentStageEnabled;
     }
 
     public static List<CompetitionSetupSection> getPublishSections() {

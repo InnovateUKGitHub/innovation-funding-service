@@ -34,7 +34,7 @@ public class CompetitionInFlightViewModel {
     private boolean readOnly;
     private boolean assessmentPanelEnabled;
     private boolean interviewPanelEnabled;
-    private boolean isHasAssessmentStage;
+    private boolean hasAssessmentStage;
     private AssessorFinanceView assessorFinanceView;
     private CompetitionCompletionStage competitionCompletionStage;
     private boolean supporterEnabled;
@@ -68,7 +68,7 @@ public class CompetitionInFlightViewModel {
         this.assessmentPanelEnabled = competitionAssessmentConfigResource.getHasAssessmentPanel() != null ? competitionAssessmentConfigResource.getHasAssessmentPanel() : false;
         this.interviewPanelEnabled = competitionAssessmentConfigResource.getHasInterviewStage() != null ? competitionAssessmentConfigResource.getHasInterviewStage() : false;
         this.assessorFinanceView = competitionAssessmentConfigResource.getAssessorFinanceView();
-        this.isHasAssessmentStage = competitionResource.isHasAssessmentStage();
+        this.hasAssessmentStage = competitionResource.isHasAssessmentStage();
         this.supporterEnabled = competitionResource.isKtp();
         this.alwaysOpen = competitionResource.isAlwaysOpen();
     }
@@ -167,7 +167,7 @@ public class CompetitionInFlightViewModel {
     }
 
     public boolean isInviteAssessorsLinkEnabled() {
-        return isHasAssessmentStage &&
+        return hasAssessmentStage &&
                 !asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competitionStatus);
     }
 
@@ -194,12 +194,12 @@ public class CompetitionInFlightViewModel {
     }
 
     public boolean isHasAssessmentStage() {
-        return isHasAssessmentStage;
+        return hasAssessmentStage;
     }
 
     public boolean isManageAssessmentLinkEnabled() {
         return competitionStatus != READY_TO_OPEN
-                && (competitionStatus != OPEN || alwaysOpen && isHasAssessmentStage);
+                && (competitionStatus != OPEN || alwaysOpen && hasAssessmentStage);
     }
 
     @JsonIgnore

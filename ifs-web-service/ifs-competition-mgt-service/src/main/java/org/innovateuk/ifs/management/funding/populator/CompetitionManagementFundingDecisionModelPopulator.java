@@ -72,10 +72,7 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
 
         if (alwaysOpenCompetitionEnabled) {
             CompetitionResource competition = getCompetitionIfExist(competitionId);
-            if (competition.isAlwaysOpen()) {
-                if (!competition.isHasAssessmentStage()) {
-                    return getSubmittedApplications(competitionId, paginationForm, fundingDecisionFilterForm);
-                }
+            if (competition.isAlwaysOpen() && competition.isHasAssessmentStage()) {
                 return applicationSummaryRestService.getAssessedApplications(
                         competitionId,
                         "id",
@@ -115,11 +112,7 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
     private List<Long> getAllApplicationIdsByFilters(long competitionId, FundingDecisionFilterForm filterForm) {
         if(alwaysOpenCompetitionEnabled) {
             CompetitionResource competition = getCompetitionIfExist(competitionId);
-            if (competition.isAlwaysOpen()) {
-                if (competition.isHorizonEuropeGuarantee()) {
-                    return applicationSummaryRestService.getAllSubmittedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
-                }
-
+            if (competition.isAlwaysOpen() && competition.isHasAssessmentStage()) {
                 return applicationSummaryRestService.getAllAssessedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
             }
         }
