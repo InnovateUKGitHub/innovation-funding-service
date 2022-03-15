@@ -163,6 +163,7 @@ the user is presented with the Application Summary page
     the user should see the element          jQuery = .govuk-panel:contains("Application number: ${ApplicationID}")
     the user should see the element          jQuery = h2:contains("What happens next?")
     the user should see the element          jQuery = h3:contains("Verification checks")
+    the user should see the element          jQuery = h3:contains("Once your application is verified")
     the user should see the element          jQuery = h3:contains("Application feedback")
 
 the internal team mark the application as successful / unsuccessful
