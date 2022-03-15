@@ -17,6 +17,7 @@ public class LabourCostTest {
     private BigDecimal grossEmployeeCost;
     private Integer labourDays;
     private String description;
+    private BigDecimal rate;
 
     @Before
     public void setUp() throws Exception {
@@ -26,8 +27,9 @@ public class LabourCostTest {
         grossEmployeeCost = new BigDecimal(50000);
         labourDays = 168;
         description = "";
+        rate = BigDecimal.ZERO;
 
-        labourCost = new LabourCost(id, key, role, grossEmployeeCost, labourDays, description, 1L);
+        labourCost = new LabourCost(id, key, role, grossEmployeeCost, labourDays, description, 1L, rate, false);
     }
 
     @Test
