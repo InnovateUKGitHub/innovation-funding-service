@@ -26,6 +26,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
     private final ApplicationKtaInviteResource ktaInvite;
     private final ProcessRoleResource ktaProcessRole;
     private final boolean isEDIUpdateEnabled;
+    private final boolean isThirdPartyOfgem;
 
     public ApplicationTeamViewModel(long applicationId,
                                     String applicationName,
@@ -41,7 +42,8 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
                                     boolean ktpPhase2Enabled,
                                     ApplicationKtaInviteResource ktaInvite,
                                     ProcessRoleResource ktaProcessRole,
-                                    boolean isEDIUpdateEnabled
+                                    boolean isEDIUpdateEnabled,
+                                    boolean isThirdPartyOfgem
                                     ) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
@@ -58,6 +60,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         this.ktaInvite = ktaInvite;
         this.ktaProcessRole = ktaProcessRole;
         this.isEDIUpdateEnabled = isEDIUpdateEnabled;
+        this.isThirdPartyOfgem = isThirdPartyOfgem;
     }
 
     @Override
@@ -128,9 +131,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         return ktpCompetition;
     }
 
-    public boolean isKtpPhase2Enabled() {
-        return ktpPhase2Enabled;
-    }
+    public boolean isKtpPhase2Enabled() { return ktpPhase2Enabled; }
 
     public Long getKtaInvitePendingDays() {
         if (ktaInvite == null || InviteStatus.SENT != ktaInvite.getStatus()) {
@@ -174,5 +175,9 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
 
     public boolean isEDIUpdateEnabled() {
         return isEDIUpdateEnabled;
+    }
+
+    public boolean isThirdPartyOfgem() {
+        return isThirdPartyOfgem;
     }
 }
