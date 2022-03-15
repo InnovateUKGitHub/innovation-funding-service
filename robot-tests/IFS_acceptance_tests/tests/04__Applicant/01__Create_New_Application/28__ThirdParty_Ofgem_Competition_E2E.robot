@@ -7,6 +7,8 @@ Documentation   IFS-11442 OFGEM: Create a "ThirdParty" generic template
 ...
 ...             IFS-11481 OFGEM: Funding Cap as a monetary value rather than percentage
 ...
+...             IFS-11483 OFGEM: Delete Reference to General Guidance
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -110,6 +112,13 @@ the applicant should not view overhead and capital usage costs in application su
     Then the user should not see the element   jQuery = th:contains("Overheads (£)")
     And the user should not see the element    jQuery = th:contains("Capital usage (£)")
     And the user should see the element        jQuery = th:contains("Other funding (£)")
+
+The lead applicant can not view general guidenece reference
+     [Documentation]  IFS-11483
+     [Setup]  Requesting competition and application ID of this Project
+     Given log in as a different user            &{innovation_lead_one}
+     When the user navigates to the page         ${server}/management/competition/${ThirdPartyCompId}/application/${ThirdPartyApplicationId}
+     Then the user should not see the element    jQuery = p:contains("You must read the General Guidance (opens in a new window) before you start")
 
 Internal user should not view overhead and capital usage costs in application summary
     [Documentation]  IFS-11475  IFS-11476
