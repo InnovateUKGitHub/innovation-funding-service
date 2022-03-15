@@ -15,18 +15,18 @@ public class AlwaysOpenCloseCompetitionViewModel {
     private String competitionName;
     private ZonedDateTime submissionDate;
     private List<ApplicationResource> submittedApplications;
-    private boolean hasAssessmentStage;
+    private boolean isHasAssessmentStage;
 
     public AlwaysOpenCloseCompetitionViewModel(Long competitionId,
                                                String competitionName,
                                                ZonedDateTime submissionDate,
                                                List<ApplicationResource> submittedApplications,
-                                               boolean hasAssessmentStage) {
+                                               boolean isHasAssessmentStage) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.submissionDate = submissionDate;
         this.submittedApplications = submittedApplications;
-        this.hasAssessmentStage = hasAssessmentStage;
+        this.isHasAssessmentStage = isHasAssessmentStage;
     }
 
     public Long getCompetitionId() {
@@ -46,7 +46,7 @@ public class AlwaysOpenCloseCompetitionViewModel {
     }
 
     public boolean isHasAssessmentStage() {
-        return hasAssessmentStage;
+        return isHasAssessmentStage;
     }
 
     public boolean submissionDateIsPresentAndHadPassed() {
