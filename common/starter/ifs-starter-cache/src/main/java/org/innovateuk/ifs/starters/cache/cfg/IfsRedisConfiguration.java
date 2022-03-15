@@ -5,16 +5,16 @@ import io.lettuce.core.ClientOptions;
 import io.lettuce.core.ClientOptions.DisconnectedBehavior;
 import io.lettuce.core.cluster.ClusterClientOptions;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.redis.LettuceClientConfigurationBuilderCustomizer;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 @Slf4j
-public class RedisConfiguration extends CachingConfigurerSupport {
+@Configuration
+public class IfsRedisConfiguration extends CachingConfigurerSupport {
 
-    @Autowired
     private RedisProperties redisProperties;
 
     /*
@@ -24,10 +24,11 @@ public class RedisConfiguration extends CachingConfigurerSupport {
 
         Here we are setting the cluster configuration to be null if the nodes property is empty.
      */
-    public RedisConfiguration() {
+    public IfsRedisConfiguration(RedisProperties redisProperties) {
         if (redisProperties.getCluster() != null && redisProperties.getCluster().getNodes().isEmpty()) {
             redisProperties.setCluster(null);
         }
+        this.redisProperties = redisProperties;
     }
 
     @Bean
