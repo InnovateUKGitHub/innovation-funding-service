@@ -19,6 +19,6 @@ public class ApplicationAssessmentFormPopulator implements CompetitionSetupFormP
 
     @Override
     public ApplicationAssessmentForm populateForm(CompetitionResource competitionResource) {
-        return new ApplicationAssessmentForm(competitionResource.isHasAssessmentStage());
+        return new ApplicationAssessmentForm(competitionResource.hasAssessmentStage());
     }
 }

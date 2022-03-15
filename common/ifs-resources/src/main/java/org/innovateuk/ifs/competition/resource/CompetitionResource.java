@@ -313,7 +313,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return "";
     }
 
-    public boolean isHasAssessmentStage() {
+    public boolean hasAssessmentStage() {
         return hasAssessmentStage;
     }
 

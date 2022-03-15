@@ -21,8 +21,8 @@ import static java.lang.String.format;
 @Service
 public class ApplicationSubmissionSectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater  {
 
-    @Value("${ifs.hecp.tcp.enabled}")
-    private boolean isHecpTcpEnabled;
+    @Value("${ifs.assessment.stage.competition.enabled}")
+    private boolean assessmentStageCompetitionEnabled;
 
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
@@ -49,7 +49,7 @@ public class ApplicationSubmissionSectionUpdater extends AbstractSectionUpdater 
 
         String sectionPath;
 
-        if (competition.isAlwaysOpen() && isHecpTcpEnabled) {
+        if (competition.isAlwaysOpen() && assessmentStageCompetitionEnabled) {
             sectionPath = CompetitionSetupSection.APPLICATION_ASSESSMENT.getPath();
         } else {
             sectionPath = CompetitionSetupSection.MILESTONES.getPath();

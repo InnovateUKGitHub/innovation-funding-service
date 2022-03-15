@@ -42,7 +42,7 @@ public class SendNotificationsViewModel {
         this.alwaysOpen = competition.isAlwaysOpen();
         this.includeAssessorsScore = includeAssessorsScore;
         this.hesta = hesta;
-        this.hasAssessmentStage = competition.isHasAssessmentStage();
+        this.hasAssessmentStage = competition.hasAssessmentStage();
     }
 
     public long getCompetitionId() {

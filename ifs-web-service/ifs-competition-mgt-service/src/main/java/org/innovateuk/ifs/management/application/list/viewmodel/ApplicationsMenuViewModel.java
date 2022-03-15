@@ -25,7 +25,7 @@ public class ApplicationsMenuViewModel {
                                      boolean innovationLeadView) {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
-        this.displayAssessorStats = !CompetitionCompletionStage.COMPETITION_CLOSE.equals(competitionResource.getCompletionStage()) && competitionResource.isHasAssessmentStage();
+        this.displayAssessorStats = isDisplayAssessorStats(competitionResource);
         this.assessorsInvited = assessorsInvited;
         this.applicationsInProgress = applicationsInProgress;
         this.applicationsSubmitted = applicationsSubmitted;
@@ -63,5 +63,9 @@ public class ApplicationsMenuViewModel {
 
     public boolean isInnovationLeadView() {
         return innovationLeadView;
+    }
+
+    private boolean isDisplayAssessorStats(CompetitionResource competitionResource) {
+        return !CompetitionCompletionStage.COMPETITION_CLOSE.equals(competitionResource.getCompletionStage()) && competitionResource.hasAssessmentStage();
     }
 }
