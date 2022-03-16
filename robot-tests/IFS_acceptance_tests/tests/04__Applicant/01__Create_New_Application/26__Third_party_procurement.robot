@@ -33,7 +33,7 @@ Third party procurement terms and conditions validations
     And the user clicks the button/link                     jQuery = .govuk-button:contains("Create competition")
     And the user fills in the CS Initial details            ${thirdPartyProcurementCompetitionName}  ${month}  ${nextyear}  Programme  NOT_AID  PROCUREMENT
     When the user clicks the button/link                    link = Terms and conditions
-    And the user clicks the button twice                    jQuery = label:contains("Procurement Third Party")
+    And the user clicks the button twice                    jQuery = label:contains("Procurement")
     And the user clicks the button/link                     jQuery = button:contains("Done")
     Then the user should see third party t&c validations
 
@@ -204,7 +204,7 @@ the user completes required fields in third party procurement competition
 
 the user verifies valid terms and conditions text is displaying
     [Arguments]  ${title}
-    the user clicks the button/link                     jQuery = a:contains("Procurement Third Party (opens in a new window)")
+    the user clicks the button/link                     jQuery = a:contains("Procurement (opens in a new window)")
     select window                                       title = ${title} - Innovation Funding Service
     the user should see the element                     jQuery = h1:contains("${title}")
     the user should see the element                     jQuery = a:contains("View ${title} (opens in a new window)")
