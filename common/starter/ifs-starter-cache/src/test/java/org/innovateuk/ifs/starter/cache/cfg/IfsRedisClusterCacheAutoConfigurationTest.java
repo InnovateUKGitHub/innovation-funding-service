@@ -28,7 +28,7 @@ public class IfsRedisClusterCacheAutoConfigurationTest {
     /** For cluster mode */
     private static final List<String> ENVIRONMENT_CACHE_CONFIG_CLUSTER =
         Lists.newArrayList(
-AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME + "=ANYTHINGELSE",
+            AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME + "=ANYTHINGELSE",
             "SPRING_REDIS_CLUSTER_NODES=somewhere.probably.cache.aws.com:6379,a.n.other:6379",
             "SPRING_REDIS_HOST=",
             "SPRING_REDIS_PORT=0"

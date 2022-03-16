@@ -5,6 +5,7 @@ spring:
   redis:
     clientType: LETTUCE
     timeout: 1s
+    enable-statistics: true
   data:
     redis:
       repositories:

@@ -19,12 +19,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Light touch on top of the spring AutoConfiguration migrated out of data-service into a starter -:
+ * Wrapper around the spring AutoConfiguration migrated out of data-service into a starter.
  *
- * Required to override the presence of redis on the classpath.
+ * Required to override the presence of redis on the classpath and support cluster and non-cluster modes
+ * while being able to read this config in via environment variables.
  *
- * Applies the existing RedisConfiguration based on the cache type setting.
- * Pre-processes some startup configuration based on the profile.
+ * Sets up a cache error handler.
+ * Detects cluster and non cluster mode and alters lettuce config to accommodate this.
+ *
+ * This all follows on from the config pre-processor
  * @see IfsCacheContextInitializer
  *
  */

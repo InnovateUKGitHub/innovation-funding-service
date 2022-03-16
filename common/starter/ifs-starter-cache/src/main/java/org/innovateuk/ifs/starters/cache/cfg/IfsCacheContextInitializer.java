@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.IfsProfileConstants.REDIS_STANDALONE_CACHE;
 import static org.innovateuk.ifs.IfsProfileConstants.SIMPLE_CACHE;
 
 /**
- * Adds startup settings to disable redis caching when in NOCACHE profile or sets defaults for redis
+ * Adds startup settings to set cache modes, SIMPLE, REDIS and REDIS CLUSTER
  */
 public class IfsCacheContextInitializer implements ApplicationContextInitializer {
 

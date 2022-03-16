@@ -36,7 +36,7 @@ public class IfsProfileConstants {
     public static final String NOT_AMQP_PROFILE = "!" + AMQP_PROFILE;
 
     /**
-     * Used to disable redis caching.
+     * Used to enable simple and redis caching.
      */
     public static final String SIMPLE_CACHE = "SIMPLE_CACHE";
     public static final String REDIS_STANDALONE_CACHE = "REDIS_STANDALONE_CACHE";

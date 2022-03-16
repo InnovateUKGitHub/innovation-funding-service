@@ -1,3 +1,4 @@
+## Simple Cache Config
 spring:
   cache:
     type: SIMPLE
