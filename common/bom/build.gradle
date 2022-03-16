@@ -47,6 +47,7 @@ dependencies {
         api project(":common:starter:ifs-starter-logging")
         api project(":common:starter:ifs-starter-stubdev")
         api project(":common:starter:ifs-starter-swagger-ui")
+        api project(":common:starter:ifs-starter-common")
 
         api project(":common:ifs-commons")
         api project(":common:ifs-commons-test")

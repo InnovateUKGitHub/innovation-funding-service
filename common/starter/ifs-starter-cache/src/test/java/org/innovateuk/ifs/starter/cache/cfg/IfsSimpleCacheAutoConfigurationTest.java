@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.starter.cache.cfg;
 
 import org.innovateuk.ifs.IfsProfileConstants;
+import org.innovateuk.ifs.starter.common.util.ProfileUtils;
 import org.innovateuk.ifs.starters.cache.cfg.IfsCacheAutoConfiguration;
 import org.innovateuk.ifs.starters.cache.cfg.IfsCacheContextInitializer;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.innovateuk.ifs.IfsProfileConstants.REDIS_STANDALONE_CACHE;
+import static org.innovateuk.ifs.IfsProfileConstants.SIMPLE_CACHE;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class IfsSimpleCacheAutoConfigurationTest {
@@ -26,7 +29,7 @@ public class IfsSimpleCacheAutoConfigurationTest {
     public void testConfigWithSimpleCacheProfile() {
         new ApplicationContextRunner()
             .withSystemProperties(
-                AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME + "=" + IfsProfileConstants.SIMPLE_CACHE
+                ProfileUtils.activeProfilesString(SIMPLE_CACHE)
             )
             .withInitializer(new IfsCacheContextInitializer())
             .withConfiguration(

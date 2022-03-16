@@ -14,6 +14,7 @@ include("common:starter:ifs-starter-audit")
 include("common:starter:ifs-starter-cache")
 include("common:starter:ifs-starter-stubdev")
 include("common:starter:ifs-starter-swagger-ui")
+include("common:starter:ifs-starter-common")
 
 // Commons - can be split and deprecated
 include("common:ifs-commons")

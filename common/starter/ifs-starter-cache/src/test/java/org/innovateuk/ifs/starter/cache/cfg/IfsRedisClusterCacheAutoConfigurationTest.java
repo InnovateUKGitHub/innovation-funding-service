@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.starter.cache.cfg;
 
-import org.assertj.core.util.Lists;
+import com.google.common.collect.ObjectArrays;
+import org.innovateuk.ifs.starter.common.util.ProfileUtils;
 import org.innovateuk.ifs.starters.cache.cfg.IfsCacheAutoConfiguration;
 import org.innovateuk.ifs.starters.cache.cfg.IfsCacheContextInitializer;
 import org.junit.jupiter.api.Test;
@@ -13,11 +14,7 @@ import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.cache.interceptor.CacheErrorHandler;
-import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.data.redis.core.StringRedisTemplate;
-
-import java.util.List;
-import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -26,19 +23,18 @@ import static org.innovateuk.ifs.starter.cache.cfg.IfsRedisStandaloneCacheAutoCo
 public class IfsRedisClusterCacheAutoConfigurationTest {
 
     /** For cluster mode */
-    private static final List<String> ENVIRONMENT_CACHE_CONFIG_CLUSTER =
-        Lists.newArrayList(
-            AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME + "=ANYTHINGELSE",
-            "SPRING_REDIS_CLUSTER_NODES=somewhere.probably.cache.aws.com:6379,a.n.other:6379",
-            "SPRING_REDIS_HOST=",
-            "SPRING_REDIS_PORT=0"
-        );
+    private static final String[] ENVIRONMENT_CACHE_CONFIG_CLUSTER = new String[] {
+        ProfileUtils.activeProfilesString("ANYTHINGELSE"),
+        "SPRING_REDIS_CLUSTER_NODES=somewhere.probably.cache.aws.com:6379,a.n.other:6379",
+        "SPRING_REDIS_HOST=",
+        "SPRING_REDIS_PORT=0"
+    };
 
     @Test
     public void testConfigClusterMode() {
         new ApplicationContextRunner()
             .withSystemProperties(
-                Stream.concat(ENVIRONMENT_CACHE_CONFIG_COMMON.stream(), ENVIRONMENT_CACHE_CONFIG_CLUSTER.stream()).toArray(String[]::new)
+                ObjectArrays.concat(ENVIRONMENT_CACHE_CONFIG_COMMON, ENVIRONMENT_CACHE_CONFIG_CLUSTER, String.class)
             )
             .withInitializer(new IfsCacheContextInitializer())
             .withConfiguration(
