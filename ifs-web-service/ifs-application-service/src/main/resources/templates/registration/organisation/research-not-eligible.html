@@ -15,12 +15,17 @@
               th:with="linkTitle='Back to confirm your eligibility',linkClass='link-back',linkUrl='/', dynamicBackLink=${true}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:unless="${collaborator}" th:insert="fragments/layout :: page-title" th:with="pageTitle='You are not eligible to start an application',size='govuk-heading-l'" />
-        <th:block th:if="${collaborator}" th:insert="fragments/layout :: page-title" th:with="pageTitle='You are not eligible to join this application',size='govuk-heading-l'" />
+        <th:block
+                th:with="researchSubTitle=${model.organisationName.isPresent()} ? |${model.organisationName.get()} (Research)|: null">
+            <th:block th:unless="${collaborator}" th:insert="fragments/layout :: page-title"
+                      th:with="pageTitle='You are not eligible to start an application', subTitle=${researchSubTitle},size='govuk-heading-l'"/>
+            <th:block th:if="${collaborator}" th:insert="fragments/layout :: page-title"
+                      th:with="pageTitle='You are not eligible to join this application', subTitle=${researchSubTitle},size='govuk-heading-l'"/>
+        </th:block>
 
         <p class="govuk-body">The way you intend to exploit the outputs from your project does not match the eligibility criteria for research applicants</p>
         <p class="govuk-body">
-            The eligibility criteria is defined in the <a th:href="@{~/competition/{cid}/overview(cid=${competitionId})}" class="govuk-link">competition brief</a>.
+            The eligibility criteria is defined in the <a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" class="govuk-link">competition brief</a>.
         </p>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
