@@ -564,11 +564,12 @@ the user verifies his email and checks his organisation name
 
 logged in user applies to competition research
     [Arguments]  ${competition}  ${applicationType}
-    the user select the competition and starts application       ${competition}
-    the user clicks the button/link                              link = Apply with a different organisation
-    the user selects the radio button                            organisationTypeId  ${applicationType}
-    the user clicks the button/link                              jQuery = button:contains("Save and continue")
-    the user search for organisation name on Companies house     Bath  Bath Spa University
+    the user select the competition and starts application          ${competition}
+    the user clicks the button/link                                 link = Apply with a different organisation
+    the user selects the radio button                               organisationTypeId  ${applicationType}
+    the user clicks the button/link                                 jQuery = button:contains("Save and continue")
+    the user confirms economic activity for research organiations   No
+    the user search for organisation name on Companies house        Bath  Bath Spa University
 
 logged in user applies to competition public
     [Arguments]  ${competition}  ${applicationType}
@@ -1070,3 +1071,8 @@ the user accepts invitation to join application under same organisation
     the user clicks the button/link                  jQuery = a:contains("Continue")
     login to application                             ${email}  ${password}
     the user clicks the button/link                  jQuery = a:contains("Confirm and accept invitation")
+
+the user confirms economic activity for research organiations
+    [Arguments]  ${confirmEligibility}
+    the user clicks the button twice    jQuery = label:contains("${confirmEligibility}")
+    the user clicks the button/link     name = research-eligibility-submit
