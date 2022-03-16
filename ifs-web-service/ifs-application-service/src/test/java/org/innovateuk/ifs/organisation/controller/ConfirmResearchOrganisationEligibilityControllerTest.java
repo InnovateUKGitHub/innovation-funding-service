@@ -79,7 +79,6 @@ public class ConfirmResearchOrganisationEligibilityControllerTest extends BaseCo
 
     @Test
     public void existingResearchOrganisationConfirmEligibilityViewPage() throws Exception {
-        when(registrationCookieService.getOrganisationIdCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(2L));
         when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
 
         mockMvc.perform(get(BASE_URL + "/" + competition.getId() +"/confirm-eligibility"))
@@ -89,8 +88,6 @@ public class ConfirmResearchOrganisationEligibilityControllerTest extends BaseCo
 
     @Test
     public void newResearchOrganisationConfirmEligibilityViewPage() throws Exception {
-        when(registrationCookieService.getOrganisationIdCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.empty());
-
         mockMvc.perform(get(BASE_URL + "/" + competition.getId() +"/confirm-eligibility"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name(TEMPLATE_PATH + "/" + RESEARCH_ELIGIBILITY_TEMPLATE));
@@ -101,27 +98,26 @@ public class ConfirmResearchOrganisationEligibilityControllerTest extends BaseCo
         ConfirmResearchOrganisationEligibilityForm form = new ConfirmResearchOrganisationEligibilityForm();
         form.setConfirmEligibility(true);
 
-        when(registrationCookieService.getOrganisationIdCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(2L));
+        when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
 
-        mockMvc.perform(post(BASE_URL + "/" + competition.getId() +"/confirm-eligibility")
+        mockMvc.perform(post(BASE_URL + "/" + competition.getId() +"/confirm-eligibility/" + organisation.getId())
                 .param("confirmEligibility", "Yes"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(BASE_URL + "/" + competition.getId() +"/confirm-eligibility/research-not-eligible"));
+                .andExpect(redirectedUrl(BASE_URL + "/" + competition.getId() +"/confirm-eligibility/research-not-eligible/" + organisation.getId()));
     }
 
     @Test
     public void existingResearchUserChooseNo() throws Exception {
         ConfirmResearchOrganisationEligibilityForm form = new ConfirmResearchOrganisationEligibilityForm();
         form.setConfirmEligibility(false);
-
-        when(registrationCookieService.getOrganisationIdCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(2L));
         when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
+
         when(registrationCookieService.isLeadJourney(any(HttpServletRequest.class))).thenReturn(false);
         when(registrationCookieService.isCollaboratorJourney(any(HttpServletRequest.class))).thenReturn(true);
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(organisationJourneyEnd.completeProcess(any(), any(), eq(loggedInUser), eq(organisation.getId()))).thenReturn(VIEW);
 
-        mockMvc.perform(post(BASE_URL + "/" + competition.getId() +"/confirm-eligibility")
+        mockMvc.perform(post(BASE_URL + "/" + competition.getId() +"/confirm-eligibility/" + organisation.getId())
                 .param("confirmEligibility", "No"))
                 .andExpect(status().isOk())
                 .andExpect(view().name(VIEW));
