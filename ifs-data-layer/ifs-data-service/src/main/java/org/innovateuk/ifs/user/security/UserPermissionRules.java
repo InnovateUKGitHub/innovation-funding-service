@@ -444,7 +444,7 @@ public class UserPermissionRules {
 
         List<Project> monitoringOfficerProjectsWhereThisUserIsInConsortiumAtApplication = monitoringOfficerProjects.stream()
                 .filter(moProject -> applicationsWhereThisUserIsInConsortium.stream()
-                        .anyMatch(application -> moProject.getApplication().getId() == application.getId()))
+                        .anyMatch(application -> moProject.getApplication().getId().equals(application.getId())))
                 .collect(Collectors.toList());
 
         return !disjoint(monitoringOfficerProjects, monitoringOfficerProjectsWhereThisUserIsInConsortiumAtApplication);
