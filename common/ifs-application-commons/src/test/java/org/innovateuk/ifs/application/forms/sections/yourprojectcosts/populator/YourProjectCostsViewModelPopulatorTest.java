@@ -209,7 +209,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withFunder(Funder.OFFICE_OF_GAS_AND_ELECTRICITY_MARKETS_OFGEM)
                 .build();
         GrantTermsAndConditionsResource grantTermsAndConditions = newGrantTermsAndConditionsResource()
-                .withName("Procurement Third Party")
+                .withName("Third Party")
                 .build();
         CompetitionResource competition = newCompetitionResource()
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
@@ -252,7 +252,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withFunder(Funder.OTHER_STAKEHOLDERS)
                 .build();
         GrantTermsAndConditionsResource grantTermsAndConditions = newGrantTermsAndConditionsResource()
-                .withName("Procurement Third Party")
+                .withName("Third Party")
                 .build();
         CompetitionResource competition = newCompetitionResource()
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
@@ -1040,7 +1040,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .build();
         GrantTermsAndConditionsResource grantTermsAndConditionsResource = newGrantTermsAndConditionsResource()
                 .withTemplate("third-party-terms-and-conditions")
-                .withName("Procurement Third Party")
+                .withName("Third Party")
                 .build();
         CompetitionResource thirdPartyCompetition = newCompetitionResource()
                 .withCompetitionStatus(OPEN)

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 public class GrantTermsAndConditionsResource extends VersionedTemplateResource {
     private static final String PROCUREMENT = "Procurement";
-    private static final String PROCUREMENT_THIRD_PARTY = "Procurement Third Party";
+    private static final String PROCUREMENT_THIRD_PARTY = "Third Party";
 
     public GrantTermsAndConditionsResource() {
     }

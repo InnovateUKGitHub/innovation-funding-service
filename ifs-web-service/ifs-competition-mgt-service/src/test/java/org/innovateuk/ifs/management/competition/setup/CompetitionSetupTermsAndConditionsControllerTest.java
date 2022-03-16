@@ -383,7 +383,7 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
     @Test
     public void submitThirdPartyTermsAndConditionsSectionDetails() throws Exception {
         GrantTermsAndConditionsResource thirdPartyProcurement = newGrantTermsAndConditionsResource()
-                .withName("Procurement Third Party")
+                .withName("Third Party")
                 .build();
 
         CompetitionThirdPartyConfigResource thirdPartyConfigResource = newCompetitionThirdPartyConfigResource()
@@ -440,7 +440,7 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
     @Test
     public void updateThirdPartyTermsAndConditionsSectionDetails() throws Exception {
         GrantTermsAndConditionsResource thirdPartyProcurement = newGrantTermsAndConditionsResource()
-                .withName("Procurement Third Party")
+                .withName("Third Party")
                 .build();
 
         CompetitionThirdPartyConfigResource thirdPartyConfigResource = newCompetitionThirdPartyConfigResource()
