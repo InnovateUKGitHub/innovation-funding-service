@@ -3,10 +3,8 @@ package org.innovateuk.ifs.competitionsetup.applicationformbuilder.template;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
-import org.innovateuk.ifs.competition.resource.FundingRules;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
-import org.innovateuk.ifs.form.resource.QuestionType;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -50,10 +48,17 @@ public class ThirdPartyOfgemTemplate implements CompetitionTemplate {
                         )),
                 applicationQuestions()
                         .withQuestions(newArrayList(
-                                genericQuestion()
+                                thirdPartyOfgemDefaultQuestions()
                         )),
                 finances(),
                 termsAndConditions()
         );
+    }
+
+    public static QuestionBuilder thirdPartyOfgemDefaultQuestions() {
+        QuestionBuilder thirdPartyOfgemDefaultQuestion =
+                genericQuestion()
+                        .withName("Thirdparty ofgem place holder question");
+        return thirdPartyOfgemDefaultQuestion;
     }
 }
