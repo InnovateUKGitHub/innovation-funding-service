@@ -14,7 +14,6 @@ import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.*;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 
 @Component
 public class ThirdPartyOfgemTemplate implements CompetitionTemplate {
