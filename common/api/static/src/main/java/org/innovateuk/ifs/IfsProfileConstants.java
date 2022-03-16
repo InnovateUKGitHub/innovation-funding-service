@@ -7,9 +7,6 @@ package org.innovateuk.ifs;
  */
 public class IfsProfileConstants {
 
-    public static final String OR = "|";
-    public static final String AND = "|";
-
     /**
      * Used on laptop builds for stub based work
      */

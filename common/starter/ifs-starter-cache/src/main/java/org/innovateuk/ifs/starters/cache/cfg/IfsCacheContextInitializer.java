@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.starters.cache.cfg;
 
-import org.innovateuk.ifs.starter.common.util.YamlPropertyLoader;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.ClassPathResource;
