@@ -39,6 +39,9 @@ public class YourProjectCostsViewModelPopulator {
     @Value("${ifs.ktp.phase2.enabled}")
     private boolean ktpPhase2Enabled;
 
+    @Value("${ifs.thirdparty.ofgem.enabled}")
+    private boolean thirdPartyOfgemEnabled;
+
     @Autowired
     private CompetitionRestService competitionRestService;
 
@@ -113,7 +116,9 @@ public class YourProjectCostsViewModelPopulator {
                     finance.getFecModelEnabled(),
                     getGrantClaimPercentage(application.getId(), organisation.getId()),
                     getThirdPartyProjectCostGuidanceLink(competition),
-                    competition.isOfGemCompetition());
+                    competition.isOfGemCompetition(),
+                    thirdPartyOfgemEnabled,
+                    competition.isThirdPartyOfgem());
         }
     }
 
@@ -161,7 +166,9 @@ public class YourProjectCostsViewModelPopulator {
                 finance.getFecModelEnabled(),
                 getGrantClaimPercentage(application.getId(), organisation.getId()),
                 getThirdPartyProjectCostGuidanceLink(competition),
-                competition.isOfGemCompetition());
+                competition.isOfGemCompetition(),
+                thirdPartyOfgemEnabled,
+                competition.isThirdPartyOfgem());
     }
 
     private boolean isYourFecCostRequired(List<Long> completedSectionIds, Long yourFecCostSectionId) {

@@ -927,6 +927,10 @@
 
                 <th:block th:unless="${model.internal}">
                     <div class="govuk-body">
+                        <th:block th:if="${model.isThirdPartyOfgem()}">
+                            <p>You can claim the costs of materials used on your project providing they are purchased from third parties.</p>
+                        </th:block>
+                        <th:block th:unless="${model.isThirdPartyOfgem()}">
                             <p>You can claim the costs of materials used on your project providing:</p>
                             <ul class="govuk-list govuk-list--bullet">
                                 <li>they are not already purchased or included in the overheads</li>
@@ -935,6 +939,7 @@
                                     <li>they won’t have a residual/resale value at the end of your project. If they do you can claim the costs minus this value</li>
                                 </th:block>
                             </ul>
+                        </th:block>
                         <p><a
                             href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">Please
                             refer to our guide to project costs for further information.</a></p>
