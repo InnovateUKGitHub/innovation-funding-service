@@ -97,12 +97,6 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
     private Supplier<String> validateEligibility(HttpServletRequest request, HttpServletResponse response, UserResource user, OrganisationSelectionForm form) {
         return () -> {
 
-            if (isResearchOrganisation(form)) {
-                long competitionId = getCompetitionIdFromInviteOrCookie(request);
-                    long organisationId = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess().getId();
-                    return "redirect:" + BASE_URL + "/" + competitionId  + "/confirm-eligibility/" +  organisationId;
-            }
-
             if (registrationCookieService.isLeadJourney(request)) {
                 if (!validateLeadApplicant(request, form))
                     return "redirect:" + BASE_URL + "/" + ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
@@ -112,6 +106,12 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
                 if (!validateCollaborator(request, form)) {
                     return "redirect:" + BASE_URL + "/" + ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
                 }
+            }
+
+            if (isResearchOrganisation(form)) {
+                long competitionId = getCompetitionIdFromInviteOrCookie(request);
+                long organisationId = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess().getId();
+                return "redirect:" + BASE_URL + "/" + competitionId  + "/confirm-eligibility/" +  organisationId;
             }
 
             if (newOrganisationSearchEnabled && isDeprecatedManualEntry(form)) {
