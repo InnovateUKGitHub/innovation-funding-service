@@ -51,6 +51,7 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
 
     private static final Long COMPETITION_ID = 12L;
     private static final String URL_PREFIX = "/competition/setup";
+    private static final String THIRD_PARTY = "Third Party";
 
     @Mock
     private CompetitionSetupService competitionSetupService;
@@ -383,7 +384,7 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
     @Test
     public void submitThirdPartyTermsAndConditionsSectionDetails() throws Exception {
         GrantTermsAndConditionsResource thirdPartyProcurement = newGrantTermsAndConditionsResource()
-                .withName("Third Party")
+                .withName(THIRD_PARTY)
                 .build();
 
         CompetitionThirdPartyConfigResource thirdPartyConfigResource = newCompetitionThirdPartyConfigResource()
@@ -440,7 +441,7 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
     @Test
     public void updateThirdPartyTermsAndConditionsSectionDetails() throws Exception {
         GrantTermsAndConditionsResource thirdPartyProcurement = newGrantTermsAndConditionsResource()
-                .withName("Third Party")
+                .withName(THIRD_PARTY)
                 .build();
 
         CompetitionThirdPartyConfigResource thirdPartyConfigResource = newCompetitionThirdPartyConfigResource()

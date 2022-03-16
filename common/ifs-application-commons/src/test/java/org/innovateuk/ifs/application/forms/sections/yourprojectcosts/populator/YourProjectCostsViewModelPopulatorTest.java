@@ -57,6 +57,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
     private static final long APPLICATION_ID = 1L;
     private static final long SECTION_ID = 2L;
     private static final long ORGANISATION_ID = 3L;
+    private static final String THIRD_PARTY = "Third Party";
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -209,7 +210,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withFunder(Funder.OFFICE_OF_GAS_AND_ELECTRICITY_MARKETS_OFGEM)
                 .build();
         GrantTermsAndConditionsResource grantTermsAndConditions = newGrantTermsAndConditionsResource()
-                .withName("Third Party")
+                .withName(THIRD_PARTY)
                 .build();
         CompetitionResource competition = newCompetitionResource()
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
@@ -252,7 +253,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withFunder(Funder.OTHER_STAKEHOLDERS)
                 .build();
         GrantTermsAndConditionsResource grantTermsAndConditions = newGrantTermsAndConditionsResource()
-                .withName("Third Party")
+                .withName(THIRD_PARTY)
                 .build();
         CompetitionResource competition = newCompetitionResource()
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
@@ -1040,7 +1041,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .build();
         GrantTermsAndConditionsResource grantTermsAndConditionsResource = newGrantTermsAndConditionsResource()
                 .withTemplate("third-party-terms-and-conditions")
-                .withName("Third Party")
+                .withName(THIRD_PARTY)
                 .build();
         CompetitionResource thirdPartyCompetition = newCompetitionResource()
                 .withCompetitionStatus(OPEN)
