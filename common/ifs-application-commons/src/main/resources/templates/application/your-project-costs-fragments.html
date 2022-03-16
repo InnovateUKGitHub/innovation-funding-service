@@ -1937,7 +1937,7 @@
             <th:block
                 th:unless="${model.isReadOnly()}">
                 <p class="govuk-body" th:unless="${model.internal or model.isProcurementCompetition() or model.isKtpCompetition()}">
-                    <th:block th:unless="${model.isOfGemCompetition()}">
+                    <th:block th:unless="${model.isOfGemCompetition() or model.isThirdPartyOfgem()}">
                         Please note that legal or project audit and accountancy fees are not eligible and
                         should not be included as an 'other cost’. Patent filing costs of new IP relating to the project are
                         limited to £7,500 for SME applicants only.
