@@ -21,10 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -155,7 +152,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
 
     private Stream<Assessment> filterByAssessmentPeriod(Stream<Assessment> assessmentStream, AssessmentPeriodResource assessmentPeriod) {
         return assessmentStream
-                .filter(assessment -> assessment.getTarget().getAssessmentPeriod().getId() == assessmentPeriod.getId());
+                .filter(assessment -> Objects.equals(assessment.getTarget().getAssessmentPeriod().getId(), assessmentPeriod.getId()));
     }
 
     private Long getTotalAssessmentsAcceptedForCompetitionCount(List<Assessment> assessments,
