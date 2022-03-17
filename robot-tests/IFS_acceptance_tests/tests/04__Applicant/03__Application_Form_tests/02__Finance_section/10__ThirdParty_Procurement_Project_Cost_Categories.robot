@@ -52,7 +52,7 @@ the comp admin edits the funding information
     logging in and error checking               &{Comp_admin1_credentials}
     the user navigates to the page              ${server}/management/competition/setup/${ofGemCompetitionId}/section/additional
     the user clicks the button/link             jQuery = button:contains("Edit")
-    the user selects option from type ahead     funders[0].funder   ofGem   Office of Gas and Electricity Markets (Ofgem)
+    the user selects option from type ahead     funders[0].funder   Office of Gas and Electricity Markets (Ofgem)   Office of Gas and Electricity Markets (Ofgem)
     the user enters text to a text field        id = funders[0].funderBudget  142424242
     the user clicks the button/link             jQuery = button:contains("Done")
     the user clicks the button/link             link = Back to competition details

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationOrganisationAddressRestService;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -44,7 +45,6 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -68,7 +68,8 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
 
     @Mock
     private ApplicationOrganisationAddressRestService applicationOrganisationAddressRestService;
-
+    @Mock
+    private CompetitionRestService competitionRestServiceMock;
     @Test
     public void populate() {
         UserResource user = newUserResource().withRoleGlobal(Role.SUPPORT).build();
@@ -122,9 +123,10 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
                 .build();
-        QuestionResource question = newQuestionResource().build();
+        QuestionResource question = newQuestionResource().withCompetition(1L).build();
 
         AddressResource address = newAddressResource().build();
+        when(competitionRestServiceMock.hasEDIQuestion(anyLong())).thenReturn(restSuccess(Boolean.FALSE));
 
         when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(asList(leadRole, collaboratorRole)));
         when(inviteRestService.getInvitesByApplication(application.getId())).thenReturn(restSuccess(asList(collaboratorOrganisationInvite, invitedOrganisation)));
@@ -239,7 +241,7 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
                 .build();
-        QuestionResource question = newQuestionResource().build();
+        QuestionResource question = newQuestionResource().withCompetition(1L).build();
 
         AddressResource address = newAddressResource().build();
 
@@ -248,6 +250,8 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
         when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(asList(leadOrganisation, collaboratorOrganisation)));
         when(applicationOrganisationAddressRestService.getAddress(application.getId(), collaboratorOrganisation.getId(), OrganisationAddressType.INTERNATIONAL)).thenReturn(restSuccess(address));
         when(userRestService.retrieveUserById(anyLong())).thenReturn(restSuccess(newUserResource().withPhoneNumber("999").withEdiStatus(EDIStatus.COMPLETE).build()));
+        when(competitionRestServiceMock.hasEDIQuestion(anyLong())).thenReturn(restSuccess(Boolean.FALSE));
+
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
                 emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
 

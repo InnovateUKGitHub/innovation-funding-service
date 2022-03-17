@@ -174,14 +174,14 @@ Finance reviewer is added to the project
 
 The user selects finance reviewer
     [Arguments]   ${FlName}
-    input text                          id = userId    ${FlName}
-    the user clicks the button/link     jQuery = ul li:contains("${FlName}")
+    wait until keyword succeeds without screenshots   10s    200ms   input text    id = userId    ${FlName}
+    Execute Javascript                                document.evaluate("//li[text()='${FlName}']",document.body,null,9,null).singleNodeValue.click();
 
 The user adds a new team member
-  [Arguments]  ${firstName}  ${email}
-    the user enters text to a text field   css = input[name=name]   ${firstName}
-    the user enters text to a text field   css = input[name=email]  ${email}
-    the user clicks the button/link        jQuery = button:contains("Invite to")
+   [Arguments]  ${firstName}  ${email}
+   the user enters text to a text field   css = input[name=name]   ${firstName}
+   the user enters text to a text field   css = input[name=email]  ${email}
+   the user clicks the button/link        jQuery = button:contains("Invite to")
 
 internal user generates the GOL
     [Arguments]  ${projectID}
@@ -227,7 +227,7 @@ Applicant uploads the GOL using Docusign
     the user navigates to the page                                           ${server}/project-setup/project/${projectID}
     the user clicks the button/link                                          jquery = a:contains("Grant offer letter")
     the user clicks the button/link                                          jquery = a:contains("review and sign the grant offer letter")
-    the user should see the element                                          css=.page.page-loaded
+    wait until keyword succeeds without screenshots      30 s    5 s         the user should see the element   css=.page.page-loaded
     the user accepts electronic record and signature disclosure if exist
     the user should see the element                                          jQuery = span:contains("Please review the documents below.")
     the user clicks the button/link                                          jQuery = button:contains("Continue")
@@ -240,7 +240,9 @@ Applicant uploads the GOL using Docusign
     the user clicks the button/link                                          css = div.signature-tab-content
     the user adopts signature details if exist
     the user clicks the button/link                                          css = div.documents-finish-button-decoration
-    the user should see the element                                          jQuery = h1:contains("Grant offer letter")
+    #adding a small sleep to wait for docusign to close and redirect to ifs
+    sleep  2s
+    the user should see the element                                         jQuery = h1:contains("Grant offer letter")
 
 the GOL has already been approved
     [Arguments]  ${projectID}
@@ -641,39 +643,19 @@ the user goes to documents page
 
 Search for MO
     [Arguments]  ${MO_name}  ${MO_fullname}
-    the element should be disabled      jQuery = button:contains("View Monitoring Officer")
-    input text                          id = userId   ${MO_name}
-    the user clicks the button/link     jQuery = ul li:contains("${MO_fullname}")
-    the user clicks the button/link     jQuery = button:contains("View Monitoring Officer")
+    the element should be disabled                      jQuery = button:contains("View Monitoring Officer")
+    wait until keyword succeeds without screenshots     10s    200ms   input text   id = userId   ${MO_name}
+    mouse down                                          jQuery = ul li:contains("${MO_fullname}")
+    Execute Javascript                                  document.evaluate("//li[text()='${MO_fullname}']",document.body,null,9,null).singleNodeValue.click();
+    the user clicks the button/link                     jQuery = button:contains("View Monitoring Officer")
 
 The internal user assign project to MO
     [Arguments]  ${search_ID}  ${project_name}
-    the element should be disabled              jQuery = button:contains("Assign")
-    input text                                  id = projectId   ${search_ID}
-    the user should see project in dropdown     id = projectId   ${search_ID}  ${project_name}
-    the user clicks the button/link             jQuery = ul li:contains("${search_ID} - ${project_name}")
-    the user clicks the button/link             jQuery = button:contains("Assign")
-
-the user should see project in dropdown
-    [Arguments]  ${locator}  ${labelOrId}  ${actualName}
-    :FOR    ${i}    IN RANGE  10
-    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots  element should be visible  jQuery = ul li:contains("${labelOrId} - ${actualName}")
-    \  Exit For Loop If  '${status}'=='PASS'
-    \  run keyword if  '${status}'=='FAIL'   retry entering the project     ${locator}   ${labelOrId}
-    \  ${i} =  Set Variable  ${i + 1}
-
-the user should see country in dropdown
-    [Arguments]  ${locator}  ${searchWord}
-    :FOR    ${i}    IN RANGE  10
-    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots  element should be visible  jQuery = ul li:contains("${searchWord}")
-    \  Exit For Loop If  '${status}'=='PASS'
-    \  run keyword if  '${status}'=='FAIL'   retry entering the project     ${locator}   ${searchWord}
-    \  ${i} =  Set Variable  ${i + 1}
-
-retry entering the project
-    [Arguments]  ${locator}  ${searchWord}
-    clear element text      ${locator}
-    input text              ${locator}   ${searchWord}
+    the element should be disabled                    jQuery = button:contains("Assign")
+    wait until keyword succeeds without screenshots   10s    200ms   input text         id = projectId   ${search_ID} - ${project_name}
+    mouse down                                        jQuery = ul li:contains("${search_ID} - ${project_name}")
+    Execute Javascript                                document.evaluate("//li[text()='${search_ID} - ${project_name}']",document.body,null,9,null).singleNodeValue.click();
+    the user clicks the button/link                   jQuery = button:contains("Assign")
 
 the user completes the project team details
     the user clicks the button/link     link = Project team
@@ -813,9 +795,8 @@ the user fills correspondence address for non-uk based organisations
 
 enter the country in the autocomplete field
     [Arguments]         ${country}  ${completeCountryName}
-    Wait Until Keyword Succeeds Without Screenshots     10 s    200 ms    Input Text      id = country        ${country}
-    #wait for autosave
-    Wait Until Keyword Succeeds Without Screenshots     10 s    200 ms   click element    jQuery = ul li:contains("${completeCountryName}")
+    wait until keyword succeeds without screenshots   10s    200ms  input text    id = country        ${country}
+    wait until keyword succeeds without screenshots    60s   5s    click element     jQuery = ul li:contains("${completeCountryName}")
 
 the user should see project is live with review its progress link
     the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
