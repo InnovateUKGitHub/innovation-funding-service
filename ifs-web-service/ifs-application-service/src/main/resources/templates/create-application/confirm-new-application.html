@@ -30,7 +30,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('createNewApplication')} ? 'govuk-form-group-error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('createNewApplication')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-visually-hidden" id="createNewApplication">
                         <span class="govuk-fieldset__heading">Create a new application?</span>
