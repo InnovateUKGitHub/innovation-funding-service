@@ -87,23 +87,7 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
         when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competition));
     }
 
-    @Test
-    public void assessorProfileSkills() throws Exception {
-        long assessorId = 1L;
 
-        AddressResource expectedAddress = getExpectedAddress();
-        List<InnovationAreaResource> expectedInnovationAreas = getInnovationAreas();
-        AssessorProfileResource expectedProfile = getAssessorProfile(expectedAddress, expectedInnovationAreas);
-
-        when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(expectedProfile));
-
-        mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}?tab=skills", competition.getId(), assessorId))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("profile/skills"));
-
-        verify(assessorRestService, only()).getAssessorProfile(assessorId);
-    }
 
     @Test
     public void assessorProfileDeclaration() throws Exception {
