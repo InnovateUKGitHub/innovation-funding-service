@@ -73,4 +73,10 @@ public class CompetitionRestServiceImpl extends BaseRestService implements Compe
     public RestResult<ByteArrayResource> downloadTerms(long competitionId) {
         return getWithRestResult(format("%s/%d/terms-and-conditions", COMPETITION_REST_SERVICE, competitionId), ByteArrayResource.class);
     }
+
+    @Override
+    public RestResult<Boolean> hasEDIQuestion(Long competitionId) {
+        return getWithRestResult(format("%s/%s/%s", COMPETITION_REST_SERVICE,  competitionId,"has-edi"), Boolean.class);
+
+    }
 }
