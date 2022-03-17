@@ -40,17 +40,6 @@ public class AssessorProfileController {
         this.assessorRestService = assessorRestService;
     }
 
-    @GetMapping("/skills")
-    public String skills(Model model,
-                         UserResource loggedInUser) {
-
-        AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(loggedInUser.getId()).getSuccess();
-        ProfileResource profile = assessorProfile.getProfile();
-
-        model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(loggedInUser, profile, Optional.empty(), false));
-        return "profile/skills";
-    }
-
     @GetMapping("/declaration")
     public String profileDeclaration(Model model,
                                      UserResource loggedInUser) {

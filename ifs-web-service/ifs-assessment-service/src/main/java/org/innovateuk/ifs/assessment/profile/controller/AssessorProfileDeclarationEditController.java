@@ -84,7 +84,7 @@ public class AssessorProfileDeclarationEditController {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> updateResult = affiliationRestService.updateUserAffiliations(loggedInUser.getId(), populateAffiliationsFromForm(form)).toServiceResult();
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
-                    .failNowOrSucceedWith(failureView, () -> "redirect:/profile/skills");
+                    .failNowOrSucceedWith(failureView, () -> "redirect:/profile/declaration");
         });
     }
 
