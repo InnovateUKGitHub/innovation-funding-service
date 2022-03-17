@@ -6,10 +6,13 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.AffiliationType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.viewmodel.AssessorProfileDeclarationViewModel;
 import org.innovateuk.ifs.viewmodel.AssessorProfileDetailsViewModel;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,6 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
+@Scope(value = "prototype", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDeclarationBasePopulator {
 
     private AssessorProfileDetailsModelPopulator assessorProfileDetailsModelPopulator;
@@ -24,6 +28,8 @@ public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDec
     private CompetitionRestService competitionRestService;
     @Value("${ifs.edi.update.enabled}")
     private boolean isEdiUpdateEnabled;
+    @Value("${ifs.edi.salesforce.page.url}")
+    private String ediUpdateUrl;
     public AssessorProfileDeclarationModelPopulator(AssessorProfileDetailsModelPopulator assessorProfileDetailsModelPopulator,
                                                     AffiliationRestService affiliationRestService,
                                                     CompetitionRestService competitionRestService) {
@@ -33,7 +39,7 @@ public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDec
     }
 
     public AssessorProfileDeclarationViewModel populateModel(UserResource user, ProfileResource profile, Optional<Long> competitionId, boolean compAdminUser) {
-
+        isEdiUpdateEnabled = isEdiUpdateEnabled &&  user.hasRoles(Role.ASSESSOR,Role.APPLICANT);
         CompetitionResource competition = competitionId.map(id -> competitionRestService.getCompetitionById(id).getSuccess())
                 .orElse(null);
 
@@ -56,7 +62,9 @@ public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDec
                 getFamilyFinancialInterests(affiliations),
                 compAdminUser,
                 isEdiUpdateEnabled,
-                user.getEdiStatus()
+                user.getEdiStatus(),
+                user.getEdiReviewDate(),
+                ediUpdateUrl
         );
     }
 }

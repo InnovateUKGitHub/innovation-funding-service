@@ -4,6 +4,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.EDIStatus;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +23,14 @@ public class AssessorProfileDeclarationViewModel {
     private boolean compAdminUser;
     private final boolean ediUpdateEnabled;
     private final EDIStatus ediStatus;
-
+    private final ZonedDateTime ediReviewDate;
+    private String ediUpdateUrl;
     public EDIStatus getEdiStatus() {
         return ediStatus;
+    }
+
+    public String getEdiUpdateUrl() {
+        return ediUpdateUrl;
     }
 
     public AssessorProfileDeclarationViewModel(CompetitionResource competition,
@@ -39,7 +45,9 @@ public class AssessorProfileDeclarationViewModel {
                                                String familyFinancialInterests,
                                                boolean compAdminUser,
                                                boolean isEDIUpdateEnabled,
-                                               EDIStatus ediStatus) {
+                                               EDIStatus ediStatus,
+                                               ZonedDateTime ediReviewDate,
+                                               String ediUpdateUrl) {
         this.competition = competition;
         this.assessorProfileDetailsViewModel = assessorProfileDetailsViewModel;
         this.completed = completed;
@@ -53,6 +61,12 @@ public class AssessorProfileDeclarationViewModel {
         this.compAdminUser = compAdminUser;
         this.ediUpdateEnabled = isEDIUpdateEnabled;
         this.ediStatus=ediStatus;
+        this.ediReviewDate=ediReviewDate;
+        this.ediUpdateUrl = ediUpdateUrl;
+    }
+
+    public ZonedDateTime getEdiReviewDate() {
+        return ediReviewDate;
     }
 
     public CompetitionResource getCompetition() {
