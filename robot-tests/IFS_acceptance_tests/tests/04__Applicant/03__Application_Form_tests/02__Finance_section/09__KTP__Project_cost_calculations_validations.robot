@@ -35,6 +35,8 @@ Documentation     IFS-7790 KTP: Your finances - Edit
 ...
 ...               IFS-11135 Business Finances: Financial Overview
 ...
+...               IFS-11439 Unable to Invite KTA to application
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../../resources/defaultResources.robot
@@ -49,8 +51,8 @@ ${KTPcompetiton}                          KTP new competition duplicate
 ${KTPcompetitonId}                        ${competition_ids["${KTPcompetiton}"]}
 &{KTPLead}                                email=bob@knowledge.base    password=${short_password}
 ${ktp_KTA_name}                           Hermen Mermen
-${ktp_KTA_email}                          hermen.mermen@ktn-uk.test
-&{KTA_assessor_credentials}               email=hermen.mermen@ktn-uk.test   password=${short_password}
+${ktp_KTA_email}                          Hermen.Mermen@ktn-uk.test
+&{KTA_assessor_credentials}               email=Hermen.Mermen@ktn-uk.test   password=${short_password}
 &{supporter_credentials}                  email=hubert.cumberdale@salad-fingers.com   password=${short_password}
 ${supporter_name}                         Hubert Cumberdale
 ${KTA_invitation_email_subject}           Invitation to be Knowledge Transfer Adviser
@@ -236,7 +238,7 @@ Business user can view read-only view of the project cost table in finance overv
    Then the user should see the correct data in the finance tables
 
 KTA user assigned to application can view the read-only view for 'No' selected fEC declaration
-    [Documentation]  IFS-9246
+    [Documentation]  IFS-9246  IFS-11439
     [Setup]  knowledge based applicant invites KTA user to the application
     Given the user clicks the button/link                               jQuery = a:contains("Applications")
     When the user clicks the button/link                                link = ${KTPapplication}
