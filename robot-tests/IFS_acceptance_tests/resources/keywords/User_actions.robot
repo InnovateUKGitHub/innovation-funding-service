@@ -181,31 +181,17 @@ the internal user navigates to the project setup competition
 
 the user refreshes until element appears on page
     [Arguments]  ${selector}
-    Wait Until Keyword Succeeds Without Screenshots     60s   2s   reload and check if element appears    ${selector}
+    Wait Until Keyword Succeeds Without Screenshots     120s   5s   reload and check if element appears    ${selector}
 
 reload and check if element appears
     [Arguments]  ${selector}
     the user reloads the page
-    Wait Until Page Contains Element Without Screenshots    ${selector}     1s
+    Wait Until Page Contains Element Without Screenshots    ${selector}     5s
 
 the user selects option from type ahead
     [Arguments]   ${inputId}  ${searchTerm}  ${optionSelector}
-    the user clicks the button/link                       id = ${inputId}
-    wait for autosave
-    the user should see option in type ahead field        id = ${inputId}  ${optionSelector}
-    wait for autosave
-    mouse out                                             id = ${inputId}
-
-the user should see option in type ahead field
-    [Arguments]  ${locator}  ${searchWord}
-    :FOR    ${i}    IN RANGE  10
-    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots   click element    jQuery = ul li:contains("${searchWord}")
-    \  Exit For Loop If  '${status}'=='PASS'
-    \  run keyword if  '${status}'=='FAIL'   the user tries to select the option again    ${locator}  ${searchWord}
-    \  ${i} =  Set Variable  ${i + 1}
-
-the user tries to select the option again
-    [Arguments]  ${locator}  ${searchWord}
-    the user clicks the button/link     ${locator}
-    wait for autosave
-    click element                       jQuery = ul li:contains("${searchWord}")
+    Page Should Contain Element                             id = ${inputId}    5s
+    wait until element is enabled without screenshots       id = ${inputId}
+    wait until keyword succeeds without screenshots         10s  1s     click element      id = ${inputId}
+    Mouse down                                              jQuery = ul li:contains("${searchTerm}")
+    Execute Javascript                                      document.evaluate("//li[text()='${optionSelector}']",document.body,null,9,null).singleNodeValue.click();

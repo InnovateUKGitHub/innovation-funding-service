@@ -499,8 +499,9 @@ Support user should see completed project in previous tab
 
 Project is automatically sent to ACC if set up for the competition
     [Documentation]  IFS-6786
-    Given log in as a different user         ${Elbow_Grease_Lead_PM_Email}   ${short_password}
-    Then the user should see the element     id = dashboard-link-LIVE_PROJECTS_USER
+    Given log in as a different user                        ${Elbow_Grease_Lead_PM_Email}   ${short_password}
+    When the user refreshes until element appears on page   id = dashboard-link-LIVE_PROJECTS_USER
+    Then the user should see the element                    id = dashboard-link-LIVE_PROJECTS_USER
 
 IFS Expert user can reset GOL in project setup
     [Documentation]  IFS-9611
@@ -582,7 +583,8 @@ the user should see project setup compeletion status
     the user clicks the button/link      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(8).status.ok a  # GOL
 
 the user should see live project on dashboard
-    the user clicks the button/link        id = dashboard-link-APPLICANT
+    #the user clicks the button/link        id = dashboard-link-APPLICANT
+    the user clicks the application tile if displayed
     the user should not see the element    jQuery = .projects-in-setup ul li a:contains("${Elbow_Grease_Title}")
     the user should see the element        jQuery = .previous ul li a:contains("${Elbow_Grease_Title}")
     the user should see the element        jQUery = .task:contains("${Elbow_Grease_Title}") ~ .status-and-action:contains("Live project")
