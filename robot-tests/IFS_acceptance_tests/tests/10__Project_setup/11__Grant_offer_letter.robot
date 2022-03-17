@@ -546,8 +546,8 @@ the IFS expert user rejects the GOL
 
 the user is able to see the Grant Offer letter page
     Select Window                          title = Print version with CSS
-    the user should see the element        css = h2:nth-child(22)
-    the user should see the element        css = p:nth-child(23)
+    the user should see the element        xpath = //*[contains(text(),'Minimal Financial Assistance')]
+    the user should see the element        xpath = //*[contains(text(),'The funding awarded to [insert names of the relevant consortium members] can be lawfully granted under Minimal Financial Assistance in accordance with the UK’s Subsidy Control Framework.')]
     the user closes the last opened tab
 
 the user removes existing and uploads new grant offer letter
