@@ -137,13 +137,6 @@ Applicant - Finance contact of partner organisation should see message project i
      Then the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
      And the user should see the element      link = ${reviewProgressLink}
 
-Applicant - User should be redirected to IFS post award service on click review its progress for post award service applications
-     [Documentation]  IFS-7017
-     Given log in as a different user                        ${projectManagerEmailLeadOrganisation}  ${short_password}
-     When the user navigates to the page                     ${server}/project-setup/project/${postAwardServiceProjectID}
-     And the user clicks the button/link                     link = ${reviewProgressLink}
-     Then the user should see live projects landing page
-
 Applicant - User should be redirected to grant application service on click review its progress for connect applications
      [Documentation]  IFS-7017
      [Setup]  Request a project id of connect service application
@@ -155,11 +148,20 @@ Applicant - User should be redirected to grant application service on click revi
 
 Applicant - User should be redirected to IFS post award service on click projects tile in dashboard for post award service applications
      [Documentation]  IFS-7017
-     Given the user navigates to the page                        ${server}/dashboard-selection
-     And log in as a different user                              ${projectManagerEmailLeadOrganisation}  ${short_password}
-     And the user clicks the live project tile in dashboard      id = dashboard-link-LIVE_PROJECTS_USER
+     Given the user navigates to the page                           ${server}/dashboard-selection
+     And log in as a different user                                 ${projectManagerEmailLeadOrganisation}  ${short_password}
+     #When the user navigates to the page                        ${server}/dashboard-selection
+     And the user reloads page until project tile appears on page   id = dashboard-link-LIVE_PROJECTS_USER
+     And the user clicks the live project tile in dashboard         id = dashboard-link-LIVE_PROJECTS_USER
      Then the user should see live projects landing page
 
+Applicant - User should be redirected to IFS post award service on click review its progress for post award service applications
+     [Documentation]  IFS-7017
+     Given the user navigates to the page                    ${server}/dashboard-selection
+     #And log in as a different user                          ${projectManagerEmailLeadOrganisation}  ${short_password}
+     When the user navigates to the page                     ${server}/project-setup/project/${postAwardServiceProjectID}
+     And the user clicks the button/link                     link = ${reviewProgressLink}
+     Then the user should see live projects landing page
 
 *** Keywords ***
 Custom Suite Setup
@@ -245,3 +247,13 @@ the user clicks the live project tile in dashboard
     \  run keyword if  '${status}'=='FAIL'   log in as a different user     ${projectManagerEmailLeadOrganisation}  ${short_password}
     \  ${i} =  Set Variable  ${i + 1}
     the user clicks the button/link     ${locator}
+
+the user reloads page until project tile appears on page
+    [Arguments]  ${selector}
+    Wait Until Keyword Succeeds Without Screenshots     120s   5s   reload and check project tile appears    ${selector}
+
+reload and check project tile appears
+    [Arguments]  ${selector}
+    the user navigates to the page                          ${server}/applicant/dashboard
+    the user clicks the button/link                         id = dashboard-navigation-link
+    Wait Until Page Contains Element Without Screenshots    ${selector}     5s

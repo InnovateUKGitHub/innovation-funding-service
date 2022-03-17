@@ -234,7 +234,7 @@ IFS Admin can see applicant's response flagged in Query responses tab and mark d
     [Tags]
     # Query responses tab
     Given the user navigates to the page  ${server}/project-setup-management/competition/${PS_Competition_Id}/status/queries
-    When the user clicks the button/link  link = Queries (1)
+    When the user clicks the button/link  jQuery = a:contains("Queries")
     Then the user mark the discussion as resolved
 
 Project finance user can view the response and supporting documents
