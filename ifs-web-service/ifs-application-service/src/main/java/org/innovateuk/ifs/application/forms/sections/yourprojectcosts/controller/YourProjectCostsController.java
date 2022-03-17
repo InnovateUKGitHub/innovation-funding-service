@@ -207,11 +207,16 @@ public class YourProjectCostsController extends AsyncAdaptor {
         YourProjectCostsForm form = new YourProjectCostsForm();
         form.setLabour(new LabourForm());
         Map.Entry<String, AbstractCostRowForm> map = saver.addRowForm(form, rowType);
-        YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user);
+
         model.addAttribute("form", form);
         model.addAttribute("id", map.getKey());
         model.addAttribute("row", map.getValue());
-        model.addAttribute("thirdPartyOfgem", viewModel.isThirdPartyOfgem());
+
+        if(FinanceRowType.SUBCONTRACTING_COSTS == rowType) {
+            YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user);
+            model.addAttribute("thirdPartyOfgem", viewModel.isThirdPartyOfgem());
+        }
+
         return String.format("application/your-project-costs-fragments :: ajax_%s_row", rowType.name().toLowerCase());
     }
 
