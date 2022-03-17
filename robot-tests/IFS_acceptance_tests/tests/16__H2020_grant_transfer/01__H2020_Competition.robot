@@ -239,7 +239,7 @@ The internal user is able to progress an application to project set up
     the user clicks the button/link                             css = button[data-js-modal="send-to-all-applicants-modal"]
     the user clicks the button/link                             jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
     #The sleep is necessary as the email is not delivering even after specified time
-    sleep  300s
+    sleep  120s
     the user refreshes until h2020 element appears on page      jQuery = td:contains("Project name") ~ td:contains("Sent")
     the user clicks the button/link                             link = Competition
     the user clicks the button/link                             link = Manage funding notifications
@@ -264,8 +264,8 @@ The user is able to complete Initial details section
     the user enters text to a text field                              id = openingDateDay    10
     the user enters text to a text field                              id = openingDateMonth    1
     the user enters text to a text field                              id = openingDateYear     ${nextyear}
-    the user selects option from type ahead                           innovationLeadUserId  i  Ian Cooper
-    the user selects option from type ahead                           executiveUserId  j  John Doe
+    the user selects option from type ahead                           innovationLeadUserId  Ian Cooper  Ian Cooper
+    the user selects option from type ahead                           executiveUserId  John Doe  John Doe
     the user clicks the button/link                                   jQuery = button:contains("Done")
     the user should see the read-only view of the initial details
 
@@ -281,7 +281,7 @@ The user should see the read-only view of the initial details
 
 The user completes funding information
     the user clicks the button/link         id = generate-code
-    the user enters text to an autocomplete field  id = funders[0].funder   Aerospace Technology Institute (ATI)
+    the user enters text to an autocomplete field  id = funders[0].funder   BEIS: Aerospace Technology Institute (ATI) Programme
     the user enters text to a text field    id = funders[0].funderBudget    20000
     the user enters text to a text field    id = pafNumber    2016
     the user enters text to a text field    id = budgetCode    2004
@@ -556,7 +556,7 @@ the user is able to filter on status
 
 the user refreshes until h2020 element appears on page
     [Arguments]  ${selector}
-    Wait Until Keyword Succeeds Without Screenshots     240s   1s   reload and check if h2020 element appears    ${selector}
+    Wait Until Keyword Succeeds Without Screenshots     10 m   1 m   reload and check if h2020 element appears    ${selector}
 
 reload and check if h2020 element appears
     [Arguments]  ${selector}
