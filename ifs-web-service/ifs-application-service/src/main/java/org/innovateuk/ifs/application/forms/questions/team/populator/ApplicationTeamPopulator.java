@@ -21,6 +21,7 @@ import org.innovateuk.ifs.invite.service.ApplicationKtaInviteRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
@@ -129,7 +130,7 @@ public class ApplicationTeamPopulator {
                 application.isOpen() && competition.isOpen(),
                 questionStatuses.stream().anyMatch(QuestionStatusResource::getMarkedAsComplete),
                 competition.isKtp(), ktpPhase2Enabled,
-                ktaInvite, ktaProcessRole, isEDIUpdateEnabled, competition.isThirdPartyOfgem());
+                ktaInvite, ktaProcessRole, isEDIUpdateEnabled, competition.isThirdPartyOfgem(), user.hasRoles(Role.ASSESSOR,Role.APPLICANT));
     }
 
     private ApplicationTeamOrganisationViewModel toInviteOrganisationTeamViewModel(InviteOrganisationResource organisationInvite, boolean leadApplicant) {

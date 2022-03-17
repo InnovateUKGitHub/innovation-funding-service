@@ -20,7 +20,7 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle=${model.compAdminUser} ? 'Assessor profile' : 'Your details'"/>
 
-        <p class="govuk-body" th:if="${!model.compAdminUser}">55These details will be used for all accounts linked to
+        <p class="govuk-body" th:if="${!model.compAdminUser}">These details will be used for all accounts linked to
             your email address.</p>
         <h2 th:unless="${!model.compAdminUser}" class="govuk-heading-m">Assessor details</h2>
 
