@@ -79,11 +79,12 @@ the user starts a competition create account journey
     the user clicks the button/link    link = Continue and create an account
 
 User starts an application with a second organisation type
-    the user select the competition and starts application     Performance testing competition
-    the user clicks the button/link                            link = Apply with a different organisation
-    the user selects the radio button                          organisationTypeId  2
-    the user clicks the button/link                            id = lead-organisation-type-cta
-    the user selects his organisation in Companies House       university   Aberystwyth University
+    the user select the competition and starts application          Performance testing competition
+    the user clicks the button/link                                 link = Apply with a different organisation
+    the user selects the radio button                               organisationTypeId  2
+    the user clicks the button/link                                 id = lead-organisation-type-cta
+    the user confirms economic activity for research organiations   No
+    the user selects his organisation in Companies House            university   Aberystwyth University
 
 the user start again a new application with two organisations
     the user select the competition and starts application     Performance testing competition
