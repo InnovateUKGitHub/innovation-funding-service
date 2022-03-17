@@ -121,8 +121,4 @@ SmithZone: eve.smith@gmail.com
 Red Planet: jake.reddy@gmail.com",Thomas,Filton,thomas.filton@isee.example.com,01676 342514,"Ward Ltd: 51406795 / 404745
 SmithZone: 51406795 / 404745
 Red Planet: 51406795 / 404745",Yes,Yes,SETUP,Yes,Yes,Yes,Yes,Yes,Yes
-Third Party Ofgem-NO VAT Application,2023-01-01,steve.smith@empire.com,Yes,"Empire Ltd: steve.smith@empire.com
-SmithZone: belle.smith@gmail.com
-Red Planet: nicole.brown@gmail.com",Thomas,Filton,thomas.filton@isee.example.com,01675 342514,"Ward Ltd: 51406795 / 404745
-SmithZone: 51406795 / 404745
-Red Planet: 51406795 / 404745",No,No,SETUP,No,No,No,No,No,No
+Third Party Ofgem-NO VAT Application,2023-01-01,steve.smith@empire.com,Yes,Empire Ltd: steve.smith@empire.com,Thomas,Filton,thomas.filton@isee.example.com,01675 342514,,No,No,SETUP,No,No,No,No,No,No
