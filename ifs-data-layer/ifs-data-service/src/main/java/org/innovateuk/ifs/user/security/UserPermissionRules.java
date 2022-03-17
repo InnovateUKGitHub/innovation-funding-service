@@ -31,6 +31,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -444,7 +445,7 @@ public class UserPermissionRules {
 
         List<Project> monitoringOfficerProjectsWhereThisUserIsInConsortiumAtApplication = monitoringOfficerProjects.stream()
                 .filter(moProject -> applicationsWhereThisUserIsInConsortium.stream()
-                        .anyMatch(application -> moProject.getApplication().getId().equals(application.getId())))
+                        .anyMatch(application -> Objects.equals(moProject.getApplication().getId(), application.getId())))
                 .collect(Collectors.toList());
 
         return !disjoint(monitoringOfficerProjects, monitoringOfficerProjectsWhereThisUserIsInConsortiumAtApplication);
