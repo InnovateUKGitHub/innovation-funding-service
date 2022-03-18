@@ -9,6 +9,8 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11269 HECP Phase 2 - Changes to cost categories
 ...
+...               IFS-11486 HECP Phase 2 - Always open functionality to have the the ability to bypass IFS assessment
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -44,7 +46,7 @@ Comp admin can view Hesta competition type in Initial details read only view
     Then the user can view Hesta competition type in Initial details read only view
 
 Comp admin creates Hesta competition
-    [Documentation]  IFS-8751
+    [Documentation]  IFS-8751  IFS-11486
     Given the user clicks the button/link                            link = Back to competition details
     Then the competition admin creates Hesta competition             ${BUSINESS_TYPE_ID}  ${hestaCompetitionName}  ${compType_HESTA}  ${compType_HESTA}  STATE_AID  GRANT  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
@@ -63,15 +65,9 @@ Lead applicant should get a confirmation email after application submission
     Then the user reads his email               ${leadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
 
 The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
-    [Documentation]  IFS-10697  IFS-11406
+    [Documentation]  IFS-10697  IFS-11406  IFS-11486
     Given Log in as a different user                                                &{Comp_admin1_credentials}
-    And Requesting IDs of this competition                                          ${hestaCompetitionName}
-    And Competition admin creates an assessment period                              ${competitionId}
-    And comp admin sends invite to assesor
-    And the assessor accepts an invite to an application
-    And Log in as a different user                                                  &{Comp_admin1_credentials}
     And The user clicks the button/link                                             link = ${hestaCompetitionName}
-    And assign the application to assessor                                          ${hestaApplicationName}
     When the internal team mark the application as successful / unsuccessful        ${hestaApplicationName}   FUNDED
     And Log in as a different user                                                  email=${leadApplicantEmail}   password=${short_password}
     Then the application summary page must not include the reopen application link
@@ -79,7 +75,7 @@ The Application Summary page must not include the Reopen Application link when t
     And the user is presented with the Application Summary page
 
 Lead applicant receives email notifiction when internal user marks application unsuccessful
-    [Documentation]  IFS-10695  IFS-11341
+    [Documentation]  IFS-10695  IFS-11341  IFS-11486
     Given the user logs out if they are logged in
     And Requesting IDs of this competition                                          ${hestaCompetitionName}
     And the user successfully completes application                                 barry   barrington   ${newLeadApplicantEmail}   ${newHestaApplicationName}
@@ -88,12 +84,20 @@ Lead applicant receives email notifiction when internal user marks application u
     And the user can submit the application
     And Log in as a different user                                                  &{Comp_admin1_credentials}
     And The user clicks the button/link                                             link = ${hestaCompetitionName}
-    And assign the application to assessor                                          ${newHestaApplicationName}
     When the internal team mark the application as successful / unsuccessful        ${newHestaApplicationName}   UNFUNDED
     And the user clicks the button/link                                             link = Competition
     And Requesting IDs of this application                                          ${newHestaApplicationName}
     And the internal team notifies all applicants                                   ${ApplicationID}
     Then the user reads his email                                                   ${newLeadApplicantEmail}  ${ApplicationID}: ${hestaApplicationUnsuccessfulEmailSubject}  ${hestaApplicationUnsuccessfulEmail}
+
+the user should not see any references to assessment and release feedback on close competition page
+    [Documentation]  IFS-11486
+    When the user navigates to the page   ${server}/management/competition/${competitionId}/always-open
+    Then the user should see the element  jQuery = li:contains("A submission date as been set and is now in the past.")
+    And the user should see the element   jQuery = li:contains("All eligible applications have  their funding decisions entered.")
+    And the user should see the element   jQuery = li:contains("All funding decision notifications have been sent.")
+    And the user should see the element   jQuery = p:contains("Once this competition is closed you will no longer be able to add funding decisions.")
+    And the element should be disabled    jQuery = button:contains("Close competition")
 
 
 *** Keywords ***
@@ -111,7 +115,7 @@ the competition admin creates Hesta competition
     the user fills in the CS funding eligibility            true   ${compType_HESTA}  ${fundingRule}
     the user selects the organisational eligibility         true    true
     the user completes milestones section
-    the user marks the Hesta application question as done   ${projectGrowth}  ${compType}  ${competition}
+    the user marks the Hesta application question as done
     the user clicks the button/link                         link = Public content
     the user fills in the Public content and publishes      ${extraKeyword}
     the user clicks the button/link                         link = Return to setup overview
@@ -153,9 +157,9 @@ the user successfully completes application
     the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team                        COMPLETE  ${email}
     the user completes the application research category            Feasibility studies
-    The user is able to complete hecp public description section
     The user is able to complete horizon grant agreement section
-    the lead applicant fills all the questions and marks as complete(Hesta)
+    the lead applicant marks the application question as complete   1. Tell us where your organisation is based  My organisation is based in the UK or a British Overseas Territory
+    the lead applicant marks the application question as complete   2. What EIC call have you been successfully evaluated for?  EIC Transition
     the user accept the competition terms and conditions            Back to application overview
 
 the user is presented with the Application Summary page
@@ -187,41 +191,46 @@ the application summary page must not include the reopen application link
     the user should not see the element     link = Reopen application
 
 the user marks the Hesta application question as done
-    [Arguments]  ${growthTable}  ${comp_type}  ${competition}
-    the user clicks the button/link                                     link = Application
-    the user marks each question as complete                            Application details
-    the user marks each question as complete                            Public description
-    the user fills in the CS Application section with custom questions  ${growthTable}  ${comp_type}
+    the user clicks the button/link                                 link = Application
+    the user marks each question as complete                        Application details
+    the user fills in the CS Application section hecp question      Tell us where your organisation is based
+    the user fills in the CS Application section hecp question      What EIC call have you been successfully evaluated for?
+    the user clicks the button/link                                 jQuery = .govuk-heading-s a:contains("Finances")
+    the user clicks the button/link                                 jQuery = button:contains("Done")
+    the user clicks the button/link                                 jQuery = button:contains("Done")
+    the user clicks the button/link                                 link = Back to competition details
+    the user should see the element                                 jQuery = div:contains("Application") ~ .task-status-complete
 
 the user completes milestones section
-    the user clicks the button/link                 link = Milestones
-    the user clicks the button twice                jQuery = label:contains("Project setup")
-    the user clicks the button/link                 jQuery = button:contains("Done")
-    the user completes application submission page  Yes
-    the user clicks the button/link                 jQuery = button:contains("Done")
-    the user clicks the button/link                 link = Back to competition details
-    the user should see the element                 jQuery = div:contains("Milestones") ~ .task-status-complete
+    the user clicks the button/link                     link = Milestones
+    the user clicks the button twice                    jQuery = label:contains("Project setup")
+    the user clicks the button/link                     jQuery = button:contains("Done")
+    the user completes application submission page      Yes
+    the user inputs application assessment decision     No
+    the user clicks the button/link                     jQuery = button:contains("Done")
+    the user clicks the button/link                     link = Back to competition details
+    the user should see the element                     jQuery = div:contains("Milestones") ~ .task-status-complete
 
-Competition admin creates an assessment period
-    [Arguments]  ${competitionId}
-    Log in as a different user              &{Comp_admin1_credentials}
-    the user clicks the button/link         link = ${hestaCompetitionName}
-    the user clicks the button/link         link = Manage assessments
-    the user clicks the button/link         link = Manage assessment period
-    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.day  12
-    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.month  12
-    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.year  2100
-    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.day  14
-    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.month  12
-    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.year  2100
-    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.day  16
-    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.month  12
-    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.year  2100
-    the user clicks the button/link         jQuery = button:contains('Save and return to manage assessments')
-    the user clicks the button/link         jQuery = button:contains("Notify assessors")
-    update assessment batch 1 milestone to yesterday   ${competitionId}  ASSESSOR_DEADLINE
-    the user clicks the button/link         jQuery = button:contains("Close assessment")
-    the user clicks the button/link         link = Competition
+#Competition admin creates an assessment period
+#    [Arguments]  ${competitionId}
+#    Log in as a different user              &{Comp_admin1_credentials}
+#    the user clicks the button/link         link = ${hestaCompetitionName}
+#    the user clicks the button/link         link = Manage assessments
+#    the user clicks the button/link         link = Manage assessment period
+#    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.day  12
+#    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.month  12
+#    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.year  2100
+#    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.day  14
+#    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.month  12
+#    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.year  2100
+#    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.day  16
+#    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.month  12
+#    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.year  2100
+#    the user clicks the button/link         jQuery = button:contains('Save and return to manage assessments')
+#    the user clicks the button/link         jQuery = button:contains("Notify assessors")
+#    update assessment batch 1 milestone to yesterday   ${competitionId}  ASSESSOR_DEADLINE
+#    the user clicks the button/link         jQuery = button:contains("Close assessment")
+#    the user clicks the button/link         link = Competition
 
 update assessment batch 1 milestone to yesterday
     [Arguments]  ${competition_id}  ${milestone}
@@ -234,29 +243,29 @@ Custom Suite Setup
     The guest user opens the browser
     Connect to database  @{database}
 
-assign the application to assessor
-    [Arguments]   ${applicationName}
-    the user clicks the button/link     link = Manage assessments
-    the user clicks the button/link     link = Manage applications
-    the user clicks the button/link     jQuery = td:contains("${applicationName}") ~ td a:contains("View progress")
-    the user selects the checkbox       assessor-row-1
-    the user clicks the button/link     jQuery = button:contains("Add to application")
-    the user clicks the button/link     link = Allocate applications
-    the user clicks the button/link     link = Back to manage assessments
-    the user clicks the button/link     link = Competition
-    the user clicks the button/link     link = Input and review funding decision
-    the user should see the element     jQuery =td:contains("${hestaApplicationName}")
+#assign the application to assessor
+#    [Arguments]   ${applicationName}
+#    the user clicks the button/link     link = Manage assessments
+#    the user clicks the button/link     link = Manage applications
+#    the user clicks the button/link     jQuery = td:contains("${applicationName}") ~ td a:contains("View progress")
+#    the user selects the checkbox       assessor-row-1
+#    the user clicks the button/link     jQuery = button:contains("Add to application")
+#    the user clicks the button/link     link = Allocate applications
+#    the user clicks the button/link     link = Back to manage assessments
+#    the user clicks the button/link     link = Competition
+#    the user clicks the button/link     link = Input and review funding decision
+#    the user should see the element     jQuery =td:contains("${hestaApplicationName}")
 
-comp admin sends invite to assesor
-    the user clicks the button/link          link = Invite assessors to assess the competition
-    the user enters text to a text field     id = assessorNameFilter  ${webTestAssessor}
-    the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
-    the user clicks the button/link          jQuery = tr:contains("${webTestAssessor}") label[for^="assessor-row"]
-    the user clicks the button/link          jQuery = .govuk-button:contains("Add selected to invite list")
-    the user clicks the button/link          link = Invite
-    the user clicks the button/link          link = Review and send invites
-    the user clicks the button/link          jQuery = .govuk-button:contains("Send invitation")
-    the user logs out if they are logged in
+#comp admin sends invite to assesor
+#    the user clicks the button/link          link = Invite assessors to assess the competition
+#    the user enters text to a text field     id = assessorNameFilter  ${webTestAssessor}
+#    the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
+#    the user clicks the button/link          jQuery = tr:contains("${webTestAssessor}") label[for^="assessor-row"]
+#    the user clicks the button/link          jQuery = .govuk-button:contains("Add selected to invite list")
+#    the user clicks the button/link          link = Invite
+#    the user clicks the button/link          link = Review and send invites
+#    the user clicks the button/link          jQuery = .govuk-button:contains("Send invitation")
+#    the user logs out if they are logged in
 
 the assessor accepts an invite to an application
     logging in and error checking         ${webTestAssessorEmailAddress}   ${short_password}
@@ -311,3 +320,19 @@ The user is able to complete horizon grant agreement section
     the user clicks the button/link           id = mark-as-complete
     the user clicks the button/link           link = Return to application overview
     the user should see the element           jQuery = li:contains("Horizon Europe Guarantee grant agreement") > .task-status-complete
+
+the user fills in the CS Application section hecp question
+    [Arguments]  ${question_link}
+    the user clicks the button/link         jQuery = h4 a:contains("${question_link}")
+    the user enters text to a text field    id = question.guidanceTitle  Innovation is crucial to the continuing success of any organization.
+    the user enters text to a text field    css = [aria-labelledby="question.guidance-label"]  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
+    the user clicks the button/link         jQuery = button:contains("Done")
+
+the lead applicant marks the application question as complete
+    [Arguments]  ${questionName}   ${questionAnswer}
+    the user clicks the button/link     link = ${questionName}
+    the user clicks the button twice    jQuery = label:contains("${questionAnswer}")
+    the user clicks the button/link     id = application-question-complete
+    the user clicks the button/link     link = Back to application overview
+
+
