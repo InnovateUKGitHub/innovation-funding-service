@@ -67,8 +67,9 @@ Capital usage
     [Tags]  HappyPath
     When the applicant fills the 'capital usage' field
     Then Totals should be correct                       jQuery = h4:contains("Total capital usage costs") [data-mirror^="#section-total"]  £200  jQuery = [data-mirror^="#section-total-capital-usage"]  £200
-    And the user clicks the button/link                 css = #capital-usage [data-repeatable-row]:nth-child(1) button
-    And the user reloads page with autosave
+#    And the user clicks the button/link                 css = #capital-usage [data-repeatable-row]:nth-child(1) button
+#    And the user reloads page with autosave
+    And the user removes one row of costs and checks for total  jQuery = h4:contains("Total capital usage costs") span:contains("£100")  css = #capital-usage [data-repeatable-row]:nth-child(1) button
     Then Totals should be correct                       jQuery = h4:contains("Total capital usage costs") [data-mirror^="#section-total"]  £100  jQuery = [data-mirror^="#section-total-capital-usage"]  £100
     And the user clicks the button/link                 css = #capital-usage [data-repeatable-row]:nth-child(1) button
     [Teardown]    the user clicks the button/link       jQuery = button:contains("Capital usage")
@@ -92,11 +93,10 @@ Travel and subsistence
     [Documentation]    INFUND-736, INFUND-6390
     [Tags]  HappyPath
     When the Applicant fills the Travel fields
-    Then Totals should be correct                jQuery = h4:contains("Total travel and subsistence costs") [data-mirror^="#section-total"]  £2,000  jQuery = [data-mirror^="#section-total-travel"]  £2,000
-    And the user clicks the button/link          css = #travel-costs-table [data-repeatable-row]:nth-child(1) button
-    And the user reloads page with autosave
-    Then Totals should be correct                jQuery = h4:contains("Total travel and subsistence costs") [data-mirror^="#section-total"]  £1,000  jQuery = [data-mirror^="#section-total-travel"]  £1,000
-    [Teardown]  the user clicks the button/link  jQuery = button:contains("Travel and subsistence")
+    Then Totals should be correct                               jQuery = h4:contains("Total travel and subsistence costs") [data-mirror^="#section-total"]  £2,000  jQuery = [data-mirror^="#section-total-travel"]  £2,000
+    And the user removes one row of costs and checks for total  jQuery = h4:contains("Total travel and subsistence costs") span:contains("£1,000")   css = #travel-costs-table [data-repeatable-row]:nth-child(1) button
+    Then Totals should be correct                               jQuery = h4:contains("Total travel and subsistence costs") [data-mirror^="#section-total"]  £1,000  jQuery = [data-mirror^="#section-total-travel"]  £1,000
+    [Teardown]  the user clicks the button/link                 jQuery = button:contains("Travel and subsistence")
 
 Other costs
     [Documentation]    INFUND-736, INFUND-6390
@@ -246,3 +246,13 @@ The row should be removed
 Custom suite teardown
     The user closes the browser
     Disconnect from database
+
+the user removes one row of costs and checks for total
+    [Arguments]  ${selector}  ${removeSelector}
+    Wait Until Keyword Succeeds Without Screenshots     120s   5s   reload and check total appears    ${selector}  ${removeSelector}
+
+reload and check total appears
+    [Arguments]  ${selector}   ${removeSelector}
+    the user clicks the button/link                         ${removeSelector}
+    the user reloads page with autosave
+    Wait Until Page Contains Element Without Screenshots    ${selector}     5s

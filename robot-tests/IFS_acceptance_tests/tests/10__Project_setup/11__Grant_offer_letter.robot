@@ -59,6 +59,9 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...
 ...               IFS-9774 Investigate if its possible to fix AT's failure due to IDP upgrade
 ...
+...               IFS-11380 GOL template offer update (MFA Change)
+...
+
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -148,7 +151,7 @@ Comp Admin cannot upload big or non-pdf grant offer letter
     Then the user should see a field error              ${wrong_filetype_validation_error}
 
 Comp Admin is able to navigate to the Grant Offer letter page
-    [Documentation]  IFS-5865
+    [Documentation]  IFS-5865  IFS-11380
     Given the user navigates to the page                         ${server}/project-setup-management/project/${PS_LP_Application_Project_Id}/grant-offer-letter/send
     When the user clicks the button/link                         jQuery = a:contains("View the grant offer letter page")
     Then the user is able to see the Grant Offer letter page
@@ -499,8 +502,9 @@ Support user should see completed project in previous tab
 
 Project is automatically sent to ACC if set up for the competition
     [Documentation]  IFS-6786
-    Given log in as a different user         ${Elbow_Grease_Lead_PM_Email}   ${short_password}
-    Then the user should see the element     id = dashboard-link-LIVE_PROJECTS_USER
+    Given log in as a different user                        ${Elbow_Grease_Lead_PM_Email}   ${short_password}
+    When the user refreshes until element appears on page   id = dashboard-link-LIVE_PROJECTS_USER
+    Then the user should see the element                    id = dashboard-link-LIVE_PROJECTS_USER
 
 IFS Expert user can reset GOL in project setup
     [Documentation]  IFS-9611
@@ -543,6 +547,8 @@ the IFS expert user rejects the GOL
 
 the user is able to see the Grant Offer letter page
     Select Window                          title = Print version with CSS
+    the user should see the element        xpath = //*[contains(text(),'Minimal Financial Assistance')]
+    the user should see the element        xpath = //*[contains(text(),'The funding awarded to [insert names of the relevant consortium members] can be lawfully granted under Minimal Financial Assistance in accordance with the UK’s Subsidy Control Framework.')]
     the user closes the last opened tab
 
 the user removes existing and uploads new grant offer letter
@@ -582,7 +588,8 @@ the user should see project setup compeletion status
     the user clicks the button/link      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(8).status.ok a  # GOL
 
 the user should see live project on dashboard
-    the user clicks the button/link        id = dashboard-link-APPLICANT
+    #the user clicks the button/link        id = dashboard-link-APPLICANT
+    the user clicks the application tile if displayed
     the user should not see the element    jQuery = .projects-in-setup ul li a:contains("${Elbow_Grease_Title}")
     the user should see the element        jQuery = .previous ul li a:contains("${Elbow_Grease_Title}")
     the user should see the element        jQUery = .task:contains("${Elbow_Grease_Title}") ~ .status-and-action:contains("Live project")

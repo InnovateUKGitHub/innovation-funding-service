@@ -161,7 +161,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
         when(userService.isLeadApplicant(loggedInUser.getId(), application)).thenReturn(true);
 
         MvcResult mvcResult = mockMvc.perform(get("/application/" + application.getId() + "/track"))
-                .andExpect(view().name("hecp-application-track"))
+                .andExpect(view().name("horizon-europe-guarantee-application-track"))
                 .andReturn();
         TrackViewModel model = (TrackViewModel) mvcResult.getModelAndView().getModel().get("model");
         assertFalse(model.isReopenLinkVisible());

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationTeamReadOnly
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationTeamUserReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationOrganisationAddressRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -23,6 +24,8 @@ import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -39,6 +42,8 @@ import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 @Component
+@Scope(value = "prototype", proxyMode = ScopedProxyMode.TARGET_CLASS)
+//TODO- Remove this when feature toggle for EDI is removed
 public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOnlyViewModelPopulator<ApplicationTeamReadOnlyViewModel> {
 
     @Value("${ifs.edi.update.enabled}")
@@ -59,6 +64,9 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
     @Autowired
     private ApplicationOrganisationAddressRestService applicationOrganisationAddressRestService;
 
+    @Autowired
+    private CompetitionRestService competitionRestService;
+
     @Override
     public ApplicationTeamReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         boolean internalUser = data.getUser().isInternalUser();
@@ -67,6 +75,12 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
                 .filter(role -> applicantProcessRoles().contains(role.getRole()))
                 .collect(toList());
         List<InviteOrganisationResource> inviteOrganisationResources = emptyList();
+
+
+        boolean hasEDIQuestions = competitionRestService.hasEDIQuestion(question.getCompetition()).getSuccess();
+        ediUpdateEnabled = ediUpdateEnabled && !hasEDIQuestions;
+
+
         if (showInvites(data)) {
             inviteOrganisationResources = inviteRestService.getInvitesByApplication(data.getApplication().getId()).getSuccess();
         }
@@ -79,8 +93,8 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
                     .filter(role -> role.getRole().isKta())
                     .findAny();
 
-            if(internalUser && ktaProcessRole.isPresent()) {
-               ktaPhoneNumber = getPhoneNumber(ktaProcessRole.get().getUserEmail());
+            if (internalUser && ktaProcessRole.isPresent()) {
+                ktaPhoneNumber = getPhoneNumber(ktaProcessRole.get().getUserEmail());
             }
         }
 
@@ -107,7 +121,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
     private boolean showInvites(ApplicationReadOnlyData data) {
         return !data.getApplication().isSubmitted() &&
                 (data.getUsersProcessRole().map(pr -> applicantProcessRoles().contains(pr.getRole())).orElse(false)
-                || data.getUser().hasAnyRoles(SUPPORT, IFS_ADMINISTRATOR));
+                        || data.getUser().hasAnyRoles(SUPPORT, IFS_ADMINISTRATOR));
     }
 
     private ApplicationTeamOrganisationReadOnlyViewModel toOrganisationTeamViewModel(ApplicationResource application, OrganisationResource organisation, Collection<ProcessRoleResource> processRoles, InviteOrganisationResource organisationInvite, boolean internalUser) {
