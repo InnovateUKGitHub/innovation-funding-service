@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 
@@ -66,7 +67,7 @@ public class ReviewAndSubmitViewModelPopulator {
                             List<QuestionStatusResource> questionStatuses = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(question.getId(), application.getId()).getSuccess();
                             boolean completedByLeadOrganisation = questionStatuses
                                     .stream()
-                                    .anyMatch(questionStatus -> questionStatus.getMarkedAsCompleteByOrganisationId() == application.getLeadOrganisationId() &&
+                                    .anyMatch(questionStatus -> Objects.equals(questionStatus.getMarkedAsCompleteByOrganisationId(), application.getLeadOrganisationId()) &&
                                             questionStatus.getMarkedAsComplete() != null && questionStatus.getMarkedAsComplete());
                             boolean completeByAll = questionStatuses.stream()
                                     .allMatch(questionStatus -> questionStatus.getMarkedAsComplete() != null && questionStatus.getMarkedAsComplete());

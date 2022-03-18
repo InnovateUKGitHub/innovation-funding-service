@@ -136,6 +136,10 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
                 return "redirect:" + BASE_URL + "/" + INTERNATIONAL_ORGANISATION + "/details";
             }
 
+            if (organisationTypeId == OrganisationTypeEnum.RESEARCH.getId()) {
+                return "redirect:" + BASE_URL + "/" + getCompetitionIdFromInviteOrCookie(request) + "/confirm-eligibility";
+            }
+
             return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
         } else {
             organisationForm.setTriedToSave(true);

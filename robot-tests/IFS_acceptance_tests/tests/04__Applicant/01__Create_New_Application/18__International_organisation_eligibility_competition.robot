@@ -458,6 +458,7 @@ Lead organisation can see international organisation address details in project 
     [Documentation]  IFS-7200
     [Tags]  HappyPath
     Given log in as a different user                                                          ${lead_international_email}  ${short_password}
+    And the user clicks the application tile if displayed
     And the user clicks the button/link                                                       link = ${internationalApplicationTitle}
     When the user clicks the button/link                                                      link = Project team
     Then the user completes project team and can see international organisation addresses
@@ -508,7 +509,7 @@ Correspondence address field validations
     [Documentation]     IFS - 7241
     [Tags]
     Given the user navigates to the page                                   ${server}/project-setup/project/${ProjectID}/details
-    when the user clicks the button/link                                   link = Correspondence address
+    When the user clicks the button/link                                   link = Correspondence address
     And the user check for correspondence address titles and info text
     And the user clicks the button/link                                    id = save-project-address-button
     Then the user should see field and summary validation messages
@@ -804,9 +805,10 @@ the user provides international organisation details
     the user enters text to a text field                               id = companyRegistrationNumber  ${company_reg_no}
     the user enters text to a text field                               id = addressLine1  ${internationalOrganisationFirstLineAddress}
     the user enters text to a text field                               id = town  ${international_org_town}
-    input text                                                         id = country  ${international_org_country}
-    the user should see country in dropdown                            id = country  ${international_org_country_complete}
-    the user clicks the button/link                                    jQuery = ul li:contains("${international_org_country_complete}")
+    wait until keyword succeeds without screenshots   10s   200ms   input text     id = country  ${international_org_country}
+    #the user should see country in dropdown                            id = country  ${international_org_country_complete}
+    wait until keyword succeeds without screenshots   10s   200ms   click element   jQuery = ul li:contains("${international_org_country_complete}")
+    #the user clicks the button/link                                    jQuery = ul li:contains("${international_org_country_complete}")
     the user clicks the button/link                                    id = ${button_id}
 
 the user gets an error message on not filling mandatory fields
@@ -1043,9 +1045,9 @@ the user fills correspondence address data
     the user enters text to a text field            id = zipCode            ${zipCode}
 
 the user should see read only view of completed correspondence address details
-    the user should see the element     jQuery = td:contains("Calle 11, San Sebastian,")
-    the user should see the element     jQuery = td:contains("Argentina, X5187XAB")
-    the user should see the element     id = project-address-status
+    wait until keyword succeeds without screenshots  5 s   100 ms     the user should see the element     jQuery = td:contains("Calle 11, San Sebastian,")
+    wait until keyword succeeds without screenshots  5 s   100 ms     the user should see the element     jQuery = td:contains("Argentina, X5187XAB")
+    wait until keyword succeeds without screenshots  5 s   100 ms     the user should see the element     id = project-address-status
 
 the user should see field and summary validation messages
     the user should see a field and summary error   ${countryValidationMessage}
