@@ -28,6 +28,8 @@ import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -46,6 +48,7 @@ import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.user.resource.ProcessRoleType.applicantProcessRoles;
 
 @Component
+@Scope(value="prototype", proxyMode= ScopedProxyMode.TARGET_CLASS)  //TODO- Remove this when feature toogle for EDI removed
 public class ApplicationTeamPopulator {
 
     @Value("${ifs.ktp.phase2.enabled}")
@@ -80,10 +83,12 @@ public class ApplicationTeamPopulator {
 
     @Autowired
     private UserRestService userRestService;
-
     public ApplicationTeamViewModel populate(long applicationId, long questionId, UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        boolean hasEDIQuestions = competitionRestService.hasEDIQuestion(competition.getId()).getSuccess();
+        isEDIUpdateEnabled = isEDIUpdateEnabled && !hasEDIQuestions;
+
         List<ProcessRoleResource> processRoles = processRoleRestService.findProcessRole(applicationId).getSuccess();
         List<ProcessRoleResource> applicantProcessRoles = processRoles
                 .stream()
@@ -106,9 +111,9 @@ public class ApplicationTeamPopulator {
                 .collect(toList());
 
         organisationViewModels.addAll(inviteOrganisationResources.stream()
-            .filter(invite -> invite.getOrganisation() == null)
-            .map(invite -> toInviteOrganisationTeamViewModel(invite, leadApplicant))
-            .collect(toList()));
+                .filter(invite -> invite.getOrganisation() == null)
+                .map(invite -> toInviteOrganisationTeamViewModel(invite, leadApplicant))
+                .collect(toList()));
 
         sort(organisationViewModels);
 
