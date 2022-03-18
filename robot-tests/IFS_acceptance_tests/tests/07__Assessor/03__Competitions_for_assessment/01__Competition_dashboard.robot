@@ -69,6 +69,7 @@ Comp admin can see the application is rejected on manage assessor page
     [Documentation]  IFS-396
     [Setup]  the user navigates to the page                     ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}
     Given the user clicks the button/link                       link = Manage assessors
+    And the user search for assessor
     When the user clicks the button/link in the paginated list  jQuery = td:contains("Paul Plum") ~ td a:contains("View progress")
     Then the user should see the element                        jQuery = td:contains("Not my area of expertise")
     And the user should see the element                         jQuery = td:contains("Unable to assess the application as i'm on holiday.")
@@ -142,3 +143,8 @@ the user should see competition details
     the user should see the element    jQuery = dt:contains("Accept applications deadline") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_TIME_DATE_LONG}")
     the user should see the element    jQuery = dt:contains("Submit applications deadline:") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_DATE_LONG}")
     the user should see the element    jQuery = h2:contains("Applications for assessment")
+
+the user search for assessor
+    the user enters text to a text field    name = assessorNameFilter  paul plum
+    the user clicks the button/link         jQuery = button:contains("Filter")
+
