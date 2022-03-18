@@ -59,7 +59,7 @@ public class CompetitionManagementAssessorProfileController {
 
         model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(assessorProfile.getUser(), profile, Optional.of(competitionId), true));
 
-        return "profile/declaration";
+        return "profile/skills";
     }
 
     @GetMapping(value = "/profile/{assessorId}", params = "tab=declaration")
