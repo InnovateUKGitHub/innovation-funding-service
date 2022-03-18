@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,9 +16,6 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.YOUR_FINAN
 
 @Component
 public class ThirdPartyTemplate implements FundingTypeTemplate {
-
-    @Value("${ifs.thirdparty.ofgem.enabled}")
-    private boolean thirdPartyOfgemEnabled;
 
     @Autowired
     private CommonBuilders commonBuilders;
@@ -45,7 +41,7 @@ public class ThirdPartyTemplate implements FundingTypeTemplate {
                         OTHER_COSTS,
                         OTHER_FUNDING,
                         YOUR_FINANCE);
-        types.add((thirdPartyOfgemEnabled && competition.getCompetitionType().getCompetitionTypeEnum() == CompetitionTypeEnum.OFGEM) ? GRANT_CLAIM_AMOUNT : FINANCE);
+        types.add(competition.getCompetitionType().getCompetitionTypeEnum() == CompetitionTypeEnum.OFGEM ? GRANT_CLAIM_AMOUNT : FINANCE);
         return commonBuilders.saveFinanceRows(competition, types);
     }
 
