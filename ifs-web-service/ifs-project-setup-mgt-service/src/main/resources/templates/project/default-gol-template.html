@@ -200,8 +200,8 @@
             <h2 class="heading-medium">Subsidy</h2>
             <p>The funding awarded to [insert names of the relevant consortium members] <strong>is a “subsidy”</strong> under the UK International Obligations for Subsidy Control but can be lawfully granted as it respects the principles in Article 3.4 of Chapter 3 (Subsidy Control), Title XI, Part 2 of the Trade and Cooperation Agreement between the European Union and the United Kingdom and is not a prohibited subsidy falling within Article 3.5.</p>
             <p>AND/OR</p>
-            <h2 class="heading-medium">Special Drawing Rights</h2>
-            <p>The funding awarded to [insert names of the relevant consortium members] <strong>is a “subsidy”</strong> under the UK International Obligations for Subsidy Control but can be lawfully granted as it falls within the exception in Article 3.2 (4) (below 325,000 SDR units) of Chapter 3 (Subsidy Control), Title XI, Part 2 of the Trade and Cooperation Agreement between the European Union and the United Kingdom.</p>
+            <h2 class="heading-medium">Minimal Financial Assistance</h2>
+            <p>The funding awarded to [insert names of the relevant consortium members] can be lawfully granted under Minimal Financial Assistance in accordance with the UK’s Subsidy Control Framework.</p>
             <p>AND/OR</p>
             <h2 class="heading-medium">No Subsidy</h2>
             <p>The funding awarded to [insert names of the research organisations in the consortium] is <strong>“not a subsidy”</strong> under the UK International Obligations for Subsidy Control as the organisation is a “research organisation” as defined in the European Commission’s Framework for State Aid for Research and Development and Innovation (2014C 198/01) <strong>(“R&D&I Framework”)</strong> and operates in accordance with sections 2.1 and 2.2 of the R&D&I Framework.</p>
@@ -292,24 +292,26 @@
                             &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                     </tr>
-                    <tr>
-                        <td>Overheads</td>
-                        <td style="text-align:right;"
-                            th:each="(organisation : ${model.industrialFinanceTable.organisations})"
-                            th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
-                            &pound;<th:block th:with="category = ${model.isProcurement() ?
+                    <th:block th:unless="${model.isThirdPartyOfgem()}">
+                        <tr>
+                            <td>Overheads</td>
+                            <td style="text-align:right;"
+                                th:each="(organisation : ${model.industrialFinanceTable.organisations})"
+                                th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
+                                &pound;<th:block th:with="category = ${model.isProcurement() ?
                             organisationFinance.getFinanceOrganisationDetails(model.getProcurementOverheadsFinanceRowType()) :
                             organisationFinance.getFinanceOrganisationDetails(model.getOverheadsFinanceRowType())}"
-                                      th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
-                        </td>
-                        <td style="text-align:right;"
-                            th:if="${model.industrialFinanceTable.showTotalsColumn}"
-                            th:with="total=${model.isProcurement() ?
+                                                 th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
+                            </td>
+                            <td style="text-align:right;"
+                                th:if="${model.industrialFinanceTable.showTotalsColumn}"
+                                th:with="total=${model.isProcurement() ?
                             model.industrialFinanceTable.getTotalForType(model.getProcurementOverheadsFinanceRowType()) :
                             model.industrialFinanceTable.getTotalForType(model.getOverheadsFinanceRowType())}">
-                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
-                        </td>
-                    </tr>
+                                &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                            </td>
+                        </tr>
+                    </th:block>
                     <tr>
                         <td>Materials</td>
                         <td style="text-align:right;"
@@ -324,20 +326,22 @@
                             &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                     </tr>
-                    <tr>
-                        <td>Capital usage</td>
-                        <td style="text-align:right;"
-                            th:each="(organisation : ${model.industrialFinanceTable.organisations})"
-                            th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
-                            &pound;<th:block th:with="category = ${organisationFinance.getFinanceOrganisationDetails(model.getCapitalUsageFinanceRowType())}"
-                                      th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
-                        </td>
-                        <td style="text-align:right;"
-                            th:if="${model.industrialFinanceTable.showTotalsColumn}"
-                            th:with="total=${model.industrialFinanceTable.getTotalForType(model.getCapitalUsageFinanceRowType())}">
-                            &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
-                        </td>
-                    </tr>
+                    <th:block th:unless="${model.isThirdPartyOfgem()}">
+                        <tr>
+                            <td>Capital usage</td>
+                            <td style="text-align:right;"
+                                th:each="(organisation : ${model.industrialFinanceTable.organisations})"
+                                th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
+                                &pound;<th:block th:with="category = ${organisationFinance.getFinanceOrganisationDetails(model.getCapitalUsageFinanceRowType())}"
+                                                 th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
+                            </td>
+                            <td style="text-align:right;"
+                                th:if="${model.industrialFinanceTable.showTotalsColumn}"
+                                th:with="total=${model.industrialFinanceTable.getTotalForType(model.getCapitalUsageFinanceRowType())}">
+                                &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                            </td>
+                        </tr>
+                    </th:block>
                     <tr>
                         <td>Subcontract </td>
                         <td style="text-align:right;"
@@ -792,18 +796,20 @@
 
         <br><br><br>
     </div>
-    <!-- terms start -->
-    <div class="terms-and-conditions letter-size letter-size--terms">
-        <th:block th:if="${model.singleTermsAndConditionsTemplatePresent}">
-            <h2 style="font-size: 24px">Terms and conditions</h2>
-            <th:block th:insert="competition/info/__${model.singleTermsAndConditionsTemplate}__ :: terms-and-conditions-content" th:with="hideProcurementLink=${true}"/>
-        </th:block>
-        <th:block th:unless="${model.singleTermsAndConditionsTemplatePresent}" th:each="termsTemplate : ${model.termsAndConditionsTemplates.entrySet()}">
-            <h2 style="font-size: 24px">Terms and conditions (<th:block th:text="${termsTemplate.key}" />)</h2>
-            <th:block th:insert="competition/info/__${termsTemplate.value}__ :: terms-and-conditions-content" th:with="hideProcurementLink=${true}"/>
-        </th:block>
-    </div>
-    <!-- terms end  -->
+    <th:block th:unless="${model.isThirdPartyOfgem()}">
+        <!-- terms start -->
+        <div class="terms-and-conditions letter-size letter-size--terms">
+            <th:block th:if="${model.singleTermsAndConditionsTemplatePresent}">
+                <h2 style="font-size: 24px">Terms and conditions</h2>
+                <th:block th:insert="competition/info/__${model.singleTermsAndConditionsTemplate}__ :: terms-and-conditions-content" th:with="hideProcurementLink=${true}"/>
+            </th:block>
+            <th:block th:unless="${model.singleTermsAndConditionsTemplatePresent}" th:each="termsTemplate : ${model.termsAndConditionsTemplates.entrySet()}">
+                <h2 style="font-size: 24px">Terms and conditions (<th:block th:text="${termsTemplate.key}" />)</h2>
+                <th:block th:insert="competition/info/__${termsTemplate.value}__ :: terms-and-conditions-content" th:with="hideProcurementLink=${true}"/>
+            </th:block>
+        </div>
+        <!-- terms end  -->
+    </th:block>
 </main>
 </body>
 </html>

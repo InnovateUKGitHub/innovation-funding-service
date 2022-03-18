@@ -20,7 +20,6 @@ Resource         ../../resources/common/Competition_Commons.robot
 ${questionSubTitleInfo}     We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.
 ${surveyMonkeyUrl}          https://www.surveymonkey.co.uk/r/ifsaccount
 ${ediQuestion}              Have you completed the EDI survey?
-${ediQuestionTitle}         Equality, diversity and inclusion
 *** Test Cases ***
 Business opportunity Server-side validations setup questions
     [Documentation]    INFUND-5629 INFUND-5685
@@ -108,25 +107,6 @@ Test Heading: Mark as done
     And the user should see the element          jQuery = dt:contains("Max word count") + dd:contains("150")
     [Teardown]  the user clicks the button/link  link = Back to application
 
-#Equality, diversity and inclusion should display default content
-#    [Documentation]    IFS-7700
-#    When The user clicks the button/link                      jQuery = a:contains("Equality, diversity and inclusion")
-#    Then the user should see EDI question default content
-#
-#Equality, diversity and inclusion: validations
-#    [Documentation]    IFS-7700
-#    [Tags]
-#    Given the user clears predefined text in EDI question
-#    And The user clicks the button/link                        jQuery = button:contains("Done")
-#    Then the user should see the field validation messages
-#    And the user should see the summary validation messages
-#
-#Equality, diversity and inclusion can be removed from application section
-#    [Documentation]    IFS-7700
-#    Given the user clicks the button/link        link = Back to application
-#    When the user clicks the button/link         name = deleteQuestion
-#    Then the user should not see the element     jQuery = a:contains("Equality, diversity and inclusion")
-
 Scope: Sever-side validations assessment questions
     [Documentation]    INFUND-6444
     [Tags]
@@ -207,8 +187,8 @@ User creates a new competition for Application tests
     the user enters text to a text field                    id = openingDateDay    01
     the user enters text to a text field                    id = openingDateMonth    12
     the user enters text to a text field                    id = openingDateYear  ${nextYear}
-    the user selects option from type ahead                 innovationLeadUserId  i  Ian Cooper
-    the user selects option from type ahead                 executiveUserId  j  John Doe
+    the user selects option from type ahead                 innovationLeadUserId  Ian Cooper  Ian Cooper
+    the user selects option from type ahead                 executiveUserId  John Doe  John Doe
     the user clicks the button/link                         jQuery = button:contains("Done")
     the user clicks the button/link                         link = Back to competition details
 
@@ -229,11 +209,3 @@ the user should see the summary validation messages
     the user should see the element     css = [href='#question.title']
     the user should see the element     css = [href='#question.choices[0].text']
     the user should see the element     css = [href='#question.choices[1].text']
-#
-#the user should see EDI question default content
-#    the user should see the element     css = [value="${ediQuestionTitle}"]
-#    the user should see the element     css = [value="${ediQuestion}"]
-#    the user should see the element     css = [href="${surveyMonkeyUrl}"]
-#    the user should see the element     jQuery = p:contains("${questionSubTitleInfo}")
-#    the user should see the element     css = [value="Yes"]
-#    the user should see the element     css = [value="No"]

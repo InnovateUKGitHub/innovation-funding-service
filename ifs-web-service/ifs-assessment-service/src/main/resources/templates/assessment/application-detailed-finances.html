@@ -27,7 +27,10 @@
                             <th scope="col" class="govuk-table__header govuk-table__header--numeric">Total costs</th>
                             <th scope="col" class="govuk-table__header govuk-table__header--numeric">Funding level (%)</th>
                             <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding sought (&pound;)</th>
-                            <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding (&pound;)</th>
+                            <th class="govuk-table__header govuk-table__header--numeric" scope="col">
+                                <th:block th:if="${model.thirdPartyOfgem}">Other funding (&pound;)</th:block>
+                                <th:block th:unless="${model.thirdPartyOfgem}">Other public sector funding (&pound;)</th:block>
+                            </th>
                             <th class="govuk-table__header govuk-table__header--numeric" scope="col">Contribution to project (&pound;)</th>
                         </tr>
                         </thead>

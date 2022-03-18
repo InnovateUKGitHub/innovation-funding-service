@@ -17,6 +17,8 @@ Documentation     IFS-1012 As a comp exec I am able to set Research and Public s
 ...
 ...               IFS-9774 Investigate if its possible to fix AT's failure due to IDP upgrade
 ...
+...               IFS-6782 Enhance non-aid criteria for research applicants
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -42,16 +44,39 @@ Comp Admin Creates Competitions where Research can lead
     Given Logging in and Error Checking                   &{Comp_admin1_credentials}
     Then The competition admin creates a competition for  ${ACADEMIC_TYPE_ID}  ${compResearch}  Research
 
+Applicants can not start a new application when the economic activity is selected as Yes
+    [Documentation]  IFS-6782
+    [Setup]   get competition id and set open date to yesterday         ${compResearch}
+    Given log in as a different user                                    &{collaborator2_credentials}
+    And the user select the competition and starts application          ${compResearch}
+    And the user clicks the button/link                                 link = Apply with a different organisation
+    When the user selects the radio button                              organisationTypeId   2
+    And the user clicks the button/link                                 jQuery = button:contains("Save and continue")
+    And the user confirms economic activity for research organiations   Yes
+    Then the user should see ineligable to start application page
+
+Economic activity confirmation page validations
+    [Documentation]  IFS-6782
+    Given the user clicks the button/link                           link = Back to confirm your eligibility
+    When the user clicks the button/link                            name = research-eligibility-submit
+    Then the user should see a field and summary error              Please select an option to continue.
+    And the user should see economic activity confirmation page
+
+Applicants confirms academic organisations economic activity
+    [Documentation]  IFS-6782
+    When the user clicks the button twice   jQuery = label:contains("No")
+    And the user clicks the button/link     name = research-eligibility-submit
+    Then the user should see the element    jQuery = p:contains("Your organisation must be registered on Je-S before we will consider you to be a research organisation.")
+
 The Applicant is able to apply to the competition once is Open and see the correct Questions
     [Documentation]  IFS-182 IFS-2832  IFS-4046
     [Tags]  HappyPath
-    [Setup]   get competition id and set open date to yesterday  ${compResearch}
-    Given log in as a different user                     &{collaborator2_credentials}
-    When logged in user applies to competition research  ${compResearch}  2
-    Then the user should see the element                 jQuery = li:contains("${customQuestion}")
-    And the user should see the element                  jQuery = li:contains("Scope")
-    And the user should not see the element              jQuery = li:contains("Public description")
-    And the user should not see the element              jQuery = li:contains("Project summary")
+    #[Setup]   get competition id and set open date to yesterday  ${compResearch}
+    When the user search for organisation name on Companies house   Bath  Bath Spa University
+    Then the user should see the element                            jQuery = li:contains("${customQuestion}")
+    And the user should see the element                             jQuery = li:contains("Scope")
+    And the user should not see the element                         jQuery = li:contains("Public description")
+    And the user should not see the element                         jQuery = li:contains("Project summary")
 
 The Applicant completing the application details
     [Documentation]  IFS-1012  IFS-2879  IFS-4046  IFS-5920  IFS-7718
@@ -59,7 +84,6 @@ The Applicant completing the application details
     When the user clicks the button/link                        link = Application details
     Then the user fills in the Application details              ${researchLeadApp}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team                COMPLETE  pete.tom@egg.com
-    #And the applicant marks EDI question as complete
     And the user selects Research category                      Feasibility studies
     And the lead applicant marks every question as complete     Scope
     And the lead applicant marks every question as complete     1. ${customQuestion}
@@ -130,7 +154,6 @@ the user removes some of the Project details questions
     the user clicks the button/link              jQuery = li:contains("Project summary") button:contains("Remove")
     the user should not see the element          jQuery = li:contains("Project summary")
     the user marks each question as complete     Public description
-    #the user marks each question as complete     Equality, diversity and inclusion
     the user marks each question as complete     Scope
     the user clicks the button/link              link = Public description
     the user clicks the button/link              css = button[name = "deleteQuestion"]
@@ -181,6 +204,17 @@ the internal user can see that the Generic competition has only one Application 
     the user is able to configure the new question    ${customQuestion}
     the user should be able to see the read only view of question correctly  ${customQuestion}
     the user clicks the button/link                   link = Back to competition details
+
+the user should see ineligable to start application page
+    the user should see the element     jQuery = h1:contains("You are not eligible to start an application")
+    the user should see the element     css = [href="/competition/${competitionId}/overview"]
+    the user should see the element     jQuery = a:contains("competition brief")
+    the user should see the element     jQuery = p:contains("The way you intend to exploit the outputs from your project does not match the eligibility criteria for research applicants")
+
+the user should see economic activity confirmation page
+    the user should see the element     jQuery = h1:contains("Confirm your eligibility")
+    the user should see the element     jQuery = p:contains("Organisations whose main activity is commercial or economic")
+    the user should see the element     jQuery = span:contains("Do you plan to exploit the outputs from your project commercially or economically to gain a selective advantage in the market?")
 
 Custom suite teardown
     Close browser and delete emails

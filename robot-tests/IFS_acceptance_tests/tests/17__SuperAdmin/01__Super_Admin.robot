@@ -85,11 +85,11 @@ Super admin user cannot reject a document once the project is completed
 
 Super admin can edit application questions when the competition is open
     [Documentation]  IFS-9996
-    Given the user navigates to the page                      ${SERVER}/management/competition/setup/${liveCompetitionID}/section/application/landing-page
-    And the user clicks the button/link                       jQuery = a:contains("Adding value")
-    When the user clicks the button/link                      jQuery = a:contains("Edit this question")
-    Then the user enters text to a text field                 jQuery = label[for="question.subTitle"] +* .editor       Business opportunity guidance
-    And the user clicks the button/link                       jQuery = button:contains("Done")
+    Given the user navigates to the page        ${SERVER}/management/competition/setup/${liveCompetitionID}/section/application/landing-page
+    And the user clicks the button/link         jQuery = a:contains("Adding value")
+    When the user clicks the button/link        jQuery = a:contains("Edit this question")
+    Then the user enters text into subtitle     jQuery = label[for="question.subTitle"] +* .editor       Business opportunity guidance
+    And the user clicks the button/link         jQuery = button:contains("Done")
 
 *** Keywords ***
 Custom Suite Setup
@@ -102,6 +102,14 @@ Custom Suite Setup
 Custom suite teardown
     Close browser and delete emails
     Disconnect from database
+
+the user enters text into subtitle
+    [Arguments]  ${TEXT_FIELD}    ${TEXT_INPUT}
+    Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
+    Clear Element Text    ${TEXT_FIELD}
+    Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
+    Set Focus To Element    link=GOV.UK
+    Wait for autosave
 
 assessor edit the assessment question
     The user selects the option from the drop-down menu     10    css = .assessor-question-score
@@ -160,4 +168,3 @@ compAdmin user approves the GOL
     the user clicks the button/link      jQuery = button:contains("Submit")
     the user clicks the button/link      jQuery = button[type = "submit"]:contains("Accept signed grant offer letter")
     the user should see the element      jQuery = .success-alert h2:contains("These documents have been approved.")
-

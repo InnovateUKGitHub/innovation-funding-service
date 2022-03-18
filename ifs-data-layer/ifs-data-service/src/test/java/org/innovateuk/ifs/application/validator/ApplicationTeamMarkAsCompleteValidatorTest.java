@@ -2,21 +2,19 @@ package org.innovateuk.ifs.application.validator;
 
 import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
 import org.innovateuk.ifs.invite.transactional.ApplicationKtaInviteService;
-import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.EDIStatus;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Title;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -30,8 +28,6 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.util.Lists.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
@@ -39,7 +35,6 @@ import static org.innovateuk.ifs.invite.builder.ApplicationKtaInviteResourceBuil
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -54,10 +49,17 @@ public class ApplicationTeamMarkAsCompleteValidatorTest {
     @Mock
     private ApplicationInviteService applicationInviteService;
 
+
     @Mock
     private ApplicationKtaInviteService applicationKtaInviteService;
-
+        @Mock
+        private CompetitionService competitionServiceMock;
     @Test
+
+    @Before
+    public void setup(){
+        when(competitionServiceMock.hasEDIQuestion(anyLong())).thenReturn(serviceSuccess(Boolean.FALSE));
+    }
     public void rejectWithUnopenedInvite() {
         // given
         Application application = ApplicationBuilder.newApplication().withCompetition(newCompetition().build()).build();

@@ -72,7 +72,6 @@ public class FinanceSummaryTableViewModelPopulator {
     @Autowired
     private FinanceLinksUtil financeLinksUtil;
 
-
     public FinanceSummaryTableViewModel populateSingleOrganisation(ApplicationResource application, CompetitionResource competition, OrganisationResource organisation) {
         List<OrganisationResource> organisations;
         boolean includeOrganisationNames;
@@ -102,7 +101,8 @@ public class FinanceSummaryTableViewModelPopulator {
                 true,
                 application.isCollaborativeProject(),
                 null,
-                includeOrganisationNames);
+                includeOrganisationNames,
+                competition.isThirdPartyOfgem());
     }
 
     public FinanceSummaryTableViewModel populateAllOrganisations(ApplicationResource application, CompetitionResource competition, List<ProcessRoleResource> processRoles, UserResource user) {
@@ -149,7 +149,8 @@ public class FinanceSummaryTableViewModelPopulator {
                 readonly,
                 application.isCollaborativeProject(),
                 maximumFundingSought,
-                true);
+                true,
+                competition.isThirdPartyOfgem());
     }
 
     private Optional<ProcessRoleResource> getCurrentUsersRole(List<ProcessRoleResource> processRoles, UserResource user) {
