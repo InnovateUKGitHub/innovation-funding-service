@@ -1,4 +1,5 @@
 ## Redis Config -  defaults not set via env variables (k8s config-map)
+## AT and custom
 spring:
   cache:
     type: REDIS

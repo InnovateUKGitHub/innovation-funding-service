@@ -1,4 +1,5 @@
-## Redis Config -  defaults not set via env variables (k8s config-map)
+## Redis Config -  defaults not set via env variables (k8s config-map) 
+## (SYSINT, PERF, UAT, DEMO and PROD)
 spring:
   cache:
     type: REDIS
