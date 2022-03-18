@@ -94,10 +94,8 @@
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Project duration</th>
                     <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total costs</th>
-                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding level (&percnt;)
-                    </th>
-                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding sought (&pound;)
-                    </th>
+                    <th class="govuk-table__header govuk-table__header--numeric" scope="col" th:text="${summaryModel.isFundingLevelFirst()} ? 'Funding level (&percnt;)' : 'Funding sought (&pound;)'">Funding level (&percnt;)</th>
+                    <th class="govuk-table__header govuk-table__header--numeric" scope="col" th:text="${summaryModel.isFundingSoughtFirst()} ? 'Funding level (&percnt;)' : 'Funding sought (&pound;)'">Funding sought (&pound;)</th>
                     <th:block th:unless="${summaryModel.usingJesFinances}">
                         <th:block th:unless="${summaryModel.loanCompetition}">
                             <th class="govuk-table__header govuk-table__header--numeric" scope="col">
@@ -133,14 +131,16 @@
                         200,123
                     </th:block>
                     </td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric"
-                        th:text="${#numbers.formatDecimal(summaryModel.eligibilityOverview.percentageGrant,1,'DEFAULT',2,'DEFAULT')+'%'}">
-                        20&percnt;
-                    </td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric"
-                        th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.fundingSought,1,'DEFAULT')}">
-                        60,271
-                    </td>
+                    <th:block th:with="fundingLevel=|${#numbers.formatDecimal(summaryModel.eligibilityOverview.percentageGrant,1,'DEFAULT',2,'DEFAULT')}%|, fundingSought=${#numbers.formatInteger(summaryModel.eligibilityOverview.fundingSought,1,'DEFAULT')}">
+                        <td class="govuk-table__cell govuk-table__cell--numeric"
+                            th:text="${summaryModel.isFundingLevelFirst()} ? ${fundingLevel} : ${fundingSought}">
+                            0&percnt;
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"
+                            th:text="${summaryModel.isFundingSoughtFirst()} ? ${fundingLevel} : ${fundingSought}">
+                            0
+                        </td>
+                    </th:block>
                     <th:block th:unless="${summaryModel.usingJesFinances}">
                         <td class="govuk-table__cell govuk-table__cell--numeric"
                             th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.otherPublicSectorFunding,1,'DEFAULT')}">
