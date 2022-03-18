@@ -94,7 +94,6 @@ the user should not see any references to assessment and release feedback on clo
     [Documentation]  IFS-11486
     When the user navigates to the page   ${server}/management/competition/${competitionId}/always-open
     Then the user should see the element  jQuery = li:contains("A submission date as been set and is now in the past.")
-    And the user should see the element   jQuery = li:contains("All eligible applications have  their funding decisions entered.")
     And the user should see the element   jQuery = li:contains("All funding decision notifications have been sent.")
     And the user should see the element   jQuery = p:contains("Once this competition is closed you will no longer be able to add funding decisions.")
     And the element should be disabled    jQuery = button:contains("Close competition")
@@ -179,7 +178,7 @@ the internal team mark the application as successful / unsuccessful
 
 the internal team notifies all applicants
     [Arguments]  ${ApplicationID}
-    the user clicks the button/link                      link = Send notification and release feedback
+    the user clicks the button/link                      link = Send notification
     the user clicks the button/link                      id = app-row-${ApplicationID}
     the user clicks the button/link                      id = write-and-send-email
     the user clicks the button/link                      id = send-email-to-all-applicants
