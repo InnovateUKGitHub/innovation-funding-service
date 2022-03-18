@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype;
 
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -15,6 +16,7 @@ import java.util.List;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.YOUR_FINANCE;
 import static org.junit.Assert.*;
@@ -43,6 +45,7 @@ public class ThirdPartyTemplateTest {
     @Test
     public void setGolTemplate() {
         Competition competition = newCompetition()
+                .withCompetitionType(newCompetitionType().withName("Ofgem").build())
                 .build();
 
         when(commonBuilders.getGolTemplate(any(Competition.class)))
@@ -56,6 +59,7 @@ public class ThirdPartyTemplateTest {
     @Test
     public void initialiseFinanceTypes() {
         Competition competition = newCompetition()
+                .withCompetitionType(newCompetitionType().withName("Ofgem").build())
                 .build();
 
         List<FinanceRowType> expectedFinanceTypes =
