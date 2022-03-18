@@ -79,9 +79,6 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     @Value("${ifs.ktp.phase2.enabled}")
     private boolean ktpPhase2Enabled;
 
-    @Value("${ifs.thirdparty.ofgem.enabled}")
-    private boolean thirdPartyOfgemEnabled;
-
     @Autowired
     private FinanceCheckService financeCheckService;
 
@@ -173,8 +170,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                         competition.get().isOverheadsAlwaysTwenty(),
                         competition.get().getFundingType() == FundingType.KTP,
                         ktpPhase2Enabled,
-                        canEditProjectCosts,
-                        thirdPartyOfgemEnabled));
+                        canEditProjectCosts));
                 if (form == null) {
                     future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId, organisation.get().getId())));
                 }

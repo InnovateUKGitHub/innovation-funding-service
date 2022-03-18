@@ -39,9 +39,6 @@ public class YourProjectCostsViewModelPopulator {
     @Value("${ifs.ktp.phase2.enabled}")
     private boolean ktpPhase2Enabled;
 
-    @Value("${ifs.thirdparty.ofgem.enabled}")
-    private boolean thirdPartyOfgemEnabled;
-
     @Autowired
     private CompetitionRestService competitionRestService;
 
@@ -117,7 +114,6 @@ public class YourProjectCostsViewModelPopulator {
                     getGrantClaimPercentage(application.getId(), organisation.getId()),
                     getThirdPartyProjectCostGuidanceLink(competition),
                     competition.isOfGemCompetition(),
-                    thirdPartyOfgemEnabled,
                     competition.isThirdPartyOfgem());
         }
     }
@@ -167,7 +163,6 @@ public class YourProjectCostsViewModelPopulator {
                 getGrantClaimPercentage(application.getId(), organisation.getId()),
                 getThirdPartyProjectCostGuidanceLink(competition),
                 competition.isOfGemCompetition(),
-                thirdPartyOfgemEnabled,
                 competition.isThirdPartyOfgem());
     }
 
