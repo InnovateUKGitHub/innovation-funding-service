@@ -660,8 +660,8 @@ the user sees Innovate Uk approved document banner
 the MO navigates to page
     log in as a different user        &{ifs_admin_user_credentials}
     the user navigates to the page    ${server}/project-setup-management/competition/${PS_Competition_Id}/status/all
-    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery = th:contains("${Grade_Crossing_Application_Title}") ~td:contains("Assign")
-    Run Keyword if  '${status}' == 'PASS'   Assign a MO to the project and login as MO
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery = th:contains("${Grade_Crossing_Application_Title}") ~td:contains("Assigned")
+    Run Keyword if  '${status}' == 'FAIL'   Assign a MO to the project and login as MO
     log in as a different user              &{monitoring_officer_one_credentials}
     the user navigates to the page          ${server}/project-setup/project/${Grade_Crossing_Project_Id}
 

@@ -204,7 +204,7 @@ the application list is correct before changes
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(1):contains("${Park_living}")
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(2):contains("Park living")
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(3):contains("The Best Juggling Company")
-    the user should see the element    jQuery = tr:nth-child(1) td:nth-child(4):contains("1")
+    the user should see the element    jQuery = tr:nth-child(1) td:nth-child(4):contains("2")
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(5):contains("1")
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(6):contains("0")
 
@@ -221,7 +221,11 @@ the previously assigned list is correct
 
 the assessor list is correct before changes
     the user clicks the button/link     link = 21 to 40
-    the user should see the element     jQuery = td:contains("Paul Plum") ~ td:contains("Town Planning, Construction") ~ td:contains("5") ~ td:contains("5") ~ td:contains("2") ~ td:contains("1") ~ td:contains("View progress")
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element   jQuery = td:contains("Paul Plum") ~ td:contains("Town Planning, Construction") ~ td:contains("6") ~ td:contains("6")
+    #this will be running in cloud
+    Run Keyword If  '${status}' == 'PASS'  the user should see the element     jQuery = td:contains("Paul Plum") ~ td:contains("Town Planning, Construction") ~ td:contains("6") ~ td:contains("6") ~ td:contains("2") ~ td:contains("1") ~ td:contains("View progress")
+    # this is local setup
+    ...                             ELSE   the user should see the element     jQuery = td:contains("Paul Plum") ~ td:contains("Town Planning, Construction") ~ td:contains("7") ~ td:contains("7") ~ td:contains("3") ~ td:contains("1") ~ td:contains("View progress")
 
 the user accepts the application
     the user clicks the button/link       link = ${IN_ASSESSMENT_COMPETITION_NAME}
