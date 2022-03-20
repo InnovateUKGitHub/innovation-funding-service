@@ -20,8 +20,6 @@ Resource          ../../resources/common/PS_Common.robot
 *** Test Cases ***
 Monitoring officer can filter in-setup projects only
     [Documentation]  IFS-9576
-    #Given the user selects the checkbox                         projectInSetup
-    #When the user clicks the button/link                        id = update-documents-results-button
     Given the user logs-in in new browser                       orville.gibbs@gmail.com  ${short_password}
     When the user clicks the project setup tile if displayed
     And wait until page contains element without screenshots    id = keywordSearch   5s

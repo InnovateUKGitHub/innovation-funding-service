@@ -241,8 +241,6 @@ the user should see details on assessors progress page
     the user should see the element    jQuery = h2:contains("Maureen Moore")
     the user should see the element    jQuery = h4:contains("Innovation area") ~ ul li:contains("Digital manufacturing")
     the user should see the element    jQuery = h4:contains("Type") ~ span:contains("Business")
-#    the user should see the element    jQuery = h2:contains("Assigned") + div td:contains("103") + td:contains("Intelligent water system") + td:contains("Mo Juggling Mo Problems Ltd") + td:contains("3")
-#    the user should see the element    jQuery = h2:contains("Assigned") + div td:contains("103") ~ td:contains("Yes") + td:contains("Yes") + td:contains(" ")
     the user should see the element    jQuery = h2:contains("Assigned") + div td:contains("${Intelligent_water}") + td:contains("Intelligent water system") + td:contains("Mo Juggling Mo Problems Ltd") + td:contains("3")
     the user should see the element    jQuery = h2:contains("Assigned") + div td:contains("${Intelligent_water}") ~ td:contains("Yes") + td:contains("Yes") + td:contains(" ")
 

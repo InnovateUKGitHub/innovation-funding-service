@@ -24,6 +24,12 @@ Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/Applicant_Commons.robot
 
+*** Variables ***
+${inAssessmentComp}     Sustainable living models for the present
+${inAssessmentCompId}   ${competition_ids["${inAssessmentComp}"]}
+&{assessorcredentials}  email=clayton.edwards@gmail.com  password=${short_password}
+
+
 *** Test Cases ***
 User cannot accept/reject an invite to an application that has been withdrawn
     [Documentation]    INFUND-4797
@@ -46,31 +52,30 @@ User can view the competition brief
 
 Accept an application for assessment
     [Documentation]    INFUND-1180  INFUND-4128
-    Given the user should see the element                     jQuery = .in-progress li:contains("Low power air purification systems"):contains("Pending")
+    [Setup]    Log in as a different user                   &{assessorcredentials}
+    Given the user navigates to the page                    ${server}/assessment/assessor/dashboard/competition/${inAssessmentCompId}
+    And the user should see the element                     jQuery = .in-progress li:contains("High power air purification systems"):contains("Pending")
     When the user accepts the invitation
-    Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
-    And the user should see the element                       jQuery = .in-progress li:contains("Low power air purification systems"):contains("Accepted")
+    Then the user should see the element                    jQuery = .in-progress li:contains("High power air purification systems"):contains("Accepted")
 
 Reject an application for assessment
     [Documentation]    INFUND-1180  INFUND-4128  INFUND-6358  INFUND-3726
-    [Setup]    Log in as a different user                &{assessor_credentials}
-    Given The user clicks the button/link                link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user should see the element                  jQuery = .in-progress li:nth-child(1):contains("Park living"):contains("Pending")
+    Given the user should see the element                  jQuery = .in-progress li:nth-child(1):contains("Living park"):contains("Pending")
     When the user rejects the invitation
     Then the application for assessment should be removed
 
 Check the comp admin see the assessor has rejected the application
     [Documentation]  IFS-396
     [Setup]    Log in as a different user  &{Comp_admin1_credentials}
-    Given the user clicks the button/link  link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    Given the user clicks the button/link  link = ${inAssessmentComp}
     Then comp admin checks the assessor rejected the application for assessment
 
 Comp admin can see the application is rejected on manage assessor page
     [Documentation]  IFS-396
-    [Setup]  the user navigates to the page                     ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}
+    [Setup]  the user navigates to the page                     ${server}/management/assessment/competition/${inAssessmentCompId}
     Given the user clicks the button/link                       link = Manage assessors
-    And the user search for assessor
-    When the user clicks the button/link in the paginated list  jQuery = td:contains("Paul Plum") ~ td a:contains("View progress")
+    #And the user search for assessor
+    When the user clicks the button/link in the paginated list  jQuery = td:contains("Clayton Edwards") ~ td a:contains("View progress")
     Then the user should see the element                        jQuery = td:contains("Not my area of expertise")
     And the user should see the element                         jQuery = td:contains("Unable to assess the application as i'm on holiday.")
 
@@ -89,7 +94,7 @@ the assessor fills all fields with valid inputs
     The user enters text to a text field                  id = rejectComment    Unable to assess the application as i'm on holiday.
 
 the application for assessment should be removed
-    the user should not see the element    link = Park living
+    the user should not see the element    link = Living park
     the user should not see the element    css = .assessment-submit-checkbox
 
 The order of the applications should be correct according to the status
@@ -113,7 +118,7 @@ Custom suite teardown
     The user closes the browser
 
 the user accepts the invitation
-    the user clicks the button/link       jQuery = .in-progress li:contains("Low") a:contains("Accept or reject")
+    the user clicks the button/link       jQuery = .in-progress li:contains("High") a:contains("Accept or reject")
     the user should see the element       jQuery = h1:contains("Accept application")
     the user selects the radio button     assessmentAccept  true
     the user clicks the button/link       jQuery = button:contains("Confirm")
@@ -129,9 +134,7 @@ the user rejects the invitation
     the user clicks the button/link                  jQuery = .govuk-button:contains("Confirm")
 
 comp admin checks the assessor rejected the application for assessment
-#    the user clicks the button/link    jQuery = a:contains("Manage assessments")
-#    the user clicks the button/link    jQuery = a:contains("Manage applications")
-    the user navigates to the page     ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}/applications/period?
+    the user navigates to the page     ${server}/management/assessment/competition/${inAssessmentCompId}/applications/period?
     the user clicks the button/link    jQuery = tr:nth-child(1) a:contains("View progress")
     the user should see the element    jQuery = h2:contains("Rejected (1)")
     the user should see the element    jQuery = .assessors-rejected td:contains("Not my area of expertise")
@@ -143,8 +146,3 @@ the user should see competition details
     the user should see the element    jQuery = dt:contains("Accept applications deadline") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_TIME_DATE_LONG}")
     the user should see the element    jQuery = dt:contains("Submit applications deadline:") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_DATE_LONG}")
     the user should see the element    jQuery = h2:contains("Applications for assessment")
-
-the user search for assessor
-    the user enters text to a text field    name = assessorNameFilter  paul plum
-    the user clicks the button/link         jQuery = button:contains("Filter")
-
