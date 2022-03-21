@@ -14,8 +14,10 @@ import org.innovateuk.ifs.user.resource.AffiliationListResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.innovateuk.ifs.viewmodel.AssessorProfileDeclarationViewModel;
 import org.innovateuk.ifs.viewmodel.AssessorProfileDetailsViewModel;
+import org.innovateuk.ifs.viewmodel.AssessorProfileSkillsViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -24,10 +26,14 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.Boolean.TRUE;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -37,10 +43,13 @@ import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffi
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.AffiliationType.*;
+import static org.innovateuk.ifs.user.resource.AffiliationType.FAMILY_FINANCIAL;
+import static org.innovateuk.ifs.user.resource.AffiliationType.PERSONAL_FINANCIAL;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -78,6 +87,53 @@ public class AssessorProfileControllerTest extends BaseControllerMockMVCTest<Ass
                 profileRestService,
                 assessorRestService
                 );
+    }
+
+    @Test
+    public void getSkills() throws Exception {
+        BusinessType businessType = BUSINESS;
+        UserResource user = newUserResource().build();
+        String skillAreas = "skill1 skill2 skill3";
+
+        List<InnovationAreaResource> innovationAreaResources = CollectionFunctions.combineLists(
+                setUpInnovationAreasForSector("Emerging and enabling",
+                        "Data", "Cyber Security"),
+                setUpInnovationAreasForSector("Health and life sciences",
+                        "Biosciences", "Independent living and wellbeing"));
+        UserResource userResource = setUpProfileSkills(businessType, skillAreas, innovationAreaResources);
+
+        Map<String, List<String>> expectedInnovationAreas = new LinkedHashMap<>();
+        expectedInnovationAreas.put("Emerging and enabling", asList("Data", "Cyber Security"));
+        expectedInnovationAreas.put("Health and life sciences", asList("Biosciences", "Independent living and wellbeing"));
+
+        ProfileResource profile = newProfileResource()
+                .withBusinessType(businessType)
+                .withInnovationAreas(innovationAreaResources)
+                .withSkillsAreas(skillAreas)
+                .withAddress(newAddressResource().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build())
+                .build();
+
+        AssessorProfileDetailsViewModel assessorProfileDetailsViewModel = new AssessorProfileDetailsViewModel(user, profile);
+
+        AssessorProfileResource assessorProfileResource = newAssessorProfileResource()
+                .withUser(user)
+                .withProfile(profile)
+                .build();
+
+        when(assessorRestService.getAssessorProfile(anyLong())).thenReturn(restSuccess(assessorProfileResource));
+        when(assessorProfileDetailsModelPopulator.populateModel(user, profile)).thenReturn(assessorProfileDetailsViewModel);
+
+        MvcResult result = mockMvc.perform(get("/profile/details/skills"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("profile/skills"))
+                .andReturn();
+
+        AssessorProfileSkillsViewModel model = (AssessorProfileSkillsViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals(expectedInnovationAreas, model.getInnovationAreas());
+        assertEquals(skillAreas, model.getSkillAreas());
+
+        verify(assessorRestService, only()).getAssessorProfile(userResource.getId());
     }
 
     @Test

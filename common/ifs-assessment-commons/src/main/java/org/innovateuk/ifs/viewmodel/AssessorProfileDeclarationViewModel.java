@@ -25,13 +25,6 @@ public class AssessorProfileDeclarationViewModel {
     private final EDIStatus ediStatus;
     private final ZonedDateTime ediReviewDate;
     private String ediUpdateUrl;
-    public EDIStatus getEdiStatus() {
-        return ediStatus;
-    }
-
-    public String getEdiUpdateUrl() {
-        return ediUpdateUrl;
-    }
 
     public AssessorProfileDeclarationViewModel(CompetitionResource competition,
                                                AssessorProfileDetailsViewModel assessorProfileDetailsViewModel,
@@ -60,8 +53,8 @@ public class AssessorProfileDeclarationViewModel {
         this.familyFinancialInterests = familyFinancialInterests;
         this.compAdminUser = compAdminUser;
         this.ediUpdateEnabled = isEDIUpdateEnabled;
-        this.ediStatus=ediStatus;
-        this.ediReviewDate=ediReviewDate;
+        this.ediStatus = ediStatus;
+        this.ediReviewDate = ediReviewDate;
         this.ediUpdateUrl = ediUpdateUrl;
     }
 
@@ -116,4 +109,13 @@ public class AssessorProfileDeclarationViewModel {
     public boolean isEdiUpdateEnabled() {
         return ediUpdateEnabled;
     }
+
+    public EDIStatus getEdiStatus() {
+        return ediStatus;
+    }
+
+    public String getEdiUpdateUrl() {
+        return ediUpdateUrl;
+    }
+
 }
