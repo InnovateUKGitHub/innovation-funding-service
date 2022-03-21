@@ -259,8 +259,6 @@ public class YourProjectCostsAutosaver {
             case "rate":
                 cost.setRate(new BigDecimal(value));
                 break;
-            case "thirdPartyOfgem":
-                cost.setThirdPartyOfgem(BooleanUtils.toBoolean(value));
             default:
                 throw new IFSRuntimeException(format("Auto save labour field not handled %s", rowField), emptyList());
         }

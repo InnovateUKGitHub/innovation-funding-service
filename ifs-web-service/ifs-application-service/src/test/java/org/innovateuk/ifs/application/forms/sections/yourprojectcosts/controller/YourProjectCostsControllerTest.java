@@ -87,7 +87,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     private CompetitionRestService competitionRestService;
 
     @Test
-    public void d() throws Exception {
+    public void viewYourProjectCosts() throws Exception {
         YourProjectCostsViewModel viewModel = mockViewModel();
 
         OrganisationResource organisationResource = newOrganisationResource()
