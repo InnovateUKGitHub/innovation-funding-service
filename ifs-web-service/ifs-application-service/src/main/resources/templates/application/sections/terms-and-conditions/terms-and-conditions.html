@@ -59,7 +59,7 @@
                 </div>
                 <div th:unless="${model.collaborativeApplication}" class="message-alert govuk-!-margin-bottom-6">
                     <p class="govuk-body"
-                       th:text ="${model.isThirdPartyProcurementCompetition} ? 'You must read and agree to the ${thirdPartyLabel} by ticking the box at the end of the page.'
+                       th:text ="${model.isThirdPartyProcurementCompetition} ? 'You must read and agree to the ' + ${thirdPartyLabel} + ' by ticking the box at the end of the page.'
                                         : 'You must read and agree to the terms and conditions by ticking the box at the end of the page.'">
                     </p>
                 </div>
