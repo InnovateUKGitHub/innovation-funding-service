@@ -1960,7 +1960,8 @@
                         should not be included as an 'other cost’. Patent filing costs of new IP relating to the project are
                         limited to £7,500 for SME applicants only.
                     </th:block>
-                    Please provide estimates of other costs that do not fit within any other cost headings.
+                    <th:block th:if="${model.isThirdPartyOfgem()}">Please provide estimates of any other costs that do not fit within the cost headings.</th:block>
+                    <th:block th:unless="${model.isThirdPartyOfgem()}">Please provide estimates of other costs that do not fit within any other cost headings.</th:block>
                 </p>
                 <p class="govuk-body" th:if="${model.isProcurementCompetition()}">Provide estimates of other costs that do not fall under our standard cost headings.</p>
                 <p class="govuk-body" th:if="${model.isKtpCompetition()}">Do not complete this section unless your request has been approved by the programme manager.</p>
