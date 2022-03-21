@@ -1531,11 +1531,16 @@
                     </th:block>
                     <p>Subcontracting associate companies should be charged at cost.</p>
                     <th:block th:unless="${model.isOfGemCompetition()}">
-                        <p><span th:if="${!model.isProcurementCompetition()}">Where possible you should select a UK based contractor. </span>You
-                            should name the subcontractor (<span th:if="${!model.isProcurementCompetition()}">where</span>
-                            <span th:if="${model.isProcurementCompetition()}">if</span> known) and describe what they will be doing. You should also state where the work will be undertaken.
+                        <p><span th:if="${!model.isProcurementCompetition()}">Where possible you should select a UK based contractor. </span>
+                            You should name the subcontractor (
+                            <span th:if="${!model.isProcurementCompetition()}">where</span>
+                            <span th:if="${model.isProcurementCompetition()}">if</span>
+                            known) and describe what they will be doing. You should also state where the work will be
+                            <span th:if="${model.isThirdPartyOfgem()}">carried out.</span>
+                            <span th:unless="${model.isThirdPartyOfgem()}">undertaken.</span>
                             <span th:unless="${model.isProcurementCompetition() or model.isThirdPartyOfgem()}">
-                                We will look at the size of this contribution when assessing your eligibility and level of support.</span>
+                                We will look at the size of this contribution when assessing your eligibility and level of support.
+                            </span>
                         </p>
                     </th:block>
                 </div>
