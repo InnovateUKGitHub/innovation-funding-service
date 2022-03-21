@@ -23,7 +23,8 @@ public enum QuestionSetupType {
     /* KTP */
     KTP_ASSESSMENT("Ktp Assessment", FORM_INPUTS),
     /* Loan */
-    LOAN_BUSINESS_AND_FINANCIAL_INFORMATION("Business and financial information", FORM_INPUTS);
+    LOAN_BUSINESS_AND_FINANCIAL_INFORMATION("Business and financial information", FORM_INPUTS),
+    HEUKAR_PROJECT_LOCATION("Project location", FORM_INPUTS);
 
 
     private String shortName;

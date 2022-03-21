@@ -9,11 +9,6 @@ import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.project.core.ProjectParticipantRole;
-import org.innovateuk.ifs.supporter.resource.AssessorDashboardState;
-import org.innovateuk.ifs.supporter.resource.SupporterDashboardCompetitionResource;
-import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.resource.search.*;
@@ -25,12 +20,15 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.granttransfer.resource.EuActionTypeResource;
+import org.innovateuk.ifs.heukar.resource.ApplicationHeukarLocationResource;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
 import org.innovateuk.ifs.interview.resource.InterviewResource;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
@@ -38,6 +36,9 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
+import org.innovateuk.ifs.supporter.resource.AssessorDashboardState;
+import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
+import org.innovateuk.ifs.supporter.resource.SupporterDashboardCompetitionResource;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.*;
@@ -407,5 +408,9 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<OrganisationAddressResource>> organisationAddressResourceListType() {
         return new ParameterizedTypeReference<List<OrganisationAddressResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<ApplicationHeukarLocationResource>> applicationHeukarLocationResourceListType() {
+        return new ParameterizedTypeReference<List<ApplicationHeukarLocationResource>>() {};
     }
 }
