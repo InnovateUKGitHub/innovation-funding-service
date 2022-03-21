@@ -194,14 +194,14 @@ internal user uploads the GOL
     the user uploads the file          grantOfferLetter  ${gol_pdf}
     the user should see the element    jQuery = a:contains("GOL_template.pdf (opens in a new window)")
     #horrible hack but we need to wait for virus scanning
-    sleep  5s
+    sleep  10s
 
 internal user uploads the Annex
     [Arguments]  ${projectID}
     the user uploads the file          annex  ${valid_pdf}
     the user should see the element    jQuery = a:contains("testing.pdf (opens in a new window)")
     #horrible hack but we need to wait for virus scanning
-    sleep  5s
+    sleep  10s
 
 internal user sends letter to project team
     the user selects the checkbox      confirmation
