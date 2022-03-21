@@ -69,9 +69,9 @@ public class ThirdPartyTemplateTest {
                         SUBCONTRACTING_COSTS,
                         TRAVEL,
                         OTHER_COSTS,
-                        FINANCE,
+                        GRANT_CLAIM_AMOUNT,
                         OTHER_FUNDING,
-                        GRANT_CLAIM_AMOUNT);
+                        YOUR_FINANCE);
 
         when(commonBuilders.saveFinanceRows(any(Competition.class), Mockito.anyList()))
                 .thenReturn(competition);
