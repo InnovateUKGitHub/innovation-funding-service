@@ -46,31 +46,14 @@ spec:
             timeoutSeconds: 5
             successThreshold: 1
             failureThreshold: 1
+          envFrom:
+            - configMapRef:
+                name: web-config
           env:
-              - name: IFS_WEB_SYSTEM_USER_UID
-                valueFrom:
-                  configMapKeyRef:
-                    name: web-config
-                    key: IFS_WEB_SYSTEM_USER_UID
-              - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
-                valueFrom:
-                  configMapKeyRef:
-                    name: web-config
-                    key: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
-              - name: SPRING_APPLICATION_JSON
-                valueFrom:
-                  configMapKeyRef:
-                    name: web-config
-                    key: SPRING_APPLICATION_JSON
-              - name: IFS_WEB_BASEURL
-                valueFrom:
-                  configMapKeyRef:
-                    name: web-config
-                    key: IFS_WEB_BASEURL
-              - name: JAVA_TOOL_OPTIONS
-                value: -Xms400m -Xmx400m -javaagent:/newrelic.jar
-              - name: NEW_RELIC_APP_NAME
-                value: "ifs-survey-service"
+            - name: JAVA_TOOL_OPTIONS
+              value: -Xms400m -Xmx400m -javaagent:/newrelic.jar
+            - name: NEW_RELIC_APP_NAME
+              value: "ifs-survey-service"
           ports:
             - containerPort: 8080
           resources:

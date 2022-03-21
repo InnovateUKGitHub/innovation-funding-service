@@ -46,47 +46,12 @@ spec:
             timeoutSeconds: 5
             successThreshold: 1
             failureThreshold: 1
+          envFrom:
+            - configMapRef:
+                name: web-config
+            - configMapRef:
+                name: feature-toggle-config
           env:
-            - name: SPRING_APPLICATION_JSON
-              valueFrom:
-                configMapKeyRef:
-                  name: web-config
-                  key: SPRING_APPLICATION_JSON
-            - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
-              valueFrom:
-                configMapKeyRef:
-                  name: web-config
-                  key: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
-            - name: IFS_WEB_SYSTEM_USER_UID
-              valueFrom:
-                configMapKeyRef:
-                  name: web-config
-                  key: IFS_WEB_SYSTEM_USER_UID
-            - name: IFS_SUBSIDY_CONTROL_NORTHERN_IRELAND_ENABLED
-              valueFrom:
-                configMapKeyRef:
-                  name: feature-toggle-config
-                  key: IFS_SUBSIDY_CONTROL_NORTHERN_IRELAND_ENABLED
-            - name: IFS_LOAN_PARTB_ENABLED
-              valueFrom:
-                configMapKeyRef:
-                  name: feature-toggle-config
-                  key: IFS_LOAN_PARTB_ENABLED
-            - name: IFS_KTP_PHASE2_ENABLED
-              valueFrom:
-                configMapKeyRef:
-                  name: feature-toggle-config
-                  key: IFS_KTP_PHASE2_ENABLED
-            - name: IFS_EDI_UPDATE_ENABLED
-              valueFrom:
-                configMapKeyRef:
-                  name: feature-toggle-config
-                  key: IFS_EDI_UPDATE_ENABLED
-            - name: IFS_WEB_BASEURL
-              valueFrom:
-                configMapKeyRef:
-                  name: web-config
-                  key: IFS_WEB_BASEURL
             - name: NEW_RELIC_APP_NAME
               value: "ifs-front-door-service"
             - name: JAVA_TOOL_OPTIONS

@@ -1,0 +1,6 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: custom
+
+bases:
+  - ../../../base

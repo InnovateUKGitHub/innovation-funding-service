@@ -55,17 +55,16 @@ spec:
             timeoutSeconds: 10
             failureThreshold: 5
           imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: ldap-config
+            - configMapRef:
+                name: shibboleth-config
+            - configMapRef:
+                name: web-config
+            - configMapRef:
+                name: idp-config
           env:
-            - name: SP_DOMAIN
-              valueFrom:
-                configMapKeyRef:
-                  name: shibboleth-config
-                  key: SP_DOMAIN
-            - name: IDP_DOMAIN
-              valueFrom:
-                configMapKeyRef:
-                  name: shibboleth-config
-                  key: IDP_DOMAIN
             - name: JAVA_TOOL_OPTIONS
               value: -Xms384M -Xmx768M -javaagent:/newrelic.jar
             - name: NEW_RELIC_APP_NAME
@@ -74,76 +73,6 @@ spec:
               value: "9443"
             - name: HTTP_PORT
               value: "9080"
-            - name: MEMCACHE_ENDPOINT
-              valueFrom:
-                configMapKeyRef:
-                  name: shibboleth-config
-                  key: MEMCACHE_ENDPOINT
-            - name: LDAP_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: ldap-config
-                  key: LDAP_URL
-            - name: LDAP_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: ldap-config
-                  key: IDP_LDAP_PORT
-            - name: LDAP_USESTARTTLS
-              valueFrom:
-                configMapKeyRef:
-                  name: ldap-config
-                  key: LDAP_USESTARTTLS
-            - name: LDAP_USESSL
-              valueFrom:
-                configMapKeyRef:
-                  name: ldap-config
-                  key: LDAP_USESSL
-            - name: LDAP_BASEDN
-              valueFrom:
-                configMapKeyRef:
-                  name: ldap-config
-                  key: LDAP_BASEDN
-            - name: LDAP_BINDDN
-              valueFrom:
-                configMapKeyRef:
-                  name: ldap-config
-                  key: LDAP_BINDDN
-            - name: LDAP_BINDDNCREDENTIAL
-              valueFrom:
-                configMapKeyRef:
-                  name: ldap-config
-                  key: LDAP_PASSWORD
-            - name: LDAP_USERFILTER
-              valueFrom:
-                configMapKeyRef:
-                  name: ldap-config
-                  key: LDAP_USERFILTER
-            - name: LDAP_ATTRIBUTE_SEARCHFILTER
-              valueFrom:
-                configMapKeyRef:
-                  name: ldap-config
-                  key: LDAP_ATTRIBUTE_SEARCHFILTER
-            - name: LDAP_RETURNATTRIBUTES
-              valueFrom:
-                configMapKeyRef:
-                  name: ldap-config
-                  key: LDAP_RETURNATTRIBUTES
-            - name: LDAP_AUTHENTICATOR
-              valueFrom:
-                configMapKeyRef:
-                  name: ldap-config
-                  key: LDAP_AUTHENTICATOR
-            - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
-              valueFrom:
-                configMapKeyRef:
-                  name: web-config
-                  key: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
-            - name: RESOURCE_DOMAIN
-              valueFrom:
-                configMapKeyRef:
-                  name: idp-config
-                  key: RESOURCE_DOMAIN
           ports:
             - containerPort: 9443
             - containerPort: 9080

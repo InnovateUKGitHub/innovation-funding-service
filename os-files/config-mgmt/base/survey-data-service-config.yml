@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: survey-data-service-config
+data:
+  DB_URL: "jdbc:mysql://ifs-database:3306/ifs_survey"
+  DB_USER: "root"
+  DB_PASS: "password"
