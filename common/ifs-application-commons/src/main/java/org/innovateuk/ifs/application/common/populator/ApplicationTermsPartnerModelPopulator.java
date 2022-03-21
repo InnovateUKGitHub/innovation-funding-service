@@ -5,11 +5,14 @@ import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsPartnerVi
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -24,6 +27,8 @@ public class ApplicationTermsPartnerModelPopulator {
     private final SectionService sectionService;
     private final ProcessRoleRestService processRoleRestService;
     private final OrganisationService organisationService;
+    @Autowired
+    private CompetitionRestService competitionRestService;
 
     public ApplicationTermsPartnerModelPopulator(SectionService sectionService,
                                                  ProcessRoleRestService processRoleRestService,
@@ -62,6 +67,8 @@ public class ApplicationTermsPartnerModelPopulator {
                 .sorted((o1, o2) -> o1.isLead() ? -1 : 1)
                 .collect(toList());
 
-        return new ApplicationTermsPartnerViewModel(application.getId(), application.getCompetitionName(), questionId, partners);
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        return new ApplicationTermsPartnerViewModel(application.getId(), application.getCompetitionName(), questionId, partners,
+                 competition.isThirdPartyOfgem(), competition.getCompetitionThirdPartyConfigResource() );
     }
 }
