@@ -46,8 +46,8 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationTeamPopulatorTest {
@@ -78,6 +78,7 @@ public class ApplicationTeamPopulatorTest {
 
     @Mock
     private UserRestService userRestService;
+
 
     @Test
     public void populate() {
@@ -138,7 +139,7 @@ public class ApplicationTeamPopulatorTest {
                 .withQuestion(questionId)
                 .withMarkedAsComplete(true)
                 .build();
-
+        when(competitionRestService.hasEDIQuestion(anyLong())).thenReturn(restSuccess(Boolean.FALSE));
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(asList(leadRole, collaboratorRole)));
@@ -266,7 +267,7 @@ public class ApplicationTeamPopulatorTest {
                 .withQuestion(questionId)
                 .withMarkedAsComplete(true)
                 .build();
-
+        when(competitionRestService.hasEDIQuestion(anyLong())).thenReturn(restSuccess(Boolean.FALSE));
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(asList(leadRole, collaboratorRole)));

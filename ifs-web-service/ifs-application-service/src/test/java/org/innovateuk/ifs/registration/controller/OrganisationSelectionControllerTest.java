@@ -34,6 +34,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -122,11 +123,14 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
     public void selectOrganisation_ineligible() throws Exception {
         long competitionId = 1L;
         long organisationId = 2L;
+        OrganisationResource organisation = newOrganisationResource()
+                .withOrganisationType(3L)
+                .withOrganisationTypeName(BUSINESS.name())
+                .build();
 
         when(registrationCookieService.isLeadJourney(any())).thenReturn(true);
         when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(competitionId));
-        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(newOrganisationResource()
-                .withOrganisationType(3L).build()));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(newCompetitionResource()
                 .withLeadApplicantType(asList(4L, 5L)).build()));
 
@@ -143,6 +147,7 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
 
         OrganisationResource organisation = newOrganisationResource()
                 .withOrganisationType(1L)
+                .withOrganisationTypeName(BUSINESS.name())
                 .withCompaniesHouseNumber("12345")
                 .build();
 
@@ -171,13 +176,17 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
                 .withCompetitionId(competitionId)
                 .withHash(hash)
                 .build();
+        OrganisationResource organisation = newOrganisationResource()
+                .withOrganisationType(5L)
+                .withOrganisationTypeName(BUSINESS.name())
+                .build();
 
         when(registrationCookieService.isLeadJourney(any())).thenReturn(false);
         when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(true);
         when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.of(hash));
         when(inviteRestService.getInviteByHash(any())).thenReturn(restSuccess(applicationInviteResource));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
-        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(newOrganisationResource().withOrganisationType(5L).build()));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
         mockMvc.perform(post("/organisation/select")
                 .param("selectedOrganisationId", String.valueOf(organisationId)))
@@ -196,14 +205,17 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
                 .withFundingType(FundingType.GRANT)
                 .build();
 
+        OrganisationResource organisation = newOrganisationResource()
+                .withId(21L)
+                .withOrganisationType(1L)
+                .withOrganisationTypeName(BUSINESS.name())
+                .withAddresses(Collections.singletonList(new OrganisationAddressResource()))
+                .build();
+
         when(registrationCookieService.isLeadJourney(any())).thenReturn(true);
         when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(false);
         when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(competitionId));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
-        OrganisationResource organisation = newOrganisationResource()
-                .withOrganisationType(1L)
-                .withAddresses(Collections.singletonList(new OrganisationAddressResource()))
-                .build();
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
         mockMvc.perform(post("/organisation/select")
@@ -224,11 +236,17 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
                 .withFundingType(FundingType.GRANT)
                 .build();
 
+        OrganisationResource organisation = newOrganisationResource()
+                .withId(21L)
+                .withOrganisationType(1L)
+                .withOrganisationTypeName(BUSINESS.name())
+                .build();
+
         when(registrationCookieService.isLeadJourney(any())).thenReturn(true);
         when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(false);
         when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(competitionId));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
-        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(newOrganisationResource().withOrganisationType(1L).build()));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
         mockMvc.perform(post("/organisation/select")
                 .param("selectedOrganisationId", String.valueOf(organisationId)))

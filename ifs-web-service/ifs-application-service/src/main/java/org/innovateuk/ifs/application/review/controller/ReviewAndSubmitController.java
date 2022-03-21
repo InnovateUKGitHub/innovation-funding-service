@@ -276,7 +276,7 @@ public class ReviewAndSubmitController {
         if (CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType())) {
             return "covid-additional-funding-application-track";
         } else if (competition.isHorizonEuropeGuarantee()) {
-            return "hesta-application-track";
+            return "horizon-europe-guarantee-application-track";
         } else if (competition.isAlwaysOpen()) {
             return "always-open-track";
         } else if (competition.isH2020()) {

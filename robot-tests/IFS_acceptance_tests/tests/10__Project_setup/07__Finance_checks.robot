@@ -111,7 +111,7 @@ Validation on duration of Project
     [Documentation]  IFS-2313
     [Tags]
     Given the user clicks the button/link               link = Edit
-    And Set Focus To Element                            id = durationInMonths
+    And the user enters text to a text field            id = durationInMonths  ${empty}
     When Set Focus To Element                           link = Contact us
     Then the user should see a field error              ${empty_field_warning_message}
     When the user clicks the button/link                jQuery = button:contains("Save and return to project finances")

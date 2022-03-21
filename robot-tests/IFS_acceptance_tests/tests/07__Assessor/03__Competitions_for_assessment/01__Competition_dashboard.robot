@@ -128,8 +128,9 @@ the user rejects the invitation
     the user clicks the button/link                  jQuery = .govuk-button:contains("Confirm")
 
 comp admin checks the assessor rejected the application for assessment
-    the user clicks the button/link    jQuery = a:contains("Manage assessments")
-    the user clicks the button/link    jQuery = a:contains("Manage applications")
+#    the user clicks the button/link    jQuery = a:contains("Manage assessments")
+#    the user clicks the button/link    jQuery = a:contains("Manage applications")
+    the user navigates to the page     ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}/applications/period?
     the user clicks the button/link    jQuery = tr:nth-child(1) a:contains("View progress")
     the user should see the element    jQuery = h2:contains("Rejected (1)")
     the user should see the element    jQuery = .assessors-rejected td:contains("Not my area of expertise")

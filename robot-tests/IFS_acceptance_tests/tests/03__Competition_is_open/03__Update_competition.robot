@@ -129,7 +129,7 @@ Funding Information is editable (Open)
     When the user clicks the button/link        link = Funding information
     And the user should see the element         jquery = h1:contains("Funding information")
     And the user clicks the button/link         jQuery = .govuk-button:contains("Edit")
-    And the user edits autocomplete field       id = funders[0].funder    Aerospace Technology Institute (ATI)
+    And the user edits autocomplete field       id = funders[0].funder    BEIS: Aerospace Technology Institute (ATI) Programme
     And the user should see the element         id = funders[0].funderBudget
     And the user should see the element         id = pafNumber
     And the user should see the element         id = budgetCode
@@ -233,8 +233,8 @@ Initial details editable before notify date (Open)
     And the user should see the element                     jQuery = dt:contains("Opening date") ~ dd:contains("2020")
     And the user should see that the element is disabled    id = innovationSectorCategoryId
     And the user should see that the element is disabled    name = innovationAreaCategoryIds[0]
-    When the user selects option from type ahead            innovationLeadUserId  i  Peter Freeman
-    And the user selects option from type ahead             executiveUserId  j  John Doe
+    When the user selects option from type ahead            innovationLeadUserId  Peter Freeman  Peter Freeman
+    And the user selects option from type ahead             executiveUserId  John Doe  John Doe
     And the user clicks the button/link                     jQuery = button:contains("Done")
     Then the user should see the element                    jQuery = .govuk-button:contains("Edit")
     And The user should see the element                     jQuery = dt:contains("Competition Lead") ~ dd:contains("Peter Freeman")
