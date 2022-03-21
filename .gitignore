@@ -168,3 +168,6 @@ ifs-data-layer/ifs-data-service/target/*
 
 # OpenShift local environment generated files
 openshift.local.clusterup/
+
+skaffold
+kustomize
