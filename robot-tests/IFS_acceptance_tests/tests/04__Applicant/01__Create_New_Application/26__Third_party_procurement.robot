@@ -15,6 +15,9 @@ Documentation    IFS-10080 Third party procurement: Comp setup configuration
 ...
 ...              IFS-10273  Ofgem - Hide Cost Cateogory - Capital usage
 ...
+...              IFS-11567 OFGEM: Remove T & C, Upload the SIF document
+...
+
 Suite Setup       Custom suite setup
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/Competition_Commons.robot
@@ -28,7 +31,7 @@ ${thirdPartyProcurementApplicationName}    Third party procurement application
 
 *** Test Cases ***
 Third party terms and conditions validations
-    [Documentation]  IFS-10081  IFS-10082
+    [Documentation]  IFS-10081  IFS-10082  IFS-11567
     Given the user navigates to the page                    ${CA_UpcomingComp}
     And the user clicks the button/link                     jQuery = .govuk-button:contains("Create competition")
     And the user fills in the CS Initial details            ${thirdPartyProcurementCompetitionName}  ${month}  ${nextyear}  Programme  NOT_AID  PROCUREMENT
@@ -64,7 +67,7 @@ Comp admin selects third party funder in funding information
     And the user should see the element                                                jQuery = h3 a:contains("Third party procurement competition")
 
 User applies to third party competition
-    [Documentation]  IFS-10083  IFS-10157
+    [Documentation]  IFS-10083  IFS-10157  IFS-11567
     [Setup]  get competition id and set open date to yesterday                                  ${thirdPartyProcurementCompetitionName}
     Given log in as a different user                                                            &{lead_applicant_credentials}
     And logged in user applies to competition                                                   ${thirdPartyProcurementCompetitionName}  3
@@ -72,6 +75,8 @@ User applies to third party competition
     And the applicant completes Application Team                                                COMPLETE  steve.smith@empire.com
     And the lead applicant fills all the questions and marks as complete(procurement)
     Then the lead completes the questions with multiple answer choice and multiple appendices
+    And the user should not see the element                                                     jQuery = h2:contains("terms and conditions")
+    And the user should not see the element                                                     link = terms and conditions
     And the third party applicant can view the strategic innovation terms and conditions        Strategic Innovation Fund governance document
 
 Applicant fills in project finances without any VAT validations
@@ -214,15 +219,16 @@ the user verifies valid terms and conditions text is displaying
 
 the third party applicant can view the strategic innovation terms and conditions
     [Arguments]  ${title}
-    the user clicks the button/link    link = ${title}
-    the user should see the element    jQuery = h1:contains("${title}")
-    the user should see the element    link = View ${title} (opens in a new window)
-    the user should see the element    jQuery = p:contains("Summary of ${title}")
-    the user should see the element    link = ${title} (opens in a new window)
-    the user selects the checkbox      agreed
-    the user clicks the button/link    jQuery = button:contains("Agree and continue")
-    the user should see the element    jQuery = .form-footer:contains("${title} accepted")
-    the user clicks the button/link    link = Return to application overview
+    the user clicks the button/link      link = ${title}
+    the user should see the element      jQuery = h1:contains("${title}")
+    the user should not see the element  jQuery = p:contains("terms and conditions")
+    the user should see the element      link = View ${title} (opens in a new window)
+    the user should see the element      jQuery = p:contains("Summary of ${title}")
+    the user should see the element      link = ${title} (opens in a new window)
+    the user selects the checkbox        agreed
+    the user clicks the button/link      jQuery = button:contains("Agree and continue")
+    the user should see the element      jQuery = .form-footer:contains("${title} accepted")
+    the user clicks the button/link      link = Return to application overview
 
 applicant fills in payment milestones
     the user clicks the button/link                           link = Your payment milestones
