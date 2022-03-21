@@ -1,0 +1,9 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: uat
+
+bases:
+  - ../../../base
+
+patchesStrategicMerge:
+  - spring-profile-env.yml
