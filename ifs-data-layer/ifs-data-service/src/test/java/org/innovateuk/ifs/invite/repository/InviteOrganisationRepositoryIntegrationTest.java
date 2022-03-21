@@ -22,6 +22,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNam
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.junit.Assert.assertTrue;
 
 public class InviteOrganisationRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<InviteOrganisationRepository> {
 
@@ -133,7 +134,7 @@ public class InviteOrganisationRepositoryIntegrationTest extends BaseRepositoryI
 
         Optional<InviteOrganisation> inviteOrganisationResponse = repository.findFirstByOrganisationIdAndInvitesApplicationId(organisation1.getId(), application1.getId());
 
-        assertThat(ImmutableList.of(inviteOrganisation.getId(), inviteOrgApplication1Org1.getId(), inviteOrgApplication1Org2.getId())
+        assertTrue(ImmutableList.of(inviteOrganisation.getId(), inviteOrgApplication1Org1.getId(), inviteOrgApplication1Org2.getId())
                 .contains(inviteOrganisationResponse.get().getId()));
     }
 
