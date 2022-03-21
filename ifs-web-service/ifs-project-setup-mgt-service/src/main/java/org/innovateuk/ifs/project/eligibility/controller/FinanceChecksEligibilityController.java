@@ -308,12 +308,15 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     @PostMapping("add-row/{rowType}")
     public String ajaxAddRow(Model model,
                              @PathVariable long projectId,
+                             @PathVariable long organisationId,
                              @PathVariable FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
-        YourProjectCostsForm form = new YourProjectCostsForm();
+        CompetitionResource competition = competitionRestService.getCompetitionForProject(projectId).getSuccess();
+        YourProjectCostsForm form = formPopulator.populateForm(projectId, organisationId, competition.isThirdPartyOfgem());
         Map.Entry<String, AbstractCostRowForm> entry = yourProjectCostsSaver.addRowForm(form, rowType);
         model.addAttribute("form", form);
         model.addAttribute("id", entry.getKey());
         model.addAttribute("row", entry.getValue());
+        model.addAttribute("thirdPartyOfgem", competition.isThirdPartyOfgem());
         return String.format("application/your-project-costs-fragments :: ajax_%s_row", rowType.name().toLowerCase());
     }
 
