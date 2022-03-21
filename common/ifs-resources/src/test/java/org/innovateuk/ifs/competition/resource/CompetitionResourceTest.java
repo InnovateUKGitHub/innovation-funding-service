@@ -121,7 +121,7 @@ public class CompetitionResourceTest {
         assertFalse(competition.isOfGemCompetition());
 
         GrantTermsAndConditionsResource grantTermsAndConditions = newGrantTermsAndConditionsResource()
-                .withName("Procurement Third Party")
+                .withName("Third Party")
                 .build();
         competition.setTermsAndConditions(grantTermsAndConditions);
 

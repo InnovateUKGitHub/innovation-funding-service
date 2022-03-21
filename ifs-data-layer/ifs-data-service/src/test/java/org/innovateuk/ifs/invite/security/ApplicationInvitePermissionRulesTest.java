@@ -25,6 +25,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
+import static org.innovateuk.ifs.invite.builder.ApplicationKtaInviteResourceBuilder.newApplicationKtaInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -37,6 +38,7 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
 
     private UserResource leadApplicant;
     private UserResource collaborator;
+    private UserResource ktaAdviser;
     private ApplicationInvite invite;
     private ApplicationKtaInviteResource inviteKtaResource;
     private ApplicationInviteResource inviteResource;
@@ -45,6 +47,7 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
 
     private UserResource otherLeadApplicant;
     private UserResource otherCollaborator;
+
 
     @Mock
     private ApplicationRepository applicationRepository;
@@ -60,37 +63,62 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
     @Before
     public void setup() {
 
+        String ktaAdviserEmail = "ktpadviser@ktp.com";
+
         leadApplicant = newUserResource().build();
         collaborator = newUserResource().build();
-        {
-            final Competition competition = newCompetition().build();
-            final Organisation organisation = OrganisationBuilder.newOrganisation().build();
-            final Application application = newApplication().withApplicationState(ApplicationState.OPENED).withCompetition(competition).build();
-            final InviteOrganisation inviteOrganisation = newInviteOrganisation().withOrganisation(organisation).build();
-            invite = newApplicationInvite().withApplication(application).withInviteOrganisation(inviteOrganisation).build();
-            inviteResource = new ApplicationInviteResource();
-            inviteResource.setApplication(application.getId());
-            inviteResource.setInviteOrganisation(inviteOrganisation.getId());
-            inviteKtaResource = new ApplicationKtaInviteResource();
-            inviteKtaResource.setApplication(application.getId());
-            inviteResourceLead = newApplicationInviteResource().withApplication(application.getId()).withUsers(leadApplicant.getId()).build();
-            inviteResourceCollab = newApplicationInviteResource().withApplication(application.getId()).withUsers(collaborator.getId()).build();
-            when(inviteOrganisationRepository.findById(inviteOrganisation.getId())).thenReturn(Optional.of(inviteOrganisation));
-            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), application.getId(), ProcessRoleType.LEADAPPLICANT)).thenReturn(true);
-            when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(collaborator.getId(), applicantProcessRoles(), application.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
-            when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), COLLABORATOR, application.getId(), organisation.getId())).thenReturn(true);
-            when(applicationRepository.findById(invite.getTarget().getId())).thenReturn(Optional.of(application));
-        }
-
+        ktaAdviser = newUserResource().withEmail(ktaAdviserEmail).build();
         otherLeadApplicant = newUserResource().build();
         otherCollaborator = newUserResource().build();
-        {
-            final Application otherApplication = newApplication().withApplicationState(ApplicationState.OPENED).build();
-            final Organisation otherOrganisation = OrganisationBuilder.newOrganisation().build();
-            when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(otherApplication.getId(), applicantProcessRoles(), otherApplication.getId())).thenReturn(newProcessRole().withRole(LEADAPPLICANT).build());
-            when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(otherCollaborator.getId(), applicantProcessRoles(), otherApplication.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
-            when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(otherCollaborator.getId(), COLLABORATOR, otherApplication.getId(), otherOrganisation.getId())).thenReturn(true);
-        }
+
+        final Competition competition = newCompetition().build();
+        final Organisation organisation = OrganisationBuilder.newOrganisation().build();
+        final Application application = newApplication()
+                .withApplicationState(ApplicationState.OPENED)
+                .withCompetition(competition)
+                .build();
+
+        final InviteOrganisation inviteOrganisation = newInviteOrganisation()
+                .withOrganisation(organisation)
+                .build();
+
+        invite = newApplicationInvite()
+                .withApplication(application)
+                .withInviteOrganisation(inviteOrganisation)
+                .build();
+
+        inviteResource = newApplicationInviteResource()
+                .withApplication(application.getId())
+                .withInviteOrganisation(inviteOrganisation.getId())
+                .build();
+
+        inviteKtaResource = newApplicationKtaInviteResource()
+                .withApplication(application.getId())
+                .withEmail(ktaAdviserEmail)
+                .build();
+
+        inviteResourceLead = newApplicationInviteResource()
+                .withApplication(application.getId())
+                .withUsers(leadApplicant.getId())
+                .build();
+
+        inviteResourceCollab = newApplicationInviteResource()
+                .withApplication(application.getId())
+                .withUsers(collaborator.getId())
+                .build();
+
+        when(inviteOrganisationRepository.findById(inviteOrganisation.getId())).thenReturn(Optional.of(inviteOrganisation));
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), application.getId(), ProcessRoleType.LEADAPPLICANT)).thenReturn(true);
+        when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(collaborator.getId(), applicantProcessRoles(), application.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
+        when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), COLLABORATOR, application.getId(), organisation.getId())).thenReturn(true);
+        when(applicationRepository.findById(invite.getTarget().getId())).thenReturn(Optional.of(application));
+
+        final Application otherApplication = newApplication().withApplicationState(ApplicationState.OPENED).build();
+        final Organisation otherOrganisation = OrganisationBuilder.newOrganisation().build();
+
+        when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(otherApplication.getId(), applicantProcessRoles(), otherApplication.getId())).thenReturn(newProcessRole().withRole(LEADAPPLICANT).build());
+        when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(otherCollaborator.getId(), applicantProcessRoles(), otherApplication.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
+        when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(otherCollaborator.getId(), COLLABORATOR, otherApplication.getId(), otherOrganisation.getId())).thenReturn(true);
     }
 
     @Test
@@ -119,6 +147,20 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
         assertTrue(rules.leadApplicantCanSaveKtaInviteToTheApplication(inviteKtaResource, leadApplicant));
         assertFalse(rules.leadApplicantCanSaveKtaInviteToTheApplication(inviteKtaResource, collaborator));
         assertFalse(rules.leadApplicantCanSaveKtaInviteToTheApplication(inviteKtaResource, otherLeadApplicant));
+    }
+
+    @Test
+    public void leadApplicantCanRemoveKtaInviteToTheApplication() {
+        assertTrue(rules.leadApplicantCanRemoveKtaInviteToTheApplication(inviteKtaResource, leadApplicant));
+        assertFalse(rules.leadApplicantCanRemoveKtaInviteToTheApplication(inviteKtaResource, collaborator));
+        assertFalse(rules.leadApplicantCanRemoveKtaInviteToTheApplication(inviteKtaResource, otherLeadApplicant));
+    }
+
+    @Test
+    public void ktaCanAcceptAnInviteAddressedToThem() {
+        assertTrue(rules.ktaCanAcceptAnInviteAddressedToThem(inviteKtaResource, ktaAdviser));
+        assertFalse(rules.ktaCanAcceptAnInviteAddressedToThem(inviteKtaResource, collaborator));
+        assertFalse(rules.ktaCanAcceptAnInviteAddressedToThem(inviteKtaResource, otherLeadApplicant));
     }
 
     @Test

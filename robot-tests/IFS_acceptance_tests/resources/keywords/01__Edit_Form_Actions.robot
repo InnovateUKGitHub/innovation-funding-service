@@ -59,7 +59,7 @@ The user enters text to a text field
     Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
     Clear Element Text    ${TEXT_FIELD}
     Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
-    Mouse Out    ${TEXT_FIELD}
+    Mouse Out             ${TEXT_FIELD}
     Set Focus To Element    link=GOV.UK
     Wait for autosave
 
@@ -74,15 +74,14 @@ The user enters text to an autocomplete field
 #different from the keyword above, as we don't want to lose focus from the field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
     Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
-    click element    ${TEXT_FIELD}
-    wait for autosave
-    click element    jQuery = li:contains("${TEXT_INPUT}")
+    Wait Until Keyword Succeeds Without Screenshots    10s    500ms    click element    ${TEXT_FIELD}
+    Execute Javascript                                 document.evaluate("//li[text()='${TEXT_INPUT}']",document.body,null,9,null).singleNodeValue.click();
 
 The user edits autocomplete field
     [Arguments]      ${TEXT_FIELD}    ${TEXT_INPUT}
     click element       ${TEXT_FIELD}
-    Input text          ${TEXT_FIELD}   ${TEXT_INPUT}
-    click element       jQuery = li:contains("${TEXT_INPUT}")
+    wait until keyword succeeds without screenshots   10s    200ms   Input text      ${TEXT_FIELD}   ${TEXT_INPUT}
+    Execute Javascript                                document.evaluate("//li[text()='${TEXT_INPUT}']",document.body,null,9,null).singleNodeValue.click();
     Mouse Out           ${TEXT_FIELD}
 
 the user sees the text in the element
@@ -91,7 +90,7 @@ the user sees the text in the element
 
 the user sees the text in the text field
     [Arguments]    ${textfield}    ${text}
-    Wait Until Keyword Succeeds Without Screenshots    10    200ms    textfield should contain    ${textfield}    ${text}
+    Wait Until Keyword Succeeds Without Screenshots    10s    200ms    textfield should contain    ${textfield}    ${text}
 
 The user enters multiple strings into a text field
     [Arguments]    ${field}    ${string}    ${multiplicity}
@@ -109,8 +108,8 @@ The user should see the enabled element
 the user selects the option from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
     Wait Until Element Is Visible Without Screenshots    ${drop-down}
-    Wait Until Element Is Enabled   ${drop-down}
-    Select From List By Label    ${drop-down}    ${option}
+    Wait Until Element Is Enabled                        ${drop-down}
+    wait until keyword succeeds without screenshots      30 s   1 s    Select From List By Label    ${drop-down}    ${option}
     mouse out    ${drop-down}
     #Error checking
     the user should not see an error in the page
