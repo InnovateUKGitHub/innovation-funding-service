@@ -303,7 +303,7 @@
                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Days to be spent by all staff
                     at this grade
                 </th>
-                <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total costs</th>
+                <th class="govuk-table__header govuk-table__header--numeric govuk-table__header-span" scope="col" th:colspan="${model.isThirdPartyOfgem() ? 2 : 1}">Total costs</th>
             </tr>
             </thead>
             <tbody class="govuk-table__body">
@@ -317,7 +317,7 @@
                     <td class="govuk-table__cell govuk-table__cell--numeric"
                         th:text="${cost.rate != null ? #numbers.formatInteger(cost.rate,0,'DEFAULT') : '0'}"></td>
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.days}"></td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:colspan="${model.isThirdPartyOfgem() ? 2 : 1}">&pound;<th:block
                         th:text="${cost.total != null ? #numbers.formatInteger(cost.total, 0, 'DEFAULT') : '0'}"/>
                     </td>
                 </tr>
