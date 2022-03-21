@@ -26,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
 
@@ -210,6 +211,44 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
         verify(programmeTemplate).copyTemplatePropertiesToCompetition(competition);
 //        assertEquals(result.getSuccess().getTermsAndConditions(), fundingTypeTerms);
+    }
+
+
+    @Test
+    public void initializeCompetitionByCompetitionTemplate_EDI() {
+        ReflectionTestUtils.setField(service, "ediUpdateToggle", true);
+
+        GrantTermsAndConditions fundingTypeTerms = new GrantTermsAndConditions();
+        CompetitionType competitionType = newCompetitionType()
+                .withName(PROGRAMME.getText())
+                .withId(1L)
+                .build();
+
+        Competition competition = newCompetition()
+                .withId(3L)
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withFundingType(FundingType.LOAN)
+                .build();
+
+
+        when(grantTermsAndConditionsRepository.getLatestForFundingType(FundingType.LOAN)).thenReturn(fundingTypeTerms);
+        when(programmeTemplate.sections()).thenReturn(newArrayList(aSection()));
+        when(loanTemplate.sections(any())).thenReturn(newArrayList(aSection()));
+        when(loanTemplate.initialiseFinanceTypes(any())).thenReturn(competition);
+        when(loanTemplate.initialiseProjectSetupColumns(any())).thenReturn(competition);
+        when(loanTemplate.overrideTermsAndConditions(any())).thenReturn(competition);
+        when(loanTemplate.setGolTemplate(any())).thenReturn(competition);
+        when(competitionTypeRepository.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
+                .thenReturn(Optional.empty());
+        when(competitionRepository.save(competition)).thenReturn(competition);
+
+        ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
+
+        assertTrue(result.isSuccess());
+
+
     }
 
     @Test

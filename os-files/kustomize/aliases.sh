@@ -141,6 +141,7 @@ k8s_clean_all() {
   kubectl delete svc survey-data-svc
   kubectl delete svc survey-svc
   kubectl delete configmap cache-config
+  kubectl delete configmap cache-provider-config
   kubectl delete configmap data-service-config
   kubectl delete configmap db-config
   kubectl delete configmap docusign-config

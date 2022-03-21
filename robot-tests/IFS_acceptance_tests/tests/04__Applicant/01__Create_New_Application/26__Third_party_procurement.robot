@@ -15,6 +15,9 @@ Documentation    IFS-10080 Third party procurement: Comp setup configuration
 ...
 ...              IFS-10273  Ofgem - Hide Cost Cateogory - Capital usage
 ...
+...              IFS-11567 OFGEM: Remove T & C, Upload the SIF document
+...
+
 Suite Setup       Custom suite setup
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/Competition_Commons.robot
@@ -27,15 +30,16 @@ ${thirdPartyProcurementCompetitionName}    Third party procurement competition
 ${thirdPartyProcurementApplicationName}    Third party procurement application
 
 *** Test Cases ***
-Third party procurement terms and conditions validations
-    [Documentation]  IFS-10081  IFS-10082
+Third party terms and conditions validations
+    [Documentation]  IFS-10081  IFS-10082  IFS-11567
     Given the user navigates to the page                    ${CA_UpcomingComp}
     And the user clicks the button/link                     jQuery = .govuk-button:contains("Create competition")
     And the user fills in the CS Initial details            ${thirdPartyProcurementCompetitionName}  ${month}  ${nextyear}  Programme  NOT_AID  PROCUREMENT
     When the user clicks the button/link                    link = Terms and conditions
-    And the user clicks the button twice                    jQuery = label:contains("Procurement Third Party")
+    And the user clicks the button twice                    jQuery = label:contains("Third Party")
     And the user clicks the button/link                     jQuery = button:contains("Done")
     Then the user should see third party t&c validations
+    And the user should see the element                     jQuery = label:contains("Third Party")
 
 Comp admin can configure third party procurement terms and conditions
     [Documentation]  IFS-10081  IFS-10082  IFS-10169
@@ -58,20 +62,21 @@ Comp admin can edit the third party procurement terms and conditions
 Comp admin selects third party funder in funding information
     [Documentation]   IFS-10080
     Given comp admin creates procurement competition
-    When the user fills in funding information for the third party procurement comp
+    When the user fills in funding information for the third party comp
     Then the user navigates to the page                                                ${CA_UpcomingComp}
     And the user should see the element                                                jQuery = h3 a:contains("Third party procurement competition")
 
 User applies to third party competition
-    [Documentation]  IFS-10083  IFS-10157
+    [Documentation]  IFS-10083  IFS-10157  IFS-11567
     [Setup]  get competition id and set open date to yesterday                                  ${thirdPartyProcurementCompetitionName}
     Given log in as a different user                                                            &{lead_applicant_credentials}
     And logged in user applies to competition                                                   ${thirdPartyProcurementCompetitionName}  3
     When the user fills in third-party Application details                                      ${thirdPartyProcurementApplicationName}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team                                                COMPLETE  steve.smith@empire.com
-    And the applicant marks EDI question as complete
     And the lead applicant fills all the questions and marks as complete(procurement)
     Then the lead completes the questions with multiple answer choice and multiple appendices
+    And the user should not see the element                                                     jQuery = h2:contains("terms and conditions")
+    And the user should not see the element                                                     link = terms and conditions
     And the third party applicant can view the strategic innovation terms and conditions        Strategic Innovation Fund governance document
 
 Applicant fills in project finances without any VAT validations
@@ -91,7 +96,7 @@ the user submits the third party procurement application
     Given the user clicks the button/link                       id = application-overview-submit-cta
     And the user should see the element                         jQuery = h2:contains("Strategic Innovation Fund governance document")
     When the user clicks the button/link                        id = accordion-questions-heading-4-1
-    And the user should see the element                         jQuery = td:contains("Empire Ltd")+td:contains("Procurement Third Party")+td:contains("Accepted")
+    And the user should see the element                         jQuery = td:contains("Empire Ltd")+td:contains("Third Party")+td:contains("Accepted")
     And the user clicks the button/link                         id = submit-application-button
     Then the user should see the element                        jQuery = h2:contains("Application submitted")
     And the user should see procurement terms and conditions in application summary
@@ -162,7 +167,7 @@ Internal user can view third-party terms and conditions
     When The user should see the element                    jQuery = button:contains("Strategic Innovation Fund governance document")
     And the user clicks the button twice                    jQuery = button:contains("Strategic Innovation Fund governance document")
     Then the user should see the element                    jQuery = th:contains("Partner") + th:contains("Strategic Innovation Fund governance document")
-    And The user should see the element                     jQuery = td:contains("Empire Ltd") ~ td:contains("Procurement Third Party")
+    And The user should see the element                     jQuery = td:contains("Empire Ltd") ~ td:contains("Third Party")
 
 *** Keywords ***
 Custom suite setup
@@ -205,7 +210,7 @@ the user completes required fields in third party procurement competition
 
 the user verifies valid terms and conditions text is displaying
     [Arguments]  ${title}
-    the user clicks the button/link                     jQuery = a:contains("Procurement Third Party (opens in a new window)")
+    the user clicks the button/link                     jQuery = a:contains("Third Party (opens in a new window)")
     select window                                       title = ${title} - Innovation Funding Service
     the user should see the element                     jQuery = h1:contains("${title}")
     the user should see the element                     jQuery = a:contains("View ${title} (opens in a new window)")
@@ -214,15 +219,16 @@ the user verifies valid terms and conditions text is displaying
 
 the third party applicant can view the strategic innovation terms and conditions
     [Arguments]  ${title}
-    the user clicks the button/link    link = ${title}
-    the user should see the element    jQuery = h1:contains("${title}")
-    the user should see the element    link = View ${title} (opens in a new window)
-    the user should see the element    jQuery = p:contains("Summary of ${title}")
-    the user should see the element    link = ${title} (opens in a new window)
-    the user selects the checkbox      agreed
-    the user clicks the button/link    jQuery = button:contains("Agree and continue")
-    the user should see the element    jQuery = .form-footer:contains("${title} accepted")
-    the user clicks the button/link    link = Return to application overview
+    the user clicks the button/link      link = ${title}
+    the user should see the element      jQuery = h1:contains("${title}")
+    the user should not see the element  jQuery = p:contains("terms and conditions")
+    the user should see the element      link = View ${title} (opens in a new window)
+    the user should see the element      jQuery = p:contains("Summary of ${title}")
+    the user should see the element      link = ${title} (opens in a new window)
+    the user selects the checkbox        agreed
+    the user clicks the button/link      jQuery = button:contains("Agree and continue")
+    the user should see the element      jQuery = .form-footer:contains("${title} accepted")
+    the user clicks the button/link      link = Return to application overview
 
 applicant fills in payment milestones
     the user clicks the button/link                           link = Your payment milestones
@@ -237,7 +243,7 @@ applicant fills in payment milestones
 
 the user should see procurement terms and conditions in application summary
     the user clicks the button/link     link = View application
-    the user should see the element     jQuery = td:contains("Empire Ltd")+td:contains("Procurement Third Party")
+    the user should see the element     jQuery = td:contains("Empire Ltd")+td:contains("Third Party")
 
 the assessor submits the assessment
     the user clicks the button/link                             link = Finances overview
@@ -256,7 +262,7 @@ the assessor submits the assessment
 assessor should see third party procurement terms and conditions
     [Arguments]  ${title}
     the user should see the element    jQuery = h2:contains("${title}")
-    the user clicks the button/link    jQuery = a:contains("Procurement Third Party")
+    the user clicks the button/link    jQuery = a:contains("Third Party")
     the user should see the element    jQuery = h1:contains("${title}")
     the user should see the element    link = View ${title} (opens in a new window)
     the user should see the element    jQuery = p:contains("Summary of ${title}")

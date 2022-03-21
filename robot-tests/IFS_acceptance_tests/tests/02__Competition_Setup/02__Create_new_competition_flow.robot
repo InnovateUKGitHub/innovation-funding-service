@@ -253,7 +253,7 @@ Funding information: calculations
     And the user enters text to a text field    id = pafNumber    2016
     And the user enters text to a text field    id = budgetCode    2004
     And the user enters text to a text field    id = activityCode    4242
-    And the user enters text to an autocomplete field  id = funders[0].funder    Advanced Propulsion Centre (APC)
+    And the user enters text to an autocomplete field  id = funders[0].funder    BEIS: Advanced Propulsion Centre (APC) Programme
     When the user clicks the button/link        jQuery = Button:contains("+Add co-funder")
     And the user should see the element         jQuery = Button:contains("+Add co-funder")
     And the user should see the element         jQuery = Button:contains("Remove")
@@ -473,15 +473,6 @@ Project details: Business and financial information
     And the user enters text to a text field        css = label[for="question.guidance"] + * .editor  Guidance text
     And The user clicks the button/link             jQuery = button:contains('Done')
     Then the user should see the element            jQuery = li:contains("Business and financial information") .task-status-complete
-
-External user edits the EDI question
-    [Documentation]  IFS-7700  IFS-8522
-    Given the user marks each question as complete     Equality, diversity and inclusion
-    And the user clicks the button/link                link = Equality, diversity and inclusion
-    And the user should see the element                css=a[href*='https://bit.ly/EDIForm']
-    When the user clicks the button/link               jQuery = a:contains("Edit this question")
-    And the user clicks the button/link                jQuery = button:contains("Done")
-    Then the user should see the element               jQuery = li:contains("Equality, diversity and inclusion") .task-status-complete
 
 Application: Scope
     [Documentation]  INFUND-5634 INFUND-5635
@@ -776,18 +767,11 @@ User deletes the competition
     And the user clicks the button/link             css = .delete-modal button[type="submit"]
     Then the user should see page not found error   ${deletedCompUrl}
 
-User deletes the competition on completing all competition details
-    [Documentation]  IFS-8496
-    Given the comp admin creates competition with all sections details    ${business_type_id}  Competition to Delete  EOI  ${compType_Programme}  NOT_AID  GRANT  PROJECT_SETUP  no  1  true  collaborative  No
-    When the user clicks the button/link                                  link = Delete competition
-    And the user clicks the button/link                                   css = .delete-modal button[type="submit"]
-    And the user navigates to the page                                    ${CA_UpcomingComp}
-    Then The user should not see the element                              link = Competition to Delete
-
 User cannot delete competition with assessors
     [Documentation]  IFS-1084
     [Tags]  HappyPath
-    Given the user clicks the button/link       link = Photonics for health
+    Given the user navigates to the page        ${server}/management/dashboard/upcoming
+    And the user clicks the button/link         link = Photonics for health
     And The user clicks the button/link         link = View and update competition details
     When the user clicks the button/link        link = Delete competition
     And the user clicks the button/link         css = .delete-modal button[type="submit"]
@@ -911,8 +895,8 @@ The user enters valid data in the initial details
     the user enters text to a text field                    id = openingDateDay    10
     the user enters text to a text field                    id = openingDateMonth    1
     the user enters text to a text field                    id = openingDateYear     ${nextyear}
-    the user selects option from type ahead                 innovationLeadUserId  i  Ian Cooper
-    the user selects option from type ahead                 executiveUserId  j  John Doe
+    the user selects option from type ahead                 innovationLeadUserId  Ian Cooper  Ian Cooper
+    the user selects option from type ahead                 executiveUserId  John Doe  John Doe
 
 The competition should show in the correct section
     [Arguments]    ${SECTION}    ${COMP_NAME}

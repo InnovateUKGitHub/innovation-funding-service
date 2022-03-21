@@ -121,10 +121,23 @@ public class CompetitionResourceTest {
         assertFalse(competition.isOfGemCompetition());
 
         GrantTermsAndConditionsResource grantTermsAndConditions = newGrantTermsAndConditionsResource()
-                .withName("Procurement Third Party")
+                .withName("Third Party")
                 .build();
         competition.setTermsAndConditions(grantTermsAndConditions);
 
         assertTrue(competition.isOfGemCompetition());
+    }
+
+    @Test
+    public void isThirdPartyOfgem() {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.THIRDPARTY)
+                .build();
+
+        assertFalse(competition.isThirdPartyOfgem());
+
+        competition.setCompetitionTypeEnum(CompetitionTypeEnum.OFGEM);
+
+        assertTrue(competition.isThirdPartyOfgem());
     }
 }

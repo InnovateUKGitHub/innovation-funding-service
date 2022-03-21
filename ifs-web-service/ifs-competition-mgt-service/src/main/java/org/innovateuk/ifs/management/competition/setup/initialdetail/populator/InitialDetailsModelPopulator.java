@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.competition.setup.initialdetail.populator;
 
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -16,7 +17,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
@@ -38,6 +41,12 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<In
     @Autowired
     private CategoryRestService categoryRestService;
 
+    @Value("${ifs.thirdparty.ofgem.enabled}")
+    private boolean thirdPartyOfgemEnabled;
+
+    @Value("${ifs.hecp.tcp.enabled}")
+    private Boolean hecpTcpEnabled;
+
     @Override
     public CompetitionSetupSection sectionToPopulateModel() {
         return CompetitionSetupSection.INITIAL_DETAILS;
@@ -51,7 +60,15 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<In
                 addAllInnovationAreaOption(categoryRestService.getInnovationAreas().getSuccess()),
                 competitionRestService.getCompetitionTypes().getSuccess(),
                 userRestService.findByUserRoleAndUserStatus(INNOVATION_LEAD, ACTIVE).getSuccess(),
-                competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionResource.getId()));
+                competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionResource.getId()),
+                fundingTypes());
+    }
+
+    private List<FundingType> fundingTypes() {
+        return Arrays.stream(FundingType.values())
+                .filter(fundingType -> (FundingType.THIRDPARTY !=  fundingType) || thirdPartyOfgemEnabled)
+                .filter(fundingType -> (FundingType.HECP != fundingType) || hecpTcpEnabled)
+                .collect(Collectors.toList());
     }
 
     private List<InnovationAreaResource> addAllInnovationAreaOption(List<InnovationAreaResource> innovationAreas) {

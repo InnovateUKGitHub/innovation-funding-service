@@ -12,7 +12,6 @@ import org.innovateuk.ifs.file.builder.FileEntryResourceBuilder;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.grantofferletter.GrantOfferLetterService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterLetterForm;
 import org.innovateuk.ifs.project.grantofferletter.populator.GrantOfferLetterTemplatePopulator;
@@ -34,9 +33,9 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -51,7 +50,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
-import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.finance.builder.NoteResourceBuilder.newNoteResource;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.PENDING;
@@ -717,6 +715,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                                                                   "competitionName",
                                                                   "projectName",
                                                                   "leadOrgName",
+                                                                  "leadOrganisationNumber",
                                                                   newNoteResource().build(1),
                                                                   Collections.singletonMap("state aid", "templateName"),
                                                                   industrialTable,
@@ -724,7 +723,8 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                                                                   summaryTable,
                                                                   true,
                                                                   subsidyControlModel,
-                                                                 false));
+                                                                 false,
+                                                    false));
         mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/template"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/gol-template"));

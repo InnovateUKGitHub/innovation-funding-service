@@ -63,7 +63,7 @@ Lead applicant should get a confirmation email after application submission
     Then the user reads his email               ${leadApplicantEmail}  ${ApplicationID}: ${hestaApplicationSubmissionEmailSubject}  ${hestaApplicationSubmissionEmail}
 
 The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
-    [Documentation]  IFS-10697
+    [Documentation]  IFS-10697  IFS-11406
     Given Log in as a different user                                                &{Comp_admin1_credentials}
     And Requesting IDs of this competition                                          ${hestaCompetitionName}
     And Competition admin creates an assessment period                              ${competitionId}
@@ -79,7 +79,7 @@ The Application Summary page must not include the Reopen Application link when t
     And the user is presented with the Application Summary page
 
 Lead applicant receives email notifiction when internal user marks application unsuccessful
-    [Documentation]  IFS-10695
+    [Documentation]  IFS-10695  IFS-11341
     Given the user logs out if they are logged in
     And Requesting IDs of this competition                                          ${hestaCompetitionName}
     And the user successfully completes application                                 barry   barrington   ${newLeadApplicantEmail}   ${newHestaApplicationName}
@@ -153,7 +153,6 @@ the user successfully completes application
     the user completes the application details section              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team                        COMPLETE  ${email}
     the user completes the application research category            Feasibility studies
-    the applicant marks EDI question as complete
     The user is able to complete hecp public description section
     The user is able to complete horizon grant agreement section
     the lead applicant fills all the questions and marks as complete(Hesta)
@@ -163,19 +162,9 @@ the user is presented with the Application Summary page
     the user should see the element          jQuery = h2:contains("Application submitted")
     the user should see the element          jQuery = .govuk-panel:contains("Application number: ${ApplicationID}")
     the user should see the element          jQuery = h2:contains("What happens next?")
-    the user should see the element          jQuery = p:contains("You have already applied directly to the European Commission for an EU grant.")
     the user should see the element          jQuery = h3:contains("Verification checks")
-    the user should see the element          jQuery = h3:contains("Stage 2")
-    the user should see the element          jQuery = h3:contains("If your application is successful")
-    the user should see the element          jQuery = h3:contains("If your application is successful")
-    the user should see the element          jQuery = p:contains("You will proceed to stage 2 of our process.")
-    the user should see the element          jQuery = h3:contains("If your application is unsuccessful")
-    the user should see the element          jQuery = p:contains("After registering your Horizon Europe UK Application, you may still be unsuccessful.")
+    the user should see the element          jQuery = h3:contains("Once your application is verified")
     the user should see the element          jQuery = h3:contains("Application feedback")
-    the user should see the element          jQuery = p:contains("Since we do not assess your application for EU grants we do not provide individual feedback.")
-    the user should not see the element      jQuery = h3:contains("Assessment process")
-    the user should not see the element      jQuery = h3:contains("Decision notification")
-    the user should not see the element      jQuery = p:contains("Application feedback will be provided by")
 
 the internal team mark the application as successful / unsuccessful
     [Arguments]   ${applicationName}   ${decision}
@@ -202,7 +191,6 @@ the user marks the Hesta application question as done
     the user clicks the button/link                                     link = Application
     the user marks each question as complete                            Application details
     the user marks each question as complete                            Public description
-    the user marks each question as complete                            Equality, diversity and inclusion
     the user fills in the CS Application section with custom questions  ${growthTable}  ${comp_type}
 
 the user completes milestones section

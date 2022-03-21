@@ -78,8 +78,8 @@ the user fills in the CS Initial details
     the user enters text to a text field                    css = #openingDateDay  1
     the user enters text to a text field                    css = #openingDateMonth  ${month}
     the user enters text to a text field                    css = #openingDateYear  ${nextyear}
-    the user selects option from type ahead                 innovationLeadUserId  i  Ian Cooper
-    the user selects option from type ahead                 executiveUserId  r  Robert Johnson
+    the user selects option from type ahead                 innovationLeadUserId  Ian Cooper  Ian Cooper
+    the user selects option from type ahead                 executiveUserId  Robert Johnson  Robert Johnson
     the user clicks the button/link                         jQuery = button:contains("Done")
     the user should see the element                         jQuery = button:contains("Edit")
     the user clicks the button/link                         link = Back to competition details
@@ -112,14 +112,13 @@ the user selects the Terms and Conditions
 the user fills in the CS Funding Information
     the user clicks the button/link                   link = Funding information
     the user clicks the button/link                   jQuery = button:contains("Generate code")
-    the user enters text to an autocomplete field     id = funders[0].funder    Aerospace Technology Institute (ATI)
-    textfield should contain                          id = funders[0].funder   BEIS: Aerospace Technology Institute (ATI) Programme
-    the user enters text to a text field              id = funders[0].funderBudget  142424242
-    mouse out                                         id = funders[0].funderBudget
-    textfield should contain                          id = funders[0].funderBudget   142424242
+    the user enters text to an autocomplete field     id = funders[0].funder    BEIS: Aerospace Technology Institute (ATI) Programme
+    the user sees the text in the text field          id = funders[0].funder   BEIS: Aerospace Technology Institute (ATI) Programme
     the user enters text to a text field              id = pafNumber  2424
     the user enters text to a text field              id = budgetCode  Ch0col@73
     the user enters text to a text field              id = activityCode  133t
+    the user enters text to a text field              id = funders[0].funderBudget  142424242
+    the user sees the text in the text field          id = funders[0].funderBudget   142424242
     ${nextYearInTwoDigits}=                           get next year in two digits
     textfield should contain                          css = input[name="competitionCode"]   ${nextYearInTwoDigits}
     the user clicks the button/link                   jQuery = button:contains("Done")
@@ -127,14 +126,14 @@ the user fills in the CS Funding Information
     the user clicks the button/link                   link = Back to competition details
     the user should see the element                   jQuery = div:contains("Funding information") ~ .task-status-complete
 
-the user fills in funding information for the third party procurement comp
+the user fills in funding information for the third party comp
     the user clicks the button/link                   link = Funding information
     the user clicks the button/link                   jQuery = button:contains("Generate code")
     the user enters text to an autocomplete field     funders[0].funder  Office of Gas and Electricity Markets (Ofgem)
-    the user enters text to a text field              id = funders[0].funderBudget  142424242
     the user enters text to a text field              id = pafNumber  2424
     the user enters text to a text field              id = budgetCode  Ch0col@73
     the user enters text to a text field              id = activityCode  133t
+    the user enters text to a text field              id = funders[0].funderBudget  123456789
     ${nextYearInTwoDigits}=                           get next year in two digits
     textfield should contain                          css = input[name="competitionCode"]   ${nextYearInTwoDigits}
     the user clicks the button/link                   jQuery = button:contains("Done")
@@ -275,7 +274,7 @@ the user marks the Application as done
     [Arguments]  ${growthTable}  ${comp_type}  ${competition}
     the user clicks the button/link                               link = Application
     the user marks the Application details section as complete    ${comp_type}
-    Run Keyword If  '${comp_type}' == 'Generic' or '${comp_type}' == '${compType_APC}'  the user fills in the CS Application section with custom questions  ${growthTable}  ${comp_type}
+    Run Keyword If  '${comp_type}' == 'Generic' or '${comp_type}' == '${compType_APC}' or '${comp_type}' == 'Ofgem'  the user fills in the CS Application section with custom questions  ${growthTable}  ${comp_type}
     ...    ELSE  the user marks the Assessed questions as complete             ${growthTable}  ${comp_type}  ${competition}
 
 the user marks the KTP application details as done
@@ -390,7 +389,6 @@ the user marks the Application details section as complete
     [Arguments]  ${compType}
     the user marks each question as complete                Application details
     the user marks each question as complete                Project summary
-    the user marks each question as complete                Equality, diversity and inclusion
     Run Keyword If    '${compType}'!= '${compType_EOI}'     the user marks each question as complete  Public description
     the user marks each question as complete                Scope
 
