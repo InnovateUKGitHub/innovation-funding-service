@@ -16,6 +16,7 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
     private final String termsAndConditionsTerminology;
     private final boolean thirdPartyProcurementCompetition;
     private final String thirdPartyProcurementHeader;
+    private final boolean isOfgemCompetition;
 
     public TermsAndConditionsReadOnlyViewModel(ApplicationReadOnlyData data,
                                                QuestionResource question,
@@ -23,7 +24,8 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
                                                List<TermsAndConditionsRowReadOnlyViewModel> partners,
                                                String termsAndConditionsTerminology,
                                                boolean thirdPartyProcurementCompetition,
-                                               String thirdPartyProcurementHeader) {
+                                               String thirdPartyProcurementHeader,
+                                               boolean isOfgemCompetition) {
         super(data, question);
         this.partners = partners;
         this.includeFundingRules = includeFundingRules;
@@ -31,6 +33,7 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
         this.termsAndConditionsTerminology = termsAndConditionsTerminology;
         this.thirdPartyProcurementCompetition = thirdPartyProcurementCompetition;
         this.thirdPartyProcurementHeader = thirdPartyProcurementHeader;
+        this.isOfgemCompetition = isOfgemCompetition;
     }
 
     @Override
@@ -77,7 +80,7 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
     }
 
     public boolean isThirdPartyProcurementCompetition() {
-        return thirdPartyProcurementCompetition;
+        return thirdPartyProcurementCompetition || isOfgemCompetition;
     }
 
     public String getThirdPartyProcurementHeader() {

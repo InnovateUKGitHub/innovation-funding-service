@@ -49,20 +49,18 @@
             <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: main/th:block[0] "/>
 
             <th:block th:if="${model.showHeaderAndFooter}">
-                <!-- /* 1, Where there is only one organisation in the application: */ -->
-                <div th:unless="${model.collaborativeApplication or model.isThirdPartyProcurementCompetition}" class="message-alert govuk-!-margin-bottom-6">
-                    <p class="govuk-body">You must read and agree to the terms and conditions by ticking the box at the end of the page.</p>
-                </div>
-                <div th:if="${model.isThirdPartyProcurementCompetition}" class="message-alert govuk-!-margin-bottom-6">
-                    <p class="govuk-body"
-                       th:text="|You must read and agree to the ${thirdPartyLabel} by ticking the box at the end of the page.|"></p>
-                </div>
-                <!-- /* 2. Where there is more than one organisation in the application: */ -->
                 <div th:if="${model.collaborativeApplication}" class="message-alert govuk-!-margin-bottom-6">
-                    <p class="govuk-body">
-                        You must read and agree to the terms and conditions by ticking the box at the end of the page. Your
-                        application cannot be submitted until all partners have read and accepted the terms.
+                    <p class="govuk-body"
+                        th:text ="${model.isThirdPartyProcurementCompetition} ? 'You must read and agree to the ' + ${thirdPartyLabel} + ' by ticking the box at the end of the page.'
+                                        : 'You must read and agree to the terms and conditions by ticking the box at the end of the page.'">
+                        Your application cannot be submitted until all partners have read and accepted the terms.
                         <a class="govuk-link" th:href="@{/application/{applicationId}/form/terms-and-conditions/question/{questionId}/partner-status(applicationId=${model.applicationId},questionId=${model.questionId})}">View partners' acceptance</a>
+                    </p>
+                </div>
+                <div th:unless="${model.collaborativeApplication}" class="message-alert govuk-!-margin-bottom-6">
+                    <p class="govuk-body"
+                       th:text ="${model.isThirdPartyProcurementCompetition} ? 'You must read and agree to the ${thirdPartyLabel} by ticking the box at the end of the page.'
+                                        : 'You must read and agree to the terms and conditions by ticking the box at the end of the page.'">
                     </p>
                 </div>
             </th:block>
