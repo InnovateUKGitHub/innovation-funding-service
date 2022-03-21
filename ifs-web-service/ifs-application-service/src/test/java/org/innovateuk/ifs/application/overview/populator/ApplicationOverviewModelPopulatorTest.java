@@ -208,7 +208,7 @@ public class ApplicationOverviewModelPopulatorTest {
     @Test
     public void thirdPartyApplication() {
         GrantTermsAndConditionsResource termsAndCondition = newGrantTermsAndConditionsResource()
-                .withName("Procurement Third Party")
+                .withName("Third Party")
                 .build();
         CompetitionThirdPartyConfigResource thirdPartyConfigResource = newCompetitionThirdPartyConfigResource()
                 .withTermsAndConditionsLabel("Test label")
