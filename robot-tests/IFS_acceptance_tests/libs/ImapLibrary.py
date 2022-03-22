@@ -123,8 +123,10 @@ class ImapLibrary(object):
         """
         if self._is_walking_multipart(email_index):
             body = self.get_multipart_payload(decode=True)
+            print(body)
         else:
             body = self._imap.fetch(email_index, '(BODY[TEXT])')[1][0][1]
+            print(body)
         return decode(body, 'quopri_codec').decode('utf-8')
 
     def get_links_from_email(self, email_index):

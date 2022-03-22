@@ -44,6 +44,9 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<In
     @Value("${ifs.thirdparty.ofgem.enabled}")
     private boolean thirdPartyOfgemEnabled;
 
+    @Value("${ifs.hecp.tcp.enabled}")
+    private Boolean hecpTcpEnabled;
+
     @Override
     public CompetitionSetupSection sectionToPopulateModel() {
         return CompetitionSetupSection.INITIAL_DETAILS;
@@ -64,6 +67,7 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<In
     private List<FundingType> fundingTypes() {
         return Arrays.stream(FundingType.values())
                 .filter(fundingType -> (FundingType.THIRDPARTY !=  fundingType) || thirdPartyOfgemEnabled)
+                .filter(fundingType -> (FundingType.HECP != fundingType) || hecpTcpEnabled)
                 .collect(Collectors.toList());
     }
 

@@ -17,11 +17,14 @@ import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.transactional.ProjectToBeCreatedService;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,10 +80,12 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     protected AssessmentPeriodRepository assessmentPeriodRepository;
-
+    @Autowired
+    private QuestionService questionService;
     @Autowired
     private CrmService crmService;
 
+    public static final String EQUALITY_DIVERSITY_AND_INCLUSION = "Equality, diversity and inclusion";
 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(long id) {
@@ -281,4 +286,18 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                         )
                 );
     }
+
+    @Override
+    public ServiceResult<Boolean> hasEDIQuestion(long competitionId) {
+        return serviceSuccess(questionService.findByCompetition(competitionId)
+                .getSuccess()
+                .stream()
+                .anyMatch(this::isEDIQuestion));
+    }
+
+    private boolean isEDIQuestion(QuestionResource question) {
+        return (QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION.equals(question.getQuestionSetupType()))
+                || (question.getShortName() != null && question.getShortName().contains(EQUALITY_DIVERSITY_AND_INCLUSION));
+    }
 }
+

@@ -28,6 +28,11 @@ public class CompetitionController {
         return competitionService.getCompetitionById(id).toGetResponse();
     }
 
+    @GetMapping("/{id}/has-edi")
+    public RestResult<Boolean> hasEDIQuestions(@PathVariable("id") final Long id) {
+        return competitionService.hasEDIQuestion (id).toGetResponse();
+    }
+
     @GetMapping("/{id}/get-organisation-types")
     public RestResult<List<OrganisationTypeResource>> getOrganisationTypes(@PathVariable("id") final long id) {
         return competitionService.getCompetitionOrganisationTypes(id).toGetResponse();

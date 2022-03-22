@@ -63,6 +63,7 @@ The type of organisation navigates to the correct page
     And the user should see the element            jQuery = .govuk-hint:contains("Higher education and organisations registered with Je-S.")
     Given the user selects the radio button        organisationTypeId    2
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
+    And the user confirms economic activity for research organiations    No
     Then the user should see the element           jQuery = span:contains("This is the organisation that you work for, this will search all organisations available on Je-S.")
     And the user enters text to a text field       id = organisationSearchName    zoo
     And the user clicks the button/link            jQuery = button:contains("Search")
