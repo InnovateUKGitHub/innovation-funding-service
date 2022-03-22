@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 
@@ -148,6 +149,7 @@ public class LabourCost extends AbstractFinanceRowItem {
         return total;
     }
 
+    @JsonIgnore
     public BigDecimal getTotalWithoutWorkingDays() {
         calculateTotal();
         return total;
