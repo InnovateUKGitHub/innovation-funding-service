@@ -325,6 +325,8 @@ public class GrantOfferLetterController {
             model.addAttribute("model", ktpGrantOfferLetterTemplatePopulator.populate(project));
         } else if (template.getName().equals(FundingType.PROCUREMENT.getGolType())) {
             model.addAttribute("model", procurementGrantOfferLetterTemplatePopulator.populate(project, competition));
+        } else if (template.getName().equals(FundingType.HECP.getGolType())) {
+            model.addAttribute("model", grantOfferLetterTemplatePopulator.populate(project, competition));
         }
         return "project/" + template.getTemplate();
     }

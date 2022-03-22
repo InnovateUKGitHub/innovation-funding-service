@@ -26,7 +26,8 @@ public class InitialDetailsViewModel extends CompetitionSetupViewModel {
     public InitialDetailsViewModel(GeneralSetupViewModel generalSetupViewModel,
                                    List<UserResource> competitionExecutiveUsers, List<InnovationSectorResource> innovationSectors,
                                    List<InnovationAreaResource> innovationAreas, List<CompetitionTypeResource> competitionTypes,
-                                   List<UserResource> innovationLeadTechUsers, boolean restricted, List<FundingType> fundingTypes) {
+                                   List<UserResource> innovationLeadTechUsers, boolean restricted,
+                                   List<FundingType> fundingTypes) {
         this.generalSetupViewModel = generalSetupViewModel;
         this.competitionExecutiveUsers = competitionExecutiveUsers;
         this.innovationSectors = innovationSectors;
