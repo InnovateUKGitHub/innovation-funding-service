@@ -9,6 +9,8 @@ Documentation   IFS-11442 OFGEM: Create a "ThirdParty" generic template
 ...
 ...             IFS-11483 OFGEM: Delete Reference to General Guidance
 ...
+...             IFS-11566 OFGEM - Confirmation of submission page amendments
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -103,6 +105,7 @@ the user submits the third party ofgem application
     When the user clicks the button/link                        id = application-overview-submit-cta
     And the user clicks the button/link                         id = submit-application-button
     Then the user should see the element                        jQuery = h2:contains("Application submitted")
+    And the user should see ofgem submitted application amendments
     [Teardown]  update milestone to yesterday                   ${competitionId}  SUBMISSION_DATE
 
 the applicant should not view overhead and capital usage costs in application summary
@@ -217,3 +220,10 @@ the user enters empty funding amount
     the user enters text to a text field           id = amount  ${EMPTY}
     the user clicks the button/link                id = mark-all-as-complete
     the user should see a field and summary error  Enter the amount of funding sought.
+
+the user should see ofgem submitted application amendments
+    the user should see the element     jQuery = h3:contains("Assessment process")
+    the user should see the element     jQuery = h3:contains("Decision notification")
+    the user should see the element     jQuery = h3:contains("If your application is successful")
+    the user should see the element     jQuery = h3:contains("If your application is unsuccessful")
+    the user should see the element     jQuery = h3:contains("Application feedback")

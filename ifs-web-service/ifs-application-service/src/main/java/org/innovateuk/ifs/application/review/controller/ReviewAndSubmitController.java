@@ -283,6 +283,8 @@ public class ReviewAndSubmitController {
             return "h2020-grant-transfer-track";
         } else if (competition.isLoan()) {
             return "loan-application-track";
+        } else if (competition.isThirdPartyOfgem()) {
+            return "third-party-ofgem-application-track";
         } else {
             return "application-track";
         }
