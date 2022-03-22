@@ -71,7 +71,7 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
                     cost.getDescription(), cost.getTarget().getId(), cost.getCost(), thirdPartyOfgem);
         } else {
             labourCost = new LabourCost(cost.getId(), cost.getName(), cost.getItem(), cost.getCost(), cost.getQuantity(),
-                    cost.getDescription(), cost.getTarget().getId(), BigDecimal.ONE, thirdPartyOfgem);
+                    cost.getDescription(), cost.getTarget().getId(), BigDecimal.ZERO, thirdPartyOfgem);
         }
 
         return labourCost;

@@ -39,51 +39,53 @@
                     <p class="govuk-body">
                         Be specific and add each role separately.
                     </p>
-                    <details class="govuk-details" role="group">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">Labour costs guidance</span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            <p class="govuk-body">If your application is awarded funding, you will need to account for
-                                all your labour costs<span
-                                    th:if="${!model.isProcurementCompetition()}"> as they occur</span>. For example, you
-                                must keep timesheets and payroll records. These must show the actual hours worked by
-                                individuals and paid by the organisation.</p>
-                            <p class="govuk-body">You can include the following labour costs, based on your PAYE
-                                records:</p>
-                            <ul class="govuk-list govuk-list--bullet">
-                                <li>gross salary</li>
-                                <li>National Insurance</li>
-                                <li>company pension contribution</li>
-                                <li>life insurance</li>
-                                <li>other non-discretionary package costs</li>
-                            </ul>
-                            <p class="govuk-body">You cannot include:</p>
-                            <ul class="govuk-list govuk-list--bullet">
-                                <li>discretionary bonuses</li>
-                                <li>performance related payments of any kind</li>
-                            </ul>
-                            <p class="govuk-body">You may include the total number of working days for staff but do not
-                                include:</p>
-                            <ul class="govuk-list govuk-list--bullet">
-                                <li>sick days</li>
-                                <li>waiting time</li>
-                                <li>training days</li>
-                                <li>non-productive time</li>
-                            </ul>
-                            <p class="govuk-body">Enter the total number of working days in the year. List the total
-                                days worked by all categories of staff on your project. Describe their roles.</p>
-                            <p class="govuk-body">
-                                <th:block th:unless="${model.isOfGemCompetition()}">
-                                    We
-                                    <span th:if="${!model.isProcurementCompetition()}">will</span>
-                                    <span th:if="${model.isProcurementCompetition()}">may</span>
-                                    review the total amount of time and cost of labour before we approve your application.
-                                    <span th:if="${!model.isProcurementCompetition()}"> The terms and conditions of the grant include compliance with these points.</span>
-                                </th:block>
-                            </p>
-                        </div>
-                    </details>
+                    <th:block th:unless="${model.isThirdPartyOfgem()}">
+                        <details class="govuk-details" role="group">
+                            <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text">Labour costs guidance</span>
+                            </summary>
+                            <div class="govuk-details__text">
+                                <p class="govuk-body">If your application is awarded funding, you will need to account for
+                                    all your labour costs<span
+                                            th:if="${!model.isProcurementCompetition()}"> as they occur</span>. For example, you
+                                    must keep timesheets and payroll records. These must show the actual hours worked by
+                                    individuals and paid by the organisation.</p>
+                                <p class="govuk-body">You can include the following labour costs, based on your PAYE
+                                    records:</p>
+                                <ul class="govuk-list govuk-list--bullet">
+                                    <li>gross salary</li>
+                                    <li>National Insurance</li>
+                                    <li>company pension contribution</li>
+                                    <li>life insurance</li>
+                                    <li>other non-discretionary package costs</li>
+                                </ul>
+                                <p class="govuk-body">You cannot include:</p>
+                                <ul class="govuk-list govuk-list--bullet">
+                                    <li>discretionary bonuses</li>
+                                    <li>performance related payments of any kind</li>
+                                </ul>
+                                <p class="govuk-body">You may include the total number of working days for staff but do not
+                                    include:</p>
+                                <ul class="govuk-list govuk-list--bullet">
+                                    <li>sick days</li>
+                                    <li>waiting time</li>
+                                    <li>training days</li>
+                                    <li>non-productive time</li>
+                                </ul>
+                                <p class="govuk-body">Enter the total number of working days in the year. List the total
+                                    days worked by all categories of staff on your project. Describe their roles.</p>
+                                <p class="govuk-body">
+                                    <th:block th:unless="${model.isOfGemCompetition()}">
+                                        We
+                                        <span th:if="${!model.isProcurementCompetition()}">will</span>
+                                        <span th:if="${model.isProcurementCompetition()}">may</span>
+                                        review the total amount of time and cost of labour before we approve your application.
+                                        <span th:if="${!model.isProcurementCompetition()}"> The terms and conditions of the grant include compliance with these points.</span>
+                                    </th:block>
+                                </p>
+                            </div>
+                        </details>
+                    </th:block>
                 </th:block>
                 <div class="govuk-form-group inline">
                     <label class="govuk-label" th:for="working-days-per-year">
@@ -111,12 +113,14 @@
                                 </th>
                             </th:block>
                             <th id="labour-rate" scope="col"
-                                class="govuk-table__header govuk-table__header--numeric width-80">Rate
+                                class="govuk-table__header govuk-table__header--numeric width-80" th:classappend="${model.isThirdPartyOfgem()} ? 'cell-nowrap'">Rate
                                 (£/day)
                             </th>
                             <th id="labour-days" scope="col"
-                                class="govuk-table__header govuk-table__header--numeric width-100">Days
-                                to be spent by all staff at this grade
+                                class="govuk-table__header govuk-table__header--numeric "
+                                th:classappend="${model.isThirdPartyOfgem()} ? 'width-150' : 'width-100'"
+                                th:text="${model.isThirdPartyOfgem() ? 'Days to be spent on the project' : 'Days to be spent by all staff at this grade'}">
+                                Days to be spent by all staff at this grade
                             </th>
                             <th scope="col"
                                 class="govuk-table__header govuk-table__header--numeric width-150">Total
@@ -299,9 +303,11 @@
                     <th class="govuk-table__header govuk-table__header--numeric" scope="col">Gross employee cost (&pound;)
                     </th>
                 </th:block>
-                <th class="govuk-table__header govuk-table__header--numeric" scope="col">Rate (&pound;/day)</th>
-                <th class="govuk-table__header govuk-table__header--numeric" scope="col">Days to be spent by all staff
-                    at this grade
+                <th class="govuk-table__header govuk-table__header--numeric" th:classappend="${model.isThirdPartyOfgem()} ? 'cell-nowrap'" scope="col">Rate (&pound;/day)</th>
+                <th class="govuk-table__header govuk-table__header--numeric" scope="col"
+                    th:classappend="${model.isThirdPartyOfgem()} ? 'width-150' : 'width-100'"
+                    th:text="${model.isThirdPartyOfgem() ? 'Days to be spent on the project' : 'Days to be spent by all staff at this grade'}">
+                    Days to be spent by all staff at this grade
                 </th>
                 <th class="govuk-table__header govuk-table__header--numeric govuk-table__header-span" scope="col" th:colspan="${model.isThirdPartyOfgem() ? 2 : 1}">Total costs</th>
             </tr>
