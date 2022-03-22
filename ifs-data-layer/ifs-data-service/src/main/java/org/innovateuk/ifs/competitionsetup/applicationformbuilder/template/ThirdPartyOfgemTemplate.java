@@ -26,7 +26,7 @@ public class ThirdPartyOfgemTemplate implements CompetitionTemplate {
 
     @Override
     public Competition copyTemplatePropertiesToCompetition(Competition competition) {
-        competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Procurement Third Party"));
+        competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Third Party"));
         competition.setAcademicGrantPercentage(100);
         competition.setMinProjectDuration(1);
         competition.setMaxProjectDuration(36);

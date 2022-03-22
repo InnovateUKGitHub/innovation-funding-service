@@ -12,7 +12,8 @@ public enum FundingType {
     KTP("Knowledge Transfer Partnership (KTP)", "Knowledge Transfer Partnership (KTP)", "KTP GOL Template"),
     LOAN("Loan", "Loans"),
     PROCUREMENT("Procurement", "Procurement", "Procurement GOL Template"),
-    THIRDPARTY("Thirdparty", "Thirdparty", "Default GOL Template");
+    THIRDPARTY("Thirdparty", "Thirdparty", "Default GOL Template"),
+    HECP("Horizon Europe Guarantee", "Horizon Europe Guarantee", "Horizon Europe Guarantee GOL Template");
 
     private final String displayName;
     private final String defaultTermsName;
