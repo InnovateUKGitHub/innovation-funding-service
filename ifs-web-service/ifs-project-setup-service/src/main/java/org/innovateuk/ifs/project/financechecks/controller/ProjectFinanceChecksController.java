@@ -510,7 +510,14 @@ public class ProjectFinanceChecksController {
             Optional<ProjectFinanceResource> organisationProjectFinance = projectFinances.stream()
                     .filter(projectFinance -> projectFinance.getOrganisation().equals(organisation.getId()))
                     .findFirst();
-            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(), competition.getFinanceRowTypesByFinance(organisationProjectFinance), competition.isOverheadsAlwaysTwenty(), competition.getName(), competition.getFundingType() == FundingType.KTP, ktpPhase2Enabled, canEditProjectCosts));
+            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(),
+                    competition.getFinanceRowTypesByFinance(organisationProjectFinance),
+                    competition.isOverheadsAlwaysTwenty(),
+                    competition.getName(),
+                    competition.getFundingType() == FundingType.KTP,
+                    ktpPhase2Enabled,
+                    canEditProjectCosts,
+                    competition.isHorizonEuropeGuarantee()));
             model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId()));
         } else {
             model.addAttribute("academicCostForm", projectAcademicCostFormPopulator.populate(new AcademicCostForm(), project.getId(), organisation.getId()));
@@ -537,7 +544,8 @@ public class ProjectFinanceChecksController {
                 showChangesLink,
                 false,
                 false,
-                competition.isThirdPartyOfgem()));
+                competition.isThirdPartyOfgem(),
+                competition.isHorizonEuropeGuarantee()));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
 

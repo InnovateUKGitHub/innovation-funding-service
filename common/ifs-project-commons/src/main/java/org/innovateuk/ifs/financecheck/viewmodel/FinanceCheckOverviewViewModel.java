@@ -15,15 +15,12 @@ public class FinanceCheckOverviewViewModel {
     private final boolean ktpCompetition;
     private final boolean hasGrantClaimPercentage;
     private final boolean isThirdPartyOfgem;
-
+    private final boolean hecpCompetition;
     private final long applicationId;
     private final boolean canChangeFundingSought;
     private final boolean canChangeFundingLevelPercentages;
-
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
-
     private final boolean externalUser;
-
     private final String externalUserLinkUrl;
 
     public FinanceCheckOverviewViewModel(ProjectFinanceOverviewViewModel overview,
@@ -36,9 +33,10 @@ public class FinanceCheckOverviewViewModel {
                                          boolean canChangeFundingLevelPercentages,
                                          boolean hasGrantClaimPercentage,
                                          ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
-                                         boolean isThirdPartyOfgem) {
+                                         boolean isThirdPartyOfgem,
+                                         boolean hecpCompetition) {
         this(overview, summaries, breakdown, applicationId, canChangeFundingSought, loanCompetition, ktpCompetition, canChangeFundingLevelPercentages,
-                hasGrantClaimPercentage, applicationFundingBreakdownViewModel, false, null, isThirdPartyOfgem);
+                hasGrantClaimPercentage, applicationFundingBreakdownViewModel, false, null, isThirdPartyOfgem, hecpCompetition);
     }
 
     public FinanceCheckOverviewViewModel(ProjectFinanceOverviewViewModel overview,
@@ -53,7 +51,8 @@ public class FinanceCheckOverviewViewModel {
                                          ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
                                          boolean externalUser,
                                          String externalUserLinkUrl,
-                                         boolean isThirdPartyOfgem) {
+                                         boolean isThirdPartyOfgem,
+                                         boolean hecpCompetition) {
         this.overview = overview;
         this.summaries = summaries;
         this.breakdown = breakdown;
@@ -67,6 +66,7 @@ public class FinanceCheckOverviewViewModel {
         this.externalUser = externalUser;
         this.externalUserLinkUrl = externalUserLinkUrl;
         this.isThirdPartyOfgem = isThirdPartyOfgem;
+        this.hecpCompetition = hecpCompetition;
     }
 
     public ProjectFinanceOverviewViewModel getOverview() {
@@ -124,5 +124,9 @@ public class FinanceCheckOverviewViewModel {
 
     public boolean isThirdPartyOfgem() {
         return isThirdPartyOfgem;
+    }
+
+    public boolean isHecpCompetition() {
+        return hecpCompetition;
     }
 }
