@@ -164,7 +164,7 @@ the user completes required fields in third party competition
 
 the user verifies valid terms and conditions text is displaying
     [Arguments]  ${title}
-    the user clicks the button/link                     jQuery = a:contains("Procurement Third Party (opens in a new window)")
+    the user clicks the button/link                     jQuery = a:contains("Third Party (opens in a new window)")
     select window                                       title = ${title} - Innovation Funding Service
     the user should see the element                     jQuery = h1:contains("${title}")
     the user should see the element                     jQuery = a:contains("View ${title} (opens in a new window)")
