@@ -23,3 +23,8 @@ spec:
                 configMapKeyRef:
                   name: new-relic-config
                   key: NEW_RELIC_LABELS
+            - name: NEW_RELIC_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: new-relic-config
+                  key: NEW_RELIC_ENV
