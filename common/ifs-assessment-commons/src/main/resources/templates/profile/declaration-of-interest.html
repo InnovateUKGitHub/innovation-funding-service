@@ -163,7 +163,7 @@
 
         </th:block>
 
-        <th:block th:if="${model.ediUpdateEnabled}">
+        <th:block th:if="${model.ediUpdateEnabled && !model.compAdminUser}">
             <h2 class="govuk-heading-m govuk-!-margin-top-6">Equality, diversity and inclusion</h2>
             <p class="govuk-body govuk-hint">Please complete our EDI monitoring survey. It helps us ensure we treat
                 everyone who engages with us fairly and equally. The survey is mandatory and should takes no more than
