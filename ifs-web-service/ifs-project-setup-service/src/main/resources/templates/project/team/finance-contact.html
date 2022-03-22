@@ -38,12 +38,25 @@
         <th:block th:unless="${model.ktpCompetition}">
             <p class="govuk-body">Select your finance contact. You can change your finance
                 contact at any time until project setup is complete.
-                <br/>They will:</p>
+                <br/>
+                <th:block th:if="${model.hecpCompetition}">The finance contact will be required to:</th:block>
+                <th:block th:unless="${model.hecpCompetition}">They will:</th:block>
+            </p>
 
             <ul class="govuk-list govuk-list--bullet">
                 <li>provide bank details for your organisation</li>
                 <li>confirm any queries we have with your project costs</li>
+                <th:block th:if="${model.hecpCompetition}">
+                    <li>submit claims once the project is live and has started</li>
+                </th:block>
             </ul>
+
+            <th:block th:if="${model.hecpCompetition}">
+                <p class="govuk-body">
+                    The project manager and the finance contact can be the same person.
+                </p>
+            </th:block>
+
         </th:block>
 
         <form id="finance-contact-form" method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate"
