@@ -7,7 +7,6 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.viewmodel.AssessorProfileDetailsViewModel;
 import org.innovateuk.ifs.viewmodel.AssessorProfileSkillsViewModel;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
@@ -22,10 +21,7 @@ public class AssessorProfileSkillsModelPopulator {
 
     private AssessorProfileDetailsModelPopulator assessorProfileDetailsModelPopulator;
     private CompetitionRestService competitionRestService;
-    @Value("${ifs.edi.update.enabled}")
-    private boolean isEdiUpdateEnabled;
-    @Value("${ifs.edi.salesforce.page.url}")
-    private String ediUpdateUrl;
+
     public AssessorProfileSkillsModelPopulator(AssessorProfileDetailsModelPopulator assessorProfileDetailsModelPopulator,
                                                CompetitionRestService competitionRestService) {
         this.assessorProfileDetailsModelPopulator = assessorProfileDetailsModelPopulator;
@@ -44,9 +40,7 @@ public class AssessorProfileSkillsModelPopulator {
                 assessorProfileDetailsViewModel,
                 getInnovationAreasSectorMap(profile.getInnovationAreas()),
                 profile.getSkillsAreas(),
-                compAdminUser,
-                isEdiUpdateEnabled,
-                ediUpdateUrl
+                compAdminUser
         );
     }
 
