@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tgh="http://www.thymeleaf.org">
 <!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.YourProjectCostsViewModel"*/-->
 <!--/*@thymesVar id="form" type="org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm"*/-->
 
@@ -87,17 +87,22 @@
                         </details>
                     </th:block>
                 </th:block>
-                <div class="govuk-form-group inline">
-                    <label class="govuk-label" th:for="working-days-per-year">
-                        Working days per year
-                    </label>
-                    <th:block
-                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=labour.workingDaysPerYear)"/>
-                    <input type="number" class="govuk-input govuk-input--width-4"
-                           id="working-days-per-year" th:field="*{labour.workingDaysPerYear}"
-                           th:errorclass="govuk-input--error"
-                           placeholder="0" min="1" max="365" required="required">
-                </div>
+                <th:block th:unless="${model.isThirdPartyOfgem()}">
+                    <div class="govuk-form-group inline">
+                        <label class="govuk-label" th:for="working-days-per-year">
+                            Working days per year
+                        </label>
+                        <th:block
+                                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=labour.workingDaysPerYear)"/>
+                        <input type="number" class="govuk-input govuk-input--width-4"
+                               id="working-days-per-year" th:field="*{labour.workingDaysPerYear}"
+                               th:errorclass="govuk-input--error"
+                               placeholder="0" min="1" max="365" required="required">
+                    </div>
+                </th:block>
+                <th:block h:if="${model.isThirdPartyOfgem()}">
+                    <input type="hidden" name="labour.workingDaysPerYear" th:value="${#numbers.formatInteger(1,0,'DEFAULT')}"/>
+                </th:block>
                 <h3 class="govuk-heading-s">Number of staff and roles within the project</h3>
                 <div class="govuk-form-group table-overflow">
                     <table id="labour-costs-table" class="govuk-table">
@@ -289,10 +294,12 @@
 </th:block>
 
 <th:block th:fragment="labour_read_only">
-    <dl class="standard-definition-list">
-        <dt>Working days per year</dt>
-        <dd th:text="${form.labour.workingDaysPerYear}">232</dd>
-    </dl>
+    <th:block th:unless="${model.isThirdPartyOfgem()}">
+        <dl class="standard-definition-list">
+            <dt>Working days per year</dt>
+            <dd th:text="${form.labour.workingDaysPerYear}">232</dd>
+        </dl>
+    </th:block>
     <p class="govuk-body">Number of staff and roles within the project</p>
     <div class="table-overflow">
         <table class="govuk-table labour-costs-table">

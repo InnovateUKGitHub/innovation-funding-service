@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,7 +88,14 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
         String description = LabourCostCategory.WORKING_DAYS_PER_YEAR;
         Integer labourDays = DEFAULT_WORKING_DAYS;
         boolean thirdPartyOfgem = finance.getCompetition().isThirdPartyOfgem();
-        return newArrayList(new LabourCost(null, LabourCostCategory.WORKING_DAYS_KEY, null,
-                null, labourDays, description, finance.getId(), null, thirdPartyOfgem));
+
+        List<LabourCost> defaultLabourCost = Collections.emptyList();
+
+        if (!thirdPartyOfgem) {
+            defaultLabourCost = newArrayList(new LabourCost(null, LabourCostCategory.WORKING_DAYS_KEY, null,
+                    null, labourDays, description, finance.getId(), null, thirdPartyOfgem));
+        }
+
+        return defaultLabourCost;
     }
 }
