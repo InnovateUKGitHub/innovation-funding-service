@@ -19,14 +19,16 @@ public class ApplicationFundingBreakdownViewModel implements BaseAnalyticsViewMo
     private final boolean collaborativeProject;
     private final boolean ktpCompetition;
     private final List<FinanceRowType> financeRowTypes;
+    private final boolean hecpCompetition;
 
-    public ApplicationFundingBreakdownViewModel(long applicationId, String competitionName, List<BreakdownTableRow> rows, boolean collaborativeProject, boolean ktpCompetition, List<FinanceRowType> financeRowTypes) {
+    public ApplicationFundingBreakdownViewModel(long applicationId, String competitionName, List<BreakdownTableRow> rows, boolean collaborativeProject, boolean ktpCompetition, List<FinanceRowType> financeRowTypes, boolean hecpCompetition) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.rows = rows;
         this.collaborativeProject = collaborativeProject;
         this.ktpCompetition = ktpCompetition;
         this.financeRowTypes = financeRowTypes;
+        this.hecpCompetition = hecpCompetition;
     }
 
     @Override
@@ -53,6 +55,10 @@ public class ApplicationFundingBreakdownViewModel implements BaseAnalyticsViewMo
 
     public List<FinanceRowType> getFinanceRowTypes() {
         return financeRowTypes;
+    }
+
+    public boolean isHecpCompetition() {
+        return hecpCompetition;
     }
 
     /* view logic. */
