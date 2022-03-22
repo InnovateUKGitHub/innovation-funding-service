@@ -11,7 +11,7 @@ public class GrantTermsAndConditionsResourceTest {
     @Test
     public void isProcurementThirdParty() {
         GrantTermsAndConditionsResource grantTermsAndConditionsResource = newGrantTermsAndConditionsResource()
-                .withName("Procurement Third Party")
+                .withName("Third Party")
                 .build();
 
         assertTrue(grantTermsAndConditionsResource.isProcurementThirdParty());
