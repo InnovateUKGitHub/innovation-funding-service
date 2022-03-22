@@ -13,6 +13,8 @@ Documentation   IFS-11442 OFGEM: Create a "ThirdParty" generic template
 ...
 ...             IFS-11570 Your Project costs -> Other costs - Content change
 ...
+...             IFS-11566 OFGEM - Confirmation of submission page amendments
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -94,15 +96,16 @@ Applicant should not view SME applicant related content in Other costs
     [Teardown]  the user clicks the button/link     jQuery = button:contains("Other costs")
 
 the user submits the third party ofgem application
-    [Documentation]   IFS-11475  IFS-11476  IFS-11480
-    [Setup]  Get competitions id and set it as suite variable   ${thirdPartyOfgemCompetitionName}
+    [Documentation]   IFS-11475  IFS-11476  IFS-11480  IFS-11566
+    [Setup]  Get competitions id and set it as suite variable       ${thirdPartyOfgemCompetitionName}
     Given the user completes thirdparty ofgem project finances
-    And the user clicks the button/link                         link = Back to application overview
-    And the user accept the thirdpary terms and conditions      Back to application overview
-    When the user clicks the button/link                        id = application-overview-submit-cta
-    And the user clicks the button/link                         id = submit-application-button
-    Then the user should see the element                        jQuery = h2:contains("Application submitted")
-    [Teardown]  update milestone to yesterday                   ${competitionId}  SUBMISSION_DATE
+    And the user clicks the button/link                             link = Back to application overview
+    And the user accept the thirdpary terms and conditions          Back to application overview
+    When the user clicks the button/link                            id = application-overview-submit-cta
+    And the user clicks the button/link                             id = submit-application-button
+    Then the user should see the element                            jQuery = h2:contains("Application submitted")
+    And the user should see ofgem submitted application amendments
+    [Teardown]  update milestone to yesterday                       ${competitionId}  SUBMISSION_DATE
 
 the applicant should not view overhead and capital usage costs in application summary
      [Documentation]   IFS-11475  IFS-11476
@@ -163,7 +166,7 @@ the user completes required fields in third party competition
 
 the user verifies valid terms and conditions text is displaying
     [Arguments]  ${title}
-    the user clicks the button/link                     jQuery = a:contains("Procurement Third Party (opens in a new window)")
+    the user clicks the button/link                     jQuery = a:contains("Third Party (opens in a new window)")
     select window                                       title = ${title} - Innovation Funding Service
     the user should see the element                     jQuery = h1:contains("${title}")
     the user should see the element                     jQuery = a:contains("View ${title} (opens in a new window)")
@@ -219,3 +222,10 @@ the user accept the thirdpary terms and conditions
     the user clicks the button/link    jQuery = button:contains("Agree and continue")
     the user should see the element    jQuery = .form-footer:contains("Innovation Fund governance document accepted")
     the user clicks the button/link    link = ${returnLink}
+
+the user should see ofgem submitted application amendments
+    the user should see the element     jQuery = h3:contains("Assessment process")
+    the user should see the element     jQuery = h3:contains("Decision notification")
+    the user should see the element     jQuery = h3:contains("If your application is successful")
+    the user should see the element     jQuery = h3:contains("If your application is unsuccessful")
+    the user should see the element     jQuery = h3:contains("Application feedback")

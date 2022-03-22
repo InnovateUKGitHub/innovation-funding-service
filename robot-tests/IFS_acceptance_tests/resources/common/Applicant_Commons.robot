@@ -449,7 +449,7 @@ the user completes the new account creation
 
 the applicant adds some content and marks this section as complete
     Set Focus To Element      css = .textarea-wrapped .editor
-    Input Text    css = .textarea-wrapped .editor    This is some random text
+    wait until keyword succeeds without screenshots   10s    200ms  Input Text    css = .textarea-wrapped .editor    This is some random text
     the user clicks the button/link    name = complete
     the user should see the element    name = edit
 
@@ -564,11 +564,12 @@ the user verifies his email and checks his organisation name
 
 logged in user applies to competition research
     [Arguments]  ${competition}  ${applicationType}
-    the user select the competition and starts application       ${competition}
-    the user clicks the button/link                              link = Apply with a different organisation
-    the user selects the radio button                            organisationTypeId  ${applicationType}
-    the user clicks the button/link                              jQuery = button:contains("Save and continue")
-    the user search for organisation name on Companies house     Bath  Bath Spa University
+    the user select the competition and starts application          ${competition}
+    the user clicks the button/link                                 link = Apply with a different organisation
+    the user selects the radio button                               organisationTypeId  ${applicationType}
+    the user clicks the button/link                                 jQuery = button:contains("Save and continue")
+    the user confirms economic activity for research organiations   No
+    the user search for organisation name on Companies house        Bath  Bath Spa University
 
 logged in user applies to competition public
     [Arguments]  ${competition}  ${applicationType}
@@ -862,8 +863,15 @@ the user selected organisation if available
 
 the user selects a knowledge based organisation
     [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
-    input text                          id = knowledgeBase        ${knowledgeBase}
-    the user clicks the button/link     jQuery = ul li:contains("${completeKBOrganisartionName}")
+    wait until keyword succeeds without screenshots         10s    200ms   input text      id = knowledgeBase        ${knowledgeBase}
+    Execute Javascript                                document.evaluate("//li[text()='${completeKBOrganisartionName}']",document.body,null,9,null).singleNodeValue.click();
+    Mouse Out           id = knowledgeBase
+#    wait until page contains element without screenshots    css=[id="knowledgeBase"][class="autocomplete__input autocomplete__input--focused autocomplete__input--default"]  5s
+#    wait until keyword succeeds without screenshots         10s    200ms   click element   jQuery = ul li:contains("${completeKBOrganisartionName}")
+#    mouse out                                               id = knowledgeBase
+#    Set Focus To Element    link=GOV.UK
+#    wait until page contains element without screenshots    css=[id="knowledgeBase"][class="autocomplete__input autocomplete__input--default"]    5s
+    #the user clicks the button/link     jQuery = ul li:contains("${completeKBOrganisartionName}")
 
 the user apply with knowledge base organisation
     [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
@@ -1070,3 +1078,8 @@ the user accepts invitation to join application under same organisation
     the user clicks the button/link                  jQuery = a:contains("Continue")
     login to application                             ${email}  ${password}
     the user clicks the button/link                  jQuery = a:contains("Confirm and accept invitation")
+
+the user confirms economic activity for research organiations
+    [Arguments]  ${confirmEligibility}
+    the user clicks the button twice    jQuery = label:contains("${confirmEligibility}")
+    the user clicks the button/link     name = research-eligibility-submit

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 public class GrantTermsAndConditionsResource extends VersionedTemplateResource {
     private static final String PROCUREMENT = "Procurement";
-    private static final String PROCUREMENT_THIRD_PARTY = "Procurement Third Party";
+    private static final String THIRD_PARTY = "Third Party";
 
     public GrantTermsAndConditionsResource() {
     }
@@ -23,6 +23,6 @@ public class GrantTermsAndConditionsResource extends VersionedTemplateResource {
 
     @JsonIgnore
     public boolean isProcurementThirdParty() {
-        return name.equals(PROCUREMENT_THIRD_PARTY);
+        return name.equals(THIRD_PARTY);
     }
 }

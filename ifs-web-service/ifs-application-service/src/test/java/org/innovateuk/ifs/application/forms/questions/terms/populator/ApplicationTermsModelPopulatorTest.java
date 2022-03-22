@@ -597,7 +597,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 .build();
         GrantTermsAndConditionsResource grantTermsAndConditionsResource = newGrantTermsAndConditionsResource()
                 .withTemplate("third-party-terms-and-conditions")
-                .withName("Procurement Third Party")
+                .withName("Third Party")
                 .build();
         CompetitionResource thirdPartyCompetition = newCompetitionResource()
                 .withCompetitionStatus(OPEN)

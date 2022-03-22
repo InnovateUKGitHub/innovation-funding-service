@@ -90,15 +90,17 @@ the user updates his organisation inviting the user
 # I am on purpose not making the following lines one keyword.
 # That is because i want to insert too many custom inputs, that would lead to too many arguments
 New Research user applies to Competition and starts application
-    the user applies to competition and enters organisation type  ${openCompetitionResearch}  radio-2
-    the research user finds org in companies house                Warwick  University of Warwick
-    the user enters text to a text field    email  ${bob}
-    the invited user fills the create account form  Bob  Minion
-    the user verifies account and starts his application  ${bob}
+    the user applies to competition and enters organisation type    ${openCompetitionResearch}  radio-2
+    the user confirms economic activity for research organiations   No
+    the research user finds org in companies house                  Warwick  University of Warwick
+    the user enters text to a text field                            email  ${bob}
+    the invited user fills the create account form                  Bob  Minion
+    the user verifies account and starts his application            ${bob}
     logout as user
 
 Another Research user applies to Competition and starts application
     the user applies to competition and enters organisation type    ${openCompetitionResearch}  radio-2
+    the user confirms economic activity for research organiations   No
     the research user finds org in companies house                  Warwick  University of Warwick
     the user enters text to a text field                            email  ${stuart}
     the invited user fills the create account form  Stuart          Minion

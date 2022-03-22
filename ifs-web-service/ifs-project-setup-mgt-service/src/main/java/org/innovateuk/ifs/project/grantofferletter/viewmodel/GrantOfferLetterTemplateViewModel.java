@@ -29,6 +29,7 @@ public class GrantOfferLetterTemplateViewModel {
     private final SubsidyControlModel subsidyControlModel;
     private final boolean isProcurement;
     private final boolean thirdPartyOfgem;
+    private final String leadOrganisationNumber;
 
     public GrantOfferLetterTemplateViewModel(long applicationId,
                                              String projectManagerFirstName,
@@ -37,6 +38,7 @@ public class GrantOfferLetterTemplateViewModel {
                                              String competitionName,
                                              String projectName,
                                              String leadOrgName,
+                                             String leadOrganisationNumber,
                                              List<NoteResource> notes,
                                              Map<String, String> termsAndConditionsTemplates,
                                              IndustrialFinanceTableModel industrialFinanceTable,
@@ -53,6 +55,7 @@ public class GrantOfferLetterTemplateViewModel {
         this.competitionName = competitionName;
         this.projectName = projectName;
         this.leadOrgName = leadOrgName;
+        this.leadOrganisationNumber = leadOrganisationNumber;
         this.notes = notes;
         this.termsAndConditionsTemplates = termsAndConditionsTemplates;
         this.industrialFinanceTable = industrialFinanceTable;
@@ -130,6 +133,10 @@ public class GrantOfferLetterTemplateViewModel {
 
     public boolean isProcurement() {
         return isProcurement;
+    }
+
+    public String getLeadOrganisationNumber() {
+        return leadOrganisationNumber;
     }
 
     public boolean isThirdPartyOfgem() {
