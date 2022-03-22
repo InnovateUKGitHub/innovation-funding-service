@@ -404,9 +404,11 @@ public class YourProjectCostsForm {
         getLabour().getRows().forEach((id, row) -> {
             LabourCost cost = row.toCost(null);
             row.setTotal(cost.getTotal(getLabour().getWorkingDaysPerYear()));
-            if (!isThirdPartyOfgem()) {
+            if (isThirdPartyOfgem()) {
+                row.setRate(cost.getRate());
+            } else {
                 row.setRate(cost.getRate(getLabour().getWorkingDaysPerYear()));
-            }
+           }
         });
         getOverhead().setTotal(getOverhead().getTotal());
         recalculateTotal(getMaterialRows());

@@ -148,6 +148,11 @@ public class LabourCost extends AbstractFinanceRowItem {
         return total;
     }
 
+    public BigDecimal getTotalWithoutWorkingDays() {
+        calculateTotal();
+        return total;
+    }
+
     private void calculateTotal() {
         if (rate != null && labourDays != null) {
             total = rate.multiply(new BigDecimal(labourDays));
