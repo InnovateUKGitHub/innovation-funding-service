@@ -70,7 +70,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
             });
 
             doAs(data.getLeadApplicant(), () ->
-                    data.setProject(projectService.getByApplicationId(data.getApplication().getId()).getSuccess())
+                data.setProject(projectService.getByApplicationId(data.getApplication().getId()).getSuccess())
             );
         });
     }
