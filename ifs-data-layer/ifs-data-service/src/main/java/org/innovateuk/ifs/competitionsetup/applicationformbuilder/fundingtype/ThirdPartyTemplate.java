@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +39,9 @@ public class ThirdPartyTemplate implements FundingTypeTemplate {
                         SUBCONTRACTING_COSTS,
                         TRAVEL,
                         OTHER_COSTS,
-                        FINANCE,
                         OTHER_FUNDING,
                         YOUR_FINANCE);
+        types.add(competition.getCompetitionType().getCompetitionTypeEnum() == CompetitionTypeEnum.OFGEM ? GRANT_CLAIM_AMOUNT : FINANCE);
         return commonBuilders.saveFinanceRows(competition, types);
     }
 
