@@ -7,6 +7,8 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
+Documentation     IFS-11534 Applicant/Assessors for EDI
+...
 
 *** Variables ***
 ${competitionNameEDI}   Performance testing competition
@@ -84,13 +86,36 @@ Lead applicant check the status of edi as complete when edi survey is complete f
     When the user clicks the button/link                        id = application-overview-submit-cta
     Then the user should see the read only view of EDI status   Complete
 
-Assessor can view EDI section in profile page
+Assessor can view EDI section as a incomplete in profile page
     [Documentation]  IFS-11534
     Given the user logs-in in new browser  	            &{assessor_credentials}
     And the user clicks the button/link                 id = dashboard-link-ASSESSOR
     When the user clicks the button/link                link = Profile
     Then the user should see EDI section details        Incomplete  Not Applicable  Start now
+    And the user should see the element                 jQuery = h1:contains("DOI")
 
+Assessor/Applicant checks the status of EDI as Incomplete When user not started the edi survey
+    [Documentation]  IFS-11534
+    Given the user creates a new application
+    And the user fills in the EDI application details   ${applicationNameEDI}  ${tomorrowday}  ${month}  ${nextyear}
+    When the user clicks the button/link                link = Application team
+    Then the user should see the element                jQuery = td:contains("Aaron Jennings") ~ td:contains("Incomplete") ~ td:contains("Lead applicant")
+
+Assessor/Applicant can view the EDI incomplete status
+    [Documentation]  IFS-111534
+    Given the user clicks the button/link                       link = Application overview
+    When the user clicks the button/link                        id = application-overview-submit-cta
+    And the user clicks the button/link                         id = accordion-questions-heading-1-2
+    Then the user should see the read only view of EDI status   Incomplete
+
+Assessor/applicant can not mark the application team as complete when the edi survey is not started
+    [Documentation]  IFS-11534
+    Given the user clicks the button/link                  link = Application overview
+    And the user clicks the button/link                    link = Application team
+    When the user clicks the button/link                   id = application-question-complete
+    And the user clicks the button/link                    jQuery = a:contains("here")
+    And the user changed EDI survey status                 INPROGRESS  2076-01-22 01:02:03
+    Then the user should see EDI section details           Incomplete  22 January 2076  Continue
 
 
 *** Keywords ***
