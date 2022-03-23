@@ -86,37 +86,36 @@ Lead applicant check the status of edi as complete when edi survey is complete f
     When the user clicks the button/link                        id = application-overview-submit-cta
     Then the user should see the read only view of EDI status   Complete
 
-Assessor can view EDI section as a incomplete in profile page
-    [Documentation]  IFS-11534
-    Given the user logs-in in new browser  	            &{assessor_credentials}
-    And the user clicks the button/link                 id = dashboard-link-ASSESSOR
-    When the user clicks the button/link                link = Profile
-    Then the user should see EDI section details        Incomplete  Not Applicable  Start now
-    And the user should see the element                 jQuery = h1:contains("DOI")
-
 Assessor/Applicant checks the status of EDI as Incomplete When user not started the edi survey
     [Documentation]  IFS-11534
-    Given the user creates a new application
-    And the user fills in the EDI application details   ${applicationNameEDI}  ${tomorrowday}  ${month}  ${nextyear}
+    Given the user logs-in in new browser  	            &{EDI_assessor_credentials}
+    And the assessor creates a new application
     When the user clicks the button/link                link = Application team
     Then the user should see the element                jQuery = td:contains("Aaron Jennings") ~ td:contains("Incomplete") ~ td:contains("Lead applicant")
 
-Assessor/Applicant can view the EDI incomplete status
-    [Documentation]  IFS-111534
-    Given the user clicks the button/link                       link = Application overview
-    When the user clicks the button/link                        id = application-overview-submit-cta
-    And the user clicks the button/link                         id = accordion-questions-heading-1-2
-    Then the user should see the read only view of EDI status   Incomplete
+Assessor can view EDI section as a incomplete in profile page
+    [Documentation]  IFS-11534
+    When the user clicks the button/link                 link = Profile
+    Then the user should see EDI section details         Incomplete  Not Applicable  Start now
+    And the user should see the element                  jQuery = h1:contains("DOI")
 
 Assessor/applicant can not mark the application team as complete when the edi survey is not started
     [Documentation]  IFS-11534
-    Given the user clicks the button/link                  link = Application overview
+    [Setup]  get application Id                            ${applicationNameEDI}
+    Given the user navigates to the page                   ${server}/application/${applicationIdEDI}
+    And the user clicks the button/link                    link = Application overview
     And the user clicks the button/link                    link = Application team
     When the user clicks the button/link                   id = application-question-complete
     And the user clicks the button/link                    jQuery = a:contains("here")
-    And the user changed EDI survey status                 INPROGRESS  2076-01-22 01:02:03
+    And the assessor changed EDI survey status             INPROGRESS  2076-01-22 01:02:03
     Then the user should see EDI section details           Incomplete  22 January 2076  Continue
 
+Applicant can view the EDI status as complete in profile
+    [Documentation]  IFS-11534
+    Given log in as a different user                &{EDI_assessor_credentials}
+    When the user clicks the button/link            link = Profile
+    And the user changed EDI survey status          COMPLETE  2089-03-25 01:02:03
+    Then the user should see EDI section details    Complete  25 March 2089  Review EDI summary
 
 *** Keywords ***
 Custom Suite Setup
@@ -171,3 +170,26 @@ the user should see the read only view of EDI status
     the user should see the element                 jQuery = h3:contains("Team members")
     the user should see the element                 jQuery = th:contains("EDI status")
     the user should see the element                 jQuery = td:contains("Steve Smith") ~ td:contains("${ediStatus}")
+
+the assessor creates a new application
+     the user select the competition and starts application     ${competitionNameEDI}
+     the user selects the radio button                          organisationTypeId  1
+     the user clicks the button/link                            jQuery = button:contains("Save and continue")
+     the user enters text to a text field                       id = organisationSearchName  ASOS
+     the user clicks the button/link                            jQuery = button:contains("Search")
+     the user clicks the button/link                            link = ASOS PLC
+     the user clicks the button/link                            jQuery = button:contains("Save and continue")
+     the user selects the checkbox                              agree
+     the user clicks the button/link                            jQuery = button:contains("Continue")
+
+the assessor should see the read only view of EDI status
+      [Arguments]  ${ediStatus}
+      the user should see the element                 jQuery = h3:contains("Team members")
+      the user should see the element                 jQuery = th:contains("EDI status")
+      the user should see the element                 jQuery = td:contains("Aaron Jennings") ~ td:contains("${ediStatus}")
+
+the assessor changed EDI survey status
+    [Arguments]  ${ediStatus}  ${ediReviewDate}
+    execute sql string   UPDATE `${database_name}`.`user` SET `edi_status` = '${ediStatus}', `edi_review_date` = '${ediReviewDate}' WHERE (`email` = 'Aaron.Jennings@ukri.org');
+    the user clicks the button/link             link = Edit your details
+    the user clicks the button/link             jQuery = button:contains("Save changes")

@@ -46,7 +46,7 @@
 &{system_maintenance_user}                        email=system.maintainer@innovateuk.test                password=${short_password}
 &{lead_SP_credentials}                            email=ralph.young@ooba.example.com                     password=${short_password}
 &{support|_user}                                  email=support@innovateuk.test                          password=${short_password}
-&{assessor_credentials}                           email=Aaron.Jennings@ukri.org                          password=${short_password}
+&{EDI_assessor_credentials}                       email=Aaron.Jennings@ukri.org                          password=${short_password}
 ##### DO NOT USE THIS USER FOR ANYTHING ELSE ######
 &{terms_and_conditions_login_credentials}         email=laura.jackson@example.com                        password=Passw0rd1357
 ###################################################
