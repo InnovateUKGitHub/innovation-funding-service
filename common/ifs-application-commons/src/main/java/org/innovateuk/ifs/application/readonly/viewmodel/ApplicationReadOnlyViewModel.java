@@ -106,9 +106,4 @@ public class ApplicationReadOnlyViewModel {
         return isLoanPartBEnabled;
     }
 
-    @JsonIgnore
-    public boolean isTermsAndConditionsRemovalForOfgem() {
-        return thirdPartyProcurement || thirdPartyOfgem;
-    }
-
 }
