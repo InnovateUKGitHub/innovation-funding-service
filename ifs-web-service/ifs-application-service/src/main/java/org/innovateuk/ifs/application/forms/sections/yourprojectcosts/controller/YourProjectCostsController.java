@@ -169,7 +169,6 @@ public class YourProjectCostsController extends AsyncAdaptor {
                              @PathVariable long sectionId,
                              @ModelAttribute("form") YourProjectCostsForm form,
                              @RequestParam("add_row") FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
-
         saver.addRowForm(form, rowType);
         return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId, VIEW);
     }
@@ -225,6 +224,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
         model.addAttribute("id", map.getKey());
         model.addAttribute("row", map.getValue());
         model.addAttribute("thirdPartyOfgem", competition.isThirdPartyOfgem());
+
         return String.format("application/your-project-costs-fragments :: ajax_%s_row", rowType.name().toLowerCase());
     }
 
