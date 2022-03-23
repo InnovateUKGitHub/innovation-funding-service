@@ -9,6 +9,12 @@ Documentation   IFS-11442 OFGEM: Create a "ThirdParty" generic template
 ...
 ...             IFS-11483 OFGEM: Delete Reference to General Guidance
 ...
+...             IFS-11568 Your Project costs -> Materials - Content change
+...
+...             IFS-11569 Your Project costs -> Subcontracting - Content change
+...
+...             IFS-11570 Your Project costs -> Other costs - Content change
+...
 ...             IFS-11566 OFGEM - Confirmation of submission page amendments
 ...
 Suite Setup       Custom suite setup
@@ -68,6 +74,28 @@ Applicant should not view overhead and capital usage costs in project costs
     When the user clicks the button/link             link = Your project costs
     Then the user should not see the element         jQuery = button:contains("Overhead costs")
     And the user should not see the element          jQuery = button:contains("Capital usage")
+
+Applicant should not view any references to overhead cost in materials
+    [Documentation]   IFS-11568
+    When the user clicks the button/link            jQuery = button:contains("Materials")
+    Then the user should not see the element        jQuery = p:contains("You can claim the costs of materials used on your project providing:")
+    And the user should not see the element         jQuery = li:contains("they are not already purchased or included in the overheads")
+    [Teardown]  the user clicks the button/link     jQuery = button:contains("Materials")
+
+Applicant should view ofgem related subcontracting content changes
+    [Documentation]   IFS-11569
+    When the user clicks the button/link            jQuery = button:contains("Subcontracting")
+    Then the user should see the element            jQuery = label:contains("Project partner name")
+    And the user should see the element             jQuery = label:contains("Country where the project partner will work")
+    And the user should see the element             jQuery = label:contains("Role of the project partner in the project and description of the work they’ll do")
+    And the user should not see the element         jQuery = p:contains("You can subcontract work if you don’t have the expertise in your project team.")
+    [Teardown]  the user clicks the button/link     jQuery = button:contains("Subcontracting")
+
+Applicant should not view SME applicant related content in Other costs
+    [Documentation]   IFS-11570
+    When the user clicks the button/link            jQuery = button:contains("Other costs")
+    Then the user should not see the element        jQuery = p:contains("Please note that legal or project audit and accountancy fees are not eligible")
+    [Teardown]  the user clicks the button/link     jQuery = button:contains("Other costs")
 
 Max funding sought validation - ofgem
     [Documentation]  IFS-7866
