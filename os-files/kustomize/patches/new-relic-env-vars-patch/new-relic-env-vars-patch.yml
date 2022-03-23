@@ -7,12 +7,10 @@ spec:
     spec:
       containers:
         - name: spring-boot-service-container
+          envFrom:
+            - secretRef:
+                name: new-relic-secrets
           env:
-            - name: NEW_RELIC_LICENSE_KEY
-              valueFrom:
-                configMapKeyRef:
-                  name: new-relic-config
-                  key: NEW_RELIC_LICENSE_KEY
             - name: NEW_RELIC_LOG
               valueFrom:
                 configMapKeyRef:

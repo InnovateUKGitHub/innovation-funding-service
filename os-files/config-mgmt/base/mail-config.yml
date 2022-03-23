@@ -1,6 +1,0 @@
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: mail-config
-data:
-  MAIL_FQDN: "mail-openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org"

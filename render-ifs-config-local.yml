@@ -1,0 +1,198 @@
+apiVersion: v1
+data:
+  IFS_DATA_SERVICE_CACHE_PREFIX: 'nn:'
+  IFS_DATA_SERVICE_CACHE_TTL: "18000000"
+  IFS_DATA_SERVICE_CACHE_TYPE: redis
+  IFS_DATA_SERVICE_REDIS_MAX_ACTIVE: "8"
+  IFS_DATA_SERVICE_REDIS_SSL: "false"
+kind: ConfigMap
+metadata:
+  annotations:
+    deployedWith: kustomize
+  name: cache-config
+---
+apiVersion: v1
+data:
+  AUTH_KEY: supersecretkey
+  CLUSTER_ADDRESS: org-env-0.org.innovateuk.ukri.org
+  DATA_SERVICE_HOST: data-service
+  DATA_SERVICE_PORT: "8080"
+  FILE_UPLOAD_CLAIM: file-upload-claim
+  GLUSTER_IP_1: 10.150.10.10
+  GLUSTER_IP_2: 10.150.11.11
+  GLUSTER_IP_3: 10.150.12.12
+  IDP_REST_BASEURL: http://registration-svc:8080
+  IFS_DATA_COMPANIES_HOUSE_LOOKUP_ENABLED: "false"
+  IFS_DATA_SERVICE_FILE_GRANT_SEND_DELAY_MILLIS: "60000"
+  IFS_DATA_SERVICE_FILE_STORAGE_BASE: /tmp
+  IFS_DATA_SERVICE_FILE_STORAGE_VIRUS_SCANNING_ENABLED: "false"
+  IFS_EMAIL_BLACKLIST: blacklisted.com
+  IFS_EMAIL_WHITELIST: '*'
+  IFS_FINANCE_TOTALS_ENABLED: "true"
+  IFS_SYSTEM_EMAIL_ADDRESS: noreply-innovateuk@example.com
+  IFS_SYSTEM_EXTERNAL_USER_EMAIL_DOMAIN: ktn-uk.test
+  IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAIN: innovateuk.ukri.test
+  IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAINS: iuk.ukri.test,innovateuk.ukri.test,innovateuk.test
+  IFS_SYSTEM_KTA_USER_EMAIL_DOMAIN: ktn-uk.test
+  SIL_REST_BASEURL: http://sil-stub:8080/silstub
+  SPRING_DATASOURCE_HIKARI_CONNECTIONTIMEOUT: "30000"
+  SPRING_DATASOURCE_HIKARI_MAXIMUMPOOLSIZE: "10"
+  SPRING_DATASOURCE_HIKARI_MAXLIFETIME: "1800000"
+  SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE: "100"
+kind: ConfigMap
+metadata:
+  annotations:
+    deployedWith: kustomize
+  name: data-service-config
+---
+apiVersion: v1
+data:
+  IFS_ALWAYS_OPEN_COMPETITION_ENABLED: "true"
+  IFS_EDI_UPDATE_ENABLED: "true"
+  IFS_EXTERNAL_ROLE_ENABLED: "true"
+  IFS_KTP_FEC_FINANCE_MODEL_ENABLED: "true"
+  IFS_KTP_PHASE2_ENABLED: "true"
+  IFS_LOAN_PARTB_ENABLED: "true"
+  IFS_LOAN_SURVEY_QUESTION_ENABLED: "true"
+  IFS_MONITORINGOFFICER_DASHBOARD_FILTER_ENABLED: "true"
+  IFS_MONITORINGOFFICER_JOURNEY_UPDATE_ENABLED: "true"
+  IFS_MONITORINGOFFICER_SPENDPROFILE_UPDATE_ENABLED: "true"
+  IFS_NEW_ORGANISATION_SEARCH_ENABLED: "true"
+  IFS_PROCUREMENT_MILESTONES_ENABLED: "true"
+  IFS_SUBSIDY_CONTROL_ENABLED: "true"
+  IFS_SUBSIDY_CONTROL_GOL_ENABLED: "true"
+  IFS_SUBSIDY_CONTROL_NORTHERN_IRELAND_ENABLED: "true"
+  IFS_SUBSIDY_CONTROL_NORTHERN_IRELAND_MODE: FULL
+  IFS_SUPPORTER_ENABLED: "true"
+kind: ConfigMap
+metadata:
+  annotations:
+    deployedWith: kustomize
+  name: feature-toggle-config
+---
+apiVersion: v1
+data:
+  FLYWAY_LOCATIONS: db/migration,db/reference,db/setup,db/webtest
+  FLYWAY_TABLE: schema_version
+kind: ConfigMap
+metadata:
+  annotations:
+    deployedWith: kustomize
+  name: flyway-config
+---
+apiVersion: v1
+data:
+  RESOURCE_DOMAIN: ""
+kind: ConfigMap
+metadata:
+  annotations:
+    deployedWith: kustomize
+  name: idp-config
+---
+apiVersion: v1
+data:
+  IDP_LDAP_PORT: "8389"
+  LDAP_ATTRIBUTE_SEARCHFILTER: (mail=$resolutionContext.principal)
+  LDAP_AUTHENTICATOR: anonSearchAuthenticator
+  LDAP_BASEDN: dc=nodomain
+  LDAP_BINDDN: cn=admin,dc=nodomain
+  LDAP_DOMAIN: dc=int,dc=g2g3digital,dc=net
+  LDAP_PORT: "389"
+  LDAP_RETURNATTRIBUTES: mail,uid
+  LDAP_SCHEME: ldaps
+  LDAP_USERFILTER: (&(mail={user})(!(employeeType=inactive)))
+  LDAP_USESSL: "true"
+  LDAP_USESTARTTLS: "false"
+  ONLY_DELETE_IFS_USERS: "false"
+  ONLY_SYNC_LDAP: "false"
+kind: ConfigMap
+metadata:
+  annotations:
+    deployedWith: kustomize
+  name: ldap-config
+---
+apiVersion: v1
+data:
+  MAIL_FQDN: host.docker.internal:4443
+kind: ConfigMap
+metadata:
+  annotations:
+    deployedWith: kustomize
+  name: mail-config
+---
+apiVersion: v1
+data:
+  NEW_RELIC_LABELS: undefined
+  NEW_RELIC_LOG: STDOUT
+kind: ConfigMap
+metadata:
+  annotations:
+    deployedWith: kustomize
+  name: new-relic-config
+---
+apiVersion: v1
+data:
+  IDP_DOMAIN: auth-openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org
+  MEMCACHE_ENDPOINT: ""
+  MPM_MAXCONNECTIONSPERCHILD: "0"
+  MPM_MAXREQUESTWORKERS: "150"
+  MPM_MAXSPARETHREADS: "75"
+  MPM_MINSPARETHREADS: "25"
+  MPM_STARTSERVERS: "2"
+  MPM_THREADLIMIT: "64"
+  MPM_THREADSPERCHILD: "25"
+  SHIBBOLETH_API_KEYS: "1234567890"
+  SHIBBOLETH_LDAP_BASE_DN: dc=nodomain
+  SHIBBOLETH_LDAP_PORT: "8389"
+  SHIBBOLETH_LDAP_USER: cn=admin,dc=nodomain
+  SP_DOMAIN: openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org
+kind: ConfigMap
+metadata:
+  annotations:
+    deployedWith: kustomize
+  name: shibboleth-config
+---
+apiVersion: v1
+data:
+  SPRING_PROFILES_ACTIVE: nonnamed,AT,debug
+kind: ConfigMap
+metadata:
+  annotations:
+    deployedWith: kustomize
+  name: spring-profile-env
+---
+apiVersion: v1
+data:
+  ADMIN_ADDRESS: admin-openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org
+  IFS_EARLY_METRICS_URL: https://openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org/early-metrics
+  IFS_EDI_SALESFORCE_PAGE_URL: https://loans-innovateuk.cs80.force.com/EDI/s
+  IFS_EXTERNAL_ROLE_ENABLED: "true"
+  IFS_LIVE_PROJECTS_LANDING_PAGE_URL: https://openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org/live-projects-landing-page
+  IFS_LOANS_SALESFORCE_PAGE_URL: https://loans-innovateuk.cs80.force.com/loansCommunity/s
+  IFS_PROJECT_MANAGEMENT_ON_HOLD: "true"
+  IFS_SHOW_COVID_QUESTIONNAIRE_LINKS: "true"
+  IFS_WEB_AJP_CONNECTIONS_ACCEPT_COUNT: "700"
+  IFS_WEB_AJP_CONNECTIONS_MAX_THREADS: "300"
+  IFS_WEB_AJP_CONNECTIONS_MAX_TOTAL: "700"
+  IFS_WEB_BASEURL: https://openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org
+  IFS_WEB_REST_CONNECTIONS_MAX_PER_ROUTE: "1000"
+  IFS_WEB_REST_CONNECTIONS_MAX_TOTAL: "1000"
+  MAIL_ADDRESS: mail-openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org
+  SPRING_APPLICATION_JSON: '{"logout":{"url": "https://openshiftEnvKey.apps.org-env-0.org.innovateuk.ukri.org/Logout/"
+    }}'
+kind: ConfigMap
+metadata:
+  annotations:
+    deployedWith: kustomize
+  name: web-config
+---
+apiVersion: v1
+data:
+  IFS_SBA_PASSWORD: e2JjcnlwdH0kMmEkMTAkVXN6bmxXNEppVDJKLmdsT052eVM4T1JEZVF0ck1UZGdRQlNnV3F2OHB2UmxkYXhyOC5uL1M=
+  IFS_SBA_USERNAME: c2JhZG1pbg==
+kind: Secret
+metadata:
+  annotations:
+    deployedWith: kustomize
+  name: sba-secret
+type: Opaque

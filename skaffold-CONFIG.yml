@@ -3,13 +3,30 @@ kind: Config
 metadata:
   name: innovation-funding-service
 profiles:
+  - name: local
+    build:
+      local:
+        useDockerCLI: false
+        useBuildkit: false
+        tryImportMissing: true
+        push: false
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
+      artifacts: [ ]
+    deploy:
+      kubeContext: custom
+      kustomize:
+        paths:
+          - os-files/kustomize/config-mgmt/env/local
+
   - name: custom
     build:
       local:
         useDockerCLI: false
         useBuildkit: false
         tryImportMissing: true
-        push: true
+        push: false
       tagPolicy:
         gitCommit:
           ignoreChanges: true
@@ -18,7 +35,7 @@ profiles:
       kubeContext: custom
       kustomize:
         paths:
-          - os-files/config-mgmt/env/aws/custom
+          - os-files/kustomize/config-mgmt/env/aws/custom
 
   - name: sysint
     build:
@@ -26,7 +43,7 @@ profiles:
         useDockerCLI: false
         useBuildkit: false
         tryImportMissing: true
-        push: true
+        push: false
       tagPolicy:
         gitCommit:
           ignoreChanges: true
@@ -35,7 +52,7 @@ profiles:
       kubeContext: sysint
       kustomize:
         paths:
-          - os-files/config-mgmt/env/aws/sysint
+          - os-files/kustomize/config-mgmt/env/aws/sysint
 
   - name: perf
     build:
@@ -43,7 +60,7 @@ profiles:
         useDockerCLI: false
         useBuildkit: false
         tryImportMissing: true
-        push: true
+        push: false
       tagPolicy:
         gitCommit:
           ignoreChanges: true
@@ -52,7 +69,7 @@ profiles:
       kubeContext: perf
       kustomize:
         paths:
-          - os-files/config-mgmt/env/aws/perf
+          - os-files/kustomize/config-mgmt/env/aws/perf
 
   - name: uat
     build:
@@ -60,7 +77,7 @@ profiles:
         useDockerCLI: false
         useBuildkit: false
         tryImportMissing: true
-        push: true
+        push: false
       tagPolicy:
         gitCommit:
           ignoreChanges: true
@@ -69,7 +86,7 @@ profiles:
       kubeContext: uat
       kustomize:
         paths:
-          - os-files/config-mgmt/env/aws/uat
+          - os-files/kustomize/config-mgmt/env/aws/uat
 
   - name: demo
     build:
@@ -77,7 +94,7 @@ profiles:
         useDockerCLI: false
         useBuildkit: false
         tryImportMissing: true
-        push: true
+        push: false
       tagPolicy:
         gitCommit:
           ignoreChanges: true
@@ -86,7 +103,7 @@ profiles:
       kubeContext: demo
       kustomize:
         paths:
-          - os-files/config-mgmt/env/aws/demo
+          - os-files/kustomize/config-mgmt/env/aws/demo
 
   - name: prod
     build:
@@ -94,7 +111,7 @@ profiles:
         useDockerCLI: false
         useBuildkit: false
         tryImportMissing: true
-        push: true
+        push: false
       tagPolicy:
         gitCommit:
           ignoreChanges: true
@@ -103,4 +120,4 @@ profiles:
       kubeContext: prod
       kustomize:
         paths:
-          - os-files/config-mgmt/env/aws/prod
+          - os-files/kustomize/config-mgmt/env/aws/prod

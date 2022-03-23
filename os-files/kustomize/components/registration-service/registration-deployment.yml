@@ -44,6 +44,10 @@ spec:
             successThreshold: 1
             failureThreshold: 1
           envFrom:
+            - secretRef:
+                name: ldap-secrets
+            - secretRef:
+                name: shibboleth-secrets
             - configMapRef:
                 name: web-config
             - configMapRef:

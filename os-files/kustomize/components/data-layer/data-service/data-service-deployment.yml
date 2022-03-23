@@ -42,10 +42,18 @@ spec:
           successThreshold: 1
           failureThreshold: 3
         envFrom:
+          - secretRef:
+              name: data-service-secrets
+          - secretRef:
+              name: db-secrets
+          - secretRef:
+              name: docusign-secrets
+          - secretRef:
+              name: cache-secrets
+          - secretRef:
+              name: flyway-secrets
           - configMapRef:
               name: feature-toggle-config
-          - configMapRef:
-              name: db-config
           - configMapRef:
               name: flyway-config
           - configMapRef:
@@ -54,8 +62,6 @@ spec:
               name: web-config
           - configMapRef:
               name: data-service-config
-          - configMapRef:
-              name: docusign-config
           - configMapRef:
               name: feature-toggle-config
         env:

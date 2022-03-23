@@ -14,7 +14,6 @@ resources:
 
   - config-maps/data-service-config.yml
   - config-maps/cache-config.yml
-  - config-maps/db-config.yml
   - config-maps/docusign-config.yml
   - config-maps/feature-toggle-config.yml
   - config-maps/flyway-config.yml

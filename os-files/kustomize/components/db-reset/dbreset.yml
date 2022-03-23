@@ -23,8 +23,12 @@ spec:
           EOF
           . /clean-migrate-db-sync-ldap.sh
       envFrom:
-        - configMapRef:
-            name: db-config
+        - secretRef:
+            name: db-secrets
+        - secretRef:
+            name: ldap-secrets
+        - secretRef:
+            name: flyway-secrets
         - configMapRef:
             name: performance-config
         - configMapRef:
@@ -32,11 +36,6 @@ spec:
         - configMapRef:
             name: flyway-config
       env:
-        - name: SYSTEM_USER_UUID
-          valueFrom:
-            configMapKeyRef:
-              name: flyway-config
-              key: SYSTEM_USER_UUID
         - name: IFS_TEST_USER_PASSWORD
           value: "%%IFS_TEST_USER_PASSWORD%%"
   restartPolicy: Never

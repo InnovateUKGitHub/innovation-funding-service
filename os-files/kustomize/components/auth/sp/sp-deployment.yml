@@ -47,6 +47,8 @@ spec:
             failureThreshold: 1
           imagePullPolicy: IfNotPresent
           envFrom:
+            - secretRef:
+                name: shibboleth-secrets
             - configMapRef:
                 name: shibboleth-config
           env:

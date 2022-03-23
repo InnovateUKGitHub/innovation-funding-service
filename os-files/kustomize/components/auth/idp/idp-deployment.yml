@@ -56,6 +56,10 @@ spec:
             failureThreshold: 5
           imagePullPolicy: IfNotPresent
           envFrom:
+            - secretRef:
+                name: ldap-secrets
+            - secretRef:
+                name: shibboleth-secrets
             - configMapRef:
                 name: ldap-config
             - configMapRef:

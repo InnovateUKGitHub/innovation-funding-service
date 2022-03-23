@@ -48,8 +48,10 @@ spec:
           - name: NEW_RELIC_APP_NAME
             value: "ifs-finance-data-service"
         envFrom:
-          - configMapRef:
-              name: finance-data-service-config
+          - secretRef:
+              name: data-service-secrets
+          - secretRef:
+              name: finance-data-service-secrets
           - configMapRef:
               name: data-service-config
         ports:

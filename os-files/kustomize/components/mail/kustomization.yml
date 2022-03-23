@@ -3,4 +3,3 @@ kind: Component
 resources:
   - mail.yml
   - mail-deployment.yml
-  - mail-config.yml

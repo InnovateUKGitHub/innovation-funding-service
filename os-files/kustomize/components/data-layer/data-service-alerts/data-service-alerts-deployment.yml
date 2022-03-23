@@ -43,8 +43,8 @@ spec:
           successThreshold: 1
           failureThreshold: 1
         envFrom:
-          - configMapRef:
-              name: db-config
+          - secretRef:
+              name: db-secrets
         env:
           - name: JAVA_TOOL_OPTIONS
             value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
