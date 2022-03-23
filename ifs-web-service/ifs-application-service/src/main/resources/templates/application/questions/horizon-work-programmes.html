@@ -65,9 +65,8 @@
                                            class="govuk-radios__input"
                                            required="required"
                                            th:attr="data-required-errormessage=#{validation.standard.horizon.work.programme.required}" />
-                                    <label th:for=${checkboxId} class="govuk-label govuk-checkboxes__label">
-                                        <span th:text=${workProgramme.display}>work programme name</span>
-                                    </label>
+                                    <label th:text="${workProgramme.display}"
+                                           class="govuk-label govuk-radios__label">Label</label>
                                 </div>
                             </div>
                         </fieldset>
@@ -81,10 +80,6 @@
             <table class="govuk-body">
                 <tr class="govuk-!-margin-bottom-2" th:each="entry: ${model.readOnlyMap}">
                     <div class="govuk-!-margin-bottom-3">
-                        <td class="cell-align-top govuk-form-group govuk-!-margin-bottom-4">
-                            <p class="govuk-!-font-weight-bold govuk-!-margin-top-0 govuk-!-margin-right-8"
-                               th:text="${entry.key}"></p>
-                        </td>
                         <td class="cell-align-top govuk-form-group">
                             <th:block th:each="location : ${entry.value}">
                                 <p class="govuk-body govuk-!-margin-bottom-0" th:text="${location.getDisplay()}"></p>
