@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.project.pendingpartner.viewmodel;
 
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
@@ -12,6 +15,9 @@ public class ProjectTermsViewModel {
     private final ZonedDateTime termsAcceptedOn;
     private final boolean subsidyBasisRequiredAndNotCompleted;
     private final Optional<Long> subsidyBasisQuestionId;
+    private CompetitionThirdPartyConfigResource thirdPartyConfig;
+    private FileEntryResource competitionTerms;
+    private final long competitionId;
 
     public ProjectTermsViewModel(long projectId,
                                  String projectName,
@@ -20,7 +26,10 @@ public class ProjectTermsViewModel {
                                  boolean termsAccepted,
                                  ZonedDateTime termsAcceptedOn,
                                  boolean subsidyBasisRequiredAndNotCompleted,
-                                 Optional<Long> subsidyBasisQuestionId) {
+                                 Optional<Long> subsidyBasisQuestionId,
+                                 CompetitionThirdPartyConfigResource thirdPartyConfig,
+                                 FileEntryResource competitionTerms,
+                                 long competitionId) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.organisationId = organisationId;
@@ -29,6 +38,9 @@ public class ProjectTermsViewModel {
         this.termsAcceptedOn = termsAcceptedOn;
         this.subsidyBasisRequiredAndNotCompleted = subsidyBasisRequiredAndNotCompleted;
         this.subsidyBasisQuestionId = subsidyBasisQuestionId;
+        this.thirdPartyConfig = thirdPartyConfig;
+        this.competitionTerms = competitionTerms;
+        this.competitionId = competitionId;
     }
 
 
@@ -66,5 +78,17 @@ public class ProjectTermsViewModel {
 
     public String getProjectName() {
         return projectName;
+    }
+
+    public CompetitionThirdPartyConfigResource getThirdPartyConfig() {
+        return thirdPartyConfig;
+    }
+
+    public boolean isTermsAndConditionsUploaded() {
+        return competitionTerms != null;
+    }
+
+    public long getCompetitionId() {
+        return competitionId;
     }
 }

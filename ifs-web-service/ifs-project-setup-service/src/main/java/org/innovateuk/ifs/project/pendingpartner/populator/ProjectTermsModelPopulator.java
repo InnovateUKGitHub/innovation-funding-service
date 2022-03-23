@@ -59,7 +59,8 @@ public class ProjectTermsModelPopulator {
                 pendingPartnerProgressResource.isTermsAndConditionsComplete(),
                 pendingPartnerProgressResource.getTermsAndConditionsCompletedOn(),
                 subsidyBasisRequired && !progress.isSubsidyBasisComplete(),
-                subsidyQuestionId
+                subsidyQuestionId, competition.getCompetitionThirdPartyConfigResource(),
+                competition.getCompetitionTerms(), competition.getId()
         );
     }
 

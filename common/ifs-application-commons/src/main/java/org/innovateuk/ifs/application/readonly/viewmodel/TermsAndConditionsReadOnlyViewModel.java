@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.readonly.viewmodel;
 
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
     private final boolean thirdPartyProcurementCompetition;
     private final String thirdPartyProcurementHeader;
     private final boolean isOfgemCompetition;
+    private final CompetitionThirdPartyConfigResource thirdPartyConfig;
 
     public TermsAndConditionsReadOnlyViewModel(ApplicationReadOnlyData data,
                                                QuestionResource question,
@@ -25,7 +27,8 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
                                                String termsAndConditionsTerminology,
                                                boolean thirdPartyProcurementCompetition,
                                                String thirdPartyProcurementHeader,
-                                               boolean isOfgemCompetition) {
+                                               boolean isOfgemCompetition,
+                                               CompetitionThirdPartyConfigResource thirdPartyConfig) {
         super(data, question);
         this.partners = partners;
         this.includeFundingRules = includeFundingRules;
@@ -34,6 +37,7 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
         this.thirdPartyProcurementCompetition = thirdPartyProcurementCompetition;
         this.thirdPartyProcurementHeader = thirdPartyProcurementHeader;
         this.isOfgemCompetition = isOfgemCompetition;
+        this.thirdPartyConfig = thirdPartyConfig;
     }
 
     @Override
@@ -89,5 +93,13 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
 
     public String getAccordionSectionId() {
         return "terms-and-conditions";
+    }
+
+    public boolean isOfgemCompetition() {
+        return isOfgemCompetition;
+    }
+
+    public CompetitionThirdPartyConfigResource getThirdPartyConfig() {
+        return thirdPartyConfig;
     }
 }
