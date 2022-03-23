@@ -2,7 +2,7 @@
 FROM debian:8
 
 RUN apt-get update && \
-    apt-get install -y wget mysql-client rsync curl && \
+    apt-get install -y mysql-client curl && \
     curl -sLO https://github.com/sysown/proxysql/releases/download/v2.0.8/proxysql_2.0.8-debian8_amd64.deb && \
     cp proxysql_2.0.8-debian8_amd64.deb /opt/ && \
     dpkg -i /opt/proxysql_2.0.8-debian8_amd64.deb && \
