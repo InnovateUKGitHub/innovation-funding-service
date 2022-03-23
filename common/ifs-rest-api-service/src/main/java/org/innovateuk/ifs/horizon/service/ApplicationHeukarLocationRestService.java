@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.applicant.service;
+package org.innovateuk.ifs.horizon.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.heukar.resource.ApplicationHeukarLocationResource;

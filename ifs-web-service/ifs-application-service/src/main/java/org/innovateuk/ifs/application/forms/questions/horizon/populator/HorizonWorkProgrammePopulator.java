@@ -1,12 +1,11 @@
-package org.innovateuk.ifs.application.forms.questions.heukar.populator;
+package org.innovateuk.ifs.application.forms.questions.horizon.populator;
 
-import org.innovateuk.ifs.horizon.service.ApplicationHeukarLocationRestService;
-import org.innovateuk.ifs.application.forms.questions.heukar.model.HeukarProjectLocationViewModel;
+import org.innovateuk.ifs.application.forms.questions.horizon.model.HorizonWorkProgrammeViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
-import org.innovateuk.ifs.heukar.resource.HeukarLocation;
+import org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +13,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 @Component
-public class HeukarProjectLocationPopulator {
+public class HorizonWorkProgrammePopulator {
 
     @Autowired
     private ApplicationRestService applicationRestService;
@@ -29,36 +28,26 @@ public class HeukarProjectLocationPopulator {
     @Autowired
     private OrganisationRestService organisationRestService;
 
-    @Autowired
-    private ApplicationHeukarLocationRestService heukarLocationRestService;
-
-    public HeukarProjectLocationViewModel populate(long applicationId,
-                                                   long questionId,
-                                                   long userId,
-                                                   HeukarLocation parentLocation,
-                                                   Map<String, List<HeukarLocation>> readOnlyMap) {
+    public HorizonWorkProgrammeViewModel populate(long applicationId,
+                                                  long questionId,
+                                                  long userId,
+                                                  Set<HorizonWorkProgramme> workProgrammes,
+                                                  Map<String, List<HorizonWorkProgramme>> readOnlyMap) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(userId, application.getId()).getSuccess();
 
         boolean readOnly = !readOnlyMap.isEmpty();
 
-        String pageTitle = getPageTitleForParentLocation(parentLocation, readOnly);
-
-        return new HeukarProjectLocationViewModel(application.getName(),
+        return new HorizonWorkProgrammeViewModel(
+                application.getName(),
                 applicationId,
                 isComplete(application, organisation, questionId),
                 true,
                 true,
-                pageTitle,
+                workProgrammes,
                 readOnly,
                 readOnlyMap
         );
-    }
-
-    private String getPageTitleForParentLocation(HeukarLocation parentLocation, boolean readOnly) {
-        return readOnly ?
-                Optional.ofNullable(parentLocation).map(HeukarLocation::getTitleDisplayFor).orElse("Confirm your locations") :
-                Optional.ofNullable(parentLocation).map(HeukarLocation::getTitleDisplayFor).orElse("Project location");
     }
 
     private boolean isComplete(ApplicationResource application, OrganisationResource organisation, long questionId) {

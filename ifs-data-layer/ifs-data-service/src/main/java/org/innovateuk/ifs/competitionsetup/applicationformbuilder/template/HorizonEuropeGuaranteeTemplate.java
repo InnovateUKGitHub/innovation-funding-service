@@ -46,6 +46,7 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                                 applicationDetails(),
                                 applicationTeam(),
                                 heukarProjectLocation(),
+                                horizonWorkProgramme(),
                                 aQuestion()
                                         .withShortName("Horizon Europe Guarantee grant agreement")
                                         .withName("Horizon Europe Guarantee grant agreement")
@@ -86,6 +87,18 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                 .withMarkAsCompletedEnabled(true)
                 .withType(QuestionType.LEAD_ONLY)
                 .withQuestionSetupType(QuestionSetupType.HEUKAR_PROJECT_LOCATION)
+                .withFormInputs(newArrayList());
+    }
+
+    public static QuestionBuilder horizonWorkProgramme() {
+        return aQuestion()
+                .withShortName("Work programme")
+                .withName("Work programme")
+                .withDescription("Hello there.")
+                .withAssignEnabled(false)
+                .withMarkAsCompletedEnabled(true)
+                .withType(QuestionType.LEAD_ONLY)
+                .withQuestionSetupType(QuestionSetupType.HORIZON_WORK_PROGRAMME)
                 .withFormInputs(newArrayList());
     }
 

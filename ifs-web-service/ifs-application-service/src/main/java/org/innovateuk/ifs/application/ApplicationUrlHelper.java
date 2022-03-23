@@ -43,6 +43,8 @@ public class ApplicationUrlHelper {
                     return Optional.of(format("/application/%d/form/question/%d/research-category", applicationId, questionId));
                 case HEUKAR_PROJECT_LOCATION:
                     return Optional.of(format("/application/%d/form/question/%d/heukar-project-location", applicationId, questionId));
+                case HORIZON_WORK_PROGRAMME:
+                    return Optional.of(format("/application/%d/form/question/%d/horizon-work-programme", applicationId, questionId));
                 default:
                     // do nothing
             }

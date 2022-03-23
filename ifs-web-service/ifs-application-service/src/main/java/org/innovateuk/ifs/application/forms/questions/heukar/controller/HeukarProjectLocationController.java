@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.questions.heukar.controller;
 
-import org.innovateuk.ifs.applicant.service.ApplicationHeukarLocationRestService;
+import org.innovateuk.ifs.horizon.service.ApplicationHeukarLocationRestService;
 import org.innovateuk.ifs.application.forms.questions.heukar.HeukarProjectLocationCookieService;
 import org.innovateuk.ifs.application.forms.questions.heukar.form.HeukarProjectLocationForm;
 import org.innovateuk.ifs.application.forms.questions.heukar.model.HeukarProjectLocationSelectionData;
