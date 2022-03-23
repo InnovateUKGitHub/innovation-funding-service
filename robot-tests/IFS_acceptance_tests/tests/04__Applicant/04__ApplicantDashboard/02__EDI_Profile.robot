@@ -84,6 +84,14 @@ Lead applicant check the status of edi as complete when edi survey is complete f
     When the user clicks the button/link                        id = application-overview-submit-cta
     Then the user should see the read only view of EDI status   Complete
 
+Assessor can view EDI section in profile page
+    [Documentation]  IFS-11534
+    Given the user logs-in in new browser  	            &{assessor_credentials}
+    And the user clicks the button/link                 id = dashboard-link-ASSESSOR
+    When the user clicks the button/link                link = Profile
+    Then the user should see EDI section details        Incomplete  Not Applicable  Start now
+
+
 
 *** Keywords ***
 Custom Suite Setup
