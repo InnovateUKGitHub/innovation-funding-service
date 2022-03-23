@@ -17,6 +17,8 @@ Documentation   IFS-11442 OFGEM: Create a "ThirdParty" generic template
 ...
 ...             IFS-11566 OFGEM - Confirmation of submission page amendments
 ...
+...             IFS-11477 OFGEM: Remove Gross Employee Cost Replace with Day Rate
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -97,9 +99,36 @@ Applicant should not view SME applicant related content in Other costs
     Then the user should not see the element        jQuery = p:contains("Please note that legal or project audit and accountancy fees are not eligible")
     [Teardown]  the user clicks the button/link     jQuery = button:contains("Other costs")
 
+Applicant can view ofgem related labour cost fields and validations
+    [Documentation]   IFS-11477
+    Given the user expands the section                  Labour
+    When the user highlights the fields
+    Then the user should see a field error              This field cannot be left blank.
+    And the user should see ofgem labour cost fields
+
+Applicant completes ofgem labour costs
+    [Documentation]   IFS-11477
+    When the user fills the third party project costs
+    And the user clicks the button/link                 css = label[for="stateAidAgreed"]
+    And the user clicks the button/link                 jQuery = button:contains("Mark as complete")
+    And the user clicks the button/link                 link = Your project costs
+    Then the user should see readonly labour costs      anotherrole   500   100  £50,000
+
+Applicant can edit labour costs
+    [Documentation]   IFS-11477
+    Given the user clicks the button/link       jQuery = button:contains("Edit your project costs")
+    When the user fills in ofgem labour costs   anotherrole2  10  17
+    And the user clicks the button/link         css = label[for="stateAidAgreed"]
+    And the user clicks the button/link         jQuery = button:contains("Mark as complete")
+    And the user clicks the button/link         link = Your project costs
+    And the user clicks the button/link         jQuery = button:contains("Labour")
+    Then the user should see the element        jQuery = td:contains("anotherrole2")+td:contains("10")+td:contains("17")+td:contains("£170")
+
 Max funding sought validation - ofgem
     [Documentation]  IFS-7866
-    Given the user completes thirdparty ofgem project finances except funding info
+    Given the user clicks the button/link                        link = Your project finances
+    And the user enters the project location
+    And the user fills in the organisation information           ${thirdPartyOfgemApplicationName}  ${SMALL_ORGANISATION_SIZE}
     When the user navigates to Your-finances page                ${thirdPartyOfgemApplicationName}
     And the user selects funding section in project finances
     And the user enters text to a text field                     id = amount   57803
@@ -117,13 +146,13 @@ the user marks the your funding section as complete
     When the user enters text to a text field                   id = amount   25678
     And the user fills thirdparty other funding information
     And the user clicks the button/link                         id = mark-all-as-complete
-    Then the user should see the element                        jQuery = td:contains("55,224") ~ td:contains("25,678") ~ td:contains("82.71%") ~ td:contains("20,000") ~ td:contains("9,546")
+    Then the user should see the element                        jQuery = td:contains("53,220") ~ td:contains("25,678") ~ td:contains("85.83%") ~ td:contains("20,000") ~ td:contains("7,542")
 
 Ofgem application finance overview
     [Documentation]  IFS-11481
     Given the user clicks the button/link  link = Back to application overview
     When the user clicks the button/link   link = Finances overview
-    Then the user should see the element   jQuery = td:contains("55,224") ~ td:contains("25,678") ~ td:contains("82.71%") ~ td:contains("20,000") ~ td:contains("9,546")
+    Then the user should see the element   jQuery = td:contains("53,220") ~ td:contains("25,678") ~ td:contains("85.83%") ~ td:contains("20,000") ~ td:contains("7,542")
 
 the user submits the third party ofgem application
     [Documentation]   IFS-11475  IFS-11476  IFS-11480
@@ -145,11 +174,11 @@ the applicant should not view overhead and capital usage costs in application su
     And the user should see the element        jQuery = th:contains("Other funding (£)")
 
 The lead applicant can not view general guidenece reference
-     [Documentation]  IFS-11483
-     [Setup]  Requesting competition and application ID of this Project
-     Given log in as a different user            &{innovation_lead_one}
-     When the user navigates to the page         ${server}/management/competition/${ThirdPartyCompId}/application/${ThirdPartyApplicationId}
-     Then the user should not see the element    jQuery = p:contains("You must read the General Guidance (opens in a new window) before you start")
+    [Documentation]  IFS-11483
+    [Setup]  Requesting competition and application ID of this Project
+    Given log in as a different user            &{innovation_lead_one}
+    When the user navigates to the page         ${server}/management/competition/${ThirdPartyCompId}/application/${ThirdPartyApplicationId}
+    Then the user should not see the element    jQuery = p:contains("You must read the General Guidance (opens in a new window) before you start")
 
 Internal user should not view overhead and capital usage costs in application summary
     [Documentation]  IFS-11475  IFS-11476
@@ -158,6 +187,18 @@ Internal user should not view overhead and capital usage costs in application su
     When the user navigates to the page         ${server}/management/competition/${ThirdPartyCompId}/application/${ThirdPartyApplicationId}
     Then the user should not see the element    jQuery = th:contains("Overheads (£)")
     And the user should not see the element     jQuery = th:contains("Capital usage (£)")
+
+Internal user can edit ofgem labour costs
+    [Documentation]  IFS-11477
+    Given the user moves comp to project setup
+    When the user edit the labour costs in project setup
+    Then the user should see the element                    jQuery = th:contains("Role within project")
+    And the user should see the element                     jQuery = th:contains("Rate (£/day)")
+    And the user should see the element                     jQuery = th:contains("Days to be spent on the project")
+    And the user should see the element                     jQuery = td:contains("anotherrole3")+td:contains("10")+td:contains("100")+td:contains("£1,000")
+    And the user should see the element                     jQuery = .labour-total:contains("£51,170")
+    And the user should see the element                     css = [id="total-cost"][value="£54,220"]
+
 
 *** Keywords ***
 Custom suite setup
@@ -174,6 +215,10 @@ Requesting competition and application ID of this Project
     Set suite variable   ${ThirdPartyCompId}
     ${ThirdPartyApplicationId} =  get application id by name   ${thirdPartyOfgemApplicationName}
     Set suite variable    ${ThirdPartyApplicationId}
+
+Requesting project ID of this project
+    ${thirdPartyProjId} =  get project id by name    ${thirdPartyOfgemApplicationName}
+    Set suite variable   ${thirdPartyProjId}
 
 comp admin creates ofgem competition
     the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}    2   false   single-or-collaborative
@@ -203,32 +248,11 @@ the user verifies valid terms and conditions text is displaying
     [Teardown]   the user closes the last opened tab
 
 the user fills the third party project costs
-    the user fills in Labour
+    the user fills in ofgem labour costs        anotherrole  500  100
     the user fills in Material
     the user fills in Subcontracting costs
     the user fills in Travel and subsistence
     the user fills in Other costs
-
-the assessor submits the thirdparty assessment
-    the user clicks the button/link                             link = Finances overview
-    the user should see the element                             jQuery = h2:contains("Project cost breakdown") ~ div:contains("Total VAT")
-    the user clicks the button/link                             link = Back to your assessment overview
-    the assessor adds score and feedback for every question     11   # value 5: is the number of questions to loop through to submit feedback
-    the user clicks the button/link                             link = Review and complete your assessment
-    the user selects the radio button                           fundingConfirmation  true
-    the user enters text to a text field                        id = feedback    Procurement application assessed
-    the user clicks the button/link                             jQuery = .govuk-button:contains("Save assessment")
-    the user clicks the button/link                             jQuery = li:contains("${thirdPartyProcurementApplicationName}") label[for^="assessmentIds"]
-    the user clicks the button/link                             jQuery = .govuk-button:contains("Submit assessments")
-    the user clicks the button/link                             jQuery = button:contains("Yes I want to submit the assessments")
-    the user should see the element                             jQuery = li:contains("${thirdPartyProcurementApplicationName}") strong:contains("Recommended")
-
-the user completes thirdparty ofgem project finances except funding info
-    the user fills the third party project costs
-    the user clicks the button/link                    css = label[for="stateAidAgreed"]
-    the user clicks the button/link                    jQuery = button:contains("Mark as complete")
-    the user enters the project location
-    the user fills in the organisation information     ${thirdPartyOfgemApplicationName}  ${SMALL_ORGANISATION_SIZE}
 
 the user fills thirdparty other funding information
     the user selects the radio button       otherFunding  true
@@ -255,3 +279,49 @@ the user should see ofgem submitted application amendments
     the user should see the element     jQuery = h3:contains("If your application is successful")
     the user should see the element     jQuery = h3:contains("If your application is unsuccessful")
     the user should see the element     jQuery = h3:contains("Application feedback")
+
+the user fills in ofgem labour costs
+    [Arguments]  ${roleName}  ${rate}  ${days}
+    the user enters text to a text field    jQuery = input[id$="role"]:text[value = ""]:first    ${roleName}
+    the user enters text to a text field    jQuery = input[id$="rate"][value = ""]:first    ${rate}
+    the user enters text to a text field    jQuery = input[id$="days"][value = ""]:first    ${days}
+    the user clicks the button/link         jQuery = button:contains("Labour")
+
+the user should see ofgem labour cost fields
+    the user should see the element    jQuery = th:contains("Role within")
+    the user should see the element    jQuery = span:contains("Rate (£/day)")
+    the user should see the element    jQuery = th:contains("Days to be spent on the project")
+    the user should see the element    jQuery = input[id$="role"]:text[value = ""]:first
+
+the user highlights the fields
+    Set Focus To Element               jQuery = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input
+    mouse out                          jQuery = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input
+    Set Focus To Element               jQuery = input[id$="rate"][value = ""]:first
+    mouse out                          jQuery = input[id$="rate"][value = ""]:first
+    Set Focus To Element               jQuery = input[id$="days"][value = ""]:first
+    mouse out                          jQuery = input[id$="days"][value = ""]:first
+
+the user should see readonly labour costs
+    [Arguments]  ${role}  ${rate}  ${days}  ${total}
+    the user clicks the button/link     jQuery = button:contains("Labour")
+    the user should see the element     jQuery = th:contains("Role within project")
+    the user should see the element     jQuery = th:contains("Rate (£/day)")
+    the user should see the element     jQuery = th:contains("Days to be spent on the project")
+    the user should see the element     jQuery = th:contains("Total costs")
+    the user should see the element     jQuery = td:contains("${role}")+td:contains("${rate}")+td:contains("${days}")+td:contains("${total}")
+
+the user moves comp to project setup
+    Log in as a different user                      &{internal_finance_credentials}
+    moving competition to Closed                    ${ThirdPartyCompId}
+    making the application a successful project     ${ThirdPartyCompId}  ${thirdPartyOfgemApplicationName}
+    moving competition to Project Setup             ${ThirdPartyCompId}
+    Requesting project ID of this project
+
+the user edit the labour costs in project setup
+    the user navigates to the page          ${server}/project-setup-management/project/${thirdPartyProjId}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
+    the user clicks the button/link         link = Edit project costs
+    the user clicks the button/link         jQuery = button:contains("Add another role")
+    the user enters text to a text field    jQuery = input[id$="role"]:text[value = ""]:first    anotherrole3
+    the user enters text to a text field    jQuery = input[id$="rate"][value = ""]:first    10
+    the user enters text to a text field    jQuery = input[id$="days"][value = ""]:first    100
+    the user clicks the button/link         id = save-eligibility
