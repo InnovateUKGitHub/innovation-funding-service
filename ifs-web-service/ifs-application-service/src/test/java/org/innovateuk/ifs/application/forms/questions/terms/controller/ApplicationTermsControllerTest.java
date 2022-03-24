@@ -217,7 +217,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .build();
 
 
-        ApplicationTermsPartnerViewModel viewModel = new ApplicationTermsPartnerViewModel(application.getId(), "compName", questionId, emptyList());
+        ApplicationTermsPartnerViewModel viewModel = new ApplicationTermsPartnerViewModel(application.getId(), "compName", questionId, emptyList(), false,null);
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(applicationTermsPartnerModelPopulatorMock.populate(application, questionId)).thenReturn(viewModel);
 
@@ -245,7 +245,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .withApplicationState(OPENED)
                 .build();
 
-        ApplicationTermsPartnerViewModel viewModel = new ApplicationTermsPartnerViewModel(application.getId(), "compName", questionId, emptyList());
+        ApplicationTermsPartnerViewModel viewModel = new ApplicationTermsPartnerViewModel(application.getId(), "compName", questionId, emptyList(), false, null);
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
         mockMvc.perform(get("/application/{applicationId}/form/terms-and-conditions/question/{questionId}/partner-status", application.getId(), questionId))
@@ -269,7 +269,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .withApplicationState(SUBMITTED)
                 .build();
 
-        ApplicationTermsPartnerViewModel viewModel = new ApplicationTermsPartnerViewModel(application.getId(), "compName", questionId, emptyList());
+        ApplicationTermsPartnerViewModel viewModel = new ApplicationTermsPartnerViewModel(application.getId(), "compName", questionId, emptyList(), false, null);
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
         mockMvc.perform(get("/application/{applicationId}/form/terms-and-conditions/question/{questionId}/partner-status", application.getId(), questionId))

@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.pendingpartner.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
@@ -20,8 +22,10 @@ public class PendingPartnerProgressLandingPageViewModel {
     private final boolean showSubsidyBasis;
     private final boolean subsidyBasisComplete;
     private final Optional<Long> subsidyBasisQuestionId;
+    private  final CompetitionResource competitionResource;
 
-    public PendingPartnerProgressLandingPageViewModel(ProjectResource project, long organisationId, PendingPartnerProgressResource progress, boolean showYourOrganisation, boolean showSubsidyBasis, Optional<Long> subsidyBasisQuestionId) {
+    public PendingPartnerProgressLandingPageViewModel(ProjectResource project, long organisationId, PendingPartnerProgressResource progress, boolean showYourOrganisation,
+                                                      boolean showSubsidyBasis, Optional<Long> subsidyBasisQuestionId, CompetitionResource competitionResource) {
         this.projectId = project.getId();
         this.organisationId = organisationId;
         this.applicationId = project.getApplication();
@@ -35,6 +39,7 @@ public class PendingPartnerProgressLandingPageViewModel {
         this.showSubsidyBasis = showSubsidyBasis;
         this.subsidyBasisComplete = progress.isSubsidyBasisComplete();
         this.subsidyBasisQuestionId = subsidyBasisQuestionId;
+        this.competitionResource = competitionResource;
     }
 
     public long getProjectId() {
@@ -87,5 +92,14 @@ public class PendingPartnerProgressLandingPageViewModel {
 
     public Long getSubsidyBasisQuestionId() {
         return subsidyBasisQuestionId.orElse(null);
+    }
+
+    @JsonIgnore
+    public String getThirdPartyOfgemLabel() {
+        String termsAndConditionsLabel = "Award terms and conditions";
+        if (competitionResource.getTermsAndConditions().isProcurementThirdParty()) {
+            termsAndConditionsLabel = competitionResource.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel();
+        }
+        return termsAndConditionsLabel;
     }
 }
