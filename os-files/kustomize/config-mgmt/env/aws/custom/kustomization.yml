@@ -2,5 +2,5 @@ commonAnnotations:
   deployedWith: kustomize
   environment: custom
 
-bases:
+resources:
   - ../../../base

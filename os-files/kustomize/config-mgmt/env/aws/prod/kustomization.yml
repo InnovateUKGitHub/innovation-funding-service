@@ -2,8 +2,9 @@ commonAnnotations:
   deployedWith: kustomize
   environment: prod
 
-bases:
+resources:
   - ../../../base
 
 patchesStrategicMerge:
   - spring-profile-env.yml
+  - feature-toggle-config.yml
