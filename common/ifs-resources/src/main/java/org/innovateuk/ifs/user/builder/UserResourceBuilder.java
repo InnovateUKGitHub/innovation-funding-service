@@ -33,10 +33,6 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
         return new UserResource();
     }
 
-    public UserResourceBuilder withUID(String... uids) {
-        return withArray((uid, user) -> setField("uid", uid, user), uids);
-    }
-
     @SafeVarargs
     public final UserResourceBuilder withRolesGlobal(List<Role>... rolesList) {
         return withArray((roles, user) -> user.setRoles(roles), rolesList);
