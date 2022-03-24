@@ -76,7 +76,17 @@ public class ProcurementTemplate implements FundingTypeTemplate {
 
     @Override
     public Competition initialiseFinanceTypes(Competition competition) {
-        List<FinanceRowType> types = newArrayList(LABOUR, PROCUREMENT_OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING_COSTS, TRAVEL, OTHER_COSTS, FINANCE, OTHER_FUNDING, VAT);
+        List<FinanceRowType> types = newArrayList(
+                LABOUR,
+                PROCUREMENT_OVERHEADS,
+                MATERIALS,
+                CAPITAL_USAGE,
+                SUBCONTRACTING_COSTS,
+                TRAVEL,
+                OTHER_COSTS,
+          		FINANCE,
+                OTHER_FUNDING,
+                VAT);
         return commonBuilders.saveFinanceRows(competition, types);
     }
 
