@@ -94,10 +94,12 @@ public class HorizonWorkProgrammeController {
         form.setSelected(existingSelection);
         model.addAttribute("form", form);
 
-        HorizonWorkProgrammeViewModel viewModel = horizonWorkProgrammePopulator.populate(applicationId, questionId, user.getId(), null, emptyMap());
+        String pageTitle = "Enter the Horizon Europe Work programme Part you applied to, e.g. CL2.";
+
+        HorizonWorkProgrammeViewModel viewModel = horizonWorkProgrammePopulator.populate(applicationId, questionId, user.getId(), pageTitle, null, emptyMap());
 
         if (viewModel.isComplete() || readOnly) {
-            viewModel = horizonWorkProgrammePopulator.populate(applicationId, questionId, user.getId(), null, getReadOnlyMap(applicationId, request));
+            viewModel = horizonWorkProgrammePopulator.populate(applicationId, questionId, user.getId(), pageTitle, null, getReadOnlyMap(applicationId, request));
         }
 
         model.addAttribute("form", form);
@@ -149,11 +151,13 @@ public class HorizonWorkProgrammeController {
                 .map(HorizonWorkProgrammeSelectionData::getCallId)
                 .orElse(null);
 
+        String pageTitle = "Select the call you applied to.";
+
         form.setAllOptions(getChildrenOf(cookieSelectionData));
         form.setSelected(existingSelection);
 
         model.addAttribute("form", form);
-        model.addAttribute("model", horizonWorkProgrammePopulator.populate(applicationId, questionId, user.getId(), null, emptyMap()));
+        model.addAttribute("model", horizonWorkProgrammePopulator.populate(applicationId, questionId, user.getId(), pageTitle, null, emptyMap()));
 
         return TEMPLATE_PATH;
     }
@@ -227,7 +231,7 @@ public class HorizonWorkProgrammeController {
 
         return savedSelections
                 .stream()
-                .sorted(comparing(HorizonWorkProgramme::getWorkProgramme, nullsFirst(naturalOrder())))
+                .sorted(comparing(HorizonWorkProgramme::getWorkProgramme, nullsLast(naturalOrder())))
                 .collect(Collectors.groupingBy(HorizonWorkProgramme::getDisplay));
     }
 

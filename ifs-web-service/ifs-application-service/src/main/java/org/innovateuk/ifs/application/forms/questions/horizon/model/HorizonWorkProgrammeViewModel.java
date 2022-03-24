@@ -16,9 +16,11 @@ public class HorizonWorkProgrammeViewModel {
     private final Map<String, List<HorizonWorkProgramme>> readOnlyMap;
     private final Set<HorizonWorkProgramme> workProgrammes;
     private final boolean readOnly;
+    private String pageTitle;
 
     public HorizonWorkProgrammeViewModel(String applicationName,
                                           Long applicationId,
+                                          String pageTitle,
                                           boolean complete,
                                           boolean open,
                                           boolean leadApplicant,
@@ -28,6 +30,7 @@ public class HorizonWorkProgrammeViewModel {
     ) {
         this.applicationName = applicationName;
         this.applicationId = applicationId;
+        this.pageTitle = pageTitle;
         this.complete = complete;
         this.open = open;
         this.leadApplicant = leadApplicant;
@@ -42,6 +45,10 @@ public class HorizonWorkProgrammeViewModel {
 
     public Long getApplicationId() {
         return applicationId;
+    }
+
+    public String getPageTitle() {
+        return pageTitle;
     }
 
     public boolean isComplete() {

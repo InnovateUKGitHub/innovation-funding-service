@@ -31,6 +31,7 @@ public class HorizonWorkProgrammePopulator {
     public HorizonWorkProgrammeViewModel populate(long applicationId,
                                                   long questionId,
                                                   long userId,
+                                                  String pageTitle,
                                                   Set<HorizonWorkProgramme> workProgrammes,
                                                   Map<String, List<HorizonWorkProgramme>> readOnlyMap) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
@@ -41,6 +42,7 @@ public class HorizonWorkProgrammePopulator {
         return new HorizonWorkProgrammeViewModel(
                 application.getName(),
                 applicationId,
+                pageTitle,
                 isComplete(application, organisation, questionId),
                 true,
                 true,
