@@ -16,16 +16,16 @@ public class ApplicationTermsPartnerViewModel implements BaseAnalyticsViewModel 
     private final String competitionName;
     private final long questionId;
     private final List<ApplicationTermsPartnerRowViewModel> partners;
-    private boolean isThirdPartyOfgemCompetition;
+    private final boolean isThirdPartyProcurementCompetition;
     private final CompetitionThirdPartyConfigResource thirdPartyConfig;
 
     public ApplicationTermsPartnerViewModel(long applicationId, String competitionName, long questionId, List<ApplicationTermsPartnerRowViewModel> partnerStatus,
-                                            boolean isThirdPartyOfgemCompetition, CompetitionThirdPartyConfigResource thirdPartyConfig) {
+                                            boolean isThirdPartyProcurementCompetition, CompetitionThirdPartyConfigResource thirdPartyConfig) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.partners = partnerStatus;
         this.questionId = questionId;
-        this.isThirdPartyOfgemCompetition = isThirdPartyOfgemCompetition;
+        this.isThirdPartyProcurementCompetition = isThirdPartyProcurementCompetition;
         this.thirdPartyConfig = thirdPartyConfig;
     }
 
@@ -54,12 +54,8 @@ public class ApplicationTermsPartnerViewModel implements BaseAnalyticsViewModel 
                 .collect(toList());
     }
 
-    public boolean isThirdPartyOfgemCompetition() {
-        return isThirdPartyOfgemCompetition;
-    }
-
-    public void setThirdPartyOfgemCompetition(boolean thirdPartyOfgemCompetition) {
-        isThirdPartyOfgemCompetition = thirdPartyOfgemCompetition;
+    public boolean isThirdPartyProcurementCompetition() {
+        return isThirdPartyProcurementCompetition;
     }
 
     public CompetitionThirdPartyConfigResource getThirdPartyConfig() {
@@ -68,16 +64,16 @@ public class ApplicationTermsPartnerViewModel implements BaseAnalyticsViewModel 
 
     @JsonIgnore
     public String getPageTitle() {
-       String pageTitle =  "Partners' acceptance of";
-       String subPageTitle = isThirdPartyOfgemCompetition ? thirdPartyConfig.getTermsAndConditionsLabel() :
-               "terms and conditions";
-       return pageTitle + " " + subPageTitle;
+        String pageTitle =  "Partners' acceptance of";
+        String subPageTitle = isThirdPartyProcurementCompetition ? thirdPartyConfig.getTermsAndConditionsLabel() :
+                "terms and conditions";
+        return pageTitle + " " + subPageTitle;
     }
 
     @JsonIgnore
     public String getLinkTitle() {
         String linkSubTitle = "of an Innovate UK grant award";
-        String linkTitle = isThirdPartyOfgemCompetition ? thirdPartyConfig.getTermsAndConditionsLabel() :
+        String linkTitle = isThirdPartyProcurementCompetition ? thirdPartyConfig.getTermsAndConditionsLabel() :
                 "Terms and conditions";
         return linkTitle + " " + linkSubTitle;
     }

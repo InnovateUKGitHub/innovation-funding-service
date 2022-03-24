@@ -414,12 +414,12 @@
                         <li th:text="${nonAcceptedPartner.partnerName}">Non accepted partner organisation</li>
                     </th:block> 
                 </ul>
-                <th:block
-                        th:with="thirdPartyLabel=${(model.isOfgemCompetition != null and model.isOfgemCompetition) or (model.thirdPartyOfgem != null and model.thirdPartyOfgem)}
+               <th:block
+                        th:with="thirdPartyLabel=${model.thirdPartyProcurementCompetition}
                                  ? ${model.thirdPartyConfig.termsAndConditionsLabel}
                                  : 'terms and conditions'">
-                      <p class="govuk-body"
-                         th:text="|This application cannot be submitted until all partners accept our ${thirdPartyLabel}.|"></p>
+                    <p class="govuk-body"
+                       th:text="|This application cannot be submitted until all partners accept our ${thirdPartyLabel}.|"></p>
                 </th:block>
             </div>
         </th:block>

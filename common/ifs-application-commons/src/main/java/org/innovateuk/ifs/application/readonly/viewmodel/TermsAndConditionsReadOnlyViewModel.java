@@ -17,7 +17,6 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
     private final String termsAndConditionsTerminology;
     private final boolean thirdPartyProcurementCompetition;
     private final String thirdPartyProcurementHeader;
-    private final boolean isOfgemCompetition;
     private final CompetitionThirdPartyConfigResource thirdPartyConfig;
 
     public TermsAndConditionsReadOnlyViewModel(ApplicationReadOnlyData data,
@@ -27,7 +26,6 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
                                                String termsAndConditionsTerminology,
                                                boolean thirdPartyProcurementCompetition,
                                                String thirdPartyProcurementHeader,
-                                               boolean isOfgemCompetition,
                                                CompetitionThirdPartyConfigResource thirdPartyConfig) {
         super(data, question);
         this.partners = partners;
@@ -36,7 +34,6 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
         this.termsAndConditionsTerminology = termsAndConditionsTerminology;
         this.thirdPartyProcurementCompetition = thirdPartyProcurementCompetition;
         this.thirdPartyProcurementHeader = thirdPartyProcurementHeader;
-        this.isOfgemCompetition = isOfgemCompetition;
         this.thirdPartyConfig = thirdPartyConfig;
     }
 
@@ -84,7 +81,7 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
     }
 
     public boolean isThirdPartyProcurementCompetition() {
-        return thirdPartyProcurementCompetition || isOfgemCompetition;
+        return thirdPartyProcurementCompetition;
     }
 
     public String getThirdPartyProcurementHeader() {
@@ -93,10 +90,6 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
 
     public String getAccordionSectionId() {
         return "terms-and-conditions";
-    }
-
-    public boolean isOfgemCompetition() {
-        return isOfgemCompetition;
     }
 
     public CompetitionThirdPartyConfigResource getThirdPartyConfig() {

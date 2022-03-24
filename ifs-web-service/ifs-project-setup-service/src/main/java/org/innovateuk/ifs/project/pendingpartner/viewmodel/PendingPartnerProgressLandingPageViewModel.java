@@ -24,7 +24,8 @@ public class PendingPartnerProgressLandingPageViewModel {
     private final Optional<Long> subsidyBasisQuestionId;
     private CompetitionResource competitionResource;
 
-    public PendingPartnerProgressLandingPageViewModel(ProjectResource project, long organisationId, PendingPartnerProgressResource progress, boolean showYourOrganisation, boolean showSubsidyBasis, Optional<Long> subsidyBasisQuestionId, CompetitionResource competitionResource) {
+    public PendingPartnerProgressLandingPageViewModel(ProjectResource project, long organisationId, PendingPartnerProgressResource progress, boolean showYourOrganisation,
+                                                      boolean showSubsidyBasis, Optional<Long> subsidyBasisQuestionId, CompetitionResource competitionResource) {
         this.projectId = project.getId();
         this.organisationId = organisationId;
         this.applicationId = project.getApplication();
@@ -96,7 +97,7 @@ public class PendingPartnerProgressLandingPageViewModel {
     @JsonIgnore
     public String getThirdPartyOfgemLabel() {
         String termsAndConditionsLabel = "Award terms and conditions";
-        if (competitionResource.isThirdPartyOfgem()) {
+        if (competitionResource.getTermsAndConditions().isProcurementThirdParty()) {
             termsAndConditionsLabel = competitionResource.getCompetitionThirdPartyConfigResource().getTermsAndConditionsLabel();
         }
         return termsAndConditionsLabel;

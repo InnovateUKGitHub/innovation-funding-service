@@ -53,7 +53,7 @@ public class CompetitionTermsAndConditionsPopulatorTest {
 
     @Test
     public void populateProcurementThirdParty() {
-        grantTermsAndConditionsResource = new GrantTermsAndConditionsResource("Procurement Third Party", "third-party-terms-and-conditions", 1);
+        grantTermsAndConditionsResource = new GrantTermsAndConditionsResource("Third Party", "third-party-terms-and-conditions", 1);
         competitionThirdPartyConfigResource = new CompetitionThirdPartyConfigResource("TermsAndConditionsLabel",
                 "TermsAndConditionsGuidance", null);
         fileEntryResource = newFileEntryResource().build();
@@ -74,7 +74,7 @@ public class CompetitionTermsAndConditionsPopulatorTest {
                 "competitionId=1\n" +
                 "termsAndConditions{\n" +
                 "id=null\n" +
-                "name=Procurement Third Party\n" +
+                "name=Third Party\n" +
                 "template=third-party-terms-and-conditions\n" +
                 "version=1\n" +
                 "}\n" +

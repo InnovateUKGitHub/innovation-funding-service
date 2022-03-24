@@ -69,6 +69,6 @@ public class ApplicationTermsPartnerModelPopulator {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         return new ApplicationTermsPartnerViewModel(application.getId(), application.getCompetitionName(), questionId, partners,
-                 competition.isThirdPartyOfgem(), competition.getCompetitionThirdPartyConfigResource() );
+                competition.getTermsAndConditions().isProcurementThirdParty(), competition.getCompetitionThirdPartyConfigResource());
     }
 }

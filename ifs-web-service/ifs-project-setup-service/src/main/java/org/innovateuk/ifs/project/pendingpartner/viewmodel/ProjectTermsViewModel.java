@@ -15,6 +15,7 @@ public class ProjectTermsViewModel {
     private final ZonedDateTime termsAcceptedOn;
     private final boolean subsidyBasisRequiredAndNotCompleted;
     private final Optional<Long> subsidyBasisQuestionId;
+    private final boolean isThirdPartyProcurementCompetition;
     private CompetitionThirdPartyConfigResource thirdPartyConfig;
     private FileEntryResource competitionTerms;
     private final long competitionId;
@@ -27,6 +28,7 @@ public class ProjectTermsViewModel {
                                  ZonedDateTime termsAcceptedOn,
                                  boolean subsidyBasisRequiredAndNotCompleted,
                                  Optional<Long> subsidyBasisQuestionId,
+                                 boolean isThirdPartyProcurementCompetition,
                                  CompetitionThirdPartyConfigResource thirdPartyConfig,
                                  FileEntryResource competitionTerms,
                                  long competitionId) {
@@ -38,6 +40,7 @@ public class ProjectTermsViewModel {
         this.termsAcceptedOn = termsAcceptedOn;
         this.subsidyBasisRequiredAndNotCompleted = subsidyBasisRequiredAndNotCompleted;
         this.subsidyBasisQuestionId = subsidyBasisQuestionId;
+        this.isThirdPartyProcurementCompetition = isThirdPartyProcurementCompetition;
         this.thirdPartyConfig = thirdPartyConfig;
         this.competitionTerms = competitionTerms;
         this.competitionId = competitionId;
@@ -80,15 +83,23 @@ public class ProjectTermsViewModel {
         return projectName;
     }
 
+    public boolean isThirdPartyProcurementCompetition() {
+        return isThirdPartyProcurementCompetition;
+    }
+
     public CompetitionThirdPartyConfigResource getThirdPartyConfig() {
         return thirdPartyConfig;
     }
 
-    public boolean isTermsAndConditionsUploaded() {
-        return competitionTerms != null;
+    public FileEntryResource getCompetitionTerms() {
+        return competitionTerms;
     }
 
     public long getCompetitionId() {
         return competitionId;
+    }
+
+    public boolean isTermsAndConditionsUploaded() {
+        return competitionTerms != null;
     }
 }
