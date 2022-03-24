@@ -72,6 +72,8 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     private final boolean ofGemCompetition;
 
+    private final boolean thirdPartyOfgem;
+
     private final boolean hecpCompetition;
 
     public YourProjectCostsViewModel(long applicationId,
@@ -102,6 +104,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      BigDecimal grantClaimPercentage,
                                      String thirdPartyProjectCostGuidanceLink,
                                      boolean ofGemCompetition,
+                                     boolean thirdPartyOfgem,
                                      boolean hecpCompetition) {
         this.internal = false;
         this.organisationId = organisationId;
@@ -132,6 +135,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.grantClaimPercentage = grantClaimPercentage;
         this.thirdPartyProjectCostGuidanceLink = thirdPartyProjectCostGuidanceLink;
         this.ofGemCompetition = ofGemCompetition;
+        this.thirdPartyOfgem = thirdPartyOfgem;
         this.hecpCompetition = hecpCompetition;
     }
 
@@ -158,12 +162,13 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      BigDecimal grantClaimPercentage,
                                      String thirdPartyProjectCostGuidanceLink,
                                      boolean ofGemCompetition,
+                                     boolean thirdPartyOfgem,
                                      boolean hecpCompetition) {
         this(applicationId, competitionName, sectionId, competitionId, organisationId, complete, open,
                 includeVat, applicationName, organisationName, financesUrl, procurementCompetition, thirdPartyProcurementCompetition,
                 ktpCompetition, ktpPhase2Enabled, financeRowTypes, overheadAlwaysTwenty, showCovidGuidance, showJustificationForm, false,
                 false, null, false, null, fecModelEnabled,
-                grantClaimPercentage, thirdPartyProjectCostGuidanceLink, ofGemCompetition, hecpCompetition);
+                grantClaimPercentage, thirdPartyProjectCostGuidanceLink, ofGemCompetition, thirdPartyOfgem, hecpCompetition);
     }
 
     public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, boolean thirdPartyProcurementCompetition,
@@ -200,6 +205,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.grantClaimPercentage = BigDecimal.ZERO;
         this.thirdPartyProjectCostGuidanceLink = null;
         this.ofGemCompetition = false;
+        this.thirdPartyOfgem = false;
     }
 
     @Override
@@ -336,6 +342,11 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
     public Boolean isOfGemCompetition() {
         return ofGemCompetition;
     }
+
+    public boolean isThirdPartyOfgem() {
+        return thirdPartyOfgem;
+    }
+
 
     public boolean isHecpCompetition() {
         return hecpCompetition;

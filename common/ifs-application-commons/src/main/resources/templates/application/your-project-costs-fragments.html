@@ -927,6 +927,10 @@
 
                 <th:block th:unless="${model.internal}">
                     <div class="govuk-body">
+                        <th:block th:if="${model.isThirdPartyOfgem()}">
+                            <p>You can claim the costs of materials used on your project providing they are purchased from third parties.</p>
+                        </th:block>
+                        <th:block th:unless="${model.isThirdPartyOfgem()}">
                             <p>You can claim the costs of materials used on your project providing:</p>
                             <ul class="govuk-list govuk-list--bullet">
                                 <li>they are not already purchased or included in the overheads</li>
@@ -935,6 +939,7 @@
                                     <li>they won’t have a residual/resale value at the end of your project. If they do you can claim the costs minus this value</li>
                                 </th:block>
                             </ul>
+                        </th:block>
                         <p><a
                             href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">Please
                             refer to our guide to project costs for further information.</a></p>
@@ -1458,14 +1463,14 @@
                               th:insert="application/your-project-costs-fragments :: subcontracting_guidance">
                     </th:block>
                 </th:block>
-                <p class="govuk-body" th:unless="${model.internal}">Please provide details of any work that you
-                    expect
-                    to subcontract for your
-                    project.</p>
+                <p class="govuk-body" th:unless="${model.internal}">
+                    <th:block th:if="${model.isThirdPartyOfgem()}">Please provide details of any work that you expect to be completed by your project partner.</th:block>
+                    <th:block th:unless="${model.isThirdPartyOfgem()}">Please provide details of any work that you expect to subcontract for your project.</th:block>
+                </p>
                 <div id="subcontracting">
                     <th:block th:each="entry : *{subcontractingRows}">
                         <th:block
-                            th:insert="application/your-project-costs-fragments :: subcontracting_costs_row (${entry.key}, ${entry.value})"/>
+                            th:insert="application/your-project-costs-fragments :: subcontracting_costs_row (${entry.key}, ${entry.value}, ${model.isThirdPartyOfgem()})"/>
                     </th:block>
                 </div>
                 <p class="alignright">
@@ -1473,7 +1478,9 @@
                             name="add_row"
                             th:value="${financeRowType}"
                             class="button-clear"
-                            data-repeatable-rowcontainer="#subcontracting">Add another subcontractor
+                            data-repeatable-rowcontainer="#subcontracting">
+                        <th:block th:if="${model.isThirdPartyOfgem()}">Add another project partner</th:block>
+                        <th:block th:unless="${model.isThirdPartyOfgem()}">Add another subcontractor</th:block>
                     </button>
                 </p>
                 <h4 class="govuk-heading-s alignright section-total-summary">
@@ -1482,6 +1489,10 @@
                           data-mirror="#section-total-subcontracting"
                           th:text="'£' + ${#numbers.formatInteger(form.totalSubcontractingCosts, 0,'DEFAULT')}"></span>
                 </h4>
+                <input type="hidden"
+                       name="thirdPartyOfgem"
+                       th:value="${model.isThirdPartyOfgem()}"
+                        />
                 <input type="hidden"
                        data-calculation-fields=".subcontracting-totals"
                        data-calculation-operations="+"
@@ -1492,7 +1503,8 @@
                 <th:block th:unless="${model.internal}">
                     <th:block th:unless="${model.isKtpCompetition()}"
                               th:insert="application/your-project-costs-fragments :: subcontracting_guidance">
-                    </th:block>                </th:block>
+                    </th:block>
+                </th:block>
             </th:block>
         </div>
     </div>
@@ -1500,7 +1512,7 @@
 
 <th:block th:fragment="subcontracting_guidance">
     <div class="govuk-body">
-        <th:block th:unless="${model.isOfGemCompetition()}">
+        <th:block th:unless="${model.isOfGemCompetition() or model.isThirdPartyOfgem()}">
             <p>You can subcontract work if you don’t have the expertise in your project team.
                 You can also subcontract if it is cheaper than developing your skills in-house.</p>
         </th:block>
@@ -1510,20 +1522,25 @@
                 </summary>
                 <div class="govuk-details__text">
                     <p>Subcontracting costs relate to work carried out by third party organisations.
-                        <span th:unless="${model.isOfGemCompetition()}">These organisations are not part of your project.</span>
+                        <span th:unless="${model.isOfGemCompetition() or model.isThirdPartyOfgem()}">These organisations are not part of your project.</span>
                     </p>
-                    <th:block th:unless="${model.isOfGemCompetition()}">
+                    <th:block th:unless="${model.isOfGemCompetition() or model.isThirdPartyOfgem()}">
                         <p>Subcontracting is eligible providing it is justified
                             <span th:if="${!model.isProcurementCompetition()}"> as to why the work cannot be performed by a project partner</span>.
                         </p>
                     </th:block>
                     <p>Subcontracting associate companies should be charged at cost.</p>
                     <th:block th:unless="${model.isOfGemCompetition()}">
-                        <p><span th:if="${!model.isProcurementCompetition()}">Where possible you should select a UK based contractor. </span>You
-                            should name the subcontractor (<span th:if="${!model.isProcurementCompetition()}">where</span>
-                            <span th:if="${model.isProcurementCompetition()}">if</span> known) and describe what they will be doing. You should also state where the work will be undertaken.
-                            <span th:unless="${model.isProcurementCompetition()}">
-                                We will look at the size of this contribution when assessing your eligibility and level of support.</span>
+                        <p><span th:if="${!model.isProcurementCompetition()}">Where possible you should select a UK based contractor. </span>
+                            You should name the subcontractor
+                            <span th:if="${!model.isProcurementCompetition()}">(where known)</span>
+                            <span th:if="${model.isProcurementCompetition()}">(if known)</span>
+                            and describe what they will be doing. You should also state where the work will be
+                            <span th:if="${model.isThirdPartyOfgem()}">carried out.</span>
+                            <span th:unless="${model.isThirdPartyOfgem()}">undertaken.</span>
+                            <span th:unless="${model.isProcurementCompetition() or model.isThirdPartyOfgem()}">
+                                We will look at the size of this contribution when assessing your eligibility and level of support.
+                            </span>
                         </p>
                     </th:block>
                 </div>
@@ -1533,17 +1550,18 @@
 
 <th:block th:fragment="ajax_subcontracting_costs_row">
     <th:block th:object="${form}">
-        <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs_row (${id}, ${row})"/>
+        <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs_row (${id}, ${row}, ${thirdPartyOfgem})"/>
     </th:block>
 </th:block>
 
-<th:block th:fragment="subcontracting_costs_row (id, row)">
+<th:block th:fragment="subcontracting_costs_row (id, row, thirdPartyOfgem)">
     <div class="form-row" th:with="path=${'subcontractingRows[__${id}__]'}" th:attr="data-repeatable-row=${path}"
          th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.name')} ? 'govuk-form-group--error'">
             <label class="govuk-label govuk-label--s" th:for="__${path}__.name">
-                Subcontractor name
+                <th:block th:if="${thirdPartyOfgem}">Project partner name</th:block>
+                <th:block th:unless="${thirdPartyOfgem}">Subcontractor name</th:block>
             </label>
             <th:block
                 th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.name)"/>
@@ -1557,7 +1575,8 @@
         </div>
         <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.country')} ? 'govuk-form-group--error'">
             <label class="govuk-label govuk-label--s" th:for="__${path}__.country">
-                Country where the subcontractor will work
+                <th:block th:if="${thirdPartyOfgem}">Country where the project partner will work</th:block>
+                <th:block th:unless="${thirdPartyOfgem}">Country where the subcontractor will work</th:block>
             </label>
             <th:block
                 th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.country)"/>
@@ -1572,7 +1591,8 @@
 
         <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.role')} ? 'govuk-form-group--error'">
             <label class="govuk-label govuk-label--s" th:for="__${path}__.role">
-                Role of the subcontractor in the project and description of the work they’ll do
+                <th:block th:if="${thirdPartyOfgem}">Role of the project partner in the project and description of the work they’ll do</th:block>
+                <th:block th:unless="${thirdPartyOfgem}">Role of the subcontractor in the project and description of the work they’ll do</th:block>
             </label>
             <th:block
                 th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.role)"/>
@@ -1618,7 +1638,10 @@
         <table class="govuk-table" id="subcontracting-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header" id="subcontracting-name">Subcontractor name</th>
+                <th scope="col" class="govuk-table__header" id="subcontracting-name">
+                    <th:block th:if="${model.isThirdPartyOfgem()}">Project partner name</th:block>
+                    <th:block th:unless="${model.isThirdPartyOfgem()}">Subcontractor name</th:block>
+                </th>
                 <th scope="col" class="govuk-table__header" id="subcontracting-country">Country</th>
                 <th scope="col" class="govuk-table__header" id="subcontracting-role">Role</th>
                 <th scope="col" class="govuk-table__header govuk-table__header--numeric" id="subcontracting-cost">
@@ -1932,12 +1955,13 @@
             <th:block
                 th:unless="${model.isReadOnly()}">
                 <p class="govuk-body" th:unless="${model.internal or model.isProcurementCompetition() or model.isKtpCompetition()}">
-                    <th:block th:unless="${model.isOfGemCompetition()}">
+                    <th:block th:unless="${model.isOfGemCompetition() or model.isThirdPartyOfgem()}">
                         Please note that legal or project audit and accountancy fees are not eligible and
                         should not be included as an 'other cost’. Patent filing costs of new IP relating to the project are
                         limited to £7,500 for SME applicants only.
                     </th:block>
-                    Please provide estimates of other costs that do not fit within any other cost headings.
+                    <th:block th:if="${model.isThirdPartyOfgem()}">Please provide estimates of any other costs that do not fit within the cost headings.</th:block>
+                    <th:block th:unless="${model.isThirdPartyOfgem()}">Please provide estimates of other costs that do not fit within any other cost headings.</th:block>
                 </p>
                 <p class="govuk-body" th:if="${model.isProcurementCompetition()}">Provide estimates of other costs that do not fall under our standard cost headings.</p>
                 <p class="govuk-body" th:if="${model.isKtpCompetition()}">Do not complete this section unless your request has been approved by the programme manager.</p>

@@ -114,6 +114,7 @@ public class YourProjectCostsViewModelPopulator {
                     getGrantClaimPercentage(application.getId(), organisation.getId()),
                     getThirdPartyProjectCostGuidanceLink(competition),
                     competition.isOfGemCompetition(),
+                    competition.isThirdPartyOfgem(),
                     competition.isHorizonEuropeGuarantee());
         }
     }
@@ -163,6 +164,7 @@ public class YourProjectCostsViewModelPopulator {
                 getGrantClaimPercentage(application.getId(), organisation.getId()),
                 getThirdPartyProjectCostGuidanceLink(competition),
                 competition.isOfGemCompetition(),
+                competition.isThirdPartyOfgem(),
                 competition.isHorizonEuropeGuarantee());
     }
 

@@ -32,6 +32,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
+
 @Component
 public class ProjectFinanceChangesViewModelPopulator {
 
@@ -162,6 +165,20 @@ public class ProjectFinanceChangesViewModelPopulator {
         }
         if (FinanceRowType.YOUR_FINANCE == rowType) {
             return "Your finance";
+        }
+
+        if (competition.isHorizonEuropeGuarantee()) {
+            if (LABOUR == rowType) {
+                return "Personnel costs";
+            }     if (FinanceRowType.SUBCONTRACTING_COSTS == rowType) {
+                return "Subcontracting costs";
+            }     if (FinanceRowType.MATERIALS == rowType) {
+                return "Equipment";
+            }     if (FinanceRowType.CAPITAL_USAGE == rowType) {
+                return "Other goods, works and services";
+            }     if (FinanceRowType.OVERHEADS == rowType) {
+                return "Indirect costs";
+            }
         }
         return rowType.getDisplayName();
     }
