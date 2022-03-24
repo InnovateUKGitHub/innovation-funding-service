@@ -86,14 +86,22 @@ Lead applicant can mark the application team as complete when edi status is comp
     Then the user should see the element            jQuery = li:contains("Application team") > .task-status-complete
 
 Lead applicant check the status of edi as complete when edi survey is complete for lead applicant
+    [Documentation]  IFS-11341
     When the user clicks the button/link                        id = application-overview-submit-cta
     Then the user should see the read only view of EDI status   Complete
 
 Assessor can not see EDI status when he is only assessor not the applicant
+<<<<<<< HEAD
       Given log in as a different user     	            &{edi_assessor_credentials}
       When the user clicks the button/link              link = Profile
       Then the user should not see the element          jQuery = h2:contains("Equality, diversity and inclusion")
       And the user should not see the element           jQuery = p:contains("Please complete our EDI monitoring survey. It helps us ensure we treat everyone who engages with us fairly and equally. The survey is mandatory and should takes no more than 10 minutes. You will be redirected to another page to complete this survey, but you can return here at any point.")
+=======
+    [Documentation]  IFS-11534
+    Given log in as a different user     	            &{edi_assessor_credentials}
+    When the user clicks the button/link              link = Profile
+    Then the user should not see the element          jQuery = h2:contains("Equality, diversity and inclusion")
+>>>>>>> 0c596c40f7e7a3268d3fcb60f6534bfef10087e3
 
 Assessor/Applicant checks the status of EDI as Incomplete When user not started the edi survey
     [Documentation]  IFS-11534
@@ -113,7 +121,7 @@ Assessor/applicant can not mark the application team as complete when the edi su
     [Documentation]  IFS-11534
     Given log in as a different user  	                   &{edi_assessor_credentials}
     And the user clicks the button/link                    jQuery = h2:contains("Applications")
-    And the user clicks the button/link                    ${AssessorapplicationNameEDI}
+    And the user clicks the button/link                    link = ${AssessorapplicationNameEDI}
     And the user clicks the button/link                    link = Application team
     When the user clicks the button/link                   id = application-question-complete
     And the user clicks the button/link                    jQuery = a:contains("here")
@@ -138,7 +146,7 @@ Custom suite teardown
 the user should see EDI section details
     [Arguments]  ${ediStatus}  ${ediReviewDate}  ${ediButton}
     the user should see the element  jQuery = h2:contains("Equality, diversity and inclusion")
-    the user should see the element  jQuery = p:contains("Please complete our EDI monitoring survey. It helps us ensure we treat everyone who engages with us fairly and equally. The survey is mandatory and should takes no more than 10 minutes. You will be redirected to another page to complete this survey, but you can return here at any point.")
+    the user should see the element  jQuery = p:contains("Please complete our EDI monitoring survey.")
     the user should see the element  jQuery = th:contains("Survey status")+td:contains("${ediStatus}")
     the user should see the element  jQuery = th:contains("Last reviewed")+td:contains("${ediReviewDate}")
     the user should see the element  jQuery = a:contains("${ediButton}")
@@ -181,21 +189,21 @@ the user should see the read only view of EDI status
     the user should see the element                 jQuery = td:contains("Steve Smith") ~ td:contains("${ediStatus}")
 
 the assessor creates a new application
-     the user select the competition and starts application     ${competitionNameEDI}
-     the user selects the radio button                          organisationTypeId  1
-     the user clicks the button/link                            jQuery = button:contains("Save and continue")
-     the user enters text to a text field                       id = organisationSearchName  ASOS
-     the user clicks the button/link                            jQuery = button:contains("Search")
-     the user clicks the button/link                            link = ASOS PLC
-     the user clicks the button/link                            jQuery = button:contains("Save and continue")
-     the user selects the checkbox                              agree
-     the user clicks the button/link                            jQuery = button:contains("Continue")
+    the user select the competition and starts application     ${competitionNameEDI}
+    the user selects the radio button                          organisationTypeId  1
+    the user clicks the button/link                            jQuery = button:contains("Save and continue")
+    the user enters text to a text field                       id = organisationSearchName  ASOS
+    the user clicks the button/link                            jQuery = button:contains("Search")
+    the user clicks the button/link                            link = ASOS PLC
+    the user clicks the button/link                            jQuery = button:contains("Save and continue")
+    the user selects the checkbox                              agree
+    the user clicks the button/link                            jQuery = button:contains("Continue")
 
 the assessor should see the read only view of EDI status
-      [Arguments]  ${ediStatus}
-      the user should see the element                 jQuery = h3:contains("Team members")
-      the user should see the element                 jQuery = th:contains("EDI status")
-      the user should see the element                 jQuery = td:contains("Aaron Jennings") ~ td:contains("${ediStatus}")
+    [Arguments]  ${ediStatus}
+    the user should see the element                 jQuery = h3:contains("Team members")
+    the user should see the element                 jQuery = th:contains("EDI status")
+    the user should see the element                 jQuery = td:contains("Aaron Jennings") ~ td:contains("${ediStatus}")
 
 the assessor changed EDI survey status
     [Arguments]  ${ediStatus}  ${ediReviewDate}
