@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface HorizonWorkProgrammeRestService {
 
-    RestResult<Void> updateWorkProgrammeForApplication(List<HorizonWorkProgramme> selectedLocations, long applicationId);
+    RestResult<Void> updateWorkProgrammeForApplication(List<HorizonWorkProgramme> selectedProgrammes, long applicationId);
 
     RestResult<List<ApplicationHorizonWorkProgrammeResource>> findAllWithApplicationId(long applicationId);
 }
