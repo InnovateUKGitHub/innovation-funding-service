@@ -112,7 +112,7 @@ Assessor/applicant can not mark the application team as complete when the edi su
     [Documentation]  IFS-11534
     Given log in as a different user  	                   &{edi_assessor_credentials}
     And the user clicks the button/link                    jQuery = h2:contains("Applications")
-    And the user clicks the button/link                    ${AssessorapplicationNameEDI}
+    And the user clicks the button/link                    link = ${AssessorapplicationNameEDI}
     And the user clicks the button/link                    link = Application team
     When the user clicks the button/link                   id = application-question-complete
     And the user clicks the button/link                    jQuery = a:contains("here")
@@ -137,7 +137,7 @@ Custom suite teardown
 the user should see EDI section details
     [Arguments]  ${ediStatus}  ${ediReviewDate}  ${ediButton}
     the user should see the element  jQuery = h2:contains("Equality, diversity and inclusion")
-    the user should see the element  jQuery = p:contains("Please complete our EDI monitoring survey. It helps us ensure we treat everyone who engages with us fairly and equally. The survey is mandatory and should takes no more than 10 minutes. You will be redirected to another page to complete this survey, but you can return here at any point.")
+    the user should see the element  jQuery = p:contains("Please complete our EDI monitoring survey.")
     the user should see the element  jQuery = th:contains("Survey status")+td:contains("${ediStatus}")
     the user should see the element  jQuery = th:contains("Last reviewed")+td:contains("${ediReviewDate}")
     the user should see the element  jQuery = a:contains("${ediButton}")
