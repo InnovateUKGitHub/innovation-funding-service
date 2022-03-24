@@ -40,7 +40,7 @@ public class CsrfTokenServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        final UserResource user = newUserResource().withId(-1L).withUID(UID).build();
+        final UserResource user = newUserResource().withId(-1L).withUid(UID).build();
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
 
         encryptor = Encryptors.text(ENCRYPTION_PASSWORD, ENCRYPTION_SALT);
