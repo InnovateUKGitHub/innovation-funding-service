@@ -3,16 +3,19 @@ Documentation    IFS-11252 EDI Section to Applicant Profile
 ...
 ...              IFS-11490 EDI: open in second tab
 ...
+...              IFS-11534 Applicant/Assessors for EDI
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Documentation     IFS-11534 Applicant/Assessors for EDI
-...
+
 
 *** Variables ***
-${competitionNameEDI}   Performance testing competition
-${applicationNameEDI}   EDI Application
+${competitionNameEDI}           Performance testing competition
+${assessorcompetitionNameEDI}   EDI Testing Competition
+${applicationNameEDI}           EDI Application
+${AssessorapplicationNameEDI}   EDI Assessor application
 
 
 *** Test Cases ***
@@ -86,10 +89,15 @@ Lead applicant check the status of edi as complete when edi survey is complete f
     When the user clicks the button/link                        id = application-overview-submit-cta
     Then the user should see the read only view of EDI status   Complete
 
+Assessor/Applicant can not see EDI status as he is only assessor not the applicant
+      Given log in as a different user     	            &{edi_assessor_credentials}
+
+
 Assessor/Applicant checks the status of EDI as Incomplete When user not started the edi survey
     [Documentation]  IFS-11534
-    Given the user logs-in in new browser  	            &{EDI_assessor_credentials}
+    Given log in as a different user     	            &{edi_assessor_credentials}
     And the assessor creates a new application
+    And the user fills in the EDI application details   ${AssessorapplicationNameEDI}  ${tomorrowday}  ${month}  ${nextyear}
     When the user clicks the button/link                link = Application team
     Then the user should see the element                jQuery = td:contains("Aaron Jennings") ~ td:contains("Incomplete") ~ td:contains("Lead applicant")
 
@@ -101,18 +109,17 @@ Assessor can view EDI section as a incomplete in profile page
 
 Assessor/applicant can not mark the application team as complete when the edi survey is not started
     [Documentation]  IFS-11534
-    [Setup]  get application Id                            ${applicationNameEDI}
-    Given the user navigates to the page                   ${server}/application/${applicationIdEDI}
-    And the user clicks the button/link                    link = Application overview
+    Given log in as a different user  	                   &{edi_assessor_credentials}
+    And the user clicks the button/link                    jQuery = h2:contains("Applications")
+    And the user clicks the button/link                    ${AssessorapplicationNameEDI}
     And the user clicks the button/link                    link = Application team
     When the user clicks the button/link                   id = application-question-complete
     And the user clicks the button/link                    jQuery = a:contains("here")
     And the assessor changed EDI survey status             INPROGRESS  2076-01-22 01:02:03
     Then the user should see EDI section details           Incomplete  22 January 2076  Continue
 
-Applicant can view the EDI status as complete in profile
+Assessor/Applicant can view the EDI status as complete in profile
     [Documentation]  IFS-11534
-    Given log in as a different user                &{EDI_assessor_credentials}
     When the user clicks the button/link            link = Profile
     And the user changed EDI survey status          COMPLETE  2089-03-25 01:02:03
     Then the user should see EDI section details    Complete  25 March 2089  Review EDI summary
