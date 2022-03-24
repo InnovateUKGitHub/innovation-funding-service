@@ -2,12 +2,14 @@ package org.innovateuk.ifs.application.forms.questions.horizon.form;
 
 import org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class HorizonWorkProgrammeForm {
     private String title;
     private List<HorizonWorkProgramme> allOptions;
 
+    @NotNull(message = "{validation.horizon.programme.required}")
     private HorizonWorkProgramme selected;
 
     public HorizonWorkProgrammeForm() {

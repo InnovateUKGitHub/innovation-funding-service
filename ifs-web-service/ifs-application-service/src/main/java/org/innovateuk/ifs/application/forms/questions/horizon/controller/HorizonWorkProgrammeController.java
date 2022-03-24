@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyMap;
+import static java.util.Comparator.*;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MODEL_ATTRIBUTE_FORM;
@@ -226,7 +227,7 @@ public class HorizonWorkProgrammeController {
 
         return savedSelections
                 .stream()
-                .sorted(Comparator.comparing(HorizonWorkProgramme::getWorkProgramme, Comparator.nullsLast(Comparator.reverseOrder())))
+                .sorted(comparing(HorizonWorkProgramme::getWorkProgramme, nullsFirst(naturalOrder())))
                 .collect(Collectors.groupingBy(HorizonWorkProgramme::getDisplay));
     }
 
