@@ -31,7 +31,6 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private final String liveProjectsLandingPageUrl;
     private final boolean thirdPartyProcurement;
     private final CompetitionThirdPartyConfigResource thirdPartyConfig;
-    private final boolean ofGemCompetition;
 
     public SetupStatusViewModel(ProjectResource project,
                                 boolean monitoringOfficer,
@@ -43,8 +42,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
                                 PostAwardService postAwardService,
                                 String liveProjectsLandingPageUrl,
                                 boolean thirdPartyProcurement,
-                                CompetitionThirdPartyConfigResource thirdPartyConfig,
-                                boolean ofGemCompetition ) {
+                                CompetitionThirdPartyConfigResource thirdPartyConfig) {
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.monitoringOfficer = monitoringOfficer;
@@ -62,7 +60,6 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.liveProjectsLandingPageUrl = liveProjectsLandingPageUrl;
         this.thirdPartyProcurement = thirdPartyProcurement;
         this.thirdPartyConfig = thirdPartyConfig;
-        this.ofGemCompetition = ofGemCompetition;
     }
 
     public Long getProjectId() {
@@ -153,7 +150,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         return !isKtpCompetition() && getProjectState().isLive();
     }
 
-    public boolean isThirdPartyProcurement() { return thirdPartyProcurement || ofGemCompetition; }
+    public boolean isThirdPartyProcurement() { return thirdPartyProcurement; }
 
     public CompetitionThirdPartyConfigResource getThirdPartyConfig() { return thirdPartyConfig; }
 }

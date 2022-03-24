@@ -91,7 +91,7 @@ public class ApplicationTermsModelPopulator {
                         competition.getCompetitionThirdPartyConfigResource(),
                         competition.getTermsAndConditions().isProcurementThirdParty(),
                         competition.getCompetitionTerms(),
-                        competition.isThirdPartyOfgem());
+                        competition.isOfGemCompetition());
             }
         }
 

@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application.readonly.viewmodel;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 
@@ -22,7 +20,6 @@ public class ApplicationReadOnlyViewModel {
     private final boolean thirdPartyProcurement;
     private final CompetitionThirdPartyConfigResource thirdPartyConfig;
     private final boolean isLoanPartBEnabled;
-    private final boolean thirdPartyOfgem;
 
     public ApplicationReadOnlyViewModel(ApplicationReadOnlySettings settings,
                                         Set<ApplicationSectionReadOnlyViewModel> sections,
@@ -33,8 +30,7 @@ public class ApplicationReadOnlyViewModel {
                                         boolean ktpCompetition,
                                         boolean thirdPartyProcurement,
                                         CompetitionThirdPartyConfigResource thirdPartyConfig,
-                                        boolean isLoanPartBEnabled,
-                                        boolean thirdPartyOfgem) {
+                                        boolean isLoanPartBEnabled) {
         this.settings = settings;
         this.sections = sections;
         this.applicationScore = applicationScore;
@@ -45,7 +41,6 @@ public class ApplicationReadOnlyViewModel {
         this.thirdPartyProcurement = thirdPartyProcurement;
         this.thirdPartyConfig = thirdPartyConfig;
         this.isLoanPartBEnabled = isLoanPartBEnabled;
-        this.thirdPartyOfgem = thirdPartyOfgem;
     }
 
     public List<String> getOverallFeedbacks() {
@@ -98,12 +93,11 @@ public class ApplicationReadOnlyViewModel {
         return ktpCompetition;
     }
 
-    public boolean isThirdPartyProcurement() { return thirdPartyProcurement || thirdPartyOfgem; }
+    public boolean isThirdPartyProcurement() { return thirdPartyProcurement; }
 
     public CompetitionThirdPartyConfigResource getThirdPartyConfig() { return thirdPartyConfig; }
 
     public boolean isLoanPartBEnabled() {
         return isLoanPartBEnabled;
     }
-
 }

@@ -182,7 +182,7 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
     }
 
     public boolean isThirdPartyProcurementCompetition() {
-        return isThirdPartyProcurementCompetition || ofGemCompetition;
+        return isThirdPartyProcurementCompetition;
     }
 
     public boolean isTermsAndConditionsUploaded() {
