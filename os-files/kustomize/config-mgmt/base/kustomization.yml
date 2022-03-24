@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonAnnotations:
+  deployedWith: kustomize
+
+resources:
+  - cache-config.yml
+  - data-service-config.yml
+  - feature-toggle-config.yml
+  - flyway-config.yml
+  - idp-config.yml
+  - ldap-config.yml
+  - mail-config.yml
+  - new-relic-config.yml
+  - sba-secret.yml
+  - shibboleth-config.yml
+  - spring-profile-env.yml
+  - web-config.yml

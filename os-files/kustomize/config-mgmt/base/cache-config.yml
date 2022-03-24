@@ -1,0 +1,10 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cache-config
+data:
+  IFS_DATA_SERVICE_CACHE_TYPE: "redis"
+  IFS_DATA_SERVICE_CACHE_PREFIX: "nn:"
+  IFS_DATA_SERVICE_REDIS_SSL: "false"
+  IFS_DATA_SERVICE_REDIS_MAX_ACTIVE: "8"
+  IFS_DATA_SERVICE_CACHE_TTL: "18000000"
