@@ -1,7 +1,0 @@
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: flyway-config
-data:
-  FLYWAY_LOCATIONS: "db/migration,db/reference,db/setup,db/webtest"
-  FLYWAY_TABLE: "schema_version"
