@@ -39,9 +39,7 @@
             </div>
 
             <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: main/th:block[0] "/>
-            <th:block th:if="${model.isThirdPartyProcurementCompetition}"
-                      th:with="thirdPartyLabel=${model.thirdPartyConfig.termsAndConditionsLabel}">
-            <th:block  th:with="termsMsg=${model.isThirdPartyProcurementCompetition} ? 'You must read these ' + ${thirdPartyLabel} + ' and accept them by ticking the box at the end of the page.'
+              <th:block  th:with="termsMsg=${model.isThirdPartyProcurementCompetition} ? 'You must read these ' + ${model.thirdPartyConfig.termsAndConditionsLabel} + ' and accept them by ticking the box at the end of the page.'
                         : 'You must read these terms and conditions and accept them by ticking the box at the end of the page.'">
                 <th:block>
                     <div class="message-alert govuk-!-margin-bottom-6">
@@ -65,7 +63,7 @@
                                            id="agreed"
                                            th:field="*{agreed}" />
                                     <label th:if="${model.isThirdPartyProcurementCompetition}" for="agreed" class="govuk-label govuk-checkboxes__label"
-                                           th:text="|I agree to the award ${thirdPartyLabel} set out by Innovate UK.|">
+                                           th:text="|I agree to the award ${model.thirdPartyConfig.termsAndConditionsLabel} set out by Innovate UK.|">
                                     </label>
                                     <label th:unless="${model.isThirdPartyProcurementCompetition}" for="agreed" class="govuk-label govuk-checkboxes__label">
                                         I agree to the award terms and conditions set out by Innovate UK.
@@ -95,7 +93,6 @@
                     </div>
                 </th:block>
             </th:block>
-        </th:block>
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
 </div>
