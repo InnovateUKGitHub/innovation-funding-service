@@ -86,7 +86,7 @@ spec:
           - name: JAVA_TOOL_OPTIONS
             value: -Xms800m -Xmx800m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
-            value: "ifs-survey-data-service"
+            value: 'ifs-"$(NEW_RELIC_ENV)"-survey-data-service'
         ports:
           - containerPort: 8080
         resources:

@@ -69,7 +69,7 @@ spec:
             - name: JAVA_TOOL_OPTIONS
               value: -Xms384M -Xmx768M -javaagent:/newrelic.jar
             - name: NEW_RELIC_APP_NAME
-              value: "ifs-idp-service"
+              value: 'ifs-"$(NEW_RELIC_ENV)"-idp-service'
             - name: HTTPS_PORT
               value: "9443"
             - name: HTTP_PORT
