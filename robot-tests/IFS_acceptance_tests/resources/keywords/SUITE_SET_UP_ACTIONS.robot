@@ -97,8 +97,8 @@ the lead applicant marks the questions as complete (multiple appendices and mult
     Run Keyword If  '${question_link}' in ["Technical approach", "Project team"]   the user uploads the file           css = input[name="appendix"]    ${valid_pdf}
     Run Keyword If  '${question_link}' in ["Technical approach", "Project team"]   the user uploads the file           css = input[name="appendix"]    ${ods_file}
     Run Keyword If  '${question_link}' == 'Technical approach'                     the user uploads the file           css = input[name="appendix"]    ${excel_file}
-    Run Keyword If  '${question_link}' == 'Project team'                           wait until keyword succeeds without screenshots   10s    200ms     input text       id = multipleChoiceOptionId  answer7
-    Run Keyword If  '${question_link}' == 'Project team'                           Execute Javascript                  document.evaluate("//li[text()='answer7']",document.body,null,9,null).singleNodeValue.click();
+    Run Keyword If  '${question_link}' == 'Project team'                           input text                          id = multipleChoiceOptionId  answer7
+    Run Keyword If  '${question_link}' == 'Project team'                           the user clicks the button/link     jQuery = ul li:contains("answer7")
     the user clicks the button/link     name = complete
     the user clicks the button/link     link = Back to application overview
 
