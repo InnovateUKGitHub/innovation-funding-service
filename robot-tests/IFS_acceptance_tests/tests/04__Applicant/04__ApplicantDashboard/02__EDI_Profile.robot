@@ -89,9 +89,10 @@ Lead applicant check the status of edi as complete when edi survey is complete f
     When the user clicks the button/link                        id = application-overview-submit-cta
     Then the user should see the read only view of EDI status   Complete
 
-Assessor/Applicant can not see EDI status as he is only assessor not the applicant
+Assessor can not see EDI status when he is only assessor not the applicant
       Given log in as a different user     	            &{edi_assessor_credentials}
-
+      When the user clicks the button/link              link = Profile
+      Then the user should not see the element          jQuery = h2:contains("Equality, diversity and inclusion")
 
 Assessor/Applicant checks the status of EDI as Incomplete When user not started the edi survey
     [Documentation]  IFS-11534
