@@ -231,7 +231,7 @@ public class HorizonWorkProgrammeController {
 
         return savedSelections
                 .stream()
-                .sorted(comparing(HorizonWorkProgramme::getWorkProgramme, nullsLast(naturalOrder())))
+                .sorted(nullsFirst(comparing(HorizonWorkProgramme::getWorkProgramme, nullsFirst(naturalOrder()))))
                 .collect(Collectors.groupingBy(HorizonWorkProgramme::getDisplay));
     }
 
