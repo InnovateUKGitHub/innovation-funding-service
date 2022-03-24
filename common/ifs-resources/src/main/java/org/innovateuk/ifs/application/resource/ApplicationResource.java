@@ -7,7 +7,6 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.heukar.resource.ApplicationHeukarLocationResource;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -39,7 +38,6 @@ public class ApplicationResource {
     private String previousApplicationNumber;
     private String previousApplicationTitle;
     private ResearchCategoryResource researchCategory;
-    private List<ApplicationHeukarLocationResource> locations;
     private InnovationAreaResource innovationArea;
     private boolean noInnovationAreaApplicable;
     private IneligibleOutcomeResource ineligibleOutcome;
@@ -244,14 +242,6 @@ public class ApplicationResource {
         this.researchCategory = researchCategory;
     }
 
-    public List<ApplicationHeukarLocationResource> getLocations() {
-        return locations;
-    }
-
-    public void setLocations(List<ApplicationHeukarLocationResource> locations) {
-        this.locations = locations;
-    }
-
     public InnovationAreaResource getInnovationArea() {
         return innovationArea;
     }
@@ -385,7 +375,6 @@ public class ApplicationResource {
                 .append(previousApplicationNumber, that.previousApplicationNumber)
                 .append(previousApplicationTitle, that.previousApplicationTitle)
                 .append(researchCategory, that.researchCategory)
-                .append(locations, that.locations)
                 .append(innovationArea, that.innovationArea)
                 .append(ineligibleOutcome, that.ineligibleOutcome)
                 .append(leadOrganisationId, that.leadOrganisationId)
@@ -417,7 +406,6 @@ public class ApplicationResource {
                 .append(previousApplicationNumber)
                 .append(previousApplicationTitle)
                 .append(researchCategory)
-                .append(locations)
                 .append(innovationArea)
                 .append(noInnovationAreaApplicable)
                 .append(ineligibleOutcome)
