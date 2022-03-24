@@ -42,14 +42,47 @@ spec:
           timeoutSeconds: 5
           successThreshold: 1
           failureThreshold: 1
-        envFrom:
-          - secretRef:
-              name: survey-data-service-secrets
-          - configMapRef:
-              name: data-service-config
-          - configMapRef:
-              name: web-config
         env:
+          - name: SPRING_DATASOURCE_URL
+            valueFrom:
+              secretKeyRef:
+                name: survey-data-service-secrets
+                key: DB_URL
+          - name: SPRING_FLYWAY_URL
+            valueFrom:
+              secretKeyRef:
+                name: survey-data-service-secrets
+                key: DB_URL
+          - name: SPRING_DATASOURCE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: survey-data-service-secrets
+                key: DB_USER
+          - name: SPRING_FLYWAY_USER
+            valueFrom:
+              secretKeyRef:
+                name: survey-data-service-secrets
+                key: DB_USER
+          - name: SPRING_DATASOURCE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: survey-data-service-secrets
+                key: DB_PASS
+          - name: SPRING_FLYWAY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: survey-data-service-secrets
+                key: DB_PASS
+          - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
+            valueFrom:
+              configMapKeyRef:
+                name: data-service-config
+                key: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
+          - name: IFS_WEB_SYSTEM_USER_UID
+            valueFrom:
+              secretKeyRef:
+                name: web-secrets
+                key: IFS_WEB_SYSTEM_USER_UID
           - name: JAVA_TOOL_OPTIONS
             value: -Xms800m -Xmx800m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME

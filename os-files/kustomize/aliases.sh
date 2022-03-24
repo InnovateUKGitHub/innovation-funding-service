@@ -163,6 +163,7 @@ k8s_clean_all() {
   kubectl delete secrets finance-data-service-secrets
   kubectl delete secrets cache-secrets
   kubectl delete secrets flyway-secrets
+  kubectl delete secrets web-secrets
   kubectl delete secrets idp-keys-secrets
   kubectl delete secrets ldap-keys-secrets
   kubectl delete secrets sp-secrets

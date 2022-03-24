@@ -43,6 +43,46 @@ spec:
           successThreshold: 1
           failureThreshold: 1
         env:
+          - name: SPRING_DATASOURCE_URL
+            valueFrom:
+              secretKeyRef:
+                name: finance-data-service-secrets
+                key: FINANCE_DB_URL
+          - name: SPRING_FLYWAY_URL
+            valueFrom:
+              secretKeyRef:
+                name: finance-data-service-secrets
+                key: FINANCE_DB_URL
+          - name: SPRING_DATASOURCE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: finance-data-service-secrets
+                key: FINANCE_DB_USER
+          - name: SPRING_FLYWAY_USER
+            valueFrom:
+              secretKeyRef:
+                name: finance-data-service-secrets
+                key: FINANCE_DB_USER
+          - name: SPRING_DATASOURCE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: finance-data-service-secrets
+                key: FINANCE_DB_PASS
+          - name: SPRING_FLYWAY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: finance-data-service-secrets
+                key: FINANCE_DB_PASS
+          - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
+            valueFrom:
+              configMapKeyRef:
+                name: data-service-config
+                key: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
+          - name: IFS_FINANCE-TOTALS_AUTHSECRETKEY
+            valueFrom:
+              secretKeyRef:
+                name: data-service-secrets
+                key: IFS_FINANCE-TOTALS_AUTHSECRETKEY
           - name: JAVA_TOOL_OPTIONS
             value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME

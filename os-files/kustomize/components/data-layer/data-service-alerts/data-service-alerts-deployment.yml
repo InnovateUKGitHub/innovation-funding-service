@@ -42,9 +42,6 @@ spec:
           timeoutSeconds: 5
           successThreshold: 1
           failureThreshold: 1
-        envFrom:
-          - secretRef:
-              name: db-secrets
         env:
           - name: JAVA_TOOL_OPTIONS
             value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
@@ -52,6 +49,21 @@ spec:
             value: "ifs-data-service-alerts"
           - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
             value: "100"
+          - name: SPRING_DATASOURCE_URL
+            valueFrom:
+              secretKeyRef:
+                name: db-secrets
+                key: DB_URL
+          - name: SPRING_DATASOURCE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: db-secrets
+                key: DB_USER
+          - name: SPRING_DATASOURCE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: db-secrets
+                key: DB_PASS
         ports:
           - containerPort: 8080
         resources:

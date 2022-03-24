@@ -46,12 +46,57 @@ spec:
             timeoutSeconds: 5
             failureThreshold: 1
           imagePullPolicy: IfNotPresent
-          envFrom:
-            - secretRef:
-                name: shibboleth-secrets
-            - configMapRef:
-                name: shibboleth-config
           env:
+            - name: SP_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: shibboleth-config
+                  key: SP_DOMAIN
+            - name: IDP_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: shibboleth-config
+                  key: IDP_DOMAIN
+            - name: MPM_STARTSERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: shibboleth-config
+                  key: MPM_STARTSERVERS
+            - name: MPM_MINSPARETHREADS
+              valueFrom:
+                configMapKeyRef:
+                  name: shibboleth-config
+                  key: MPM_MINSPARETHREADS
+            - name: MPM_MAXSPARETHREADS
+              valueFrom:
+                configMapKeyRef:
+                  name: shibboleth-config
+                  key: MPM_MAXSPARETHREADS
+            - name: MPM_THREADLIMIT
+              valueFrom:
+                configMapKeyRef:
+                  name: shibboleth-config
+                  key: MPM_THREADLIMIT
+            - name: MPM_THREADSPERCHILD
+              valueFrom:
+                configMapKeyRef:
+                  name: shibboleth-config
+                  key: MPM_THREADSPERCHILD
+            - name: MPM_MAXREQUESTWORKERS
+              valueFrom:
+                configMapKeyRef:
+                  name: shibboleth-config
+                  key: MPM_MAXREQUESTWORKERS
+            - name: MPM_MAXCONNECTIONSPERCHILD
+              valueFrom:
+                configMapKeyRef:
+                  name: shibboleth-config
+                  key: MPM_MAXCONNECTIONSPERCHILD
+            - name: MEMCACHE_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: shibboleth-secrets
+                  key: MEMCACHE_ENDPOINT
             - name: HTTPS_PORT
               value: "9443"
             - name: HTTP_PORT

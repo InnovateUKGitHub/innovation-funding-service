@@ -22,20 +22,87 @@ spec:
           flyway.table=$FLYWAY_TABLE
           EOF
           . /clean-migrate-db-sync-ldap.sh
-      envFrom:
-        - secretRef:
-            name: db-secrets
-        - secretRef:
-            name: ldap-secrets
-        - secretRef:
-            name: flyway-secrets
-        - configMapRef:
-            name: performance-config
-        - configMapRef:
-            name: ldap-config
-        - configMapRef:
-            name: flyway-config
       env:
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: DB_HOST
+        - name: DB_PORT
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: DB_PORT
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: DB_NAME
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: DB_USER
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: DB_PASS
+        - name: PERFORMANCE_APPLICANT_USERS
+          valueFrom:
+            configMapKeyRef:
+              name: performance-config
+              key: PERFORMANCE_APPLICANT_USERS
+        - name: PERFORMANCE_h2020_USERS
+          valueFrom:
+            configMapKeyRef:
+              name: performance-config
+              key: PERFORMANCE_h2020_USERS
+        - name: LDAP_HOST
+          valueFrom:
+            secretKeyRef:
+              name: ldap-secrets
+              key: LDAP_HOST
+        - name: LDAP_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: ldap-config
+              key: LDAP_PORT
+        - name: LDAP_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: ldap-secrets
+              key: LDAP_PASSWORD
+        - name: LDAP_DOMAIN
+          valueFrom:
+            configMapKeyRef:
+              name: ldap-config
+              key: LDAP_DOMAIN
+        - name: ONLY_SYNC_LDAP
+          valueFrom:
+            configMapKeyRef:
+              name: ldap-config
+              key: ONLY_SYNC_LDAP
+        - name: ONLY_DELETE_IFS_USERS
+          valueFrom:
+            configMapKeyRef:
+              name: ldap-config
+              key: ONLY_DELETE_IFS_USERS
+        - name: LDAP_SCHEME
+          valueFrom:
+            configMapKeyRef:
+              name: ldap-config
+              key: LDAP_SCHEME
+        - name: FLYWAY_TABLE
+          valueFrom:
+            configMapKeyRef:
+              name: flyway-config
+              key: FLYWAY_TABLE
+        - name: SYSTEM_USER_UUID
+          valueFrom:
+            secretKeyRef:
+              name: flyway-secrets
+              key: SYSTEM_USER_UUID
         - name: IFS_TEST_USER_PASSWORD
           value: "%%IFS_TEST_USER_PASSWORD%%"
   restartPolicy: Never
