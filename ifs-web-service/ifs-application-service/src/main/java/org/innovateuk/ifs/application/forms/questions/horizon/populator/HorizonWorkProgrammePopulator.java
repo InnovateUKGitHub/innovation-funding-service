@@ -45,6 +45,7 @@ public class HorizonWorkProgrammePopulator {
                 applicationId,
                 pageTitle,
                 isCallId,
+                questionId,
                 isComplete(application, organisation, questionId),
                 true,
                 true,

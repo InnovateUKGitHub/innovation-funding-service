@@ -114,6 +114,18 @@
             </form>
         </th:block>
 
+        <th:block th:if="${model.isCallId}">
+            <ul class="govuk-list pagination">
+                <li class="prev">
+                    <a rel="prev" title="Navigate to previous part"
+                       th:href="@{/application/{id}/form/question/{questionId}/horizon-work-programme(id=${model.applicationId}, questionId=${model.questionId})}">
+                        <span class="pagination-label">Previous</span>
+                        <span class="pagination-part-title">Work programme</span>
+                    </a>
+                </li>
+            </ul>
+        </th:block>
+
         <div class="govuk-!-margin-top-6">
             <a th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
                class="govuk-button govuk-button--secondary">Return to application overview

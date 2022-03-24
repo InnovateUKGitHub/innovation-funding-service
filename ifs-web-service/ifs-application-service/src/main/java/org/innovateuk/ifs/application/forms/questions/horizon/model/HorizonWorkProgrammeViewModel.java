@@ -18,11 +18,13 @@ public class HorizonWorkProgrammeViewModel {
     private final boolean readOnly;
     private final String pageTitle;
     private final boolean isCallId;
+    private final long questionId;
 
     public HorizonWorkProgrammeViewModel(String applicationName,
                                           Long applicationId,
                                           String pageTitle,
                                           boolean isCallId,
+                                          long questionId,
                                           boolean complete,
                                           boolean open,
                                           boolean leadApplicant,
@@ -34,6 +36,7 @@ public class HorizonWorkProgrammeViewModel {
         this.applicationId = applicationId;
         this.pageTitle = pageTitle;
         this.isCallId = isCallId;
+        this.questionId = questionId;
         this.complete = complete;
         this.open = open;
         this.leadApplicant = leadApplicant;
@@ -80,5 +83,9 @@ public class HorizonWorkProgrammeViewModel {
 
     public boolean isCallId() {
         return isCallId;
+    }
+
+    public long getQuestionId() {
+        return questionId;
     }
 }
