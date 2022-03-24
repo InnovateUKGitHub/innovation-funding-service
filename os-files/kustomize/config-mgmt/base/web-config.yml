@@ -12,6 +12,5 @@ data:
   IFS_LIVE_PROJECTS_LANDING_PAGE_URL: "host.docker.internal:8443"
   IFS_EARLY_METRICS_URL: "host.docker.internal:8443"
   IFS_WEB_BASEURL: 'https://host.docker.internal:8443'
-  IFS_SHOW_COVID_QUESTIONNAIRE_LINKS: 'host.docker.internal:8443'
   IFS_LOANS_SALESFORCE_PAGE_URL: "https://loans-innovateuk.cs80.force.com/loansCommunity/s"
   IFS_EDI_SALESFORCE_PAGE_URL: "https://loans-innovateuk.cs80.force.com/EDI/s"

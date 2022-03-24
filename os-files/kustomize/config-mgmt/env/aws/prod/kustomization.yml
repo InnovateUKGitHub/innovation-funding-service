@@ -8,3 +8,4 @@ resources:
 patchesStrategicMerge:
   - spring-profile-env.yml
   - feature-toggle-config.yml
+  - new-relic-config.yml

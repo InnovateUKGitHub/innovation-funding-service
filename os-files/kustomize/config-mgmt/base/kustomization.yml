@@ -13,7 +13,6 @@ resources:
   - ldap-config.yml
   - mail-config.yml
   - new-relic-config.yml
-  - sba-secret.yml
   - shibboleth-config.yml
   - spring-profile-env.yml
   - web-config.yml
