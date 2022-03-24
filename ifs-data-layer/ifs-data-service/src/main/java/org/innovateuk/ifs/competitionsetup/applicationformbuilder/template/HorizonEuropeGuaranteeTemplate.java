@@ -45,7 +45,6 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                         .withQuestions(newArrayList(
                                 applicationDetails(),
                                 applicationTeam(),
-                                heukarProjectLocation(),
                                 horizonWorkProgramme(),
                                 aQuestion()
                                         .withShortName("Horizon Europe Guarantee grant agreement")
@@ -76,18 +75,6 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                 .filter(fi -> fi.getScope().equals(ASSESSMENT))
                 .forEach(fi -> fi.withActive(false));
         return horizonEuropeGuaranteeQuestion;
-    }
-
-    public static QuestionBuilder heukarProjectLocation() {
-        return aQuestion()
-                .withShortName("Project location")
-                .withName("Project location")
-                .withDescription("Choose the UK nation or other location where your project or work will be done.")
-                .withAssignEnabled(false)
-                .withMarkAsCompletedEnabled(true)
-                .withType(QuestionType.LEAD_ONLY)
-                .withQuestionSetupType(QuestionSetupType.HEUKAR_PROJECT_LOCATION)
-                .withFormInputs(newArrayList());
     }
 
     public static QuestionBuilder horizonWorkProgramme() {

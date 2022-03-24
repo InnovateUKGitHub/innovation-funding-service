@@ -36,7 +36,7 @@
         </th:block>
         <th:block th:if="${model.complete}">
             <div class="success-alert assignee govuk-!-margin-bottom-6">
-                <p class="govuk-body">This question is marked as complete</p>
+                <p class="govuk-body">This question is marked as complete.</p>
             </div>
         </th:block>
 
@@ -81,8 +81,8 @@
                 <tr class="govuk-!-margin-bottom-2" th:each="entry: ${model.readOnlyMap}">
                     <div class="govuk-!-margin-bottom-3">
                         <td class="cell-align-top govuk-form-group">
-                            <th:block th:each="location : ${entry.value}">
-                                <p class="govuk-body govuk-!-margin-bottom-0" th:text="${location.getDisplay()}"></p>
+                            <th:block th:each="programme : ${entry.value}">
+                                <p class="govuk-body govuk-!-margin-bottom-0" th:text="${programme.getDisplay()}"></p>
                             </th:block>
                         </td>
                     </div>

@@ -20,7 +20,6 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.granttransfer.resource.EuActionTypeResource;
-import org.innovateuk.ifs.heukar.resource.ApplicationHeukarLocationResource;
 import org.innovateuk.ifs.horizon.resource.ApplicationHorizonWorkProgrammeResource;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
 import org.innovateuk.ifs.interview.resource.InterviewResource;
@@ -409,10 +408,6 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<OrganisationAddressResource>> organisationAddressResourceListType() {
         return new ParameterizedTypeReference<List<OrganisationAddressResource>>() {};
-    }
-
-    public static ParameterizedTypeReference<List<ApplicationHeukarLocationResource>> applicationHeukarLocationResourceListType() {
-        return new ParameterizedTypeReference<List<ApplicationHeukarLocationResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<ApplicationHorizonWorkProgrammeResource>> applicationHorizonWorkProgrammeResourceListType() {
