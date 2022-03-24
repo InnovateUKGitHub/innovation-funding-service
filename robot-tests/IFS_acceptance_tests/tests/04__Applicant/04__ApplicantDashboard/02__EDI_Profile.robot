@@ -93,6 +93,7 @@ Assessor can not see EDI status when he is only assessor not the applicant
       Given log in as a different user     	            &{edi_assessor_credentials}
       When the user clicks the button/link              link = Profile
       Then the user should not see the element          jQuery = h2:contains("Equality, diversity and inclusion")
+      And the user should not see the element           jQuery = p:contains("Please complete our EDI monitoring survey. It helps us ensure we treat everyone who engages with us fairly and equally. The survey is mandatory and should takes no more than 10 minutes. You will be redirected to another page to complete this survey, but you can return here at any point.")
 
 Assessor/Applicant checks the status of EDI as Incomplete When user not started the edi survey
     [Documentation]  IFS-11534
@@ -122,7 +123,7 @@ Assessor/applicant can not mark the application team as complete when the edi su
 Assessor/Applicant can view the EDI status as complete in profile
     [Documentation]  IFS-11534
     When the user clicks the button/link            link = Profile
-    And the user changed EDI survey status          COMPLETE  2089-03-25 01:02:03
+    And the assessor changed EDI survey status      COMPLETE  2089-03-25 01:02:03
     Then the user should see EDI section details    Complete  25 March 2089  Review EDI summary
 
 *** Keywords ***
