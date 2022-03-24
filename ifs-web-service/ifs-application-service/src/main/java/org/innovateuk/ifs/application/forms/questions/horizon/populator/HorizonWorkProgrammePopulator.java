@@ -32,6 +32,7 @@ public class HorizonWorkProgrammePopulator {
                                                   long questionId,
                                                   long userId,
                                                   String pageTitle,
+                                                  boolean isCallId,
                                                   Set<HorizonWorkProgramme> workProgrammes,
                                                   Map<String, List<HorizonWorkProgramme>> readOnlyMap) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
@@ -43,6 +44,7 @@ public class HorizonWorkProgrammePopulator {
                 application.getName(),
                 applicationId,
                 pageTitle,
+                isCallId,
                 isComplete(application, organisation, questionId),
                 true,
                 true,

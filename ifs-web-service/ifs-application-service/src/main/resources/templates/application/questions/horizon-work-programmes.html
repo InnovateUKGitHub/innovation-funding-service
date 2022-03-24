@@ -53,7 +53,9 @@
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="selected">
                                 <h2 class="govuk-fieldset__heading" th:with="pageTitle=${model.pageTitle}"></h2>
+                                <span th:if="${model.isCallId}">Select the call you applied to.</span>
                             </legend>
+                            <span th:if="${model.isCallId}" class="govuk-hint">Select one of the options below.</span>
                             <th:block th:if="${#fields.hasErrors('selected')}">
                                 <span class="govuk-error-message"  th:each="err : ${#fields.errors('selected')}" th:text="${err}" />
                             </th:block>

@@ -16,11 +16,13 @@ public class HorizonWorkProgrammeViewModel {
     private final Map<String, List<HorizonWorkProgramme>> readOnlyMap;
     private final Set<HorizonWorkProgramme> workProgrammes;
     private final boolean readOnly;
-    private String pageTitle;
+    private final String pageTitle;
+    private final boolean isCallId;
 
     public HorizonWorkProgrammeViewModel(String applicationName,
                                           Long applicationId,
                                           String pageTitle,
+                                          boolean isCallId,
                                           boolean complete,
                                           boolean open,
                                           boolean leadApplicant,
@@ -31,6 +33,7 @@ public class HorizonWorkProgrammeViewModel {
         this.applicationName = applicationName;
         this.applicationId = applicationId;
         this.pageTitle = pageTitle;
+        this.isCallId = isCallId;
         this.complete = complete;
         this.open = open;
         this.leadApplicant = leadApplicant;
@@ -73,5 +76,9 @@ public class HorizonWorkProgrammeViewModel {
 
     public boolean isReadOnly() {
         return readOnly;
+    }
+
+    public boolean isCallId() {
+        return isCallId;
     }
 }
