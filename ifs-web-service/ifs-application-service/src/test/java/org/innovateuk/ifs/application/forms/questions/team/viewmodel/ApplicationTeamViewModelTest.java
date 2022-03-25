@@ -25,7 +25,7 @@ public class ApplicationTeamViewModelTest {
                 .withSentOn(fiveDaysAgo)
                 .build();
         model = new ApplicationTeamViewModel(1, null, null, 1, null, 1,
-                false, false, false, false, true, true, invite, null, false, false);
+                false, false, false, false, true, true, invite, null, false, false, false);
 
         // when
         long pendingDays = model.getKtaInvitePendingDays();
@@ -42,7 +42,7 @@ public class ApplicationTeamViewModelTest {
                 .build();
         ProcessRoleResource processRole = newProcessRoleResource().withUserEmail("processrole@example.com").build();
         model = new ApplicationTeamViewModel(1, null, null, 1, null, 1,
-                false, false, false, false, true, true, invite, processRole, false, false);
+                false, false, false, false, true, true, invite, processRole, false, false, false);
 
         // when
         String result = model.getKtaEmail();
@@ -58,7 +58,7 @@ public class ApplicationTeamViewModelTest {
                 .withEmail("inviteemail@example.com")
                 .build();
         model = new ApplicationTeamViewModel(1, null, null, 1, null, 1,
-                false, false, false, false, true, true, invite, null,false, false);
+                false, false, false, false, true, true, invite, null,false, false, false);
 
 
         // when
@@ -76,7 +76,7 @@ public class ApplicationTeamViewModelTest {
                 .build();
         ProcessRoleResource processRole = newProcessRoleResource().withUserName("ProcessRole").build();
         model = new ApplicationTeamViewModel(1, null, null, 1, null, 1,
-                false, false, false, false, true, true, invite, processRole, false, false);
+                false, false, false, false, true, true, invite, processRole, false, false, false);
 
         // when
         String result = model.getKtaName();
@@ -92,7 +92,7 @@ public class ApplicationTeamViewModelTest {
                 .withName("Invited")
                 .build();
         model = new ApplicationTeamViewModel(1, null, null, 1, null, 1,
-                false, false, false, false, true, true, invite, null,false,  false);
+                false, false, false, false, true, true, invite, null,false,  false, false);
 
         // when
         String result = model.getKtaName();
