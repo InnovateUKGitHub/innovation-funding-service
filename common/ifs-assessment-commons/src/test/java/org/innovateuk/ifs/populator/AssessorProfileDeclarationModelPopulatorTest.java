@@ -11,7 +11,9 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.user.resource.AffiliationListResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
+import org.innovateuk.ifs.user.resource.EDIStatus;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.TimeMachine;
 import org.innovateuk.ifs.viewmodel.AssessorProfileDeclarationViewModel;
 import org.innovateuk.ifs.viewmodel.AssessorProfileDetailsViewModel;
 import org.junit.Before;
@@ -21,7 +23,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.ZonedDateTime;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,11 +42,11 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.AffiliationType.*;
-import static org.innovateuk.ifs.user.resource.AffiliationType.FAMILY_FINANCIAL;
-import static org.innovateuk.ifs.user.resource.AffiliationType.PERSONAL_FINANCIAL;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
+import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -58,7 +64,12 @@ public class AssessorProfileDeclarationModelPopulatorTest {
     private AffiliationResource professionalAffiliations;
     private AffiliationResource financialInterests;
     private AffiliationResource familyFinancialInterests;
-
+    private AssessorProfileResource expectedProfile;
+    private AddressResource expectedAddress;
+    private List<InnovationAreaResource> expectedInnovationAreas;
+    private ProfileResource profile;
+    private UserResource user;
+    private AssessorProfileDetailsViewModel expectedDetailsViewModel;
     @InjectMocks
     private AssessorProfileDeclarationModelPopulator populator;
 
@@ -73,9 +84,12 @@ public class AssessorProfileDeclarationModelPopulatorTest {
 
     @Mock
     private AssessorRestService assessorRestService;
+    private final ZonedDateTime fixedClock = ZonedDateTime.parse("2021-10-12T09:38:12.850Z");
+
 
     @Before
     public void setup() {
+        TimeMachine.useFixedClockAt(fixedClock);
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
 
@@ -84,50 +98,23 @@ public class AssessorProfileDeclarationModelPopulatorTest {
     }
 
 
-
     @Test
-    public void populateModel() throws Exception {
+    public void populateModelAssessorRole() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
                 .build();
-
-        UserResource user = newUserResource()
+        ReflectionTestUtils.setField(populator, "isEdiUpdateEnabled", true);
+        user = newUserResource()
                 .withId(2L)
                 .withFirstName("Test")
                 .withLastName("Tester")
                 .withEmail("test@test.com")
                 .withPhoneNumber("012345")
+                .withEdiStatusReviewDate(fixedClock)
+                .withEdiStatus(EDIStatus.COMPLETE)
+                .withRolesGlobal(Collections.singletonList(ASSESSOR))
                 .build();
-
-        AddressResource expectedAddress = newAddressResource()
-                .withAddressLine1("1 Testing Lane")
-                .withTown("Testville")
-                .withCounty("South Testshire")
-                .withPostcode("TES TEST")
-                .build();
-
-        List<InnovationAreaResource> expectedInnovationAreas = newInnovationAreaResource()
-                .withSector(1L, 2L, 1L)
-                .withSectorName("sector 1", "sector 2", "sector 1")
-                .withName("innovation area 1", "innovation area 2", "innovation area 3")
-                .build(3);
-
-        ProfileResource profile = newProfileResource()
-                .withSkillsAreas("A Skill")
-                .withBusinessType(ACADEMIC)
-                .withInnovationAreas(expectedInnovationAreas)
-                .withAddress(expectedAddress)
-                .build();
-
-        AssessorProfileResource expectedProfile = newAssessorProfileResource()
-                .withUser(user)
-                .withProfile(profile)
-                .build();
-
-        AssessorProfileDetailsViewModel expectedDetailsViewModel = new AssessorProfileDetailsViewModel(user, profile);
-
         setupAffiliations();
-
         when(assessorRestService.getAssessorProfile(user.getId())).thenReturn(restSuccess(expectedProfile));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(assessorProfileDetailsModelPopulator.populateModel(user, profile)).thenReturn(expectedDetailsViewModel);
@@ -147,10 +134,86 @@ public class AssessorProfileDeclarationModelPopulatorTest {
         assertEquals(expectedPrincipalEmployer, model.getPrincipalEmployer());
         assertEquals(expectedProfessionalAffiliations, model.getProfessionalAffiliations());
         assertEquals(expectedRole, model.getRole());
+        assertEquals(fixedClock, model.getEdiReviewDate());
+        assertEquals(EDIStatus.COMPLETE, model.getEdiStatus());
+        assertFalse( model.isEdiUpdateEnabled());
 
     }
 
+    @Test
+    public void populateModeApplicantAndAssessorRole() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withId(1L)
+                .build();
+        ReflectionTestUtils.setField(populator, "isEdiUpdateEnabled", true);
+
+        user = newUserResource()
+                .withId(2L)
+                .withFirstName("Test")
+                .withLastName("Tester")
+                .withEmail("test@test.com")
+                .withPhoneNumber("012345")
+                .withEdiStatusReviewDate(fixedClock)
+                .withEdiStatus(EDIStatus.INCOMPLETE)
+                .withRolesGlobal(Arrays.asList(ASSESSOR, APPLICANT))
+                .build();
+        setupAffiliations();
+        when(assessorRestService.getAssessorProfile(user.getId())).thenReturn(restSuccess(expectedProfile));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(assessorProfileDetailsModelPopulator.populateModel(user, profile)).thenReturn(expectedDetailsViewModel);
+
+        AssessorProfileDeclarationViewModel model = populator.populateModel(user, profile, Optional.of(competition.getId()), false);
+        AssessorProfileDetailsViewModel assessorDetails = model.getAssessorProfileDetailsViewModel();
+
+        assertEquals("Test Tester", assessorDetails.getName());
+        assertEquals("012345", assessorDetails.getPhoneNumber());
+        assertEquals(ACADEMIC.getDisplayName(), assessorDetails.getBusinessType().getDisplayName());
+        assertEquals("test@test.com", assessorDetails.getEmail());
+        assertEquals(expectedAddress, assessorDetails.getAddress());
+        assertEquals(expectedAppointments, model.getAppointments());
+        assertEquals(expectedFamilyAffiliations, model.getFamilyAffiliations());
+        assertEquals(expectedFamilyFinancialInterests, model.getFamilyFinancialInterests());
+        assertEquals(expectedFinancialInterests, model.getFinancialInterests());
+        assertEquals(expectedPrincipalEmployer, model.getPrincipalEmployer());
+        assertEquals(expectedProfessionalAffiliations, model.getProfessionalAffiliations());
+        assertEquals(expectedRole, model.getRole());
+        assertEquals(fixedClock, model.getEdiReviewDate());
+        assertEquals(EDIStatus.INCOMPLETE, model.getEdiStatus());
+        assertTrue( model.isEdiUpdateEnabled());
+
+
+
+    }
+
+
     private void setupAffiliations() {
+
+
+        expectedAddress = newAddressResource()
+                .withAddressLine1("1 Testing Lane")
+                .withTown("Testville")
+                .withCounty("South Testshire")
+                .withPostcode("TES TEST")
+                .build();
+
+        expectedInnovationAreas = newInnovationAreaResource()
+                .withSector(1L, 2L, 1L)
+                .withSectorName("sector 1", "sector 2", "sector 1")
+                .withName("innovation area 1", "innovation area 2", "innovation area 3")
+                .build(3);
+
+        profile = newProfileResource()
+                .withSkillsAreas("A Skill")
+                .withBusinessType(ACADEMIC)
+                .withInnovationAreas(expectedInnovationAreas)
+                .withAddress(expectedAddress)
+                .build();
+        expectedProfile = newAssessorProfileResource()
+                .withUser(user)
+                .withProfile(profile)
+                .build();
+
+         expectedDetailsViewModel = new AssessorProfileDetailsViewModel(user, profile);
 
         expectedPrincipalEmployer = "Big Name Corporation";
         expectedRole = "Financial Accountant";
@@ -205,4 +268,6 @@ public class AssessorProfileDeclarationModelPopulatorTest {
                 )
                 )));
     }
+
+
 }
