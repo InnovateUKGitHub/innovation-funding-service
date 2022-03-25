@@ -241,7 +241,7 @@ the internal team mark the application as successful / unsuccessful
 
 the internal team notifies all applicants
     [Arguments]  ${ApplicationID}
-    the user clicks the button/link                      link = Send notification and release feedback
+    the user clicks the button/link                      link = Send notification
     the user clicks the button/link                      jQuery = tr:contains(${ApplicationID}) label
     the user clicks the button/link                      id = write-and-send-email
     the user clicks the button/link                      id = send-email-to-all-applicants

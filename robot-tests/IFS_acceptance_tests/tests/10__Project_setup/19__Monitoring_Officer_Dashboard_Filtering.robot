@@ -148,7 +148,6 @@ Monitoring officer can filter based on both keywords and spendprofile status
 *** Keywords ***
 Custom suite setup
     Connect to database  @{database}
-    the guest user opens the browser
 
 Custom suite teardown
     Disconnect from database
