@@ -5,11 +5,6 @@
 #
 
 # Deployments
-# Use sensible defaults to deploy 'external' resources
-alias skaffold_e="skaffold dev -f skaffold-EXT.yml --rpc-http-port=50054 --rpc-port=50053 --auto-build=false --auto-sync=false --auto-deploy=false --status-check=true --wait-for-deletions=true --tail=false"
-# Use sensible defaults to deploy dev and custom builds in a faster mode (use one at a time)
-alias skaffold_dx="skaffold dev --watch-image='[]' --cache-artifacts=false --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true --tail=false"
-alias skaffold_cx="skaffold dev -f skaffold-CUSTOM.yml --cache-artifacts=false --watch-image='[]' --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true --tail=false"
 # View state/events for dev/custom in firefox
 alias skaffold_state="open -a Firefox http://localhost:50052/v1/state"
 alias skaffold_events="open -a Firefox http://localhost:50052/v1/events"
@@ -22,11 +17,30 @@ alias k8s_svc="kubectl get svc"
 alias k8s_configmap="kubectl get configmap"
 alias k8s_secrets="kubectl get secrets"
 
+skaffold_e() {
+  _assert_context
+  # Use sensible defaults to deploy 'external' resources
+  skaffold dev -f skaffold-EXT.yml --rpc-http-port=50054 --rpc-port=50053 --auto-build=false --auto-sync=false --auto-deploy=false --status-check=true --wait-for-deletions=true --tail=false
+}
+
+skaffold_dx() {
+  _assert_context
+  # Use sensible defaults to deploy dev and custom builds in a faster mode (use one at a time)
+  skaffold dev --watch-image='[]' --cache-artifacts=false --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true --tail=false
+}
+
+skaffold_cx() {
+  _assert_context
+  skaffold dev -f skaffold-CUSTOM.yml --cache-artifacts=false --watch-image='[]' --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true --tail=false
+}
+
 skaffold_dev() {
+  _assert_context
   skaffold dev -f skaffold-ADHOC.yml -p $1 --watch-image='[]' --cache-artifacts=false --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true --tail=true
 }
 
 skaffold_debug() {
+  _assert_context
   skaffold debug -f skaffold-ADHOC.yml -p $1 --watch-image='[]' --cache-artifacts=false --auto-build=false --auto-sync=false --auto-deploy=false --status-check=false --wait-for-deletions=true --tail=true
 }
 
@@ -67,6 +81,7 @@ k8s_describe() {
 }
 
 k8s_sync_ldap_all_users() {
+  _assert_context
   if [[ -z "${TEST_USER_PASSWORD}" ]]; then
     echo 'IFS_TEST_USER_PASSWORD env var is not set so using default of Passw0rd1357'
     pass=$(slappasswd -s "Passw0rd1357" | base64)
@@ -79,6 +94,7 @@ k8s_sync_ldap_all_users() {
 }
 
 k8s_sync_ldap_one_user() {
+  _assert_context
   if [[ -z "${TEST_USER_PASSWORD}" ]]; then
     echo 'IFS_TEST_USER_PASSWORD env var is not set so using default of Passw0rd1357'
     pass=$(slappasswd -s "Passw0rd1357" | base64)
@@ -90,6 +106,14 @@ k8s_sync_ldap_one_user() {
   kubectl exec "$POD" -- bash -c "export IFS_TEST_USER_PASSWORD=$pass && /usr/local/bin/ldap-sync-one-user.sh $1"
 }
 
+_assert_context() {
+  if [[ $(kubectl config current-context) != "docker-desktop" ]]; then
+    printf "%s " "Context is not docker-desktop so exiting. Press enter to continue"
+    read ans
+    exit 1
+  fi
+}
+
 k8s_wait() {
   while [[ $(kubectl get pods -l app=$1 -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]];
     do echo "waiting for pod $1" && sleep 5;
@@ -97,6 +121,7 @@ k8s_wait() {
 }
 
 k8s_rebuild_db() {
+  _assert_context
   k8s_delete ldap
   k8s_wait ldap
   k8s_delete ifs-database
@@ -107,6 +132,7 @@ k8s_rebuild_db() {
 }
 
 k8s_clean_svc() {
+  _assert_context
   kubectl delete deployment application-svc
   kubectl delete deployment assessment-svc
   kubectl delete deployment competition-mgt-svc
@@ -121,6 +147,7 @@ k8s_clean_svc() {
 }
 
 k8s_clean_all() {
+  _assert_context
   kubectl delete deployment --all
   kubectl delete svc application-svc
   kubectl delete svc assessment-svc
