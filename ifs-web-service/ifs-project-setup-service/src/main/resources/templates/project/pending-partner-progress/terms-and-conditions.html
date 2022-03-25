@@ -79,7 +79,7 @@
                     <div id="terms-accepted" class="form-footer govuk-body govuk-!-margin-bottom-6" th:if="${model.termsAccepted}">
                         <div class="form-footer__actions">
                             <span th:unless="${model.isThirdPartyProcurementCompetition}" th:text="|Terms and conditions accepted|"></span>
-                            <span th:if="${model.isThirdPartyProcurementCompetition}" th:text="|${thirdPartyLabel} accepted|"></span>
+                            <span th:if="${model.isThirdPartyProcurementCompetition}" th:text="|${model.thirdPartyConfig.termsAndConditionsLabel} accepted|"></span>
                             <th:block>
                                 at <span th:text="${#strings.toLowerCase(#temporals.format(model.termsAcceptedOn.get(), 'h:mma'))}"> 6:10pm</span>
                                 on <span th:text="${#temporals.format(model.termsAcceptedOn.get(), 'd MMMM yyyy')}"> 08 May 2019</span>
