@@ -33,12 +33,18 @@ public abstract class AbstractYourProjectCostsFormPopulator {
     @Autowired
     private OrganisationRestService organisationRestService;
 
+    // TODO: needs removing once called the below new one from assessment & project services
     public YourProjectCostsForm populateForm(long targetId, long organisationId) {
+        return populateForm(targetId, organisationId, false);
+    }
+
+    public YourProjectCostsForm populateForm(long targetId, long organisationId, boolean thirdPartyOfgem) {
         YourProjectCostsForm form = new YourProjectCostsForm();
         BaseFinanceResource finance = getFinanceResource(targetId, organisationId);
 
+        form.setThirdPartyOfgem(thirdPartyOfgem);
         form.setOverhead(overhead(finance));
-        form.setLabour(labour(finance));
+        form.setLabour(labour(finance, form));
         form.setCapitalUsageRows(toRows(finance, FinanceRowType.CAPITAL_USAGE,
                 CapitalUsageRowForm.class, CapitalUsage.class));
         form.setMaterialRows(toRows(finance, FinanceRowType.MATERIALS,
@@ -110,13 +116,14 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         return ofNullable(finance.getFinanceOrganisationDetails().get(type)).map(category -> category.getCosts().size()).orElse(0);
     }
 
-    private LabourForm labour(BaseFinanceResource finance) {
+    private LabourForm labour(BaseFinanceResource finance, YourProjectCostsForm form) {
         LabourCostCategory costCategory = (LabourCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.LABOUR);
+
         LabourForm labourForm = new LabourForm();
         if (costCategory != null) {
             costCategory.calculateTotal();
             labourForm.setWorkingDaysPerYear(costCategory.getWorkingDaysPerYear());
-            labourForm.setRows(labourCosts(costCategory));
+            labourForm.setRows(labourCosts(costCategory, form.isThirdPartyOfgem()));
         }
         return labourForm;
     }
@@ -131,15 +138,17 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         return new OverheadForm();
     }
 
-    private Map<String, LabourRowForm> labourCosts(LabourCostCategory costCategory) {
+    private Map<String, LabourRowForm> labourCosts(LabourCostCategory costCategory, boolean thirdPartyOfgem) {
         Map<String, LabourRowForm> rows = costCategory.getCosts().stream()
                 .map(LabourCost.class::cast)
                 .map(LabourRowForm::new)
                 .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
 
         if (shouldAddEmptyRow()) {
-            rows.put(generateUnsavedRowId(), new LabourRowForm());
+            LabourRowForm labourRowForm = new LabourRowForm(thirdPartyOfgem);
+            rows.put(generateUnsavedRowId(), labourRowForm);
         }
+
         return rows;
     }
 
