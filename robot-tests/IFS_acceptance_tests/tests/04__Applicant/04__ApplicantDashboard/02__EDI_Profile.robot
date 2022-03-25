@@ -91,17 +91,11 @@ Lead applicant check the status of edi as complete when edi survey is complete f
     Then the user should see the read only view of EDI status   Complete
 
 Assessor can not see EDI status when he is only assessor not the applicant
-<<<<<<< HEAD
-      Given log in as a different user     	            &{edi_assessor_credentials}
-      When the user clicks the button/link              link = Profile
-      Then the user should not see the element          jQuery = h2:contains("Equality, diversity and inclusion")
-      And the user should not see the element           jQuery = p:contains("Please complete our EDI monitoring survey. It helps us ensure we treat everyone who engages with us fairly and equally. The survey is mandatory and should takes no more than 10 minutes. You will be redirected to another page to complete this survey, but you can return here at any point.")
-=======
     [Documentation]  IFS-11534
-    Given log in as a different user     	            &{edi_assessor_credentials}
+    Given log in as a different user     	          &{edi_assessor_credentials}
     When the user clicks the button/link              link = Profile
     Then the user should not see the element          jQuery = h2:contains("Equality, diversity and inclusion")
->>>>>>> 0c596c40f7e7a3268d3fcb60f6534bfef10087e3
+    And the user should not see the element           jQuery = p:contains("Please complete our EDI monitoring survey. It helps us ensure we treat everyone who engages with us fairly and equally. The survey is mandatory and should takes no more than 10 minutes. You will be redirected to another page to complete this survey, but you can return here at any point.")
 
 Assessor/Applicant checks the status of EDI as Incomplete When user not started the edi survey
     [Documentation]  IFS-11534
@@ -126,13 +120,13 @@ Assessor/applicant can not mark the application team as complete when the edi su
     When the user clicks the button/link                   id = application-question-complete
     And the user clicks the button/link                    jQuery = a:contains("here")
     And the assessor changed EDI survey status             INPROGRESS  2076-01-22 01:02:03
+    And the user edit the profile of an assessor
     Then the user should see EDI section details           Incomplete  22 January 2076  Continue
 
 Assessor/Applicant can view the EDI status as complete in profile
     [Documentation]  IFS-11534
-    When the user clicks the button/link            link = Profile
-    And the assessor changed EDI survey status      COMPLETE  2089-03-25 01:02:03
-    Then the user should see EDI section details    Complete  25 March 2089  Review EDI summary
+    When the assessor changed EDI survey status      COMPLETE  2089-03-25 01:02:03
+    Then the user should see EDI section details     Complete  25 March 2089  Review EDI summary
 
 *** Keywords ***
 Custom Suite Setup
@@ -171,6 +165,10 @@ get application Id
     ${applicationIdEDI} =  get application id by name    ${appName}
     Set suite variable    ${applicationIdEDI}
 
+get application Id of assessor
+    ${assessorApplicationIdEDI} =  get application id by name    ${AssessorapplicationNameEDI}
+    Set suite variable    ${assessorApplicationIdEDI}
+
 the user fills in the EDI application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user clicks the button/link       link = Application details
@@ -208,5 +206,11 @@ the assessor should see the read only view of EDI status
 the assessor changed EDI survey status
     [Arguments]  ${ediStatus}  ${ediReviewDate}
     execute sql string   UPDATE `${database_name}`.`user` SET `edi_status` = '${ediStatus}', `edi_review_date` = '${ediReviewDate}' WHERE (`email` = 'Aaron.Jennings@ukri.org');
-    the user clicks the button/link             link = Edit your details
-    the user clicks the button/link             jQuery = button:contains("Save changes")
+
+the user edit the profile of an assessor
+    the user navigates to the page     ${server}/assessment/profile/details/edit
+    the user enters text to a text field   id= addressLine1  test
+    the user enters text to a text field   id= town  test
+    the user enters text to a text field   id= postcode  test
+    the user clicks the button/link         jQuery=button:contains("Save and return to your details")
+    the user clicks the button/link                    link = Profile
