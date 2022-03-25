@@ -194,14 +194,14 @@ internal user uploads the GOL
     the user uploads the file          grantOfferLetter  ${gol_pdf}
     the user should see the element    jQuery = a:contains("GOL_template.pdf (opens in a new window)")
     #horrible hack but we need to wait for virus scanning
-    sleep  5s
+    sleep  10s
 
 internal user uploads the Annex
     [Arguments]  ${projectID}
     the user uploads the file          annex  ${valid_pdf}
     the user should see the element    jQuery = a:contains("testing.pdf (opens in a new window)")
     #horrible hack but we need to wait for virus scanning
-    sleep  5s
+    sleep  10s
 
 internal user sends letter to project team
     the user selects the checkbox      confirmation
@@ -896,7 +896,8 @@ the internal user reverts the viability
 the user edits the payment milestone
     the user clicks the button/link                        id = edit
     the user clicks the button/link                        jQuery = button:contains("Open all")
-    the user enters multiple strings into a text field     id = milestones[1].taskOrActivity    This is an edited text${SPACE}    3
+    #the user enters multiple strings into a text field     id = milestones[1].taskOrActivity    This is an edited text${SPACE}    3
+    the user enters multiple strings into a text field     id = milestones[3].taskOrActivity    This is an edited text${SPACE}    3
     the user clicks the button/link                        jQuery = button:contains("Save and return to payment milestone check")
 
 the internal user approves payment milestone
