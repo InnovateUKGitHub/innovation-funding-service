@@ -126,6 +126,7 @@ Assessor/applicant can not mark the application team as complete when the edi su
 Assessor/Applicant can view the EDI status as complete in profile
     [Documentation]  IFS-11534
     When the assessor changed EDI survey status      COMPLETE  2089-03-25 01:02:03
+    And the user edit the profile of an assessor
     Then the user should see EDI section details     Complete  25 March 2089  Review EDI summary
 
 *** Keywords ***
@@ -208,9 +209,9 @@ the assessor changed EDI survey status
     execute sql string   UPDATE `${database_name}`.`user` SET `edi_status` = '${ediStatus}', `edi_review_date` = '${ediReviewDate}' WHERE (`email` = 'Aaron.Jennings@ukri.org');
 
 the user edit the profile of an assessor
-    the user navigates to the page     ${server}/assessment/profile/details/edit
+    the user navigates to the page         ${server}/assessment/profile/details/edit
     the user enters text to a text field   id= addressLine1  test
     the user enters text to a text field   id= town  test
     the user enters text to a text field   id= postcode  test
-    the user clicks the button/link         jQuery=button:contains("Save and return to your details")
-    the user clicks the button/link                    link = Profile
+    the user clicks the button/link        jQuery=button:contains("Save and return to your details")
+    the user clicks the button/link        link = Profile
