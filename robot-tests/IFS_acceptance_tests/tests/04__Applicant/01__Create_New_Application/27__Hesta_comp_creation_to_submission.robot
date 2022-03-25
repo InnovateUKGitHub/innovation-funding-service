@@ -11,6 +11,8 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11299 HECP Phase 1 - EIC - New GOL Template
 ...
+...               IFS-11618 HECP Phase 2 - Cost categories - Application view additional updates
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -52,7 +54,7 @@ Comp admin creates Hesta competition
     [Teardown]  Get competition id and set open date to yesterday    ${hestaCompetitionName}
 
 Lead applicant can submit application
-    [Documentation]  IFS-8751  IFS-11269
+    [Documentation]  IFS-8751  IFS-11269  IFS-11618
     Given the user logs out if they are logged in
     When the user successfully completes application          tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
     And the user clicks the button/link                       link = Your project finances
@@ -346,16 +348,19 @@ The user is able to complete hecp project costs
     the user clicks the button/link           link = Your project costs
     the user should see the element           jQuery = h1:contains("Your project costs")
     the user should see the element           jQuery = span:contains("Personnel costs")
+    the user should see the element           jQuery = span:contains("Subcontracting costs")
+    the user should see the element           jQuery = span:contains("Travel and subsistence")
     the user should see the element           jQuery = span:contains("Equipment")
-    the user should see the element           jQuery = span:contains("Indirect costs")
     the user should see the element           jQuery = span:contains("Other goods, works and services")
+    the user should see the element           jQuery = span:contains("Other costs")
+    the user should see the element           jQuery = span:contains("Indirect costs")
     the user enters text to a text field      id = labour  50000
-    the user enters text to a text field      id = overhead  40000
+    the user enters text to a text field      id = subcontracting  50000
+    the user enters text to a text field      id = travel  10000
     the user enters text to a text field      id = material  30000
     the user enters text to a text field      id = capital  20000
-    the user enters text to a text field      id = subcontracting  15000
-    the user enters text to a text field      id = travel  10000
-    the user enters text to a text field      id = other  0
+    the user enters text to a text field      id = other  40000
+    the user enters text to a text field      id = overhead  0
     the user clicks the button/link           jQuery = button:contains("Mark")
     the user should see the element           jQuery = li:contains("Your project costs") > .task-status-complete
 
@@ -387,7 +392,7 @@ IFS admin approves the spend profiles for hestaApplication
 the user completes all project setup sections
     Requesting IDs of this Hesta application
     Requesting IDs of this Asos Organisation
-    the internal team mark the application as successful / unsuccessful       ${hestaApplicationID}  FUNDED
+    the internal team mark the application as successful / unsuccessful         ${hestaApplicationID}  FUNDED
     the user clicks the button/link                                             link = Competition
     the internal team notifies all applicants                                   ${hestaApplicationID}
     the user refreshes until element appears on page                            jQuery = td:contains("${hestaApplicationID}") ~ td:contains("Sent")
