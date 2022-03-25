@@ -100,9 +100,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private ApplicationInviteServiceImpl applicationInviteService;
 
     @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
 
     @Value("${ifs.edi.update.enabled}")
