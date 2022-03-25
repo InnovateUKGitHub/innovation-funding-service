@@ -176,8 +176,8 @@
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header govuk-!-width-one-third">Survey status</th>
                         <td class="govuk-table__cell govuk-!-width-two-thirds">
-                            <span class="yes accepted" th:if="${model.ediStatus!=null}">Complete</span>
-                            <span class="edit" th:unless="${model.ediStatus!=null}">Incomplete</span>
+                            <span class="yes accepted" th:if="${#strings.equals(model.ediStatus, 'COMPLETE')}">Complete</span>
+                            <span class="edit" th:unless="${#strings.equals(model.ediStatus, 'COMPLETE')}">Incomplete</span>
                         </td>
                     </tr>
                     </thead>
