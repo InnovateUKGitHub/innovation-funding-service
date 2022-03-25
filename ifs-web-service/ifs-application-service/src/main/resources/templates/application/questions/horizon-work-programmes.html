@@ -47,45 +47,53 @@
             </div>
         </th:block>
 
-        <form th:unless="${model.readOnly}"
-              th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-              method="POST"
-              novalidate="novalidate"
-              th:object="${form}"
-              class="govuk-!-margin-top-5">
+        <div class="assign-container assigned-alert"
+             th:if="${model.showQuestionAssignedBanner()}">
+            <p class="assignee govuk-body" th:text="|This question is assigned to ${model.leadApplicantName}.|">
+                This question is assigned to Steve Smith.
+            </p>
+        </div>
 
-            <div th:unless="${model.readOnly}" class="govuk-form-group">
-                    <div class="govuk-form-group"
-                         th:classappend="${#fields.hasErrors('selected')} ? 'govuk-form-group--error'">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="selected">
-                                <h2 class="govuk-fieldset__heading" th:with="pageTitle=${model.pageTitle}"></h2>
-                                <span th:if="${model.isCallId}">Select the call you applied to.</span>
-                            </legend>
-                            <span th:if="${model.isCallId}" class="govuk-hint">Select one of the options below.</span>
-                            <th:block th:if="${#fields.hasErrors('selected')}">
-                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('selected')}" th:text="${err}" />
-                            </th:block>
-                            <div class="govuk-radios">
-                                <div class="govuk-radios__item" th:each="workProgramme : *{allOptions}">
-                                    <input th:field="*{selected}"
-                                           th:value="${workProgramme}"
-                                           type="radio"
-                                           class="govuk-radios__input"
-                                           required="required"
-                                           th:attr="data-required-errormessage=#{validation.horizon.programme.required}" />
-                                    <label th:text="${workProgramme.display}"
-                                           class="govuk-label govuk-radios__label">Label</label>
-                                </div>
+        <th:block th:if="${!model.allReadOnly}">
+            <form th:unless="${model.readOnly}"
+                  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+                  method="POST"
+                  novalidate="novalidate"
+                  th:object="${form}"
+                class="govuk-!-margin-top-5">
+
+                    <div th:unless="${model.readOnly}" class="govuk-form-group">
+                            <div class="govuk-form-group"
+                                 th:classappend="${#fields.hasErrors('selected')} ? 'govuk-form-group--error'">
+                                <fieldset class="govuk-fieldset">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="selected">
+                                        <h2 class="govuk-fieldset__heading" th:with="pageTitle=${model.pageTitle}"></h2>
+                                        <span th:if="${model.isCallId}">Select the call you applied to.</span>
+                                    </legend>
+                                    <span th:if="${model.isCallId}" class="govuk-hint">Select one of the options below.</span>
+                                    <th:block th:if="${#fields.hasErrors('selected')}">
+                                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('selected')}" th:text="${err}" />
+                                    </th:block>
+                                    <div class="govuk-radios">
+                                        <div class="govuk-radios__item" th:each="workProgramme : *{allOptions}">
+                                            <input th:field="*{selected}"
+                                                   th:value="${workProgramme}"
+                                                   type="radio"
+                                                   class="govuk-radios__input"
+                                                   required="required"
+                                                   th:attr="data-required-errormessage=#{validation.horizon.programme.required}" />
+                                            <label th:text="${workProgramme.display}"
+                                                   class="govuk-label govuk-radios__label">Label</label>
+                                        </div>
+                                    </div>
+                                </fieldset>
                             </div>
-                        </fieldset>
                     </div>
-            </div>
+                <button id="selected-work-programmes-cta" class="govuk-button govuk-!-margin-top-6">Save and continue</button>
+            </form>
+        </th:block>
 
-            <button id="selected-work-programmes-cta" class="govuk-button govuk-!-margin-top-6">Save and continue</button>
-        </form>
-
-        <th:block th:if="${model.readOnly}">
+        <th:block th:if="${model.readOnly or model.allReadOnly}">
             <table class="govuk-body">
                 <tr class="govuk-!-margin-bottom-2" th:each="entry: ${model.readOnlyMap}">
                     <div class="govuk-!-margin-bottom-3">

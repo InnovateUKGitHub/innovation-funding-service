@@ -4,7 +4,6 @@ import org.innovateuk.ifs.horizon.resource.HorizonWorkProgramme;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class HorizonWorkProgrammeViewModel {
 
@@ -14,21 +13,23 @@ public class HorizonWorkProgrammeViewModel {
     private final boolean open;
     private final boolean leadApplicant;
     private final Map<String, List<HorizonWorkProgramme>> readOnlyMap;
-    private final Set<HorizonWorkProgramme> workProgrammes;
     private final boolean readOnly;
     private final String pageTitle;
     private final boolean isCallId;
     private final long questionId;
+    private final boolean allReadOnly;
+    private final String leadApplicantName;
 
     public HorizonWorkProgrammeViewModel(String applicationName,
                                           Long applicationId,
                                           String pageTitle,
                                           boolean isCallId,
                                           long questionId,
+                                          boolean allReadOnly,
+                                          String leadApplicantName,
                                           boolean complete,
                                           boolean open,
                                           boolean leadApplicant,
-                                          Set<HorizonWorkProgramme> workProgrammes,
                                           boolean readOnly,
                                           Map<String, List<HorizonWorkProgramme>> readOnlyMap
     ) {
@@ -37,10 +38,11 @@ public class HorizonWorkProgrammeViewModel {
         this.pageTitle = pageTitle;
         this.isCallId = isCallId;
         this.questionId = questionId;
+        this.allReadOnly = allReadOnly;
+        this.leadApplicantName = leadApplicantName;
         this.complete = complete;
         this.open = open;
         this.leadApplicant = leadApplicant;
-        this.workProgrammes = workProgrammes;
         this.readOnly = readOnly;
         this.readOnlyMap = readOnlyMap;
     }
@@ -69,10 +71,6 @@ public class HorizonWorkProgrammeViewModel {
         return leadApplicant;
     }
 
-    public Set<HorizonWorkProgramme> getWorkProgrammes() {
-        return workProgrammes;
-    }
-
     public Map<String, List<HorizonWorkProgramme>> getReadOnlyMap() {
         return readOnlyMap;
     }
@@ -87,5 +85,17 @@ public class HorizonWorkProgrammeViewModel {
 
     public long getQuestionId() {
         return questionId;
+    }
+
+    public boolean isAllReadOnly() {
+        return allReadOnly;
+    }
+
+    public String getLeadApplicantName() {
+        return leadApplicantName;
+    }
+
+    public boolean showQuestionAssignedBanner() {
+        return !leadApplicant && !complete;
     }
 }

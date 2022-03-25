@@ -96,16 +96,20 @@ public class HorizonWorkProgrammeController {
 
         String pageTitle = "Enter the Horizon Europe Work programme Part";
 
-        HorizonWorkProgrammeViewModel viewModel = horizonWorkProgrammePopulator.populate(applicationId, questionId, user.getId(), pageTitle, false, null, emptyMap());
+        HorizonWorkProgrammeViewModel viewModel = getPopulate(applicationId, questionId, user, pageTitle, false, emptyMap());
 
         if (viewModel.isComplete() || readOnly) {
-            viewModel = horizonWorkProgrammePopulator.populate(applicationId, questionId, user.getId(), pageTitle, false, null, getReadOnlyMap(applicationId, request));
+            viewModel = getPopulate(applicationId, questionId, user, pageTitle, false, getReadOnlyMap(applicationId, request));
         }
 
         model.addAttribute("form", form);
         model.addAttribute("model", viewModel);
 
         return TEMPLATE_PATH;
+    }
+
+    private HorizonWorkProgrammeViewModel getPopulate(long applicationId, long questionId, UserResource user, String pageTitle, boolean isCallId, Map<String, List<HorizonWorkProgramme>> readOnlyMap) {
+        return horizonWorkProgrammePopulator.populate(applicationId, questionId, user, pageTitle, isCallId, readOnlyMap);
     }
 
     @PostMapping
@@ -157,7 +161,8 @@ public class HorizonWorkProgrammeController {
         form.setSelected(existingSelection);
 
         model.addAttribute("form", form);
-        model.addAttribute("model", horizonWorkProgrammePopulator.populate(applicationId, questionId, user.getId(), pageTitle, true, null, emptyMap()));
+        model.addAttribute("model",
+                getPopulate(applicationId, questionId, user, pageTitle, true, emptyMap()));
 
         return TEMPLATE_PATH;
     }
