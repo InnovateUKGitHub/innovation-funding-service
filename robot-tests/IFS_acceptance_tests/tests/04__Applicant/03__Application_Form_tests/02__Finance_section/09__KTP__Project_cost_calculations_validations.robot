@@ -569,21 +569,6 @@ ifs admin invites a supporter to the ktp application
     the user selects the checkbox            select-all-check
     the user clicks the button/link          jQuery = button:contains("Add selected to application")
 
-#get assessment deadline date using competition id
-#    [Arguments]  ${competition_id}
-#    log in as a different user        &{ifs_admin_user_credentials}
-#    the user navigates to the page   ${server}/management/competition/setup/${competition_id}/section/milestones
-#    ${assessmentDeadLineWeekDay} =  get text   css = tr:nth-of-type(7) td:nth-of-type(3)
-#    ${assessmentDeadLineDate} =  get text   css = tr:nth-of-type(7) td:nth-of-type(4)
-#    @{list_string}=     split string    ${assessmentDeadLineDate}      ${SPACE}
-#    ${dayInDate}=       evaluate       '${list_string}[0]'.replace(',','')
-#    ${monthInDate}=     evaluate       '${list_string}[1]'.replace(',','')
-#    ${yearInDate}=      evaluate       '${list_string}[2]'.replace(',','')
-#    Set suite variable   ${assessmentDeadLineWeekDay}
-#    Set suite variable   ${dayInDate}
-#    Set suite variable   ${monthInDate}
-#    Set suite variable   ${yearInDate}
-
 the user should see the correct employee data
     the user should see the element   jQuery = td:contains("Number of full time employees in your company")+td:contains("2,000")+td:contains("1,500")+td:contains("1,200")
     the user should see the element   jQuery = td:contains("Number of full time employees in your corporate group (if applicable)")+td:contains("4,000")+td:contains("2,500")+td:contains("3,200")
