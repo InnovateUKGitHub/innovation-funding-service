@@ -67,8 +67,6 @@ Capital usage
     [Tags]  HappyPath
     When the applicant fills the 'capital usage' field
     Then Totals should be correct                       jQuery = h4:contains("Total capital usage costs") [data-mirror^="#section-total"]  £200  jQuery = [data-mirror^="#section-total-capital-usage"]  £200
-#    And the user clicks the button/link                 css = #capital-usage [data-repeatable-row]:nth-child(1) button
-#    And the user reloads page with autosave
     And the user removes one row of costs and checks for total  jQuery = h4:contains("Total capital usage costs") span:contains("£100")  css = #capital-usage [data-repeatable-row]:nth-child(1) button
     Then Totals should be correct                       jQuery = h4:contains("Total capital usage costs") [data-mirror^="#section-total"]  £100  jQuery = [data-mirror^="#section-total-capital-usage"]  £100
     And the user clicks the button/link                 css = #capital-usage [data-repeatable-row]:nth-child(1) button

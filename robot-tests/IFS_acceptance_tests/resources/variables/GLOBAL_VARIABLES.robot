@@ -267,6 +267,8 @@ ${CURRENTLY_WAITING_UNTIL}                                          false
 # Organisation variables
 ${EMPIRE_LTD_NAME}                    Empire Ltd
 ${EMPIRE_LTD_ID}                      ${organisation_ids["${EMPIRE_LTD_NAME}"]}
+${asosName}                           ASOS PLC
+${asosId}                             ${organisation_ids["${asosName}"]}
 ${organisationLudlowName}             Ludlow
 ${organisationLudlowId}               ${organisation_ids["${organisationLudlowName}"]}
 ${organisationEggsName}               EGGS

@@ -186,7 +186,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void testChangePassword() {
 
         User user = newUser().build();
-        UserResource userResource = newUserResource().withUID("myuid").build();
+        UserResource userResource = newUserResource().withUid("myuid").build();
 
         Token token = new Token(TokenType.RESET_PASSWORD, null, 123L, null, null, null);
         when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(serviceSuccess(token));
@@ -204,7 +204,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void testChangePasswordButPasswordValidationFails() {
 
         User user = newUser().build();
-        UserResource userResource = newUserResource().withUID("myuid").build();
+        UserResource userResource = newUserResource().withUid("myuid").build();
 
         Token token = new Token(TokenType.RESET_PASSWORD, null, 123L, null, null, null);
         when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(serviceSuccess(token));
@@ -221,7 +221,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void testChangePasswordButPasswordValidationFailsOnIDP() {
         final User user = newUser().build();
-        final UserResource userResource = newUserResource().withUID("myuid").build();
+        final UserResource userResource = newUserResource().withUid("myuid").build();
         final String password = "mypassword";
 
         Token token = new Token(TokenType.RESET_PASSWORD, null, 123L, null, null, null);

@@ -20,7 +20,7 @@ Resource          ../../resources/common/PS_Common.robot
 *** Test Cases ***
 Monitoring officer can filter in-setup projects only
     [Documentation]  IFS-9576
-    Given Logging in and Error Checking                         orville.gibbs@gmail.com  ${short_password}
+    Given the user logs-in in new browser                       orville.gibbs@gmail.com  ${short_password}
     When the user clicks the project setup tile if displayed
     And wait until search box appears
     Then check correct number of in-setup projects filtered     In setup
@@ -149,9 +149,6 @@ Monitoring officer can filter based on both keywords and spendprofile status
 Custom suite setup
     Connect to database  @{database}
     the guest user opens the browser
-#    the user logs-in in new browser                         orville.gibbs@gmail.com  ${short_password}
-#    the user clicks the project setup tile if displayed
-#    wait until page contains element without screenshots    id = keywordSearch   5s
 
 Custom suite teardown
     Disconnect from database
