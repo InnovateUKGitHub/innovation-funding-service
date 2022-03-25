@@ -9,6 +9,8 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11269 HECP Phase 2 - Changes to cost categories
 ...
+...               IFS-11299 HECP Phase 1 - EIC - New GOL Template
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -95,8 +97,57 @@ Lead applicant receives email notifiction when internal user marks application u
     And the internal team notifies all applicants                                   ${ApplicationID}
     Then the user reads his email                                                   ${newLeadApplicantEmail}  ${ApplicationID}: ${hestaApplicationUnsuccessfulEmailSubject}  ${hestaApplicationUnsuccessfulEmail}
 
+Internal user can view hecp GOL template
+    [Documentation]  IFS-11299
+    Given the user completes all project setup sections
+    When the user clicks the button/link                            jQuery = td:contains("Review")
+    And user clicks on View the grant offer letter page
+    And Select Window                                               NEW
+    Then the user should see the element                            xpath = //h2[text()='Accepting your award ']
+    [Teardown]  the user closes the last opened tab
+
 
 *** Keywords ***
+user clicks on View the grant offer letter page
+    the user clicks the button/link        link = View the grant offer letter page (opens in a new window)
+
+project finance approves eligibility and generates the Spend Profile
+    [Arguments]  ${lead}  ${project}
+    project finance approves Viability for  ${lead}  ${project}
+    the user navigates to the page          ${server}/project-setup-management/project/${project}/finance-check/organisation/${lead}/eligibility
+    the user approves project costs
+    the user navigates to the page          ${server}/project-setup-management/project/${project}/finance-check
+    the user clicks the button/link         css = .generate-spend-profile-main-button
+    the user clicks the button/link         css = #generate-spend-profile-modal-button
+
+The user fills in bank details
+    the user clicks the button/link                      link = Bank details
+    the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link                      id = postcode-lookup
+    the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
+    applicant user enters bank details
+
+Internal user reviews and approves documents
+    log in as a different user                          &{ifs_admin_user_credentials}
+    the user navigates to the page                      ${server}/project-setup-management/project/${hestaProjectID}/document/all
+    the user clicks the button/link                     link = Exploitation plan
+    the user clicks the button/link                     id = radio-review-approve
+    the user clicks the button/link                     id = submit-button
+    the user clicks the button/link                     id = accept-document
+
+Internal user approves bank details
+    the user navigates to the page                      ${server}/project-setup-management/project/${hestaProjectID}/organisation/${asosId}/review-bank-details
+    the user clicks the button/link                     jQuery = button:contains("Approve bank account details")
+    the user clicks the button/link                     id = submit-approve-bank-details
+
+The user is able to complete and submit the spend profile
+    Log in as a different user                          ${leadApplicantEmail}    ${short_password}
+    the user navigates to the page                      ${server}/project-setup/project/${hestaProjectID}/partner-organisation/${asosId}/spend-profile/review
+    the user clicks the button/link                      id = spend-profile-mark-as-complete-button
+    the user clicks the button/link                      link = Review and submit project spend profile
+    the user clicks the button/link                      id = submit-project-spend-profile-button
+    the user clicks the button/link                      id = submit-send-all-spend-profiles
+
 the user can view Hesta competition type in Initial details read only view
     the user should see the element     jQuery = ${hestaCompTypeSelector}
     the user clicks the button/link     jQuery = button:contains("Edit")
@@ -124,6 +175,18 @@ Requesting IDs of this application
     [Arguments]  ${applicationName}
     ${ApplicationID} =  get application id by name    ${applicationName}
     Set suite variable    ${ApplicationID}
+
+Requesting Project ID of this Project
+    ${hestaProjectID} =  get project id by name    ${hestaApplicationName}
+    Set suite variable    ${hestaProjectID}
+
+Requesting IDs of this Hesta application
+    ${hestaApplicationID} =  get application id by name    ${hestaApplicationName}
+    Set suite variable    ${hestaApplicationID}
+
+Requesting IDs of this Asos Organisation
+    ${asosId} =    get organisation id by name     ${asosName}
+    Set suite variable      ${asosId}
 
 Requesting IDs of this competition
     [Arguments]  ${competitionName}
@@ -176,7 +239,7 @@ the internal team mark the application as successful / unsuccessful
 the internal team notifies all applicants
     [Arguments]  ${ApplicationID}
     the user clicks the button/link                      link = Send notification and release feedback
-    the user clicks the button/link                      id = app-row-${ApplicationID}
+    the user clicks the button/link                      jQuery = tr:contains(${ApplicationID}) label
     the user clicks the button/link                      id = write-and-send-email
     the user clicks the button/link                      id = send-email-to-all-applicants
     the user clicks the button/link                      id = send-email-to-all-applicants-button
@@ -311,3 +374,34 @@ The user is able to complete horizon grant agreement section
     the user clicks the button/link           id = mark-as-complete
     the user clicks the button/link           link = Return to application overview
     the user should see the element           jQuery = li:contains("Horizon Europe Guarantee grant agreement") > .task-status-complete
+
+
+IFS admin approves the spend profiles for hestaApplication
+    [Arguments]  ${project}
+    log in as a different user       &{ifs_admin_user_credentials}
+    the user navigates to the page   ${server}/project-setup-management/project/${project}/spend-profile/approval
+    #the user selects the checkbox    approvedByLeadTechnologist
+    the user clicks the button/link  id = radio-spendprofile-approve
+    the user clicks the button/link  id = submit-button
+
+the user completes all project setup sections
+    Requesting IDs of this Hesta application
+    Requesting IDs of this Asos Organisation
+    the internal team mark the application as successful / unsuccessful       ${hestaApplicationID}  FUNDED
+    the user clicks the button/link                                             link = Competition
+    the internal team notifies all applicants                                   ${hestaApplicationID}
+    the user refreshes until element appears on page                            jQuery = td:contains("${hestaApplicationID}") ~ td:contains("Sent")
+    log in as a different user                                                  ${leadApplicantEmail}    ${short_password}
+    the user clicks the button/link                                             link = ${hestaApplicationName}
+    the user is able to complete project details section
+    the user completes the project team details
+    the user is able to complete the Documents section
+    the user fills in bank details
+    log in as a different user                                                  &{internal_finance_credentials}
+    internal user assigns MO to application                                     ${hestaApplicationID}    ${hestaApplicationName}    Orvill  Orville Gibbs
+    Requesting Project ID of this Project
+    project finance approves eligibility and generates the Spend Profile        ${asosId}  ${hestaProjectID}
+    Internal user reviews and approves documents
+    Internal user approves bank details
+    The user is able to complete and submit the spend profile
+    IFS admin approves the spend profiles for hestaApplication                  ${hestaProjectID}
