@@ -60,9 +60,9 @@ the lead applicant fills all the questions and marks as complete(thirdparty)
     :FOR  ${ELEMENT}    IN    @{Thirdparty_questions}
      \     the lead applicant marks every question as complete    ${ELEMENT}
 
-the lead applicant fills all the questions and marks as complete(Hesta)
-    :FOR  ${ELEMENT}    IN    @{Hesta_questions}
-     \     the lead applicant marks every question as complete    ${ELEMENT}
+#the lead applicant fills all the questions and marks as complete(Hesta)
+#    :FOR  ${ELEMENT}    IN    @{Hesta_questions}
+#     \     the lead applicant marks every question as complete    ${ELEMENT}
 
 the lead completes the questions with multiple answer choice and multiple appendices
     :FOR  ${ELEMENT}    IN    @{other_questions_procurement_ati}

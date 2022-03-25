@@ -54,6 +54,8 @@ public class CompletionStageSectionUpdater extends AbstractSectionUpdater implem
 
         if (completionStageUtils.isApplicationSubmissionEnabled(completionStageForm.getSelectedCompletionStage())) {
             sectionPath = CompetitionSetupSection.APPLICATION_SUBMISSION.getPath();
+        } else if (completionStageUtils.isAssessmentStageCompetitionEnabled(completionStageForm.getSelectedCompletionStage())) {
+            sectionPath = CompetitionSetupSection.APPLICATION_ASSESSMENT.getPath();
         } else {
             sectionPath = CompetitionSetupSection.MILESTONES.getPath();
         }

@@ -53,7 +53,8 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-8952 Always open competitions: Close completed competition
 ...
-
+...               IFS-11486 HECP Phase 2 - Always open functionality to have the the ability to bypass IFS assessment
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -83,15 +84,15 @@ ${assessorEmail}                   another.person@gmail.com
 
 *** Test Cases ***
 the user fills in milestones without a submission date
-    [Documentation]  IFS-8848  IFS-9756
-    Given The user logs-in in new browser            &{Comp_admin1_credentials}
-    And the user navigates to the page               ${CA_UpcomingComp}
-    And the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
-    And the user fills in the CS Initial details     ${openEndedCompName}  ${month}  ${nextyear}  ${compType_Programme}  STATE_AID  GRANT
+    [Documentation]  IFS-8848  IFS-9756  IFS-11486
+    Given The user logs-in in new browser                   &{Comp_admin1_credentials}
+    And the user navigates to the page                      ${CA_UpcomingComp}
+    And the user clicks the button/link                     jQuery = .govuk-button:contains("Create competition")
+    And the user fills in the CS Initial details            ${openEndedCompName}  ${month}  ${nextyear}  ${compType_Programme}  STATE_AID  GRANT
     When the user completes milestones section
-    Then the user should see the element             jQuery = td:contains("2. Submission date") + td:contains("-")+td:contains("-")+td:contains("None")
-    And the user should see the element              jQuery = .panel:contains("Assessment dates are set after the competition has opened.")
-    And the user should see the element              jQuery = .panel:contains("Do not complete the 'Submission date' milestone when creating open-ended competitions.")
+    Then the user should see the element                    jQuery = td:contains("2. Submission date") + td:contains("-")+td:contains("-")+td:contains("None")
+    And the user should see the element                     jQuery = .panel:contains("Assessment dates are set after the competition has opened.")
+    And the user should see the element                     jQuery = .panel:contains("Do not complete the 'Submission date' milestone when creating open-ended competitions.")
 
 the user should not see submission deadline date in public content dates
     [Documentation]  IFS-8848
@@ -161,15 +162,14 @@ Comp admin creates a new assessment period
     [Documentation]  IFS-9759  IFS-9760  IFS-10943
     Given the user clicks the button/link                   link = Manage assessment period
     When the user create a new assessment period
-    And the user create next assessment period           1  12  14  16   2  2100
-    And the user create next assessment period           2  12  14  16   3  2100
-    And the user create next assessment period           3  12  14  16   4  2100
-    And the user create next assessment period           4  12  14  16   5  2100
-    And the user create next assessment period           5  12  14  16   6  2100
-
+    And the user create next assessment period              1  12  14  16   2  2100
+    And the user create next assessment period              2  12  14  16   3  2100
+    And the user create next assessment period              3  12  14  16   4  2100
+    And the user create next assessment period              4  12  14  16   5  2100
+    And the user create next assessment period              5  12  14  16   6  2100
     And The user clicks the button/link                     link = Manage assessors
-    And the user selects the index from the drop-down menu      1  jQuery = select:nth-of-type(1)
-    Then the user clicks the button/link                     jQuery = button:contains("Save and continue")
+    And the user selects the index from the drop-down menu  1  jQuery = select:nth-of-type(1)
+    Then the user clicks the button/link                    jQuery = button:contains("Save and continue")
 
 Internal user should see the same dates entered in choose assessment period dropdowns even after notify assessor
     [Documentation]  IFS-10943
@@ -351,6 +351,7 @@ the user completes milestones section
     the user clicks the button twice                   jQuery = label:contains("Project setup")
     the user clicks the button/link                    jQuery = button:contains("Done")
     the user completes application submission page     Yes
+    the user inputs application assessment decision    Yes
     the user clicks the button/link                    jQuery = button:contains("Done")
 
 comp admin sends invite to assesor
@@ -566,5 +567,3 @@ the user should see the competition in project setup/previous dashboard and can 
     The user should see the element      jQuery = h1:contains("Always open competition")
     the user navigates to the page       ${server}/management/dashboard/live
     the user should not see the element  jQuery = a:contains("${webTestCompName}")
-
-
