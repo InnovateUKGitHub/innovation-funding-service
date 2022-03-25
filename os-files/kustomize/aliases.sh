@@ -108,9 +108,8 @@ k8s_sync_ldap_one_user() {
 
 _assert_context() {
   if [[ $(kubectl config current-context) != "docker-desktop" ]]; then
-    printf "%s " "Context is not docker-desktop so exiting. Press enter to continue"
-    read ans
-    exit 1
+    echo "Context set to docker-desktop...!"
+    kubectl config use-context docker-desktop
   fi
 }
 
