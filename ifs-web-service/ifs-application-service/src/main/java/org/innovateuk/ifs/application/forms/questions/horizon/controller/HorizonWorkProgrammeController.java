@@ -108,10 +108,6 @@ public class HorizonWorkProgrammeController {
         return TEMPLATE_PATH;
     }
 
-    private HorizonWorkProgrammeViewModel getPopulate(long applicationId, long questionId, UserResource user, String pageTitle, boolean isCallId, Map<String, List<HorizonWorkProgramme>> readOnlyMap) {
-        return horizonWorkProgrammePopulator.populate(applicationId, questionId, user, pageTitle, isCallId, readOnlyMap);
-    }
-
     @PostMapping
     public String submitWorkProgramme(@Valid @ModelAttribute(value = "form") HorizonWorkProgrammeForm form,
                                       BindingResult bindingResult,
@@ -167,14 +163,6 @@ public class HorizonWorkProgrammeController {
         return TEMPLATE_PATH;
     }
 
-    private List<HorizonWorkProgramme> getChildrenOf(Optional<HorizonWorkProgrammeSelectionData> cookieSelectionData) {
-        return HorizonWorkProgramme.findChildrenOf(cookieSelectionData.get().getWorkProgramme());
-    }
-
-    private Optional<HorizonWorkProgrammeSelectionData> getHorizonWorkProgrammeSelectionData(HttpServletRequest request) {
-        return cookieService.getHorizonWorkProgrammeSelectionData(request);
-    }
-
     @PostMapping("/call-id")
     public String submitCallId(@ModelAttribute(value = "form") @Valid HorizonWorkProgrammeForm form,
                                BindingResult bindingResult,
@@ -194,12 +182,8 @@ public class HorizonWorkProgrammeController {
             horizonWorkProgrammeSelectionData.setCallId(form.getSelected());
             cookieService.saveWorkProgrammeSelectionData(horizonWorkProgrammeSelectionData, response);
 
-            return completeWorkflowStage(applicationId, questionId);
+            return completeWorkflow(applicationId, questionId);
         });
-    }
-
-    private String completeWorkflowStage(long applicationId, long questionId) {
-        return redirectToWorkProgramme(applicationId, questionId, true);
     }
 
     private void setWorkflow(List<HorizonWorkProgramme> selectedWorkProgramme) {
@@ -218,10 +202,6 @@ public class HorizonWorkProgrammeController {
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("readOnly", readOnly);
         return builder.toUriString();
-    }
-
-    private String redirectToCallId(long applicationId, long questionId) {
-        return "redirect:" + APPLICATION_BASE_URL + applicationId + "/form/question/" + questionId + "/horizon-work-programme" + "/call-id";
     }
 
     private Map<String, List<HorizonWorkProgramme>> getReadOnlyMap(long applicationId, HttpServletRequest request) {
@@ -283,6 +263,26 @@ public class HorizonWorkProgrammeController {
         questionStatusRestService.markAsInComplete(questionId, applicationId, role.getId()).getSuccess();
 
         return viewWorkProgramme(form, bindingResult, model, applicationId, questionId, user, request, response, false);
+    }
+
+    private HorizonWorkProgrammeViewModel getPopulate(long applicationId, long questionId, UserResource user, String pageTitle, boolean isCallId, Map<String, List<HorizonWorkProgramme>> readOnlyMap) {
+        return horizonWorkProgrammePopulator.populate(applicationId, questionId, user, pageTitle, isCallId, readOnlyMap);
+    }
+
+    private List<HorizonWorkProgramme> getChildrenOf(Optional<HorizonWorkProgrammeSelectionData> cookieSelectionData) {
+        return HorizonWorkProgramme.findChildrenOf(cookieSelectionData.get().getWorkProgramme());
+    }
+
+    private Optional<HorizonWorkProgrammeSelectionData> getHorizonWorkProgrammeSelectionData(HttpServletRequest request) {
+        return cookieService.getHorizonWorkProgrammeSelectionData(request);
+    }
+
+    private String redirectToCallId(long applicationId, long questionId) {
+        return "redirect:" + APPLICATION_BASE_URL + applicationId + "/form/question/" + questionId + "/horizon-work-programme" + "/call-id";
+    }
+
+    private String completeWorkflow(long applicationId, long questionId) {
+        return redirectToWorkProgramme(applicationId, questionId, true);
     }
 
     private ErrorToObjectErrorConverter mapWorkProgrammeCompletionError() {
