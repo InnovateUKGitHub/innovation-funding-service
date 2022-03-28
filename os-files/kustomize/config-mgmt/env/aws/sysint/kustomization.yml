@@ -2,8 +2,14 @@ commonAnnotations:
   deployedWith: kustomize
   environment: sysint
 
-bases:
+resources:
   - ../../../base
 
 patchesStrategicMerge:
   - spring-profile-env.yml
+  - cache-config.yml
+  - data-service-config.yml
+  - ldap-config.yml
+  - shibboleth-config.yml
+  - web-config.yml
+  - new-relic-config.yml

@@ -1,0 +1,10 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: data-service-config
+data:
+  SIL_REST_BASEURL: "https://esb-api-sysint.apps.org-env-0.org.innovateuk.ukri.org"
+  IFS_DATA_SERVICE_FILE_STORAGE_BASE: "/mnt/ifs_storage"
+  IFS_SYSTEM_EMAIL_ADDRESS: "noreply-ifs@innovateuk.org"
+  IFS_DATA_SERVICE_FILE_STORAGE_VIRUS_SCANNING_ENABLED: "true"
+  IFS_SYSTEM_KTA_USER_EMAIL_DOMAIN: "ktn-uk.org"
