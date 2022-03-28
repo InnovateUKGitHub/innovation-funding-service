@@ -71,7 +71,6 @@ Applicants confirms academic organisations economic activity
 The Applicant is able to apply to the competition once is Open and see the correct Questions
     [Documentation]  IFS-182 IFS-2832  IFS-4046
     [Tags]  HappyPath
-    #[Setup]   get competition id and set open date to yesterday  ${compResearch}
     When the user search for organisation name on Companies house   Bath  Bath Spa University
     Then the user should see the element                            jQuery = li:contains("${customQuestion}")
     And the user should see the element                             jQuery = li:contains("Scope")

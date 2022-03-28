@@ -191,8 +191,14 @@ public class ProjectFinanceChangesViewModelPopulator {
         }
         List<CostChangeViewModel> entries = new ArrayList<>();
 
-        entries.add(new CostChangeViewModel("Funding level (%)", appFinanceResource.getGrantClaimPercentage(), eligibilityOverview.getPercentageGrant()));
-        entries.add(new CostChangeViewModel("Funding sought (£)", appFinanceResource.getTotalFundingSought(), eligibilityOverview.getFundingSought()));
+        if(competition.isThirdPartyOfgem()) {
+            entries.add(new CostChangeViewModel("Funding sought (£)", appFinanceResource.getTotalFundingSought(), eligibilityOverview.getFundingSought()));
+            entries.add(new CostChangeViewModel("Funding level (%)", appFinanceResource.getGrantClaimPercentage(), eligibilityOverview.getPercentageGrant()));
+        } else {
+            entries.add(new CostChangeViewModel("Funding level (%)", appFinanceResource.getGrantClaimPercentage(), eligibilityOverview.getPercentageGrant()));
+            entries.add(new CostChangeViewModel("Funding sought (£)", appFinanceResource.getTotalFundingSought(), eligibilityOverview.getFundingSought()));
+        }
+
         entries.add(new CostChangeViewModel("Other funding (£)", appFinanceResource.getTotalOtherFunding(), eligibilityOverview.getOtherPublicSectorFunding()));
         if (competition.isKtp()) {
             if (isLead) {
