@@ -94,8 +94,6 @@ public class HorizonWorkProgrammeController {
         form.setSelected(existingSelection);
         model.addAttribute("form", form);
 
-        String pageTitle = "Enter the Horizon Europe Work programme Part";
-
         HorizonWorkProgrammeViewModel viewModel = getPopulate(applicationId, questionId, user, false, emptyMap());
 
         if (viewModel.isComplete() || readOnly) {
