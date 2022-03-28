@@ -162,7 +162,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
             .withLastName("Watts")
             .withEmail("james.watts@email.co.uk")
             .withRoleGlobal(Role.APPLICANT)
-            .withUID("2aerg234-aegaeb-23aer").build();
+            .withUid("2aerg234-aegaeb-23aer").build();
 
     String thirdPartyTncLabel = "3rd party tnc label";
     String thirdPartyTncGuidance = "3rd party tnc guidance";

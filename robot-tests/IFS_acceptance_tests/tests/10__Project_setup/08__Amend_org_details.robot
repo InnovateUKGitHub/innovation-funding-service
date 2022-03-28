@@ -95,7 +95,7 @@ the user should see the correct funding values
 
 the user should see the correct revised values
     [Arguments]  ${revisedfunding}  ${revisedpercentage}  ${revisedtotal}
-    the user should see the element             jQuery = td:contains("Ward") ~ td:contains("£57,803") ~ td:contains("49.58%") ~ td ~ td:contains("${revisedfunding}") ~ td:contains("${revisedpercentage}")
-    the user should see the element             jQuery = th:contains("Total grant value") ~ td:contains("£402,796") ~ td:contains("£116,596") ~ td:contains("${revisedtotal}")
-    then the user should see the element        jQuery = dt:contains("Funding applied for") + dd:contains("£116,596") ~ dt:contains("Current amount") + dd:contains("${revisedtotal}")
+    the user should see the element     jQuery = td:contains("Ward") ~ td:contains("£57,803") ~ td:contains("49.58%") ~ td ~ td:contains("${revisedfunding}") ~ td:contains("${revisedpercentage}")
+    the user should see the element     jQuery = th:contains("Total grant value") ~ td:contains("£402,796") ~ td:contains("£116,596") ~ td:contains("${revisedtotal}")
+    the user should see the element     jQuery = dt:contains("Funding applied for") + dd:contains("£116,596") ~ dt:contains("Current amount") + dd:contains("${revisedtotal}")
 

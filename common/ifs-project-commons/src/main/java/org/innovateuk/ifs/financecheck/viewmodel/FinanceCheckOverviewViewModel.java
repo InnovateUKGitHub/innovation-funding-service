@@ -125,4 +125,14 @@ public class FinanceCheckOverviewViewModel {
     public boolean isThirdPartyOfgem() {
         return isThirdPartyOfgem;
     }
+
+    @JsonIgnore
+    public boolean isFundingLevelFirst() {
+        return !isThirdPartyOfgem;
+    }
+
+    @JsonIgnore
+    public boolean isFundingSoughtFirst() {
+        return !isFundingLevelFirst();
+    }
 }

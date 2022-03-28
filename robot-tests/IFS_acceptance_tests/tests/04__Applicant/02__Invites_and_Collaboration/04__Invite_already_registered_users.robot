@@ -236,6 +236,7 @@ The question is disabled for other collaborators
     [Setup]  log in as a different user                          &{lead_applicant_credentials}
     Given Steve smith assigns a question to the collaborator
     And log in as a different user                               &{collaborator2_credentials}
+    And the user clicks the application tile if displayed
     And the user navigates to the page                           ${APPLICATION_OVERVIEW_URL}
     When the user clicks the button/link                         jQuery = a:contains("Public description")
     Then The user should see the element                         css = .textarea-wrapped .readonly
