@@ -47,7 +47,7 @@ public class AssessorProfileDetailsEditController {
 
     @GetMapping
     public String getDetails() {
-        return "redirect:/profile/details/skills";
+        return "redirect:/profile/details/declaration";
     }
 
     @GetMapping("/edit")

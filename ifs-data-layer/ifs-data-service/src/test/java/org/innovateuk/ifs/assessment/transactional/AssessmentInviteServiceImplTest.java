@@ -207,7 +207,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         profile = newProfile().withId(profileId).build();
         user = newUser().withId(userId).withProfileId(profile.getId()).build();
 
-        UserResource senderResource = newUserResource().withId(-1L).withUID(UID).build();
+        UserResource senderResource = newUserResource().withId(-1L).withUid(UID).build();
         User sender = newUser().withId(-1L).withUid(UID).build();
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(senderResource));
         when(userMapperMock.mapToDomain(senderResource)).thenReturn(sender);

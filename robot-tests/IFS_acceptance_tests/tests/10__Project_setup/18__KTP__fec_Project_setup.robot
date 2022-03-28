@@ -367,7 +367,6 @@ the user can see the read-only page
     the user should see the element               jQuery = h2:contains("fEC model is marked as complete")
     the user should see the element               jQuery = h3:contains("Will you be using the full economic costing (fEC) funding model?") ~ div:contains("Change")
     Wait Until Page Contains Without Screenshots  Last updated:
-#    the user should see the element               Last updated: 8 February 04:05PM by you
     the user should see the element               link = Return to project finances
 
 the user enters empty data into date fields

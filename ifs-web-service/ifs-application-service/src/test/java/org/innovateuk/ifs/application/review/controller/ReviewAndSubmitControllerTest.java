@@ -144,7 +144,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     }
 
     @Test
-    public void hestaApplicationTrackReopen() throws Exception {
+    public void hecpApplicationTrackReopen() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionTypeEnum(HORIZON_EUROPE_GUARANTEE)
                 .withAlwaysOpen(true)

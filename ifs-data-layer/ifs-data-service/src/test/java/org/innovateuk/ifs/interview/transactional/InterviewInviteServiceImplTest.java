@@ -160,7 +160,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
         Profile profile = newProfile().withId(profileId).build();
         User user = newUser().withId(userId).withProfileId(profile.getId()).build();
 
-        UserResource senderResource = newUserResource().withId(-1L).withUID(UID).build();
+        UserResource senderResource = newUserResource().withId(-1L).withUid(UID).build();
         User sender = newUser().withId(-1L).withUid(UID).build();
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(senderResource));
         when(userMapperMock.mapToDomain(senderResource)).thenReturn(sender);

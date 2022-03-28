@@ -16,4 +16,8 @@ public class MilestonesViewModel extends CompetitionSetupViewModel {
     public boolean isApplicationSubmissionEnabled() {
         return completionStageUtils.isApplicationSubmissionEnabled(generalSetupViewModel.getCompetition().getCompletionStage());
     }
+
+    public boolean isAssessmentStageEnabled() {
+        return completionStageUtils.isAssessmentStageCompetitionEnabled(generalSetupViewModel.getCompetition().getCompletionStage());
+    }
 }

@@ -104,6 +104,17 @@ The new member is able to access the application overview after feedback is rele
     When The user clicks the button/link                            link = ${KTP_application}
     Then the user is able to view the application overview page
 
+The KTA checks the status of the application
+    [Documentation]  IFS-8549  IFS-9576  IFS-10236
+    Given Log in as a different user                              &{ktp_KTA_Credentials}
+    When the user clicks the button/link                          jQuery = h2:contains("Project setup")
+    And the user selects the checkbox                             previousProject
+    And The user enters text to a text field                      id = keywordSearch   KTP notifications application
+    And the user clicks the button/link                           id = update-documents-results-button
+    Then the user should see the element                          jQuery = .task:contains("${KTP_application}") + .status:contains("Unsuccessful")
+    And the project user is unable to make any changes
+    And the user is able to view the application overview page
+
 *** Keywords ***
 Custom suite setup
     the user logs-in in new browser   &{ktp_Lead_Credentials}
