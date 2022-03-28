@@ -2,7 +2,7 @@ commonAnnotations:
   deployedWith: kustomize
   environment: perf
 
-bases:
+resources:
   - ../../../base
 
 patchesStrategicMerge:
