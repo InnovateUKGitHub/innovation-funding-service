@@ -6,4 +6,3 @@ data:
   IFS_DATA_SERVICE_FILE_STORAGE_BASE: "/mnt/ifs_storage"
   IFS_SYSTEM_EMAIL_ADDRESS: "noreply-ifs@innovateuk.org"
   IFS_DATA_SERVICE_FILE_STORAGE_VIRUS_SCANNING_ENABLED: "true"
-  ONLY_DELETE_IFS_USERS: "true"

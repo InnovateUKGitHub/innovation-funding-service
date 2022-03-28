@@ -7,7 +7,6 @@ data:
   LDAP_DOMAIN: "dc=int,dc=g2g3digital,dc=net"
   LDAP_SCHEME: "ldap"
   ONLY_SYNC_LDAP: "false"
-  ONLY_DELETE_IFS_USERS: "false"
   IDP_LDAP_PORT: "8389"
   LDAP_USESTARTTLS: "false"
   LDAP_USESSL: "true"

@@ -7,6 +7,7 @@ commonAnnotations:
 resources:
   - cache-config.yml
   - data-service-config.yml
+  - db-reset-config.yml
   - feature-toggle-config.yml
   - flyway-config.yml
   - idp-config.yml

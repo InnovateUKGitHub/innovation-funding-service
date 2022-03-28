@@ -6,5 +6,4 @@ data:
   LDAP_BASEDN: "dc=int,dc=g2g3digital,dc=net"
   LDAP_BINDDN: "cn=admin,dc=int,dc=g2g3digital,dc=net"
   LDAP_AUTHENTICATOR: "bindSearchAuthenticator"
-  ONLY_DELETE_IFS_USERS: "true"
   LDAP_USESSL: "false"

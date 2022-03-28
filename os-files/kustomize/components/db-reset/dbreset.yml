@@ -86,7 +86,7 @@ spec:
         - name: ONLY_DELETE_IFS_USERS
           valueFrom:
             configMapKeyRef:
-              name: ldap-config
+              name: db-reset-config
               key: ONLY_DELETE_IFS_USERS
         - name: LDAP_SCHEME
           valueFrom:
