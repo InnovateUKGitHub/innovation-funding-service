@@ -10,6 +10,9 @@ public class CompletionStageUtils {
     @Value("${ifs.always.open.competition.enabled}")
     private boolean alwaysOpenCompetitionEnabled;
 
+    @Value("${ifs.assessment.stage.competition.enabled}")
+    private boolean assessmentStageCompetitionEnabled;
+
     public CompletionStageUtils() {}
 
     public boolean isAlwaysOpenCompetitionEnabled() {
@@ -19,6 +22,16 @@ public class CompletionStageUtils {
     public boolean isApplicationSubmissionEnabled(CompetitionCompletionStage competitionCompletionStage) {
         return isAlwaysOpenCompetitionEnabled()
                 && CompetitionCompletionStage.alwaysOpenValues().stream()
+                .anyMatch(completionStage -> (completionStage == competitionCompletionStage));
+    }
+
+    public boolean isAssessmentStageCompetitionEnabled() {
+        return assessmentStageCompetitionEnabled;
+    }
+
+    public boolean isAssessmentStageCompetitionEnabled(CompetitionCompletionStage competitionCompletionStage) {
+        return isAssessmentStageCompetitionEnabled()
+                && CompetitionCompletionStage.assessmentStageOpenValues().stream()
                 .anyMatch(completionStage -> (completionStage == competitionCompletionStage));
     }
 }

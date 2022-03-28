@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -50,14 +51,33 @@ public class ApplicationSubmissionSectionUpdaterTest {
     @Test
     public void getNextSection() {
 
+        ReflectionTestUtils.setField(updater, "isAssessmentStageEnabled", true);
+
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
+                .withAlwaysOpen(false)
                 .build();
         ApplicationSubmissionForm form = new ApplicationSubmissionForm(true);
 
-        String nextSection = updater.getNextSection(form, competition, CompetitionSetupSection.APPLICATION_SUBMISSION);
+        String nextSection = updater.getNextSection(form, competition, CompetitionSetupSection.MILESTONES);
 
         assertThat(nextSection).isEqualTo("redirect:/competition/setup/1/section/milestones");
+    }
+
+    @Test
+    public void getNextSectionAlwaysOpen() {
+
+        ReflectionTestUtils.setField(updater, "isAssessmentStageEnabled", true);
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(1L)
+                .withAlwaysOpen(true)
+                .build();
+        ApplicationSubmissionForm form = new ApplicationSubmissionForm(true);
+
+        String nextSection = updater.getNextSection(form, competition, CompetitionSetupSection.APPLICATION_ASSESSMENT);
+
+        assertThat(nextSection).isEqualTo("redirect:/competition/setup/1/section/application-assessment");
     }
 
     @Test
