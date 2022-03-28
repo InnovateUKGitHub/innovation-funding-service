@@ -48,29 +48,23 @@ public class HorizonWorkProgrammePopulator {
     public HorizonWorkProgrammeViewModel populate(long applicationId,
                                                   long questionId,
                                                   UserResource user,
-                                                  String pageTitle,
                                                   boolean isCallId,
                                                   Map<String, List<HorizonWorkProgramme>> readOnlyMap) {
+
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), application.getId()).getSuccess();
 
-        boolean readOnly = !readOnlyMap.isEmpty();
-
         List<ProcessRoleResource> processRoles = processRoleRestService.findProcessRole(applicationId).getSuccess();
-        List<ProcessRoleResource> applicantProcessRoles = processRoles
-                .stream()
-                .filter(role -> applicantProcessRoles().contains(role.getRole()))
-                .collect(toList());
+        List<ProcessRoleResource> applicantProcessRoles = getProcessRoleResources(processRoles);
 
-        boolean leadApplicant = applicantProcessRoles.stream()
-                .anyMatch(pr -> pr.getUser().equals(user.getId()) && pr.getRole() == LEADAPPLICANT);
-
+        boolean readOnly = !readOnlyMap.isEmpty();
+        boolean leadApplicant = isLeadApplicant(user, applicantProcessRoles);
         boolean allReadOnly = !leadApplicant;
 
         return new HorizonWorkProgrammeViewModel(
                 application.getName(),
                 applicationId,
-                pageTitle,
+                getPageTitle(isCallId),
                 isCallId,
                 questionId,
                 allReadOnly,
@@ -81,6 +75,18 @@ public class HorizonWorkProgrammePopulator {
                 readOnly,
                 readOnlyMap
         );
+    }
+
+    private List<ProcessRoleResource> getProcessRoleResources(List<ProcessRoleResource> processRoles) {
+        return processRoles
+                .stream()
+                .filter(role -> applicantProcessRoles().contains(role.getRole()))
+                .collect(toList());
+    }
+
+    private boolean isLeadApplicant(UserResource user, List<ProcessRoleResource> applicantProcessRoles) {
+        return applicantProcessRoles.stream()
+                .anyMatch(pr -> pr.getUser().equals(user.getId()) && pr.getRole() == LEADAPPLICANT);
     }
 
     private String getLeadApplicantName(long applicationId) {
@@ -97,9 +103,9 @@ public class HorizonWorkProgrammePopulator {
         }
     }
 
-    private String getYourFinancesUrl(long applicationId, long organisationId, boolean applicant) {
-        return applicant ?
-                String.format("/application/%d/form/FINANCE", applicationId) :
-                String.format("/application/%d/form/FINANCE/%d", applicationId, organisationId);
+    private String getPageTitle(boolean isCallId) {
+        return isCallId ?
+                "Call ID" :
+                "Enter the Horizon Europe Work programme Part";
     }
 }

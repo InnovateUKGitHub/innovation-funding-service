@@ -96,10 +96,10 @@ public class HorizonWorkProgrammeController {
 
         String pageTitle = "Enter the Horizon Europe Work programme Part";
 
-        HorizonWorkProgrammeViewModel viewModel = getPopulate(applicationId, questionId, user, pageTitle, false, emptyMap());
+        HorizonWorkProgrammeViewModel viewModel = getPopulate(applicationId, questionId, user, false, emptyMap());
 
         if (viewModel.isComplete() || readOnly) {
-            viewModel = getPopulate(applicationId, questionId, user, pageTitle, false, getReadOnlyMap(applicationId, request));
+            viewModel = getPopulate(applicationId, questionId, user, false, getReadOnlyMap(applicationId, request));
         }
 
         model.addAttribute("form", form);
@@ -151,14 +151,12 @@ public class HorizonWorkProgrammeController {
                 .map(HorizonWorkProgrammeSelectionData::getCallId)
                 .orElse(null);
 
-        String pageTitle = "Call ID";
-
         form.setAllOptions(getChildrenOf(cookieSelectionData));
         form.setSelected(existingSelection);
 
         model.addAttribute("form", form);
         model.addAttribute("model",
-                getPopulate(applicationId, questionId, user, pageTitle, true, emptyMap()));
+                getPopulate(applicationId, questionId, user, true, emptyMap()));
 
         return TEMPLATE_PATH;
     }
@@ -199,8 +197,10 @@ public class HorizonWorkProgrammeController {
 
     private String redirectToWorkProgramme(long applicationId, long questionId, boolean readOnly) {
         String baseUrl = String.format("redirect:/application/%d/form/question/%d/horizon-work-programme", applicationId, questionId);
+
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("readOnly", readOnly);
+
         return builder.toUriString();
     }
 
@@ -265,8 +265,8 @@ public class HorizonWorkProgrammeController {
         return viewWorkProgramme(form, bindingResult, model, applicationId, questionId, user, request, response, false);
     }
 
-    private HorizonWorkProgrammeViewModel getPopulate(long applicationId, long questionId, UserResource user, String pageTitle, boolean isCallId, Map<String, List<HorizonWorkProgramme>> readOnlyMap) {
-        return horizonWorkProgrammePopulator.populate(applicationId, questionId, user, pageTitle, isCallId, readOnlyMap);
+    private HorizonWorkProgrammeViewModel getPopulate(long applicationId, long questionId, UserResource user, boolean isCallId, Map<String, List<HorizonWorkProgramme>> readOnlyMap) {
+        return horizonWorkProgrammePopulator.populate(applicationId, questionId, user, isCallId, readOnlyMap);
     }
 
     private List<HorizonWorkProgramme> getChildrenOf(Optional<HorizonWorkProgrammeSelectionData> cookieSelectionData) {
