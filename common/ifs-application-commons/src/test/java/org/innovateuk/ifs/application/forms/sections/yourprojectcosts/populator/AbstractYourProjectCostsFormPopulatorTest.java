@@ -39,15 +39,7 @@ public class AbstractYourProjectCostsFormPopulatorTest {
     private AbstractYourProjectCostsFormPopulator target = new AbstractYourProjectCostsFormPopulator() {
         @Override
         protected BaseFinanceResource getFinanceResource(long targetId, long organisationId) {
-            BaseFinanceResource baseFinanceResource;
-
-            if (targetId == 1) {
-                baseFinanceResource = newApplicationFinanceResource().withIndustrialCosts().build();
-            } else {
-                baseFinanceResource = newApplicationFinanceResource().withIndustrialCostsForThirdPartyOfgem().build();
-            }
-
-            return baseFinanceResource;
+            return newApplicationFinanceResource().withIndustrialCosts().build();
         }
 
         @Override
@@ -58,6 +50,24 @@ public class AbstractYourProjectCostsFormPopulatorTest {
         @Override
         protected Optional<FileEntryResource> overheadFile(long costId) {
             return overheadFileRestService.getOverheadFileDetails(costId).getOptionalSuccessObject();
+        }
+    };
+
+    @InjectMocks
+    private AbstractYourProjectCostsFormPopulator targetForThirdPartyOfgem = new AbstractYourProjectCostsFormPopulator() {
+        @Override
+        protected BaseFinanceResource getFinanceResource(long targetId, long organisationId) {
+            return newApplicationFinanceResource().withIndustrialCostsForThirdPartyOfgem().build();
+        }
+
+        @Override
+        protected boolean shouldAddEmptyRow() {
+            return true;
+        }
+
+        @Override
+        protected Optional<FileEntryResource> overheadFile(long costId) {
+            return Optional.empty();
         }
     };
 
@@ -115,7 +125,7 @@ public class AbstractYourProjectCostsFormPopulatorTest {
                 .build();
         when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
 
-        YourProjectCostsForm form = target.populateForm( 2L, organisationResource.getId(), true);
+        YourProjectCostsForm form = targetForThirdPartyOfgem.populateForm( 1L, organisationResource.getId(), true);
 
         assertEquals(0, form.getLabour().getWorkingDaysPerYear().intValue());
         assertEquals(2, form.getLabour().getRows().size());
