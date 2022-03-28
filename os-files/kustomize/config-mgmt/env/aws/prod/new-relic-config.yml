@@ -4,5 +4,5 @@ metadata:
   name: new-relic-config
 data:
   NEW_RELIC_LOG: "STDOUT"
-  NEW_RELIC_LABELS: "prod"
-  NEW_RELIC_ENV: "prod"
+  NEW_RELIC_LABELS: "PROD"
+  NEW_RELIC_ENV: "PROD"
