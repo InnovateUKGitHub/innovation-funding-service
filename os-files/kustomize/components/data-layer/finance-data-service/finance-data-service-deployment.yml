@@ -87,13 +87,6 @@ spec:
             value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
             value: 'ifs-"$(NEW_RELIC_ENV)"-finance-data-service'
-        envFrom:
-          - secretRef:
-              name: data-service-secrets
-          - secretRef:
-              name: finance-data-service-secrets
-          - configMapRef:
-              name: data-service-config
         ports:
           - containerPort: 8080
         resources:

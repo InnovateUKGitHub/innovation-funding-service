@@ -21,6 +21,7 @@ components:
 
 resources:
   - ../../../config-mgmt/env/aws/custom
+  - ../../../secrets-mgmt/env/local
   - routes/mail-route.yml
   - routes/sba-route.yml
   - storage/gluster.yml

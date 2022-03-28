@@ -3,5 +3,5 @@ commonAnnotations:
   environment: custom
 
 resources:
-  - ../../../base
+  - ../../base
   - idp-metadata.yml
