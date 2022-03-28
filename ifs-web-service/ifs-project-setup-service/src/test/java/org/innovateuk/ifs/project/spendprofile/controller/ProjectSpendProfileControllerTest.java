@@ -1101,7 +1101,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 summary, false, expectedCategoryToActualTotal, expectedTotalForEachMonth,
                 expectedTotalOfAllActualTotals, expectedTotalOfAllEligibleTotals, false, null,
                 null ,false, true, false,
-                false, false, competitionResource.isKtp());
+                false, false, competitionResource.isKtp(), competitionResource.isHorizonEuropeGuarantee());
     }
 
     private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears() {
