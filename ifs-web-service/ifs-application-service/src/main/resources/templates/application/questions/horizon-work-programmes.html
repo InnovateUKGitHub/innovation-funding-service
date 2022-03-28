@@ -17,12 +17,12 @@
 
     <th:block th:unless="${model.isCallId}">
         <th:block th:insert="fragments/layout :: header-sub"
-                  th:with="linkTitle='back to application overview',linkClass='link-back',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}"/>
+                  th:with="linkTitle='Back to application overview',linkClass='link-back',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}"/>
     </th:block>
 
     <th:block th:if="${model.isCallId}">
         <th:block th:insert="fragments/layout :: header-sub"
-                  th:with="linkTitle='back to work programme',linkClass='link-back',linkUrl=@{/application/{id}/form/question/{questionId}/horizon-work-programme(id=${model.applicationId}, questionId=${model.questionId})}"/>
+                  th:with="linkTitle='Back to work programme',linkClass='link-back',linkUrl=@{/application/{id}/form/question/{questionId}/horizon-work-programme(id=${model.applicationId}, questionId=${model.questionId})}"/>
     </th:block>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">

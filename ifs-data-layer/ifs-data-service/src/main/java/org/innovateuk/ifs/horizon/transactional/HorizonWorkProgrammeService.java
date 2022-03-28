@@ -12,5 +12,6 @@ public interface HorizonWorkProgrammeService {
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE')")
     ServiceResult<Void> updateWorkProgrammesForApplication(List<HorizonWorkProgramme> programmes, long applicationId);
 
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<List<ApplicationHorizonWorkProgrammeResource>> findSelectedForApplication(long applicationId);
 }
