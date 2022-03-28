@@ -37,6 +37,7 @@ import static org.mockito.Mockito.*;
 public class AbstractYourProjectCostsSaverTest {
     private static ApplicationFinanceResource APPLICATION_FINANCE_RESOURCE = newApplicationFinanceResource().withIndustrialCosts().build();
     private static ApplicationFinanceResource APPLICATION_FINANCE_RESOURCE_WITH_EMPTY_INDIRECT_COST = newApplicationFinanceResource().withEmptyIndirectCosts().build();
+    private static ApplicationFinanceResource APPLICATION_FINANCE_RESOURCE_FOR_THIRDPARTYOFGEM = newApplicationFinanceResource().withIndustrialCostsForThirdPartyOfgem().build();
 
     @Mock
     private FinanceRowRestService financeRowRestService;
@@ -76,6 +77,21 @@ public class AbstractYourProjectCostsSaverTest {
     };
 
     private ArgumentCaptor<IndirectCost> indirectCostArgumentCaptor = ArgumentCaptor.forClass(IndirectCost.class);
+
+    @InjectMocks
+    private AbstractYourProjectCostsSaver targetForThirdPartyOfgem = new AbstractYourProjectCostsSaver() {
+        @Override
+        protected BaseFinanceResource getFinanceResource(long targetId, long organisationId) {
+            return APPLICATION_FINANCE_RESOURCE_FOR_THIRDPARTYOFGEM;
+        }
+
+        @Override
+        protected FinanceRowRestService getFinanceRowService() {
+            return financeRowRestService;
+        }
+    };
+
+    private ArgumentCaptor<LabourCost> labourCostArgumentCaptor = ArgumentCaptor.forClass(LabourCost.class);
 
     @Test
     public void save() {
@@ -183,6 +199,37 @@ public class AbstractYourProjectCostsSaverTest {
         verify(financeRowRestService, times(6)).update(mockResponse);
 
         verifyNoMoreInteractions(financeRowRestService);
+    }
+
+    @Test
+    public void save_for_thirdPartyOfgem() {
+        YourProjectCostsForm form = new YourProjectCostsForm();
+
+        LabourForm labourForm = new LabourForm();
+        LabourRowForm labourRow = new LabourRowForm();
+        labourRow.setDays(10);
+        labourRow.setRate(BigDecimal.ONE);
+        labourRow.setThirdPartyOfgem(true);
+        labourForm.setRows(asMap(UNSAVED_ROW_PREFIX, labourRow));
+        form.setLabour(labourForm);
+        form.setThirdPartyOfgem(true);
+
+        FinanceRowItem mockResponse = mock(FinanceRowItem.class);
+        when(financeRowRestService.update(any())).thenReturn(restSuccess(new ValidationMessages()));
+        when(financeRowRestService.create(any())).thenReturn(restSuccess(mockResponse));
+
+        OrganisationResource organisationResource = newOrganisationResource().withId(2L).build();
+
+        ServiceResult<Void> result = targetForThirdPartyOfgem.save(form, 1L, organisationResource, new ValidationMessages());
+
+        assertTrue(result.isSuccess());
+
+        verify(financeRowRestService, times(1)).create(labourCostArgumentCaptor.capture());
+        LabourCost workingDaysCost = labourCostArgumentCaptor.getValue();
+        assertEquals(BigDecimal.ONE, workingDaysCost.getRate());
+        assertEquals(10, workingDaysCost.getLabourDays().intValue());
+
+        verify(financeRowRestService, times(1)).update(isA(FinanceRowItem.class));
     }
 
     private void setupDataForIndirectCost(BigInteger associateOneCost, BigInteger associateTwoCost, BigInteger academicAndSecretarialSupportCost, YourProjectCostsForm form) {
