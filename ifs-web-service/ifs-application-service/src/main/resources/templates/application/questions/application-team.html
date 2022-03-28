@@ -48,8 +48,9 @@
                 organisation.</p>
 
             <th:block th:if="${model.isEDIUpdateEnabled}">
-                <p class="govuk-body">Your team members can complete the equality, diversity and inclusion survey in the profile
-                    section <a href="/profile/view" class="govuk-link"> here</a>.</p>
+                <p class="govuk-body">Your team members can complete the equality, diversity and inclusion survey in the profile section
+                    <a th:if="${model.hasApplicantAndAssessorRole}" href="/assessment/profile/details" class="govuk-link"> here</a>
+                    <a th:unless="${model.hasApplicantAndAssessorRole}" href="/profile/view" class="govuk-link"> here</a>.</p>
             </th:block>
 
             <p class="govuk-body" th:unless="${model.collaborationLevelSingle or model.isThirdPartyOfgem}">You must read the <a

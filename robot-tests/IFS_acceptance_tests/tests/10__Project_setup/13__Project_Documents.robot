@@ -226,7 +226,7 @@ Mandatory document submission
 MO can see the Documents are awaiting review
     [Documentation]    IFS-9701
     [Tags]
-    Given log in as a different user     &{monitoring_officer_one_credentials}
+    Given log in as a different user          &{monitoring_officer_one_credentials}
     When the user navigates to the page       ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     Then the user should see the element      jQuery = ul li:contains("Documents") span:contains("Awaiting review")
 
@@ -658,12 +658,14 @@ the user sees Innovate Uk approved document banner
     the user should see the element    jQuery = p:contains("Innovate UK approved this document on ${today}.")
 
 the MO navigates to page
-    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+    log in as a different user        &{ifs_admin_user_credentials}
+    the user navigates to the page    ${server}/project-setup-management/competition/${PS_Competition_Id}/status/all
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery = th:contains("${Grade_Crossing_Application_Title}") ~td:contains("Assigned")
     Run Keyword if  '${status}' == 'FAIL'   Assign a MO to the project and login as MO
+    log in as a different user              &{monitoring_officer_one_credentials}
     the user navigates to the page          ${server}/project-setup/project/${Grade_Crossing_Project_Id}
 
 Assign a MO to the project and login as MO
-    log in as a different user                        &{Comp_admin1_credentials}
     the user navigates to the page                    ${server}/project-setup-management/monitoring-officer/view-all?ktp=false
     search for MO                                     Orvill  Orville Gibbs
     the user should see the element                   jQuery = span:contains("Assign projects to Monitoring Officer")
@@ -671,4 +673,3 @@ Assign a MO to the project and login as MO
     wait until keyword succeeds without screenshots   10s    200ms   input text         id = projectId   ${Grade_Crossing_Applicaiton_No} - ${Grade_Crossing_Application_Title}
     Execute Javascript                                document.evaluate("//li[text()='${Grade_Crossing_Applicaiton_No} - ${Grade_Crossing_Application_Title}']",document.body,null,9,null).singleNodeValue.click();
     the user clicks the button/link                   jQuery = button:contains("Assign")
-    log in as a different user                        &{monitoring_officer_one_credentials}
