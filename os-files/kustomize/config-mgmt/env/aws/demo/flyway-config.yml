@@ -4,4 +4,3 @@ metadata:
   name: flyway-config
 data:
   FLYWAY_LOCATIONS: "db/migration,db/reference,db/setup"
-  FLYWAY_TABLE: "schema_version"

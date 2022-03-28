@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ldap-config
+data:
+  LDAP_BASEDN: "dc=int,dc=g2g3digital,dc=net"
+  LDAP_BINDDN: "cn=admin,dc=int,dc=g2g3digital,dc=net"
+  LDAP_AUTHENTICATOR: "bindSearchAuthenticator"
