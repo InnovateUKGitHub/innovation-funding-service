@@ -88,4 +88,21 @@ public class LabourCostTest {
         BigDecimal totalLabourCost = labourCost.getTotal(workingDaysPerYear);
         assertEquals(BigDecimal.ZERO, totalLabourCost);
     }
+
+    @Test
+    public void getLabourCostForThirdPartyOfgem() throws Exception {
+        key = "";
+        role = "Manager";
+        labourDays = 100;
+        description = "";
+        rate = BigDecimal.ONE;
+
+        Integer workingDaysPerYear = 0;
+
+        labourCost = new LabourCost(id, key, role, grossEmployeeCost, labourDays, description, 1L, rate, true);
+
+        assertEquals("third-party-ofgem", labourCost.getName());
+        assertEquals(BigDecimal.ONE, labourCost.getRate(workingDaysPerYear));
+        assertEquals(BigDecimal.valueOf(100), labourCost.getTotalWithoutWorkingDays());
+    }
 }
