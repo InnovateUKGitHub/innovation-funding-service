@@ -594,8 +594,8 @@ public class CompetitionSetupServiceImplTest {
         inOrder.verify(innovationLeadRepository).deleteAllInnovationLeads(competition.getId());
         inOrder.verify(stakeholderRepository).deleteAllStakeholders(competition.getId());
         inOrder.verify(setupStatusRepository).deleteByTargetClassNameAndTargetId(Competition.class.getName(), competition.getId());
-        inOrder.verify(competitionFinanceRowsTypesRepository).deleteAllByCompetitionFinanceRowTypesIdCompetition(competition);;
-        inOrder.verify(grantProcessConfigurationRepository).deleteByCompetitionId(competition.getId());;
+        inOrder.verify(competitionFinanceRowsTypesRepository).deleteAllByCompetitionFinanceRowTypesIdCompetition(competition);
+        inOrder.verify(grantProcessConfigurationRepository).deleteByCompetitionId(competition.getId());
         inOrder.verify(assessmentPeriodRepository).deleteByCompetitionId(competition.getId());
         inOrder.verify(competitionRepository).delete(competition);
         inOrder.verifyNoMoreInteractions();
