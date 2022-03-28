@@ -29,7 +29,7 @@ public class ApplicationSubmissionViewModelPopulatorTest {
                 build();
 
         GeneralSetupViewModel generalSetupViewModel = new GeneralSetupViewModel(false, false, competition,
-                CompetitionSetupSection.APPLICATION_SUBMISSION, null, false, false);
+                CompetitionSetupSection.APPLICATION_SUBMISSION, null, false, false, true);
 
         ApplicationSubmissionViewModel viewModel = applicationSubmissionViewModelPopulator.populateModel(generalSetupViewModel, competition);
 
