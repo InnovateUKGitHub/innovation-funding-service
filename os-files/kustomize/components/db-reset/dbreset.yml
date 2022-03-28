@@ -81,7 +81,7 @@ spec:
         - name: ONLY_SYNC_LDAP
           valueFrom:
             configMapKeyRef:
-              name: ldap-config
+              name: db-reset-config
               key: ONLY_SYNC_LDAP
         - name: ONLY_DELETE_IFS_USERS
           valueFrom:

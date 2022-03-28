@@ -6,7 +6,6 @@ data:
   LDAP_PORT: "389"
   LDAP_DOMAIN: "dc=int,dc=g2g3digital,dc=net"
   LDAP_SCHEME: "ldap"
-  ONLY_SYNC_LDAP: "false"
   IDP_LDAP_PORT: "8389"
   LDAP_USESTARTTLS: "false"
   LDAP_USESSL: "true"

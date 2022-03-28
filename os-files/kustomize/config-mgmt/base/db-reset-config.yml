@@ -4,3 +4,4 @@ metadata:
   name: db-reset-config
 data:
   ONLY_DELETE_IFS_USERS: "false"
+  ONLY_SYNC_LDAP: "false"
