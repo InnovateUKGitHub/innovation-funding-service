@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form;
 
-import javax.validation.constraints.Size;;
+import javax.validation.constraints.Size;
 import org.innovateuk.ifs.finance.resource.cost.EstateCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 

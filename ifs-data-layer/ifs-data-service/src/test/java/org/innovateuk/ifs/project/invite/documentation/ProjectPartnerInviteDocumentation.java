@@ -83,7 +83,7 @@ public class ProjectPartnerInviteDocumentation extends BaseControllerMockMVCTest
     @Test
     public void acceptInvite() throws Exception {
         long projectId = 123L;
-        long inviteId = 321L;;
+        long inviteId = 321L;
         long organisationId = 321L;
         when(projectPartnerInviteService.acceptInvite(inviteId, organisationId)).thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/project-partner-invite/{inviteId}/organisation/{organisationId}/accept", projectId, inviteId, organisationId)
