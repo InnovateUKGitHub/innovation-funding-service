@@ -33,11 +33,6 @@ public abstract class AbstractYourProjectCostsFormPopulator {
     @Autowired
     private OrganisationRestService organisationRestService;
 
-    // TODO: needs removing once called the below new one from assessment & project services
-    public YourProjectCostsForm populateForm(long targetId, long organisationId) {
-        return populateForm(targetId, organisationId, false);
-    }
-
     public YourProjectCostsForm populateForm(long targetId, long organisationId, boolean thirdPartyOfgem) {
         YourProjectCostsForm form = new YourProjectCostsForm();
         BaseFinanceResource finance = getFinanceResource(targetId, organisationId);

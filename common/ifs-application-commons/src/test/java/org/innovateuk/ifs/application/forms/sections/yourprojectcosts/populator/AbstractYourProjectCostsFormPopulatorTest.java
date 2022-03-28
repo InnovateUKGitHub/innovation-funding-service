@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator;
 
+import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.LabourRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -8,19 +9,20 @@ import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -37,7 +39,15 @@ public class AbstractYourProjectCostsFormPopulatorTest {
     private AbstractYourProjectCostsFormPopulator target = new AbstractYourProjectCostsFormPopulator() {
         @Override
         protected BaseFinanceResource getFinanceResource(long targetId, long organisationId) {
-            return newApplicationFinanceResource().withIndustrialCosts().build();
+            BaseFinanceResource baseFinanceResource;
+
+            if (targetId == 1) {
+                baseFinanceResource = newApplicationFinanceResource().withIndustrialCosts().build();
+            } else {
+                baseFinanceResource = newApplicationFinanceResource().withIndustrialCostsForThirdPartyOfgem().build();
+            }
+
+            return baseFinanceResource;
         }
 
         @Override
@@ -61,36 +71,63 @@ public class AbstractYourProjectCostsFormPopulatorTest {
                 .build();
         when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
 
-        YourProjectCostsForm form = target.populateForm( 1L, organisationResource.getId());
+        YourProjectCostsForm form = target.populateForm( 1L, organisationResource.getId(), false);
 
-        Assert.assertEquals((Integer) 250, form.getLabour().getWorkingDaysPerYear());
-        Assert.assertEquals(3, form.getLabour().getRows().size());
+        assertEquals((Integer) 250, form.getLabour().getWorkingDaysPerYear());
+        assertEquals(3, form.getLabour().getRows().size());
 
-        Assert.assertEquals((Long) 1L, form.getOverhead().getCostId());
-        Assert.assertEquals(OverheadRateType.TOTAL, form.getOverhead().getRateType());
-        Assert.assertEquals("filename", form.getOverhead().getFilename());
-        Assert.assertEquals((Integer) 1000, form.getOverhead().getTotalSpreadsheet());
+        assertEquals((Long) 1L, form.getOverhead().getCostId());
+        assertEquals(OverheadRateType.TOTAL, form.getOverhead().getRateType());
+        assertEquals("filename", form.getOverhead().getFilename());
+        assertEquals((Integer) 1000, form.getOverhead().getTotalSpreadsheet());
 
-        Assert.assertEquals(3, form.getMaterialRows().size());
-        Assert.assertEquals(3, form.getCapitalUsageRows().size());
-        Assert.assertEquals(3, form.getSubcontractingRows().size());
-        Assert.assertEquals(3, form.getTravelRows().size());
-        Assert.assertEquals(3, form.getOtherRows().size());
-        Assert.assertNotNull(form.getJustificationForm());
-        Assert.assertEquals(3, form.getProcurementOverheadRows().size());
-        Assert.assertEquals(false, form.getVatForm().getRegistered());
-        Assert.assertEquals(2, form.getAssociateSalaryCostRows().size());
-        Assert.assertEquals(5, (int)form.getAssociateSalaryCostRows().get("1").getDuration());
-        Assert.assertEquals(5, (int)form.getAssociateDevelopmentCostRows().get("1").getDuration());
-        Assert.assertEquals(10, (int)form.getAssociateSalaryCostRows().get("2").getDuration());
-        Assert.assertEquals(10, (int)form.getAssociateDevelopmentCostRows().get("2").getDuration());
-        Assert.assertEquals(2, form.getAssociateDevelopmentCostRows().size());
-        Assert.assertEquals(3, form.getConsumableCostRows().size());
-        Assert.assertEquals(2, form.getKnowledgeBaseCostRows().size());
-        Assert.assertEquals(3, form.getAssociateSupportCostRows().size());
-        Assert.assertEquals(3, form.getEstateCostRows().size());
-        Assert.assertEquals(3, form.getTravelRows().size());
-        Assert.assertEquals(3, form.getKtpTravelCostRows().size());
-        Assert.assertNotNull(form.getAdditionalCompanyCostForm().getAssociateSalary());
+        assertEquals(3, form.getMaterialRows().size());
+        assertEquals(3, form.getCapitalUsageRows().size());
+        assertEquals(3, form.getSubcontractingRows().size());
+        assertEquals(3, form.getTravelRows().size());
+        assertEquals(3, form.getOtherRows().size());
+        assertNotNull(form.getJustificationForm());
+        assertEquals(3, form.getProcurementOverheadRows().size());
+        assertEquals(false, form.getVatForm().getRegistered());
+        assertEquals(2, form.getAssociateSalaryCostRows().size());
+        assertEquals(5, (int)form.getAssociateSalaryCostRows().get("1").getDuration());
+        assertEquals(5, (int)form.getAssociateDevelopmentCostRows().get("1").getDuration());
+        assertEquals(10, (int)form.getAssociateSalaryCostRows().get("2").getDuration());
+        assertEquals(10, (int)form.getAssociateDevelopmentCostRows().get("2").getDuration());
+        assertEquals(2, form.getAssociateDevelopmentCostRows().size());
+        assertEquals(3, form.getConsumableCostRows().size());
+        assertEquals(2, form.getKnowledgeBaseCostRows().size());
+        assertEquals(3, form.getAssociateSupportCostRows().size());
+        assertEquals(3, form.getEstateCostRows().size());
+        assertEquals(3, form.getTravelRows().size());
+        assertEquals(3, form.getKtpTravelCostRows().size());
+        assertNotNull(form.getAdditionalCompanyCostForm().getAssociateSalary());
+        assertFalse(form.isThirdPartyOfgem());
+    }
+
+    @Test
+    public void populate_for_thirdPartyOfgem() {
+        when(overheadFileRestService.getOverheadFileDetails(any())).thenReturn(RestResult.restSuccess(newFileEntryResource().withName("filename").build()));
+
+        OrganisationResource organisationResource = newOrganisationResource()
+                .withId(2L)
+                .withOrganisationType(1L)
+                .build();
+        when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
+
+        YourProjectCostsForm form = target.populateForm( 2L, organisationResource.getId(), true);
+
+        assertEquals(0, form.getLabour().getWorkingDaysPerYear().intValue());
+        assertEquals(2, form.getLabour().getRows().size());
+
+        LabourRowForm labourRowForm = form.getLabour().getRows().get("1");
+
+        assertNotNull(labourRowForm);
+        assertEquals(BigDecimal.TEN,labourRowForm.getRate());
+        assertEquals(100,labourRowForm.getDays().intValue());
+        assertEquals(new BigDecimal(1000),labourRowForm.getTotal());
+        assertTrue(labourRowForm.getThirdPartyOfgem());
+
+        assertTrue(form.isThirdPartyOfgem());
     }
 }

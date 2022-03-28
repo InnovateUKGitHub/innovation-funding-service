@@ -278,7 +278,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(industrialOrganisation.getId());
         when(projectFinanceRestService.getFinanceTotals(project.getId())).thenReturn(restSuccess(emptyList()));
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
-        when(formPopulator.populateForm(project.getId(), industrialOrganisation.getId())).thenReturn(new YourProjectCostsForm());
+        when(formPopulator.populateForm(project.getId(), industrialOrganisation.getId(), false)).thenReturn(new YourProjectCostsForm());
         when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(anyBoolean(), any(), any())).thenReturn(new ProjectFinanceChangesViewModel());
 
         MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/finance-check/eligibility")).
@@ -337,7 +337,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(kbOrganisation.getId());
         when(projectFinanceRestService.getFinanceTotals(project.getId())).thenReturn(restSuccess(emptyList()));
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(Collections.singletonList(projectFinance)));
-        when(formPopulator.populateForm(project.getId(), kbOrganisation.getId())).thenReturn(new YourProjectCostsForm());
+        when(formPopulator.populateForm(project.getId(), kbOrganisation.getId(), false)).thenReturn(new YourProjectCostsForm());
         when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(anyBoolean(), any(), any())).thenReturn(new ProjectFinanceChangesViewModel());
 
         MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/finance-check/eligibility")).
@@ -404,7 +404,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(kbOrganisation.getId());
         when(projectFinanceRestService.getFinanceTotals(project.getId())).thenReturn(restSuccess(emptyList()));
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(Collections.singletonList(projectFinance)));
-        when(formPopulator.populateForm(project.getId(), kbOrganisation.getId())).thenReturn(new YourProjectCostsForm());
+        when(formPopulator.populateForm(project.getId(), kbOrganisation.getId(), false)).thenReturn(new YourProjectCostsForm());
         when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(anyBoolean(), any(), any())).thenReturn(new ProjectFinanceChangesViewModel());
 
         MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/finance-check/eligibility")).
