@@ -9,9 +9,9 @@ Documentation     IFS-10694 Hesta - Email notification content for application s
 ...
 ...               IFS-11269 HECP Phase 2 - Changes to cost categories
 ...
-...               IFS-11299 HECP Phase 1 - EIC - New GOL Template
-
 ...               IFS-11486 HECP Phase 2 - Always open functionality to have the the ability to bypass IFS assessment
+...
+...               IFS-11299 HECP Phase 1 - EIC - New GOL Template
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -92,6 +92,14 @@ Lead applicant receives email notifiction when internal user marks application u
     And the internal team notifies all applicants                                   ${ApplicationID}
     Then the user reads his email                                                   ${newLeadApplicantEmail}  ${ApplicationID}: ${hestaApplicationUnsuccessfulEmailSubject}  ${hestaApplicationUnsuccessfulEmail}
 
+the user should not see any references to assessment and release feedback on close competition page
+    [Documentation]  IFS-11486
+    When the user navigates to the page   ${server}/management/competition/${competitionId}/always-open
+    Then the user should see the element  jQuery = li:contains("A submission date as been set and is now in the past.")
+    And the user should see the element   jQuery = li:contains("All funding decision notifications have been sent.")
+    And the user should see the element   jQuery = p:contains("Once this competition is closed you will no longer be able to add funding decisions.")
+    And the element should be disabled    jQuery = button:contains("Close competition")
+
 Internal user can view hecp GOL template
     [Documentation]  IFS-11299
     Given the user completes all project setup sections
@@ -100,14 +108,6 @@ Internal user can view hecp GOL template
     And Select Window                                               NEW
     Then the user should see the element                            xpath = //h2[text()='Accepting your award ']
     [Teardown]  the user closes the last opened tab
-
-the user should not see any references to assessment and release feedback on close competition page
-    [Documentation]  IFS-11486
-    When the user navigates to the page   ${server}/management/competition/${competitionId}/always-open
-    Then the user should see the element  jQuery = li:contains("A submission date as been set and is now in the past.")
-    And the user should see the element   jQuery = li:contains("All funding decision notifications have been sent.")
-    And the user should see the element   jQuery = p:contains("Once this competition is closed you will no longer be able to add funding decisions.")
-    And the element should be disabled    jQuery = button:contains("Close competition")
 
 
 *** Keywords ***
@@ -242,7 +242,7 @@ the internal team mark the application as successful / unsuccessful
 the internal team notifies all applicants
     [Arguments]  ${ApplicationID}
     the user clicks the button/link                      link = Send notification
-    the user clicks the button/link                      id = app-row-${ApplicationID}
+    the user clicks the button/link                      jQuery = tr:contains(${ApplicationID}) label
     the user clicks the button/link                      id = write-and-send-email
     the user clicks the button/link                      id = send-email-to-all-applicants
     the user clicks the button/link                      id = send-email-to-all-applicants-button
@@ -273,27 +273,6 @@ the user completes milestones section
     the user clicks the button/link                     link = Back to competition details
     the user should see the element                     jQuery = div:contains("Milestones") ~ .task-status-complete
 
-#Competition admin creates an assessment period
-#    [Arguments]  ${competitionId}
-#    Log in as a different user              &{Comp_admin1_credentials}
-#    the user clicks the button/link         link = ${hestaCompetitionName}
-#    the user clicks the button/link         link = Manage assessments
-#    the user clicks the button/link         link = Manage assessment period
-#    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.day  12
-#    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.month  12
-#    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_BRIEFING.year  2100
-#    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.day  14
-#    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.month  12
-#    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_ACCEPTS.year  2100
-#    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.day  16
-#    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.month  12
-#    the user enters text to a text field    assessmentPeriods0.milestoneEntriesASSESSOR_DEADLINE.year  2100
-#    the user clicks the button/link         jQuery = button:contains('Save and return to manage assessments')
-#    the user clicks the button/link         jQuery = button:contains("Notify assessors")
-#    update assessment batch 1 milestone to yesterday   ${competitionId}  ASSESSOR_DEADLINE
-#    the user clicks the button/link         jQuery = button:contains("Close assessment")
-#    the user clicks the button/link         link = Competition
-
 update assessment batch 1 milestone to yesterday
     [Arguments]  ${competition_id}  ${milestone}
     ${yesterday} =    get yesterday
@@ -304,30 +283,6 @@ Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
     Connect to database  @{database}
-
-#assign the application to assessor
-#    [Arguments]   ${applicationName}
-#    the user clicks the button/link     link = Manage assessments
-#    the user clicks the button/link     link = Manage applications
-#    the user clicks the button/link     jQuery = td:contains("${applicationName}") ~ td a:contains("View progress")
-#    the user selects the checkbox       assessor-row-1
-#    the user clicks the button/link     jQuery = button:contains("Add to application")
-#    the user clicks the button/link     link = Allocate applications
-#    the user clicks the button/link     link = Back to manage assessments
-#    the user clicks the button/link     link = Competition
-#    the user clicks the button/link     link = Input and review funding decision
-#    the user should see the element     jQuery =td:contains("${hestaApplicationName}")
-
-#comp admin sends invite to assesor
-#    the user clicks the button/link          link = Invite assessors to assess the competition
-#    the user enters text to a text field     id = assessorNameFilter  ${webTestAssessor}
-#    the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
-#    the user clicks the button/link          jQuery = tr:contains("${webTestAssessor}") label[for^="assessor-row"]
-#    the user clicks the button/link          jQuery = .govuk-button:contains("Add selected to invite list")
-#    the user clicks the button/link          link = Invite
-#    the user clicks the button/link          link = Review and send invites
-#    the user clicks the button/link          jQuery = .govuk-button:contains("Send invitation")
-#    the user logs out if they are logged in
 
 the assessor accepts an invite to an application
     logging in and error checking         ${webTestAssessorEmailAddress}   ${short_password}
@@ -383,18 +338,31 @@ The user is able to complete horizon grant agreement section
     the user clicks the button/link           link = Return to application overview
     the user should see the element           jQuery = li:contains("Horizon Europe Guarantee grant agreement") > .task-status-complete
 
+the user fills in the CS Application section hecp question
+    [Arguments]  ${question_link}
+    the user clicks the button/link         jQuery = h4 a:contains("${question_link}")
+    the user enters text to a text field    id = question.guidanceTitle  Innovation is crucial to the continuing success of any organization.
+    the user enters text to a text field    css = [aria-labelledby="question.guidance-label"]  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
+    the user clicks the button/link         jQuery = button:contains("Done")
+
+the lead applicant marks the application question as complete
+    [Arguments]  ${questionName}   ${questionAnswer}
+    the user clicks the button/link     link = ${questionName}
+    the user clicks the button twice    jQuery = label:contains("${questionAnswer}")
+    the user clicks the button/link     id = application-question-complete
+    the user clicks the button/link     link = Back to application overview
+
 IFS admin approves the spend profiles for hestaApplication
     [Arguments]  ${project}
     log in as a different user       &{ifs_admin_user_credentials}
     the user navigates to the page   ${server}/project-setup-management/project/${project}/spend-profile/approval
-    #the user selects the checkbox    approvedByLeadTechnologist
     the user clicks the button/link  id = radio-spendprofile-approve
     the user clicks the button/link  id = submit-button
 
 the user completes all project setup sections
     Requesting IDs of this Hesta application
     Requesting IDs of this Asos Organisation
-    the internal team mark the application as successful / unsuccessful       ${hestaApplicationID}  FUNDED
+    the internal team mark the application as successful / unsuccessful         ${hestaApplicationID}  FUNDED
     the user clicks the button/link                                             link = Competition
     the internal team notifies all applicants                                   ${hestaApplicationID}
     the user refreshes until element appears on page                            jQuery = td:contains("${hestaApplicationID}") ~ td:contains("Sent")
@@ -412,19 +380,3 @@ the user completes all project setup sections
     Internal user approves bank details
     The user is able to complete and submit the spend profile
     IFS admin approves the spend profiles for hestaApplication                  ${hestaProjectID}
-
-the user fills in the CS Application section hecp question
-    [Arguments]  ${question_link}
-    the user clicks the button/link         jQuery = h4 a:contains("${question_link}")
-    the user enters text to a text field    id = question.guidanceTitle  Innovation is crucial to the continuing success of any organization.
-    the user enters text to a text field    css = [aria-labelledby="question.guidance-label"]  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
-    the user clicks the button/link         jQuery = button:contains("Done")
-
-the lead applicant marks the application question as complete
-    [Arguments]  ${questionName}   ${questionAnswer}
-    the user clicks the button/link     link = ${questionName}
-    the user clicks the button twice    jQuery = label:contains("${questionAnswer}")
-    the user clicks the button/link     id = application-question-complete
-    the user clicks the button/link     link = Back to application overview
-
-
