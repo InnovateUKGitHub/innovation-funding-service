@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.readonly.viewmodel;
 
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
+import org.innovateuk.ifs.competition.resource.CompetitionThirdPartyConfigResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
     private final String termsAndConditionsTerminology;
     private final boolean thirdPartyProcurementCompetition;
     private final String thirdPartyProcurementHeader;
+    private final CompetitionThirdPartyConfigResource thirdPartyConfig;
 
     public TermsAndConditionsReadOnlyViewModel(ApplicationReadOnlyData data,
                                                QuestionResource question,
@@ -23,7 +25,8 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
                                                List<TermsAndConditionsRowReadOnlyViewModel> partners,
                                                String termsAndConditionsTerminology,
                                                boolean thirdPartyProcurementCompetition,
-                                               String thirdPartyProcurementHeader) {
+                                               String thirdPartyProcurementHeader,
+                                               CompetitionThirdPartyConfigResource thirdPartyConfig) {
         super(data, question);
         this.partners = partners;
         this.includeFundingRules = includeFundingRules;
@@ -31,6 +34,7 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
         this.termsAndConditionsTerminology = termsAndConditionsTerminology;
         this.thirdPartyProcurementCompetition = thirdPartyProcurementCompetition;
         this.thirdPartyProcurementHeader = thirdPartyProcurementHeader;
+        this.thirdPartyConfig = thirdPartyConfig;
     }
 
     @Override
@@ -86,5 +90,9 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
 
     public String getAccordionSectionId() {
         return "terms-and-conditions";
+    }
+
+    public CompetitionThirdPartyConfigResource getThirdPartyConfig() {
+        return thirdPartyConfig;
     }
 }

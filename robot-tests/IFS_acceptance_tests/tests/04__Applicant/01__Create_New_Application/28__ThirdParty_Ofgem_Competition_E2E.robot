@@ -19,6 +19,8 @@ Documentation   IFS-11442 OFGEM: Create a "ThirdParty" generic template
 ...
 ...             IFS-11477 OFGEM: Remove Gross Employee Cost Replace with Day Rate
 ...
+...             IFS-11595 Modify application view in application journey, assessment & project setup for T & C changes
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -30,6 +32,7 @@ Resource          ../../../resources/common/PS_Common.robot
 *** Variables ***
 ${thirdPartyOfgemCompetitionName}    Thirdparty Competition - Ofgem
 ${thirdPartyOfgemApplicationName}    Thirdparty Application - Ofgem
+${ofgemPartnerEmail}                 ThirdParty@Ofgem.com
 
 *** Test Cases ***
 Comp admin can select the funding type as Thirdparty and Competition type as Ofgem
@@ -199,6 +202,26 @@ Internal user can edit ofgem labour costs
     And the user should see the element                     jQuery = .labour-total:contains("£51,170")
     And the user should see the element                     css = [id="total-cost"][value="£54,220"]
 
+New applicant added via project setup should not view any references to terms and conditions
+    [Documentation]  IFS-11595
+    Given internal user add new partner orgnisation to ofgem project in project setup
+    And log in as a different user           ${ofgemPartnerEmail}   ${short_password}
+    When the user clicks the button/link    link = ${thirdPartyOfgemApplicationName}
+    And the user clicks the button/link     link = Innovation Fund governance document
+    And the user selects the checkbox       agreed
+    And the user clicks the button/link     jQuery = button:contains("Agree and continue")
+    Then the user should see the element    jQuery = .form-footer:contains("Innovation Fund governance document accepted")
+
+New partner can join the ofgem project via project setup
+    [Documentation]  IFS-11595
+    Given the user clicks the button/link                        link = Back to join project
+    And the user completes ofgem project organisation details
+    When the user clicks the button/link                         link = Your funding
+    When the user enters text to a text field                    id = amount   250
+    And the user fills thirdparty other funding information
+    And the user clicks the button/link                          id = mark-all-as-complete
+    When the user clicks the button/link                         id = submit-join-project-button
+    Then the user should see the element                         jQuery = h1:contains("Set up your project") span:contains("${thirdPartyOfgemApplicationName}")
 
 *** Keywords ***
 Custom suite setup
@@ -325,3 +348,16 @@ the user edit the labour costs in project setup
     the user enters text to a text field    jQuery = input[id$="rate"][value = ""]:first    10
     the user enters text to a text field    jQuery = input[id$="days"][value = ""]:first    100
     the user clicks the button/link         id = save-eligibility
+
+internal user add new partner orgnisation to ofgem project in project setup
+    the user navigates to the page                         ${server}/project-setup-management/competition/${ThirdPartyCompId}/project/${thirdPartyProjId}/team/partner
+    the user adds a new partner organisation               Testing Admin Organisation  Name Surname  ${ofgemPartnerEmail}
+    a new organisation is able to accept project invite    Name  Surname  ${ofgemPartnerEmail}  ROYAL  ROYAL MAIL PLC  ${ThirdPartyApplicationId}  ${thirdPartyOfgemApplicationName}
+
+the user completes ofgem project organisation details
+    the user clicks the button/link         link = Your organisation
+    the user selects the radio button       organisationSize  MEDIUM
+    the user enters text to a text field    css = #turnover   5600
+    the user enters text to a text field    css = #headCount    3000
+    the user clicks the button/link         jQuery = button:contains("Mark as complete")
+    the user should see the element         jQuery = li div:contains("Your organisation") ~ .task-status-complete
