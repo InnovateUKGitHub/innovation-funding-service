@@ -10,19 +10,5 @@ spec:
           envFrom:
             - secretRef:
                 name: new-relic-secrets
-          env:
-            - name: NEW_RELIC_LOG
-              valueFrom:
-                configMapKeyRef:
-                  name: new-relic-config
-                  key: NEW_RELIC_LOG
-            - name: NEW_RELIC_LABELS
-              valueFrom:
-                configMapKeyRef:
-                  name: new-relic-config
-                  key: NEW_RELIC_LABELS
-            - name: NEW_RELIC_ENV
-              valueFrom:
-                configMapKeyRef:
-                  name: new-relic-config
-                  key: NEW_RELIC_ENV
+            - configMapRef:
+                name: new-relic-config
