@@ -40,7 +40,7 @@ public class CompletionStageViewModelPopulatorTest {
                 build();
 
         GeneralSetupViewModel generalSetupViewModel = new GeneralSetupViewModel(false, false, competition,
-                CompetitionSetupSection.COMPLETION_STAGE, null, false, false);
+                CompetitionSetupSection.COMPLETION_STAGE, null, false, false, true);
 
         when(completionStageUtils.isApplicationSubmissionEnabled(CompetitionCompletionStage.RELEASE_FEEDBACK)).thenReturn(true);
 
@@ -62,7 +62,7 @@ public class CompletionStageViewModelPopulatorTest {
                 build();
 
         GeneralSetupViewModel generalSetupViewModel = new GeneralSetupViewModel(false, false, competition,
-                CompetitionSetupSection.COMPLETION_STAGE, null, false, false);
+                CompetitionSetupSection.COMPLETION_STAGE, null, false, false, true);
 
         when(completionStageUtils.isApplicationSubmissionEnabled(CompetitionCompletionStage.COMPETITION_CLOSE)).thenReturn(false);
 

@@ -557,7 +557,7 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         ReflectionTestUtils.setField(competitionManagementFundingDecisionModelPopulator, "alwaysOpenCompetitionEnabled", true);
 
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
-        CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).withAlwaysOpen(true).build();
+        CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).withAlwaysOpen(true).withHasAssessmentStage(true).build();
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(competitionSummaryResource));
         when(applicationSummaryRestService.getAllAssessedApplicationIds(COMPETITION_ID, empty(), empty())).thenReturn(restSuccess(asList(1L, 2L)));
