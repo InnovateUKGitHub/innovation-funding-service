@@ -4,5 +4,5 @@ metadata:
   name: new-relic-config
 data:
   NEW_RELIC_LOG: "STDOUT"
-  NEW_RELIC_LABELS: "UAT"
+  NEW_RELIC_LABELS: "env: UAT"
   NEW_RELIC_ENV: "UAT"

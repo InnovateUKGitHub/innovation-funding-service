@@ -90,7 +90,7 @@ spec:
           - name: JAVA_TOOL_OPTIONS
             value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
-            value: 'ifs-"$(NEW_RELIC_ENV)"-assessment-service'
+            value: 'ifs-$(NEW_RELIC_ENV)-assessment-service'
           - name: IFS_EDI_SALESFORCE_PAGE_URL
             valueFrom:
               configMapKeyRef:
