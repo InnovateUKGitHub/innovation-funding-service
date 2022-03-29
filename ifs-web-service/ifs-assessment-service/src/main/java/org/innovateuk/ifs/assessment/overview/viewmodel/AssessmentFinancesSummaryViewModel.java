@@ -23,12 +23,14 @@ public class AssessmentFinancesSummaryViewModel {
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
     private final ApplicationProcurementMilestonesSummaryViewModel applicationProcurementMilestonesSummaryViewModel;
     private final boolean procurementMilestones;
+    private final boolean hecpCompetition;
 
     public AssessmentFinancesSummaryViewModel(long assessmentId, long applicationId, String applicationName, long daysLeft,
                                               long daysLeftPercentage, FundingType fundingType, ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
                                               ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
                                               ApplicationProcurementMilestonesSummaryViewModel applicationProcurementMilestonesSummaryViewModel,
-                                              boolean procurementMilestones) {
+                                              boolean procurementMilestones,
+                                              boolean hecpCompetition) {
         this.assessmentId = assessmentId;
         this.applicationId = applicationId;
         this.applicationName = applicationName;
@@ -39,6 +41,7 @@ public class AssessmentFinancesSummaryViewModel {
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
         this.applicationProcurementMilestonesSummaryViewModel = applicationProcurementMilestonesSummaryViewModel;
         this.procurementMilestones = procurementMilestones;
+        this.hecpCompetition = hecpCompetition;
     }
 
     public long getAssessmentId() {
@@ -67,6 +70,10 @@ public class AssessmentFinancesSummaryViewModel {
 
     public boolean isKtpCompetition() {
         return FundingType.KTP.equals(fundingType);
+    }
+
+    public boolean isHecpCompetition() {
+        return hecpCompetition;
     }
 
     public ApplicationFinanceSummaryViewModel getApplicationFinanceSummaryViewModel() {
@@ -109,6 +116,7 @@ public class AssessmentFinancesSummaryViewModel {
                 .append(applicationFundingBreakdownViewModel, that.applicationFundingBreakdownViewModel)
                 .append(applicationProcurementMilestonesSummaryViewModel, that.applicationProcurementMilestonesSummaryViewModel)
                 .append(procurementMilestones, that.procurementMilestones)
+                .append(hecpCompetition, that.hecpCompetition)
                 .isEquals();
     }
 
@@ -125,6 +133,7 @@ public class AssessmentFinancesSummaryViewModel {
                 .append(applicationFundingBreakdownViewModel)
                 .append(applicationProcurementMilestonesSummaryViewModel)
                 .append(procurementMilestones)
+                .append(hecpCompetition)
                 .toHashCode();
     }
 }
