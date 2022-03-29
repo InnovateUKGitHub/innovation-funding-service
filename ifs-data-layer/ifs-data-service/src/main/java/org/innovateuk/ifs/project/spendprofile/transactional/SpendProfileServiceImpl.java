@@ -9,7 +9,6 @@ import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -74,13 +73,11 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.math.BigDecimal.ROUND_HALF_UP;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
 import static org.innovateuk.ifs.project.resource.ApprovalType.REJECTED;
@@ -411,19 +408,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                 andOnSuccess((spendProfile, project) -> {
 
                     List<CostCategory> costCategories = spendProfile.getCostCategoryType().getCostCategories();
-                    if (project.getApplication().getCompetition().isHorizonEuropeGuarantee()) {
-                        List<CostCategory> hecpCosts = new ArrayList<>();
-                        hecpCosts.add(costCategories.stream().filter(costCategory -> costCategory.getName().equals(LABOUR.getDisplayName())).findFirst().get());
-                        hecpCosts.add(costCategories.stream().filter(costCategory -> costCategory.getName().equals(SUBCONTRACTING_COSTS.getDisplayName())).findFirst().get());
-                        hecpCosts.add(costCategories.stream().filter(costCategory -> costCategory.getName().equals(TRAVEL.getDisplayName())).findFirst().get());
-                        hecpCosts.add(costCategories.stream().filter(costCategory -> costCategory.getName().equals(MATERIALS.getDisplayName())).findFirst().get());
-                        hecpCosts.add(costCategories.stream().filter(costCategory -> costCategory.getName().equals(CAPITAL_USAGE.getDisplayName())).findFirst().get());
-                        hecpCosts.add(costCategories.stream().filter(costCategory -> costCategory.getName().equals(OTHER_COSTS.getDisplayName())).findFirst().get());
-                        hecpCosts.add(costCategories.stream().filter(costCategory -> costCategory.getName().equals(OVERHEADS.getDisplayName())).findFirst().get());
-
-                        costCategories = hecpCosts;
-                    }
-
                     Organisation organisation = organisationRepository.findById(projectOrganisationCompositeId.getOrganisationId()).get();
                     CostGroup eligibleCosts = spendProfile.getEligibleCosts();
                     CostGroup spendProfileFigures = spendProfile.getSpendProfileFigures();
@@ -751,43 +735,17 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         monthsRow.add(CSV_ELIGIBLE_COST_TOTAL);
 
         final int[] columnSize = new int[1];
-        boolean hecpCompetition = getProject(projectOrganisationCompositeId.getProjectId()).getSuccess().getApplication().getCompetition().isHorizonEuropeGuarantee();
-
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values) -> {
 
             CostCategory cc = costCategoryRepository.findById(category).get();
             if (isResearch) {
                 byCategory.add(cc.getLabel());
             }
-            else if (hecpCompetition) {
-                if (cc.getName().equals(LABOUR.getDisplayName())) {
-                    byCategory.add("Personnel costs");
-                }
-                if (cc.getName().equals(SUBCONTRACTING_COSTS.getDisplayName())) {
-                    byCategory.add("Subcontracting costs");
-                }
-                if (cc.getName().equals(TRAVEL.getDisplayName())) {
-                    byCategory.add("Travel and subsistence");
-                }
-                if (cc.getName().equals(MATERIALS.getDisplayName())) {
-                    byCategory.add("Equipment");
-                }
-                if (cc.getName().equals(CAPITAL_USAGE.getDisplayName())) {
-                    byCategory.add("Other goods, works and services");
-                }
-                if (cc.getName().equals(OTHER_COSTS.getDisplayName())) {
-                    byCategory.add("Other costs");
-                }
-                if (cc.getName().equals(OVERHEADS.getDisplayName())) {
-                    byCategory.add("Indirect costs");
-                }
-            } else {
-                byCategory.add(String.valueOf(cc.getName()));
-            }
-                values.forEach(val ->
-                        byCategory.add(val.toString())
-                );
 
+            byCategory.add(String.valueOf(cc.getName()));
+            values.forEach(val ->
+                    byCategory.add(val.toString())
+            );
             byCategory.add(categoryToActualTotal.get(category).toString());
             byCategory.add(spendProfileTableResource.getEligibleCostPerCategoryMap().get(category).toString());
 
@@ -829,31 +787,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
             if (isResearch) {
                 rows.add(calculateQuarterly(cc.getLabel(), cc.getName(), values).toArray(new String[0]));
-            }
-            else if (hecpCompetition) {
-                if (cc.getName().equals(LABOUR.getDisplayName())) {
-                    rows.add(calculateQuarterly("Personnel costs", values).toArray(new String[0]));
-                }
-                if (cc.getName().equals(SUBCONTRACTING_COSTS.getDisplayName())) {
-                    rows.add(calculateQuarterly("Subcontracting costs", values).toArray(new String[0]));
-                }
-                if (cc.getName().equals(TRAVEL.getDisplayName())) {
-                    rows.add(calculateQuarterly("Travel and subsistence", values).toArray(new String[0]));
-                }
-                if (cc.getName().equals(MATERIALS.getDisplayName())) {
-                    rows.add(calculateQuarterly("Equipment", values).toArray(new String[0]));
-                }
-                if (cc.getName().equals(CAPITAL_USAGE.getDisplayName())) {
-                    rows.add(calculateQuarterly("Other goods, works and services", values).toArray(new String[0]));
-                }
-                if (cc.getName().equals(OTHER_COSTS.getDisplayName())) {
-                    rows.add(calculateQuarterly("Other costs", values).toArray(new String[0]));
-                }
-                if (cc.getName().equals(OVERHEADS.getDisplayName())) {
-                    rows.add(calculateQuarterly("Indirect costs", values).toArray(new String[0]));
-                }
-            }
-            else {
+            } else {
                 rows.add(calculateQuarterly(cc.getName(), values).toArray(new String[0]));
             }
         });

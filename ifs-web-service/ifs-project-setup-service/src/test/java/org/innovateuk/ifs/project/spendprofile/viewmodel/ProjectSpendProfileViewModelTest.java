@@ -24,7 +24,7 @@ public class ProjectSpendProfileViewModelTest {
         ProjectSpendProfileViewModel viewModel = new ProjectSpendProfileViewModel(projectResource, organisationResource,
                 null, null, null, null, null, null,
                 null, false, null, null, null,
-                false, false, false, false, competitionResource.isKtp(), competitionResource.isHorizonEuropeGuarantee());
+                false, false, false, false, competitionResource.isKtp());
 
         assertTrue(viewModel.isKtpCompetition());
     }
@@ -39,7 +39,7 @@ public class ProjectSpendProfileViewModelTest {
         ProjectSpendProfileViewModel viewModel = new ProjectSpendProfileViewModel(projectResource, organisationResource,
                 null, null, null, null, null, null,
                 null, false, null, null, null,
-                false, false, false, false, competitionResource.isKtp(), competitionResource.isHorizonEuropeGuarantee());
+                false, false, false, false, competitionResource.isKtp());
 
         assertFalse(viewModel.isKtpCompetition());
     }

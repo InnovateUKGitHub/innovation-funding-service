@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 
 @Component
@@ -34,12 +33,12 @@ public class HecpTemplate implements FundingTypeTemplate {
         List<FinanceRowType> types =
                 newArrayList(
                         LABOUR,
-                        SUBCONTRACTING_COSTS,
-                        TRAVEL,
+                        OVERHEADS,
                         MATERIALS,
                         CAPITAL_USAGE,
+                        SUBCONTRACTING_COSTS,
+                        TRAVEL,
                         OTHER_COSTS,
-                        OVERHEADS,
                         FINANCE,
                         OTHER_FUNDING,
                         YOUR_FINANCE);
