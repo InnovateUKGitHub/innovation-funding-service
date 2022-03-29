@@ -59,7 +59,8 @@ Lead applicant can submit application
     When the user successfully completes application          tim   timmy   ${leadApplicantEmail}   ${hestaApplicationName}
     And the user clicks the button/link                       link = Your project finances
     Then the user completes hecp project finances             ${hestaApplicationName}  no
-    Then the user can submit the application
+    And the user see the print view of the application
+    And the user can submit the application
 
 Lead applicant should get a confirmation email after application submission
     [Documentation]    IFS-10694
@@ -343,6 +344,15 @@ the user completes hecp project finances
     the user should see all finance subsections complete
     the user clicks the button/link  link = Back to application overview
     the user should see the element  jQuery = li:contains("Your project finances") > .task-status-complete
+    the user clicks the button/link  link = Finances overview
+    the user should see the element  jQuery = th:contains("Personnel costs (£)")
+    the user should see the element  jQuery = th:contains("Subcontracting costs (£)")
+    the user should see the element  jQuery = th:contains("Travel and subsistence (£)")
+    the user should see the element  jQuery = th:contains("Equipment (£)")
+    the user should see the element  jQuery = th:contains("Other goods, works and services (£)")
+    the user should see the element  jQuery = th:contains("Other costs (£)")
+    the user should see the element  jQuery = th:contains("Indirect costs (£)")
+    the user clicks the button/link  link = Application overview
 
 The user is able to complete hecp project costs
     the user clicks the button/link           link = Your project costs
@@ -380,7 +390,6 @@ The user is able to complete horizon grant agreement section
     the user clicks the button/link           link = Return to application overview
     the user should see the element           jQuery = li:contains("Horizon Europe Guarantee grant agreement") > .task-status-complete
 
-
 IFS admin approves the spend profiles for hestaApplication
     [Arguments]  ${project}
     log in as a different user       &{ifs_admin_user_credentials}
@@ -410,3 +419,16 @@ the user completes all project setup sections
     Internal user approves bank details
     The user is able to complete and submit the spend profile
     IFS admin approves the spend profiles for hestaApplication                  ${hestaProjectID}
+
+the user see the print view of the application
+  the user clicks the button/link   link = Print your application
+  Select Window                     title = Print Application - Innovation Funding Service
+  the user should see the element   xpath = //*[contains(text(),'Personnel costs (£)')]
+  the user should see the element   xpath = //*[contains(text(),'Subcontracting costs (£)')]
+  the user should see the element   xpath = //*[contains(text(),'Travel and subsistence (£)')]
+  the user should see the element   xpath = //*[contains(text(),'Equipment (£)')]
+  the user should see the element   xpath = //*[contains(text(),'Other goods, works and services (£)')]
+  the user should see the element   xpath = //*[contains(text(),'Other costs (£)')]
+  the user should see the element   xpath = //*[contains(text(),'Indirect costs (£)')]
+  the user closes the last opened tab
+
