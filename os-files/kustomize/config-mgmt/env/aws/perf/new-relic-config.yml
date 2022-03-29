@@ -4,5 +4,5 @@ metadata:
   name: new-relic-config
 data:
   NEW_RELIC_LOG: "STDOUT"
-  NEW_RELIC_LABELS: "PERF"
+  NEW_RELIC_LABELS: "env: PERF"
   NEW_RELIC_ENV: "PERF"

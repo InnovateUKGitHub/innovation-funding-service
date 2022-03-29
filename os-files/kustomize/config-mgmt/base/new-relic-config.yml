@@ -4,5 +4,5 @@ metadata:
   name: new-relic-config
 data:
   NEW_RELIC_LOG: "STDOUT"
-  NEW_RELIC_LABELS: "undefined"
+  NEW_RELIC_LABELS: "env: undefined"
   NEW_RELIC_ENV: "undefined"
