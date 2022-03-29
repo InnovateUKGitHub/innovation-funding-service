@@ -67,7 +67,12 @@
                 <p class="govuk-body">Your spend profile has now been accepted by Innovate UK.</p>
             </div>
         </th:block>
-        <p class="govuk-body">We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners. This is so we can plan the allocation of the grant funding to your project.</p>
+        <th:block th:unless="${model.isHecpCompetition()}">
+            <p class="govuk-body">We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners. This is so we can plan the allocation of the grant funding to your project.</p>
+        </th:block>
+        <th:block th:if="${model.isHecpCompetition()}">
+            <p class="govuk-body">We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners ​which estimates how you think costs will be spread out over the duration of your project. ​This is so we can plan the allocation of the grant funding to your project.</p>
+        </th:block>
         <dl class="standard-definition-list">
             <th:block th:unless="${model.ktpCompetition}">
                 <dt>Project start date</dt>
@@ -80,7 +85,9 @@
         </dl>
 
         <h2 class="govuk-heading-m"><th:block th:text="${model.organisationName}" /> - Spend profile</h2>
-        <p class="govuk-body">We have reviewed and approved your project costs. Each organisation should now edit their spend profile costs to reflect your proposed project costs.</p>
+        <th:block th:unless="${model.isHecpCompetition()}">
+            <p class="govuk-body">We have reviewed and approved your project costs. Each organisation should now edit their spend profile costs to reflect your proposed project costs.</p>
+        </th:block>
     </div>
     <th:block th:with="readonly=${form == null ? true : false}">
         <form method="post" autocomplete="off" novalidate="novalidate"
@@ -344,7 +351,12 @@
                        th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 
                     <th:block th:if="${!model.markedAsComplete}">
-                        <p class="govuk-body govuk-!-margin-top-6">You need to mark this section as complete. You can then send completed spend profiles to Innovate UK.</p>
+                        <th:block th:unless="${model.isHecpCompetition()}">
+                            <p class="govuk-body govuk-!-margin-top-6">You need to mark this section as complete. You can then send completed spend profiles to Innovate UK.</p>
+                        </th:block>
+                        <th:block th:if="${model.isHecpCompetition()}">
+                            <p class="govuk-body govuk-!-margin-top-6">If you require further assistance in filling out your spend profile, contact you monitoring officer.</p>
+                        </th:block>
                         <form method="post" id="spend-profile-mark-as-complete-form"
                               th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}">
                             <button class="govuk-button" id="spend-profile-mark-as-complete-button" name="mark-as-complete" th:disabled="${#lists.size(model.table.validationMessages.errors) > 0}">Mark as complete</button>
@@ -354,6 +366,9 @@
 
                 <th:block th:if="${model.leadPartner and model.markedAsComplete and !model.userPartOfThisOrganisation}">
                     <p class="govuk-body govuk-!-margin-top-6">You can still allow partners to edit their spend profile at this stage. Once this section has been marked as complete you can submit it to Innovate UK.</p>
+                    <th:block th:if="${model.isHecpCompetition()}">
+                        <p class="govuk-body govuk-!-margin-top-6">If you require further assistance in filling out your spend profile, contact you monitoring officer.</p>
+                    </th:block>
                     <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${model.projectId},organisationId=${model.organisationId})}"
                         class="govuk-button govuk-!-margin-top-6" data-js-modal="modal-confirm-allow-spend-profile-edits">Allow edits
                     </a>
