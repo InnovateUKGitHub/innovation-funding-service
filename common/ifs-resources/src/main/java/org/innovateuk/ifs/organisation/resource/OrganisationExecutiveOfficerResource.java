@@ -3,6 +3,9 @@ package org.innovateuk.ifs.organisation.resource;
 import java.util.Objects;
 
 public class OrganisationExecutiveOfficerResource {
+
+    private static final long serialVersionUID = 6318064923671344867L;
+
     private Long id;
     private Long organisation;
     private String name;
