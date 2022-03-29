@@ -51,12 +51,12 @@ spec:
         - name: PERFORMANCE_APPLICANT_USERS
           valueFrom:
             configMapKeyRef:
-              name: performance-config
+              name: db-reset-config
               key: PERFORMANCE_APPLICANT_USERS
         - name: PERFORMANCE_h2020_USERS
           valueFrom:
             configMapKeyRef:
-              name: performance-config
+              name: db-reset-config
               key: PERFORMANCE_h2020_USERS
         - name: LDAP_HOST
           valueFrom:
