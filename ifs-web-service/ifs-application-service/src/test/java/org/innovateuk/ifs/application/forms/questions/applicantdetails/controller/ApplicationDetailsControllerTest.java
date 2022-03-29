@@ -306,7 +306,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
                 .withCompetition(competition.getId())
                 .build();
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
-        when(applicationRestService.saveApplication(any(ApplicationResource.class))).thenReturn(restSuccess(ValidationMessages.noErrors()));;
+        when(applicationRestService.saveApplication(any(ApplicationResource.class))).thenReturn(restSuccess(ValidationMessages.noErrors()));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
 
         mockMvc.perform(

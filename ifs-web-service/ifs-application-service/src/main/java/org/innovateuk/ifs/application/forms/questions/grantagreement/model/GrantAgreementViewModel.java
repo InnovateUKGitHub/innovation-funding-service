@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.forms.questions.grantagreement.model;
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 
 /**
- * View model for horizon 2020 grant agreement upload.
+ * View model for the grant agreement upload for Horizon competitions.
  */
 public class GrantAgreementViewModel implements BaseAnalyticsViewModel {
 
@@ -14,8 +14,16 @@ public class GrantAgreementViewModel implements BaseAnalyticsViewModel {
     private final String filename;
     private final boolean open;
     private final boolean complete;
+    private final String competitionType;
 
-    public GrantAgreementViewModel(long applicationId, String competitionName, String applicationName, long questionId, String filename, boolean open, boolean complete) {
+    public GrantAgreementViewModel(long applicationId,
+                                   String competitionName,
+                                   String applicationName,
+                                   long questionId,
+                                   String filename,
+                                   boolean open,
+                                   boolean complete,
+                                   String competitionType) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.applicationName = applicationName;
@@ -23,6 +31,7 @@ public class GrantAgreementViewModel implements BaseAnalyticsViewModel {
         this.filename = filename;
         this.open = open;
         this.complete = complete;
+        this.competitionType = competitionType;
     }
 
     @Override
@@ -53,6 +62,10 @@ public class GrantAgreementViewModel implements BaseAnalyticsViewModel {
 
     public boolean isComplete() {
         return complete;
+    }
+
+    public String getCompetitionType() {
+        return competitionType;
     }
 
     /* view logic */

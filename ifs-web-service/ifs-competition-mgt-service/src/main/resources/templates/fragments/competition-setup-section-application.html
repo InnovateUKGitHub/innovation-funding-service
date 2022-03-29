@@ -17,7 +17,8 @@
         <h2 class="govuk-heading-m govuk-!-margin-top-6"
             th:text="${model.general.competition.competitionTypeName+' competition questions'}"/>
 
-        <p class="govuk-body">You can review and amend the application and assessment questions and guidance for this
+        <p class="govuk-body">You can review and amend the application
+            <th:block th:if="${model.general.competition.hasAssessmentStage}"> and assessment questions</th:block> and guidance for this
             competition. You can also edit the finances section to update funding rules. Any changes you make will be
             applied to this competition, but will not affect the default template for this competition type.</p>
 
@@ -74,7 +75,7 @@
             </li>
         </ul>
 
-        <h3 class="govuk-heading-s">Assessed questions</h3>
+        <h3 class="govuk-heading-s" th:text="${model.general.competition.hasAssessmentStage} ? 'Assessed questions' : 'Questions'"></h3>
         <ul class="task-list" th:classappend="${model.general.state.preventEdit} ? '' : 'govuk-!-margin-bottom-0'">
             <li th:each="question : ${model.questions}">
                 <th:block th:if="${model.questionStatuses.get(question.id)}">

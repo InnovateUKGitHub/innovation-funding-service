@@ -199,7 +199,7 @@ public class DocumentsController {
     }
 
     private void sendDocumentReviewNotificationToMO(long projectId) {
-            Optional<MonitoringOfficerResource> monitoringOfficer  = monitoringOfficerRestService.findMonitoringOfficerForProject(projectId).getOptionalSuccessObject();;
+            Optional<MonitoringOfficerResource> monitoringOfficer  = monitoringOfficerRestService.findMonitoringOfficerForProject(projectId).getOptionalSuccessObject();
             if (monitoringOfficer.isPresent()) {
                   Optional<UserResource> moUser= userRestService.findUserByEmail(monitoringOfficer.get().getEmail()).getOptionalSuccessObject();
                   if (moUser.isPresent()) {

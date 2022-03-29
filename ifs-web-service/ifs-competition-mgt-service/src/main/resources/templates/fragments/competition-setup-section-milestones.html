@@ -12,7 +12,11 @@
 
     <div class="govuk-body panel">
         <th:block th:unless="${model.general.competition.alwaysOpen}">Define the competition milestones. Make sure that dates are in order of milestones, for example the briefing date cannot come after the submission date.</th:block>
-        <th:block th:if="${model.general.competition.alwaysOpen}">Assessment dates are set after the competition has opened.<br />Do not complete the 'Submission date' milestone when creating open-ended competitions.</th:block>
+        <th:block th:if="${model.general.competition.alwaysOpen}">
+            <th:block th:if="${model.general.competition.hasAssessmentStage}">
+                Assessment dates are set after the competition has opened.<br /></th:block>
+                Do not complete the 'Submission date' milestone when creating open-ended competitions.
+        </th:block>
     </div>
 
     <form th:action="@{(${model.general.editable} ? '' : 'milestones/edit')}"
@@ -165,6 +169,14 @@
     <ul class="govuk-list pagination">
         <li class="prev">
             <a rel="prev" title="Navigate to previous part"
+               th:if="${model.general.competition.alwaysOpen && model.general.isAssessmentStageEnabled}"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath=${model.applicationSubmissionEnabled ? 'application-assessment' : 'completion-stage'})}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title" th:text="${model.applicationSubmissionEnabled ? 'Application assessment' : 'Completion stage'}">Completion stage</span>
+            </a>
+
+            <a rel="prev" title="Navigate to previous part"
+               th:unless="${model.general.competition.alwaysOpen && model.general.isAssessmentStageEnabled}"
                th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath=${model.applicationSubmissionEnabled ? 'application-submission' : 'completion-stage'})}">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title" th:text="${model.applicationSubmissionEnabled ? 'Application submission' : 'Completion stage'}">Completion stage</span>
