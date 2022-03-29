@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='grant agreement'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.competitionType} + ' grant agreement'" />
 </head>
 <body class="govuk-template__body application">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -25,7 +25,7 @@
         </div>
 
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='grant agreement',subTitle=${model.applicationName},size='govuk-heading-xl'" />
+                  th:with="pageTitle=${model.competitionType} + ' grant agreement',subTitle=${model.applicationName},size='govuk-heading-xl'" />
 
         <form th:action="@{/application/{applicationId}/form/question/{questionId}/grant-agreement(applicationId=${model.applicationId},questionId=${model.questionId})}"
               method="post"

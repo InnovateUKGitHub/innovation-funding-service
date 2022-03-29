@@ -210,7 +210,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     private List<Long> getAllApplicationIdsByFilters(long competitionId, FundingDecisionFilterForm filterForm) {
         if(alwaysOpenCompetitionEnabled) {
             CompetitionResource competition = getCompetitionIfExist(competitionId);
-            if (competition.isAlwaysOpen()) {
+            if (competition.isAlwaysOpen() && competition.isHasAssessmentStage()) {
                 return applicationSummaryRestService.getAllAssessedApplicationIds(competitionId, filterForm.getStringFilter(), filterForm.getFundingFilter()).getOrElse(emptyList());
             }
         }

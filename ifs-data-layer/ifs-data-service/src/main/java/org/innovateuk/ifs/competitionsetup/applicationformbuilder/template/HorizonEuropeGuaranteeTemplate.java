@@ -5,6 +5,8 @@ import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsReposito
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
+import org.innovateuk.ifs.form.resource.FormInputScope;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +15,12 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.*;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder.aFormInput;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.GuidanceRowBuilder.aGuidanceRow;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.MultipleChoiceOptionBuilder.aMultipleChoiceOption;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
-import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 
 @Component
 public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
@@ -33,8 +38,14 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
     public Competition copyTemplatePropertiesToCompetition(Competition competition) {
         competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Horizon Europe Guarantee"));
         competition.setAcademicGrantPercentage(100);
+        competition.setResubmission(false);
         competition.setMinProjectDuration(1);
         competition.setMaxProjectDuration(84);
+        competition.setAlwaysOpen(true);
+        competition.setApplicationFinanceType(STANDARD);
+        competition.setIncludeProjectGrowthTable(false);
+        competition.setIncludeJesForm(false);
+        competition.setIncludeYourOrganisationSection(false);
         return competition;
     }
 
@@ -46,35 +57,90 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                                 applicationDetails(),
                                 applicationTeam(),
                                 horizonWorkProgramme(),
-                                aQuestion()
-                                        .withShortName("Horizon Europe Guarantee grant agreement")
-                                        .withName("Horizon Europe Guarantee grant agreement")
-                                        .withAssignEnabled(false)
-                                        .withMultipleStatuses(false)
-                                        .withMarkAsCompletedEnabled(true)
-                                        .withType(QuestionType.LEAD_ONLY)
-                                        .withQuestionSetupType(QuestionSetupType.GRANT_AGREEMENT),
-                                publicDescription(),
+                                grantAgreement(),
                                 equalityDiversityAndInclusion()
                         )),
                 applicationQuestions()
-                        .withQuestions(newArrayList(
-                                horizonEuropeGuaranteeDefaultQuestions()
-                        )),
+                        .withQuestions(horizonEuropeDefaultQuestions()),
                 finances(),
                 termsAndConditions()
         );
     }
 
-    public static QuestionBuilder horizonEuropeGuaranteeDefaultQuestions() {
-        QuestionBuilder horizonEuropeGuaranteeQuestion =
-                genericQuestion()
-                        .withName("Placeholder question");
+    public static List<QuestionBuilder> horizonEuropeDefaultQuestions() {
+        return newArrayList(
+                organisation(),
+                eic()
+        );
+    }
 
-        horizonEuropeGuaranteeQuestion.getFormInputs().stream()
-                .filter(fi -> fi.getScope().equals(ASSESSMENT))
-                .forEach(fi -> fi.withActive(false));
-        return horizonEuropeGuaranteeQuestion;
+    public static QuestionBuilder grantAgreement() {
+        return aQuestion()
+                .withShortName("Horizon Europe Guarantee grant agreement")
+                .withName("Horizon Europe Guarantee grant agreement")
+                .withAssignEnabled(false)
+                .withMultipleStatuses(false)
+                .withMarkAsCompletedEnabled(true)
+                .withType(QuestionType.LEAD_ONLY)
+                .withQuestionSetupType(QuestionSetupType.GRANT_AGREEMENT);
+    }
+
+    public static QuestionBuilder organisation() {
+        return aQuestion()
+                .withShortName("Tell us where your organisation is based")
+                .withName("Tell us where your organisation is based")
+                .withAssignEnabled(true)
+                .withMarkAsCompletedEnabled(true)
+                .withMultipleStatuses(false)
+                .withType(QuestionType.GENERAL)
+                .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
+                .withAssessorMaximumScore(10)
+                .withFormInputs(newArrayList(
+                        aFormInput()
+                                .withType(FormInputType.MULTIPLE_CHOICE)
+                                .withActive(true)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withMultipleChoiceOptions(newArrayList(
+                                        aMultipleChoiceOption()
+                                                .withText("My organisation is based in the UK or a British Overseas Territory"),
+                                        aMultipleChoiceOption()
+                                                .withText("My organisation is NOT based in the UK or a British Overseas Territory")
+                                )),
+                        aFormInput()
+                                .withType(FormInputType.TEXTAREA)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withActive(false)
+                                .withWordCount(400),
+                        aFormInput()
+                                .withType(FormInputType.TEMPLATE_DOCUMENT)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withActive(false),
+                        aFormInput()
+                                .withType(FormInputType.ASSESSOR_SCORE)
+                                .withScope(FormInputScope.ASSESSMENT)
+                                .withActive(false),
+                        aFormInput()
+                                .withType(FormInputType.FILEUPLOAD)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withActive(false),
+                        aFormInput()
+                                .withType(FormInputType.TEXTAREA)
+                                .withScope(FormInputScope.ASSESSMENT)
+                                .withActive(false)
+                                .withWordCount(100)
+                                .withGuidanceRows(newArrayList(
+                                        aGuidanceRow()
+                                                .withSubject("9,10"),
+                                        aGuidanceRow()
+                                                .withSubject("7,8"),
+                                        aGuidanceRow()
+                                                .withSubject("5,6"),
+                                        aGuidanceRow()
+                                                .withSubject("3,4"),
+                                        aGuidanceRow()
+                                                .withSubject("1,2")
+                                ))
+                ));
     }
 
     public static QuestionBuilder horizonWorkProgramme() {
@@ -89,4 +155,63 @@ public class HorizonEuropeGuaranteeTemplate implements CompetitionTemplate {
                 .withFormInputs(newArrayList());
     }
 
+    public static QuestionBuilder eic() {
+        return aQuestion()
+                .withShortName("What EIC call have you been successfully evaluated for?")
+                .withName("What EIC call have you been successfully evaluated for?")
+                .withAssignEnabled(true)
+                .withMarkAsCompletedEnabled(true)
+                .withMultipleStatuses(false)
+                .withType(QuestionType.GENERAL)
+                .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
+                .withAssessorMaximumScore(10)
+                .withFormInputs(newArrayList(
+                        aFormInput()
+                                .withType(FormInputType.MULTIPLE_CHOICE)
+                                .withActive(true)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withMultipleChoiceOptions(newArrayList(
+                                        aMultipleChoiceOption()
+                                                .withText("EIC Transition"),
+                                        aMultipleChoiceOption()
+                                                .withText("EIC Pathfinder"),
+                                        aMultipleChoiceOption()
+                                                .withText("EIC Accelerator")
+                                )),
+                        aFormInput()
+                                .withType(FormInputType.TEXTAREA)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withActive(false)
+                                .withWordCount(400),
+                        aFormInput()
+                                .withType(FormInputType.FILEUPLOAD)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withActive(false),
+                        aFormInput()
+                                .withType(FormInputType.TEMPLATE_DOCUMENT)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withActive(false),
+                        aFormInput()
+                                .withType(FormInputType.ASSESSOR_SCORE)
+                                .withScope(FormInputScope.ASSESSMENT)
+                                .withActive(false),
+                        aFormInput()
+                                .withType(FormInputType.TEXTAREA)
+                                .withScope(FormInputScope.ASSESSMENT)
+                                .withActive(false)
+                                .withWordCount(100)
+                                .withGuidanceRows(newArrayList(
+                                        aGuidanceRow()
+                                                .withSubject("9,10"),
+                                        aGuidanceRow()
+                                                .withSubject("7,8"),
+                                        aGuidanceRow()
+                                                .withSubject("5,6"),
+                                        aGuidanceRow()
+                                                .withSubject("3,4"),
+                                        aGuidanceRow()
+                                                .withSubject("1,2")
+                                ))
+                ));
+    }
 }
