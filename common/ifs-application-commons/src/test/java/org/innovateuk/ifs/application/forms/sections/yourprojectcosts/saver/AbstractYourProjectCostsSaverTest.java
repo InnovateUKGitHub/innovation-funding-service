@@ -226,7 +226,7 @@ public class AbstractYourProjectCostsSaverTest {
 
         verify(financeRowRestService, times(1)).create(labourCostArgumentCaptor.capture());
         LabourCost workingDaysCost = labourCostArgumentCaptor.getValue();
-        assertEquals(BigDecimal.ONE, workingDaysCost.getRate());
+        assertEquals(0, BigDecimal.ONE.compareTo(workingDaysCost.getRate()));
         assertEquals(10, workingDaysCost.getLabourDays().intValue());
 
         verify(financeRowRestService, times(1)).update(isA(FinanceRowItem.class));

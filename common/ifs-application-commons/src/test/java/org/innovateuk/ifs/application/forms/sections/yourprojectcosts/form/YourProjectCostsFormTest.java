@@ -165,6 +165,7 @@ public class YourProjectCostsFormTest {
         LabourRowForm returnedLabourRowForm = form.getLabour().getRows().get("labour_costs-1");
 
         assertNotNull(returnedLabourRowForm);
-        assertEquals(BigDecimal.ONE, returnedLabourRowForm.getRate());
+        assertEquals(0, BigDecimal.ONE.compareTo(returnedLabourRowForm.getRate()));
+        //assertEquals(BigDecimal.ONE, returnedLabourRowForm.getRate());
     }
 }

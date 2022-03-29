@@ -102,7 +102,7 @@ public class LabourCostTest {
         labourCost = new LabourCost(id, key, role, grossEmployeeCost, labourDays, description, 1L, rate, true);
 
         assertEquals("third-party-ofgem", labourCost.getName());
-        assertEquals(BigDecimal.ONE, labourCost.getRate(workingDaysPerYear));
-        assertEquals(BigDecimal.valueOf(100), labourCost.getTotalWithoutWorkingDays());
+        assertEquals(0, BigDecimal.ONE.compareTo(labourCost.getRate(workingDaysPerYear)));
+        assertEquals(0, BigDecimal.valueOf(100).compareTo(labourCost.getTotalWithoutWorkingDays()));
     }
 }

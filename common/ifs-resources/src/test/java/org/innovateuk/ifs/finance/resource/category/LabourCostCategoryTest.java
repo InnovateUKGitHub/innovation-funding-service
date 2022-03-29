@@ -129,6 +129,6 @@ public class LabourCostCategoryTest {
 
         labourCostCategory.calculateTotal();
 
-        assertEquals(BigDecimal.valueOf(100), labourCostCategory.getTotal());
+        assertEquals(0, new BigDecimal(100).compareTo(labourCostCategory.getTotal()));
     }
 }
