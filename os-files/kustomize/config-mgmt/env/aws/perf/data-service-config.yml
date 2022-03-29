@@ -6,3 +6,5 @@ data:
   IFS_DATA_SERVICE_FILE_STORAGE_BASE: "/mnt/ifs_storage"
   IFS_SYSTEM_EMAIL_ADDRESS: "noreply-ifs@innovateuk.org"
   IFS_DATA_SERVICE_FILE_STORAGE_VIRUS_SCANNING_ENABLED: "true"
+  IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAINS: "innovateuk.ukri.test,innovateuk.test"
+  IFS_SYSTEM_KTA_USER_EMAIL_DOMAIN: "innovateuk.ukri.test"
