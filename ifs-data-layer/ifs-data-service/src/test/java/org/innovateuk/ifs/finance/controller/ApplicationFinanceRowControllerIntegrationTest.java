@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.validation.BindingResult;
 
 import java.math.BigDecimal;
@@ -72,12 +73,14 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
     @Before
     public void prepare(){
         loginSteveSmith();
+
         FinanceRow grandClaimCost = applicationFinanceRowRepository.findById(48L).get();
         applicationFinance = ((ApplicationFinanceRow) grandClaimCost).getTarget();
 
         grantClaim = (GrantClaimPercentage) controller.get(48L).getSuccess();
         materials = (Materials) controller.get(12L).getSuccess();
         labourCost = (LabourCost) controller.get(4L).getSuccess();
+        labourCost.setRate(BigDecimal.ONE);
         labourCostDaysPerYear = (LabourCost) controller.get(1L).getSuccess();
 
         otherFunding = (OtherFunding) controller.get(54L).getSuccess();

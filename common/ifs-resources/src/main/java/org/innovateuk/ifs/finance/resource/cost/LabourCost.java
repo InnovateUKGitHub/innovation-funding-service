@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 
@@ -8,11 +9,12 @@ import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-
 /**
  * {@code LabourCost} implements {@link FinanceRowItem}
  */
 public class LabourCost extends AbstractFinanceRowItem {
+
+    public static final String THIRDPARTY_OFGEM_NAME_KEY = "third-party-ofgem";
 
     public interface YearlyWorkingDays {
     }
@@ -39,9 +41,10 @@ public class LabourCost extends AbstractFinanceRowItem {
     @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
     private Integer labourDays;
 
-    private BigDecimal rate; // calculated field, no validation
+    private BigDecimal rate;
     private String description;
     private BigDecimal total; // calculated field, no validation
+    private boolean thirdPartyOfgem;
 
     private LabourCost() {
         this(null);
@@ -51,10 +54,11 @@ public class LabourCost extends AbstractFinanceRowItem {
         super(targetId);
     }
 
-    public LabourCost(Long id, String name, String role, BigDecimal grossEmployeeCost, Integer labourDays, String description, Long targetId) {
+    public LabourCost(Long id, String name, String role, BigDecimal grossEmployeeCost, Integer labourDays, String description,
+                      Long targetId, BigDecimal rate, boolean thirdPartyOfgem) {
         super(targetId);
         this.id = id;
-        this.name = name;
+        this.name = addtThirdPartyOfgemKeyIfRequired(name, thirdPartyOfgem);
         this.role = role;
         if (StringUtils.isNotEmpty(this.name)
                 && this.name.equals(LabourCostCategory.WORKING_DAYS_KEY)
@@ -65,7 +69,19 @@ public class LabourCost extends AbstractFinanceRowItem {
         this.grossEmployeeCost = grossEmployeeCost;
         this.labourDays = labourDays;
         this.description = description;
+        this.rate = rate;
+        this.thirdPartyOfgem = thirdPartyOfgem;
     }
+
+    private String addtThirdPartyOfgemKeyIfRequired(String incomingName, boolean thirdPartyOfgem) {
+        String name = incomingName;
+
+        if (StringUtils.isEmpty(name) && thirdPartyOfgem) {
+            name = THIRDPARTY_OFGEM_NAME_KEY;
+        }
+
+        return name;
+   }
 
     @Override
     public Long getId() {
@@ -91,7 +107,10 @@ public class LabourCost extends AbstractFinanceRowItem {
     }
 
     public BigDecimal getRate(Integer workingDaysPerYear) {
-        rate = getRatePerDay(workingDaysPerYear);
+        if (!thirdPartyOfgem) {
+            rate = getRatePerDay(workingDaysPerYear);
+        }
+
         return rate;
     }
 
@@ -130,6 +149,12 @@ public class LabourCost extends AbstractFinanceRowItem {
         return total;
     }
 
+    @JsonIgnore
+    public BigDecimal getTotalWithoutWorkingDays() {
+        calculateTotal();
+        return total;
+    }
+
     private void calculateTotal() {
         if (rate != null && labourDays != null) {
             total = rate.multiply(new BigDecimal(labourDays));
@@ -154,6 +179,10 @@ public class LabourCost extends AbstractFinanceRowItem {
         this.labourDays = labourDays;
     }
 
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
+
     @Override
     public FinanceRowType getCostType() {
         return FinanceRowType.LABOUR;
@@ -161,6 +190,14 @@ public class LabourCost extends AbstractFinanceRowItem {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isThirdPartyOfgem() {
+        return thirdPartyOfgem;
+    }
+
+    public void setThirdPartyOfgem(boolean thirdPartyOfgem) {
+        this.thirdPartyOfgem = thirdPartyOfgem;
     }
 
     public BigDecimal totalDiff(Integer workingDaysPerYear, LabourCost otherOverhead) {
