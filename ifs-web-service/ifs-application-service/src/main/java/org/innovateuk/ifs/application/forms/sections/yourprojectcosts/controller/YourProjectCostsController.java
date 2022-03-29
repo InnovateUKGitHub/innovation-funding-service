@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
-import org.innovateuk.ifs.application.forms.sections.procurement.milestones.controller.ApplicationProcurementMilestonesController;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.LabourForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
@@ -14,10 +13,14 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.Appl
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.YourProjectCostsAutosaver;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
@@ -74,6 +77,12 @@ public class YourProjectCostsController extends AsyncAdaptor {
     @Autowired
     private OverheadFileRestService overheadFileRestService;
 
+    @Autowired
+    private ApplicationRestService applicationRestService;
+
+    @Autowired
+    private CompetitionRestService competitionRestService;
+
     @GetMapping
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
     @SecuredBySpring(value = "VIEW_PROJECT_COSTS", description = "Applicants, internal users and kta can view the Your project costs page")
@@ -82,9 +91,12 @@ public class YourProjectCostsController extends AsyncAdaptor {
                                        @PathVariable long applicationId,
                                        @PathVariable long organisationId,
                                        @PathVariable long sectionId) {
-        YourProjectCostsForm form = formPopulator.populateForm(applicationId, organisationId);
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+
+        YourProjectCostsForm form = formPopulator.populateForm(applicationId, organisationId, competition.isThirdPartyOfgem());
         model.addAttribute("form", form);
-        return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId);
+        return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId, VIEW);
     }
 
     @PostMapping
@@ -114,7 +126,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
                            BindingResult bindingResult,
                            ValidationHandler validationHandler) {
         Supplier<String> successView = () -> redirectToYourFinances(applicationId);
-        Supplier<String> failureView = () -> viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId);
+        Supplier<String> failureView = () -> viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId, VIEW);
         validator.validate(applicationId, form, validationHandler);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saver.save(form, applicationId, user));
@@ -146,7 +158,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
                                 @ModelAttribute("form") YourProjectCostsForm form,
                                 @RequestParam("remove_row") String removeId) {
         saver.removeRowFromForm(form, removeId);
-        return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId);
+        return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId, VIEW);
     }
 
     @PostMapping(params = "add_row")
@@ -158,7 +170,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
                              @ModelAttribute("form") YourProjectCostsForm form,
                              @RequestParam("add_row") FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
         saver.addRowForm(form, rowType);
-        return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId);
+        return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId, VIEW);
     }
 
     @PostMapping(params = "uploadOverheadFile")
@@ -170,7 +182,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
                                             @ModelAttribute("form") YourProjectCostsForm form,
                                             BindingResult bindingResult,
                                             ValidationHandler validationHandler) {
-        Supplier<String> view = () -> viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId);
+        Supplier<String> view = () -> viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId, VIEW);
         MultipartFile file = form.getOverhead().getFile();
         return validationHandler.performFileUpload("overhead.file", view, () -> overheadFileRestService
                 .updateOverheadCalculationFile(form.getOverhead().getCostId(), file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file))
@@ -185,7 +197,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
                                             @PathVariable long sectionId,
                                             @ModelAttribute("form") YourProjectCostsForm form) {
         overheadFileRestService.removeOverheadCalculationFile(form.getOverhead().getCostId()).getSuccess();
-        return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId);
+        return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId, VIEW);
     }
 
     @PostMapping("remove-row/{rowId}")
@@ -199,23 +211,19 @@ public class YourProjectCostsController extends AsyncAdaptor {
 
     @PostMapping("add-row/{rowType}")
     public String ajaxAddRow(Model model,
-                             UserResource user,
                              @PathVariable long applicationId,
                              @PathVariable long organisationId,
-                             @PathVariable long sectionId,
                              @PathVariable FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
-        YourProjectCostsForm form = new YourProjectCostsForm();
-        form.setLabour(new LabourForm());
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+
+        YourProjectCostsForm form = formPopulator.populateForm(applicationId, organisationId, competition.isThirdPartyOfgem());
         Map.Entry<String, AbstractCostRowForm> map = saver.addRowForm(form, rowType);
 
         model.addAttribute("form", form);
         model.addAttribute("id", map.getKey());
         model.addAttribute("row", map.getValue());
-
-        if(FinanceRowType.SUBCONTRACTING_COSTS == rowType) {
-            YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user);
-            model.addAttribute("thirdPartyOfgem", viewModel.isThirdPartyOfgem());
-        }
+        model.addAttribute("thirdPartyOfgem", competition.isThirdPartyOfgem());
 
         return String.format("application/your-project-costs-fragments :: ajax_%s_row", rowType.name().toLowerCase());
     }
@@ -237,12 +245,13 @@ public class YourProjectCostsController extends AsyncAdaptor {
         return String.format("redirect:/application/%d/form/%s", applicationId, SectionType.FINANCE.name());
     }
 
-    private String viewYourProjectCosts(YourProjectCostsForm form, UserResource user, Model model, long applicationId, long sectionId, long organisationId) {
+    private String viewYourProjectCosts(YourProjectCostsForm form, UserResource user, Model model, long applicationId,
+                                        long sectionId, long organisationId, String view) {
         form.recalculateTotals();
         form.orderAssociateCosts();
         YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user);
         model.addAttribute("model", viewModel);
-        return VIEW;
+        return view;
     }
 
     private long getProcessRoleId(long applicationId, long userId) {
