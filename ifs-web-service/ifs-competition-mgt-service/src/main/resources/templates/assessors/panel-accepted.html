@@ -10,7 +10,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage assessment panel',linkUrl=@{/assessment/panel/competition/{competitionId}(competitionId=${model.competitionId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to manage assessment panel',linkUrl=@{/assessment/panel/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors',subTitle=${model.competitionName},size='govuk-heading-xl'" />
@@ -78,7 +78,8 @@
                         <th class="govuk-table__header" scope="col">Assessor name</th>
                         <th class="govuk-table__header" scope="col">Type</th>
                         <th class="govuk-table__header" scope="col">Innovation area</th>
-                        <th class="govuk-table__header" scope="col">Contract and DOI</th>
+                        <th class="govuk-table__header" scope="col">Contract</th>
+                        <th class="govuk-table__header" scope="col">DOI</th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -93,8 +94,12 @@
                         <td class="govuk-table__cell" th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Business</td>
                         <td class="govuk-table__cell" th:text="${assessor.innovationAreas}">Electronics, sensors &amp; photonics, Materials</td>
                         <td class="govuk-table__cell">
-                            <span class="yes" th:if="${assessor.compliant}">Yes</span>
-                            <span class="no" th:unless="${assessor.compliant}">No</span>
+                            <span class="yes" th:if="${assessor.validAgreement}">Yes</span>
+                            <span class="no" th:unless="${assessor.validAgreement}">No</span>
+                        </td>
+                        <td class="govuk-table__cell">
+                            <span class="yes" th:if="${assessor.validDoi}">Yes</span>
+                            <span class="no" th:unless="${assessor.validDoi}">No</span>
                         </td>
                     </tr>
                     <tr class="govuk-table__row" th:if="${#lists.isEmpty(model.assessors)}">
